@@ -7,6 +7,16 @@ Created on Sep 23, 2015
 from subprocess import Popen, PIPE
 
 
+class StatusType(object):
+    '''
+        class to define numbers for status types
+    '''
+    succes = 1
+    timeout = 2
+    crashed = 3
+    abort = 4
+
+
 class ExecuteTARun(object):
     '''
         executes a target algorithm run with a given configuration
@@ -22,7 +32,7 @@ class ExecuteTARun(object):
         self.ta = ta
         pass
 
-    def run(self, config, instance, specifics="0",
+    def run(self, config, instance,
             cutoff=99999999999999.,
             seed=12345):
         '''
@@ -32,7 +42,6 @@ class ExecuteTARun(object):
             Args:
                 config : dictionary param -> value
                 instance: problem instance (string)
-                specifics: instance specifics (string)
                 cutoff: runtime cutoff (double)
                 seed : random seed (integer)
             Return:
@@ -40,4 +49,4 @@ class ExecuteTARun(object):
                 cost: cost/regret/quality (float) (None, if not returned by TA)
                 runtime: runtime (float; None if not returned by TA)
         '''
-        return "SUCCESS", 12345, 1
+        return StatusType.succes, 12345.0, 1.2345
