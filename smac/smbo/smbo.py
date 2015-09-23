@@ -1,5 +1,6 @@
 import logging
 
+# I already implemented the local search and EI in RoBO maybe we can reuse it here
 from robo.acquisition.ei import EI
 from robo.maximizers.local_search import LocalSearch
 from robo.solver.base_solver import BaseSolver
