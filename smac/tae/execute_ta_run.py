@@ -13,21 +13,23 @@ class ExecuteTARun(object):
         on a given instance and some resource limitations
     '''
 
-    def __init__(self):
+    def __init__(self, ta):
         '''
         Constructor
+        Args:
+            ta : target algorithm (string)
         '''
+        self.ta = ta
         pass
 
-    def run(self, ta, config, instance, specifics="0",
+    def run(self, config, instance, specifics="0",
             cutoff=99999999999999.,
             seed=12345):
         '''
-            runs target algorithm <ta> with configuration <config> on
+            runs target algorithm <self.ta> with configuration <config> on
             instance <instance> with instance specifics <specifics>
             for at most <cutoff> seconds and random seed <seed>
             Args:
-                ta : target algorithm (string)
                 config : dictionary param -> value
                 instance: problem instance (string)
                 specifics: instance specifics (string)
