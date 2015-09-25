@@ -6,8 +6,6 @@ Created on Sep 25, 2015
 from abc import ABCMeta, abstractmethod
 import logging
 
-import smac.smbo.run_history
-
 logger = logging.getLogger("epm")
 
 
