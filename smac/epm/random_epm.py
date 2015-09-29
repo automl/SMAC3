@@ -10,10 +10,8 @@ import smac.smbo.run_history
 import smac.epm.base_Epm
 import smac.configspace
 
-logger = logging.getLogger("random_epm")
 
-
-class randomEpm(smac.epm.base_Epm.baseEPM):
+class RandomEpm(smac.epm.base_Epm.baseEPM):
     """implement an epm, which returns only random values"""
 
     def __init__(self, rng):
@@ -21,6 +19,7 @@ class randomEpm(smac.epm.base_Epm.baseEPM):
         initialize random number generator
         :param rng: any integer
         """
+        self.logger = logging.getLogger("random_epm")
         numpy.random.seed(rng)
 
     def fit(self, run_history):
@@ -33,7 +32,7 @@ class randomEpm(smac.epm.base_Epm.baseEPM):
         # provides a method to transform data to a matrix
         if not isinstance(run_history, smac.smbo.run_history):
             raise NotImplementedError("Can only fit on run_history")
-        logger.debug("Fit model to data")
+        self.logger.debug("Fit model to data")
 
     def update(self, config, value, instance_feature=None):
         """
@@ -57,7 +56,7 @@ class randomEpm(smac.epm.base_Epm.baseEPM):
         dummy_run_history.add(config, value, instance_feature)
         # (KE) If a model is updateable, it will read a run_history entry
         # or matrix
-        logger.debug("Update model with one sample")
+        self.logger.debug("Update model with one sample")
 
     def predict(self, configs, instance_features=None):
         """Predict values for configs

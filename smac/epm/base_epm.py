@@ -6,12 +6,11 @@ Created on Sep 25, 2015
 from abc import ABCMeta, abstractmethod
 import logging
 
-logger = logging.getLogger("epm")
 
-
-class baseEpm(metaclass=ABCMeta):
+class BaseEpm(metaclass=ABCMeta):
     """abstract EPM class"""
     def __init__(self):
+        self.logger = logging.getLogger("epm")
         """initialize epm module"""
 
     @abstractmethod
