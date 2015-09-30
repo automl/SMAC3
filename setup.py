@@ -4,8 +4,8 @@ import setuptools
 setuptools.setup(
     name="smac",
     version="0.0.1dev",
-    author="Marius Lindauer",
-    author_email="lindauer@cs.uni-freiburg.de",
+    author="Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter",
+    author_email="fh@cs.uni-freiburg.de",
     description=("SMAC3, a python implementation of 'Sequential Model-based "
                  "Algorithm Configuration'."),
     license="BSD",
