@@ -36,7 +36,7 @@ class RunhistoryTest(unittest.TestCase):
         #  1  2 23     0 0 23
         #  1 25  1  -> 0 1  1
         # 21  2  1     1 0  1
-
+        
 
 if __name__ == "__main__":
     unittest.main()
