@@ -3,18 +3,14 @@ import logging
 from scipy.stats import norm
 import numpy as np
 
-from robo.acquisition.base import AcquisitionFunction
-
 logger = logging.getLogger(__name__)
 
 
-class EI(AcquisitionFunction):
+class EI(object):
 
     def __init__(
             self,
             model,
-            X_lower,
-            X_upper,
             compute_incumbent,
             par=0.01,
             **kwargs):
@@ -50,9 +46,6 @@ class EI(AcquisitionFunction):
 
         self.par = par
         self.compute_incumbent = compute_incumbent
-        super(EI, self).__init__(model, X_lower, X_upper)
-
-        logger.debug("Test")
 
     def compute(self, X, derivative=False, **kwargs):
         """
@@ -83,13 +76,13 @@ class EI(AcquisitionFunction):
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
 
-        if np.any(X < self.X_lower) or np.any(X > self.X_upper):
-            if derivative:
-                f = 0
-                df = np.zeros((1, X.shape[1]))
-                return np.array([[f]]), np.array([df])
-            else:
-                return np.array([[0]])
+#        if np.any(X < self.X_lower) or np.any(X > self.X_upper):
+#            if derivative:
+#                f = 0
+#                df = np.zeros((1, X.shape[1]))
+#                return np.array([[f]]), np.array([df])
+#            else:
+#                return np.array([[0]])
 
         m, v = self.model.predict(X, full_cov=True)
 
