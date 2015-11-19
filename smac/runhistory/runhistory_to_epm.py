@@ -18,6 +18,7 @@ class RunHistoryToEPM(object):
         Constructor
         '''
         self.config = dict()
+        self.fitted = False
         self.logger = logging.getLogger("epm")
         if config is not None:
             self.config.update(config)
@@ -31,6 +32,26 @@ class RunHistoryToEPM(object):
             runhistory : list of dicts
                 parameter configurations
         '''
+        # learn values to scale params between [0,1] from configspace
+
+        self.fitted = True
+        pass
+
+    def transform(self, runhistory):
+        '''
+        returns vector representation of runhistory
+
+        Attributes
+        ----------
+        runhistory : list of dicts
+                parameter configurations
+        '''
+        if not self.fitted:
+            raise ValueError("runhistory2epm is not yet fitted")
+        # consider only finished runs (status == SUCCESS), put them into a list
+        # impute nonactive parameters
+        # create an array
+        # scale x-values to be within [0,1]
         pass
 
     def fit_transform(self, runhistory):
@@ -42,15 +63,5 @@ class RunHistoryToEPM(object):
         runhistory : list of dicts
                 parameter configurations
         '''
-        pass
-
-    def tranform(self, runhistory):
-        '''
-        returns vector representation of runhistory
-
-        Attributes
-        ----------
-        runhistory : list of dicts
-                parameter configurations
-        '''
-        pass
+        self.fit(runhistory)
+        return self.transform(runhistory)
