@@ -12,6 +12,9 @@ from robo.recommendation.incumbent import compute_incumbent
 from robo.solver.base_solver import BaseSolver
 
 
+from smac.smbo.run_history import RunHistory
+
+
 class SMBO(BaseSolver):
 
     def __init__(self, pcs_file, instance_features, seed=42):
@@ -80,13 +83,14 @@ class SMBO(BaseSolver):
         #TODO: Call initial design
 
         # Main BO loop
-        #for i in range(max_iters):
+        self.runhistory = RunHistory()
+        for i in range(max_iters):
 
             #TODO: Transform lambda to X
-            #X, Y = runhist2EPM()
+            X, Y = runhist2EPM(self.runhistory)
 
             #TODO: Estimate new configuration
-            #next_config = self.choose_next(X, Y)
+            next_config = self.choose_next(X, Y)
 
             #TODO: Perform intensification
             #self.incumbent = intensify(self.incumbent, next_config)
