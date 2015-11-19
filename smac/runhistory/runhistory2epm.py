@@ -48,12 +48,10 @@ class RunHistory2EPM(object):
             run_list = self.__selectRuns(runhistory).values()
 
         # Store a list of instance IDs
-        instance_id_list = [r.instance_id for r in run_list]
+        instance_id_list = [k.instance_id for k in run_list.keys()]
 
-        # transform to configspace-configs & impute nonactive
-        # (TODO) Replace with map
-        run_list = [configSpace.dict2config(r.config).imputeNonActive()
-                    for r in run_list]
+        # transform to ConfigSpace.config & impute nonactive
+        #   -> automatically done by configSpace object
 
         # Add instance id key to the end
 
