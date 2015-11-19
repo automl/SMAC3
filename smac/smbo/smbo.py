@@ -14,12 +14,11 @@ from robo.solver.base_solver import BaseSolver
 
 class SMBO(BaseSolver):
 
-    def __init__(self, pcs_file, seed=42):
+    def __init__(self, pcs_file, inst_features, seed=42):
 
         self.config_space = ConfigSpace(pcs_file)
 
         # Extract types vector for rf from config space
-
         self.types = np.zeros(len(self.config_space.get_parameter_names()))
 
         # Extract bounds of the input space
@@ -37,7 +36,7 @@ class SMBO(BaseSolver):
                 X_lower[i] = lo
                 X_upper[i] = up
 
-        self.model = RandomForest(self.types)
+        self.model = RandomForest(self.types, inst_features)
 
         self.acquisition_func = EI(self.model,
                                    X_lower,
@@ -59,7 +58,9 @@ class SMBO(BaseSolver):
 
         #Initialize X, Y
         for i in range(max_iters):
-            next_config = self.choose_next()
+
+            X, Y = runhist2EPM()
+            next_config = self.choose_next(X, Y)
             #incumbent = itensify()
             #Evaluate nex_config and update X, Y
 
@@ -76,6 +77,7 @@ class SMBO(BaseSolver):
             Return:
                 incumbent: The next configuration to evaluate (2D numpy array)
         '''
+
         self.model.train(X, Y)
         self.acquisition_func.update(self.model)
 
