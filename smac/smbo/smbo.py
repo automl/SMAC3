@@ -6,7 +6,7 @@ from ParameterConfigSpace.config_space import ConfigSpace
 from esmac.local_search import LocalSearch
 
 from robo.acquisition.ei import EI
-from robo.models.random_forest import RandomForest
+from robo.models.random_forest import RandomForestWithInstances
 from robo.recommendation.incumbent import compute_incumbent
 
 from robo.solver.base_solver import BaseSolver
@@ -14,12 +14,12 @@ from robo.solver.base_solver import BaseSolver
 
 class SMBO(BaseSolver):
 
-    def __init__(self, pcs_file, seed=42):
+    def __init__(self, pcs_file, instance_features, seed=42):
 
         self.config_space = ConfigSpace(pcs_file)
+        self.instance_features = instance_features
 
         # Extract types vector for rf from config space
-
         self.types = np.zeros(len(self.config_space.get_parameter_names()))
 
         # Extract bounds of the input space
@@ -37,7 +37,8 @@ class SMBO(BaseSolver):
                 X_lower[i] = lo
                 X_upper[i] = up
 
-        self.model = RandomForest(self.types)
+        self.model = RandomForestWithInstances(self.types,
+                                               self.instance_features)
 
         self.acquisition_func = EI(self.model,
                                    X_lower,
