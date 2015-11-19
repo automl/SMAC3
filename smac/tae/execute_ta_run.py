@@ -33,14 +33,16 @@ class ExecuteTARun(object):
             the command line call to the target algorithm (wrapper)
     """
 
-    def __init__(self, ta):
+    def __init__(self, ta, run_obj="runtime"):
         """
         Constructor
 
         Parameters
         ----------
             ta : list
-                target algorithm command line string as list
+                target algorithm command line as list of arguments
+            run_obj: str
+                run objective of SMAC
         """
         self.ta = ta
         self.logger = logging.getLogger("ExecuteTARun")
@@ -72,5 +74,7 @@ class ExecuteTARun(object):
                     cost/regret/quality (float) (None, if not returned by TA)
                 runtime: float
                     runtime (None if not returned by TA)
+                additional_info: dict
+                    all further additional run information
         """
-        return StatusType.SUCCESS, 12345.0, 1.2345
+        return StatusType.SUCCESS, 12345.0, 1.2345, {}
