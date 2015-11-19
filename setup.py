@@ -12,7 +12,7 @@ setuptools.setup(
     keywords="machine learning algorithm configuration hyperparameter "
              "optimization tuning",
     url="",
-    packages=setuptools.find_packages(exclude=['test']),
+    packages=setuptools.find_packages(exclude=['test', 'source']),
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",
@@ -22,6 +22,7 @@ setuptools.setup(
     install_requires=['setuptools',
                       'numpy>=1.10.1',
                       'scipy>=0.16.1',
-                      'pysmac'],
-    test_suite = 'nose.collector'
+                      'pysmac',
+                      'ConfigSpace'],
+    test_suite='nose.collector'
 )
