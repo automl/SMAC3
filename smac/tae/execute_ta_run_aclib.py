@@ -1,4 +1,5 @@
 import logging
+import json
 from subprocess import Popen, PIPE
 
 from smac.tae.execute_ta_run import StatusType
@@ -11,12 +12,12 @@ __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class ExecuteTARunOld(object):
+class ExecuteTARunAClib(object):
 
     """
         executes a target algorithm run with a given configuration
         on a given instance and some resource limitations
-        Uses the original SMAC/PILS format (SMAC < v2.10)
+        Uses the AClib 2.0 style
 
         Attributes
         ----------
@@ -65,8 +66,6 @@ class ExecuteTARunOld(object):
                     cost/regret/quality/runtime (float) (None, if not returned by TA)
                 runtime: float
                     runtime (None if not returned by TA)
-                additional_info: dict
-                    all further additional run information
         """
 
         if instance is None:
@@ -76,7 +75,12 @@ class ExecuteTARunOld(object):
         # other value
         cmd = []
         cmd.extend(self.ta)
-        cmd.extend([instance, "0", str(cutoff), "0", str(seed)])
+        cmd.extend(["--instance", instance,
+                    "--cutoff", str(cutoff),
+                    "--seed", str(seed),
+                    "--config"
+                    ])
+
         for p in config:
             cmd.extend(["-" + p, config[p]])
 
@@ -89,24 +93,18 @@ class ExecuteTARunOld(object):
 
         for line in stdout_.split("\n"):
             if line.startswith("Result of this algorithm run:"):
-                fields = line.split(":")[1].split(",")
-                fields = map(lambda x: x.strip(" "), fields)
-                if len(fields) == 5:
-                    status, runtime, runlength, quality, seed = fields
-                    additional_info = {}
-                else:
-                    status, runtime, runlength, quality, seed, additional_info = fields
-                    additional_info = {"additional_info": additional_info}
+                fields = ":".join(line.split(":")[1:])
+                results = json.loads(fields)
 
-        if status in ["SAT", "UNSAT", "SUCCESS"]:
+        if results["status"] in ["SAT", "UNSAT", "SUCCESS"]:
             status = StatusType.SUCCESS
-        elif status in ["TIMEOUT"]:
+        elif results["status"] in ["TIMEOUT"]:
             status = StatusType.TIMEOUT
-        elif status in ["CRASHED"]:
+        elif results["status"] in ["CRASHED"]:
             status = StatusType.CRASHED
-        elif status in ["ABORT"]:
+        elif results["status"] in ["ABORT"]:
             status = StatusType.ABORT
-        elif status in ["MEMOUT"]:
+        elif results["status"] in ["MEMOUT"]:
             status = StatusType.MEMOUT
 
         if status in [StatusType.CRASHED, StatusType.ABORT]:
@@ -115,9 +113,32 @@ class ExecuteTARunOld(object):
             self.logger.warn(stdout_.split("\n")[-5:])
             self.logger.warn(stderr_.split("\n")[-5:])
 
-        if self.run_obj == "runtime":
-            cost = float(runtime)
-        else:
-            cost = float(quality)
+        if results.get("runtime") is None:
+            self.logger.warn(
+                "The target algorithm has not returned a runtime -- imputed by 0.")
+            results["runtime"] = 0
 
-        return status, cost, float(runtime), additional_info
+        runtime = float(results["runtime"])
+
+        if self.run_obj == "quality" and results.get("cost") is None:
+            self.logger.error(
+                "The target algorithm has not returned a quality/cost value" +
+                "although we optimize cost.")
+            results["cost"] = 0
+
+        if self.run_obj == "runtime":
+            cost = float(results["runtime"])
+        else:
+            cost = float(results["cost"])
+
+        del results["status"]
+        try:
+            del results["runtime"]
+        except KeyError:
+            pass
+        try:
+            del results["cost"]
+        except KeyError:
+            pass
+
+        return status, cost, runtime, results
