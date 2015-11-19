@@ -60,7 +60,9 @@ class SMBO(BaseSolver):
 
         #Initialize X, Y
         for i in range(max_iters):
-            next_config = self.choose_next()
+
+            X, Y = runhist2EPM()
+            next_config = self.choose_next(X, Y)
             #incumbent = itensify()
             #Evaluate nex_config and update X, Y
 
@@ -77,6 +79,7 @@ class SMBO(BaseSolver):
             Return:
                 incumbent: The next configuration to evaluate (2D numpy array)
         '''
+
         self.model.train(X, Y)
         self.acquisition_func.update(self.model)
 
