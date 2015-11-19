@@ -32,8 +32,10 @@ class ExecuteTARunOld(object):
 
         Parameters
         ----------
-            ta : string
-                target algorithm command line string
+            ta : list
+                target algorithm command line as list of arguments
+            run_obj: str
+                run objective of SMAC
         """
         self.ta = ta
         self.logger = logging.getLogger("ExecuteTARun")
