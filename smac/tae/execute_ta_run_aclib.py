@@ -33,7 +33,7 @@ class ExecuteTARunAClib(object):
 
         Parameters
         ----------
-            ta : string
+            ta : list
                 target algorithm command line string
         """
         self.ta = ta
@@ -116,6 +116,7 @@ class ExecuteTARunAClib(object):
         if results.get("runtime") is None:
             self.logger.warn(
                 "The target algorithm has not returned a runtime -- imputed by 0.")
+            # (TODO) Check 0
             results["runtime"] = 0
 
         runtime = float(results["runtime"])
@@ -124,6 +125,7 @@ class ExecuteTARunAClib(object):
             self.logger.error(
                 "The target algorithm has not returned a quality/cost value" +
                 "although we optimize cost.")
+            # (TODO) Do not return 0
             results["cost"] = 0
 
         if self.run_obj == "runtime":
