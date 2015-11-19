@@ -46,7 +46,7 @@ class CMDReader(object):
                               help="random seed")
 
         args_ = parser.parse_args()
-        self.check_args(args_)
+        self._check_args(args_)
 
         return args_
 
