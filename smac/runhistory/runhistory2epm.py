@@ -6,7 +6,6 @@ import numpy
 
 from smac.tae.execute_ta_run import StatusType
 from smac.runhistory.runhistory import RunHistory
-import ConfigSpace
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
