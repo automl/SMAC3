@@ -25,7 +25,7 @@ class RunHistory2EPM(object):
         '''
         self.config = OrderedDict({
             'success_states': [SUCCESS, ],
-            'scale': [0, 1],
+            'impute_censored_data': False,
                                    })
         self.logger = logging.getLogger("runhistory2epm")
         if config is not None:
@@ -48,15 +48,14 @@ class RunHistory2EPM(object):
             run_list = self.__selectRuns(runhistory).values()
 
         # Store a list of instance IDs
-        instance_id_list = [r['instance_id'] for r in run_list]
+        instance_id_list = [r.instance_id for r in run_list]
 
         # transform to configspace-configs & impute nonactive
-        run_list = [configSpace.dict2config(r['config']).imputeNonActive()
+        # (TODO) Replace with map
+        run_list = [configSpace.dict2config(r.config).imputeNonActive()
                     for r in run_list]
 
-        # Scale within [0,1]
-        run_list = [r.scale(lower=self.config['scale'][0],
-                            upper=self.config['scale'][0]) for r in run_list]
+        # Add instance id key to the end
 
         # transform to array
         run_list = numpy.array([r.toArray() for r in run_list])
