@@ -6,7 +6,7 @@ __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 import unittest
-from smac.runhistory import runhistory, runhistory_to_epm
+from smac.runhistory import runhistory, runhistory2epm
 
 
 class RunhistoryTest(unittest.TestCase):
@@ -17,19 +17,26 @@ class RunhistoryTest(unittest.TestCase):
         '''
         rh = runhistory.RunHistory()
         rh.add(config={'a': '1', 'b': '2'}, cost=10, time=20,
-               status="SUCCESS", instance_id=None,
+               status="SUCCESS", instance_id=23,
                seed=None,
                additional_info=None)
-        rh.add(config={'a': '1', 'b': '2'}, cost=10, time=20,
+        rh.add(config={'a': '1', 'b': '25'}, cost=10, time=20,
                status="SUCCESS", instance_id=1,
                seed=12354,
                additional_info={"start_time": 10})
+        rh.add(config={'a': '21', 'b': '2'}, cost=10, time=20,
+               status="TIMEOUT", instance_id=1,
+               seed=45,
+               additional_info={"start_time": 10})
 
-        rh2epm = runhistory_to_epm.RunHistoryToEPM()
+        rh2epm = runhistory2epm.RunHistory2EPM()
+        rhArr = rh2epm.transform(rh2epm)
 
-        self.assertRaises(ValueError, rh2epm.transform, rh)
-        print(rh2epm.fit(rh))
-
+        # We expect
+        #  1  2 23     0 0 23
+        #  1 25  1  -> 0 1  1
+        # 21  2  1     1 0  1
+        
 
 if __name__ == "__main__":
     unittest.main()
