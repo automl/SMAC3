@@ -34,7 +34,9 @@ class ExecuteTARunAClib(object):
         Parameters
         ----------
             ta : list
-                target algorithm command line string
+                target algorithm command line as list of arguments
+            run_obj: str
+                run objective of SMAC
         """
         self.ta = ta
         self.logger = logging.getLogger("ExecuteTARun")
@@ -66,6 +68,8 @@ class ExecuteTARunAClib(object):
                     cost/regret/quality/runtime (float) (None, if not returned by TA)
                 runtime: float
                     runtime (None if not returned by TA)
+                additional_info: dict
+                    all further additional run information
         """
 
         if instance is None:
