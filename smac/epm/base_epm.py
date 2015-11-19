@@ -1,41 +1,64 @@
-'''
-Created on Sep 25, 2015
-
-@author: eggenspk
-'''
 from abc import ABCMeta, abstractmethod
 import logging
 
+__author__ = "Katharina Eggensperger"
+__copyright__ = "Copyright 2015, ML4AAD"
+__license__ = "BSD"
+__maintainer__ = "Katharina Eggensperger"
+__email__ = "eggenspk@cs.uni-freiburg.de"
+__version__ = "0.0.1"
+
 
 class BaseEpm(metaclass=ABCMeta):
-    """abstract EPM class"""
+    '''abstract EPM class'''
     def __init__(self):
+        '''initialize epm module'''
         self.logger = logging.getLogger("epm")
-        """initialize epm module"""
+
 
     @abstractmethod
     def fit(self, run_history):
-        """
+        '''
         fit model to run history
 
-        :param run_history: Object that keeps complete run_history
-        """
+        Parameters
+        ----------
+        run_history : dict
+            Object that keeps complete run_history
+        '''
+
 
     @abstractmethod
-    def update(self, config, value, instance_feature=None):
-        """
+    def update(self, config, value, instance_features=None):
+        '''
         Update model (if possible)
 
-        :param config: one configuration (configspace.configuration)
-        :param value: one return value (float)
-        :param instance_feature: list of features
-        """
+        Parameters
+        ----------
+        config : configSpace.config
+            configuration
+        value : float
+            costs for config
+        instance_features : list
+            list of instance features
+        '''
+
 
     @abstractmethod
     def predict(self, configs, instance_features=None):
-        """Predict values for configs
+        '''
+        Predict values for configs
 
-        :param configs: list of configurations
-        :param instance_features: list of instance features
-        :return: predictions
-        """
+        Parameters
+        ----------
+        configs : list
+            list of configurations
+
+        instance_features : list
+            list of instance features
+
+        Returns
+        -------
+        predictions
+        '''
+
