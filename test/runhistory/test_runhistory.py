@@ -27,8 +27,7 @@ class RunhistoryTest(unittest.TestCase):
             seed=12354,
             additional_info={"start_time": 10})
 
-        print(rh.data[0])
-        print(rh.data[1])
+        print(rh.data)
 
 if __name__ == "__main__":
     unittest.main()
