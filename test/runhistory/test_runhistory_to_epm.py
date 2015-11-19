@@ -26,6 +26,8 @@ class RunhistoryTest(unittest.TestCase):
                additional_info={"start_time": 10})
 
         rh2epm = runhistory_to_epm.RunHistoryToEPM()
+
+        self.assertRaises(ValueError, rh2epm.transform, rh)
         print(rh2epm.fit(rh))
 
 
