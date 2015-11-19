@@ -2,7 +2,7 @@
 
 ## Required other projects
 
-* rfr: https://mlindauer@bitbucket.org/aadfreiburg/random_forest_run.git
+* rfr: https://bitbucket.org/aadfreiburg/random_forest_run.git
 * (HPOlib)Configspace (branch refactor): https://github.com/automl/HPOlibConfigSpace/
 
 ## Meeting Protocols
