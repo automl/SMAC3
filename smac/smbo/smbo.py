@@ -69,24 +69,35 @@ class SMBO(BaseSolver):
         Parameters
         ----------
         max_iters: int
-            The maximum number of iterations (int)
+            The maximum number of iterations
 
         Returns
         ----------
-        incumbent: np.array(1, D)
+        incumbent: np.array(1, H)
             The best found configuration
         '''
 
-        #Initialize X, Y
-        for i in range(max_iters):
+        #TODO: Call initial design
 
-            X, Y = runhist2EPM()
-            next_config = self.choose_next(X, Y)
-            #incumbent = itensify()
-            #Evaluate nex_config and update X, Y
+        # Main BO loop
+        #for i in range(max_iters):
 
-        incumbent = np.random.randn(1, 1)
-        return incumbent
+            #TODO: Transform lambda to X
+            #X, Y = runhist2EPM()
+
+            #TODO: Estimate new configuration
+            #next_config = self.choose_next(X, Y)
+
+            #TODO: Perform intensification
+            #self.incumbent = intensify(self.incumbent, next_config)
+
+            #TODO: Perform target algorithm run
+
+            #TODO: Update run history
+
+            #TODO: Write run history into database
+
+        return self.incumbent
 
     def choose_next(self, X=None, Y=None, n_iters=10):
         """
@@ -96,16 +107,14 @@ class SMBO(BaseSolver):
         Parameters
         ----------
         X : (N, D) numpy array, optional
-            The points that have been observed so far. The model is trained on
-            this points.
-        Y : (N, D) numpy array, optional
-            The function values of the observed points. Make sure the number of
-            points is the same.
+            Each column contains a configuration and one set of instance features.
+        Y : (N, 1) numpy array, optional
+            The function values for each configuration instance pair.
 
         Returns
         -------
-        x : (1, D) numpy array
-            The suggested point to evaluate.
+        x : (1, H) numpy array
+            The suggested configuration to evaluate.
         """
 
         self.model.train(X, Y)
