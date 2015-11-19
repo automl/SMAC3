@@ -11,6 +11,7 @@ from smac.runhistory.runhistory import RunHistory
 
 class RunhistoryTest(unittest.TestCase):
 
+
     def test_add(self):
         '''
             simply aading some rundata to runhistory
