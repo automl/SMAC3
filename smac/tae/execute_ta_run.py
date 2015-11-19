@@ -18,6 +18,7 @@ class StatusType(object):
     TIMEOUT = 2
     CRASHED = 3
     ABORT = 4
+    MEMOUT = 5
 
 
 class ExecuteTARun(object):
@@ -38,8 +39,8 @@ class ExecuteTARun(object):
 
         Parameters
         ----------
-            ta : string
-                target algorithm command line string
+            ta : list
+                target algorithm command line string as list
         """
         self.ta = ta
         self.logger = logging.getLogger("ExecuteTARun")
