@@ -15,6 +15,19 @@ from robo.solver.base_solver import BaseSolver
 class SMBO(BaseSolver):
 
     def __init__(self, pcs_file, instance_features, seed=42):
+        '''
+        Interface that contains the main Bayesian optimization loop
+
+        Parameters
+        ----------
+        pcs_file: str
+            Path to the parameter configuration space file
+        instance_features: np.ndarray (I, K)
+            Contains the K dimensional instance features
+            of the I different instances
+        seed: int
+            Seed that is passed to random forest
+        '''
 
         self.config_space = ConfigSpace(pcs_file)
         self.instance_features = instance_features
@@ -51,11 +64,17 @@ class SMBO(BaseSolver):
 
     def run(self, max_iters=10):
         '''
-            Runs the Bayesian optimization loop for max_iters iterations
-            Args:
-                max_iters : The maximum number of iterations (int)
-            Return:
-                incumbent: the global optimizer (2D numpy array)
+        Runs the Bayesian optimization loop for max_iters iterations
+
+        Parameters
+        ----------
+        max_iters: int
+            The maximum number of iterations (int)
+
+        Returns
+        ----------
+        incumbent: np.array(1, D)
+            The best found configuration
         '''
 
         #Initialize X, Y
@@ -70,15 +89,24 @@ class SMBO(BaseSolver):
         return incumbent
 
     def choose_next(self, X=None, Y=None, n_iters=10):
-        '''
-            Chooses the next configuration by training the model and
-            optimizing the acquisition function.
-            Args:
-                X : The configuration we have seen so far (2D numpy array)
-                Y : The function values of the configurations (2D numpy array)
-            Return:
-                incumbent: The next configuration to evaluate (2D numpy array)
-        '''
+        """
+        Performs one single iteration of Bayesian optimization and estimated
+        the next point to evaluate.
+
+        Parameters
+        ----------
+        X : (N, D) numpy array, optional
+            The points that have been observed so far. The model is trained on
+            this points.
+        Y : (N, D) numpy array, optional
+            The function values of the observed points. Make sure the number of
+            points is the same.
+
+        Returns
+        -------
+        x : (1, D) numpy array
+            The suggested point to evaluate.
+        """
 
         self.model.train(X, Y)
         self.acquisition_func.update(self.model)
