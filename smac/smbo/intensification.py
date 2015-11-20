@@ -16,6 +16,8 @@ __maintainer__ = "Katharina Eggensperger"
 __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
+MAXINT = 2**31-1
+
 
 class Intensifier(object):
     '''
@@ -23,8 +25,8 @@ class Intensifier(object):
     '''
 
     def __init__(self, ta, challengers, incumbent, run_history,
-                 run_obj="runtime", cutoff=sys.maxint,
-                 time_bound=sys.maxint, run_limit=sys.maxint, maxR=2000, rng=0):
+                 run_obj="runtime", cutoff=MAXINT,
+                 time_bound=MAXINT, run_limit=MAXINT, maxR=2000, rng=0):
         '''
         Constructor
 
@@ -55,7 +57,7 @@ class Intensifier(object):
         self.time_bound = time_bound
         self.run_limit = run_limit
         self.maxR = maxR
-        self.rs = numpy.random.randomstate(rng)
+        self.rs = numpy.random.RandomState(rng)
 
         # info about current state
         self.challengers = challengers
@@ -80,13 +82,13 @@ class Intensifier(object):
             if len(inc_runs) < self.maxR:
                 # TODO sample instance where inc has not yet been evaluated
                 next_instance = None
-                next_seed = self.rs.random_integer(low=0, high=sys.maxint, size=1)[0]
-                status, cost, time, res = self.tae.run(config=self.incumbent,
+                next_seed = self.rs.random_integer(low=0, high=MAXINT, size=1)[0]
+                status, cost, dur, res = self.tae.run(config=self.incumbent,
                                                        instance=next_instance,
                                                        seed=next_seed,
                                                        cutoff=self.cutoff)
                 self.run_history.add(config=self.incumbent,
-                                     cost=cost, time=time, status=status,
+                                     cost=cost, time=dur, status=status,
                                      instance_id=next_instance, seed=next_seed,
                                      additional_info=res)
                 num_run += 1
@@ -101,12 +103,12 @@ class Intensifier(object):
                 for r in to_run:
                     # Run challenger on all <config,seed> to run
                     seed, instance = r
-                    status, cost, time, res = self.tae.run(config=challenger,
+                    status, cost, dur, res = self.tae.run(config=challenger,
                                                            instance=instance,
                                                            seed=seed,
                                                            cutoff=self.cutoff)
                     self.run_history.add(config=challenger,
-                                         cost=cost, time=time, status=status,
+                                         cost=cost, time=dur, status=status,
                                          instance_id=instance, seed=seed,
                                          additional_info=res)
                     num_run += 1
