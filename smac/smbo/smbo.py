@@ -1,75 +1,140 @@
 import logging
 import numpy as np
 
-# Aaron: I already implemented the local search in ESMAC and EI in RoBO maybe
-# we can reuse it here
+from ParameterConfigSpace.config_space import ConfigSpace
 
-# from robo.acquisition.ei import EI
-# from robo.maximizers.local_search import LocalSearch
-# from robo.solver.base_solver import BaseSolver
+from esmac.local_search import LocalSearch
+
+from robo.acquisition.ei import EI
+from robo.models.random_forest import RandomForestWithInstances
+from robo.recommendation.incumbent import compute_incumbent
+
+from robo.solver.base_solver import BaseSolver
 
 
-class BayesianOptimization(object):
-    # Aaron: I would like to derive this class from the RoBO interface in order
-    # to share the output and logging functionality between RoBO and SMAC.
-    # Aaron: I will change the default value to RandomForest, EI and
-    # LocalSearch as soon as we have configured the dependencies
+from smac.smbo.run_history import RunHistory
 
-    def __init__(self, model=None,
-                 acquisition_func=None,
-                 maximizer=None,
-                 seed=42):
+
+class SMBO(BaseSolver):
+
+    def __init__(self, pcs_file, instance_features, seed=42):
         '''
-            Implementation of the main Bayesian optimization loop
-            Args:
-                model : A model that captures our believe of our objective
-                    function (robo model object)
-                acquisition_func : Surrogate function to pick a new
-                    configuration (robo acquisition object)
-                maximizer: Optimization strategy to maximize the
-                    acquisition function (robo maximizer object)
-                seed : random seed (integer)
+        Interface that contains the main Bayesian optimization loop
+
+        Parameters
+        ----------
+        pcs_file: str
+            Path to the parameter configuration space file
+        instance_features: np.ndarray (I, K)
+            Contains the K dimensional instance features
+            of the I different instances
+        seed: int
+            Seed that is passed to random forest
         '''
-        self.model = model
-        # Aaron: Maybe we do not want to pass the acquisition function and the
-        # maximizer as argument but rather initialize them here. Passing them
-        # as an argument makes only sense if we want to use something different
-        # than EI and LocalSearch
-        self.acquisition_func = acquisition_func
-        self.maximizer = maximizer
+
+        self.config_space = ConfigSpace(pcs_file)
+        self.instance_features = instance_features
+
+        # Extract types vector for rf from config space
+        self.types = np.zeros(len(self.config_space.get_parameter_names()))
+
+        # Extract bounds of the input space
+        X_lower = np.zeros([self.types.shape[0]])
+        X_upper = np.zeros([self.types.shape[0]])
+
+        for i, param in enumerate(self.config_space.get_parameter_names()):
+            if param in self.config_space.get_categorical_parameters():
+                n_cats = len(self.config_space.get_categorical_values(param))
+                self.types[i] = n_cats
+                X_lower[i] = 0
+                X_upper[i] = n_cats
+            elif param in self.config_space.get_continuous_parameters():
+                lo, up = self.config_space.parameters[param].values
+                X_lower[i] = lo
+                X_upper[i] = up
+
+        self.model = RandomForestWithInstances(self.types,
+                                               self.instance_features)
+
+        self.acquisition_func = EI(self.model,
+                                   X_lower,
+                                   X_upper,
+                                   compute_incumbent)
+
+        self.local_search = LocalSearch(self.acquisition_func,
+                                        self.config_space)
         self.seed = seed
 
     def run(self, max_iters=10):
         '''
-            Runs the Bayesian optimization loop for max_iters iterations
-            Args:
-                max_iters : The maximum number of iterations (int)
-            Return:
-                incumbent: the global optimizer (2D numpy array)
+        Runs the Bayesian optimization loop for max_iters iterations
+
+        Parameters
+        ----------
+        max_iters: int
+            The maximum number of iterations
+
+        Returns
+        ----------
+        incumbent: np.array(1, H)
+            The best found configuration
         '''
-        #Initialize X, Y
+
+        #TODO: Call initial design
+
+        # Main BO loop
+        self.runhistory = RunHistory()
         for i in range(max_iters):
-            next_config = self.choose_next()
-            #incumbent = itensify()
-            #Evaluate nex_config and update X, Y
 
-        # Aaron: I assume in RoBO always 2 dimensional numpy arrays (that is
-        # how vectors are handled in GPy as well)
-        incumbent = np.random.randn(1, 1)
-        return incumbent
+            #TODO: Transform lambda to X
+            X, Y = runhist2EPM(self.runhistory)
 
-    def choose_next(self, X=None, Y=None):
-        '''
-            Chooses the next configuration by training the model and
-            optimizing the acquisition function.
-            Args:
-                X : The configuration we have seen so far (2D numpy array)
-                Y : The function values of the configurations (2D numpy array)
-            Return:
-                incumbent: The next configuration to evaluate (2D numpy array)
-        '''
-        #self.model.fit(X, Y)
-        #self.acquisition_func.update(self.model)
-        #configuration = self.local_search.maximize()
-        configuration = np.random.randn(1, 1)
-        return configuration
+            #TODO: Estimate new configuration
+            next_config = self.choose_next(X, Y)
+
+            #TODO: Perform intensification
+            #self.incumbent = intensify(self.incumbent, next_config)
+
+            #TODO: Perform target algorithm run
+
+            #TODO: Update run history
+
+            #TODO: Write run history into database
+
+        return self.incumbent
+
+    def choose_next(self, X=None, Y=None, n_iters=10):
+        """
+        Performs one single iteration of Bayesian optimization and estimated
+        the next point to evaluate.
+
+        Parameters
+        ----------
+        X : (N, D) numpy array, optional
+            Each column contains a configuration and one set of instance features.
+        Y : (N, 1) numpy array, optional
+            The function values for each configuration instance pair.
+
+        Returns
+        -------
+        x : (1, H) numpy array
+            The suggested configuration to evaluate.
+        """
+
+        self.model.train(X, Y)
+        self.acquisition_func.update(self.model)
+
+        found_configs = []
+        acq_vals = np.zeros([n_iters])
+
+        # Start N local search from different random start points
+        for i in range(n_iters):
+            start_point = self.config_space.get_random_config_vector()
+            configuration, acq_val = self.local_search.maximize(start_point)
+
+            found_configs.append(configuration)
+            acq_vals[i] = acq_val[0][0]
+
+        # Return configuration with highest acquisition value
+        best = np.argmax(acq_vals)
+        return found_configs[best]
