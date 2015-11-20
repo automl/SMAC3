@@ -78,7 +78,7 @@ class Intensifier(object):
             inc_runs = self.run_history.get_runs_for_config(self.incumbent)
             # First evaluate incumbent on a new instance
             if len(inc_runs) < self.maxR:
-                # TODO sample config where inc has not yet been evaluated
+                # TODO sample instance where inc has not yet been evaluated
                 next_instance = None
                 next_seed = self.rs.random_integer(low=0, high=sys.maxint, size=1)[0]
                 status, cost, time, res = self.tae.run(config=self.incumbent,
