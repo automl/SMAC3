@@ -29,6 +29,7 @@ class RunHistory(object):
             'RunValue', ['cost', 'time', 'status', 'additional_info'])
 
         self.config_ids = {}  # config -> id
+        self.ids_config = {}  # id -> config
         self._n_id = 0
 
     def add(self, config, cost, time,
@@ -66,8 +67,29 @@ class RunHistory(object):
             self._n_id += 1
             self.config_ids[str(config)] = self._n_id
             config_id = self.config_ids.get(str(config))
+            self.ids_config[self._n_id] = config
 
         k = self.RunKey(config_id, instance_id, seed)
         v = self.RunValue(cost, time, status, additional_info)
 
         self.data[k] = v
+
+    def get_runs_for_config(self, config):
+        '''
+        given a configuration return all runs (instance, seed) of this config
+        Attributes
+        ----------
+            config: Configuration from ConfigSpace
+                parameter configuration
+        Returns
+        ----------
+            list
+        '''
+        InstSeedTuple = collections.namedtuple(
+            "Inst_Seed", ["instance", "seed", "time"])
+        list_ = []
+        for k in self.data:
+            if config == self.ids_config[k.config_id]:
+                ist = InstSeedTuple(k.instance_id, k.seed, self.data[k].time)
+                list_.append(ist)
+        return list_
