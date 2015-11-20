@@ -7,7 +7,6 @@ import time
 import numpy
 
 from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
-from smac.runhistory.runhistory import RunHistory
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -24,7 +23,7 @@ class Intensifier(object):
         takes challenger and incumbents and performs intensify
     '''
 
-    def __init__(self, ta, challengers, incumbent, run_history,
+    def __init__(self, ta, challengers, incumbent, run_history, instances=None,
                  run_obj="runtime", cutoff=MAXINT,
                  time_bound=MAXINT, run_limit=MAXINT, maxR=2000, rng=0):
         '''
@@ -40,6 +39,8 @@ class Intensifier(object):
             best configuration so far
         run_history : runhistory
             all runs on all instance,seed pairs for incumbent
+        instances : list
+            list of all instance ids
         run_obj : ("runtime", "quality")
             what to optimize
         time_bound : int
@@ -52,6 +53,9 @@ class Intensifier(object):
         # TODO It is probably important whether ta is deterministic
 
         # general attributes
+        if instances is None:
+            instances = []
+        self.instances = instances
         self.start_time = time.time()
         self.logger = logging.getLogger("intensifier")
         self.time_bound = time_bound
@@ -84,9 +88,9 @@ class Intensifier(object):
                 next_instance = None
                 next_seed = self.rs.random_integer(low=0, high=MAXINT, size=1)[0]
                 status, cost, dur, res = self.tae.run(config=self.incumbent,
-                                                       instance=next_instance,
-                                                       seed=next_seed,
-                                                       cutoff=self.cutoff)
+                                                      instance=next_instance,
+                                                      seed=next_seed,
+                                                      cutoff=self.cutoff)
                 self.run_history.add(config=self.incumbent,
                                      cost=cost, time=dur, status=status,
                                      instance_id=next_instance, seed=next_seed,
