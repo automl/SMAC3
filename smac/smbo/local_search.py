@@ -9,6 +9,8 @@ import numpy as np
 
 from robo.maximizers.base_maximizer import BaseMaximizer
 
+from smac.configspace import impute_inactive_values, get_random_neighbor
+
 
 class LocalSearch(BaseMaximizer):
 
@@ -71,17 +73,20 @@ class LocalSearch(BaseMaximizer):
                 Is it maybe stuck in a infinite loop?", local_search_steps)
 
             # Compute the acquisition value of the incumbent
-            incumbent = self.config_space.impute_non_active(incumbent,
-                                                            value="def")
+            incumbent = impute_inactive_values(incumbent)
             acq_val_incumbent = self.acquisition_function(incumbent, *args)
 
             # Get neighbourhood of the current incumbent
             # by randomly drawing configurations
             neighbourhood = np.zeros([self.n_neighbours, incumbent.shape[0]])
             for i in range(self.n_neighbours):
-                n = self.config_space.get_random_neighbor(incumbent)
-                neighbourhood[i] = self.config_space.impute_non_active(n,
-                                                                value="def")
+                # TODO we MUST add a seed here!
+                n = get_random_neighbor(incumbent)
+                n = impute_inactive_values(n)
+                # TODO I don't think this is the way to go, I think this
+                # should be generalized as this is done in the EPM module as
+                # well.
+                neighbourhood[i] = n.get_array()
 
             # Compute acquisition values for all points in the neighbourhood
             acq_val_neighbours = np.zeros([self.n_neighbours])

@@ -1,17 +1,16 @@
 import logging
 import numpy as np
 
-from ParameterConfigSpace.config_space import ConfigSpace
-
-from esmac.local_search import LocalSearch
+from ConfigSpace.io import pcs
+from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
+    UniformFloatHyperparameter, UniformIntegerHyperparameter, Constant
 
 from robo.acquisition.ei import EI
 from robo.models.random_forest import RandomForestWithInstances
 from robo.recommendation.incumbent import compute_incumbent
-
 from robo.solver.base_solver import BaseSolver
 
-
+from smac.smbo.local_search import LocalSearch
 from smac.smbo.run_history import RunHistory
 
 
@@ -32,26 +31,30 @@ class SMBO(BaseSolver):
             Seed that is passed to random forest
         '''
 
-        self.config_space = ConfigSpace(pcs_file)
+        with open(pcs_file) as fh:
+            self.config_space = pcs.read(fh.read())
+            self.config_space.seed(seed)
         self.instance_features = instance_features
 
         # Extract types vector for rf from config space
-        self.types = np.zeros(len(self.config_space.get_parameter_names()))
+        self.types = np.zeros(len(self.config_space.get_hyperparameter()))
 
         # Extract bounds of the input space
         X_lower = np.zeros([self.types.shape[0]])
         X_upper = np.zeros([self.types.shape[0]])
 
-        for i, param in enumerate(self.config_space.get_parameter_names()):
-            if param in self.config_space.get_categorical_parameters():
-                n_cats = len(self.config_space.get_categorical_values(param))
+        for i, param in enumerate(self.config_space.get_hyperparameters()):
+            if isinstance(param, (UniformFloatHyperparameter,
+                                  UniformIntegerHyperparameter)):
+                X_lower[i] = 0
+                X_upper[i] = 1
+            elif isinstance(param, (CategoricalHyperparameter)):
+                n_cats = len(param.choices)
                 self.types[i] = n_cats
                 X_lower[i] = 0
                 X_upper[i] = n_cats
-            elif param in self.config_space.get_continuous_parameters():
-                lo, up = self.config_space.parameters[param].values
-                X_lower[i] = lo
-                X_upper[i] = up
+            else:
+                raise TypeError("Unknown hyperparameter type %s" % type(param))
 
         self.model = RandomForestWithInstances(self.types,
                                                self.instance_features)
@@ -129,7 +132,7 @@ class SMBO(BaseSolver):
 
         # Start N local search from different random start points
         for i in range(n_iters):
-            start_point = self.config_space.get_random_config_vector()
+            start_point = self.config_space.sample_configuration()
             configuration, acq_val = self.local_search.maximize(start_point)
 
             found_configs.append(configuration)
