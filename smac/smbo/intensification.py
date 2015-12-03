@@ -55,7 +55,7 @@ class Intensifier(object):
         # general attributes
         if instances is None:
             instances = []
-        self.instances = instances
+        self.instances = set(instances)
         self.start_time = time.time()
         self.logger = logging.getLogger("intensifier")
         self.time_bound = time_bound
@@ -84,9 +84,12 @@ class Intensifier(object):
             inc_runs = self.run_history.get_runs_for_config(self.incumbent)
             # First evaluate incumbent on a new instance
             if len(inc_runs) < self.maxR:
+                inc_scen = set([s[0] for s in inc_runs])
                 # TODO sample instance where inc has not yet been evaluated
-                next_instance = None
-                next_seed = self.rs.random_integer(low=0, high=MAXINT, size=1)[0]
+                next_seed = self.rs.random_integer(low=0, high=MAXINT,
+                                                   size=1)[0]
+                next_instance = sorted(list((self.instances - inc_scen)))
+                next_instance = next_instance[next_seed % len(next_instance)]
                 status, cost, dur, res = self.tae.run(config=self.incumbent,
                                                       instance=next_instance,
                                                       seed=next_seed,
@@ -100,7 +103,10 @@ class Intensifier(object):
             while True:
                 # TODO get a list of all seeds where challenger has not been evaluated, but incumbent
                 # TODO get a list of all instances where challenger has not been evaluated, but incumbent
-                missing_runs = [[None, None], ]
+                challenger_runs = self.run_history.get_runs_for_config(challenger)
+                # build a boolean matrix
+                challenger_runs_matrix = numpy.zeros([])
+                # TODO: here I stopped, fill matrix with ones where inc has been evaluated and create missing_runs list
                 self.rs.shuffle(missing_runs)
                 to_run = missing_runs[:min(N, len(missing_runs))]
                 missing_runs = missing_runs[min(N, len(missing_runs)):]
