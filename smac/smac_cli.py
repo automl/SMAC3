@@ -4,6 +4,7 @@ import logging
 
 from utils.io.cmd_reader import CMDReader
 from scenario.scenario import Scenario
+from smbo.smbo import SMBO
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -33,3 +34,5 @@ class SMAC(object):
         args_ = cmd_reader.read_cmd()
 
         scen = Scenario(args_)
+
+        SMBO(scenario=scen, seed=args_.seed)

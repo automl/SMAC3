@@ -10,30 +10,26 @@ from robo.solver.base_solver import BaseSolver
 
 from smac.smbo.rf_with_instances import RandomForestWithInstances
 from smac.smbo.local_search import LocalSearch
-#from smac.smbo.run_history import RunHistory
+from smac.runhistory.runhistory import RunHistory
+from smac.runhistory.runhistory2epm import RunHistory2EPM
 
 
 class SMBO(BaseSolver):
 
-    def __init__(self, pcs_file, instance_features, seed=42):
+    def __init__(self, scenario, seed=42):
         '''
         Interface that contains the main Bayesian optimization loop
 
         Parameters
         ----------
-        pcs_file: str
-            Path to the parameter configuration space file
-        instance_features: np.ndarray (I, K)
-            Contains the K dimensional instance features
-            of the I different instances
+        scenario: smac.scenario.scenario.Scenario
+            Scenario object 
         seed: int
             Seed that is passed to random forest
         '''
-
-        with open(pcs_file) as fh:
-            self.config_space = pcs.read(fh.readlines())
-            self.config_space.seed(seed)
-        self.instance_features = instance_features
+        
+        self.scenario = scenario
+        self.config_space = scenario.cs
 
         # Extract types vector for rf from config space
         self.types = np.zeros(len(self.config_space.get_hyperparameters()))
@@ -56,7 +52,7 @@ class SMBO(BaseSolver):
                 raise TypeError("Unknown hyperparameter type %s" % type(param))
 
         self.model = RandomForestWithInstances(self.types,
-                                               self.instance_features)
+                                               scenario.feature_array)
 
         self.acquisition_func = EI(self.model,
                                    X_lower,
@@ -82,13 +78,17 @@ class SMBO(BaseSolver):
         '''
 
         #TODO: Call initial design
+        
+        
 
         # Main BO loop
         self.runhistory = RunHistory()
+        rh2EPM = RunHistory2EPM()
         for i in range(max_iters):
 
             #TODO: Transform lambda to X
-            X, Y = runhist2EPM(self.runhistory)
+            
+            X, Y = rh2EPM.transform(self.runhistory)
 
             #TODO: Estimate new configuration
             next_config = self.choose_next(X, Y)
