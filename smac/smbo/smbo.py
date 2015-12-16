@@ -6,12 +6,11 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformFloatHyperparameter, UniformIntegerHyperparameter, Constant
 
 from robo.acquisition.ei import EI
-from robo.models.random_forest import RandomForestWithInstances
-from robo.recommendation.incumbent import compute_incumbent
 from robo.solver.base_solver import BaseSolver
 
+from smac.smbo.rf_with_instances import RandomForestWithInstances
 from smac.smbo.local_search import LocalSearch
-from smac.smbo.run_history import RunHistory
+#from smac.smbo.run_history import RunHistory
 
 
 class SMBO(BaseSolver):
@@ -32,12 +31,12 @@ class SMBO(BaseSolver):
         '''
 
         with open(pcs_file) as fh:
-            self.config_space = pcs.read(fh.read())
+            self.config_space = pcs.read(fh.readlines())
             self.config_space.seed(seed)
         self.instance_features = instance_features
 
         # Extract types vector for rf from config space
-        self.types = np.zeros(len(self.config_space.get_hyperparameter()))
+        self.types = np.zeros(len(self.config_space.get_hyperparameters()))
 
         # Extract bounds of the input space
         X_lower = np.zeros([self.types.shape[0]])
@@ -61,8 +60,7 @@ class SMBO(BaseSolver):
 
         self.acquisition_func = EI(self.model,
                                    X_lower,
-                                   X_upper,
-                                   compute_incumbent)
+                                   X_upper)
 
         self.local_search = LocalSearch(self.acquisition_func,
                                         self.config_space)
@@ -140,4 +138,6 @@ class SMBO(BaseSolver):
 
         # Return configuration with highest acquisition value
         best = np.argmax(acq_vals)
-        return found_configs[best]
+        #TODO: We could also return a configuration object here, but then also
+        # the unit test has to be adapted
+        return found_configs[best].get_array()[np.newaxis, :]
