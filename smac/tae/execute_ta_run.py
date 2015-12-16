@@ -1,3 +1,6 @@
+import logging
+from subprocess import Popen, PIPE
+
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "BSD"
@@ -5,8 +8,6 @@ __maintainer__ = "Marius Lindauer"
 __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
-import logging
-from subprocess import Popen, PIPE
 
 
 class StatusType(object):
@@ -18,6 +19,7 @@ class StatusType(object):
     TIMEOUT = 2
     CRASHED = 3
     ABORT = 4
+    MEMOUT = 5
 
 
 class ExecuteTARun(object):
@@ -32,14 +34,16 @@ class ExecuteTARun(object):
             the command line call to the target algorithm (wrapper)
     """
 
-    def __init__(self, ta):
+    def __init__(self, ta, run_obj="runtime"):
         """
         Constructor
 
         Parameters
         ----------
-            ta : string
-                target algorithm command line string
+            ta : list
+                target algorithm command line as list of arguments
+            run_obj: str
+                run objective of SMAC
         """
         self.ta = ta
         self.logger = logging.getLogger("ExecuteTARun")
@@ -71,5 +75,7 @@ class ExecuteTARun(object):
                     cost/regret/quality (float) (None, if not returned by TA)
                 runtime: float
                     runtime (None if not returned by TA)
+                additional_info: dict
+                    all further additional run information
         """
-        return StatusType.SUCCESS, 12345.0, 1.2345
+        return StatusType.SUCCESS, 12345.0, 1.2345, {}

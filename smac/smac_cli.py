@@ -1,0 +1,35 @@
+import os
+import sys
+import logging
+
+from utils.io.cmd_reader import CMDReader
+from scenario.scenario import Scenario
+
+__author__ = "Marius Lindauer"
+__copyright__ = "Copyright 2015, ML4AAD"
+__license__ = "BSD"
+__maintainer__ = "Marius Lindauer"
+__email__ = "lindauer@cs.uni-freiburg.de"
+__version__ = "0.0.1"
+
+
+class SMAC(object):
+    '''
+    main class of SMAC
+    '''
+
+    def __init__(self):
+        '''
+            constructor
+        '''
+        self.logger = logging.getLogger("SMAC")
+
+    def main_cli(self):
+        '''
+            main function of SMAC for CLI interface
+        '''
+
+        cmd_reader = CMDReader()
+        args_ = cmd_reader.read_cmd()
+
+        scen = Scenario(args_)

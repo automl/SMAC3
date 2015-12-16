@@ -20,8 +20,8 @@ setuptools.setup(
     ],
     platforms=['Linux'],
     install_requires=['setuptools',
-                      'numpy>=0.16.2',
-                      'scipy>=0.9.0',
+                      'numpy>=1.10.1',
+                      'scipy>=0.16.1',
                       'pysmac',
                       'ConfigSpace'],
     test_suite='nose.collector'
