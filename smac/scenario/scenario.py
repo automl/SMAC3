@@ -2,6 +2,7 @@ import os
 import sys
 import logging
 import numpy
+import shlex
 
 from smac.utils.io.input_reader import InputReader
 from smac.configspace import pcs
@@ -35,7 +36,7 @@ class Scenario(object):
         in_reader = InputReader()
         scenario = in_reader.read_scenario_file(args_.scenario_file)
 
-        self.ta = scenario["algo"]
+        self.ta = shlex.split(scenario["algo"])
         self.execdir = scenario.get("execdir", ".")
         self.deterministic = scenario.get("deterministic", "0")
         self.pcs_fn = scenario["paramfile"]

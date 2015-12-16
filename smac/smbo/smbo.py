@@ -1,5 +1,6 @@
 import logging
 import numpy as np
+import random
 
 from ConfigSpace.io import pcs
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
@@ -12,6 +13,7 @@ from smac.smbo.rf_with_instances import RandomForestWithInstances
 from smac.smbo.local_search import LocalSearch
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import RunHistory2EPM
+from smac.tae.execute_ta_run_old import ExecuteTARunOld
 
 
 class SMBO(BaseSolver):
@@ -27,7 +29,10 @@ class SMBO(BaseSolver):
         seed: int
             Seed that is passed to random forest
         '''
-        
+        self.logger = logging.getLogger("smbo")
+
+        random.seed(seed)
+
         self.scenario = scenario
         self.config_space = scenario.cs
 
@@ -77,30 +82,51 @@ class SMBO(BaseSolver):
             The best found configuration
         '''
 
-        #TODO: Call initial design
+        num_params = len(self.config_space.get_hyperparameters())
+        self.runhistory = RunHistory()
+        rh2EPM = RunHistory2EPM(num_params=num_params)
+        executor = ExecuteTARunOld(
+            ta=self.scenario.ta, run_obj=self.scenario.run_obj)
+
+        default_conf = self.config_space.get_default_configuration()
+        rand_inst_id = random.randint(0,len(self.scenario.train_insts))
+        # ignore instance specific values
+        rand_inst = self.scenario.train_insts[rand_inst_id][0]
+        # TODO: handle TA seeds
+        status, cost, runtime, additional_info = executor.run(
+            default_conf, instance=rand_inst, cutoff=self.scenario.cutoff)
         
+        #TODO: only for testing
+        self.runhistory.add(config=default_conf, cost=1, time=1,
+                            status=1,
+                            instance_id=rand_inst_id,
+                            seed=None,
+                            additional_info=additional_info)
         
+        #----- self.runhistory.add(config=default_conf, cost=cost, time=runtime,
+                            #------------------------------------ status=status,
+                            #------------------------- instance_id=rand_inst_id,
+                            #---------------------------------------- seed=None,
+                            #------------------ additional_info=additional_info)
 
         # Main BO loop
-        self.runhistory = RunHistory()
-        rh2EPM = RunHistory2EPM()
         for i in range(max_iters):
 
-            #TODO: Transform lambda to X
-            
+            # TODO: Transform lambda to X
+
             X, Y = rh2EPM.transform(self.runhistory)
 
-            #TODO: Estimate new configuration
+            # TODO: Estimate new configuration
             next_config = self.choose_next(X, Y)
 
-            #TODO: Perform intensification
+            # TODO: Perform intensification
             #self.incumbent = intensify(self.incumbent, next_config)
 
-            #TODO: Perform target algorithm run
+            # TODO: Perform target algorithm run
 
-            #TODO: Update run history
+            # TODO: Update run history
 
-            #TODO: Write run history into database
+            # TODO: Write run history into database
 
         return self.incumbent
 
@@ -138,6 +164,6 @@ class SMBO(BaseSolver):
 
         # Return configuration with highest acquisition value
         best = np.argmax(acq_vals)
-        #TODO: We could also return a configuration object here, but then also
+        # TODO: We could also return a configuration object here, but then also
         # the unit test has to be adapted
         return found_configs[best].get_array()[np.newaxis, :]

@@ -70,7 +70,6 @@ class ExecuteTARunOld(object):
                 additional_info: dict
                     all further additional run information
         """
-
         if instance is None:
             instance = "0"
 
@@ -80,7 +79,7 @@ class ExecuteTARunOld(object):
         cmd.extend(self.ta)
         cmd.extend([instance, "0", str(cutoff), "0", str(seed)])
         for p in config:
-            cmd.extend(["-" + p, config[p]])
+            cmd.extend(["-" + str(p), str(config[p])])
 
         self.logger.debug("Calling: %s" % (" ".join(cmd)))
         p = Popen(cmd, shell=False, stdout=PIPE, stderr=PIPE)
@@ -89,8 +88,11 @@ class ExecuteTARunOld(object):
         self.logger.debug("Stdout: %s" % (stdout_))
         self.logger.debug("Stderr: %s" % (stderr_))
 
+        #status = "CRASHED"
+        #quality = 1234567890
+        #runtime = 1234567890
         for line in stdout_.split("\n"):
-            if line.startswith("Result of this algorithm run:"):
+            if line.startswith("Result of this algorithm run:") or line.startswith("Result for ParamILS") or line.startswith("Result for SMAC"):
                 fields = line.split(":")[1].split(",")
                 fields = map(lambda x: x.strip(" "), fields)
                 if len(fields) == 5:

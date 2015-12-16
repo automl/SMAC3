@@ -33,6 +33,9 @@ class SMAC(object):
         cmd_reader = CMDReader()
         args_ = cmd_reader.read_cmd()
 
+        logging.basicConfig(level=args_.verbose_level)
+
         scen = Scenario(args_)
 
-        SMBO(scenario=scen, seed=args_.seed)
+        smbo = SMBO(scenario=scen, seed=args_.seed)
+        smbo.run(max_iters=2)

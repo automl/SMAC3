@@ -20,9 +20,15 @@ class RunHistory2EPM(object):
         takes a runhistory object and preprocess data in order to train EPM
     '''
 
-    def __init__(self, config=None):
+    def __init__(self, num_params, config=None):
         '''
         Constructor
+        Parameters
+        ----------
+        num_params : int
+            number of parameters in config space
+        config: dict
+            configuration for conversion
         '''
         self.config = OrderedDict({
             'success_states': [StatusType.SUCCESS, ],
@@ -33,6 +39,7 @@ class RunHistory2EPM(object):
         self.logger = logging.getLogger("runhistory2epm")
         if config is not None:
             self.config.update(config)
+        self.num_params = num_params
 
     def transform(self, runhistory):
         '''
@@ -51,8 +58,8 @@ class RunHistory2EPM(object):
         # Store a list of instance IDs
         instance_id_list = [k.instance_id for k in run_list.keys()]
 
-        run_list = [r.config for r in run_list]
-
+        run_list = [(run_list[r].time, r.config_id) for r in run_list]
+        
         if self.config['impute_censored_data']:
             cens_list = self.__select_runs(rh_data=copy.deepcopy(runhistory.data),
                                            select_censored=True)
@@ -65,16 +72,21 @@ class RunHistory2EPM(object):
 
 
         # First build nan-matrix of size #configs x #params+1
-        n_rows = len(runhistory.data)
-        n_cols = runhistory.data[runhistory.data.keys()[0]].ConfigSpace.numParams
-        run_array = numpy.ones([n_rows, n_cols]) * numpy.nan
+        n_rows = len(run_list)
+        n_cols = self.num_params
+        X = numpy.ones([n_rows, n_cols]) * numpy.nan
+        y = numpy.ones([n_rows])
 
         # Then populate matrix
         for row, run in enumerate(run_list):
             # Scaling is automatically done in configSpace
-            run_array[row, :-1] = run.impute_inactive_values().get_array()
-            run_array[row, -1] = instance_id_list[row]
-        return run_array
+            X[row, :] = runhistory.ids_config[run[1]].get_array()
+            #TODO: replace with instance features if available
+            #run_array[row, -1] = instance_id_list[row]
+            #TODO: replace by cost if we optimize quality/cost
+            y[row] = run[0]
+            
+        return X, y 
 
     def __select_runs(self, rh_data, select_censored=False):
         '''
