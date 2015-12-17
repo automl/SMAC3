@@ -29,7 +29,7 @@ class RunHistory2EPM(object):
         num_params : int
             number of parameters in config space
         cutoff_time: positive float
-            cutoff time for this scenario
+            cutoff time for this scenario, matters only if runs are censored
         success_states: list, optional
             list of states considered as successful (such as StatusType.SUCCESS)
         impute_censored_data: bool, optional
