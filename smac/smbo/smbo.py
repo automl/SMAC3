@@ -84,7 +84,11 @@ class SMBO(BaseSolver):
 
         num_params = len(self.config_space.get_hyperparameters())
         self.runhistory = RunHistory()
-        rh2EPM = RunHistory2EPM(num_params=num_params)
+
+        # TODO set arguments properly
+        rh2EPM = RunHistory2EPM(num_params=num_params, cutoff_time=np.inf,
+                                success_states=None, impute_censored_data=False,
+                                impute_state=None)
         executor = ExecuteTARunOld(
             ta=self.scenario.ta, run_obj=self.scenario.run_obj)
 
