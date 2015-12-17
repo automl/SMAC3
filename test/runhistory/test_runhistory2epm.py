@@ -29,8 +29,10 @@ class RunhistoryTest(unittest.TestCase):
                seed=45,
                additional_info={"start_time": 10})
 
-        rh2epm = runhistory2epm.RunHistory2EPM()
-        rhArr = rh2epm.transform(rh2epm)
+        self.assertRaises(TypeError, runhistory2epm.RunHistory2EPM)
+
+        rh2epm = runhistory2epm.RunHistory2EPM(num_params=2, cutoff_time=10)
+        rhArr = rh2epm.transform(rh)
 
         # We expect
         #  1  2 23     0 0 23

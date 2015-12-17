@@ -20,25 +20,37 @@ class RunHistory2EPM(object):
         takes a runhistory object and preprocess data in order to train EPM
     '''
 
-    def __init__(self, num_params, config=None):
+    def __init__(self, num_params, cutoff_time, success_states=None,
+                 impute_censored_data=False, impute_state=None):
         '''
         Constructor
         Parameters
         ----------
         num_params : int
             number of parameters in config space
-        config: dict
-            configuration for conversion
+        cutoff_time: positive float
+            cutoff time for this scenario
+        success_states: list, optional
+            list of states considered as successful (such as StatusType.SUCCESS)
+        impute_censored_data: bool, optional
+            should we impute data?
+        impute_state: list, optional
+            list of states that mark censored data (such as StatusType.TIMEOUT)
+            in combination with runtime < cutoff_time
         '''
+        if impute_state is None:
+            impute_state = [StatusType.TIMEOUT, ]
+
+        if success_states is None:
+            success_states = [StatusType.SUCCESS, ]
+
         self.config = OrderedDict({
-            'success_states': [StatusType.SUCCESS, ],
-            'impute_censored_data': False,
-            'cutoff_time': -1,
-            'impute_state': [StatusType.TIMEOUT],
+            'success_states': success_states,
+            'impute_censored_data': impute_censored_data,
+            'cutoff_time': cutoff_time,
+            'impute_state': impute_state,
                                    })
         self.logger = logging.getLogger("runhistory2epm")
-        if config is not None:
-            self.config.update(config)
         self.num_params = num_params
 
     def transform(self, runhistory):
