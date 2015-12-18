@@ -93,25 +93,18 @@ class SMBO(BaseSolver):
             ta=self.scenario.ta, run_obj=self.scenario.run_obj)
 
         default_conf = self.config_space.get_default_configuration()
-        rand_inst_id = random.randint(0,len(self.scenario.train_insts))
+        rand_inst_id = random.randint(0, len(self.scenario.train_insts))
         # ignore instance specific values
         rand_inst = self.scenario.train_insts[rand_inst_id][0]
         # TODO: handle TA seeds
         status, cost, runtime, additional_info = executor.run(
             default_conf, instance=rand_inst, cutoff=self.scenario.cutoff)
-        
-        #TODO: only for testing
-        self.runhistory.add(config=default_conf, cost=1, time=1,
-                            status=1,
+
+        self.runhistory.add(config=default_conf, cost=cost, time=runtime,
+                            status=status,
                             instance_id=rand_inst_id,
                             seed=None,
                             additional_info=additional_info)
-        
-        #----- self.runhistory.add(config=default_conf, cost=cost, time=runtime,
-                            #------------------------------------ status=status,
-                            #------------------------- instance_id=rand_inst_id,
-                            #---------------------------------------- seed=None,
-                            #------------------ additional_info=additional_info)
 
         # Main BO loop
         for i in range(max_iters):

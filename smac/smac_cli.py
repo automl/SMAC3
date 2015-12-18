@@ -35,6 +35,11 @@ class SMAC(object):
 
         logging.basicConfig(level=args_.verbose_level)
 
+        # TODO: hack to set logger level as long as robo does not handle logger
+        # in a correct ways
+        if args_.verbose_level == "DEBUG":
+            self.logger.parent.level = 10
+
         scen = Scenario(args_)
 
         smbo = SMBO(scenario=scen, seed=args_.seed)

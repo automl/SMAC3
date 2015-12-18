@@ -79,7 +79,8 @@ class ExecuteTARunOld(object):
         cmd.extend(self.ta)
         cmd.extend([instance, "0", str(cutoff), "0", str(seed)])
         for p in config:
-            cmd.extend(["-" + str(p), str(config[p])])
+            if not config[p] is None:
+                cmd.extend(["-" + str(p), str(config[p])])
 
         self.logger.debug("Calling: %s" % (" ".join(cmd)))
         p = Popen(cmd, shell=False, stdout=PIPE, stderr=PIPE)
@@ -116,8 +117,8 @@ class ExecuteTARunOld(object):
         if status in [StatusType.CRASHED, StatusType.ABORT]:
             self.logger.warn(
                 "Target algorithm crashed. Last 5 lines of stdout and stderr")
-            self.logger.warn(stdout_.split("\n")[-5:])
-            self.logger.warn(stderr_.split("\n")[-5:])
+            self.logger.warn("\n".join(stdout_.split("\n")[-5:]))
+            self.logger.warn("\n".join(stderr_.split("\n")[-5:]))
 
         if self.run_obj == "runtime":
             cost = float(runtime)

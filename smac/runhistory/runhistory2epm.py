@@ -49,7 +49,7 @@ class RunHistory2EPM(object):
             'impute_censored_data': impute_censored_data,
             'cutoff_time': cutoff_time,
             'impute_state': impute_state,
-                                   })
+        })
         self.logger = logging.getLogger("runhistory2epm")
         self.num_params = num_params
 
@@ -71,7 +71,7 @@ class RunHistory2EPM(object):
         instance_id_list = [k.instance_id for k in run_list.keys()]
 
         run_list = [(run_list[r].time, r.config_id) for r in run_list]
-        
+
         if self.config['impute_censored_data']:
             cens_list = self.__select_runs(rh_data=copy.deepcopy(runhistory.data),
                                            select_censored=True)
@@ -82,23 +82,22 @@ class RunHistory2EPM(object):
             raise NotImplementedError("Imputation of right censored data is not"
                                       " yet possible")
 
-
         # First build nan-matrix of size #configs x #params+1
         n_rows = len(run_list)
         n_cols = self.num_params
         X = numpy.ones([n_rows, n_cols]) * numpy.nan
-        y = numpy.ones([n_rows])
+        Y = numpy.ones([n_rows, 1])
 
         # Then populate matrix
         for row, run in enumerate(run_list):
             # Scaling is automatically done in configSpace
             X[row, :] = runhistory.ids_config[run[1]].get_array()
-            #TODO: replace with instance features if available
+            # TODO: replace with instance features if available
             #run_array[row, -1] = instance_id_list[row]
-            #TODO: replace by cost if we optimize quality/cost
-            y[row] = run[0]
-            
-        return X, y 
+            # TODO: replace by cost if we optimize quality/cost
+            Y[row, 0] = run[0]
+
+        return X, Y
 
     def __select_runs(self, rh_data, select_censored=False):
         '''
@@ -123,7 +122,7 @@ class RunHistory2EPM(object):
         if select_censored:
             for run in rh_data.keys():
                 if rh_data[run].status in self.config['impute_state'] and \
-                                rh_data[run].time < self.config['cutoff_time']:
+                        rh_data[run].time < self.config['cutoff_time']:
                     # This run was censored
                     new_dict[run] = rh_data[run]
         else:
