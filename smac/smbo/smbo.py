@@ -86,7 +86,7 @@ class SMBO(BaseSolver):
         self.runhistory = RunHistory()
 
         # TODO set arguments properly
-        rh2EPM = RunHistory2EPM(num_params=num_params, cutoff_time=np.inf,
+        rh2EPM = RunHistory2EPM(num_params=num_params, cutoff_time=self.scenario.cutoff,
                                 success_states=None, impute_censored_data=False,
                                 impute_state=None)
         executor = ExecuteTARunOld(
@@ -99,12 +99,14 @@ class SMBO(BaseSolver):
         # TODO: handle TA seeds
         status, cost, runtime, additional_info = executor.run(
             default_conf, instance=rand_inst, cutoff=self.scenario.cutoff)
-
+        
         self.runhistory.add(config=default_conf, cost=cost, time=runtime,
                             status=status,
                             instance_id=rand_inst_id,
                             seed=None,
                             additional_info=additional_info)
+
+        print(self.runhistory.data)
 
         # Main BO loop
         for i in range(max_iters):
@@ -114,6 +116,7 @@ class SMBO(BaseSolver):
             X, Y = rh2EPM.transform(self.runhistory)
 
             # TODO: Estimate new configuration
+            self.logger.debug("Search for next configuration")
             next_config = self.choose_next(X, Y)
 
             # TODO: Perform intensification

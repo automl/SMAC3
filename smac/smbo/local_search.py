@@ -41,6 +41,8 @@ class LocalSearch(BaseMaximizer):
         self.max_iterations = max_iterations
         self.seed = seed
 
+        self.logger = logging.getLogger("localsearch")
+
     def maximize(self, start_point, *args):
         """
         Starts a local search from the given startpoint.
@@ -70,7 +72,7 @@ class LocalSearch(BaseMaximizer):
 
             local_search_steps += 1
             if local_search_steps % 1000 == 0:
-                logging.warn("Local search took already %d iterations. \
+                self.logger.warn("Local search took already %d iterations. \
                 Is it maybe stuck in a infinite loop?", local_search_steps)
 
             # Compute the acquisition value of the incumbent
@@ -110,7 +112,7 @@ class LocalSearch(BaseMaximizer):
             # to one of the best neighbors
             if acq_val_best > acq_val_incumbent + self.epsilon:
 
-                logging.info("Switch to one of the neighbors")
+                self.logger.debug("Switch to one of the neighbors")
                 # List of best neighbors
                 best_indices = np.where(acq_val_neighbours > acq_val_incumbent + self.epsilon)[0]
 
@@ -126,7 +128,7 @@ class LocalSearch(BaseMaximizer):
                                           vector=best_neighbours[random_idx])
 
             else:
-                logging.info("Local search took %d steps. "
+                self.logger.debug("Local search took %d steps. "
                              "Computing the acquisition value for one"
                              "configuration took %f seconds on average.",
                              local_search_steps, (t_acq / float(n_acq)))
@@ -134,7 +136,7 @@ class LocalSearch(BaseMaximizer):
 
             if self.max_iterations != None \
                 and local_search_steps == self. max_iterations:
-                logging.info("Local search took %d steps."
+                self.logger.debug("Local search took %d steps."
                              " Computing the acquisition value for one "
                              "configuration took %f seconds on average.",
                               local_search_steps, (t_acq / float(n_acq)))

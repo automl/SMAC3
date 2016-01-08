@@ -127,7 +127,8 @@ class RunHistory2EPM(object):
                     new_dict[run] = rh_data[run]
         else:
             for run in rh_data.keys():
-                if rh_data[run].status in self.config['success_states']:
-                    # This run was successful
+                if rh_data[run].status in self.config['success_states'] or \
+                    (rh_data[run].status == StatusType.TIMEOUT and rh_data[run].time >= self.config['cutoff_time']):
+                    # This run was successful or a not censored timeout
                     new_dict[run] = rh_data[run]
         return new_dict

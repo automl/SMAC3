@@ -42,7 +42,7 @@ class Scenario(object):
         self.pcs_fn = scenario["paramfile"]
         self.run_obj = scenario.get("run_obj", "runtime")
         self.overall_obj = scenario.get("overall_obj", "par10")
-        self.cutoff = scenario.get("cutoff_time", 999999999)
+        self.cutoff = float(scenario.get("cutoff_time", 999999999))
         self.algo_runs_timelimit = scenario.get("tunerTimeout", numpy.inf)
         self.wallclock_limit = scenario.get("wallclock-limit", numpy.inf)
         self.train_inst_fn = scenario.get("instance_file", None)
