@@ -43,4 +43,4 @@ class SMAC(object):
         scen = Scenario(args_)
 
         smbo = SMBO(scenario=scen, seed=args_.seed)
-        smbo.run(max_iters=2)
+        smbo.run(max_iters=10)

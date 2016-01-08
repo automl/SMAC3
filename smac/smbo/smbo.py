@@ -1,6 +1,7 @@
 import logging
 import numpy as np
 import random
+import sys
 
 from ConfigSpace.io import pcs
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
@@ -11,10 +12,11 @@ from robo.solver.base_solver import BaseSolver
 
 from smac.smbo.rf_with_instances import RandomForestWithInstances
 from smac.smbo.local_search import LocalSearch
+from smac.smbo.intensification import Intensifier
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import RunHistory2EPM
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
-
+from smac.tae.execute_ta_run import StatusType
 
 class SMBO(BaseSolver):
 
@@ -93,6 +95,7 @@ class SMBO(BaseSolver):
             ta=self.scenario.ta, run_obj=self.scenario.run_obj)
 
         default_conf = self.config_space.get_default_configuration()
+        self.incumbent = default_conf
         rand_inst_id = random.randint(0, len(self.scenario.train_insts))
         # ignore instance specific values
         rand_inst = self.scenario.train_insts[rand_inst_id][0]
@@ -100,16 +103,24 @@ class SMBO(BaseSolver):
         status, cost, runtime, additional_info = executor.run(
             default_conf, instance=rand_inst, cutoff=self.scenario.cutoff)
         
+        status = 2
+        runtime = 3000
+        
+        if status in [StatusType.CRASHED or StatusType.ABORT]:
+            logging.info("First run crashed -- Abort")
+            sys.exit(42)
+        
         self.runhistory.add(config=default_conf, cost=cost, time=runtime,
                             status=status,
                             instance_id=rand_inst_id,
                             seed=None,
                             additional_info=additional_info)
 
-        print(self.runhistory.data)
+        #print(self.runhistory.data)
 
         # Main BO loop
-        for i in range(max_iters):
+        iteration = 1
+        while True:
 
             # TODO: Transform lambda to X
 
@@ -118,15 +129,29 @@ class SMBO(BaseSolver):
             # TODO: Estimate new configuration
             self.logger.debug("Search for next configuration")
             next_config = self.choose_next(X, Y)
-
-            # TODO: Perform intensification
-            #self.incumbent = intensify(self.incumbent, next_config)
+            
+            self.logger.debug("Intensify")
+            #TODO: fix timebound of intensifier
+            #TODO: add more than one challenger
+            inten = Intensifier(executor=executor, 
+                                challengers=[next_config], 
+                                incumbent=self.incumbent, 
+                                run_history=self.runhistory, 
+                                instances=[inst[0] for inst in self.scenario.train_insts],
+                                cutoff=self.scenario.cutoff)
+                 
+            self.incumbent = inten.intensify()
 
             # TODO: Perform target algorithm run
 
             # TODO: Update run history
 
             # TODO: Write run history into database
+            
+            if iteration == max_iters:
+                break
+
+            iteration += 1
 
         return self.incumbent
 
@@ -144,7 +169,7 @@ class SMBO(BaseSolver):
 
         Returns
         -------
-        x : (1, H) numpy array
+        x : (1, H) Configuration Object
             The suggested configuration to evaluate.
         """
 
@@ -166,4 +191,5 @@ class SMBO(BaseSolver):
         best = np.argmax(acq_vals)
         # TODO: We could also return a configuration object here, but then also
         # the unit test has to be adapted
-        return found_configs[best].get_array()[np.newaxis, :]
+        # ML: We have to return the configuration object here or else it is a mess since we cannot convert it back
+        return found_configs[best]

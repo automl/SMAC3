@@ -23,16 +23,16 @@ class Intensifier(object):
         takes challenger and incumbents and performs intensify
     '''
 
-    def __init__(self, ta, challengers, incumbent, run_history, instances=None,
-                 run_obj="runtime", cutoff=MAXINT,
+    def __init__(self, executor, challengers, incumbent, run_history, instances=None,
+                 cutoff=MAXINT,
                  time_bound=MAXINT, run_limit=MAXINT, maxR=2000, rng=0):
         '''
         Constructor
 
         Parameters
         ----------
-        ta : list
-            target algorithm command line as list of arguments
+        executor : tae.executre_ta_run_*.ExecuteTARun* Object
+            target algorithm run executor
         challengers : list of ConfigSpace.config
             promising configurations
         incumbent : ConfigSpace.config
@@ -41,8 +41,6 @@ class Intensifier(object):
             all runs on all instance,seed pairs for incumbent
         instances : list
             list of all instance ids
-        run_obj : ("runtime", "quality")
-            what to optimize
         time_bound : int
             time in [sec] available to perform intensify
         run_limit : int
@@ -69,9 +67,8 @@ class Intensifier(object):
         self.run_history = run_history
 
         # scenario info
-        self.run_obj = run_obj
         self.cutoff = cutoff
-        self.tae = ExecuteTARunAClib(ta=ta, run_obj=self.run_obj)
+        self.tae = executor
 
         if self.run_limit < 1:
             raise ValueError("run_limit must be > 1")
@@ -86,7 +83,7 @@ class Intensifier(object):
             if len(inc_runs) < self.maxR:
                 inc_scen = set([s[0] for s in inc_runs])
                 # TODO sample instance where inc has not yet been evaluated
-                next_seed = self.rs.random_integer(low=0, high=MAXINT,
+                next_seed = self.rs.randint(low=0, high=MAXINT,
                                                    size=1)[0]
                 next_instance = sorted(list((self.instances - inc_scen)))
                 next_instance = next_instance[next_seed % len(next_instance)]
