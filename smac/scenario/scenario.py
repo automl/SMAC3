@@ -51,7 +51,7 @@ class Scenario(object):
         # not handled: outdir (and some more)
 
         self.train_insts = []
-        self.test_ints = []
+        self.test_inst = []
         self.feature_dict = {}  # instance name -> feature vector
         self.feature_array = None
         self.cs = None  # ConfigSpace object
@@ -66,7 +66,7 @@ class Scenario(object):
                 sys.exit(1)
         if self.test_inst_fn:
             if os.path.isfile(self.test_inst_fn):
-                self.test_ints = in_reader.read_instance_file(
+                self.test_inst = in_reader.read_instance_file(
                     self.test_inst_fn)
             else:
                 self.logger.error(
