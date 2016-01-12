@@ -106,7 +106,7 @@ class RunHistory2EPM(object):
         Parameters
         ----------
         rh_data : runhistory
-            list of ConfigSpace.config
+            dict of ConfigSpace.config
 
         select_censored : bool, optional
             return censored runs

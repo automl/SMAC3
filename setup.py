@@ -22,7 +22,6 @@ setuptools.setup(
     install_requires=['setuptools',
                       'numpy>=1.10.1',
                       'scipy>=0.16.1',
-                      'pysmac',
                       'ConfigSpace'],
     test_suite='nose.collector'
 )
