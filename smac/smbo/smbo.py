@@ -55,9 +55,13 @@ class SMBO(BaseSolver):
                 self.types[i] = n_cats
                 X_lower[i] = 0
                 X_upper[i] = n_cats
+            elif isinstance(param, Constant):
+                # for constants we simply set types to 0
+                # which makes it a numerical parameter
+                self.types[i] = 0
+                # and we leave the bounds to be 0 for now
             else:
                 raise TypeError("Unknown hyperparameter type %s" % type(param))
-
         self.model = RandomForestWithInstances(self.types,
                                                scenario.feature_array)
 
@@ -172,7 +176,6 @@ class SMBO(BaseSolver):
         x : (1, H) Configuration Object
             The suggested configuration to evaluate.
         """
-
         self.model.train(X, Y)
         self.acquisition_func.update(self.model)
 
