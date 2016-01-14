@@ -87,6 +87,7 @@ class Scenario(object):
                 # TODO: ConfigSpace should use only logging and no print
                 # statements
                 self.cs = pcs.read(pcs_str)
+                self.cs.seed(42)
         else:
             self.logger.error("Have not found pcs file: %s" %
                               (self.pcs_fn))

@@ -76,9 +76,9 @@ class LocalSearch(BaseMaximizer):
                 Is it maybe stuck in a infinite loop?", local_search_steps)
 
             # Compute the acquisition value of the incumbent
-            incumbent = impute_inactive_values(incumbent)
+            incumbent_ = impute_inactive_values(incumbent)
             acq_val_incumbent = self.acquisition_function(
-                                                        incumbent.get_array(),
+                                                        incumbent_.get_array(),
                                                         *args)
 
             # Get neighborhood of the current incumbent
@@ -86,7 +86,7 @@ class LocalSearch(BaseMaximizer):
             neighbourhood = np.zeros([self.n_neighbours,
                                       incumbent.get_array().shape[0]])
             for i in range(self.n_neighbours):
-                n = get_random_neighbor(incumbent, self.seed)
+                n = get_random_neighbor(incumbent, i)
                 n = impute_inactive_values(n)
                 # TODO I don't think this is the way to go, I think this
                 # should be generalized as this is done in the EPM module as
