@@ -3,6 +3,7 @@ from collections import OrderedDict
 import logging
 import sys
 import time
+import random
 
 import numpy
 
@@ -15,7 +16,7 @@ __maintainer__ = "Katharina Eggensperger"
 __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
-MAXINT = 2**31-1
+MAXINT = 2**31 - 1
 
 
 class Intensifier(object):
@@ -82,11 +83,10 @@ class Intensifier(object):
             # First evaluate incumbent on a new instance
             if len(inc_runs) < self.maxR:
                 inc_scen = set([s[0] for s in inc_runs])
-                # TODO sample instance where inc has not yet been evaluated
                 next_seed = self.rs.randint(low=0, high=MAXINT,
-                                                   size=1)[0]
-                next_instance = sorted(list((self.instances - inc_scen)))
-                next_instance = next_instance[next_seed % len(next_instance)]
+                                            size=1)[0]
+                next_instance = random.choice(
+                    list((self.instances - inc_scen)))
                 status, cost, dur, res = self.tae.run(config=self.incumbent,
                                                       instance=next_instance,
                                                       seed=next_seed,
@@ -97,23 +97,27 @@ class Intensifier(object):
                                      additional_info=res)
                 num_run += 1
             N = 1
+            inc_inst_seeds = set(map(lambda x: (
+                x.instance, x.seed), self.run_history.get_runs_for_config(self.incumbent)))
+
             while True:
-                # TODO get a list of all seeds where challenger has not been evaluated, but incumbent
-                # TODO get a list of all instances where challenger has not been evaluated, but incumbent
-                challenger_runs = self.run_history.get_runs_for_config(challenger)
-                # build a boolean matrix
-                challenger_runs_matrix = numpy.zeros([])
-                # TODO: here I stopped, fill matrix with ones where inc has been evaluated and create missing_runs list
+                chall_inst_seeds = set(map(lambda x: (
+                    x.instance, x.seed), self.run_history.get_runs_for_config(challenger)))
+
+                missing_runs = list(inc_inst_seeds - chall_inst_seeds)
+
                 self.rs.shuffle(missing_runs)
                 to_run = missing_runs[:min(N, len(missing_runs))]
                 missing_runs = missing_runs[min(N, len(missing_runs)):]
+
                 for r in to_run:
                     # Run challenger on all <config,seed> to run
                     seed, instance = r
                     status, cost, dur, res = self.tae.run(config=challenger,
-                                                           instance=instance,
-                                                           seed=seed,
-                                                           cutoff=self.cutoff)
+                                                          instance=instance,
+                                                          seed=seed,
+                                                          cutoff=self.cutoff)
+                    
                     self.run_history.add(config=challenger,
                                          cost=cost, time=dur, status=status,
                                          instance_id=instance, seed=seed,
@@ -129,18 +133,14 @@ class Intensifier(object):
                     self.incumbent = challenger
                 else:
                     # challenger is not worse, continue
-                    N = 2*N
+                    N = 2 * N
 
                 if num_run > self.run_limit:
-                    self.logger("Maximum #runs for intensification reached")
+                    self.logger.debug(
+                        "Maximum #runs for intensification reached")
                     break
                 elif time.time() - self.start_time - self.time_bound < 0:
-                    self.logger("Timelimit for intensification reached")
+                    self.logger.debug("Timelimit for intensification reached")
                     break
 
         return self.incumbent, self.run_history
-
-
-
-
-

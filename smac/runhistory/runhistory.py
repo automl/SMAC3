@@ -83,13 +83,14 @@ class RunHistory(object):
                 parameter configuration
         Returns
         ----------
-            list
+            list: tuples of instance, seed, time
         '''
         InstSeedTuple = collections.namedtuple(
-            "Inst_Seed", ["instance", "seed", "time"])
+            "Inst_Seed", ["instance", "seed", "time", "cost"])
         list_ = []
         for k in self.data:
             if config == self.ids_config[k.config_id]:
-                ist = InstSeedTuple(k.instance_id, k.seed, self.data[k].time)
+                ist = InstSeedTuple(
+                    k.instance_id, k.seed, self.data[k].time, self.data[k].cost)
                 list_.append(ist)
         return list_
