@@ -79,6 +79,7 @@ class Intensifier(object):
     def intensify(self):
         num_run = 0
         for challenger in self.challengers:
+            self.logger.debug("Intensify on %s" %(challenger))
             inc_runs = self.run_history.get_runs_for_config(self.incumbent)
             # First evaluate incumbent on a new instance
             if len(inc_runs) < self.maxR:
@@ -139,10 +140,13 @@ class Intensifier(object):
 
                 if chal_perf > inc_perf:
                     # Incumbent beats challenger
+                    self.logger.debug("Incumbent is better than challenger.")
                     break
                 elif len(missing_runs) == 0:
                     # Challenger is as good as incumbent -> change incu
+                    self.logger.debug("Changing incumbent to challenger")
                     self.incumbent = challenger
+                    break
                 else:
                     # challenger is not worse, continue
                     N = 2 * N
@@ -151,7 +155,7 @@ class Intensifier(object):
                     self.logger.debug(
                         "Maximum #runs for intensification reached")
                     break
-                elif time.time() - self.start_time - self.time_bound < 0:
+                elif time.time() - self.start_time - self.time_bound > 0:
                     self.logger.debug("Timelimit for intensification reached")
                     break
 
