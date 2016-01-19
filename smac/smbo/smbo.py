@@ -149,10 +149,6 @@ class SMBO(BaseSolver):
 
             self.incumbent = inten.intensify()
 
-            # TODO: Perform target algorithm run
-
-            # TODO: Update run history
-
             # TODO: Write run history into database
 
             if iteration == max_iters:

@@ -77,6 +77,10 @@ class Intensifier(object):
             raise ValueError("time_bound must be > 1")
 
     def intensify(self):
+        '''
+            running intensification to determine the incumbent configuration
+            Side effect: adds runs to run_history
+        '''
         num_run = 0
         for challenger in self.challengers:
             self.logger.debug("Intensify on %s" %(challenger))
@@ -159,4 +163,4 @@ class Intensifier(object):
                     self.logger.debug("Timelimit for intensification reached")
                     break
 
-        return self.incumbent, self.run_history
+        return self.incumbent
