@@ -1,8 +1,3 @@
-'''
-Created on Mar 27, 2015
-
-@author: Aaron Klein
-'''
 import logging
 import time
 import numpy as np
@@ -11,11 +6,18 @@ from robo.maximizers.base_maximizer import BaseMaximizer
 
 from smac.configspace import impute_inactive_values, get_random_neighbor, Configuration
 
+__author__ = "Aaron Klein, Marius Lindauer"
+__copyright__ = "Copyright 2015, ML4AAD"
+__license__ = "BSD"
+__maintainer__ = "Aaron Klein"
+__email__ = "kleinaa@cs.uni-freiburg.de"
+__version__ = "0.0.1"
+
 
 class LocalSearch(BaseMaximizer):
 
     def __init__(self, acquisition_function, config_space,
-                 epsilon=0.01, n_neighbours=20, max_iterations=None, seed=42):
+                 epsilon=0.01, n_neighbours=42, max_iterations=None, seed=42):
         """
         Implementation of SMAC's local search
 
@@ -67,7 +69,8 @@ class LocalSearch(BaseMaximizer):
         """
         incumbent = start_point
         local_search_steps = 0
-
+        neighbors_looked_at = 0
+        time_n = []
         while True:
 
             local_search_steps += 1
@@ -78,68 +81,36 @@ class LocalSearch(BaseMaximizer):
             # Compute the acquisition value of the incumbent
             incumbent_ = impute_inactive_values(incumbent)
             acq_val_incumbent = self.acquisition_function(
-                                                        incumbent_.get_array(),
-                                                        *args)
+                incumbent_.get_array(),
+                *args)
 
             # Get neighborhood of the current incumbent
             # by randomly drawing configurations
-            neighbourhood = np.zeros([self.n_neighbours,
-                                      incumbent.get_array().shape[0]])
+            changed_inc = False
+
             for i in range(self.n_neighbours):
-                n = get_random_neighbor(incumbent, i)
-                n = impute_inactive_values(n)
-                # TODO I don't think this is the way to go, I think this
-                # should be generalized as this is done in the EPM module as
-                # well.
-                neighbourhood[i] = n.get_array()
+                s_time = time.time()
+                neighbor = get_random_neighbor(incumbent, seed=i)
+                neighbor_ = impute_inactive_values(neighbor)
+                n_array = neighbor_.get_array()
+                acq_val = self.acquisition_function(n_array, *args)
+                neighbors_looked_at += 1
 
-            # Compute acquisition values for all points in the neighborhood
-            acq_val_neighbours = np.zeros([self.n_neighbours])
-            t_acq = 0
-            n_acq = 0
-            for i in range(self.n_neighbours):
-                s = time.time()
-                acq_val_neighbours[i] = self.acquisition_function(
-                                                            neighbourhood[i],
-                                                            *args)
-                t_acq += time.time() - s
-                n_acq += 1
+                time_n.append(time.time() - s_time)
 
-            # Determine the best neighbor with highest acquisition value
-            acq_val_best = np.max(acq_val_neighbours)
+                if acq_val > acq_val_incumbent + self.epsilon:
+                    self.logger.debug("Switch to one of the neighbors")
+                    incumbent = neighbor
+                    acq_val_incumbent = acq_val
+                    changed_inc = True
+                    break
 
-            # If no significant improvement break, otherwise move
-            # to one of the best neighbors
-            if acq_val_best > acq_val_incumbent + self.epsilon:
-
-                self.logger.debug("Switch to one of the neighbors")
-                # List of best neighbors
-                best_indices = np.where(acq_val_neighbours > acq_val_incumbent + self.epsilon)[0]
-
-                best_neighbours = np.zeros([best_indices.shape[0],
-                                            neighbourhood.shape[1]])
-                for i in range(best_indices.shape[0]):
-                    best_neighbours[i] = neighbourhood[best_indices[i]]
-
-                # Move to one of the best neighbors randomly
-                random_idx = np.random.randint(0, best_indices.shape[0])
-                #incumbent = best_neighbours[random_idx]
-                incumbent = Configuration(self.config_space,
-                                          vector=best_neighbours[random_idx])
-
-            else:
-                self.logger.debug("Local search took %d steps. "
-                             "Computing the acquisition value for one"
-                             "configuration took %f seconds on average.",
-                             local_search_steps, (t_acq / float(n_acq)))
-                break
-
-            if self.max_iterations != None \
-                and local_search_steps == self. max_iterations:
-                self.logger.debug("Local search took %d steps."
-                             " Computing the acquisition value for one "
-                             "configuration took %f seconds on average.",
-                              local_search_steps, (t_acq / float(n_acq)))
+            if (not changed_inc) or (self.max_iterations != None
+                                     and local_search_steps == self. max_iterations):
+                self.logger.debug("Local search took %d steps and looked at %d configurations."
+                                  "Computing the acquisition value for one "
+                                  "configuration took %f seconds on average.",
+                                  local_search_steps, neighbors_looked_at, np.mean(time_n))
                 break
 
         return incumbent, acq_val_incumbent
