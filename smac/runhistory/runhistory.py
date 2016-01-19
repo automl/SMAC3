@@ -89,7 +89,7 @@ class RunHistory(object):
             "Inst_Seed", ["instance", "seed", "time", "cost"])
         list_ = []
         for k in self.data:
-            if config.__repr__() == self.ids_config[k.config_id]:
+            if config == self.ids_config[k.config_id]:
                 ist = InstSeedTuple(
                     k.instance_id, k.seed, self.data[k].time, self.data[k].cost)
                 list_.append(ist)

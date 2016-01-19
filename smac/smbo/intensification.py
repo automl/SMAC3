@@ -83,7 +83,7 @@ class Intensifier(object):
         '''
         num_run = 0
         for challenger in self.challengers:
-            self.logger.debug("Intensify on %s" %(challenger))
+            self.logger.debug("Intensify on %s" % (challenger))
             inc_runs = self.run_history.get_runs_for_config(self.incumbent)
             # First evaluate incumbent on a new instance
             if len(inc_runs) < self.maxR:
@@ -115,9 +115,8 @@ class Intensifier(object):
                 to_run = missing_runs[:min(N, len(missing_runs))]
                 missing_runs = missing_runs[min(N, len(missing_runs)):]
 
-                for r in to_run:
+                for instance, seed in to_run:
                     # Run challenger on all <config,seed> to run
-                    instance, seed = r.instance, r.seed
                     status, cost, dur, res = self.tae.run(config=challenger,
                                                           instance=instance,
                                                           seed=seed,
@@ -144,11 +143,13 @@ class Intensifier(object):
 
                 if chal_perf > inc_perf:
                     # Incumbent beats challenger
-                    self.logger.debug("Incumbent is better than challenger.")
+                    self.logger.debug("Incumbent (%.2f) is better than challenger (%.2f)." %(inc_perf, chal_perf))
                     break
                 elif len(missing_runs) == 0:
                     # Challenger is as good as incumbent -> change incu
-                    self.logger.debug("Changing incumbent to challenger")
+                    self.logger.debug("Challenger (%.2f) is better than incumbent (%.2f)." %(chal_perf, inc_perf))
+                    self.logger.debug(
+                        "Changing incumbent to challenger: %s" % (challenger))
                     self.incumbent = challenger
                     break
                 else:
@@ -162,5 +163,11 @@ class Intensifier(object):
                 elif time.time() - self.start_time - self.time_bound > 0:
                     self.logger.debug("Timelimit for intensification reached")
                     break
+
+        # output estimated performance of incumbent
+        inc_runs = self.run_history.get_runs_for_config(self.incumbent)
+        inc_perf = numpy.mean(map(lambda x: x.cost, inc_runs))
+        logging.info("Updated estimated performance of incumbent on %d runs: %.4f" % (
+            len(inc_runs), inc_perf))
 
         return self.incumbent
