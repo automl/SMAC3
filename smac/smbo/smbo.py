@@ -184,7 +184,10 @@ class SMBO(BaseSolver):
 
         # Start N local search from different random start points
         for i in range(n_iters):
-            start_point = self.config_space.sample_configuration()
+            if i == 0:
+                start_point = self.incumbent
+            else:
+                start_point = self.config_space.sample_configuration()
             configuration, acq_val = self.local_search.maximize(start_point)
 
             found_configs.append(configuration)
