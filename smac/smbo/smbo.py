@@ -108,16 +108,13 @@ class SMBO(BaseSolver):
         status, cost, runtime, additional_info = executor.run(
             default_conf, instance=rand_inst, cutoff=self.scenario.cutoff)
 
-        status = 2
-        runtime = 3000
-
         if status in [StatusType.CRASHED or StatusType.ABORT]:
             logging.info("First run crashed -- Abort")
             sys.exit(42)
 
         self.runhistory.add(config=default_conf, cost=cost, time=runtime,
                             status=status,
-                            instance_id=rand_inst_id,
+                            instance_id=rand_inst,
                             seed=None,
                             additional_info=additional_info)
 
