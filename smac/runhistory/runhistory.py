@@ -62,11 +62,11 @@ class RunHistory(object):
 
         # TODO: replace str casting of config when we have something hashable
         # as a config object
-        config_id = self.config_ids.get(str(config))
+        config_id = self.config_ids.get(config.__repr__())
         if config_id is None:
             self._n_id += 1
-            self.config_ids[str(config)] = self._n_id
-            config_id = self.config_ids.get(str(config))
+            self.config_ids[config.__repr__()] = self._n_id
+            config_id = self.config_ids.get(config.__repr__())
             self.ids_config[self._n_id] = config
 
         k = self.RunKey(config_id, instance_id, seed)
@@ -89,7 +89,7 @@ class RunHistory(object):
             "Inst_Seed", ["instance", "seed", "time", "cost"])
         list_ = []
         for k in self.data:
-            if config == self.ids_config[k.config_id]:
+            if config.__repr__() == self.ids_config[k.config_id]:
                 ist = InstSeedTuple(
                     k.instance_id, k.seed, self.data[k].time, self.data[k].cost)
                 list_.append(ist)

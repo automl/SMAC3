@@ -112,20 +112,32 @@ class Intensifier(object):
 
                 for r in to_run:
                     # Run challenger on all <config,seed> to run
-                    seed, instance = r
+                    instance, seed = r.instance, r.seed
                     status, cost, dur, res = self.tae.run(config=challenger,
                                                           instance=instance,
                                                           seed=seed,
                                                           cutoff=self.cutoff)
-                    
+
                     self.run_history.add(config=challenger,
                                          cost=cost, time=dur, status=status,
                                          instance_id=instance, seed=seed,
                                          additional_info=res)
                     num_run += 1
-                incu_perf = self.runhistory.performance(self.incumbent)
-                chal_perf = self.runhistory.performance(challenger)
-                if chal_perf > incu_perf:
+
+                challenger_runs = self.run_history.get_runs_for_config(
+                    challenger)
+                chal_inst_seeds = map(lambda x: (
+                    x.instance, x.seed), self.run_history.get_runs_for_config(challenger))
+                chal_perf = sum(map(lambda x: x.cost, challenger_runs))
+
+                inc_id = self.run_history.config_ids[self.incumbent.__repr__()]
+                inc_perfs = []
+                for i, r in chal_inst_seeds:
+                    inc_k = self.run_history.RunKey(inc_id, i, r)
+                    inc_perfs.append(self.run_history.data[inc_k].cost)
+                inc_perf = sum(inc_perfs)
+
+                if chal_perf > inc_perf:
                     # Incumbent beats challenger
                     break
                 elif len(missing_runs) == 0:
