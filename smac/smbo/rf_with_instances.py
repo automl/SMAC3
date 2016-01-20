@@ -88,10 +88,15 @@ class RandomForestWithInstances(RandomForest):
         np.array(1,)
             predictive variance over all instances
         """
-        X_ = np.repeat(Xtest, self.instance_features.shape[0], axis=0)
-        I_ = np.tile(self.instance_features, (Xtest.shape[0], 1))
+        # first we make sure this does not break in cases
+        # where we have no instance features
+        if self.instance_features is None or len(self.instance_features) == 0:
+            X_ = Xtest
+        else:
+            X_ = np.repeat(Xtest, self.instance_features.shape[0], axis=0)
+            I_ = np.tile(self.instance_features, (Xtest.shape[0], 1))
 
-        X_ = np.concatenate((X_, I_), axis=1)
+            X_ = np.concatenate((X_, I_), axis=1)
 
         mu, var = super(RandomForestWithInstances, self).predict(X_)
 
