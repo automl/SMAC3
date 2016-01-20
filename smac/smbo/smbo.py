@@ -40,7 +40,8 @@ class SMBO(BaseSolver):
         self.config_space = scenario.cs
 
         # Extract types vector for rf from config space
-        self.types = np.zeros(len(self.config_space.get_hyperparameters()))
+        self.types = np.zeros(len(self.config_space.get_hyperparameters()),
+                              dtype=np.uint)
 
         # Extract bounds of the input space
         X_lower = np.zeros([self.types.shape[0]])
@@ -72,6 +73,7 @@ class SMBO(BaseSolver):
 
         self.local_search = LocalSearch(self.acquisition_func,
                                         self.config_space)
+        self.incumbent = None
         self.seed = seed
 
     def run(self, max_iters=10):
@@ -180,7 +182,7 @@ class SMBO(BaseSolver):
 
         # Start N local search from different random start points
         for i in range(n_iters):
-            if i == 0:
+            if i == 0 and self.incumbent is not None:
                 start_point = self.incumbent
             else:
                 start_point = self.config_space.sample_configuration()
