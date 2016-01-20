@@ -3,6 +3,7 @@ from collections import OrderedDict
 import logging
 import sys
 import time
+import random
 
 import numpy
 
@@ -15,7 +16,7 @@ __maintainer__ = "Katharina Eggensperger"
 __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
-MAXINT = 2**31-1
+MAXINT = 2**31 - 1
 
 
 class Intensifier(object):
@@ -76,17 +77,21 @@ class Intensifier(object):
             raise ValueError("time_bound must be > 1")
 
     def intensify(self):
+        '''
+            running intensification to determine the incumbent configuration
+            Side effect: adds runs to run_history
+        '''
         num_run = 0
         for challenger in self.challengers:
+            self.logger.debug("Intensify on %s" % (challenger))
             inc_runs = self.run_history.get_runs_for_config(self.incumbent)
             # First evaluate incumbent on a new instance
             if len(inc_runs) < self.maxR:
                 inc_scen = set([s[0] for s in inc_runs])
-                # TODO sample instance where inc has not yet been evaluated
                 next_seed = self.rs.randint(low=0, high=MAXINT,
-                                                   size=1)[0]
-                next_instance = sorted(list((self.instances - inc_scen)))
-                next_instance = next_instance[next_seed % len(next_instance)]
+                                            size=1)[0]
+                next_instance = random.choice(
+                    list((self.instances - inc_scen)))
                 status, cost, dur, res = self.tae.run(config=self.incumbent,
                                                       instance=next_instance,
                                                       seed=next_seed,
@@ -97,50 +102,72 @@ class Intensifier(object):
                                      additional_info=res)
                 num_run += 1
             N = 1
+            inc_inst_seeds = set(map(lambda x: (
+                x.instance, x.seed), self.run_history.get_runs_for_config(self.incumbent)))
+
             while True:
-                # TODO get a list of all seeds where challenger has not been evaluated, but incumbent
-                # TODO get a list of all instances where challenger has not been evaluated, but incumbent
-                challenger_runs = self.run_history.get_runs_for_config(challenger)
-                # build a boolean matrix
-                challenger_runs_matrix = numpy.zeros([])
-                # TODO: here I stopped, fill matrix with ones where inc has been evaluated and create missing_runs list
+                chall_inst_seeds = set(map(lambda x: (
+                    x.instance, x.seed), self.run_history.get_runs_for_config(challenger)))
+
+                missing_runs = list(inc_inst_seeds - chall_inst_seeds)
+
                 self.rs.shuffle(missing_runs)
                 to_run = missing_runs[:min(N, len(missing_runs))]
                 missing_runs = missing_runs[min(N, len(missing_runs)):]
-                for r in to_run:
+
+                for instance, seed in to_run:
                     # Run challenger on all <config,seed> to run
-                    seed, instance = r
                     status, cost, dur, res = self.tae.run(config=challenger,
-                                                           instance=instance,
-                                                           seed=seed,
-                                                           cutoff=self.cutoff)
+                                                          instance=instance,
+                                                          seed=seed,
+                                                          cutoff=self.cutoff)
+
                     self.run_history.add(config=challenger,
                                          cost=cost, time=dur, status=status,
                                          instance_id=instance, seed=seed,
                                          additional_info=res)
                     num_run += 1
-                incu_perf = self.runhistory.performance(self.incumbent)
-                chal_perf = self.runhistory.performance(challenger)
-                if chal_perf > incu_perf:
+
+                challenger_runs = self.run_history.get_runs_for_config(
+                    challenger)
+                chal_inst_seeds = map(lambda x: (
+                    x.instance, x.seed), self.run_history.get_runs_for_config(challenger))
+                chal_perf = sum(map(lambda x: x.cost, challenger_runs))
+
+                inc_id = self.run_history.config_ids[self.incumbent.__repr__()]
+                inc_perfs = []
+                for i, r in chal_inst_seeds:
+                    inc_k = self.run_history.RunKey(inc_id, i, r)
+                    inc_perfs.append(self.run_history.data[inc_k].cost)
+                inc_perf = sum(inc_perfs)
+
+                if chal_perf > inc_perf:
                     # Incumbent beats challenger
+                    self.logger.debug("Incumbent (%.2f) is better than challenger (%.2f)." %(inc_perf, chal_perf))
                     break
                 elif len(missing_runs) == 0:
                     # Challenger is as good as incumbent -> change incu
+                    self.logger.debug("Challenger (%.2f) is better than incumbent (%.2f)." %(chal_perf, inc_perf))
+                    self.logger.debug(
+                        "Changing incumbent to challenger: %s" % (challenger))
                     self.incumbent = challenger
+                    break
                 else:
                     # challenger is not worse, continue
-                    N = 2*N
+                    N = 2 * N
 
                 if num_run > self.run_limit:
-                    self.logger("Maximum #runs for intensification reached")
+                    self.logger.debug(
+                        "Maximum #runs for intensification reached")
                     break
-                elif time.time() - self.start_time - self.time_bound < 0:
-                    self.logger("Timelimit for intensification reached")
+                elif time.time() - self.start_time - self.time_bound > 0:
+                    self.logger.debug("Timelimit for intensification reached")
                     break
 
-        return self.incumbent, self.run_history
+        # output estimated performance of incumbent
+        inc_runs = self.run_history.get_runs_for_config(self.incumbent)
+        inc_perf = numpy.mean(map(lambda x: x.cost, inc_runs))
+        logging.info("Updated estimated performance of incumbent on %d runs: %.4f" % (
+            len(inc_runs), inc_perf))
 
-
-
-
-
+        return self.incumbent

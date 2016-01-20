@@ -43,4 +43,6 @@ class SMAC(object):
         scen = Scenario(args_)
 
         smbo = SMBO(scenario=scen, seed=args_.seed)
-        smbo.run(max_iters=10)
+        smbo.run(max_iters=args_.max_iterations)
+        
+        self.logger.info("Final Incumbent: %s" %(smbo.incumbent))

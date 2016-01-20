@@ -6,6 +6,7 @@ import numpy
 
 from smac.tae.execute_ta_run import StatusType
 from smac.runhistory.runhistory import RunHistory
+from smac.configspace import impute_inactive_values
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -91,7 +92,9 @@ class RunHistory2EPM(object):
         # Then populate matrix
         for row, run in enumerate(run_list):
             # Scaling is automatically done in configSpace
-            X[row, :] = runhistory.ids_config[run[1]].get_array()
+            conf = runhistory.ids_config[run[1]]
+            conf = impute_inactive_values(conf)
+            X[row, :] = conf.get_array()
             # TODO: replace with instance features if available
             #run_array[row, -1] = instance_id_list[row]
             # TODO: replace by cost if we optimize quality/cost

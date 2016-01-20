@@ -18,6 +18,7 @@ from smac.runhistory.runhistory2epm import RunHistory2EPM
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.execute_ta_run import StatusType
 
+
 class SMBO(BaseSolver):
 
     def __init__(self, scenario, seed=42):
@@ -106,21 +107,18 @@ class SMBO(BaseSolver):
         # TODO: handle TA seeds
         status, cost, runtime, additional_info = executor.run(
             default_conf, instance=rand_inst, cutoff=self.scenario.cutoff)
-        
-        status = 2
-        runtime = 3000
-        
+
         if status in [StatusType.CRASHED or StatusType.ABORT]:
             logging.info("First run crashed -- Abort")
             sys.exit(42)
-        
+
         self.runhistory.add(config=default_conf, cost=cost, time=runtime,
                             status=status,
-                            instance_id=rand_inst_id,
+                            instance_id=rand_inst,
                             seed=None,
                             additional_info=additional_info)
 
-        #print(self.runhistory.data)
+        # print(self.runhistory.data)
 
         # Main BO loop
         iteration = 1
@@ -133,25 +131,23 @@ class SMBO(BaseSolver):
             # TODO: Estimate new configuration
             self.logger.debug("Search for next configuration")
             next_config = self.choose_next(X, Y)
-            
+
             self.logger.debug("Intensify")
-            #TODO: fix timebound of intensifier
-            #TODO: add more than one challenger
-            inten = Intensifier(executor=executor, 
-                                challengers=[next_config], 
-                                incumbent=self.incumbent, 
-                                run_history=self.runhistory, 
-                                instances=[inst[0] for inst in self.scenario.train_insts],
+            # TODO: fix timebound of intensifier
+            # TODO: add more than one challenger
+            inten = Intensifier(executor=executor,
+                                challengers=[next_config,
+                                             self.config_space.sample_configuration()],
+                                incumbent=self.incumbent,
+                                run_history=self.runhistory,
+                                instances=[inst[0]
+                                           for inst in self.scenario.train_insts],
                                 cutoff=self.scenario.cutoff)
-                 
+
             self.incumbent = inten.intensify()
 
-            # TODO: Perform target algorithm run
-
-            # TODO: Update run history
-
             # TODO: Write run history into database
-            
+
             if iteration == max_iters:
                 break
 
@@ -184,7 +180,10 @@ class SMBO(BaseSolver):
 
         # Start N local search from different random start points
         for i in range(n_iters):
-            start_point = self.config_space.sample_configuration()
+            if i == 0:
+                start_point = self.incumbent
+            else:
+                start_point = self.config_space.sample_configuration()
             configuration, acq_val = self.local_search.maximize(start_point)
 
             found_configs.append(configuration)
@@ -194,5 +193,6 @@ class SMBO(BaseSolver):
         best = np.argmax(acq_vals)
         # TODO: We could also return a configuration object here, but then also
         # the unit test has to be adapted
-        # ML: We have to return the configuration object here or else it is a mess since we cannot convert it back
+        # ML: We have to return the configuration object here or else it is a
+        # mess since we cannot convert it back
         return found_configs[best]
