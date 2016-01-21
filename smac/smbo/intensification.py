@@ -86,7 +86,7 @@ class Intensifier(object):
             self.logger.debug("Intensify on %s" % (challenger))
             inc_runs = self.run_history.get_runs_for_config(self.incumbent)
             # First evaluate incumbent on a new instance
-            if len(inc_runs) < self.maxR:
+            if len(inc_runs) <= min(self.maxR, len(self.instances)):
                 inc_scen = set([s[0] for s in inc_runs])
                 next_seed = self.rs.randint(low=0, high=MAXINT,
                                             size=1)[0]
