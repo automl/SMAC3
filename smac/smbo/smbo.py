@@ -18,6 +18,8 @@ from smac.runhistory.runhistory2epm import RunHistory2EPM
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.execute_ta_run import StatusType
 
+MAXINT = 2**31 - 1
+
 
 class SMBO(BaseSolver):
 
@@ -74,7 +76,36 @@ class SMBO(BaseSolver):
         self.local_search = LocalSearch(self.acquisition_func,
                                         self.config_space)
         self.incumbent = None
+        self.executor = None
         self.seed = seed
+
+    def run_initial_design(self):
+        '''
+            runs algorithm runs for a initial design;
+            default implementation: running the default configuration on a random instance-seed pair
+            Side effect: adds runs to self.runhistory
+        '''
+
+        default_conf = self.config_space.get_default_configuration()
+        self.incumbent = default_conf
+        rand_inst_id = random.randint(0, len(self.scenario.train_insts))
+        # ignore instance specific values
+        rand_inst = self.scenario.train_insts[rand_inst_id][0]
+        initial_seed = random.randint(0, MAXINT)
+        # TODO: handle TA seeds
+        status, cost, runtime, additional_info = self.executor.run(
+            default_conf, instance=rand_inst, cutoff=self.scenario.cutoff,
+            seed=initial_seed)
+
+        if status in [StatusType.CRASHED or StatusType.ABORT]:
+            logging.info("First run crashed -- Abort")
+            sys.exit(42)
+
+        self.runhistory.add(config=default_conf, cost=cost, time=runtime,
+                            status=status,
+                            instance_id=rand_inst,
+                            seed=initial_seed,
+                            additional_info=additional_info)
 
     def run(self, max_iters=10):
         '''
@@ -95,32 +126,18 @@ class SMBO(BaseSolver):
         self.runhistory = RunHistory()
 
         # TODO set arguments properly
-        rh2EPM = RunHistory2EPM(num_params=num_params, cutoff_time=self.scenario.cutoff,
-                                success_states=None, impute_censored_data=False,
+        rh2EPM = RunHistory2EPM(num_params=num_params,
+                                cutoff_time=self.scenario.cutoff,
+                                success_states=None,
+                                impute_censored_data=False,
                                 impute_state=None)
-        executor = ExecuteTARunOld(
+
+        # TODO: Replace it by other executor based on scenario;
+        # maybe move it scenario directly
+        self.executor = ExecuteTARunOld(
             ta=self.scenario.ta, run_obj=self.scenario.run_obj)
 
-        default_conf = self.config_space.get_default_configuration()
-        self.incumbent = default_conf
-        rand_inst_id = random.randint(0, len(self.scenario.train_insts))
-        # ignore instance specific values
-        rand_inst = self.scenario.train_insts[rand_inst_id][0]
-        # TODO: handle TA seeds
-        status, cost, runtime, additional_info = executor.run(
-            default_conf, instance=rand_inst, cutoff=self.scenario.cutoff)
-
-        if status in [StatusType.CRASHED or StatusType.ABORT]:
-            logging.info("First run crashed -- Abort")
-            sys.exit(42)
-
-        self.runhistory.add(config=default_conf, cost=cost, time=runtime,
-                            status=status,
-                            instance_id=rand_inst,
-                            seed=None,
-                            additional_info=additional_info)
-
-        # print(self.runhistory.data)
+        self.run_initial_design()
 
         # Main BO loop
         iteration = 1
@@ -137,7 +154,7 @@ class SMBO(BaseSolver):
             self.logger.debug("Intensify")
             # TODO: fix timebound of intensifier
             # TODO: add more than one challenger
-            inten = Intensifier(executor=executor,
+            inten = Intensifier(executor=self.executor,
                                 challengers=[next_config,
                                              self.config_space.sample_configuration()],
                                 incumbent=self.incumbent,
