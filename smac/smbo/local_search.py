@@ -1,10 +1,11 @@
 import logging
 import time
+import random
 import numpy as np
 
 from robo.maximizers.base_maximizer import BaseMaximizer
 
-from smac.configspace import impute_inactive_values, get_random_neighbor, Configuration
+from smac.configspace import impute_inactive_values, get_one_exchange_neighbourhood, Configuration
 
 __author__ = "Aaron Klein, Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -41,7 +42,9 @@ class LocalSearch(BaseMaximizer):
         self.epsilon = epsilon
         self.n_neighbours = n_neighbours
         self.max_iterations = max_iterations
+        #TODO: has to be replaced by randomstate 
         self.seed = seed
+        random.seed(self.seed)
 
         self.logger = logging.getLogger("localsearch")
 
@@ -87,10 +90,12 @@ class LocalSearch(BaseMaximizer):
             # Get neighborhood of the current incumbent
             # by randomly drawing configurations
             changed_inc = False
+            
+            all_neighbors = get_one_exchange_neighbourhood(incumbent, seed=local_search_steps)
+            random.shuffle(all_neighbors)
 
-            for i in range(self.n_neighbours):
+            for neighbor in all_neighbors:
                 s_time = time.time()
-                neighbor = get_random_neighbor(incumbent, seed=i)
                 neighbor_ = impute_inactive_values(neighbor)
                 n_array = neighbor_.get_array()
                 acq_val = self.acquisition_function(n_array, *args)
