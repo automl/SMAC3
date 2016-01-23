@@ -2,6 +2,7 @@ import logging
 from subprocess import Popen, PIPE
 
 from smac.tae.execute_ta_run import StatusType
+from smac.stats.stats import Stats
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -70,6 +71,9 @@ class ExecuteTARunOld(object):
                 additional_info: dict
                     all further additional run information
         """
+
+        Stats.ta_runs += 1
+
         if instance is None:
             instance = "0"
 
@@ -113,6 +117,8 @@ class ExecuteTARunOld(object):
             status = StatusType.ABORT
         elif status in ["MEMOUT"]:
             status = StatusType.MEMOUT
+
+        Stats.ta_time_used += float(runtime)
 
         if status in [StatusType.CRASHED, StatusType.ABORT]:
             self.logger.warn(

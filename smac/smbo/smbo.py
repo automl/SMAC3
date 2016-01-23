@@ -17,6 +17,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import RunHistory2EPM
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.execute_ta_run import StatusType
+from smac.stats.stats import Stats
 
 MAXINT = 2**31 - 1
 
@@ -121,6 +122,7 @@ class SMBO(BaseSolver):
         incumbent: np.array(1, H)
             The best found configuration
         '''
+        Stats.start_timing()
 
         num_params = len(self.config_space.get_hyperparameters())
         self.runhistory = RunHistory()
@@ -171,6 +173,9 @@ class SMBO(BaseSolver):
                 break
 
             iteration += 1
+            
+            if Stats.get_remaing_time_budget() < 0 or Stats.get_remaining_ta_runs() < 0:
+                break
 
         return self.incumbent
 

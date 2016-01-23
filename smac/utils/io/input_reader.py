@@ -83,7 +83,12 @@ class InputReader(object):
                             'test_instance_seed_file' : 'test_instance_file',               
                             'feature-file' : 'feature_file', 
                             'instanceFeatureFile' : 'feature_file', 
-                            'feature_file' : 'feature_file'
+                            'feature_file' : 'feature_file',
+                            'runcount-limit' : 'runcount-limit',
+                            'runcount_limit' : 'runcount-limit',
+                            'totalNumRunsLimit' : 'runcount-limit',
+                            'numRunsLimit' : 'runcount-limit',
+                            'numberOfRunsLimit' : 'runcount-limit'
                         }
 
         scenario_dict = {}

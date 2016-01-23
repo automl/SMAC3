@@ -5,6 +5,7 @@ import logging
 from utils.io.cmd_reader import CMDReader
 from scenario.scenario import Scenario
 from smbo.smbo import SMBO
+from stats.stats import Stats
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -12,7 +13,6 @@ __license__ = "BSD"
 __maintainer__ = "Marius Lindauer"
 __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
-
 
 class SMAC(object):
     '''
@@ -42,7 +42,12 @@ class SMAC(object):
 
         scen = Scenario(args_)
 
+        # necessary to use stats options related to scenario information        
+        Stats.scenario = scen
+
         smbo = SMBO(scenario=scen, seed=args_.seed)
         smbo.run(max_iters=args_.max_iterations)
         
+        Stats.print_stats()
         self.logger.info("Final Incumbent: %s" %(smbo.incumbent))
+        

@@ -3,6 +3,7 @@ import json
 from subprocess import Popen, PIPE
 
 from smac.tae.execute_ta_run import StatusType
+from smac.stats.stats import Stats
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -72,6 +73,8 @@ class ExecuteTARunAClib(object):
                     all further additional run information
         """
 
+        Stats.ta_runs += 1
+
         if instance is None:
             instance = "0"
 
@@ -125,6 +128,8 @@ class ExecuteTARunAClib(object):
             results["runtime"] = 0
 
         runtime = float(results["runtime"])
+        
+        Stats.ta_time_used += float(runtime)
 
         if self.run_obj == "quality" and results.get("cost") is None:
             self.logger.error(
