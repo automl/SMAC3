@@ -3,8 +3,6 @@ import time
 import random
 import numpy as np
 
-from robo.maximizers.base_maximizer import BaseMaximizer
-
 from smac.configspace import impute_inactive_values, get_one_exchange_neighbourhood, Configuration
 
 __author__ = "Aaron Klein, Marius Lindauer"
@@ -15,7 +13,7 @@ __email__ = "kleinaa@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class LocalSearch(BaseMaximizer):
+class LocalSearch(object):
 
     def __init__(self, acquisition_function, config_space,
                  epsilon=0.01, n_neighbours=42, max_iterations=None, seed=42):

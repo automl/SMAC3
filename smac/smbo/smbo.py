@@ -7,9 +7,8 @@ from ConfigSpace.io import pcs
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformFloatHyperparameter, UniformIntegerHyperparameter, Constant
 
-from robo.acquisition.ei import EI
-from robo.solver.base_solver import BaseSolver
-
+from smac.smbo.acquisition import EI
+from smac.smbo.base_solver import BaseSolver
 from smac.smbo.rf_with_instances import RandomForestWithInstances
 from smac.smbo.local_search import LocalSearch
 from smac.smbo.intensification import Intensifier
