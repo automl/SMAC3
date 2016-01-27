@@ -5,6 +5,8 @@ Created on Dec 16, 2015
 '''
 
 import numpy as np
+import pyrfr
+import pyrfr.regression
 
 class RandomForestWithInstances(object):
     '''
@@ -126,6 +128,13 @@ class RandomForestWithInstances(object):
 
             X_ = np.concatenate((X_, I_), axis=1)
 
-        mu, var = super(RandomForestWithInstances, self).predict(X_)
+        mean = np.zeros(Xtest.shape[0])
+        var = np.zeros(Xtest.shape[0])
+
+        # TODO: Would be nice if the random forest supports batch predictions
+        for i, x in enumerate(Xtest):
+            mean[i], var[i] = self.rf.predict(x)
+
+        mu, var = mean[:, np.newaxis], var[:, np.newaxis]
 
         return mu.mean(), var.mean()
