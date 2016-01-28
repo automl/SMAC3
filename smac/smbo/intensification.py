@@ -147,8 +147,8 @@ class Intensifier(object):
                     break
                 elif len(missing_runs) == 0:
                     # Challenger is as good as incumbent -> change incu
-                    self.logger.debug("Challenger (%.2f) is better than incumbent (%.2f)." %(chal_perf, inc_perf))
-                    self.logger.debug(
+                    self.logger.info("Challenger (%.2f) is better than incumbent (%.2f)." %(chal_perf, inc_perf))
+                    self.logger.info(
                         "Changing incumbent to challenger: %s" % (challenger))
                     self.incumbent = challenger
                     break
