@@ -3,7 +3,12 @@ import logging
 from scipy.stats import norm
 import numpy as np
 
-logger = logging.getLogger(__name__)
+__author__ = "Aaron Klein"
+__copyright__ = "Copyright 2015, ML4AAD"
+__license__ = "BSD"
+__maintainer__ = "Aaron Klein"
+__email__ = "kleinaa@cs.uni-freiburg.de"
+__version__ = "0.0.1"
 
 class BestObservation(object):
     """
@@ -48,6 +53,8 @@ class AcquisitionFunction(object):
         self.X_lower = X_lower
         self.X_upper = X_upper
 
+        self.logger = logging.getLogger("AcquisitionFunction")
+
         assert np.any(self.X_lower < self.X_upper)
 
     def update(self, model):
@@ -85,7 +92,8 @@ class AcquisitionFunction(object):
             X = X[np.newaxis, :]
 
         if derivative:
-            acq, grad = zip(*[self.compute(x[np.newaxis, :], derivative) for x in X])
+            acq, grad = zip(
+                *[self.compute(x[np.newaxis, :], derivative) for x in X])
             acq = np.array(acq)[:, :, 0]
             grad = np.array(grad)[:, :, 0]
 
@@ -121,15 +129,15 @@ class AcquisitionFunction(object):
         """
         raise NotImplementedError()
 
+
 class EI(AcquisitionFunction):
 
     def __init__(self,
-            model,
-            X_lower,
-            X_upper,
-            par=0.01,
-            **kwargs):
-
+                 model,
+                 X_lower,
+                 X_upper,
+                 par=0.01,
+                 **kwargs):
         r"""
         Computes for a given x the expected improvement as
         acquisition value.
@@ -231,7 +239,7 @@ class EI(AcquisitionFunction):
                 dsdx = ds2dx / (2 * s)
                 df = (-dmdx * norm.cdf(z) + (dsdx * norm.pdf(z))).T
             if (f < 0).any():
-                logger.error("Expected Improvement is smaller than 0!")
+                self.logger.error("Expected Improvement is smaller than 0!")
                 raise ValueError
 
         if derivative:

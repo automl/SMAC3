@@ -10,8 +10,6 @@ import time
 import errno
 import logging
 
-logger = logging.getLogger(__name__)
-
 
 class BaseSolver(object):
     '''
@@ -30,6 +28,8 @@ class BaseSolver(object):
         self.save_dir = save_dir
         if self.save_dir is not None:
             self.create_save_dir()
+
+        self.logger = logging.getLogger("BaseSolver")
 
     def init_last_iteration(self):
         """
@@ -56,7 +56,8 @@ class BaseSolver(object):
         except OSError as exception:
             if exception.errno != errno.EEXIST:
                 raise
-        self.output_file = open(os.path.join(self.save_dir, 'results.csv'), 'w')
+        self.output_file = open(
+            os.path.join(self.save_dir, 'results.csv'), 'w')
         self.csv_writer = None
 
     def get_observations(self):
@@ -64,7 +65,7 @@ class BaseSolver(object):
 
     def get_model(self):
         if self.model is None:
-            logger.info("No model trained yet!")
+            self.logger.info("No model trained yet!")
         return self.model
 
     def run(self, num_iterations=10, X=None, Y=None, overwrite=False):

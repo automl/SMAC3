@@ -20,6 +20,12 @@ from smac.stats.stats import Stats
 
 MAXINT = 2**31 - 1
 
+__author__ = "Aaron Klein, Marius Lindauer"
+__copyright__ = "Copyright 2015, ML4AAD"
+__license__ = "BSD"
+#__maintainer__ = "???"
+#__email__ = "???"
+__version__ = "0.0.1"
 
 class SMBO(BaseSolver):
 
@@ -98,7 +104,7 @@ class SMBO(BaseSolver):
             seed=initial_seed)
 
         if status in [StatusType.CRASHED or StatusType.ABORT]:
-            logging.info("First run crashed -- Abort")
+            self.logger.info("First run crashed -- Abort")
             sys.exit(42)
 
         self.runhistory.add(config=default_conf, cost=cost, time=runtime,

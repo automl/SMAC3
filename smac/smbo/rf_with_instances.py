@@ -1,12 +1,13 @@
-'''
-Created on Dec 16, 2015
-
-@author: Aaron Klein
-'''
-
 import numpy as np
 import pyrfr
 import pyrfr.regression
+
+__author__ = "Aaron Klein"
+__copyright__ = "Copyright 2015, ML4AAD"
+__license__ = "BSD"
+__maintainer__ = "Aaron Klein"
+__email__ = "kleinaa@cs.uni-freiburg.de"
+__version__ = "0.0.1"
 
 class RandomForestWithInstances(object):
     '''

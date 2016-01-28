@@ -167,7 +167,7 @@ class Intensifier(object):
         # output estimated performance of incumbent
         inc_runs = self.run_history.get_runs_for_config(self.incumbent)
         inc_perf = numpy.mean(map(lambda x: x.cost, inc_runs))
-        logging.info("Updated estimated performance of incumbent on %d runs: %.4f" % (
+        self.logger.info("Updated estimated performance of incumbent on %d runs: %.4f" % (
             len(inc_runs), inc_perf))
 
         return self.incumbent
