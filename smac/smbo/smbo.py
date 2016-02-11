@@ -27,6 +27,7 @@ __license__ = "BSD"
 #__email__ = "???"
 __version__ = "0.0.1"
 
+
 class SMBO(BaseSolver):
 
     def __init__(self, scenario, seed=42):
@@ -36,7 +37,7 @@ class SMBO(BaseSolver):
         Parameters
         ----------
         scenario: smac.scenario.scenario.Scenario
-            Scenario object 
+            Scenario object
         seed: int
             Seed that is passed to random forest
         '''
@@ -88,7 +89,8 @@ class SMBO(BaseSolver):
     def run_initial_design(self):
         '''
             runs algorithm runs for a initial design;
-            default implementation: running the default configuration on a random instance-seed pair
+            default implementation: running the default configuration on
+                                    a random instance-seed pair
             Side effect: adds runs to self.runhistory
         '''
 
@@ -178,7 +180,7 @@ class SMBO(BaseSolver):
                 break
 
             iteration += 1
-            
+
             if Stats.get_remaing_time_budget() < 0 or Stats.get_remaining_ta_runs() < 0:
                 break
 
@@ -192,7 +194,8 @@ class SMBO(BaseSolver):
         Parameters
         ----------
         X : (N, D) numpy array, optional
-            Each column contains a configuration and one set of instance features.
+            Each column contains a configuration and one set of
+            instance features.
         Y : (N, 1) numpy array, optional
             The function values for each configuration instance pair.
 
@@ -201,6 +204,10 @@ class SMBO(BaseSolver):
         x : (1, H) Configuration Object
             The suggested configuration to evaluate.
         """
+
+        if X is None or Y is None:
+            return self.config_space.sample_configuration()
+
         self.model.train(X, Y)
         self.acquisition_func.update(self.model)
 
