@@ -48,7 +48,9 @@ class LocalSearch(object):
 
     def maximize(self, start_point, *args):
         """
-        Starts a local search from the given startpoint.
+        Starts a local search from the given startpoint and quits
+        if either the max number of steps is reached or no neighbor
+        with an higher improvement was found.
 
         Parameters:
         ----------
@@ -69,6 +71,12 @@ class LocalSearch(object):
 
         """
         incumbent = start_point
+        # Compute the acquisition value of the incumbent
+        incumbent_ = impute_inactive_values(incumbent)
+        acq_val_incumbent = self.acquisition_function(
+                                            incumbent_.get_array(),
+                                            *args)
+
         local_search_steps = 0
         neighbors_looked_at = 0
         time_n = []
@@ -76,20 +84,15 @@ class LocalSearch(object):
 
             local_search_steps += 1
             if local_search_steps % 1000 == 0:
-                self.logger.warn("Local search took already %d iterations. \
-                Is it maybe stuck in a infinite loop?", local_search_steps)
-
-            # Compute the acquisition value of the incumbent
-            incumbent_ = impute_inactive_values(incumbent)
-            acq_val_incumbent = self.acquisition_function(
-                incumbent_.get_array(),
-                *args)
+                self.logger.warn("Local search took already %d iterations." \
+                "Is it maybe stuck in a infinite loop?", local_search_steps)
 
             # Get neighborhood of the current incumbent
             # by randomly drawing configurations
             changed_inc = False
-            
-            all_neighbors = get_one_exchange_neighbourhood(incumbent, seed=local_search_steps)
+
+            all_neighbors = get_one_exchange_neighbourhood(incumbent,
+                                                    seed=local_search_steps)
             random.shuffle(all_neighbors)
 
             for neighbor in all_neighbors:
@@ -110,7 +113,7 @@ class LocalSearch(object):
 
             if (not changed_inc) or (self.max_iterations != None
                                      and local_search_steps == self. max_iterations):
-                self.logger.debug("Local search took %d steps and looked at %d configurations."
+                self.logger.debug("Local search took %d steps and looked at %d configurations. "
                                   "Computing the acquisition value for one "
                                   "configuration took %f seconds on average.",
                                   local_search_steps, neighbors_looked_at, np.mean(time_n))
