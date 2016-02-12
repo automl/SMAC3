@@ -147,7 +147,7 @@ class Intensifier(object):
                     # Run challenger on all <config,seed> to run
                     if self.run_obj_time:
                         cutoff = min(self.cutoff, (inc_perf - chal_time) * self.Adaptive_Capping_Slackfactor)
-                        print("Adaptive Capping cutoff: %f" %(cutoff))
+                        #print("Adaptive Capping cutoff: %f" %(cutoff))
                     else:
                         cutoff = self.cutoff
                     status, cost, dur, res = self.tae.run(config=challenger,

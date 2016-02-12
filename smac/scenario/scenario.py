@@ -38,7 +38,7 @@ class Scenario(object):
 
         self.ta = shlex.split(scenario["algo"])
         self.execdir = scenario.get("execdir", ".")
-        self.deterministic = scenario.get("deterministic", "0")
+        self.deterministic = scenario.get("deterministic", "0") == "1" or scenario.get("deterministic", "0") == "true"
         self.pcs_fn = scenario["paramfile"]
         self.run_obj = scenario.get("run_obj", "runtime")
         self.overall_obj = scenario.get("overall_obj", "par10")

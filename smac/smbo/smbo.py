@@ -170,7 +170,9 @@ class SMBO(BaseSolver):
                                 run_history=self.runhistory,
                                 instances=[inst[0]
                                            for inst in self.scenario.train_insts],
-                                cutoff=self.scenario.cutoff)
+                                cutoff=self.scenario.cutoff,
+                                deterministic = self.scenario.deterministic,
+                                run_obj_time = self.scenario.run_obj == "runtime")
 
             self.incumbent = inten.intensify()
 
