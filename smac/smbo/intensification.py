@@ -4,10 +4,13 @@ import logging
 import sys
 import time
 import random
+from collections import Counter
 
 import numpy
 
 from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
+from matplotlib.style.core import available
+
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -25,7 +28,7 @@ class Intensifier(object):
     '''
 
     def __init__(self, executor, challengers, incumbent, run_history, instances=None,
-                 cutoff=MAXINT,
+                 cutoff=MAXINT, deterministic=False,
                  time_bound=MAXINT, run_limit=MAXINT, maxR=2000, rng=0):
         '''
         Constructor
@@ -42,6 +45,10 @@ class Intensifier(object):
             all runs on all instance,seed pairs for incumbent
         instances : list
             list of all instance ids
+        cutoff : int
+            runtime cutoff of TA runs
+        deterministic: bool
+            whether the TA is deterministic or not
         time_bound : int
             time in [sec] available to perform intensify
         run_limit : int
@@ -69,6 +76,7 @@ class Intensifier(object):
 
         # scenario info
         self.cutoff = cutoff
+        self.deterministic = deterministic
         self.tae = executor
 
         if self.run_limit < 1:
@@ -87,20 +95,31 @@ class Intensifier(object):
             inc_runs = self.run_history.get_runs_for_config(self.incumbent)
             # First evaluate incumbent on a new instance
             if len(inc_runs) <= min(self.maxR, len(self.instances)):
-                inc_scen = set([s[0] for s in inc_runs])
-                next_seed = self.rs.randint(low=0, high=MAXINT,
+                # find all instances that have the most runs on the inc
+                inc_inst = [s.instance for s in inc_runs]
+                inc_inst = list(Counter(inc_inst).items())
+                inc_inst.sort(key=lambda x: x[1], reverse=True)
+                max_runs = inc_inst[0][1]
+                inc_inst = set(map(lambda x: x[0], filter(lambda x: x[1]==max_runs, inc_inst)))
+                
+                if self.deterministic:
+                    next_seed = 0
+                else:
+                    next_seed = self.rs.randint(low=0, high=MAXINT,
                                             size=1)[0]
-                next_instance = random.choice(
-                    list((self.instances - inc_scen)))
-                status, cost, dur, res = self.tae.run(config=self.incumbent,
-                                                      instance=next_instance,
-                                                      seed=next_seed,
-                                                      cutoff=self.cutoff)
-                self.run_history.add(config=self.incumbent,
-                                     cost=cost, time=dur, status=status,
-                                     instance_id=next_instance, seed=next_seed,
-                                     additional_info=res)
-                num_run += 1
+                                          
+                available_insts = (self.instances - inc_inst)
+                if available_insts: 
+                    next_instance = random.choice(list(available_insts))
+                    status, cost, dur, res = self.tae.run(config=self.incumbent,
+                                                          instance=next_instance,
+                                                          seed=next_seed,
+                                                          cutoff=self.cutoff)
+                    self.run_history.add(config=self.incumbent,
+                                         cost=cost, time=dur, status=status,
+                                         instance_id=next_instance, seed=next_seed,
+                                         additional_info=res)
+                    num_run += 1
             N = 1
             inc_inst_seeds = set(map(lambda x: (
                 x.instance, x.seed), self.run_history.get_runs_for_config(self.incumbent)))
