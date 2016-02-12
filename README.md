@@ -2,7 +2,7 @@
 
 ## Required other projects
 
-* RoBO (dev branch): https://github.com/automl/RoBO
+* rfr: https://mlindauer@bitbucket.org/aadfreiburg/random_forest_run.git
 * (HPOlib)Configspace (branch refactor): https://github.com/automl/HPOlibConfigSpace/
 
 ## Meeting Protocols
