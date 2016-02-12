@@ -12,7 +12,7 @@ from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
 from matplotlib.style.core import available
 
 
-__author__ = "Katharina Eggensperger"
+__author__ = "Katharina Eggensperger, Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "BSD"
 __maintainer__ = "Katharina Eggensperger"
@@ -28,7 +28,7 @@ class Intensifier(object):
     '''
 
     def __init__(self, executor, challengers, incumbent, run_history, instances=None,
-                 cutoff=MAXINT, deterministic=False,
+                 cutoff=MAXINT, deterministic=False, run_obj_time=True,
                  time_bound=MAXINT, run_limit=MAXINT, maxR=2000, rng=0):
         '''
         Constructor
@@ -49,6 +49,8 @@ class Intensifier(object):
             runtime cutoff of TA runs
         deterministic: bool
             whether the TA is deterministic or not
+        run_obj_time: bool
+            whether the run objective is runtime or not (if true, apply adaptive capping)
         time_bound : int
             time in [sec] available to perform intensify
         run_limit : int
@@ -56,8 +58,6 @@ class Intensifier(object):
         maxR : int
             maximum number of runs per config
         '''
-        # TODO It is probably important whether ta is deterministic
-
         # general attributes
         if instances is None:
             instances = []
@@ -77,7 +77,10 @@ class Intensifier(object):
         # scenario info
         self.cutoff = cutoff
         self.deterministic = deterministic
+        self.run_obj_time = run_obj_time
         self.tae = executor
+        
+        self.Adaptive_Capping_Slackfactor = 1.2
 
         if self.run_limit < 1:
             raise ValueError("run_limit must be > 1")
@@ -133,13 +136,24 @@ class Intensifier(object):
                 self.rs.shuffle(missing_runs)
                 to_run = missing_runs[:min(N, len(missing_runs))]
                 missing_runs = missing_runs[min(N, len(missing_runs)):]
-
+                
+                inst_seed_pairs = list(inc_inst_seeds - set(missing_runs))
+                inc_perf, inc_time = self.get_perf_and_time(self.incumbent, inst_seed_pairs)
+                
+                _, chal_time = self.get_perf_and_time(challenger, chall_inst_seeds) 
+                #TODO: do we have to consider PAR10 here instead of PAR1?
+                
                 for instance, seed in to_run:
                     # Run challenger on all <config,seed> to run
+                    if self.run_obj_time:
+                        cutoff = min(self.cutoff, (inc_perf - chal_time) * self.Adaptive_Capping_Slackfactor)
+                        print("Adaptive Capping cutoff: %f" %(cutoff))
+                    else:
+                        cutoff = self.cutoff
                     status, cost, dur, res = self.tae.run(config=challenger,
                                                           instance=instance,
                                                           seed=seed,
-                                                          cutoff=self.cutoff)
+                                                          cutoff=cutoff)
 
                     self.run_history.add(config=challenger,
                                          cost=cost, time=dur, status=status,
@@ -147,26 +161,15 @@ class Intensifier(object):
                                          additional_info=res)
                     num_run += 1
 
-                challenger_runs = self.run_history.get_runs_for_config(
-                    challenger)
-                chal_inst_seeds = map(lambda x: (
-                    x.instance, x.seed), self.run_history.get_runs_for_config(challenger))
-                chal_perf = sum(map(lambda x: x.cost, challenger_runs))
-
-                inc_id = self.run_history.config_ids[self.incumbent.__repr__()]
-                inc_perfs = []
-                for i, r in chal_inst_seeds:
-                    inc_k = self.run_history.RunKey(inc_id, i, r)
-                    inc_perfs.append(self.run_history.data[inc_k].cost)
-                inc_perf = sum(inc_perfs)
+                chal_perf, chal_perf = self.get_perf_and_time(challenger, inst_seed_pairs)
 
                 if chal_perf > inc_perf:
                     # Incumbent beats challenger
-                    self.logger.debug("Incumbent (%.2f) is better than challenger (%.2f)." %(inc_perf, chal_perf))
+                    self.logger.debug("Incumbent (%.2f) is better than challenger (%.2f) on %d runs." %(inc_perf, chal_perf, len(inst_seed_pairs)))
                     break
                 elif len(missing_runs) == 0:
                     # Challenger is as good as incumbent -> change incu
-                    self.logger.info("Challenger (%.2f) is better than incumbent (%.2f)." %(chal_perf, inc_perf))
+                    self.logger.info("Challenger (%.2f) is better than incumbent (%.2f) on %d runs." %(chal_perf, inc_perf, len(inst_seed_pairs)))
                     self.logger.info(
                         "Changing incumbent to challenger: %s" % (challenger))
                     self.incumbent = challenger
@@ -190,3 +193,37 @@ class Intensifier(object):
             len(inc_runs), inc_perf))
 
         return self.incumbent
+    
+    def get_perf_and_time(self, config, inst_seeds):
+            '''
+            returns perf and used runtime of a configuration
+    
+            Parameters
+            ----------
+            config: Configuration()
+                configuration to get stats for
+            inst_seeds: list
+                list of tuples of instance-seeds pairs
+                
+            Returns
+            ----------
+            perf : float 
+                sum of cost values in runhistory
+            time: float
+                sum of time values in runhistory
+            '''
+        
+            try:
+                id = self.run_history.config_ids[config.__repr__()]
+            except KeyError: # challenger was not running so far
+                return MAXINT, 0
+            perfs = []
+            times = []
+            for i, r in inst_seeds:
+                k = self.run_history.RunKey(id, i, r)
+                perfs.append(self.run_history.data[k].cost)
+                times.append(self.run_history.data[k].time)
+            perf = sum(perfs)
+            time = sum(times)
+            
+            return perf, time
