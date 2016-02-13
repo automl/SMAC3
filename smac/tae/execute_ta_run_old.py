@@ -141,9 +141,9 @@ class ExecuteTARunOld(object):
 
         if self.run_obj == "runtime":
             if status != StatusType.SUCCESS:
-                cost = runtime * self.par_factor
+                cost = float(runtime) * self.par_factor
             else:
-                cost = runtime
+                cost = float(runtime)
         else:
             cost = quality
 
