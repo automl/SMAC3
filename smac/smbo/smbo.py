@@ -99,8 +99,12 @@ class SMBO(BaseSolver):
         rand_inst_id = random.randint(0, len(self.scenario.train_insts))
         # ignore instance specific values
         rand_inst = self.scenario.train_insts[rand_inst_id][0]
-        initial_seed = random.randint(0, MAXINT)
-        # TODO: handle TA seeds
+        
+        if self.scenario.deterministic:
+            initial_seed = 0
+        else:
+            initial_seed = random.randint(0, MAXINT)
+
         status, cost, runtime, additional_info = self.executor.run(
             default_conf, instance=rand_inst, cutoff=self.scenario.cutoff,
             seed=initial_seed)
@@ -144,7 +148,8 @@ class SMBO(BaseSolver):
         # TODO: Replace it by other executor based on scenario;
         # maybe move it scenario directly
         self.executor = ExecuteTARunOld(
-            ta=self.scenario.ta, run_obj=self.scenario.run_obj)
+            ta=self.scenario.ta, run_obj=self.scenario.run_obj,
+            par_factor=self.scenario.par_factor)
 
         self.run_initial_design()
 
