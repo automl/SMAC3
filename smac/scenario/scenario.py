@@ -56,6 +56,13 @@ class Scenario(object):
         self.feature_dict = {}  # instance name -> feature vector
         self.feature_array = None
         self.cs = None  # ConfigSpace object
+        
+        if self.overall_obj[:3] in ["PAR", "par"]:
+            self.par_factor = int(self.overall_obj[3:])
+        elif self.overall_obj[:4] in ["mean", "MEAN"]:
+            self.par_factor = int(self.overall_obj[4:])
+        else:
+            self.par_factor = 1
 
         if self.train_inst_fn:
             if os.path.isfile(self.train_inst_fn):

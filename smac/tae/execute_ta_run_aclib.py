@@ -26,9 +26,11 @@ class ExecuteTARunAClib(object):
             the command line call to the target algorithm (wrapper)
         run_obj: str
             run objective (runtime or quality)
+        par_factor: int
+            penalized average runtime factor
     """
 
-    def __init__(self, ta, run_obj="runtime"):
+    def __init__(self, ta, run_obj="runtime", par_factor=1):
         """
         Constructor
 
@@ -38,10 +40,13 @@ class ExecuteTARunAClib(object):
                 target algorithm command line as list of arguments
             run_obj: str
                 run objective of SMAC
+            par_factor: int
+                penalized average runtime factor
         """
         self.ta = ta
         self.logger = logging.getLogger("ExecuteTARun")
         self.run_obj = run_obj
+        self.par_factor = par_factor
 
     def run(self, config, instance=None,
             cutoff=99999999999999.,
@@ -139,7 +144,10 @@ class ExecuteTARunAClib(object):
             results["cost"] = 0
 
         if self.run_obj == "runtime":
-            cost = float(results["runtime"])
+            if status != StatusType.SUCCESS:
+                cost = float(results["runtime"]) * self.par_factor
+            else:
+                cost = float(results["runtime"])
         else:
             cost = float(results["cost"])
 
