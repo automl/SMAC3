@@ -9,7 +9,6 @@ from collections import Counter
 import numpy
 
 from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
-from matplotlib.style.core import available
 
 
 __author__ = "Katharina Eggensperger, Marius Lindauer"
