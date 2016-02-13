@@ -9,8 +9,8 @@ from collections import Counter
 import numpy
 
 from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
-from matplotlib.style.core import available
-
+from smac.utils.io.traj_logging import TrajLogger
+from smac.stats.stats import Stats
 
 __author__ = "Katharina Eggensperger, Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -80,6 +80,7 @@ class Intensifier(object):
         self.run_obj_time = run_obj_time
         self.tae = executor
         
+        self.trajLogger = TrajLogger()
         self.Adaptive_Capping_Slackfactor = 1.2
 
         if self.run_limit < 1:
@@ -91,6 +92,11 @@ class Intensifier(object):
         '''
             running intensification to determine the incumbent configuration
             Side effect: adds runs to run_history
+            
+            Returns
+            -------
+            incumbent: Configuration()
+                current (maybe new) incumbent configuration
         '''
         num_run = 0
         for challenger in self.challengers:
@@ -173,6 +179,10 @@ class Intensifier(object):
                     self.logger.info(
                         "Changing incumbent to challenger: %s" % (challenger))
                     self.incumbent = challenger
+                    Stats.inc_changed += 1
+                    self.trajLogger.add_entry(train_perf=chal_perf, 
+                                              incumbent_id=Stats.inc_changed, 
+                                              incumbent=challenger)
                     break
                 else:
                     # challenger is not worse, continue
