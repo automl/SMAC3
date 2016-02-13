@@ -68,7 +68,8 @@ class TrajLogger(object):
         """
         conf = []
         for p in incumbent:  
-            conf.append("%s=%s" %(p,incumbent[p]))
+            if not incumbent[p] is None:
+                conf.append("%s='%s'" %(p,incumbent[p]))
             
         ta_time_used = Stats.ta_time_used
         wallclock_time = Stats.get_used_wallclock_time()
