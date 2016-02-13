@@ -49,15 +49,11 @@ class TrajLogger(object):
             with open(self.old_traj_fn, "w") as fp:
                 fp.write('"CPU Time Used","Estimated Training Performance","Wallclock Time","Incumbent ID","Automatic Configurator (CPU) Time","Configuration..."\n')
                 
-<<<<<<< HEAD
         self.aclib_traj_fn = os.path.join(output_dir, "traj_aclib2.json")
-=======
->>>>>>> first methods to write trajectory log files in smac2 format
 
     def add_entry(self, train_perf, 
                   incumbent_id, incumbent):
         """
-<<<<<<< HEAD
             adds entries to trajectory files (several formats)
             
             Parameters
@@ -78,13 +74,6 @@ class TrajLogger(object):
         """
             adds entries to old SMAC2-like trajectory file
             
-=======
-            checks command line arguments
-            (e.g., whether all given files exist)
-
-            it uses the time stats available when this function is called
-
->>>>>>> first methods to write trajectory log files in smac2 format
             Parameters
             ----------
             train_perf: float
@@ -94,27 +83,17 @@ class TrajLogger(object):
             incumbent: Configuration()
                 current incumbent configuration
         """
-<<<<<<< HEAD
         
         conf = []
         for p in incumbent:  
             if not incumbent[p] is None:
                 conf.append("%s='%s'" %(p,incumbent[p]))
-=======
-        conf = []
-        for p in incumbent:  
-            conf.append("%s=%s" %(p,incumbent[p]))
->>>>>>> first methods to write trajectory log files in smac2 format
             
         ta_time_used = Stats.ta_time_used
         wallclock_time = Stats.get_used_wallclock_time()
         
         with open(self.old_traj_fn, "a") as fp:
-<<<<<<< HEAD
             fp.write("%f, %f, %f, %d, %f, %s\n" %(
-=======
-            fp.write("%f, %f, %f, %d, %f, %s" %(
->>>>>>> first methods to write trajectory log files in smac2 format
                                                 ta_time_used,
                                                 train_perf,
                                                 wallclock_time,
@@ -122,7 +101,6 @@ class TrajLogger(object):
                                                 wallclock_time - ta_time_used,
                                                 ", ".join(conf)
                                                 ))
-<<<<<<< HEAD
     
     def _add_in_aclib_format(self, train_perf, 
                   incumbent_id, incumbent):
@@ -157,5 +135,3 @@ class TrajLogger(object):
         
         with open(self.aclib_traj_fn, "a") as fp:
             json.dump(traj_entry, fp)
-=======
->>>>>>> first methods to write trajectory log files in smac2 format
