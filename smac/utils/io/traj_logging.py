@@ -74,7 +74,7 @@ class TrajLogger(object):
         wallclock_time = Stats.get_used_wallclock_time()
         
         with open(self.old_traj_fn, "a") as fp:
-            fp.write("%f, %f, %f, %d, %f, %s" %(
+            fp.write("%f, %f, %f, %d, %f, %s\n" %(
                                                 ta_time_used,
                                                 train_perf,
                                                 wallclock_time,
