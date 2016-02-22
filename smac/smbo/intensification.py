@@ -9,6 +9,7 @@ from collections import Counter
 import numpy
 
 from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
+
 from smac.utils.io.traj_logging import TrajLogger
 from smac.stats.stats import Stats
 
