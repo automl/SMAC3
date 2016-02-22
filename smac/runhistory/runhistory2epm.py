@@ -88,9 +88,9 @@ class RunHistory2EPM(object):
         Y = numpy.ones([n_rows, 1])
 
         # Then populate matrix
-        for row, (_key, run) in enumerate(run_list.items()):
+        for row, (key, run) in enumerate(run_list.items()):
             # Scaling is automatically done in configSpace
-            conf = runhistory.ids_config[run.config_id]
+            conf = runhistory.ids_config[key.config_id]
             conf = impute_inactive_values(conf)
             X[row, :] = conf.get_array()
             # TODO: replace with instance features if available
