@@ -209,7 +209,6 @@ class SMBO(BaseSolver):
 
         if X is None or Y is None:
             return self.config_space.sample_configuration()
-
         self.model.train(X, Y)
         self.acquisition_func.update(self.model)
 
@@ -228,6 +227,9 @@ class SMBO(BaseSolver):
             acq_vals[i] = acq_val[0][0]
 
         # Return configuration with highest acquisition value
+        # TODO JTS: this argmax will always return the first value
+        #           if there are multiple results with the same acquisition function
+        #           maybe we should randomly tie-break here!
         best = np.argmax(acq_vals)
         # TODO: We could also return a configuration object here, but then also
         # the unit test has to be adapted

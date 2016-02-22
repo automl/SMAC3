@@ -62,6 +62,9 @@ class RunHistory(object):
 
         # TODO: replace str casting of config when we have something hashable
         # as a config object
+        # TODO JTS: We might have to execute one config multiple times
+        #           since the results can be noisy and then we can't simply
+        #           overwrite the old config result here!
         config_id = self.config_ids.get(config.__repr__())
         if config_id is None:
             self._n_id += 1
