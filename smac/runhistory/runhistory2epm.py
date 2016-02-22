@@ -71,8 +71,6 @@ class RunHistory2EPM(object):
         # Store a list of instance IDs
         instance_id_list = [k.instance_id for k in run_list.keys()]
 
-        run_list = [(run_list[r].time, r.config_id) for r in run_list]
-
         if self.config['impute_censored_data']:
             cens_list = self.__select_runs(rh_data=copy.deepcopy(runhistory.data),
                                            select_censored=True)
@@ -90,15 +88,14 @@ class RunHistory2EPM(object):
         Y = numpy.ones([n_rows, 1])
 
         # Then populate matrix
-        for row, run in enumerate(run_list):
+        for row, (_key, run) in enumerate(run_list.items()):
             # Scaling is automatically done in configSpace
-            conf = runhistory.ids_config[run[1]]
+            conf = runhistory.ids_config[run.config_id]
             conf = impute_inactive_values(conf)
             X[row, :] = conf.get_array()
             # TODO: replace with instance features if available
             #run_array[row, -1] = instance_id_list[row]
-            # TODO: replace by cost if we optimize quality/cost
-            Y[row, 0] = run[0]
+            Y[row, 0] = run.cost
 
         return X, Y
 
