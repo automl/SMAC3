@@ -13,9 +13,10 @@ class RunhistoryTest(unittest.TestCase):
 
     def test_add(self):
         '''
-            simply aading some rundata to runhistory
+            simply adding some rundata to runhistory
         '''
         rh = RunHistory()
+        assert rh.empty() == True
         rh.add(config={'a': '1', 'b': '2'}, cost=10, time=20,
                status="SUCCESS", instance_id=None,
                seed=None,
@@ -25,7 +26,7 @@ class RunhistoryTest(unittest.TestCase):
                status="SUCCESS", instance_id=1,
                seed=12354,
                additional_info={"start_time": 10})
-
+        assert rh.empty() == False
         print(rh.data)
 
     def test_get_config_runs(self):

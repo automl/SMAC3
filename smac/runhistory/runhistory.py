@@ -94,3 +94,14 @@ class RunHistory(object):
                     k.instance_id, k.seed, self.data[k].time, self.data[k].cost)
                 list_.append(ist)
         return list_
+
+    def empty(self):
+        """
+        Check whether or not the RunHistory is empty.
+
+        Returns
+        ----------
+            bool: True if runs have been added to the RunHistory, 
+                  False otherwise
+        """
+        return len(self.data) == 0
