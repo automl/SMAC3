@@ -1,3 +1,4 @@
+import sys
 import logging
 import json
 from subprocess import Popen, PIPE
@@ -104,6 +105,9 @@ class ExecuteTARunAClib(object):
         self.logger.debug("Stdout: %s" % (stdout_))
         self.logger.debug("Stderr: %s" % (stderr_))
 
+        results = {"status": "CRASHED",
+                   "cost": 1234567890
+                   }
         for line in stdout_.split("\n"):
             if line.startswith("Result of this algorithm run:"):
                 fields = ":".join(line.split(":")[1:])
@@ -117,6 +121,8 @@ class ExecuteTARunAClib(object):
             status = StatusType.CRASHED
         elif results["status"] in ["ABORT"]:
             status = StatusType.ABORT
+            self.logger.error("Target algorithm returned ABORT -- Exit!")
+            sys.exit(43)
         elif results["status"] in ["MEMOUT"]:
             status = StatusType.MEMOUT
 
