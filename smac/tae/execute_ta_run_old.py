@@ -1,3 +1,4 @@
+import sys
 import logging
 from subprocess import Popen, PIPE
 
@@ -98,9 +99,10 @@ class ExecuteTARunOld(object):
         self.logger.debug("Stdout: %s" % (stdout_))
         self.logger.debug("Stderr: %s" % (stderr_))
 
-        #status = "CRASHED"
-        #quality = 1234567890
-        #runtime = 1234567890
+        status = "CRASHED"
+        quality = 1234567890
+        runtime = 1234567890
+        additional_info = {}
         for line in stdout_.split("\n"):
             if line.startswith("Result of this algorithm run:") or line.startswith("Result for ParamILS") or line.startswith("Result for SMAC"):
                 fields = line.split(":")[1].split(",")
@@ -120,6 +122,8 @@ class ExecuteTARunOld(object):
             status = StatusType.CRASHED
         elif status in ["ABORT"]:
             status = StatusType.ABORT
+            self.logger.error("Target algorithm returned ABORT -- Exit!")
+            sys.exit(43)
         elif status in ["MEMOUT"]:
             status = StatusType.MEMOUT
 
