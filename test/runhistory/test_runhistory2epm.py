@@ -6,8 +6,22 @@ __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 import unittest
+from smac.tae.execute_ta_run import StatusType
 from smac.runhistory import runhistory, runhistory2epm
 
+from ConfigSpace import Configuration, ConfigurationSpace
+from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
+from smac.runhistory.runhistory import RunHistory
+
+def get_config_space():
+    cs = ConfigurationSpace()
+    cs.add_hyperparameter(UniformIntegerHyperparameter(name='a',
+                                                       lower=0,
+                                                       upper=100))
+    cs.add_hyperparameter(UniformIntegerHyperparameter(name='b',
+                                                       lower=0,
+                                                       upper=100))
+    return cs
 
 class RunhistoryTest(unittest.TestCase):
 
@@ -16,16 +30,23 @@ class RunhistoryTest(unittest.TestCase):
             simply adding some rundata to runhistory
         '''
         rh = runhistory.RunHistory()
-        rh.add(config={'a': '1', 'b': '2'}, cost=10, time=20,
-               status="SUCCESS", instance_id=23,
+        cs = get_config_space()
+        config1 = Configuration(cs,
+                                values={'a': 1, 'b': 2})
+        config2 = Configuration(cs,
+                                values={'a': 1, 'b': 25})
+        config3 = Configuration(cs,
+                                values={'a': 2, 'b': 2})
+        rh.add(config=config1, cost=10, time=20,
+               status=StatusType.SUCCESS, instance_id=23,
                seed=None,
                additional_info=None)
-        rh.add(config={'a': '1', 'b': '25'}, cost=10, time=20,
-               status="SUCCESS", instance_id=1,
+        rh.add(config=config2, cost=10, time=20,
+               status=StatusType.SUCCESS, instance_id=1,
                seed=12354,
                additional_info={"start_time": 10})
-        rh.add(config={'a': '21', 'b': '2'}, cost=10, time=20,
-               status="TIMEOUT", instance_id=1,
+        rh.add(config=config3, cost=10, time=20,
+               status=StatusType.TIMEOUT, instance_id=1,
                seed=45,
                additional_info={"start_time": 10})
 
