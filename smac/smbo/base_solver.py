@@ -1,14 +1,15 @@
-'''
-Created on Aug 21, 2015
-
-@author: Aaron Klein
-'''
-
 import os
 import csv
 import time
 import errno
 import logging
+
+__author__ = "Aaron Klein"
+__copyright__ = "Copyright 2015, ML4AAD"
+__license__ = "BSD"
+__maintainer__ = "Aaron Klein"
+__email__ = "kleinaa@cs.uni-freiburg.de"
+__version__ = "0.0.1"
 
 
 class BaseSolver(object):
