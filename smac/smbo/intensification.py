@@ -145,7 +145,6 @@ class Intensifier(object):
                 missing_runs = missing_runs[min(N, len(missing_runs)):]
                 
                 inst_seed_pairs = list(inc_inst_seeds - set(missing_runs))
-                print("Incumbent perfs:")
                 inc_perf, inc_time = self.get_perf_and_time(self.incumbent, inst_seed_pairs)
                 
                 _, chal_time = self.get_perf_and_time(challenger, chall_inst_seeds) 
@@ -169,7 +168,6 @@ class Intensifier(object):
                                          additional_info=res)
                     num_run += 1
 
-                print("Challenger perfs:")
                 chal_perf, chal_time = self.get_perf_and_time(challenger, inst_seed_pairs)
 
                 if chal_perf > inc_perf:
@@ -237,8 +235,6 @@ class Intensifier(object):
                 k = self.run_history.RunKey(id_, i, r)
                 perfs.append(self.run_history.data[k].cost)
                 times.append(self.run_history.data[k].time)
-            print(perfs)
-            print(times)
             perf = sum(perfs)
             time = sum(times)
             
