@@ -144,6 +144,7 @@ class Intensifier(object):
                 missing_runs = missing_runs[min(N, len(missing_runs)):]
                 
                 inst_seed_pairs = list(inc_inst_seeds - set(missing_runs))
+                print("Incumbent perfs:")
                 inc_perf, inc_time = self.get_perf_and_time(self.incumbent, inst_seed_pairs)
                 
                 _, chal_time = self.get_perf_and_time(challenger, chall_inst_seeds) 
@@ -167,7 +168,8 @@ class Intensifier(object):
                                          additional_info=res)
                     num_run += 1
 
-                chal_perf, chal_perf = self.get_perf_and_time(challenger, inst_seed_pairs)
+                print("Challenger perfs:")
+                chal_perf, chal_time = self.get_perf_and_time(challenger, inst_seed_pairs)
 
                 if chal_perf > inc_perf:
                     # Incumbent beats challenger
@@ -175,6 +177,7 @@ class Intensifier(object):
                     break
                 elif len(missing_runs) == 0:
                     # Challenger is as good as incumbent -> change incu
+                    
                     self.logger.info("Challenger (%.2f) is better than incumbent (%.2f) on %d runs." %(chal_perf, inc_perf, len(inst_seed_pairs)))
                     self.logger.info(
                         "Changing incumbent to challenger: %s" % (challenger))
@@ -224,15 +227,17 @@ class Intensifier(object):
             '''
         
             try:
-                id = self.run_history.config_ids[config.__repr__()]
+                id_ = self.run_history.config_ids[config.__repr__()]
             except KeyError: # challenger was not running so far
                 return MAXINT, 0
             perfs = []
             times = []
             for i, r in inst_seeds:
-                k = self.run_history.RunKey(id, i, r)
+                k = self.run_history.RunKey(id_, i, r)
                 perfs.append(self.run_history.data[k].cost)
                 times.append(self.run_history.data[k].time)
+            print(perfs)
+            print(times)
             perf = sum(perfs)
             time = sum(times)
             
