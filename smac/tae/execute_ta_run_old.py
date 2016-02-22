@@ -113,6 +113,10 @@ class ExecuteTARunOld(object):
                 else:
                     status, runtime, runlength, quality, seed, additional_info = fields
                     additional_info = {"additional_info": additional_info}
+                    
+                runtime = min(float(runtime), cutoff)
+                quality = float(quality)
+                seed = int(seed)
 
         if status in ["SAT", "UNSAT", "SUCCESS"]:
             status = StatusType.SUCCESS
@@ -137,10 +141,10 @@ class ExecuteTARunOld(object):
 
         if self.run_obj == "runtime":
             if status != StatusType.SUCCESS:
-                cost = float(runtime) * self.par_factor
+                cost = runtime * self.par_factor
             else:
-                cost = float(runtime)
+                cost = runtime
         else:
-            cost = float(quality)
+            cost = quality
 
         return status, cost, float(runtime), additional_info
