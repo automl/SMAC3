@@ -22,6 +22,7 @@ class Stats(object):
     wallclock_time_used = 0
     incumbent_changed = 0
     ta_time_used = 0
+    inc_changed = 0
 
     _start_time = None
     _logger = logging.getLogger("Stats")
@@ -35,6 +36,18 @@ class Stats(object):
             Stats._start_time = time.time()
         else:
             raise "Scenario is missing"
+
+    @staticmethod
+    def get_used_wallclock_time():
+        '''
+            returns used wallclock time
+            Returns
+            -------
+            wallclock_time : int
+                used wallclock time in sec
+        '''
+        
+        return time.time() - Stats._start_time
 
     @staticmethod
     def get_remaing_time_budget():

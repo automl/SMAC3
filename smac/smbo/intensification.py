@@ -10,6 +10,8 @@ import numpy
 
 from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
 
+from smac.utils.io.traj_logging import TrajLogger
+from smac.stats.stats import Stats
 
 __author__ = "Katharina Eggensperger, Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -79,6 +81,7 @@ class Intensifier(object):
         self.run_obj_time = run_obj_time
         self.tae = executor
         
+        self.trajLogger = TrajLogger()
         self.Adaptive_Capping_Slackfactor = 1.2
 
         if self.run_limit < 1:
@@ -90,6 +93,11 @@ class Intensifier(object):
         '''
             running intensification to determine the incumbent configuration
             Side effect: adds runs to run_history
+            
+            Returns
+            -------
+            incumbent: Configuration()
+                current (maybe new) incumbent configuration
         '''
         num_run = 0
         for challenger in self.challengers:
@@ -160,7 +168,7 @@ class Intensifier(object):
                                          additional_info=res)
                     num_run += 1
 
-                chal_perf, chal_perf = self.get_perf_and_time(challenger, inst_seed_pairs)
+                chal_perf, chal_time = self.get_perf_and_time(challenger, inst_seed_pairs)
 
                 if chal_perf > inc_perf:
                     # Incumbent beats challenger
@@ -168,10 +176,15 @@ class Intensifier(object):
                     break
                 elif len(missing_runs) == 0:
                     # Challenger is as good as incumbent -> change incu
+                    
                     self.logger.info("Challenger (%.2f) is better than incumbent (%.2f) on %d runs." %(chal_perf, inc_perf, len(inst_seed_pairs)))
                     self.logger.info(
                         "Changing incumbent to challenger: %s" % (challenger))
                     self.incumbent = challenger
+                    Stats.inc_changed += 1
+                    self.trajLogger.add_entry(train_perf=chal_perf, 
+                                              incumbent_id=Stats.inc_changed, 
+                                              incumbent=challenger)
                     break
                 else:
                     # challenger is not worse, continue
@@ -213,13 +226,13 @@ class Intensifier(object):
             '''
         
             try:
-                id = self.run_history.config_ids[config.__repr__()]
+                id_ = self.run_history.config_ids[config.__repr__()]
             except KeyError: # challenger was not running so far
                 return MAXINT, 0
             perfs = []
             times = []
             for i, r in inst_seeds:
-                k = self.run_history.RunKey(id, i, r)
+                k = self.run_history.RunKey(id_, i, r)
                 perfs.append(self.run_history.data[k].cost)
                 times.append(self.run_history.data[k].time)
             perf = sum(perfs)
