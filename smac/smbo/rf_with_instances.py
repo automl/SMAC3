@@ -1,5 +1,4 @@
 import numpy as np
-import pyrfr
 import pyrfr.regression
 
 __author__ = "Aaron Klein"
@@ -8,6 +7,7 @@ __license__ = "BSD"
 __maintainer__ = "Aaron Klein"
 __email__ = "kleinaa@cs.uni-freiburg.de"
 __version__ = "0.0.1"
+
 
 class RandomForestWithInstances(object):
     '''
@@ -101,16 +101,16 @@ class RandomForestWithInstances(object):
                                                       self.types)
 
         self.rf.fit(data)
- 
+
     def predict(self, Xtest, **kwargs):
         """
         Returns the predictive mean and variance marginalised over all
-        instances.
+        instances for a single test point.
 
         Parameters
         ----------
-        Xtest: np.ndarray (N, D)
-            Input test points
+        Xtest: np.ndarray (1, D)
+            Input test point
 
         Returns
         ----------
@@ -124,18 +124,21 @@ class RandomForestWithInstances(object):
         if self.instance_features is None or len(self.instance_features) == 0:
             X_ = Xtest
         else:
+            # Given a test point x and some instance i_1, ... i_n where each
+            # i_k is a feature vector, the following lines create a
+            # matrix X_ = [[x, i_1], [x, i_2], ... [x, i_n]]
             X_ = np.repeat(Xtest, self.instance_features.shape[0], axis=0)
             I_ = np.tile(self.instance_features, (Xtest.shape[0], 1))
-
             X_ = np.concatenate((X_, I_), axis=1)
 
-        mean = np.zeros(Xtest.shape[0])
-        var = np.zeros(Xtest.shape[0])
+        mean = np.zeros(X_.shape[0])
+        var = np.zeros(X_.shape[0])
 
         # TODO: Would be nice if the random forest supports batch predictions
-        for i, x in enumerate(Xtest):
+        for i, x in enumerate(X_):
             mean[i], var[i] = self.rf.predict(x)
 
-        mu, var = mean[:, np.newaxis], var[:, np.newaxis]
+        # TODO: probably we want to return here the total variance
+        mu, var = mean.mean(), var.mean()
 
-        return mu.mean(), var.mean()
+        return mu, var
