@@ -1,3 +1,4 @@
+import sys
 import logging
 from subprocess import Popen, PIPE
 
@@ -25,9 +26,11 @@ class ExecuteTARunOld(object):
             the command line call to the target algorithm (wrapper)
         run_obj: str
             run objective (runtime or quality)
+        par_factor: int
+            penalized average runtime factor
     """
 
-    def __init__(self, ta, run_obj="runtime"):
+    def __init__(self, ta, run_obj="runtime", par_factor=1):
         """
         Constructor
 
@@ -37,10 +40,13 @@ class ExecuteTARunOld(object):
                 target algorithm command line as list of arguments
             run_obj: str
                 run objective of SMAC
+            par_factor: int
+                penalized average runtime factor
         """
         self.ta = ta
         self.logger = logging.getLogger("ExecuteTARun")
         self.run_obj = run_obj
+        self.par_factor = par_factor
 
     def run(self, config, instance=None,
             cutoff=99999999999999.,
@@ -93,9 +99,10 @@ class ExecuteTARunOld(object):
         self.logger.debug("Stdout: %s" % (stdout_))
         self.logger.debug("Stderr: %s" % (stderr_))
 
-        #status = "CRASHED"
-        #quality = 1234567890
-        #runtime = 1234567890
+        status = "CRASHED"
+        quality = 1234567890
+        runtime = 1234567890
+        additional_info = {}
         for line in stdout_.split("\n"):
             if line.startswith("Result of this algorithm run:") or line.startswith("Result for ParamILS") or line.startswith("Result for SMAC"):
                 fields = line.split(":")[1].split(",")
@@ -106,6 +113,10 @@ class ExecuteTARunOld(object):
                 else:
                     status, runtime, runlength, quality, seed, additional_info = fields
                     additional_info = {"additional_info": additional_info}
+                    
+                runtime = min(float(runtime), cutoff)
+                quality = float(quality)
+                seed = int(seed)
 
         if status in ["SAT", "UNSAT", "SUCCESS"]:
             status = StatusType.SUCCESS
@@ -115,6 +126,8 @@ class ExecuteTARunOld(object):
             status = StatusType.CRASHED
         elif status in ["ABORT"]:
             status = StatusType.ABORT
+            self.logger.error("Target algorithm returned ABORT -- Exit!")
+            sys.exit(43)
         elif status in ["MEMOUT"]:
             status = StatusType.MEMOUT
 
@@ -127,8 +140,11 @@ class ExecuteTARunOld(object):
             self.logger.warn("\n".join(stderr_.split("\n")[-5:]))
 
         if self.run_obj == "runtime":
-            cost = float(runtime)
+            if status != StatusType.SUCCESS:
+                cost = runtime * self.par_factor
+            else:
+                cost = runtime
         else:
-            cost = float(quality)
+            cost = quality
 
         return status, cost, float(runtime), additional_info

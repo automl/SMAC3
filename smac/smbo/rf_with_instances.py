@@ -50,9 +50,9 @@ class RandomForestWithInstances(object):
                  num_trees=30,
                  do_bootstrapping=True,
                  n_points_per_tree=0,
-                 ratio_features=0.5,
-                 min_samples_split=1,
-                 min_samples_leaf=1,
+                 ratio_features=1,
+                 min_samples_split=2,
+                 min_samples_leaf=2,
                  max_depth=20,
                  eps_purity=1e-8,
                  max_num_nodes=1000,
@@ -124,12 +124,8 @@ class RandomForestWithInstances(object):
         if self.instance_features is None or len(self.instance_features) == 0:
             X_ = Xtest
         else:
-            # Given a test point x and some instance i_1, ... i_n where each
-            # i_k is a feature vector, the following lines create a
-            # matrix X_ = [[x, i_1], [x, i_2], ... [x, i_n]]
-            X_ = np.repeat(Xtest, self.instance_features.shape[0], axis=0)
-            I_ = np.tile(self.instance_features, (Xtest.shape[0], 1))
-            X_ = np.concatenate((X_, I_), axis=1)
+            # TODO: Use random forest data container for instances
+            raise("Not implemented!")
 
         mean = np.zeros(X_.shape[0])
         var = np.zeros(X_.shape[0])
@@ -138,7 +134,4 @@ class RandomForestWithInstances(object):
         for i, x in enumerate(X_):
             mean[i], var[i] = self.rf.predict(x)
 
-        # TODO: probably we want to return here the total variance
-        mu, var = mean.mean(), var.mean()
-
-        return mu, var
+        return mean, var
