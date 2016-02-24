@@ -30,7 +30,7 @@ __version__ = "0.0.1"
 
 class SMBO(BaseSolver):
 
-    def __init__(self, scenario, seed=42):
+    def __init__(self, scenario, rng=None):
         '''
         Interface that contains the main Bayesian optimization loop
 
@@ -38,12 +38,15 @@ class SMBO(BaseSolver):
         ----------
         scenario: smac.scenario.scenario.Scenario
             Scenario object
-        seed: int
-            Seed that is passed to random forest
+        rng: numpy.random.RandomState
+            Random number generator
         '''
         self.logger = logging.getLogger("smbo")
 
-        random.seed(seed)
+        if rng is None:
+            self.rng = np.random.RandomState(seed=np.random.randint(10000))
+        else:
+            self.rng = rng
 
         self.scenario = scenario
         self.config_space = scenario.cs
@@ -84,7 +87,6 @@ class SMBO(BaseSolver):
                                         self.config_space)
         self.incumbent = None
         self.executor = None
-        self.seed = seed
 
     def run_initial_design(self):
         '''
@@ -96,10 +98,10 @@ class SMBO(BaseSolver):
 
         default_conf = self.config_space.get_default_configuration()
         self.incumbent = default_conf
-        rand_inst_id = random.randint(0, len(self.scenario.train_insts))
+        rand_inst_id = self.rng.randint(0, len(self.scenario.train_insts))
         # ignore instance specific values
         rand_inst = self.scenario.train_insts[rand_inst_id][0]
-        initial_seed = random.randint(0, MAXINT)
+        initial_seed = self.rng.randint(0, MAXINT)
         # TODO: handle TA seeds
         status, cost, runtime, additional_info = self.executor.run(
             default_conf, instance=rand_inst, cutoff=self.scenario.cutoff,
@@ -222,6 +224,7 @@ class SMBO(BaseSolver):
                 start_point = self.incumbent
             else:
                 start_point = self.config_space.sample_configuration()
+
             configuration, acq_val = self.local_search.maximize(start_point)
 
             found_configs.append(configuration)
@@ -233,4 +236,5 @@ class SMBO(BaseSolver):
         # the unit test has to be adapted
         # ML: We have to return the configuration object here or else it is a
         # mess since we cannot convert it back
+
         return found_configs[best]

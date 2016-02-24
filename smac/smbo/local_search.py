@@ -16,7 +16,7 @@ __version__ = "0.0.1"
 class LocalSearch(object):
 
     def __init__(self, acquisition_function, config_space,
-                 epsilon=0.01, n_neighbours=42, max_iterations=None, seed=42):
+                 epsilon=0.01, n_neighbours=42, max_iterations=None, rng=None):
         """
         Implementation of SMAC's local search
 
@@ -40,9 +40,11 @@ class LocalSearch(object):
         self.epsilon = epsilon
         self.n_neighbours = n_neighbours
         self.max_iterations = max_iterations
-        #TODO: has to be replaced by randomstate 
-        self.seed = seed
-        random.seed(self.seed)
+
+        if rng is None:
+            self.rng = np.random.RandomState(seed=np.random.randint(10000))
+        else:
+            self.rng = rng
 
         self.logger = logging.getLogger("localsearch")
 
@@ -92,8 +94,8 @@ class LocalSearch(object):
             changed_inc = False
 
             all_neighbors = get_one_exchange_neighbourhood(incumbent,
-                                                    seed=local_search_steps)
-            random.shuffle(all_neighbors)
+                                                    seed=self.rng.seed())
+            self.rng.shuffle(all_neighbors)
 
             for neighbor in all_neighbors:
                 s_time = time.time()
