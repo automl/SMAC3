@@ -21,7 +21,8 @@ class RunHistory2EPM(object):
         takes a runhistory object and preprocess data in order to train EPM
     '''
 
-    def __init__(self, num_params, cutoff_time, success_states=None,
+    def __init__(self, num_params, cutoff_time, 
+                 instance_features=None, success_states=None,
                  impute_censored_data=False, impute_state=None):
         '''
         Constructor
@@ -31,6 +32,8 @@ class RunHistory2EPM(object):
             number of parameters in config space
         cutoff_time: positive float
             cutoff time for this scenario, matters only if runs are censored
+        instance_features: dict
+            dictionary mapping instance names to feature vector
         success_states: list, optional
             list of states considered as successful (such as StatusType.SUCCESS)
         impute_censored_data: bool, optional
@@ -51,6 +54,13 @@ class RunHistory2EPM(object):
             'cutoff_time': cutoff_time,
             'impute_state': impute_state,
         })
+        
+        self.instance_features = instance_features
+        if self.instance_features:
+            self.n_feats = len(self.instance_features[self.instance_features.keys()[0]])
+        else:
+            self.n_feats = 0
+        
         self.logger = logging.getLogger("runhistory2epm")
         self.num_params = num_params
 
@@ -84,7 +94,7 @@ class RunHistory2EPM(object):
         # First build nan-matrix of size #configs x #params+1
         n_rows = len(run_list)
         n_cols = self.num_params
-        X = numpy.ones([n_rows, n_cols]) * numpy.nan
+        X = numpy.ones([n_rows, n_cols+self.n_feats]) * numpy.nan
         Y = numpy.ones([n_rows, 1])
 
         # Then populate matrix
@@ -92,8 +102,12 @@ class RunHistory2EPM(object):
             # Scaling is automatically done in configSpace
             conf = runhistory.ids_config[key.config_id]
             conf = impute_inactive_values(conf)
-            X[row, :] = conf.get_array()
-            # TODO: replace with instance features if available
+            if self.n_feats:
+                feats = self.instance_features[key.instance_id]
+                X[row, : ] = numpy.hstack((conf.get_array(), feats))
+            else:
+                X[row, :] = conf.get_array()
+                
             #run_array[row, -1] = instance_id_list[row]
             Y[row, 0] = run.cost
 

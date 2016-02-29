@@ -69,7 +69,7 @@ class Scenario(object):
 
         self.train_insts = []
         self.test_inst = []
-        self.feature_dict = {}  # instance name -> feature vector
+        self.feature_dict = None  # instance name -> feature vector
         self.feature_array = None
         self.cs = None  # ConfigSpace object
 
@@ -103,7 +103,9 @@ class Scenario(object):
                 self.feature_array = []
                 for inst_ in self.train_insts:
                     self.feature_array.append(self.feature_dict[inst_[0]])
+                #TODO: feature scaling is missing
                 self.feature_array = numpy.array(self.feature_array)
+                
 
         if os.path.isfile(self.pcs_fn):
             with open(self.pcs_fn) as fp:

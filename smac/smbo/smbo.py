@@ -143,6 +143,7 @@ class SMBO(BaseSolver):
         # TODO set arguments properly
         rh2EPM = RunHistory2EPM(num_params=num_params,
                                 cutoff_time=self.scenario.cutoff,
+                                instance_features=self.scenario.feature_dict,
                                 success_states=None,
                                 impute_censored_data=False,
                                 impute_state=None)
