@@ -1,5 +1,9 @@
 import numpy as np
+import logging
+
 import pyrfr.regression
+
+from smac.utils.duplicate_filter_logging import DuplicateFilter
 
 __author__ = "Aaron Klein"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -79,6 +83,11 @@ class RandomForestWithInstances(object):
                        n_points_per_tree, ratio_features, min_samples_split,
                        min_samples_leaf, max_depth, eps_purity, seed]
         self.seed = seed
+        
+        self.logger = logging.getLogger("RF")
+        #TODO: check this -- it could slow us down
+        dub_filter = DuplicateFilter()
+        self.logger.addFilter(dub_filter)
 
     def train(self, X, Y, **kwargs):
         '''
@@ -125,7 +134,9 @@ class RandomForestWithInstances(object):
             X_ = Xtest
         else:
             # TODO: Use random forest data container for instances
-            raise("Not implemented!")
+            X_ = Xtest
+            self.logger.warn("Instance feature support is not yet implemented.")
+            #raise Exception("Not implemented!")
 
         mean = np.zeros(X_.shape[0])
         var = np.zeros(X_.shape[0])

@@ -3,6 +3,7 @@ import sys
 import logging
 import numpy
 import shlex
+import traceback
 
 from smac.utils.io.input_reader import InputReader
 from smac.configspace import pcs
@@ -20,21 +21,26 @@ class Scenario(object):
     main class of SMAC
     '''
 
-    def __init__(self, args_):
+    def __init__(self, scenario):
         '''
             constructor
             Attributes
             ----------
-                args_: ArgumentParse object
-                    all command line options
+                scenario: str or dict
+                    if str, it will be interpreted as to a path a scenario file
+                    if dict, it will be directly to get all scenario related information  
         '''
         self.logger = logging.getLogger("scenario")
 
-        self.args_ = args_
-
-        self.logger.info("Reading scenario file: %s" % (args_.scenario_file))
-        in_reader = InputReader()
-        scenario = in_reader.read_scenario_file(args_.scenario_file)
+        if type(scenario) is str:
+            scenario_fn = scenario
+            self.logger.info("Reading scenario file: %s" % (scenario_fn))
+            in_reader = InputReader()
+            scenario = in_reader.read_scenario_file(scenario_fn)
+        elif type(scenario) is dict:
+            pass
+        else:
+            raise TypeError("Wrong type of scenario (str or dict are supported)")
 
         self.ta = shlex.split(scenario["algo"])
         self.execdir = scenario.get("execdir", ".")

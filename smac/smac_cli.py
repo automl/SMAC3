@@ -1,6 +1,7 @@
 import os
 import sys
 import logging
+import numpy as np
 
 from utils.io.cmd_reader import CMDReader
 from scenario.scenario import Scenario
@@ -40,12 +41,13 @@ class SMAC(object):
         if args_.verbose_level == "DEBUG":
             self.logger.parent.level = 10
 
-        scen = Scenario(args_)
+        scen = Scenario(args_.scenario_file)
 
         # necessary to use stats options related to scenario information        
         Stats.scenario = scen
 
-        smbo = SMBO(scenario=scen, seed=args_.seed)
+        
+        smbo = SMBO(scenario=scen, rng=np.random.RandomState(args_.seed))
         smbo.run(max_iters=args_.max_iterations)
         
         Stats.print_stats()
