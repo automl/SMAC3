@@ -103,15 +103,12 @@ class Scenario(object):
                 self.feature_array = []
                 for inst_ in self.train_insts:
                     self.feature_array.append(self.feature_dict[inst_[0]])
-                #TODO: feature scaling is missing
                 self.feature_array = numpy.array(self.feature_array)
                 
 
         if os.path.isfile(self.pcs_fn):
             with open(self.pcs_fn) as fp:
                 pcs_str = fp.readlines()
-                # TODO: ConfigSpace should use only logging and no print
-                # statements
                 self.cs = pcs.read(pcs_str)
                 self.cs.seed(42)
         else:

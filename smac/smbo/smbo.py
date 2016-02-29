@@ -2,6 +2,7 @@ import logging
 import numpy as np
 import random
 import sys
+import time
 
 from ConfigSpace.io import pcs
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
@@ -18,7 +19,7 @@ from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 
-MAXINT = 2**31 - 1
+MAXINT = 2 ** 31 - 1
 
 __author__ = "Aaron Klein, Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -101,7 +102,7 @@ class SMBO(BaseSolver):
         rand_inst_id = self.rng.randint(0, len(self.scenario.train_insts))
         # ignore instance specific values
         rand_inst = self.scenario.train_insts[rand_inst_id][0]
-        
+
         if self.scenario.deterministic:
             initial_seed = 0
         else:
@@ -156,27 +157,34 @@ class SMBO(BaseSolver):
         iteration = 1
         while True:
 
-            # TODO: Transform lambda to X
-
+            start_time = time.time()
             X, Y = rh2EPM.transform(self.runhistory)
 
-            # TODO: Estimate new configuration
             self.logger.debug("Search for next configuration")
-            next_config = self.choose_next(X, Y)
+            # get all found configurations sorted according to acq
+            next_config = self.choose_next(X, Y, n_return=1234567890) 
+
+            rand_configs = [self.config_space.sample_configuration()
+                            for _ in range(len(next_config))]
+            time_spend = time.time() - start_time
+            logging.debug("Time spend to choose next configurations: %d" %(time_spend))
+
 
             self.logger.debug("Intensify")
             # TODO: fix timebound of intensifier
             # TODO: add more than one challenger
             inten = Intensifier(executor=self.executor,
-                                challengers=[next_config,
-                                             self.config_space.sample_configuration()],
+
+                                challengers=[
+                                    val for pair in zip(next_config, rand_configs) for val in pair],
                                 incumbent=self.incumbent,
                                 run_history=self.runhistory,
                                 instances=[inst[0]
                                            for inst in self.scenario.train_insts],
                                 cutoff=self.scenario.cutoff,
-                                deterministic = self.scenario.deterministic,
-                                run_obj_time = self.scenario.run_obj == "runtime")
+                                deterministic=self.scenario.deterministic,
+                                run_obj_time=self.scenario.run_obj == "runtime",
+                                time_bound = max(2, time_spend))
 
             self.incumbent = inten.intensify()
 
@@ -192,7 +200,7 @@ class SMBO(BaseSolver):
 
         return self.incumbent
 
-    def choose_next(self, X=None, Y=None, n_iters=10):
+    def choose_next(self, X=None, Y=None, n_iters=10, n_return=1):
         """
         Performs one single iteration of Bayesian optimization and estimated
         the next point to evaluate.
@@ -204,10 +212,14 @@ class SMBO(BaseSolver):
             instance features.
         Y : (N, 1) numpy array, optional
             The function values for each configuration instance pair.
+        n_iters: int
+            number of iterations
+        n_return: int
+            number of returned configurations
 
         Returns
         -------
-        x : (1, H) Configuration Object
+        x : (n_return, H) Configuration Object
             The suggested configuration to evaluate.
         """
 
@@ -217,8 +229,7 @@ class SMBO(BaseSolver):
         self.model.train(X, Y)
         self.acquisition_func.update(self.model)
 
-        found_configs = []
-        acq_vals = np.zeros([n_iters])
+        configs_acq = []
 
         # Start N local search from different random start points
         for i in range(n_iters):
@@ -229,17 +240,14 @@ class SMBO(BaseSolver):
 
             configuration, acq_val = self.local_search.maximize(start_point)
 
-            found_configs.append(configuration)
-            acq_vals[i] = acq_val[0][0]
+            configs_acq.append((configuration, acq_val[0][0]))
 
-        # Return configuration with highest acquisition value
-        # TODO JTS: this argmax will always return the first value
-        #           if there are multiple results with the same acquisition function
-        #           maybe we should randomly tie-break here!
-        best = np.argmax(acq_vals)
-        # TODO: We could also return a configuration object here, but then also
-        # the unit test has to be adapted
-        # ML: We have to return the configuration object here or else it is a
-        # mess since we cannot convert it back
+        # shuffle for random tie-break
+        random.shuffle(configs_acq, self.rng.rand)
 
-        return found_configs[best]
+        # sort according to acq value
+        # and return n best configurations
+        configs_acq.sort(key=lambda x: x[1])
+        configs = map(lambda x: x[0], configs_acq)
+
+        return configs[0:n_return]
