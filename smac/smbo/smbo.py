@@ -147,11 +147,7 @@ class SMBO(BaseSolver):
                                 impute_censored_data=False,
                                 impute_state=None)
 
-        # TODO: Replace it by other executor based on scenario;
-        # maybe move it scenario directly
-        self.executor = ExecuteTARunOld(
-            ta=self.scenario.ta, run_obj=self.scenario.run_obj,
-            par_factor=self.scenario.par_factor)
+        self.executor = self.scenario.tae_runner
 
         self.run_initial_design()
 
