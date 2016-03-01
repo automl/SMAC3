@@ -50,7 +50,9 @@ class ExecuteTARunOld(object):
 
     def run(self, config, instance=None,
             cutoff=99999999999999.,
-            seed=12345):
+            seed=12345,
+            instance_specific="0"
+            ):
         """
             runs target algorithm <self.ta> with configuration <config> on
             instance <instance> with instance specifics <specifics>
@@ -66,6 +68,8 @@ class ExecuteTARunOld(object):
                     runtime cutoff
                 seed : int
                     random seed
+                instance_specific: str
+                    instance specific information (e.g., domain file or solution)
             Returns
             -------
                 status: enum of StatusType (int)
@@ -87,7 +91,7 @@ class ExecuteTARunOld(object):
         # other value
         cmd = []
         cmd.extend(self.ta)
-        cmd.extend([instance, "0", str(cutoff), "0", str(seed)])
+        cmd.extend([instance, instance_specific, str(cutoff), "0", str(seed)])
         for p in config:
             if not config[p] is None:
                 cmd.extend(["-" + str(p), str(config[p])])
@@ -113,7 +117,7 @@ class ExecuteTARunOld(object):
                 else:
                     status, runtime, runlength, quality, seed, additional_info = fields
                     additional_info = {"additional_info": additional_info}
-                    
+
                 runtime = min(float(runtime), cutoff)
                 quality = float(quality)
                 seed = int(seed)

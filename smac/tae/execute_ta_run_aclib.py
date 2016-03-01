@@ -51,7 +51,8 @@ class ExecuteTARunAClib(object):
 
     def run(self, config, instance=None,
             cutoff=99999999999999.,
-            seed=12345):
+            seed=12345,
+            instance_specific="0"):
         """
             runs target algorithm <self.ta> with configuration <config> on
             instance <instance> with instance specifics <specifics>
@@ -67,6 +68,8 @@ class ExecuteTARunAClib(object):
                     runtime cutoff
                 seed : int
                     random seed
+                instance_specific: str
+                    instance specific information -- ignored here
             Returns
             -------
                 status: enum of StatusType (int)

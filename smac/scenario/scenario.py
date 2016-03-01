@@ -80,6 +80,7 @@ class Scenario(object):
         else:
             self.par_factor = 1
 
+        # read instance files
         if self.train_inst_fn:
             if os.path.isfile(self.train_inst_fn):
                 self.train_insts = in_reader.read_instance_file(
@@ -90,12 +91,27 @@ class Scenario(object):
                 sys.exit(1)
         if self.test_inst_fn:
             if os.path.isfile(self.test_inst_fn):
-                self.test_inst = in_reader.read_instance_file(
+                self.test_insts = in_reader.read_instance_file(
                     self.test_inst_fn)
             else:
                 self.logger.error(
                     "Have not found test instance file: %s" % (self.test_inst_fn))
                 sys.exit(1)
+
+        self.instance_specific = {}
+
+        def extract_instance_specific(instance_list):
+            insts = []
+            for inst in instance_list:
+                if len(inst) > 1:
+                    self.instance_specific[inst[0]] = " ".join(inst[1:])
+                insts.append(inst[0])
+            return insts
+
+        self.train_insts = extract_instance_specific(self.train_insts)
+        self.test_insts = extract_instance_specific(self.test_insts)
+
+        # read feature file
         if self.feature_fn:
             if os.path.isfile(self.feature_fn):
                 self.feature_dict = in_reader.read_instance_features_file(
@@ -105,6 +121,7 @@ class Scenario(object):
                     self.feature_array.append(self.feature_dict[inst_[0]])
                 self.feature_array = numpy.array(self.feature_array)
 
+        # read pcs file
         if os.path.isfile(self.pcs_fn):
             with open(self.pcs_fn) as fp:
                 pcs_str = fp.readlines()

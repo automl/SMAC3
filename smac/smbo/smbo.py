@@ -100,8 +100,8 @@ class SMBO(BaseSolver):
         self.incumbent = default_conf
         rand_inst_id = self.rng.randint(0, len(self.scenario.train_insts))
         # ignore instance specific values
-        rand_inst = self.scenario.train_insts[rand_inst_id][0]
-        
+        rand_inst = self.scenario.train_insts[rand_inst_id]
+
         if self.scenario.deterministic:
             initial_seed = 0
         else:
@@ -109,7 +109,8 @@ class SMBO(BaseSolver):
 
         status, cost, runtime, additional_info = self.executor.run(
             default_conf, instance=rand_inst, cutoff=self.scenario.cutoff,
-            seed=initial_seed)
+            seed=initial_seed,
+            instance_specific=self.scenario.instance_specific[rand_inst])
 
         if status in [StatusType.CRASHED or StatusType.ABORT]:
             self.logger.info("First run crashed -- Abort")
@@ -171,11 +172,11 @@ class SMBO(BaseSolver):
                                              self.config_space.sample_configuration()],
                                 incumbent=self.incumbent,
                                 run_history=self.runhistory,
-                                instances=[inst[0]
-                                           for inst in self.scenario.train_insts],
+                                instances=self.scenario.train_insts,
                                 cutoff=self.scenario.cutoff,
-                                deterministic = self.scenario.deterministic,
-                                run_obj_time = self.scenario.run_obj == "runtime")
+                                deterministic=self.scenario.deterministic,
+                                run_obj_time=self.scenario.run_obj == "runtime",
+                                instance_specifics = self.scenario.instance_specific)
 
             self.incumbent = inten.intensify()
 
