@@ -148,7 +148,7 @@ class RandomForestWithInstances(object):
         for i, x in enumerate(X_):
             mean[i], var[i] = self.rf.predict(x)
 
+        var = np.mean(var) + np.var(mean)
         mean = np.mean(mean)
-        var = np.sum(var)  # TODO: is this correct?
 
         return mean, var
