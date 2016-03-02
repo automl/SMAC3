@@ -109,7 +109,7 @@ class Intensifier(object):
             self.logger.debug("Intensify on %s" % (challenger))
             inc_runs = self.run_history.get_runs_for_config(self.incumbent)
             # First evaluate incumbent on a new instance
-            if len(inc_runs) <= min(self.maxR, len(self.instances)):
+            if len(inc_runs) <= self.maxR:
                 # find all instances that have the most runs on the inc
                 inc_inst = [s.instance for s in inc_runs]
                 inc_inst = list(Counter(inc_inst).items())
@@ -125,6 +125,11 @@ class Intensifier(object):
                                                 size=1)[0]
 
                 available_insts = (self.instances - inc_inst)
+
+                # if all instances were used n times, we can pick an instances from the complete set again
+                if not self.deterministic and not available_insts:
+                    available_insts = self.instances
+                    
                 if available_insts:
                     next_instance = random.choice(list(available_insts))
                     status, cost, dur, res = self.tae.run(config=self.incumbent,
