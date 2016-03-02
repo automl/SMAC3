@@ -78,14 +78,14 @@ class RunHistory2EPM(object):
             # Everything is fine
             pass
 
-        self.config = OrderedDict({
-            'success_states': success_states,
-            'impute_censored_data': impute_censored_data,
-            'cutoff_time': cutoff_time,
-            'impute_state': impute_state,
-        })
-        self.logger = logging.getLogger("runhistory2epm")
+        # Configuration for runhistory2EPM
+        self.success_states = success_states
+        self.impute_censored_data = impute_censored_data
+        self.cutoff_time = cutoff_time
+        self.impute_state = impute_state
         self.num_params = num_params
+
+        self.logger = logging.getLogger("runhistory2epm")
 
     def _build_matrix(self, run_list, runhistory, instances=None):
         # First build nan-matrix of size #configs x #params+1
@@ -135,7 +135,7 @@ class RunHistory2EPM(object):
         tX, tY = self._build_matrix(run_list=t_run_list, runhistory=runhistory,
                                     instances=t_instance_id_list)
 
-        if self.config['impute_censored_data']:
+        if self.impute_censored_data:
             # Get all censored runs
             c_run_list = self.__select_runs(rh_data=copy.deepcopy(runhistory.data),
                                             select=RunType.CENSORED)
@@ -194,17 +194,17 @@ class RunHistory2EPM(object):
 
         if select == RunType.SUCCESS:
             for run in rh_data.keys():
-                if rh_data[run].status in self.config['success_states']:
+                if rh_data[run].status in self.success_states:
                     new_dict[run] = rh_data[run]
         elif select == RunType.TIMEOUT:
             for run in rh_data.keys():
                 if (rh_data[run].status == StatusType.TIMEOUT and
-                             rh_data[run].time >= self.config['cutoff_time']):
+                            rh_data[run].time >= self.cutoff_time):
                     new_dict[run] = rh_data[run]
         elif select == RunType.CENSORED:
             for run in rh_data.keys():
-                if rh_data[run].status in self.config['impute_state'] \
-                        and rh_data[run].time < self.config['cutoff_time']:
+                if rh_data[run].status in self.impute_state \
+                        and rh_data[run].time < self.cutoff_time:
                     new_dict[run] = rh_data[run]
         else:
             err_msg = "select must be in (%s), but is %s" % \
