@@ -69,7 +69,7 @@ class Scenario(object):
 
         self.train_insts = []
         self.test_inst = []
-        self.feature_dict = {}  # instance name -> feature vector
+        self.feature_dict = None  # instance name -> feature vector
         self.feature_array = None
         self.cs = None  # ConfigSpace object
 
@@ -118,15 +118,14 @@ class Scenario(object):
                     self.feature_fn)[1]
                 self.feature_array = []
                 for inst_ in self.train_insts:
-                    self.feature_array.append(self.feature_dict[inst_[0]])
+                    self.feature_array.append(self.feature_dict[inst_])
                 self.feature_array = numpy.array(self.feature_array)
+                
 
         # read pcs file
         if os.path.isfile(self.pcs_fn):
             with open(self.pcs_fn) as fp:
                 pcs_str = fp.readlines()
-                # TODO: ConfigSpace should use only logging and no print
-                # statements
                 self.cs = pcs.read(pcs_str)
                 self.cs.seed(42)
         else:

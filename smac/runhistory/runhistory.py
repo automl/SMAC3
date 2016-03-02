@@ -51,8 +51,8 @@ class RunHistory(object):
                 runtime of TA run
             status: str
                 status in {SUCCESS, TIMEOUT, CRASHED, ABORT, MEMOUT}
-            instance_id: int
-                id of instance (default: None)
+            instance_id: str
+                str representing an instance (default: None)
             seed: int
                 random seed used by TA (default: None)
             additional_info: dict

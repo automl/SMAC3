@@ -14,6 +14,7 @@ __version__ = "0.0.1"
 
 
 class RandomForestWithInstances(object):
+
     '''
     Interface to the random forest that takes instance features
     into account.
@@ -64,6 +65,8 @@ class RandomForestWithInstances(object):
 
         self.instance_features = instance_features
         # make sure types are uint
+        if instance_features is not None:
+            types = np.hstack((types, np.zeros((instance_features.shape[1]))))
         self.types = np.array(types, dtype=np.uint)
 
         self.rf = pyrfr.regression.binary_rss()
@@ -83,9 +86,9 @@ class RandomForestWithInstances(object):
                        n_points_per_tree, ratio_features, min_samples_split,
                        min_samples_leaf, max_depth, eps_purity, seed]
         self.seed = seed
-        
+
         self.logger = logging.getLogger("RF")
-        #TODO: check this -- it could slow us down
+        # TODO: check this -- it could slow us down
         dub_filter = DuplicateFilter()
         self.logger.addFilter(dub_filter)
 
@@ -106,8 +109,8 @@ class RandomForestWithInstances(object):
         self.Y = Y
 
         data = pyrfr.regression.numpy_data_container(self.X,
-                                                      self.Y[:, 0],
-                                                      self.types)
+                                                     self.Y[:, 0],
+                                                     self.types)
 
         self.rf.fit(data)
 
@@ -133,10 +136,10 @@ class RandomForestWithInstances(object):
         if self.instance_features is None or len(self.instance_features) == 0:
             X_ = Xtest
         else:
+            nfeats = self.instance_features.shape[0]
             # TODO: Use random forest data container for instances
-            X_ = Xtest
-            self.logger.warn("Instance feature support is not yet implemented.")
-            #raise Exception("Not implemented!")
+            X_ = np.hstack(
+                (np.tile(Xtest, (nfeats, 1)), self.instance_features))
 
         mean = np.zeros(X_.shape[0])
         var = np.zeros(X_.shape[0])
@@ -144,5 +147,8 @@ class RandomForestWithInstances(object):
         # TODO: Would be nice if the random forest supports batch predictions
         for i, x in enumerate(X_):
             mean[i], var[i] = self.rf.predict(x)
+
+        var = np.mean(var) + np.var(mean)
+        mean = np.mean(mean)
 
         return mean, var

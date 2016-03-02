@@ -20,10 +20,11 @@ __maintainer__ = "Katharina Eggensperger"
 __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
-MAXINT = 2**31 - 1
+MAXINT = 2 ** 31 - 1
 
 
 class Intensifier(object):
+
     '''
         takes challenger and incumbents and performs intensify
     '''
@@ -90,8 +91,8 @@ class Intensifier(object):
 
         if self.run_limit < 1:
             raise ValueError("run_limit must be > 1")
-        if self.time_bound <= 1:
-            raise ValueError("time_bound must be > 1")
+        if self.time_bound < 1:
+            raise ValueError("time_bound must be => 1")
 
     def intensify(self):
         '''
@@ -203,13 +204,14 @@ class Intensifier(object):
                     # challenger is not worse, continue
                     N = 2 * N
 
-                if num_run > self.run_limit:
-                    self.logger.debug(
-                        "Maximum #runs for intensification reached")
-                    break
-                elif time.time() - self.start_time - self.time_bound > 0:
-                    self.logger.debug("Timelimit for intensification reached")
-                    break
+            if num_run > self.run_limit:
+                self.logger.debug(
+                    "Maximum #runs for intensification reached")
+                break
+            elif time.time() - self.start_time - self.time_bound >= 0:
+                self.logger.debug("Timelimit for intensification reached (used: %d sec, available: %d sec)" % (
+                    time.time() - self.start_time, self.time_bound))
+                break
 
         # output estimated performance of incumbent
         inc_runs = self.run_history.get_runs_for_config(self.incumbent)
