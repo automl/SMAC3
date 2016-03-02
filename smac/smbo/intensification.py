@@ -189,19 +189,20 @@ class Intensifier(object):
 
                 if chal_perf > inc_perf:
                     # Incumbent beats challenger
-                    self.logger.debug("Incumbent (%.2f) is better than challenger (%.2f) on %d runs." % (
+                    self.logger.debug("Incumbent (%.4f) is better than challenger (%.4f) on %d runs." % (
                         inc_perf, chal_perf, len(inst_seed_pairs)))
                     break
                 elif len(missing_runs) == 0:
                     # Challenger is as good as incumbent -> change incu
 
-                    self.logger.info("Challenger (%.2f) is better than incumbent (%.2f) on %d runs." % (
-                        chal_perf, inc_perf, len(inst_seed_pairs)))
+                    n_samples = len(inst_seed_pairs)
+                    self.logger.info("Challenger (%.4f) is better than incumbent (%.4f) on %d runs." % (
+                        chal_perf/n_samples, inc_perf/n_samples, n_samples))
                     self.logger.info(
                         "Changing incumbent to challenger: %s" % (challenger))
                     self.incumbent = challenger
                     Stats.inc_changed += 1
-                    self.trajLogger.add_entry(train_perf=chal_perf,
+                    self.trajLogger.add_entry(train_perf=chal_perf/n_samples,
                                               incumbent_id=Stats.inc_changed,
                                               incumbent=challenger)
                     break
