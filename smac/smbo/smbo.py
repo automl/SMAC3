@@ -18,6 +18,8 @@ from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 
+from smac.epm.rfr_imputator import RFRImputator
+
 MAXINT = 2**31 - 1
 
 __author__ = "Aaron Klein, Marius Lindauer"
@@ -141,11 +143,29 @@ class SMBO(BaseSolver):
         self.runhistory = RunHistory()
 
         # TODO set arguments properly
-        rh2EPM = RunHistory2EPM(num_params=num_params,
-                                cutoff_time=self.scenario.cutoff,
-                                success_states=None,
-                                impute_censored_data=False,
-                                impute_state=None)
+        if self.scenario.run_obj == "runtime":
+            if self.scenario.overall_obj == "par10":
+                par = 10
+            else:
+                par = 1
+            imputor = RFRImputator(cs=self.config_space,
+                                   rs=self.rng,
+                                   cutoff=self.scenario.cutoff,
+                                   threshold=self.scenario.cutoff*par,
+                                   change_threshold=0.01,
+                                   max_iter=10)
+            rh2EPM = RunHistory2EPM(scenario=self.scenario,
+                                    num_params=num_params,
+                                    success_states=[StatusType.SUCCESS, ],
+                                    impute_censored_data=True,
+                                    impute_state=[StatusType.TIMEOUT, ],
+                                    imputor=imputor)
+        else:
+            rh2EPM = RunHistory2EPM(scenario=self.scenario,
+                                    num_params=num_params,
+                                    success_states=None,
+                                    impute_censored_data=False,
+                                    impute_state=None)
 
         # TODO: Replace it by other executor based on scenario;
         # maybe move it scenario directly

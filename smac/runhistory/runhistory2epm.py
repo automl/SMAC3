@@ -1,5 +1,4 @@
 import copy
-from collections import OrderedDict
 import logging
 
 import numpy
@@ -18,10 +17,10 @@ __version__ = "0.0.1"
 
 
 class RunType(object):
-
-    """
-        class to define numbers for status types
-    """
+    '''
+       class to define numbers for status types.
+       Makes life easier in select_runs
+    '''
     SUCCESS = 1
     TIMEOUT = 2
     CENSORED = 3
@@ -32,7 +31,7 @@ class RunHistory2EPM(object):
         takes a runhistory object and preprocess data in order to train EPM
     '''
 
-    def __init__(self, num_params, cutoff_time, success_states=None,
+    def __init__(self, scenario, num_params, success_states=None,
                  impute_censored_data=False, impute_state=None, imputor=None,
                  rs=None):
         '''
@@ -53,39 +52,49 @@ class RunHistory2EPM(object):
         rs : numpy.random.RandomState
             only used for reshuffling data after imputation
         '''
+        self.logger = logging.getLogger("runhistory2epm")
 
+        # General arguments
+        self.scenario = scenario
+        self.rs = rs
+        self.num_params = num_params
+
+        # Configuration
+        self.success_states = success_states
+        self.impute_censored_data = impute_censored_data
+        self.impute_state = impute_state
+        self.cutoff_time = self.scenario.cutoff
+        self.imputor = imputor
+
+        # Fill with some default values
         if rs is None:
             self.rs = numpy.random.RandomState()
-        else:
-            self.rs = rs
 
-        if impute_state is None:
-            impute_state = [StatusType.TIMEOUT, ]
+        if self.impute_state is None:
+            self.impute_state = [StatusType.TIMEOUT, ]
 
-        if success_states is None:
-            success_states = [StatusType.SUCCESS, ]
+        if self.success_states is None:
+            self.success_states = [StatusType.SUCCESS, ]
 
-        self.imputor = imputor
+        # Sanity checks
+        # TODO: Decide whether we need this
+        if impute_censored_data and scenario.run_obj != "runtime":
+            # So far we don't know how to handle censored quality data
+            self.logger.critical("Cannot impute censored data when optimizing "
+                                 "runtime")
+            raise NotImplementedError("Cannot impute censored data when "
+                                      "optimizing runtime")
+
+        # Check imputor stuff
         if impute_censored_data and self.imputor is None:
             self.logger.critical("You want me to impute cencored data, but "
                                  "I don't know how. Imputor is None")
-            raise ValueError("impute_cencored data, but no imputor given")
-        elif impute_censored_data and not isinstance(self.imputor,
-                                                     smac.epm.base_imputor):
+            raise ValueError("impute_censored data, but no imputor given")
+        elif impute_censored_data and not \
+                isinstance(self.imputor, smac.epm.base_imputor.BaseImputor):
             raise ValueError("Given imputor is not an instance of "
-                             "smac.epm.base_imputor")
-        else:
-            # Everything is fine
-            pass
-
-        # Configuration for runhistory2EPM
-        self.success_states = success_states
-        self.impute_censored_data = impute_censored_data
-        self.cutoff_time = cutoff_time
-        self.impute_state = impute_state
-        self.num_params = num_params
-
-        self.logger = logging.getLogger("runhistory2epm")
+                             "smac.epm.base_imputor.BaseImputor, but %s" %
+                             type(self.imputor))
 
     def _build_matrix(self, run_list, runhistory, instances=None):
         # First build nan-matrix of size #configs x #params+1
@@ -103,7 +112,7 @@ class RunHistory2EPM(object):
             # TODO: replace with instance features if available
             #run_array[row, -1] = instances[row]
             Y[row, 0] = run.cost
-        return X, Y
+        return X, Y.flatten()
 
     def transform(self, runhistory, shuffle=True):
         '''
@@ -139,33 +148,37 @@ class RunHistory2EPM(object):
             # Get all censored runs
             c_run_list = self.__select_runs(rh_data=copy.deepcopy(runhistory.data),
                                             select=RunType.CENSORED)
-            # Store a list of instance IDs
-            c_instance_id_list = [k.instance_id for k in c_run_list.keys()]
-            c_run_list = [c.config for c in c_run_list.keys()]
+            if len(c_run_list) == 0:
+                self.logger.critical("No censored data found, skip imputation")
+            else:
+                # Store a list of instance IDs
+                c_instance_id_list = [k.instance_id for k in c_run_list.keys()]
 
-            cen_X, cen_Y = self._build_matrix(run_list=c_run_list,
-                                              runhistory=runhistory,
-                                              instances=c_instance_id_list)
+                cen_X, cen_Y = self._build_matrix(run_list=c_run_list,
+                                                  runhistory=runhistory,
+                                                  instances=c_instance_id_list)
 
-            # Also impute TIMEOUTS
-            cen_X = numpy.vstack((cen_X, tX))
-            cen_Y = numpy.vstack((cen_Y, tY))
+                # Also impute TIMEOUTS
+                cen_X = numpy.vstack((cen_X, tX))
+                cen_Y = numpy.concatenate((cen_Y, tY))
+                self.logger.debug("%d TIMOUTS, %d censored, %d regular" %
+                                  (tX.shape[0], cen_X.shape[0], X.shape[0]))
 
-            if shuffle:
-                shuffle_idx = self.rs.permutation(X.shape[0])
-                cen_X = cen_X[shuffle_idx, :]
-                cen_Y = cen_Y[shuffle_idx, :]
+                if shuffle:
+                    shuffle_idx = self.rs.permutation(X.shape[0])
+                    cen_X = cen_X[shuffle_idx, :]
+                    cen_Y = cen_Y[shuffle_idx, :]
 
-            imp_Y = self.imputor.impute(censored_X=cen_X, censored_y=cen_Y,
-                                        uncensored_X=X, uncensored_y=Y)
+                imp_Y = self.imputor.impute(censored_X=cen_X, censored_y=cen_Y,
+                                            uncensored_X=X, uncensored_y=Y)
 
-            # Shuffle data to mix censored and imputed data
-            X = numpy.vstack((X, cen_X))
-            Y = numpy.concatenate(Y, imp_Y)
+                # Shuffle data to mix censored and imputed data
+                X = numpy.vstack((X, cen_X))
+                Y = numpy.concatenate((Y, imp_Y))
         else:
-            # If we do not impute,w e also return TIMEOUT data
+            # If we do not impute,we also return TIMEOUT data
             X = numpy.vstack((X, tX))
-            Y = numpy.vstack((Y, tY))
+            Y = numpy.concatenate((Y, tY))
 
         if shuffle:
             shuffle_idx = self.rs.permutation(X.shape[0])
