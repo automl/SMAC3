@@ -111,7 +111,7 @@ class SMBO(BaseSolver):
         status, cost, runtime, additional_info = self.executor.run(
             default_conf, instance=rand_inst, cutoff=self.scenario.cutoff,
             seed=initial_seed,
-            instance_specific=self.scenario.instance_specific.get(rand_inst,"0"))
+            instance_specific=self.scenario.instance_specific.get(rand_inst, "0"))
 
         if status in [StatusType.CRASHED or StatusType.ABORT]:
             self.logger.info("First run crashed -- Abort")
@@ -163,13 +163,13 @@ class SMBO(BaseSolver):
 
             self.logger.debug("Search for next configuration")
             # get all found configurations sorted according to acq
-            next_config = self.choose_next(X, Y, n_return=1234567890) 
+            next_config = self.choose_next(X, Y, n_return=1234567890)
 
             rand_configs = [self.config_space.sample_configuration()
                             for _ in range(len(next_config))]
             time_spend = time.time() - start_time
-            logging.debug("Time spend to choose next configurations: %d" %(time_spend))
-
+            logging.debug(
+                "Time spend to choose next configurations: %d" % (time_spend))
 
             self.logger.debug("Intensify")
             # TODO: fix timebound of intensifier
@@ -184,8 +184,8 @@ class SMBO(BaseSolver):
                                 cutoff=self.scenario.cutoff,
                                 deterministic=self.scenario.deterministic,
                                 run_obj_time=self.scenario.run_obj == "runtime",
-                                instance_specifics = self.scenario.instance_specific,
-                                time_bound = max(2, time_spend))
+                                instance_specifics=self.scenario.instance_specific,
+                                time_bound=max(2, time_spend))
 
             self.incumbent = inten.intensify()
 
@@ -196,7 +196,14 @@ class SMBO(BaseSolver):
 
             iteration += 1
 
-            if Stats.get_remaing_time_budget() < 0 or Stats.get_remaining_ta_runs() < 0:
+            logging.debug("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
+                Stats.get_remaing_time_budget(),
+                Stats.get_remaining_ta_budget(),
+                Stats.get_remaining_ta_runs()))
+
+            if Stats.get_remaing_time_budget() < 0 or \
+                Stats.get_remaining_ta_budget() < 0 or \
+                Stats.get_remaining_ta_runs() < 0:
                 break
 
         return self.incumbent
