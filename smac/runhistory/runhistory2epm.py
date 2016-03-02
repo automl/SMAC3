@@ -23,7 +23,8 @@ class RunHistory2EPM(object):
 
     def __init__(self, num_params, cutoff_time, 
                  instance_features=None, success_states=None,
-                 impute_censored_data=False, impute_state=None):
+                 impute_censored_data=False, impute_state=None,
+                 log_y=False):
         '''
         Constructor
         Parameters
@@ -41,6 +42,8 @@ class RunHistory2EPM(object):
         impute_state: list, optional
             list of states that mark censored data (such as StatusType.TIMEOUT)
             in combination with runtime < cutoff_time
+        log_y: bool
+            if we optimize runtime, we use a log-transformation on y
         '''
         if impute_state is None:
             impute_state = [StatusType.TIMEOUT, ]
@@ -63,6 +66,7 @@ class RunHistory2EPM(object):
         
         self.logger = logging.getLogger("runhistory2epm")
         self.num_params = num_params
+        self.log_y = log_y
 
     def transform(self, runhistory):
         '''
@@ -110,6 +114,9 @@ class RunHistory2EPM(object):
                 
             #run_array[row, -1] = instance_id_list[row]
             Y[row, 0] = run.cost
+
+        if self.log_y:
+            Y = numpy.log(Y)
 
         return X, Y
 

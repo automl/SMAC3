@@ -148,7 +148,8 @@ class SMBO(BaseSolver):
                                 instance_features=self.scenario.feature_dict,
                                 success_states=None,
                                 impute_censored_data=False,
-                                impute_state=None)
+                                impute_state=None,
+                                log_y = self.scenario.run_obj == "runtime")
 
         self.executor = self.scenario.tae_runner
 
@@ -160,7 +161,7 @@ class SMBO(BaseSolver):
 
             start_time = time.time()
             X, Y = rh2EPM.transform(self.runhistory)
-
+            
             self.logger.debug("Search for next configuration")
             # get all found configurations sorted according to acq
             next_config = self.choose_next(X, Y, n_return=1234567890)
