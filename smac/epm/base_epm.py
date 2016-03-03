@@ -9,7 +9,7 @@ __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class BaseEpm(metaclass=ABCMeta):
+class BaseEpm(ABCMeta):
     '''abstract EPM class'''
     def __init__(self):
         '''initialize epm module'''

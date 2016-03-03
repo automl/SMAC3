@@ -9,7 +9,7 @@ __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class BaseImputor(metaclass=ABCMeta):
+class BaseImputor(ABCMeta):
     """abstract Imputor class"""
 
     def __init__(self):
