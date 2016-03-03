@@ -1,11 +1,13 @@
 # SMAC v3 Project
 
-## Meeting Protocols
+*UNDER DEVELOPMENT - DO NOT USE OR CONTRIBUTE TO*
 
-https://docs.google.com/document/d/1ABbrLSwlV5PYMYgEXBRfmGOjR4Qc3flMySzyeSy_Jd8/edit?usp=sharing
+This package is under heavy development and subject to change. Please use and
+contribute to the current official 
+[SMAC release](http://www.cs.ubc.ca/labs/beta/Projects/SMAC/).
 
-## Requirements
+Installation:
 
- * pysmac (parsing input and output of SMAC)
- * ROBO (acquisition functions)
- * EPM (train an EPM)
+    cat requirements.txt | xargs -n 1 -L 1 pip install
+    
+    python setup.py install
