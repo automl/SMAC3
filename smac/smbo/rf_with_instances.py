@@ -7,7 +7,7 @@ from smac.utils.duplicate_filter_logging import DuplicateFilter
 
 __author__ = "Aaron Klein"
 __copyright__ = "Copyright 2015, ML4AAD"
-__license__ = "BSD"
+__license__ = "GPLv3"
 __maintainer__ = "Aaron Klein"
 __email__ = "kleinaa@cs.uni-freiburg.de"
 __version__ = "0.0.1"
