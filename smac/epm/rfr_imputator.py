@@ -10,7 +10,7 @@ from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, \
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
-__license__ = "BSD"
+__license__ = "GPLv3"
 __maintainer__ = "Katharina Eggensperger"
 __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
@@ -19,7 +19,9 @@ __version__ = "0.0.1"
 class RFRImputator(smac.epm.base_imputor.BaseImputor):
     """Uses an rfr to do imputation"""
 
-    def __init__(self, cs, rs, cutoff, threshold, change_threshold=0.01,
+    def __init__(self, cs, rs, cutoff, threshold,
+                 types,
+                 change_threshold=0.01,
                  max_iter=10, log=False):
         """
         initialize imputator module
@@ -33,7 +35,10 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             cutoff value used for this scenario
         threshold : float
             highest possible values (e.g. cutoff * par)
-        change_threshold : stop imputation if change is less than this
+        types: list(int)
+            types of features
+        change_threshold : float 
+            stop imputation if change is less than this
         log : bool
             if True use log10(y)
         -------
@@ -47,7 +52,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         self.threshold = threshold
         self.seed = rs.random_integers(low=0, high=1000)
 
-        self.types = numpy.array(self.get_cat_size(cs=cs), dtype=numpy.uint64)
+        self.types = types
 
         # Never use a lower std than this
         self.std_threshold = 10**-5
@@ -81,7 +86,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         return cat_size
 
     def _get_model(self, X, y):
-        data1 = pyrfr.regression.numpy_data_container(X, y, self.types)
+        data1 = pyrfr.regression.numpy_data_container(X, y[:, 0], self.types)
         model = pyrfr.regression.binary_rss()
         model.seed = self.seed
         model.do_bootstrapping = self.do_bootstrapping
@@ -117,7 +122,8 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         else:
             mean, std = self.model.predict(X)
             if std < self.std_threshold:
-                self.logger.debug("Standard deviation is small, capping to 10^-5")
+                self.logger.debug(
+                    "Standard deviation is small, capping to 10^-5")
                 std = self.std_threshold
             std = numpy.array([std, ])
             mean = numpy.array([mean, ])
@@ -142,8 +148,8 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
 
         if self.log:
             self.logger.debug("Use log10 scale")
-            censored_y = numpy.log10(censored_y)
-            uncensored_y = numpy.log10(uncensored_y)
+            #censored_y = numpy.log10(censored_y)
+            #uncensored_y = numpy.log10(uncensored_y)
             self.cutoff = numpy.log10(self.cutoff)
             self.threshold = numpy.log10(self.threshold)
 
@@ -171,7 +177,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
                 [scipy.stats.truncnorm.stats(a=(censored_y[index] -
                                                 y_mean[index]) / y_stdev[index],
                                              b=(numpy.inf - y_mean[index]) /
-                                               y_stdev[index],
+                                             y_stdev[index],
                                              loc=y_mean[index],
                                              scale=y_stdev[index],
                                              moments='m')

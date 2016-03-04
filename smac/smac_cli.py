@@ -1,6 +1,7 @@
 import os
 import sys
 import logging
+import numpy as np
 
 from utils.io.cmd_reader import CMDReader
 from scenario.scenario import Scenario
@@ -9,7 +10,7 @@ from stats.stats import Stats
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
-__license__ = "BSD"
+__license__ = "GPLv3"
 __maintainer__ = "Marius Lindauer"
 __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
@@ -35,17 +36,18 @@ class SMAC(object):
 
         logging.basicConfig(level=args_.verbose_level)
 
-        # TODO: hack to set logger level as long as robo does not handle logger
+        # TODO: hack to set logger level as long as some of our dependencies does not handle logger
         # in a correct ways
         if args_.verbose_level == "DEBUG":
             self.logger.parent.level = 10
 
-        scen = Scenario(args_)
+        scen = Scenario(args_.scenario_file)
 
         # necessary to use stats options related to scenario information        
         Stats.scenario = scen
 
-        smbo = SMBO(scenario=scen, seed=args_.seed)
+        
+        smbo = SMBO(scenario=scen, rng=np.random.RandomState(args_.seed))
         smbo.run(max_iters=args_.max_iterations)
         
         Stats.print_stats()

@@ -2,6 +2,7 @@ import logging
 import numpy as np
 import random
 import sys
+import time
 
 from ConfigSpace.io import pcs
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
@@ -24,7 +25,7 @@ MAXINT = 2**31 - 1
 
 __author__ = "Aaron Klein, Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
-__license__ = "BSD"
+__license__ = "GPLv3"
 #__maintainer__ = "???"
 #__email__ = "???"
 __version__ = "0.0.1"
@@ -78,6 +79,13 @@ class SMBO(BaseSolver):
                 # and we leave the bounds to be 0 for now
             else:
                 raise TypeError("Unknown hyperparameter type %s" % type(param))
+
+        if scenario.feature_array is not None:
+            self.types = np.hstack(
+                (self.types, np.zeros((scenario.feature_array.shape[1]))))
+
+        self.types = np.array(self.types, dtype=np.uint)
+
         self.model = RandomForestWithInstances(self.types,
                                                scenario.feature_array)
 
@@ -102,8 +110,8 @@ class SMBO(BaseSolver):
         self.incumbent = default_conf
         rand_inst_id = self.rng.randint(0, len(self.scenario.train_insts))
         # ignore instance specific values
-        rand_inst = self.scenario.train_insts[rand_inst_id][0]
-        
+        rand_inst = self.scenario.train_insts[rand_inst_id]
+
         if self.scenario.deterministic:
             initial_seed = 0
         else:
@@ -111,7 +119,8 @@ class SMBO(BaseSolver):
 
         status, cost, runtime, additional_info = self.executor.run(
             default_conf, instance=rand_inst, cutoff=self.scenario.cutoff,
-            seed=initial_seed)
+            seed=initial_seed,
+            instance_specific=self.scenario.instance_specific.get(rand_inst, "0"))
 
         if status in [StatusType.CRASHED or StatusType.ABORT]:
             self.logger.info("First run crashed -- Abort")
@@ -144,14 +153,12 @@ class SMBO(BaseSolver):
 
         # TODO set arguments properly
         if self.scenario.run_obj == "runtime":
-            if self.scenario.overall_obj == "par10":
-                par = 10
-            else:
-                par = 1
             imputor = RFRImputator(cs=self.config_space,
                                    rs=self.rng,
                                    cutoff=self.scenario.cutoff,
-                                   threshold=self.scenario.cutoff*par,
+                                   threshold=self.scenario.cutoff *
+                                   self.scenario.par_factor,
+                                   types=self.types,
                                    change_threshold=0.01,
                                    max_iter=10)
             rh2EPM = RunHistory2EPM(scenario=self.scenario,
@@ -159,19 +166,17 @@ class SMBO(BaseSolver):
                                     success_states=[StatusType.SUCCESS, ],
                                     impute_censored_data=True,
                                     impute_state=[StatusType.TIMEOUT, ],
-                                    imputor=imputor)
+                                    imputor=imputor,
+                                    log_y=self.scenario.run_obj == "runtime")
         else:
             rh2EPM = RunHistory2EPM(scenario=self.scenario,
                                     num_params=num_params,
                                     success_states=None,
                                     impute_censored_data=False,
-                                    impute_state=None)
+                                    impute_state=None,
+                                    log_y=self.scenario.run_obj == "runtime")
 
-        # TODO: Replace it by other executor based on scenario;
-        # maybe move it scenario directly
-        self.executor = ExecuteTARunOld(
-            ta=self.scenario.ta, run_obj=self.scenario.run_obj,
-            par_factor=self.scenario.par_factor)
+        self.executor = self.scenario.tae_runner
 
         self.run_initial_design()
 
@@ -179,27 +184,32 @@ class SMBO(BaseSolver):
         iteration = 1
         while True:
 
-            # TODO: Transform lambda to X
-
+            start_time = time.time()
             X, Y = rh2EPM.transform(self.runhistory)
 
-            # TODO: Estimate new configuration
             self.logger.debug("Search for next configuration")
-            next_config = self.choose_next(X, Y)
+            # get all found configurations sorted according to acq
+            next_config = self.choose_next(X, Y, n_return=1234567890)
+
+            rand_configs = [self.config_space.sample_configuration()
+                            for _ in range(len(next_config))]
+            time_spend = time.time() - start_time
+            logging.debug(
+                "Time spend to choose next configurations: %d" % (time_spend))
 
             self.logger.debug("Intensify")
-            # TODO: fix timebound of intensifier
-            # TODO: add more than one challenger
             inten = Intensifier(executor=self.executor,
-                                challengers=[next_config,
-                                             self.config_space.sample_configuration()],
+
+                                challengers=[
+                                    val for pair in zip(next_config, rand_configs) for val in pair],
                                 incumbent=self.incumbent,
                                 run_history=self.runhistory,
-                                instances=[inst[0]
-                                           for inst in self.scenario.train_insts],
+                                instances=self.scenario.train_insts,
                                 cutoff=self.scenario.cutoff,
-                                deterministic = self.scenario.deterministic,
-                                run_obj_time = self.scenario.run_obj == "runtime")
+                                deterministic=self.scenario.deterministic,
+                                run_obj_time=self.scenario.run_obj == "runtime",
+                                instance_specifics=self.scenario.instance_specific,
+                                time_bound=max(2, time_spend))
 
             self.incumbent = inten.intensify()
 
@@ -210,12 +220,19 @@ class SMBO(BaseSolver):
 
             iteration += 1
 
-            if Stats.get_remaing_time_budget() < 0 or Stats.get_remaining_ta_runs() < 0:
+            logging.debug("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
+                Stats.get_remaing_time_budget(),
+                Stats.get_remaining_ta_budget(),
+                Stats.get_remaining_ta_runs()))
+
+            if Stats.get_remaing_time_budget() < 0 or \
+                    Stats.get_remaining_ta_budget() < 0 or \
+                    Stats.get_remaining_ta_runs() < 0:
                 break
 
         return self.incumbent
 
-    def choose_next(self, X=None, Y=None, n_iters=10):
+    def choose_next(self, X=None, Y=None, n_iters=10, n_return=1):
         """
         Performs one single iteration of Bayesian optimization and estimated
         the next point to evaluate.
@@ -227,10 +244,14 @@ class SMBO(BaseSolver):
             instance features.
         Y : (N, 1) numpy array, optional
             The function values for each configuration instance pair.
+        n_iters: int
+            number of iterations
+        n_return: int
+            number of returned configurations
 
         Returns
         -------
-        x : (1, H) Configuration Object
+        x : (n_return, H) Configuration Object
             The suggested configuration to evaluate.
         """
 
@@ -240,8 +261,7 @@ class SMBO(BaseSolver):
         self.model.train(X, Y)
         self.acquisition_func.update(self.model)
 
-        found_configs = []
-        acq_vals = np.zeros([n_iters])
+        configs_acq = []
 
         # Start N local search from different random start points
         for i in range(n_iters):
@@ -252,17 +272,14 @@ class SMBO(BaseSolver):
 
             configuration, acq_val = self.local_search.maximize(start_point)
 
-            found_configs.append(configuration)
-            acq_vals[i] = acq_val[0][0]
+            configs_acq.append((configuration, acq_val[0][0]))
 
-        # Return configuration with highest acquisition value
-        # TODO JTS: this argmax will always return the first value
-        #           if there are multiple results with the same acquisition function
-        #           maybe we should randomly tie-break here!
-        best = np.argmax(acq_vals)
-        # TODO: We could also return a configuration object here, but then also
-        # the unit test has to be adapted
-        # ML: We have to return the configuration object here or else it is a
-        # mess since we cannot convert it back
+        # shuffle for random tie-break
+        random.shuffle(configs_acq, self.rng.rand)
 
-        return found_configs[best]
+        # sort according to acq value
+        # and return n best configurations
+        configs_acq.sort(key=lambda x: x[1])
+        configs = map(lambda x: x[0], configs_acq)
+
+        return configs[0:n_return]
