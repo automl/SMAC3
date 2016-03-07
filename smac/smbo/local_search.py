@@ -16,7 +16,7 @@ __version__ = "0.0.1"
 class LocalSearch(object):
 
     def __init__(self, acquisition_function, config_space,
-                 epsilon=0.01, n_neighbours=42, max_iterations=None, rng=None):
+                 epsilon=0.000001, max_iterations=None, rng=None):
         """
         Implementation of SMAC's local search
 
@@ -30,15 +30,12 @@ class LocalSearch(object):
         epsilon: float
             In order to perform a local move one of the incumbent's neighbors
             needs at least an improvement higher than epsilon
-        n_neighbours: int
-            Number of neighbors that will be samples in each local move step
         max_iterations: int
             Maximum number of iterations that the local search will perform
         """
         self.config_space = config_space
         self.acquisition_function = acquisition_function
         self.epsilon = epsilon
-        self.n_neighbours = n_neighbours
         self.max_iterations = max_iterations
 
         if rng is None:

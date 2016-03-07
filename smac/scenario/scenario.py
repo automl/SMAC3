@@ -70,6 +70,7 @@ class Scenario(object):
         self.train_insts = []
         self.test_inst = []
         self.feature_dict = None  # instance name -> feature vector
+        self.n_features = 0
         self.feature_array = None
         self.cs = None  # ConfigSpace object
 
@@ -116,11 +117,12 @@ class Scenario(object):
             if os.path.isfile(self.feature_fn):
                 self.feature_dict = in_reader.read_instance_features_file(
                     self.feature_fn)[1]
+                self.n_features = len(
+                    self.feature_dict[self.feature_dict.keys()[0]])
                 self.feature_array = []
                 for inst_ in self.train_insts:
                     self.feature_array.append(self.feature_dict[inst_])
                 self.feature_array = numpy.array(self.feature_array)
-                
 
         # read pcs file
         if os.path.isfile(self.pcs_fn):

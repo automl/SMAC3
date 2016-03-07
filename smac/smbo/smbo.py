@@ -10,7 +10,7 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
 
 from smac.smbo.acquisition import EI
 from smac.smbo.base_solver import BaseSolver
-from smac.smbo.rf_with_instances import RandomForestWithInstances
+from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.smbo.local_search import LocalSearch
 from smac.smbo.intensification import Intensifier
 from smac.runhistory.runhistory import RunHistory
@@ -18,6 +18,8 @@ from smac.runhistory.runhistory2epm import RunHistory2EPM
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
+
+from smac.epm.rfr_imputator import RFRImputator
 
 MAXINT = 2 ** 31 - 1
 
@@ -77,9 +79,17 @@ class SMBO(BaseSolver):
                 # and we leave the bounds to be 0 for now
             else:
                 raise TypeError("Unknown hyperparameter type %s" % type(param))
-        self.model = RandomForestWithInstances(self.types,
-                                               scenario.feature_array)
 
+        if scenario.feature_array is not None:
+            self.types = np.hstack(
+                (self.types, np.zeros((scenario.feature_array.shape[1]))))
+
+        self.types = np.array(self.types, dtype=np.uint)
+
+        self.model = RandomForestWithInstances(self.types,
+                                               scenario.feature_array,
+                                               seed=rng.randint(1234567980))
+        
         self.acquisition_func = EI(self.model,
                                    X_lower,
                                    X_upper)
@@ -142,14 +152,39 @@ class SMBO(BaseSolver):
         num_params = len(self.config_space.get_hyperparameters())
         self.runhistory = RunHistory()
 
-        # TODO set arguments properly
-        rh2EPM = RunHistory2EPM(num_params=num_params,
-                                cutoff_time=self.scenario.cutoff,
-                                instance_features=self.scenario.feature_dict,
-                                success_states=None,
-                                impute_censored_data=False,
-                                impute_state=None,
-                                log_y = self.scenario.run_obj == "runtime")
+        if self.scenario.run_obj == "runtime":
+            if self.scenario.run_obj == "runtime":
+                # if we log the performance data,
+                # the RFRImputator will already get
+                # log transform data from the runhistory
+                cutoff = np.log10(self.scenario.cutoff)
+                threshold = np.log10(self.scenario.cutoff *
+                                     self.scenario.par_factor)
+            else:
+                cutoff = self.scenario.cutoff
+                threshold = self.scenario.cutoff * self.scenario.par_factor
+                
+            imputor = RFRImputator(cs=self.config_space,
+                                   rs=self.rng,
+                                   cutoff=cutoff,
+                                   threshold=threshold,
+                                   model=self.model,
+                                   change_threshold=0.01,
+                                   max_iter=10)
+            rh2EPM = RunHistory2EPM(scenario=self.scenario,
+                                    num_params=num_params,
+                                    success_states=[StatusType.SUCCESS, ],
+                                    impute_censored_data=True,
+                                    impute_state=[StatusType.TIMEOUT, ],
+                                    imputor=imputor,
+                                    log_y=self.scenario.run_obj == "runtime")
+        else:
+            rh2EPM = RunHistory2EPM(scenario=self.scenario,
+                                    num_params=num_params,
+                                    success_states=None,
+                                    impute_censored_data=False,
+                                    impute_state=None,
+                                    log_y=self.scenario.run_obj == "runtime")
 
         self.executor = self.scenario.tae_runner
 
@@ -161,7 +196,7 @@ class SMBO(BaseSolver):
 
             start_time = time.time()
             X, Y = rh2EPM.transform(self.runhistory)
-            
+
             self.logger.debug("Search for next configuration")
             # get all found configurations sorted according to acq
             next_config = self.choose_next(X, Y, n_return=1234567890)
@@ -173,8 +208,6 @@ class SMBO(BaseSolver):
                 "Time spend to choose next configurations: %d" % (time_spend))
 
             self.logger.debug("Intensify")
-            # TODO: fix timebound of intensifier
-            # TODO: add more than one challenger
             inten = Intensifier(executor=self.executor,
 
                                 challengers=[
@@ -203,8 +236,8 @@ class SMBO(BaseSolver):
                 Stats.get_remaining_ta_runs()))
 
             if Stats.get_remaing_time_budget() < 0 or \
-                Stats.get_remaining_ta_budget() < 0 or \
-                Stats.get_remaining_ta_runs() < 0:
+                    Stats.get_remaining_ta_budget() < 0 or \
+                    Stats.get_remaining_ta_runs() < 0:
                 break
 
         return self.incumbent
