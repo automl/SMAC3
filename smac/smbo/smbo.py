@@ -10,7 +10,7 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
 
 from smac.smbo.acquisition import EI
 from smac.smbo.base_solver import BaseSolver
-from smac.smbo.rf_with_instances import RandomForestWithInstances
+from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.smbo.local_search import LocalSearch
 from smac.smbo.intensification import Intensifier
 from smac.runhistory.runhistory import RunHistory
@@ -158,7 +158,7 @@ class SMBO(BaseSolver):
                                    cutoff=self.scenario.cutoff,
                                    threshold=self.scenario.cutoff *
                                    self.scenario.par_factor,
-                                   types=self.types,
+                                   model=self.model,
                                    change_threshold=0.01,
                                    max_iter=10,
                                    log_y=self.scenario.run_obj == "runtime")

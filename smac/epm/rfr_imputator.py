@@ -3,7 +3,6 @@ import numpy
 import scipy.stats
 
 import smac.epm.base_imputor
-import pyrfr.regression
 
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, \
     CategoricalHyperparameter, UniformFloatHyperparameter
@@ -20,7 +19,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
     """Uses an rfr to do imputation"""
 
     def __init__(self, cs, rs, cutoff, threshold,
-                 types,
+                 model,
                  change_threshold=0.01,
                  max_iter=10, log_y=False):
         """
@@ -35,8 +34,8 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             cutoff value used for this scenario
         threshold : float
             highest possible values (e.g. cutoff * par)
-        types: list(int)
-            types of features
+        model:
+            epm model (i.e. RandomForestWithInstances)
         change_threshold : float 
             stop imputation if change is less than this
         log_y : bool
@@ -52,83 +51,9 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         self.threshold = threshold
         self.seed = rs.random_integers(low=0, high=1000)
 
-        self.types = types
+        self.model = model
 
-        # Never use a lower std than this
-        self.std_threshold = 10**-5
         self.log = log_y
-
-        # Hyperparameter for random forest, mostly defaults
-        self.do_bootstrapping = True
-        self.num_data_points_per_tree = 0
-        self.max_features = 2
-        self.max_features_per_split = 0
-        self.min_samples_to_split = 2
-        self.min_samples_in_leaf = 1
-        self.max_depth = 0
-        self.epsilon_purity = 1e-8
-        self.num_trees = 50
-
-    def get_cat_size(self, cs):
-        # TODO This could also be part of the Configspace or smac.util
-        # returns a list number of discrete values for categorical parameters
-        cat_size = list()
-        for param in cs.get_hyperparameters():
-            if isinstance(param, CategoricalHyperparameter):
-                cat_size.append(param._num_choices)
-            elif isinstance(param, UniformFloatHyperparameter):
-                cat_size.append(0)
-            elif isinstance(param, UniformIntegerHyperparameter):
-                cat_size.append(0)
-            else:
-                self.logger.critical("Unknown Parametertype %s" % type(param))
-                cat_size.append(0)
-        return cat_size
-
-    def _get_model(self, X, y):
-        data1 = pyrfr.regression.numpy_data_container(X, y[:, 0], self.types)
-        model = pyrfr.regression.binary_rss()
-        model.seed = self.seed
-        model.do_bootstrapping = self.do_bootstrapping
-        model.num_data_points_per_tree = self.num_data_points_per_tree
-        model.max_features = self.max_features_per_split
-        model.min_samples_to_split = self.min_samples_to_split
-        model.min_samples_in_leaf = self.min_samples_in_leaf
-        model.max_depth = self.max_depth
-        model.epsilon_purity = self.epsilon_purity
-        model.num_trees = self.num_trees
-
-        model.fit(data1)
-        return model
-
-    def _predict(self, m, X):
-        """
-        wrap rfr predict method to predict for multiple X's and returns y's
-        Parameters
-        ----------
-        m : pyrfr.regression.binary_rss
-        x : array
-        -------
-        """
-        if len(X.shape) > 1:
-            pred = numpy.array([m.predict(x) for x in X])
-            mean = pred[:, 0]
-            std = pred[:, 1]
-            std[std < self.std_threshold] = self.std_threshold
-            std[numpy.isnan(std)] = self.std_threshold
-
-            mean = numpy.array(mean)
-            std = numpy.array(std)
-        else:
-            mean, std = self.model.predict(X)
-            if std < self.std_threshold:
-                self.logger.debug(
-                    "Standard deviation is small, capping to 10^-5")
-                std = self.std_threshold
-            std = numpy.array([std, ])
-            mean = numpy.array([mean, ])
-
-        return mean, std
 
     def impute(self, censored_X, censored_y, uncensored_X, uncensored_y):
         """
@@ -137,10 +62,13 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         Parameters
         ----------
         censored_X : array
-            Object that keeps complete run_history
-        censored_y : list
+            X matrix of censored data
+        censored_y : array
+            y matrix of censored data
         uncensored_X : array
-        uncensored_y : list
+            X matrix of uncensored data
+        uncensored_y : array
+            y matrix of uncensored data
         """
         if censored_X.shape[0] == 0:
             self.logger.critical("Nothing to impute, return None")
@@ -154,10 +82,10 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             self.threshold = numpy.log10(self.threshold)
 
         # first learn model without censored data
-        m = self._get_model(uncensored_X, uncensored_y)
+        self.model.train(uncensored_X, uncensored_y)
 
         self.logger.debug("Going to impute %d y-values with %s" %
-                          (censored_X.shape[0], str(m)))
+                          (censored_X.shape[0], str(self.model)))
 
         imputed_y = None  # define this, if imputation fails
 
@@ -170,8 +98,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             self.logger.debug("Iteration %d of %d" % (it, self.max_iter))
 
             # predict censored y values
-            y_mean, y_stdev = self._predict(m, censored_X)
-            del m
+            y_mean, y_stdev = self.model._predict(censored_X)
 
             imputed_y = \
                 [scipy.stats.truncnorm.stats(a=(censored_y[index] -
@@ -195,14 +122,16 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
                 # Calc mean difference between imputed values this and last
                 # iteration, assume imputed values are always concatenated
                 # after uncensored values
+                c_imp_y = imputed_y
+                c_y = y
                 if self.log:
-                    change = numpy.mean(abs(numpy.power(10, imputed_y) -
-                                            numpy.power(10, y[uncensored_y.shape[0]:])) /
-                                        abs(numpy.power(10, y[uncensored_y.shape[0]:])))
-                else:
-                    change = numpy.mean(abs(imputed_y -
-                                            y[uncensored_y.shape[0]:]) /
-                                        y[uncensored_y.shape[0]:])
+                    c_imp_y = numpy.power(10, imputed_y)
+                    c_y = numpy.power(10, y)
+                    
+                change = numpy.mean(abs(c_imp_y -
+                                            c_y[uncensored_y.shape[0]:]) /
+                                        c_y[uncensored_y.shape[0]:])
+                    
 
             # lower all values that are higher than threshold
             imputed_y[imputed_y >= self.threshold] = self.threshold
@@ -213,7 +142,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             y = numpy.concatenate((uncensored_y, imputed_y))
 
             if change > self.change_threshold or it == 0:
-                m = self._get_model(X, y)
+                self.model.train(X, y)
             else:
                 break
 

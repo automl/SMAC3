@@ -88,6 +88,9 @@ class RandomForestWithInstances(object):
         # TODO: check this -- it could slow us down
         dub_filter = DuplicateFilter()
         self.logger.addFilter(dub_filter)
+        
+        # Never use a lower std than this
+        self.std_threshold = 10**-5
 
     def train(self, X, Y, **kwargs):
         '''
@@ -137,15 +140,53 @@ class RandomForestWithInstances(object):
             # TODO: Use random forest data container for instances
             X_ = np.hstack(
                 (np.tile(Xtest, (nfeats, 1)), self.instance_features))
-
+            
         mean = np.zeros(X_.shape[0])
         var = np.zeros(X_.shape[0])
 
         # TODO: Would be nice if the random forest supports batch predictions
         for i, x in enumerate(X_):
             mean[i], var[i] = self.rf.predict(x)
-
+            
         var = np.mean(var) + np.var(mean)
         mean = np.mean(mean)
 
         return mean, var
+    
+    def _predict(self, X):
+        """
+        Wraps rfr predict method to predict for multiple X's and returns y's (means and stds)
+        This method does not handles instances in a special way
+        Method written for imputation of censored data
+        
+        Parameters
+        ----------
+        m : pyrfr.regression.binary_rss
+        X : array
+        
+        Returns
+        -------
+        mean: vector
+            mean predictions on X
+        std: vector
+            variance predictions on X
+        """
+        if len(X.shape) > 1:
+            pred = np.array([self.rf.predict(x) for x in X])
+            mean = pred[:, 0]
+            std = pred[:, 1]
+            std[std < self.std_threshold] = self.std_threshold
+            std[np.isnan(std)] = self.std_threshold
+
+            mean = np.array(mean)
+            std = np.array(std)
+        else:
+            mean, std = self.rf.predict(X)
+            if std < self.std_threshold:
+                self.logger.debug(
+                    "Standard deviation is small, capping to 10^-5")
+                std = self.std_threshold
+            std = np.array([std, ])
+            mean = np.array([mean, ])
+
+        return mean, std

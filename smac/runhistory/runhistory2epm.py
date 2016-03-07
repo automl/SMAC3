@@ -138,7 +138,7 @@ class RunHistory2EPM(object):
 
         if self.log_y:
             Y = numpy.log10(Y)
-
+            
         return X, Y
 
     def transform(self, runhistory):
