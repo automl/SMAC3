@@ -105,7 +105,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
 
             if sum(numpy.isfinite(imputed_y) == False) > 0:
                 # Replace all nans with threshold
-                self.logger.critical("Going to replace %d nan-value(s) with "
+                self.logger.debug("Going to replace %d nan-value(s) with "
                                      "threshold" %
                                      sum(numpy.isfinite(imputed_y) == False))
                 imputed_y[numpy.isfinite(imputed_y) == False] = self.threshold
