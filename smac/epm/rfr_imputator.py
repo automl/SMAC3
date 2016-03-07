@@ -16,6 +16,7 @@ __version__ = "0.0.1"
 
 
 class RFRImputator(smac.epm.base_imputor.BaseImputor):
+
     """Uses an rfr to do imputation"""
 
     def __init__(self, cs, rs, cutoff, threshold,
@@ -127,11 +128,10 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
                 if self.log:
                     c_imp_y = numpy.power(10, imputed_y)
                     c_y = numpy.power(10, y)
-                    
+
                 change = numpy.mean(abs(c_imp_y -
-                                            c_y[uncensored_y.shape[0]:]) /
-                                        c_y[uncensored_y.shape[0]:])
-                    
+                                        c_y[uncensored_y.shape[0]:]) /
+                                    c_y[uncensored_y.shape[0]:])
 
             # lower all values that are higher than threshold
             imputed_y[imputed_y >= self.threshold] = self.threshold
@@ -151,7 +151,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
                 break
 
         self.logger.debug("Imputation used %d/%d iterations, last_change=%f" %
-                         (it, self.max_iter, change))
+                          (it, self.max_iter, change))
 
         imputed_y = numpy.array(imputed_y, dtype=numpy.float)
         imputed_y[imputed_y >= self.threshold] = self.threshold
