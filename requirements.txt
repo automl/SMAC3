@@ -7,3 +7,4 @@ Cython
 
 git+https://github.com/automl/HPOlibConfigSpace@refactor
 git+https://bitbucket.org/aadfreiburg/random_forest_run.git@master
+git+https://github.com/sfalkner/pynisher.git@master
