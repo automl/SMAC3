@@ -1,4 +1,8 @@
 import collections
+import json
+import numpy
+
+from smac.configspace import Configuration
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -9,6 +13,7 @@ __version__ = "0.0.1"
 
 
 class RunHistory(object):
+
     '''
          saves all run informations from target algorithm runs
 
@@ -108,3 +113,50 @@ class RunHistory(object):
                   False otherwise
         """
         return len(self.data) == 0
+
+    def save_json(self, fn="runhistory.json"):
+        '''
+        saves runhistory on disk
+
+        Parameters
+        ----------
+        fn : str
+            file name
+        '''
+
+        id_vec = dict([(id_, conf.get_array().tolist())
+                       for id_, conf in self.ids_config.iteritems()])
+
+        data = [(list(k), list(v)) for k, v in self.data.iteritems()]
+
+        with open(fn, "w") as fp:
+            json.dump({"data": data,
+                       "id_config": id_vec}, fp)
+
+    def load_json(self, fn, cs):
+        '''
+        loads runhistory from disk in json represantation
+        Overwrites current runthistory!
+
+        Parameters
+        ----------
+        fn: str
+            file name to load from
+        cs: ConfigSpace
+            instance of configuration space
+        '''
+
+        with open(fn) as fp:
+            all_data = json.load(fp)
+
+        self.ids_config = dict([(id_, Configuration(
+            cs, vector=numpy.array(vec))) for id_, vec in all_data["id_config"].iteritems()])
+
+        self.config_ids = dict([(Configuration(
+            cs, vector=numpy.array(vec)).__repr__(), id_) for id_, vec in all_data["id_config"].iteritems()])
+        self._n_id = len(self.config_ids)
+
+        self.data = dict([(self.RunKey(k[0], k[1], k[2]),
+                           self.RunValue(v[0], v[1], v[2], v[3]))
+                          for k, v in all_data["data"]
+                          ])
