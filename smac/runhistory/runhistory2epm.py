@@ -137,7 +137,7 @@ class RunHistory2EPM(object):
             Y[row, 0] = run.cost
 
         if self.log_y:
-            Y = numpy.log(Y)
+            Y = numpy.log10(Y)
 
         return X, Y
 
@@ -173,7 +173,7 @@ class RunHistory2EPM(object):
             c_run_list = self.__select_runs(rh_data=copy.deepcopy(runhistory.data),
                                             select=RunType.CENSORED)
             if len(c_run_list) == 0:
-                self.logger.critical("No censored data found, skip imputation")
+                self.logger.debug("No censored data found, skip imputation")
             else:
                 # Store a list of instance IDs
                 c_instance_id_list = [k.instance_id for k in c_run_list.keys()]

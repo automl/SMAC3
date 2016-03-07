@@ -22,7 +22,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
     def __init__(self, cs, rs, cutoff, threshold,
                  types,
                  change_threshold=0.01,
-                 max_iter=10, log=False):
+                 max_iter=10, log_y=False):
         """
         initialize imputator module
 
@@ -39,7 +39,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             types of features
         change_threshold : float 
             stop imputation if change is less than this
-        log : bool
+        log_y : bool
             if True use log10(y)
         -------
         """
@@ -56,7 +56,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
 
         # Never use a lower std than this
         self.std_threshold = 10**-5
-        self.log = log
+        self.log = log_y
 
         # Hyperparameter for random forest, mostly defaults
         self.do_bootstrapping = True
@@ -184,11 +184,12 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
                  for index in range(len(censored_y))]
             imputed_y = numpy.array(imputed_y)
 
-            # Replace all nans with threshold
-            self.logger.critical("Going to replace %d nan-value(s) with "
-                                 "threshold" %
-                                 sum(numpy.isfinite(imputed_y) == False))
-            imputed_y[numpy.isfinite(imputed_y) == False] = self.threshold
+            if sum(numpy.isfinite(imputed_y) == False) > 0:
+                # Replace all nans with threshold
+                self.logger.critical("Going to replace %d nan-value(s) with "
+                                     "threshold" %
+                                     sum(numpy.isfinite(imputed_y) == False))
+                imputed_y[numpy.isfinite(imputed_y) == False] = self.threshold
 
             if it > 0:
                 # Calc mean difference between imputed values this and last
@@ -209,7 +210,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             self.logger.debug("Change: %f" % change)
 
             X = numpy.concatenate((uncensored_X, censored_X))
-            y = numpy.concatenate((uncensored_y, imputed_y)).flatten()
+            y = numpy.concatenate((uncensored_y, imputed_y))
 
             if change > self.change_threshold or it == 0:
                 m = self._get_model(X, y)
@@ -220,7 +221,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             if it > self.max_iter:
                 break
 
-        self.logger.info("Imputation used %d/%d iterations, last_change=%f)" %
+        self.logger.debug("Imputation used %d/%d iterations, last_change=%f" %
                          (it, self.max_iter, change))
 
         imputed_y = numpy.array(imputed_y, dtype=numpy.float)
@@ -228,11 +229,11 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
 
         if self.log:
             self.logger.debug("Remove log10 scale")
-            censored_y = numpy.power(10, censored_y)
-            uncensored_y = numpy.power(10, uncensored_y)
+            #censored_y = numpy.power(10, censored_y)
+            #uncensored_y = numpy.power(10, uncensored_y)
             self.cutoff = numpy.power(10, self.cutoff)
             self.threshold = numpy.power(10, self.threshold)
-            imputed_y = numpy.power(10, imputed_y)
+            #imputed_y = numpy.power(10, imputed_y)
 
         if not numpy.isfinite(imputed_y).all():
             self.logger.critical("Imputed values are not finite, %s" %

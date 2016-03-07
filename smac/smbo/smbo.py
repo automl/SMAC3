@@ -160,7 +160,8 @@ class SMBO(BaseSolver):
                                    self.scenario.par_factor,
                                    types=self.types,
                                    change_threshold=0.01,
-                                   max_iter=10)
+                                   max_iter=10,
+                                   log_y=self.scenario.run_obj == "runtime")
             rh2EPM = RunHistory2EPM(scenario=self.scenario,
                                     num_params=num_params,
                                     success_states=[StatusType.SUCCESS, ],
