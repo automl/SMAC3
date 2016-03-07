@@ -21,7 +21,7 @@ from smac.stats.stats import Stats
 
 from smac.epm.rfr_imputator import RFRImputator
 
-MAXINT = 2**31 - 1
+MAXINT = 2 ** 31 - 1
 
 __author__ = "Aaron Klein, Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -87,8 +87,9 @@ class SMBO(BaseSolver):
         self.types = np.array(self.types, dtype=np.uint)
 
         self.model = RandomForestWithInstances(self.types,
-                                               scenario.feature_array)
-
+                                               scenario.feature_array,
+                                               seed=rng.randint(1234567980))
+        
         self.acquisition_func = EI(self.model,
                                    X_lower,
                                    X_upper)
@@ -151,17 +152,25 @@ class SMBO(BaseSolver):
         num_params = len(self.config_space.get_hyperparameters())
         self.runhistory = RunHistory()
 
-        # TODO set arguments properly
         if self.scenario.run_obj == "runtime":
+            if self.scenario.run_obj == "runtime":
+                # if we log the performance data,
+                # the RFRImputator will already get
+                # log transform data from the runhistory
+                cutoff = np.log10(self.scenario.cutoff)
+                threshold = np.log10(self.scenario.cutoff *
+                                     self.scenario.par_factor)
+            else:
+                cutoff = self.scenario.cutoff
+                threshold = self.scenario.cutoff * self.scenario.par_factor
+                
             imputor = RFRImputator(cs=self.config_space,
                                    rs=self.rng,
-                                   cutoff=self.scenario.cutoff,
-                                   threshold=self.scenario.cutoff *
-                                   self.scenario.par_factor,
+                                   cutoff=cutoff,
+                                   threshold=threshold,
                                    model=self.model,
                                    change_threshold=0.01,
-                                   max_iter=10,
-                                   log_y=self.scenario.run_obj == "runtime")
+                                   max_iter=10)
             rh2EPM = RunHistory2EPM(scenario=self.scenario,
                                     num_params=num_params,
                                     success_states=[StatusType.SUCCESS, ],

@@ -22,7 +22,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
     def __init__(self, cs, rs, cutoff, threshold,
                  model,
                  change_threshold=0.01,
-                 max_iter=10, log_y=False):
+                 max_iter=10):
         """
         initialize imputator module
 
@@ -54,8 +54,6 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
 
         self.model = model
 
-        self.log = log_y
-
     def impute(self, censored_X, censored_y, uncensored_X, uncensored_y):
         """
         impute runs and returns imputed y values
@@ -74,13 +72,6 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         if censored_X.shape[0] == 0:
             self.logger.critical("Nothing to impute, return None")
             return None
-
-        if self.log:
-            self.logger.debug("Use log10 scale")
-            #censored_y = numpy.log10(censored_y)
-            #uncensored_y = numpy.log10(uncensored_y)
-            self.cutoff = numpy.log10(self.cutoff)
-            self.threshold = numpy.log10(self.threshold)
 
         # first learn model without censored data
         self.model.train(uncensored_X, uncensored_y)
@@ -123,15 +114,10 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
                 # Calc mean difference between imputed values this and last
                 # iteration, assume imputed values are always concatenated
                 # after uncensored values
-                c_imp_y = imputed_y
-                c_y = y
-                if self.log:
-                    c_imp_y = numpy.power(10, imputed_y)
-                    c_y = numpy.power(10, y)
 
-                change = numpy.mean(abs(c_imp_y -
-                                        c_y[uncensored_y.shape[0]:]) /
-                                    c_y[uncensored_y.shape[0]:])
+                change = numpy.mean(abs(imputed_y -
+                                        y[uncensored_y.shape[0]:]) /
+                                    y[uncensored_y.shape[0]:])
 
             # lower all values that are higher than threshold
             imputed_y[imputed_y >= self.threshold] = self.threshold
@@ -155,14 +141,6 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
 
         imputed_y = numpy.array(imputed_y, dtype=numpy.float)
         imputed_y[imputed_y >= self.threshold] = self.threshold
-
-        if self.log:
-            self.logger.debug("Remove log10 scale")
-            #censored_y = numpy.power(10, censored_y)
-            #uncensored_y = numpy.power(10, uncensored_y)
-            self.cutoff = numpy.power(10, self.cutoff)
-            self.threshold = numpy.power(10, self.threshold)
-            #imputed_y = numpy.power(10, imputed_y)
 
         if not numpy.isfinite(imputed_y).all():
             self.logger.critical("Imputed values are not finite, %s" %
