@@ -84,4 +84,6 @@ smbo.run(max_iters=999)
 Stats.print_stats()
 print("Final Incumbent: %s" %(smbo.incumbent))
 
+inc_value = taf.run( smbo.incumbent )[1]
+print("Optimized Value: %.2f" %(inc_value))
 
