@@ -5,6 +5,8 @@ from subprocess import Popen, PIPE
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 
+import math
+
 import pynisher
 
 __author__ = "Marius Lindauer"
@@ -18,14 +20,13 @@ __version__ = "0.0.1"
 class ExecuteTAFunc(object):
 
     """
-        executes a target algorithm run with a given configuration
-        on a given instance and some resource limitations
-        Uses the original SMAC/PILS format (SMAC < v2.10)
+        executes a function  with given inputs (i.e., the configuratoin)
+        and some resource limitations
 
         Attributes
         ----------
-        ta : string
-            the command line call to the target algorithm (wrapper)
+        func : Python function handle 
+            function to be optimized
         run_obj: str
             run objective (runtime or quality)
         par_factor: int
@@ -46,7 +47,7 @@ class ExecuteTAFunc(object):
                 penalized average runtime factor
         """
         self.func = func
-        self.logger = logging.getLogger("ExecuteTARun")
+        self.logger = logging.getLogger("ExecuteTAFunc")
         self.run_obj = run_obj
         self.par_factor = par_factor
 
@@ -67,7 +68,7 @@ class ExecuteTAFunc(object):
                 instance : string
                     problem instance
                 cutoff : double
-                    runtime cutoff
+                    runtime cutoff -- will be casted to int
                 seed : int
                     random seed
                 instance_specific: str
@@ -84,10 +85,11 @@ class ExecuteTAFunc(object):
                     all further additional run information
         """
 
-        obj = pynisher.enforce_limits(cpu_time_in_s=cutoff)(self.func)
+        obj = pynisher.enforce_limits(
+            cpu_time_in_s=int(math.ceil(cutoff)))(self.func)
 
         result = obj(config)
-        
+
         if obj.exit_status is pynisher.CpuTimeoutException:
             status = StatusType.TIMEOUT
             cost = 1234567890
@@ -96,15 +98,18 @@ class ExecuteTAFunc(object):
             cost = result
         else:
             status = StatusType.CRASHED
-            cost = 1234567890
+            cost = 1234567890  # won't be used for the model
 
-        runtime = 0 #TODO: replace by real runtime
-        
+        runtime = float(obj.wall_clock_time)
+
         if self.run_obj == "runtime":
-            cost = runtime
+            if status != StatusType.SUCCESS:
+                cost = cutoff * self.par_factor
+            else:
+                cost = runtime
 
         # update SMAC stats
         Stats.ta_runs += 1
         Stats.ta_time_used += float(runtime)
 
-        return status, cost, 0, 0
+        return status, cost, runtime, {}

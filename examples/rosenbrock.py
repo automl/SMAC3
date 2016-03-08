@@ -43,9 +43,11 @@ def rosenbrock_4d(cfg):
     return(val)
 
 # register function to be optimize
-tae = ExecuteTAFunc(rosenbrock_4d)
+taf = ExecuteTAFunc(rosenbrock_4d)
 
 # build Configuration Space which defines all parameters and their ranges
+# to illustrate different parameter types, 
+# we use continuous, integer and categorical parameters
 cs = ConfigurationSpace()
 x1 = UniformFloatHyperparameter("x1", -5, 5, default=5)
 cs.add_hyperparameter(x1)
@@ -59,15 +61,16 @@ cs.add_hyperparameter(x4)
 
 # example call of the function
 # it returns: Status, Cost, Runtime, Additional Infos
-def_value = tae.run( cs.get_default_configuration() )[1]
+def_value = taf.run( cs.get_default_configuration() )[1]
 print("Default Value: %.2f" %(def_value))
 
-scenario = Scenario({"run_obj":"quality",
-                     "runcount-limit": 200,
+scenario = Scenario({"run_obj":"quality", # we optimize quality (alternative runtime)
+                     "runcount-limit": 200, # at most 200 function evaluations
                      "instances": [[1]], # Dummy
-                     "cs": cs
+                     "cs": cs # configuration space
                      },
-                    tae_runner = tae)
+                    tae_runner = taf # above defined target algorithm function 
+                    ) 
 
 #logger = logging.getLogger("Optimizer") # Enable to show Debug outputs
 
