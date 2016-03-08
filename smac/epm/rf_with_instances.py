@@ -90,7 +90,7 @@ class RandomForestWithInstances(object):
         self.logger.addFilter(dub_filter)
 
         # Never use a lower std than this
-        self.std_threshold = 10 ** -5
+        self.var_threshold = 10 ** -5
 
     def train(self, X, Y, **kwargs):
         '''
@@ -168,25 +168,25 @@ class RandomForestWithInstances(object):
         -------
         mean: vector
             mean predictions on X
-        std: vector
+        var: vector
             variance predictions on X
         """
         if len(X.shape) > 1:
             pred = np.array([self.rf.predict(x) for x in X])
             mean = pred[:, 0]
-            std = pred[:, 1]
-            std[std < self.std_threshold] = self.std_threshold
-            std[np.isnan(std)] = self.std_threshold
+            var = pred[:, 1]
+            var[var < self.var_threshold] = self.var_threshold
+            var[np.isnan(var)] = self.var_threshold
 
             mean = np.array(mean)
-            std = np.array(std)
+            var = np.array(var)
         else:
-            mean, std = self.rf.predict(X)
-            if std < self.std_threshold:
+            mean, var = self.rf.predict(X)
+            if var < self.var_threshold:
                 self.logger.debug(
                     "Standard deviation is small, capping to 10^-5")
-                std = self.std_threshold
-            std = np.array([std, ])
+                var = self.var_threshold
+            var = np.array([var])
             mean = np.array([mean, ])
 
-        return mean, std
+        return mean, var
