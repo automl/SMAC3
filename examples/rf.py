@@ -31,8 +31,7 @@ def rfr(cfg):
     We optimize our own random forest with SMAC 
     """
 
-    types = np.max(X, axis=0)
-    types[types<=1.1] = 0
+    types=[0,3,0,0,20,6,3,2,0,0,0,20,0,7,0,0,0,20,2,0,0,2,0,20,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     types = np.array(types, dtype=np.uint)
 
     rf = regression.binary_rss()
@@ -54,18 +53,18 @@ def rfr(cfg):
         X_test = X[test,:]
         y_test = y[test]
         
-        print(X_train.shape)
-        print(y_train.shape)
-        print(types)
-        print(types.shape)
         data = regression.numpy_data_container(X_train,
                                                      y_train,
                                                      types)
         rf.fit(data)
         
-        y_pred = rf.predict(X_test)
+        y_pred = []
+        for x in X_test:
+            y_p = rf.predict(x)[0]
+            y_pred.append(y_p)
+        y_pred = np.array(y_pred)
         
-        rmse = np.sqrt(np.mean((y_pred - y_test[:,0])**2))
+        rmse = np.sqrt(np.mean((y_pred - y_test)**2))
         rmses.append(rmse)
         
     return np.mean(rmses) 
@@ -77,6 +76,7 @@ folder = os.path.realpath(
 # load data
 X = np.array(np.load(os.path.join(folder,"data/uncen_X.npy")))
 y = np.array(np.load(os.path.join(folder,"data/uncen_y.npy")))
+y = np.log10(y)
 
 # cv folds
 kf = KFold(X.shape[0], n_folds=4)
