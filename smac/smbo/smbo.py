@@ -4,7 +4,6 @@ import random
 import sys
 import time
 
-from ConfigSpace.io import pcs
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformFloatHyperparameter, UniformIntegerHyperparameter, Constant
 
@@ -181,7 +180,7 @@ class SMBO(BaseSolver):
         else:
             rh2EPM = RunHistory2EPM(scenario=self.scenario,
                                     num_params=num_params,
-                                    success_states=None,
+                                    success_states=[StatusType.SUCCESS, ],
                                     impute_censored_data=False,
                                     impute_state=None,
                                     log_y=self.scenario.run_obj == "runtime")

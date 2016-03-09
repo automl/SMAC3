@@ -49,11 +49,11 @@ class Scenario(object):
             raise TypeError(
                 "Wrong type of scenario (str or dict are supported)")
 
-        self.ta = shlex.split(scenario["algo"])
+        self.ta = shlex.split(scenario.get("algo", ""))
         self.execdir = scenario.get("execdir", ".")
         self.deterministic = scenario.get("deterministic", "0") == "1" or scenario.get(
             "deterministic", "0") == "true"
-        self.pcs_fn = scenario["paramfile"]
+        self.pcs_fn = scenario.get("paramfile", None)
         self.run_obj = scenario.get("run_obj", "runtime")
         self.overall_obj = scenario.get("overall_obj", "par10")
         self.cutoff = float(scenario.get("cutoff_time", 999999999))
@@ -67,12 +67,13 @@ class Scenario(object):
         self.feature_fn = scenario.get("feature_file")
         # not handled: outdir (and some more)
 
-        self.train_insts = []
-        self.test_inst = []
-        self.feature_dict = None  # instance name -> feature vector
-        self.n_features = 0
+        self.train_insts = scenario.get("instances", [])
+        self.test_insts = scenario.get("test_instances", [])
+        # instance name -> feature vector
+        self.feature_dict = scenario.get("features", {})
+        self.n_features = len(self.feature_dict)
         self.feature_array = None
-        self.cs = None  # ConfigSpace object
+        self.cs = scenario.get("cs", None)  # ConfigSpace object
 
         if self.overall_obj[:3] in ["PAR", "par"]:
             self.par_factor = int(self.overall_obj[3:])
@@ -110,27 +111,30 @@ class Scenario(object):
             return insts
 
         self.train_insts = extract_instance_specific(self.train_insts)
-        self.test_insts = extract_instance_specific(self.test_insts)
+        if self.test_insts:
+            self.test_insts = extract_instance_specific(self.test_insts)
 
         # read feature file
         if self.feature_fn:
             if os.path.isfile(self.feature_fn):
                 self.feature_dict = in_reader.read_instance_features_file(
                     self.feature_fn)[1]
-                self.n_features = len(
-                    self.feature_dict[self.feature_dict.keys()[0]])
-                self.feature_array = []
-                for inst_ in self.train_insts:
-                    self.feature_array.append(self.feature_dict[inst_])
-                self.feature_array = numpy.array(self.feature_array)
+
+        if self.feature_dict:
+            self.n_features = len(
+                self.feature_dict[self.feature_dict.keys()[0]])
+            self.feature_array = []
+            for inst_ in self.train_insts:
+                self.feature_array.append(self.feature_dict[inst_])
+            self.feature_array = numpy.array(self.feature_array)
 
         # read pcs file
-        if os.path.isfile(self.pcs_fn):
+        if self.pcs_fn and os.path.isfile(self.pcs_fn):
             with open(self.pcs_fn) as fp:
                 pcs_str = fp.readlines()
                 self.cs = pcs.read(pcs_str)
                 self.cs.seed(42)
-        else:
+        elif self.pcs_fn:
             self.logger.error("Have not found pcs file: %s" %
                               (self.pcs_fn))
             sys.exit(1)

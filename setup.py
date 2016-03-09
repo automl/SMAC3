@@ -6,7 +6,8 @@ requirements = ['setuptools',
                 'numpy>=1.9.1',
                 'scipy>=0.16.1',
                 'pyrfr',
-                'ConfigSpace']
+                'ConfigSpace',
+                'pynisher']
 
 setuptools.setup(
     name="smac",
