@@ -204,7 +204,7 @@ class SMBO(BaseSolver):
                             for _ in range(len(next_config))]
             time_spend = time.time() - start_time
             logging.debug(
-                "Time spend to choose next configurations: %d" % (time_spend))
+                "Time spend to choose next configurations: %.2f sec" % (time_spend))
 
             self.logger.debug("Intensify")
             inten = Intensifier(executor=self.executor,

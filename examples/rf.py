@@ -67,8 +67,12 @@ def rfr(cfg):
         rmse = np.sqrt(np.mean((y_pred - y_test)**2))
         rmses.append(rmse)
         
+        #print(np.mean(rmses))
     return np.mean(rmses) 
     
+
+logger = logging.getLogger("Optimizer") # Enable to show Debug outputs
+logger.parent.level = 20 #info level:10, debug:20
 
 folder = os.path.realpath(
     os.path.abspath(os.path.split(inspect.getfile(inspect.currentframe()))[0]))
@@ -121,12 +125,11 @@ print("Default Value: %.2f" % (def_value))
 scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative runtime)
                      "runcount-limit": 200,  # at most 200 function evaluations
                      "instances": [[1]],  # Dummy
-                     "cs": cs  # configuration space
+                     "cs": cs, # configuration space
+                     "deterministic": "true" 
                      },
                     tae_runner=taf  # above defined target algorithm function
                     )
-
-# logger = logging.getLogger("Optimizer") # Enable to show Debug outputs
 
 # necessary to use stats options related to scenario information
 Stats.scenario = scenario

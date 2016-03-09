@@ -86,9 +86,12 @@ class ExecuteTAFunc(object):
         """
 
         obj = pynisher.enforce_limits(
-            cpu_time_in_s=int(math.ceil(cutoff)))(self.func)
+            cpu_time_in_s=int(math.ceil(cutoff)), logger=self.logger)(self.func)
 
         result = obj(config)
+
+        self.logger.debug(result)
+        self.logger.debug(obj)
 
         if obj.exit_status is pynisher.CpuTimeoutException:
             status = StatusType.TIMEOUT

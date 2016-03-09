@@ -42,6 +42,9 @@ def rosenbrock_4d(cfg):
     
     return(val)
 
+logger = logging.getLogger("Optimizer") # Enable to show Debug outputs
+logger.parent.level = 20 #info level:20; debug:10
+
 # register function to be optimize
 taf = ExecuteTAFunc(rosenbrock_4d)
 
@@ -67,12 +70,11 @@ print("Default Value: %.2f" %(def_value))
 scenario = Scenario({"run_obj":"quality", # we optimize quality (alternative runtime)
                      "runcount-limit": 200, # at most 200 function evaluations
                      "instances": [[1]], # Dummy
-                     "cs": cs # configuration space
+                     "cs": cs, # configuration space
+                     "deterministic": "true"
                      },
                     tae_runner = taf # above defined target algorithm function 
                     ) 
-
-#logger = logging.getLogger("Optimizer") # Enable to show Debug outputs
 
 # necessary to use stats options related to scenario information        
 Stats.scenario = scenario
