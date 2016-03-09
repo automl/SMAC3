@@ -143,7 +143,7 @@ class Intensifier(object):
                                          additional_info=res)
                     num_run += 1
                 else:
-                    logging.debug("No further instance-seed pairs for incumbent available.")
+                    self.logger.debug("No further instance-seed pairs for incumbent available.")
             N = 1
             inc_inst_seeds = set(map(lambda x: (
                 x.instance, x.seed), self.run_history.get_runs_for_config(self.incumbent)))
