@@ -290,6 +290,6 @@ class SMBO(BaseSolver):
         # sort according to acq value
         # and return n best configurations
         configs_acq.sort(key=lambda x: x[1])
-        configs = map(lambda x: x[0], configs_acq)
+        configs = list(map(lambda x: x[0], configs_acq))
 
         return configs[0:n_return]
