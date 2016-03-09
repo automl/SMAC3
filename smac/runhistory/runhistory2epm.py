@@ -76,11 +76,11 @@ class RunHistory2EPM(object):
         if rs is None:
             self.rs = numpy.random.RandomState()
 
-        if impute_state is None:
-            impute_state = [StatusType.TIMEOUT, ]
+        if self.impute_state is None:
+            self.impute_state = [StatusType.TIMEOUT, ]
 
-        if success_states is None:
-            success_states = [StatusType.SUCCESS, ]
+        if self.success_states is None:
+            self.success_states = [StatusType.SUCCESS, ]
 
         self.config = OrderedDict({
             'success_states': success_states,
