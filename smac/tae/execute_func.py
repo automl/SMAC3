@@ -90,7 +90,7 @@ class ExecuteTAFunc(object):
 
         result = obj(config)
 
-        self.logger.debug("Function value: %.4f" % (result))
+        #self.logger.debug("Function value: %.4f" % (result))
 
         if obj.exit_status is pynisher.CpuTimeoutException:
             status = StatusType.TIMEOUT
