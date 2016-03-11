@@ -3,8 +3,8 @@ Created on Nov 19, 2015
 
 @author: lindauer
 '''
+import os
 import unittest
-import logging
 
 from ConfigSpace.io import pcs
 
@@ -15,8 +15,10 @@ class ConfigSpaceTest(unittest.TestCase):
         '''
             simply getting some random configuration from spear pcs
         '''
+        file_path = os.path.join(os.path.dirname(__file__), '..', '..',
+                                 'test_files', 'spear-params.pcs')
 
-        with open("./test_files/spear-params.pcs") as fp:
+        with open(file_path) as fp:
             pcs_str = fp.readlines()
             cs = pcs.read(pcs_str)
 
