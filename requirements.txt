@@ -1,6 +1,6 @@
 setuptools
-numpy>=1.9.1
-scipy>=0.16.1
+numpy>=1.6.1
+scipy>=0.13.1
 pynisher>=0.4.1
 
 six

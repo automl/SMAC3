@@ -3,8 +3,8 @@ import setuptools
 
 
 requirements = ['setuptools',
-                'numpy>=1.9.1',
-                'scipy>=0.16.1',
+                'numpy>=1.6.1',
+                'scipy>=0.13.1',
                 'pyrfr',
                 'ConfigSpace',
                 'pynisher']
