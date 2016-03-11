@@ -69,7 +69,6 @@ print("Default Value: %.2f" %(def_value))
 
 scenario = Scenario({"run_obj":"quality", # we optimize quality (alternative runtime)
                      "runcount-limit": 200, # at most 200 function evaluations
-                     "instances": [[1]], # Dummy
                      "cs": cs, # configuration space
                      "deterministic": "true"
                      },

@@ -72,7 +72,7 @@ def rfr(cfg):
     
 
 logger = logging.getLogger("Optimizer") # Enable to show Debug outputs
-logger.parent.level = 20 #info level:10, debug:20
+logger.parent.level = 10 #info level:10, debug:20
 
 folder = os.path.realpath(
     os.path.abspath(os.path.split(inspect.getfile(inspect.currentframe()))[0]))
@@ -123,8 +123,7 @@ def_value = taf.run(cs.get_default_configuration())[1]
 print("Default Value: %.2f" % (def_value))
 
 scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative runtime)
-                     "runcount-limit": 200,  # at most 200 function evaluations
-                     "instances": [[1]],  # Dummy
+                     "runcount-limit": 400,  # at most 200 function evaluations
                      "cs": cs, # configuration space
                      "deterministic": "true" 
                      },

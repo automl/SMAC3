@@ -67,7 +67,7 @@ class Scenario(object):
         self.feature_fn = scenario.get("feature_file")
         # not handled: outdir (and some more)
 
-        self.train_insts = scenario.get("instances", [])
+        self.train_insts = scenario.get("instances", [[None]])
         self.test_insts = scenario.get("test_instances", [])
         # instance name -> feature vector
         self.feature_dict = scenario.get("features", {})
