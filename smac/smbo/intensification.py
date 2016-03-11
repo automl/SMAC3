@@ -29,10 +29,10 @@ class Intensifier(object):
         takes challenger and incumbents and performs intensify
     '''
 
-    def __init__(self, executor, challengers, incumbent, run_history, instances=None,
+    def __init__(self, executor, instances=None,
                  instance_specifics={},
                  cutoff=MAXINT, deterministic=False, run_obj_time=True,
-                 time_bound=MAXINT, run_limit=MAXINT, maxR=2000, rng=0):
+                 run_limit=MAXINT, maxR=2000, rng=0):
         '''
         Constructor
 
@@ -40,12 +40,6 @@ class Intensifier(object):
         ----------
         executor : tae.executre_ta_run_*.ExecuteTARun* Object
             target algorithm run executor
-        challengers : list of ConfigSpace.config
-            promising configurations
-        incumbent : ConfigSpace.config
-            best configuration so far
-        run_history : runhistory
-            all runs on all instance,seed pairs for incumbent
         instances : list
             list of all instance ids
         instance_specifics : dict
@@ -56,8 +50,6 @@ class Intensifier(object):
             whether the TA is deterministic or not
         run_obj_time: bool
             whether the run objective is runtime or not (if true, apply adaptive capping)
-        time_bound : int
-            time in [sec] available to perform intensify
         run_limit : int
             maximum number of runs
         maxR : int
@@ -70,15 +62,9 @@ class Intensifier(object):
         self.instance_specifics = instance_specifics
         self.start_time = time.time()
         self.logger = logging.getLogger("intensifier")
-        self.time_bound = time_bound
         self.run_limit = run_limit
         self.maxR = maxR
         self.rs = numpy.random.RandomState(rng)
-
-        # info about current state
-        self.challengers = challengers
-        self.incumbent = incumbent
-        self.run_history = run_history
 
         # scenario info
         self.cutoff = cutoff
@@ -91,23 +77,39 @@ class Intensifier(object):
 
         if self.run_limit < 1:
             raise ValueError("run_limit must be > 1")
-        if self.time_bound < 1:
-            raise ValueError("time_bound must be => 1")
 
-    def intensify(self):
+    def intensify(self,
+                  challengers, incumbent, run_history,
+                  time_bound=MAXINT
+                  ):
         '''
             running intensification to determine the incumbent configuration
             Side effect: adds runs to run_history
+
+            Parameters
+            ----------
+
+            challengers : list of ConfigSpace.config
+                promising configurations
+            incumbent : ConfigSpace.config
+                best configuration so far
+            run_history : runhistory
+                all runs on all instance,seed pairs for incumbent
+            time_bound : int
+                time in [sec] available to perform intensify
 
             Returns
             -------
             incumbent: Configuration()
                 current (maybe new) incumbent configuration
         '''
+        if time_bound < 1:
+            raise ValueError("time_bound must be => 1")
+
         num_run = 0
-        for challenger in self.challengers:
+        for challenger in challengers:
             self.logger.debug("Intensify on %s" % (challenger))
-            inc_runs = self.run_history.get_runs_for_config(self.incumbent)
+            inc_runs = run_history.get_runs_for_config(incumbent)
             # First evaluate incumbent on a new instance
             if len(inc_runs) <= self.maxR:
                 # find all instances that have the most runs on the inc
@@ -126,31 +128,33 @@ class Intensifier(object):
 
                 available_insts = (self.instances - inc_inst)
 
-                # if all instances were used n times, we can pick an instances from the complete set again
+                # if all instances were used n times, we can pick an instances
+                # from the complete set again
                 if not self.deterministic and not available_insts:
                     available_insts = self.instances
-                    
+
                 if available_insts:
                     next_instance = random.choice(list(available_insts))
-                    status, cost, dur, res = self.tae.run(config=self.incumbent,
+                    status, cost, dur, res = self.tae.run(config=incumbent,
                                                           instance=next_instance,
                                                           seed=next_seed,
                                                           cutoff=self.cutoff,
                                                           instance_specific=self.instance_specifics.get(next_instance, "0"))
-                    self.run_history.add(config=self.incumbent,
-                                         cost=cost, time=dur, status=status,
-                                         instance_id=next_instance, seed=next_seed,
-                                         additional_info=res)
+                    run_history.add(config=incumbent,
+                                    cost=cost, time=dur, status=status,
+                                    instance_id=next_instance, seed=next_seed,
+                                    additional_info=res)
                     num_run += 1
                 else:
-                    self.logger.debug("No further instance-seed pairs for incumbent available.")
+                    self.logger.debug(
+                        "No further instance-seed pairs for incumbent available.")
             N = 1
             inc_inst_seeds = set(map(lambda x: (
-                x.instance, x.seed), self.run_history.get_runs_for_config(self.incumbent)))
+                x.instance, x.seed), run_history.get_runs_for_config(incumbent)))
 
             while True:
                 chall_inst_seeds = set(map(lambda x: (
-                    x.instance, x.seed), self.run_history.get_runs_for_config(challenger)))
+                    x.instance, x.seed), run_history.get_runs_for_config(challenger)))
 
                 missing_runs = list(inc_inst_seeds - chall_inst_seeds)
 
@@ -160,10 +164,10 @@ class Intensifier(object):
 
                 inst_seed_pairs = list(inc_inst_seeds - set(missing_runs))
                 inc_perf, inc_time = self.get_perf_and_time(
-                    self.incumbent, inst_seed_pairs)
+                    incumbent, inst_seed_pairs, run_history)
 
                 _, chal_time = self.get_perf_and_time(
-                    challenger, chall_inst_seeds)
+                    challenger, chall_inst_seeds, run_history)
                 # TODO: do we have to consider PAR10 here instead of PAR1?
 
                 for instance, seed in to_run:
@@ -180,14 +184,14 @@ class Intensifier(object):
                                                           cutoff=cutoff,
                                                           instance_specific=self.instance_specifics.get(instance, "0"))
 
-                    self.run_history.add(config=challenger,
-                                         cost=cost, time=dur, status=status,
-                                         instance_id=instance, seed=seed,
-                                         additional_info=res)
+                    run_history.add(config=challenger,
+                                    cost=cost, time=dur, status=status,
+                                    instance_id=instance, seed=seed,
+                                    additional_info=res)
                     num_run += 1
 
                 chal_perf, chal_time = self.get_perf_and_time(
-                    challenger, inst_seed_pairs)
+                    challenger, inst_seed_pairs, run_history)
 
                 if chal_perf > inc_perf:
                     # Incumbent beats challenger
@@ -199,12 +203,12 @@ class Intensifier(object):
 
                     n_samples = len(inst_seed_pairs)
                     self.logger.info("Challenger (%.4f) is better than incumbent (%.4f) on %d runs." % (
-                        chal_perf/n_samples, inc_perf/n_samples, n_samples))
+                        chal_perf / n_samples, inc_perf / n_samples, n_samples))
                     self.logger.info(
                         "Changing incumbent to challenger: %s" % (challenger))
-                    self.incumbent = challenger
+                    incumbent = challenger
                     Stats.inc_changed += 1
-                    self.trajLogger.add_entry(train_perf=chal_perf/n_samples,
+                    self.trajLogger.add_entry(train_perf=chal_perf / n_samples,
                                               incumbent_id=Stats.inc_changed,
                                               incumbent=challenger)
                     break
@@ -216,20 +220,20 @@ class Intensifier(object):
                 self.logger.debug(
                     "Maximum #runs for intensification reached")
                 break
-            elif time.time() - self.start_time - self.time_bound >= 0:
+            elif time.time() - self.start_time - time_bound >= 0:
                 self.logger.debug("Timelimit for intensification reached (used: %d sec, available: %d sec)" % (
-                    time.time() - self.start_time, self.time_bound))
+                    time.time() - self.start_time, time_bound))
                 break
 
         # output estimated performance of incumbent
-        inc_runs = self.run_history.get_runs_for_config(self.incumbent)
+        inc_runs = run_history.get_runs_for_config(incumbent)
         inc_perf = numpy.mean(map(lambda x: x.cost, inc_runs))
         self.logger.info("Updated estimated performance of incumbent on %d runs: %.4f" % (
             len(inc_runs), inc_perf))
 
-        return self.incumbent
+        return incumbent
 
-    def get_perf_and_time(self, config, inst_seeds):
+    def get_perf_and_time(self, config, inst_seeds, run_history):
         '''
         returns perf and used runtime of a configuration
 
@@ -249,15 +253,15 @@ class Intensifier(object):
         '''
 
         try:
-            id_ = self.run_history.config_ids[config.__repr__()]
+            id_ = run_history.config_ids[config.__repr__()]
         except KeyError:  # challenger was not running so far
             return MAXINT, 0
         perfs = []
         times = []
         for i, r in inst_seeds:
-            k = self.run_history.RunKey(id_, i, r)
-            perfs.append(self.run_history.data[k].cost)
-            times.append(self.run_history.data[k].time)
+            k = run_history.RunKey(id_, i, r)
+            perfs.append(run_history.data[k].cost)
+            times.append(run_history.data[k].time)
         perf = sum(perfs)
         time = sum(times)
 

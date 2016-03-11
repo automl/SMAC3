@@ -88,7 +88,7 @@ class SMBO(BaseSolver):
         self.model = RandomForestWithInstances(self.types,
                                                scenario.feature_array,
                                                seed=rng.randint(1234567980))
-        
+
         self.acquisition_func = EI(self.model,
                                    X_lower,
                                    X_upper)
@@ -96,7 +96,50 @@ class SMBO(BaseSolver):
         self.local_search = LocalSearch(self.acquisition_func,
                                         self.config_space)
         self.incumbent = None
-        self.executor = None
+        self.executor = scenario.tae_runner
+
+        self.inten = Intensifier(executor=self.executor,
+                                 instances=self.scenario.train_insts,
+                                 cutoff=self.scenario.cutoff,
+                                 deterministic=self.scenario.deterministic,
+                                 run_obj_time=self.scenario.run_obj == "runtime",
+                                 instance_specifics=self.scenario.instance_specific)
+
+        num_params = len(self.config_space.get_hyperparameters())
+
+        if self.scenario.run_obj == "runtime":
+            if self.scenario.run_obj == "runtime":
+                # if we log the performance data,
+                # the RFRImputator will already get
+                # log transform data from the runhistory
+                cutoff = np.log10(self.scenario.cutoff)
+                threshold = np.log10(self.scenario.cutoff *
+                                     self.scenario.par_factor)
+            else:
+                cutoff = self.scenario.cutoff
+                threshold = self.scenario.cutoff * self.scenario.par_factor
+
+            imputor = RFRImputator(cs=self.config_space,
+                                   rs=self.rng,
+                                   cutoff=cutoff,
+                                   threshold=threshold,
+                                   model=self.model,
+                                   change_threshold=0.01,
+                                   max_iter=10)
+            self.rh2EPM = RunHistory2EPM(scenario=self.scenario,
+                                         num_params=num_params,
+                                         success_states=[StatusType.SUCCESS, ],
+                                         impute_censored_data=True,
+                                         impute_state=[StatusType.TIMEOUT, ],
+                                         imputor=imputor,
+                                         log_y=self.scenario.run_obj == "runtime")
+        else:
+            self.rh2EPM = RunHistory2EPM(scenario=self.scenario,
+                                         num_params=num_params,
+                                         success_states=[StatusType.SUCCESS, ],
+                                         impute_censored_data=False,
+                                         impute_state=None,
+                                         log_y=self.scenario.run_obj == "runtime")
 
     def run_initial_design(self):
         '''
@@ -148,44 +191,7 @@ class SMBO(BaseSolver):
         '''
         Stats.start_timing()
 
-        num_params = len(self.config_space.get_hyperparameters())
         self.runhistory = RunHistory()
-
-        if self.scenario.run_obj == "runtime":
-            if self.scenario.run_obj == "runtime":
-                # if we log the performance data,
-                # the RFRImputator will already get
-                # log transform data from the runhistory
-                cutoff = np.log10(self.scenario.cutoff)
-                threshold = np.log10(self.scenario.cutoff *
-                                     self.scenario.par_factor)
-            else:
-                cutoff = self.scenario.cutoff
-                threshold = self.scenario.cutoff * self.scenario.par_factor
-                
-            imputor = RFRImputator(cs=self.config_space,
-                                   rs=self.rng,
-                                   cutoff=cutoff,
-                                   threshold=threshold,
-                                   model=self.model,
-                                   change_threshold=0.01,
-                                   max_iter=10)
-            rh2EPM = RunHistory2EPM(scenario=self.scenario,
-                                    num_params=num_params,
-                                    success_states=[StatusType.SUCCESS, ],
-                                    impute_censored_data=True,
-                                    impute_state=[StatusType.TIMEOUT, ],
-                                    imputor=imputor,
-                                    log_y=self.scenario.run_obj == "runtime")
-        else:
-            rh2EPM = RunHistory2EPM(scenario=self.scenario,
-                                    num_params=num_params,
-                                    success_states=[StatusType.SUCCESS, ],
-                                    impute_censored_data=False,
-                                    impute_state=None,
-                                    log_y=self.scenario.run_obj == "runtime")
-
-        self.executor = self.scenario.tae_runner
 
         self.run_initial_design()
 
@@ -194,7 +200,7 @@ class SMBO(BaseSolver):
         while True:
 
             start_time = time.time()
-            X, Y = rh2EPM.transform(self.runhistory)
+            X, Y = self.rh2EPM.transform(self.runhistory)
 
             self.logger.debug("Search for next configuration")
             # get all found configurations sorted according to acq
@@ -207,20 +213,13 @@ class SMBO(BaseSolver):
                 "Time spend to choose next configurations: %.2f sec" % (time_spend))
 
             self.logger.debug("Intensify")
-            inten = Intensifier(executor=self.executor,
 
-                                challengers=[
-                                    val for pair in zip(next_config, rand_configs) for val in pair],
-                                incumbent=self.incumbent,
-                                run_history=self.runhistory,
-                                instances=self.scenario.train_insts,
-                                cutoff=self.scenario.cutoff,
-                                deterministic=self.scenario.deterministic,
-                                run_obj_time=self.scenario.run_obj == "runtime",
-                                instance_specifics=self.scenario.instance_specific,
-                                time_bound=max(2, time_spend))
-
-            self.incumbent = inten.intensify()
+            self.incumbent = self.inten.intensify(
+                challengers=[
+                    val for pair in zip(next_config, rand_configs) for val in pair],
+                incumbent=self.incumbent,
+                run_history=self.runhistory,
+                time_bound=max(2, time_spend))
 
             # TODO: Write run history into database
 
