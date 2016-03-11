@@ -86,12 +86,11 @@ class ExecuteTAFunc(object):
         """
 
         obj = pynisher.enforce_limits(
-            cpu_time_in_s=int(math.ceil(cutoff)), logger=self.logger)(self.func)
+            cpu_time_in_s=int(math.ceil(cutoff)), logger=logging.getLogger("pynisher"))(self.func)
 
         result = obj(config)
 
-        self.logger.debug(result)
-        self.logger.debug(obj)
+        self.logger.debug("Function value: %.4f" % (result))
 
         if obj.exit_status is pynisher.CpuTimeoutException:
             status = StatusType.TIMEOUT
@@ -114,5 +113,7 @@ class ExecuteTAFunc(object):
         # update SMAC stats
         Stats.ta_runs += 1
         Stats.ta_time_used += float(runtime)
+
+        self.logger.debug("Return: %s,%.4f,%.4f" % (status, cost, runtime))
 
         return status, cost, runtime, {}
