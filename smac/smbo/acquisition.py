@@ -10,6 +10,7 @@ __maintainer__ = "Aaron Klein"
 __email__ = "kleinaa@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
+
 class BestObservation(object):
     """
     Container class for storing information about the best observation.
@@ -34,7 +35,7 @@ class AcquisitionFunction(object):
     def __str__(self):
         return type(self).__name__ + " (" + self.long_name + ")"
 
-    def __init__(self, model, X_lower, X_upper, **kwargs):
+    def __init__(self, model, **kwargs):
         """
         A base class for acquisition functions.
 
@@ -42,16 +43,9 @@ class AcquisitionFunction(object):
         ----------
         model : Model object
             Models the objective function.
-        X_lower : (D) numpy array
-            Specified the lower bound of the input space. Each entry
-            corresponds to one dimension.
-        X_upper : (D) numpy array
-            Specified the upper bound of the input space. Each entry
-            corresponds to one dimension.
+
         """
         self.model = model
-        self.X_lower = X_lower
-        self.X_upper = X_upper
 
         self.logger = logging.getLogger("AcquisitionFunction")
 
@@ -85,8 +79,6 @@ class AcquisitionFunction(object):
             If is set to true also the derivative of the acquisition
             function at X is returned
         """
-        if np.any(X < self.X_lower) or np.any(X > self.X_upper):
-            ValueError("Test point is out of bounds")
 
         if len(X.shape) == 1:
             X = X[np.newaxis, :]
@@ -134,8 +126,6 @@ class EI(AcquisitionFunction):
 
     def __init__(self,
                  model,
-                 X_lower,
-                 X_upper,
                  par=0.01,
                  **kwargs):
         r"""
@@ -167,7 +157,7 @@ class EI(AcquisitionFunction):
             and exploitation of the acquisition function. Default is 0.01
         """
 
-        super(EI, self).__init__(model, X_lower, X_upper)
+        super(EI, self).__init__(model)
         self.par = par
         self.rec = BestObservation(self.model, self.X_lower, self.X_upper)
 
@@ -181,7 +171,7 @@ class EI(AcquisitionFunction):
         """
 
         super(EI, self).update(model)
-        self.rec = BestObservation(self.model, self.X_lower, self.X_upper)
+        self.rec = BestObservation(self.model)
 
     def compute(self, X, derivative=False, **kwargs):
         """
@@ -210,14 +200,6 @@ class EI(AcquisitionFunction):
 
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
-
-        if np.any(X < self.X_lower) or np.any(X > self.X_upper):
-            if derivative:
-                f = 0
-                df = np.zeros((1, X.shape[1]))
-                return np.array([[f]]), np.array([df])
-            else:
-                return np.array([[0]])
 
         m, v = self.model.predict(X, full_cov=True)
 

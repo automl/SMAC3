@@ -57,20 +57,11 @@ class SMBO(BaseSolver):
         self.types = np.zeros(len(self.config_space.get_hyperparameters()),
                               dtype=np.uint)
 
-        # Extract bounds of the input space
-        X_lower = np.zeros([self.types.shape[0]])
-        X_upper = np.zeros([self.types.shape[0]])
-
         for i, param in enumerate(self.config_space.get_hyperparameters()):
-            if isinstance(param, (UniformFloatHyperparameter,
-                                  UniformIntegerHyperparameter)):
-                X_lower[i] = 0
-                X_upper[i] = 1
-            elif isinstance(param, (CategoricalHyperparameter)):
+            if isinstance(param, (CategoricalHyperparameter)):
                 n_cats = len(param.choices)
                 self.types[i] = n_cats
-                X_lower[i] = 0
-                X_upper[i] = n_cats
+
             elif isinstance(param, Constant):
                 # for constants we simply set types to 0
                 # which makes it a numerical parameter
@@ -89,9 +80,7 @@ class SMBO(BaseSolver):
                                                scenario.feature_array,
                                                seed=rng.randint(1234567980))
 
-        self.acquisition_func = EI(self.model,
-                                   X_lower,
-                                   X_upper)
+        self.acquisition_func = EI(self.model)
 
         self.local_search = LocalSearch(self.acquisition_func,
                                         self.config_space)
