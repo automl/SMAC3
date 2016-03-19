@@ -60,7 +60,6 @@ class Intensifier(object):
             instances = []
         self.instances = set(instances)
         self.instance_specifics = instance_specifics
-        self.start_time = time.time()
         self.logger = logging.getLogger("intensifier")
         self.run_limit = run_limit
         self.maxR = maxR
@@ -103,6 +102,8 @@ class Intensifier(object):
             incumbent: Configuration()
                 current (maybe new) incumbent configuration
         '''
+        self.start_time = time.time()
+        
         if time_bound < 1:
             raise ValueError("time_bound must be => 1")
 
