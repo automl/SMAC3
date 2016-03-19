@@ -47,13 +47,15 @@ class SMAC(object):
         # necessary to use stats options related to scenario information
         Stats.scenario = scen
 
-        try:
-            smbo = SMBO(scenario=scen, rng=np.random.RandomState(args_.seed))
-            smbo.run(max_iters=args_.max_iterations)
+        #try:
+        smbo = SMBO(scenario=scen, rng=np.random.RandomState(args_.seed))
+        smbo.run(max_iters=args_.max_iterations)
 
-        finally:
-            Stats.print_stats()
-            self.logger.info("Final Incumbent: %s" % (smbo.incumbent))
-
-            smbo.runhistory.save_json()
-            #smbo.runhistory.load_json(fn="runhistory.json", cs=smbo.config_space)
+#===============================================================================
+#         finally:
+#             Stats.print_stats()
+#             self.logger.info("Final Incumbent: %s" % (smbo.incumbent))
+# 
+#             smbo.runhistory.save_json()
+#             #smbo.runhistory.load_json(fn="runhistory.json", cs=smbo.config_space)
+#===============================================================================

@@ -67,7 +67,8 @@ class SMBO(BaseSolver):
                 # which makes it a numerical parameter
                 self.types[i] = 0
                 # and we leave the bounds to be 0 for now
-            else:
+            elif not isinstance(param, (UniformFloatHyperparameter,
+                                        UniformIntegerHyperparameter)):
                 raise TypeError("Unknown hyperparameter type %s" % type(param))
 
         if scenario.feature_array is not None:

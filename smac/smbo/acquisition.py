@@ -16,10 +16,8 @@ class BestObservation(object):
     Container class for storing information about the best observation.
     """
 
-    def __init__(self, model, X_lower, X_upper):
+    def __init__(self, model):
         self.model = model
-        self.X_upper = X_upper
-        self.X_lower = X_lower
 
     def estimate_incumbent(self):
         best = np.argmin(self.model.Y)
@@ -48,8 +46,6 @@ class AcquisitionFunction(object):
         self.model = model
 
         self.logger = logging.getLogger("AcquisitionFunction")
-
-        assert np.any(self.X_lower < self.X_upper)
 
     def update(self, model):
         """
@@ -159,7 +155,7 @@ class EI(AcquisitionFunction):
 
         super(EI, self).__init__(model)
         self.par = par
-        self.rec = BestObservation(self.model, self.X_lower, self.X_upper)
+        self.rec = BestObservation(self.model)
 
     def update(self, model):
         """
