@@ -39,8 +39,6 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             epm model (i.e. RandomForestWithInstances)
         change_threshold : float 
             stop imputation if change is less than this
-        log_y : bool
-            if True use log10(y)
         -------
         """
 
