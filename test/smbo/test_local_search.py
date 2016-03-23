@@ -4,6 +4,8 @@ Created on Dec 15, 2015
 @author: Aaron Klein
 '''
 import unittest
+import os
+
 import numpy as np
 from scipy.spatial.distance import euclidean
 
@@ -14,9 +16,12 @@ from robo.task.branin import Branin
 
 
 class TestLocalSearch(unittest.TestCase):
+    def setUp(self):
+        current_dir = os.path.dirname(__file__)
+        self.test_files_dir = os.path.join(current_dir, '..', 'test_files')
 
-    def xtest_local_search(self):
-        pcs_file = "./test_files/params_branin.pcs"
+    def test_local_search(self):
+        pcs_file = os.path.join(self.test_files_dir, "params_branin.pcs")
         seed = np.random.randint(1, 100000)
         task = Branin()
 
@@ -29,14 +34,14 @@ class TestLocalSearch(unittest.TestCase):
             return -np.min(dist)
 
         l = LocalSearch(acquisition_function, config_space, epsilon=1e-10,
-                        n_neighbours=100, max_iterations=100000)
+                        max_iterations=100000)
 
         start_point = config_space.sample_configuration()
         _, acq_val_incumbent = l.maximize(start_point)
-        assert -acq_val_incumbent <= 0.05
+        self.assertLessEqual(-acq_val_incumbent, 0.05)
 
     def test_local_search_2(self):
-        pcs_file = "../../test_files/test_local_search.pcs"
+        pcs_file = os.path.join(self.test_files_dir, "test_local_search.pcs")
         seed = np.random.randint(1, 100000)
 
         with open(pcs_file) as fh:
@@ -52,8 +57,9 @@ class TestLocalSearch(unittest.TestCase):
                         max_iterations=100000)
         incumbent, acq_val_incumbent = l.maximize(start_point)
 
-        assert acq_val_incumbent == len(start_point.get_array())
-        assert np.all(incumbent.get_array() == np.ones([acq_val_incumbent]))
+        self.assertEqual(acq_val_incumbent, len(start_point.get_array()))
+        self.assertTrue(np.all(incumbent.get_array() ==
+                               np.ones([acq_val_incumbent])))
 
 if __name__ == "__main__":
     unittest.main()
