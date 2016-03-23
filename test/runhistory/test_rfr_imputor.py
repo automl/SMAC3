@@ -90,7 +90,8 @@ class ImputorTest(unittest.TestCase):
         self.scen.overall_obj = "par10"
         self.scen.cutoff = 40
         
-        self.model = RandomForestWithInstances(types=numpy.array([2,0,0]),
+        types = numpy.array([2,0,0], dtype=numpy.uint)
+        self.model = RandomForestWithInstances(types=types,
                                        instance_features=None,
                                        seed=1234567980)
 
@@ -104,6 +105,11 @@ class ImputorTest(unittest.TestCase):
             num_censored = int(num_samples*0.1)
             X = rs.rand(num_samples, num_feat)
             y = numpy.sin(X[:, 0:1])
+            
+            types = numpy.array([0]*num_feat, dtype=numpy.uint)
+            self.model = RandomForestWithInstances(types=types,
+                                       instance_features=None,
+                                       seed=1234567980)
 
             cutoff = max(y) * 0.9
             y[y > cutoff] = cutoff
@@ -152,4 +158,4 @@ class ImputorTest(unittest.TestCase):
                                             impute_state=[StatusType.TIMEOUT],
                                             imputor=imputor,
                                             rs=rs)
-        print("%s" % str(r2e.transform(self.rh)))
+        print("%s" % str(r2e.transform(self.rh)[0]))
