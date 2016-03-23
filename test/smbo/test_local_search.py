@@ -36,7 +36,7 @@ class TestLocalSearch(unittest.TestCase):
         assert -acq_val_incumbent <= 0.05
 
     def test_local_search_2(self):
-        pcs_file = "./test_files/test_local_search.pcs"
+        pcs_file = "../../test_files/test_local_search.pcs"
         seed = np.random.randint(1, 100000)
 
         with open(pcs_file) as fh:
@@ -49,7 +49,7 @@ class TestLocalSearch(unittest.TestCase):
         start_point = config_space.get_default_configuration()
 
         l = LocalSearch(acquisition_function, config_space, epsilon=0.01,
-                        n_neighbours=50, max_iterations=100000)
+                        max_iterations=100000)
         incumbent, acq_val_incumbent = l.maximize(start_point)
 
         assert acq_val_incumbent == len(start_point.get_array())
