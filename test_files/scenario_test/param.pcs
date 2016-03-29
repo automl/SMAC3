@@ -1,0 +1,38 @@
+sp-var-dec-heur {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19}[0]    # Originally, 3,4,9,10 not used following Domagoj's advice. 20 requires modular arithmetic input format
+sp-learned-clause-sort-heur {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19}[0]   # All values make sense here. 20 requires modular arithmetic input format
+sp-orig-clause-sort-heur {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19}[0]   # All values make sense here. 20 requires modular arithmetic input format
+sp-res-order-heur {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19}[0]     # All values make sense here. 20 requires modular arithmetic input format 
+sp-clause-del-heur {0,1,2}[2]                        # All values make sense here.
+sp-phase-dec-heur {0,1,2,3,4,5,6}[5]                 # All values make sense here. 
+sp-resolution {0,1,2}[1]                             # 0 renders a whole bunch of conditionals irrelevant.
+sp-variable-decay {1.1,1.4,2.0}[1.4]                 # Should be bigger than 1 (o/w increase not decay). 
+sp-clause-decay {1.1,1.4,2.0}[1.4]                   # Same thing.
+sp-restart-inc {1.1,1.3,1.5,1.7,1.9}[1.5]            # Uniform because multiplicative.
+sp-learned-size-factor {0.1,0.2,0.4,0.8,1.6}[0.4]    # Uniform on logarithmic scale (starting value).
+sp-learned-clauses-inc {1.1,1.2,1.3,1.4,1.5}[1.3]    # Uniform because multiplicative
+sp-clause-activity-inc {0.5,1,1.5}[1]                # 
+sp-var-activity-inc {0.5,1,1.5}[1]                   # 
+sp-rand-phase-dec-freq{0, 0.0001, 0.001, 0.005, 0.01, 0.05}[0.001] # Never picked 0.05 in previous experiments, always zero.
+sp-rand-var-dec-freq {0, 0.0001, 0.001, 0.005, 0.01, 0.05}[0.001]  # Never picked 0.05 in previous experiments, always zero.
+sp-rand-var-dec-scaling {0.3,0.6,0.9,1,1.1}[1]       # Domagoj said the previous values were too coarse, so finer discretization now.
+sp-rand-phase-scaling {0.3,0.6,0.9,1,1.1}[1]         # Same thing.
+sp-max-res-lit-inc {0.25,0.5,1,2,4}[1]               #                
+sp-first-restart {25,50,100,200,400,800,1600,3200}[100]  # Uniform on logarithmic scale (starting value).
+sp-res-cutoff-cls {2,4,8,16,20}[8]                   # Only up to 20 allowed, would've used 32 otherwise.
+sp-res-cutoff-lits {100,200,400,800,1600}[400]       # 
+sp-max-res-runs {1,2,4,8,16,32}[4]                   # 
+sp-update-dec-queue {0,1}[1]                         # Enable by default.
+sp-use-pure-literal-rule {0,1}[1]                    # Enable by default. 
+sp-clause-inversion {0,1}[1]                         # Enable by default. Enable reversion of learned clauses if fixed order (sp-learned-clause-sort-heur=19) 
+
+Conditionals:
+sp-rand-phase-dec-freq|sp-phase-dec-heur in {0,1,3,4,5,6}  # when heuristic is random, then additional random steps don't change anything
+sp-rand-var-dec-scaling|sp-rand-var-dec-freq in {0.0001, 0.001, 0.005, 0.01, 0.05}  # not 0
+sp-rand-phase-scaling|sp-rand-phase-dec-freq in {0.0001, 0.001, 0.005, 0.01, 0.05}  # not 0
+sp-clause-inversion|sp-learned-clause-sort-heur in {19}
+
+sp-res-order-heur|sp-resolution in {1,2}
+sp-max-res-lit-inc|sp-resolution in {1,2}
+sp-res-cutoff-cls|sp-resolution in {1,2}
+sp-res-cutoff-lits|sp-resolution in {1,2}
+sp-max-res-runs|sp-resolution in {1,2}
