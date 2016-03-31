@@ -54,6 +54,6 @@ class SMAC(object):
         finally:
             Stats.print_stats()
             self.logger.info("Final Incumbent: %s" % (smbo.incumbent))
-
+ 
             smbo.runhistory.save_json()
             #smbo.runhistory.load_json(fn="runhistory.json", cs=smbo.config_space)

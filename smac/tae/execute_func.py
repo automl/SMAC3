@@ -88,7 +88,10 @@ class ExecuteTAFunc(object):
         obj = pynisher.enforce_limits(
             cpu_time_in_s=int(math.ceil(cutoff)), logger=logging.getLogger("pynisher"))(self.func)
 
-        result = obj(config)
+        if instance:
+            result = obj(config, instance)
+        else:
+            result = obj(config)
 
         #self.logger.debug("Function value: %.4f" % (result))
 

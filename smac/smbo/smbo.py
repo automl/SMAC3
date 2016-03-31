@@ -47,8 +47,13 @@ class SMBO(BaseSolver):
 
         if rng is None:
             self.rng = np.random.RandomState(seed=np.random.randint(10000))
-        else:
+        elif isinstance(rng, int):
+            self.rng = np.random.RandomState(seed=rng)
+        elif isinstance(rng, np.random.RandomState):
             self.rng = rng
+        else:
+            raise TypeError('Unknown type %s for argument rng. Only accepts '
+                            'None, int or np.random.RandomState' % str(type(rng)))
 
         self.scenario = scenario
         self.config_space = scenario.cs
@@ -67,7 +72,8 @@ class SMBO(BaseSolver):
                 # which makes it a numerical parameter
                 self.types[i] = 0
                 # and we leave the bounds to be 0 for now
-            else:
+            elif not isinstance(param, (UniformFloatHyperparameter,
+                                        UniformIntegerHyperparameter)):
                 raise TypeError("Unknown hyperparameter type %s" % type(param))
 
         if scenario.feature_array is not None:
@@ -78,7 +84,8 @@ class SMBO(BaseSolver):
 
         self.model = RandomForestWithInstances(self.types,
                                                scenario.feature_array,
-                                               seed=rng.randint(1234567980))
+                                               seed=self.rng.randint(
+                                                   1234567980))
 
         self.acquisition_func = EI(self.model)
 
