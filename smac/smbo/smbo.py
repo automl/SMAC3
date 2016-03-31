@@ -1,3 +1,4 @@
+import itertools
 import logging
 import numpy as np
 import random
@@ -6,6 +7,7 @@ import time
 
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformFloatHyperparameter, UniformIntegerHyperparameter, Constant
+import ConfigSpace.util
 
 from smac.smbo.acquisition import EI
 from smac.smbo.base_solver import BaseSolver
@@ -22,7 +24,7 @@ from smac.epm.rfr_imputator import RFRImputator
 
 MAXINT = 2 ** 31 - 1
 
-__author__ = "Aaron Klein, Marius Lindauer"
+__author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "GPLv3"
 #__maintainer__ = "???"
@@ -200,10 +202,8 @@ class SMBO(BaseSolver):
 
             self.logger.debug("Search for next configuration")
             # get all found configurations sorted according to acq
-            next_config = self.choose_next(X, Y, n_return=1234567890)
+            challengers = self.choose_next(X, Y)
 
-            rand_configs = [self.config_space.sample_configuration()
-                            for _ in range(len(next_config))]
             time_spend = time.time() - start_time
             logging.debug(
                 "Time spend to choose next configurations: %.2f sec" % (time_spend))
@@ -211,11 +211,10 @@ class SMBO(BaseSolver):
             self.logger.debug("Intensify")
 
             self.incumbent = self.inten.intensify(
-                challengers=[
-                    val for pair in zip(next_config, rand_configs) for val in pair],
+                challengers=challengers,
                 incumbent=self.incumbent,
                 run_history=self.runhistory,
-                time_bound=max(2, time_spend))
+                time_bound=max(0.01, time_spend))
 
             # TODO: Write run history into database
 
@@ -236,42 +235,104 @@ class SMBO(BaseSolver):
 
         return self.incumbent
 
-    def choose_next(self, X=None, Y=None, n_iters=10, n_return=1):
-        """
-        Performs one single iteration of Bayesian optimization and estimated
-        the next point to evaluate.
+    def choose_next(self, X, Y):
+        """Choose next candidate solution with Bayesian optimization.
 
         Parameters
         ----------
-        X : (N, D) numpy array, optional
-            Each column contains a configuration and one set of
+        X : (N, D) numpy array
+            Each row contains a configuration and one set of
             instance features.
-        Y : (N, 1) numpy array, optional
+        Y : (N, 1) numpy array
             The function values for each configuration instance pair.
-        n_iters: int
-            number of iterations
-        n_return: int
-            number of returned configurations
 
         Returns
         -------
-        x : (n_return, H) Configuration Object
-            The suggested configuration to evaluate.
+        list
+            List of 2020 suggested configurations to evaluate.
         """
-
-        if X is None or Y is None:
-            return self.config_space.sample_configuration()
-
         self.model.train(X, Y)
         
         #TODO: How to get the target value of the run
         incumbent_value = np.min(Y)
         self.acquisition_func.update(self.model, incumbent_value)
 
+        # Remove dummy acquisition function value
+        next_configs_by_random_search = map(
+            lambda x: x[0], self._get_next_by_random_search(num_points=1010))
+
+        # Get configurations sorted by EI
+        next_configs_by_random_search_sorted = \
+            self._get_next_by_random_search(1000, _sorted=True)
+        next_configs_by_local_search = \
+            self._get_next_by_local_search(10)
+
+        next_configs_by_acq_value = self._merge_configurations_by_acq_value(
+            next_configs_by_random_search_sorted, next_configs_by_local_search)
+
+        challengers =list(itertools.chain(*zip(next_configs_by_acq_value,
+                                               next_configs_by_random_search)))
+        return challengers
+
+    def _get_next_by_random_search(self, num_points=1000, _sorted=False):
+        """Get candidate solutions via local search.
+
+        Parameters
+        ----------
+        num_points : int, optional (default=10)
+            Number of local searches and returned values.
+
+        _sorted : bool, optional (default=True)
+            Whether to sort the candidate solutions by acquisition function
+            value.
+
+        Returns
+        -------
+        list : Candidate solutions
+        """
+
+        rand_configs = self.config_space.sample_configuration(size=num_points)
+        if _sorted:
+            imputed_rand_configs = list(map(lambda x: x.get_array(),
+                map(ConfigSpace.util.impute_inactive_values, rand_configs)))
+            imputed_rand_configs = np.array(imputed_rand_configs,
+                                            dtype=np.float64)
+            acq_values = self.acquisition_func(imputed_rand_configs)
+            # From here http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values
+            random = self.rng.rand(len(acq_values))
+            # Last column is primary sort key!
+            indices = np.lexsort((random.flatten(), acq_values.flatten()))
+
+            for i in range(len(rand_configs)):
+                rand_configs[i].origin = 'Random Search (sorted)'
+
+            # Cannot use zip here because the indices array cannot index the
+            # rand_configs list, because the second is a pure python list
+            return [(rand_configs[ind], acq_values[ind])
+                    for ind in indices[::-1]]
+        else:
+            for i in range(len(rand_configs)):
+                rand_configs[i].origin = 'Random Search'
+            return [(rand_configs[i], 0) for i in range(len(rand_configs))]
+
+    def _get_next_by_local_search(self, num_points=10):
+        """Get candidate solutions via local search.
+
+        In case acquisition function values tie, these will be broken randomly.
+
+        Parameters
+        ----------
+        num_points : int, optional (default=10)
+            Number of local searches and returned values.
+
+        Returns
+        -------
+        list : Candidate solutions, ordered by their acquisition function value
+        """
         configs_acq = []
 
         # Start N local search from different random start points
-        for i in range(n_iters):
+        for i in range(num_points):
             if i == 0 and self.incumbent is not None:
                 start_point = self.incumbent
             else:
@@ -279,6 +340,7 @@ class SMBO(BaseSolver):
 
             configuration, acq_val = self.local_search.maximize(start_point)
 
+            configuration.origin = 'Local Search'
             configs_acq.append((configuration, acq_val[0][0]))
 
         # shuffle for random tie-break
@@ -286,7 +348,56 @@ class SMBO(BaseSolver):
 
         # sort according to acq value
         # and return n best configurations
-        configs_acq.sort(key=lambda x: x[1])
-        configs = list(map(lambda x: x[0], configs_acq))
+        configs_acq.sort(key=lambda x: x[1], reverse=True)
 
-        return configs[0:n_return]
+        return configs_acq
+
+    def _merge_configurations_by_acq_value(self, list1, list2):
+        """Merge two list of (config, acq_value) tuples.
+
+        If both input lists are sorted w.r.t the acquisition function value,
+        the output will be sorted, too
+
+        Parameters
+        ----------
+        list1 : list
+
+        list2: list
+
+        Returns
+        -------
+        list
+        """
+        next_configs_by_acq_value = []
+
+        index_list_1 = 0
+        num_configurations_list_1 = len(list1)
+        index_list_2 = 0
+        num_configurations_list_2 = len(list2)
+        while index_list_1 < num_configurations_list_1 or \
+                index_list_2 < num_configurations_list_2:
+            # Add configurations from list 1 as long as acquisition
+            # function value of those is higher than the highest acquisition
+            # function value of the configurations found by list 2 not
+            # added to the list yet...
+            while index_list_1 < num_configurations_list_1 and \
+                    index_list_2 < num_configurations_list_2 and \
+                    list1[index_list_1][1] >= list2[index_list_2][1]:
+                next_configs_by_acq_value.append(list1[index_list_1][0])
+                index_list_1 += 1
+            # And the same thing for list 2
+            while index_list_1 < num_configurations_list_1 and \
+                    index_list_2 < num_configurations_list_2 and \
+                    list2[index_list_2][1] > list1[index_list_1][1]:
+                next_configs_by_acq_value.append(list2[index_list_2][0])
+                index_list_2 += 1
+            while index_list_1 >= num_configurations_list_1 and \
+                    index_list_2 < num_configurations_list_2:
+                next_configs_by_acq_value.append(list2[index_list_2][0])
+                index_list_2 += 1
+            while index_list_2 >= num_configurations_list_2 and \
+                    index_list_1 < num_configurations_list_1:
+                next_configs_by_acq_value.append(list1[index_list_1][0])
+                index_list_1 += 1
+
+        return next_configs_by_acq_value
