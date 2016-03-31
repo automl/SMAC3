@@ -84,7 +84,7 @@ class BaseSolver(object):
         """
         pass
 
-    def choose_next(self, X=None, Y=None):
+    def choose_next(self, X, Y):
         """
         Chooses the next configuration by optimizing the acquisition function.
 
