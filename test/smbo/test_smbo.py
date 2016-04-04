@@ -8,8 +8,7 @@ import numpy as np
 
 from smac.smbo.smbo import SMBO
 from smac.scenario.scenario import Scenario
-from robo.initial_design.init_random_uniform import init_random_uniform #TODO: These dependencies needs to be removed
-from robo.task.branin import Branin
+
 from smac.utils import test_helpers
 
 
@@ -17,14 +16,19 @@ class TestSMBO(unittest.TestCase):
 
     def setUp(self):
         self.scenario = Scenario({'cs': test_helpers.get_branin_config_space()})
+        
+    def branin(self, x):
+        y = (x[:, 1] - (5.1 / (4 * np.pi ** 2)) * x[:, 0] ** 2 + 5 * x[:, 0] / np.pi - 6) ** 2
+        y += 10 * (1 - 1 / (8 * np.pi)) * np.cos(x[:, 0]) + 10
+
+        return y[:, np.newaxis]        
 
     def test_choose_next(self):
         seed = 42
         smbo = SMBO(self.scenario, seed)
-        task = Branin()
+        X = self.scenario.cs.sample_configuration().get_array()[None, :]
 
-        X = init_random_uniform(task.X_lower, task.X_upper, 10)
-        Y = task.evaluate(X)
+        Y = self.branin(X)
 
         x = smbo.choose_next(X, Y)[0].get_array()
 

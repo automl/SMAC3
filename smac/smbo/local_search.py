@@ -98,7 +98,9 @@ class LocalSearch(object):
                 s_time = time.time()
                 neighbor_ = impute_inactive_values(neighbor)
                 n_array = neighbor_.get_array()
+
                 acq_val = self.acquisition_function(n_array, *args)
+
                 neighbors_looked_at += 1
 
                 time_n.append(time.time() - s_time)
