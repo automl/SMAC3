@@ -263,7 +263,10 @@ class SMBO(BaseSolver):
             return self.config_space.sample_configuration()
 
         self.model.train(X, Y)
-        self.acquisition_func.update(self.model)
+        
+        #TODO: How to get the target value of the run
+        incumbent_value = np.min(Y)
+        self.acquisition_func.update(self.model, incumbent_value)
 
         configs_acq = []
 

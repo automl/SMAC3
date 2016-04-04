@@ -11,22 +11,6 @@ __email__ = "kleinaa@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class BestObservation(object):
-    """
-    Container class for storing information about the best observation.
-    """
-
-    def __init__(self, model):
-        self.model = model
-
-    def estimate_incumbent(self):
-        best = np.argmin(self.model.Y)
-        incumbent = self.model.X[best]
-        incumbent_value = self.model.Y[best]
-
-        return incumbent[np.newaxis, :], incumbent_value[:, np.newaxis]
-
-
 class AcquisitionFunction(object):
     long_name = ""
 
@@ -155,9 +139,9 @@ class EI(AcquisitionFunction):
 
         super(EI, self).__init__(model)
         self.par = par
-        self.rec = BestObservation(self.model)
+        self.eta = None
 
-    def update(self, model):
+    def update(self, model, incumbent_value):
         """
         This method will be called if the model is updated.
         Parameters
@@ -167,7 +151,7 @@ class EI(AcquisitionFunction):
         """
 
         super(EI, self).update(model)
-        self.rec = BestObservation(self.model)
+        self.eta = incumbent_value
 
     def compute(self, X, derivative=False, **kwargs):
         """
@@ -199,17 +183,14 @@ class EI(AcquisitionFunction):
 
         m, v = self.model.predict(X, full_cov=True)
 
-        # Use the best seen observation as incumbent
-        _, eta = self.rec.estimate_incumbent()
-
         s = np.sqrt(v)
         if (s == 0).any():
             f = np.array([[0]])
             df = np.zeros((1, X.shape[1]))
 
         else:
-            z = (eta - m - self.par) / s
-            f = (eta - m - self.par) * norm.cdf(z) + s * norm.pdf(z)
+            z = (self.eta - m - self.par) / s
+            f = (self.eta - m - self.par) * norm.cdf(z) + s * norm.pdf(z)
             if derivative:
                 dmdx, ds2dx = self.model.predictive_gradients(X)
                 dmdx = dmdx[0]
