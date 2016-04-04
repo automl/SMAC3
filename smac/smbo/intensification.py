@@ -104,12 +104,14 @@ class Intensifier(object):
         '''
         self.start_time = time.time()
         
-        if time_bound < 1:
-            raise ValueError("time_bound must be => 1")
+        if time_bound < 0.01:
+            raise ValueError("time_bound must be >= 0.01")
 
         num_run = 0
         for challenger in challengers:
-            self.logger.debug("Intensify on %s" % (challenger))
+            self.logger.debug("Intensify on %s", challenger)
+            if hasattr(challenger, 'origin'):
+                self.logger.debug("Configuration origin: %s", challenger.origin)
             inc_runs = run_history.get_runs_for_config(incumbent)
             # First evaluate incumbent on a new instance
             if len(inc_runs) <= self.maxR:
@@ -222,13 +224,16 @@ class Intensifier(object):
                     "Maximum #runs for intensification reached")
                 break
             elif time.time() - self.start_time - time_bound >= 0:
-                self.logger.debug("Timelimit for intensification reached (used: %d sec, available: %d sec)" % (
+                self.logger.debug("Timelimit for intensification reached ("
+                                  "used: %f sec, available: %f sec)" % (
                     time.time() - self.start_time, time_bound))
                 break
 
         # output estimated performance of incumbent
         inc_runs = run_history.get_runs_for_config(incumbent)
-        inc_perf = numpy.mean(map(lambda x: x.cost, inc_runs))
+
+        # TODO maybe change to list comprehension for better readability in python3?
+        inc_perf = numpy.mean(list(map(lambda x: x.cost, inc_runs)))
         self.logger.info("Updated estimated performance of incumbent on %d runs: %.4f" % (
             len(inc_runs), inc_perf))
 

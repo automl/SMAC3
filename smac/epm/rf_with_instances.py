@@ -55,9 +55,9 @@ class RandomForestWithInstances(object):
                  num_trees=30,
                  do_bootstrapping=True,
                  n_points_per_tree=0,
-                 ratio_features=1,
-                 min_samples_split=2,
-                 min_samples_leaf=2,
+                 ratio_features=5./6.,
+                 min_samples_split=3,
+                 min_samples_leaf=3,
                  max_depth=20,
                  eps_purity=1e-8,
                  max_num_nodes=1000,
@@ -71,7 +71,9 @@ class RandomForestWithInstances(object):
         self.rf.seed = seed
         self.rf.do_bootstrapping = do_bootstrapping
         self.rf.num_data_points_per_tree = n_points_per_tree
-        self.rf.max_features = int(types.shape[0] * ratio_features)
+        max_features = 0 if ratio_features >= 1.0 else \
+                       max(1, int(types.shape[0] * ratio_features))
+        self.rf.max_features = max_features
         self.rf.min_samples_to_split = min_samples_split
         self.rf.min_samples_in_leaf = min_samples_leaf
         self.rf.max_depth = max_depth
