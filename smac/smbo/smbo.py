@@ -259,7 +259,7 @@ class SMBO(BaseSolver):
 
         # Remove dummy acquisition function value
         next_configs_by_random_search = map(
-            lambda x: x[0], self._get_next_by_random_search(num_points=1010))
+            lambda x: x[1], self._get_next_by_random_search(num_points=1010))
 
         # Get configurations sorted by EI
         next_configs_by_random_search_sorted = \
@@ -267,8 +267,10 @@ class SMBO(BaseSolver):
         next_configs_by_local_search = \
             self._get_next_by_local_search(10)
 
-        next_configs_by_acq_value = self._merge_configurations_by_acq_value(
-            next_configs_by_random_search_sorted, next_configs_by_local_search)
+        next_configs_by_acq_value = next_configs_by_random_search_sorted + \
+                                    next_configs_by_local_search
+        next_configs_by_acq_value.sort(reverse=True)
+        next_configs_by_acq_value = [_[1] for _ in next_configs_by_acq_value]
 
         challengers =list(itertools.chain(*zip(next_configs_by_acq_value,
                                                next_configs_by_random_search)))
@@ -288,13 +290,14 @@ class SMBO(BaseSolver):
 
         Returns
         -------
-        list : Candidate solutions
+        list : (acquisition value, Candidate solutions)
         """
 
         rand_configs = self.config_space.sample_configuration(size=num_points)
         if _sorted:
-            imputed_rand_configs = list(map(lambda x: x.get_array(),
-                map(ConfigSpace.util.impute_inactive_values, rand_configs)))
+            imputed_rand_configs = map(ConfigSpace.util.impute_inactive_values,
+                                       rand_configs)
+            imputed_rand_configs = [x.get_array() for x in imputed_rand_configs]
             imputed_rand_configs = np.array(imputed_rand_configs,
                                             dtype=np.float64)
             acq_values = self.acquisition_func(imputed_rand_configs)
@@ -308,12 +311,12 @@ class SMBO(BaseSolver):
 
             # Cannot use zip here because the indices array cannot index the
             # rand_configs list, because the second is a pure python list
-            return [(rand_configs[ind], acq_values[ind])
+            return [(acq_values[ind], rand_configs[ind])
                     for ind in indices[::-1]]
         else:
             for i in range(len(rand_configs)):
                 rand_configs[i].origin = 'Random Search'
-            return [(rand_configs[i], 0) for i in range(len(rand_configs))]
+            return [(0, rand_configs[i]) for i in range(len(rand_configs))]
 
     def _get_next_by_local_search(self, num_points=10):
         """Get candidate solutions via local search.
@@ -327,7 +330,8 @@ class SMBO(BaseSolver):
 
         Returns
         -------
-        list : Candidate solutions, ordered by their acquisition function value
+        list : (acquisition value, Candidate solutions),
+               ordered by their acquisition function value
         """
         configs_acq = []
 
@@ -341,63 +345,14 @@ class SMBO(BaseSolver):
             configuration, acq_val = self.local_search.maximize(start_point)
 
             configuration.origin = 'Local Search'
-            configs_acq.append((configuration, acq_val[0][0]))
+            configs_acq.append((acq_val[0][0], configuration))
 
         # shuffle for random tie-break
         random.shuffle(configs_acq, self.rng.rand)
 
         # sort according to acq value
         # and return n best configurations
-        configs_acq.sort(key=lambda x: x[1], reverse=True)
+        configs_acq.sort(reverse=True)
 
         return configs_acq
 
-    def _merge_configurations_by_acq_value(self, list1, list2):
-        """Merge two list of (config, acq_value) tuples.
-
-        If both input lists are sorted w.r.t the acquisition function value,
-        the output will be sorted, too
-
-        Parameters
-        ----------
-        list1 : list
-
-        list2: list
-
-        Returns
-        -------
-        list
-        """
-        next_configs_by_acq_value = []
-
-        index_list_1 = 0
-        num_configurations_list_1 = len(list1)
-        index_list_2 = 0
-        num_configurations_list_2 = len(list2)
-        while index_list_1 < num_configurations_list_1 or \
-                index_list_2 < num_configurations_list_2:
-            # Add configurations from list 1 as long as acquisition
-            # function value of those is higher than the highest acquisition
-            # function value of the configurations found by list 2 not
-            # added to the list yet...
-            while index_list_1 < num_configurations_list_1 and \
-                    index_list_2 < num_configurations_list_2 and \
-                    list1[index_list_1][1] >= list2[index_list_2][1]:
-                next_configs_by_acq_value.append(list1[index_list_1][0])
-                index_list_1 += 1
-            # And the same thing for list 2
-            while index_list_1 < num_configurations_list_1 and \
-                    index_list_2 < num_configurations_list_2 and \
-                    list2[index_list_2][1] > list1[index_list_1][1]:
-                next_configs_by_acq_value.append(list2[index_list_2][0])
-                index_list_2 += 1
-            while index_list_1 >= num_configurations_list_1 and \
-                    index_list_2 < num_configurations_list_2:
-                next_configs_by_acq_value.append(list2[index_list_2][0])
-                index_list_2 += 1
-            while index_list_2 >= num_configurations_list_2 and \
-                    index_list_1 < num_configurations_list_1:
-                next_configs_by_acq_value.append(list1[index_list_1][0])
-                index_list_1 += 1
-
-        return next_configs_by_acq_value
