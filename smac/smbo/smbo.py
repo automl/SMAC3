@@ -269,7 +269,7 @@ class SMBO(BaseSolver):
 
         next_configs_by_acq_value = next_configs_by_random_search_sorted + \
                                     next_configs_by_local_search
-        next_configs_by_acq_value.sort(reverse=True)
+        next_configs_by_acq_value.sort(reverse=True, key=lambda x: x[0])
         next_configs_by_acq_value = [_[1] for _ in next_configs_by_acq_value]
 
         challengers =list(itertools.chain(*zip(next_configs_by_acq_value,
@@ -352,7 +352,7 @@ class SMBO(BaseSolver):
 
         # sort according to acq value
         # and return n best configurations
-        configs_acq.sort(reverse=True)
+        configs_acq.sort(reverse=True, key=lambda x: x[0])
 
         return configs_acq
 
