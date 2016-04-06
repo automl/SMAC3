@@ -88,7 +88,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             self.logger.debug("Iteration %d of %d" % (it, self.max_iter))
 
             # predict censored y values
-            y_mean, y_var = self.model._predict(censored_X)
+            y_mean, y_var = self.model.predict(censored_X)
             y_stdev = numpy.sqrt(y_var)
 
             imputed_y = \

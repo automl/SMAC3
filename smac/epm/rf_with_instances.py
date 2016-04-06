@@ -91,7 +91,7 @@ class RandomForestWithInstances(object):
         dub_filter = DuplicateFilter()
         self.logger.addFilter(dub_filter)
 
-        # Never use a lower std than this
+        # Never use a lower variance than this
         self.var_threshold = 10 ** -5
 
     def train(self, X, Y, **kwargs):
@@ -116,79 +116,65 @@ class RandomForestWithInstances(object):
 
         self.rf.fit(data)
 
-    def predict(self, Xtest, **kwargs):
-        """
+    def predict(self, X):
+        """Predict mean and variance for given X.
+
         Returns the predictive mean and variance marginalised over all
-        instances for a single test point.
+        instances for a single test point. Wraps the pyrfr predict method
+        which only handles x (1, D) instead of X (N, D).
 
         Parameters
         ----------
-        Xtest: np.ndarray (1, D)
-            Input test point
-
-        Returns
-        ----------
-        np.array(1,)
-            predictive mean over all instances
-        np.array(1,)
-            predictive variance over all instances
-        """
-        # first we make sure this does not break in cases
-        # where we have no instance features
-        if self.instance_features is None or len(self.instance_features) == 0:
-            X_ = Xtest
-        else:
-            nfeats = self.instance_features.shape[0]
-            # TODO: Use random forest data container for instances
-            X_ = np.hstack(
-                (np.tile(Xtest, (nfeats, 1)), self.instance_features))
-
-        mean = np.zeros(X_.shape[0])
-        var = np.zeros(X_.shape[0])
-
-        # TODO: Would be nice if the random forest supports batch predictions
-        for i, x in enumerate(X_):
-            mean[i], var[i] = self.rf.predict(x)
-
-        var = np.mean(var) + np.var(mean)
-        mean = np.mean(mean)
-
-        return mean, var
-
-    def _predict(self, X):
-        """
-        Wraps rfr predict method to predict for multiple X's and returns y's (means and stds)
-        This method does not handles instances in a special way
-        Method written for imputation of censored data
-
-        Parameters
-        ----------
-        m : pyrfr.regression.binary_rss
-        X : array
+        X : np.ndarray
 
         Returns
         -------
-        mean: vector
-            mean predictions on X
-        var: vector
-            variance predictions on X
+        mean: np.ndarray
+            Predictive mean
+        var: np.ndarray
+            Predictive variance
         """
-        if len(X.shape) > 1:
-            pred = np.array([self.rf.predict(x) for x in X])
-            mean = pred[:, 0]
-            var = pred[:, 1]
+        if len(X.shape) != 2:
+            raise ValueError('Input to random forest must be of shape (N, D).')
+
+        if X.shape[0] > 1:
+            if self.instance_features is None or \
+                    len(self.instance_features) == 0:
+                pred = np.array([self.rf.predict(x) for x in X])
+                mean = pred[:, 0]
+                var = pred[:, 1]
+            else:
+                nfeats = self.instance_features.shape[0]
+                mean = np.zeros(X.shape[0])
+                var = np.zeros(X.shape[0])
+                for i, x in enumerate(X):
+                    instance_mean = np.zeros(nfeats)
+                    instance_var = np.ones(nfeats)
+                    x_ = np.hstack(
+                        (np.tile(x, (nfeats, 1)), self.instance_features))
+                    for j, x__ in enumerate(x_):
+                        instance_mean[i], instance_var[i] = self.rf.predict(x__)
+                    var[i] = np.mean(instance_var) + np.var(instance_mean)
+                    mean[i] = np.mean(instance_mean)
+
             var[var < self.var_threshold] = self.var_threshold
             var[np.isnan(var)] = self.var_threshold
 
             mean = np.array(mean)
             var = np.array(var)
         else:
-            mean, var = self.rf.predict(X)
+            mean, var = self.rf.predict(X.flatten())
             if var < self.var_threshold:
                 self.logger.debug(
-                    "Standard deviation is small, capping to 10^-5")
+                    "Variance is small, capping to 10^-5")
                 var = self.var_threshold
             var = np.array([var])
             mean = np.array([mean, ])
 
+        if len(mean.shape) != 2:
+            mean = mean.reshape((-1, 1))
+        if len(var.shape) != 2:
+            var = var.reshape((-1, 1))
+
         return mean, var
+
