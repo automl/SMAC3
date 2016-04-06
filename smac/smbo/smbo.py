@@ -16,7 +16,7 @@ from smac.smbo.local_search import LocalSearch
 from smac.smbo.intensification import Intensifier
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import RunHistory2EPM
-from smac.tae.execute_ta_run_old import ExecuteTARunOld
+from smac.smbo.objective import average_cost, total_cost
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 
@@ -131,6 +131,7 @@ class SMBO(BaseSolver):
                                          impute_state=[StatusType.TIMEOUT, ],
                                          imputor=imputor,
                                          log_y=self.scenario.run_obj == "runtime")
+            self.objective = total_cost
         else:
             self.rh2EPM = RunHistory2EPM(scenario=self.scenario,
                                          num_params=num_params,
@@ -138,6 +139,7 @@ class SMBO(BaseSolver):
                                          impute_censored_data=False,
                                          impute_state=None,
                                          log_y=self.scenario.run_obj == "runtime")
+            self.objective = average_cost
 
     def run_initial_design(self):
         '''
@@ -172,6 +174,12 @@ class SMBO(BaseSolver):
                             instance_id=rand_inst,
                             seed=initial_seed,
                             additional_info=additional_info)
+        defaul_inst_seeds = set(map(lambda x: (x.instance, x.seed),
+                                    self.runhistory.get_runs_for_config(
+                                        default_conf)))
+        default_perf = self.objective(default_conf, defaul_inst_seeds,
+                                      self.runhistory)
+        self.runhistory.update_cost(default_conf, default_perf)
 
     def run(self, max_iters=10):
         '''
@@ -214,6 +222,7 @@ class SMBO(BaseSolver):
                 challengers=challengers,
                 incumbent=self.incumbent,
                 run_history=self.runhistory,
+                objective=self.objective,
                 time_bound=max(0.01, time_spend))
 
             # TODO: Write run history into database
