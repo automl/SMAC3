@@ -23,7 +23,7 @@ class Scenario(object):
     main class of SMAC
     '''
 
-    def __init__(self, scenario, tae_runner=None):
+    def __init__(self, scenario, cmd_args=None, tae_runner=None):
         '''
             constructor
             Attributes
@@ -31,6 +31,8 @@ class Scenario(object):
                 scenario: str or dict
                     if str, it will be interpreted as to a path a scenario file
                     if dict, it will be directly to get all scenario related information
+                cmd_args: dict
+                    command line arguments that were not processed by argparse
                 tae_runner: object
                     object that implements the following method to call the target algorithm (or any other arbitrary function):
                     run(self, config)
@@ -48,6 +50,9 @@ class Scenario(object):
         else:
             raise TypeError(
                 "Wrong type of scenario (str or dict are supported)")
+
+        if cmd_args:
+            scenario.update(cmd_args)
 
         self.ta = shlex.split(scenario.get("algo", ""))
         self.execdir = scenario.get("execdir", ".")

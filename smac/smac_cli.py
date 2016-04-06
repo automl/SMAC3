@@ -33,7 +33,7 @@ class SMAC(object):
         '''
 
         cmd_reader = CMDReader()
-        args_ = cmd_reader.read_cmd()
+        args_, misc_args = cmd_reader.read_cmd()
 
         logging.basicConfig(level=args_.verbose_level)
 
@@ -42,7 +42,7 @@ class SMAC(object):
         if args_.verbose_level == "DEBUG":
             self.logger.parent.level = 10
 
-        scen = Scenario(args_.scenario_file)
+        scen = Scenario(args_.scenario_file, misc_args)
 
         # necessary to use stats options related to scenario information
         Stats.scenario = scen
