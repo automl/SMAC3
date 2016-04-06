@@ -252,14 +252,17 @@ class SMBO(BaseSolver):
             List of 2020 suggested configurations to evaluate.
         """
         self.model.train(X, Y)
-        
-        #TODO: How to get the target value of the run
-        incumbent_value = np.min(Y)
-        self.acquisition_func.update(self.model, incumbent_value)
+
+        if self.runhistory.empty():
+            incumbent_value = 0.0
+        else:
+            incumbent_value = self.runhistory.get_cost(self.incumbent)
+
+        self.acquisition_func.update(model=self.model, eta=incumbent_value)
 
         # Remove dummy acquisition function value
-        next_configs_by_random_search = map(
-            lambda x: x[1], self._get_next_by_random_search(num_points=1010))
+        next_configs_by_random_search = [x[1] for x in
+                                         self._get_next_by_random_search(num_points=1010)]
 
         # Get configurations sorted by EI
         next_configs_by_random_search_sorted = \
