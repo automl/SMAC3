@@ -166,8 +166,7 @@ class Intensifier(object):
             # Line 8
             N = 1
 
-            inc_inst_seeds = set(map(lambda x: (
-                x.instance, x.seed), run_history.get_runs_for_config(incumbent)))
+            inc_inst_seeds = set(run_history.get_runs_for_config(incumbent))
 
             # Line 9
             while True:
@@ -184,7 +183,7 @@ class Intensifier(object):
                 missing_runs = missing_runs[min(N, len(missing_runs)):]
 
                 inst_seed_pairs = list(inc_inst_seeds - set(missing_runs))
-                inc_perf = objective(incumbent, inst_seed_pairs, run_history)
+                inc_perf = objective(incumbent, run_history, inst_seed_pairs)
                 run_history.update_cost(incumbent, inc_perf)
 
                 # Line 12
@@ -214,7 +213,7 @@ class Intensifier(object):
                                     additional_info=res)
                     num_run += 1
 
-                chal_perf = objective(challenger, inst_seed_pairs, run_history)
+                chal_perf = objective(challenger, run_history, inst_seed_pairs)
                 run_history.update_cost(challenger, chal_perf)
 
                 # Line 15
@@ -233,6 +232,7 @@ class Intensifier(object):
                     self.logger.info(
                         "Changing incumbent to challenger: %s" % (challenger))
                     incumbent = challenger
+                    inc_perf = chal_perf
                     Stats.inc_changed += 1
                     self.trajLogger.add_entry(train_perf=chal_perf / n_samples,
                                               incumbent_id=Stats.inc_changed,
@@ -255,9 +255,7 @@ class Intensifier(object):
 
         # output estimated performance of incumbent
         inc_runs = run_history.get_runs_for_config(incumbent)
-
-        # TODO maybe change to list comprehension for better readability in python3?
-        inc_perf = numpy.mean(list(map(lambda x: x.cost, inc_runs)))
+        inc_perf = objective(incumbent, run_history, inc_runs)
         self.logger.info("Updated estimated performance of incumbent on %d runs: %.4f" % (
             len(inc_runs), inc_perf))
 

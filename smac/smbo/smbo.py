@@ -174,11 +174,9 @@ class SMBO(BaseSolver):
                             instance_id=rand_inst,
                             seed=initial_seed,
                             additional_info=additional_info)
-        defaul_inst_seeds = set(map(lambda x: (x.instance, x.seed),
-                                    self.runhistory.get_runs_for_config(
-                                        default_conf)))
-        default_perf = self.objective(default_conf, defaul_inst_seeds,
-                                      self.runhistory)
+        defaul_inst_seeds = set(self.runhistory.get_runs_for_config(default_conf))
+        default_perf = self.objective(default_conf, self.runhistory,
+                                      defaul_inst_seeds)
         self.runhistory.update_cost(default_conf, default_perf)
 
     def run(self, max_iters=10):
