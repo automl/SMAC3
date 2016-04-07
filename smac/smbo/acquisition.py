@@ -56,8 +56,8 @@ class AcquisitionFunction(object):
         Parameters
         ----------
         X : np.ndarray
-            The input point where the acquisition function
-            should be evaluate. The dimensionality of X is (N, D), with N as
+            The input points where the acquisition function
+            should be evaluated. The dimensionality of X is (N, D), with N as
             the number of points to evaluate at and D is the number of
             dimensions of one X.
 
@@ -83,8 +83,8 @@ class AcquisitionFunction(object):
         Parameters
         ----------
         X : np.ndarray
-            The input point where the acquisition function
-            should be evaluate. The dimensionality of X is (N, D), with N as
+            The input points where the acquisition function
+            should be evaluated. The dimensionality of X is (N, D), with N as
             the number of points to evaluate at and D is the number of
             dimensions of one X.
 
@@ -137,8 +137,8 @@ class EI(AcquisitionFunction):
 
         Parameters
         ----------
-        X: np.ndarray(N, D), The input point where the acquisition function
-            should be evaluate. The dimensionality of X is (N, D), with N as
+        X: np.ndarray(N, D), The input points where the acquisition function
+            should be evaluated. The dimensionality of X is (N, D), with N as
             the number of points to evaluate at and D is the number of
             dimensions of one X.
 

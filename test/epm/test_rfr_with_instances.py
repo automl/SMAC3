@@ -40,12 +40,14 @@ class TestRFWithInstances(unittest.TestCase):
 
     @mock.patch.object(RandomForestWithInstances, '_predict')
     def test_predict_mocked(self, rf_mock):
+        """Use mock to count the number of calls to _predict"""
         class SideEffect(object):
             def __init__(self):
                 self.counter = 0
 
             def __call__(self, X):
                 self.counter += 1
+                # Return mean and variance
                 return self.counter, self.counter
 
         rf_mock.side_effect = SideEffect()
@@ -119,10 +121,12 @@ class TestRFWithInstances(unittest.TestCase):
 
     @mock.patch.object(RandomForestWithInstances, 'predict')
     def test_predict_marginalized_over_instances_mocked(self, rf_mock):
+        """Use mock to count the number of calls to predict()"""
         class SideEffect(object):
             def __call__(self, X):
                 # Numpy array of number 0 to X.shape[0]
                 rval = np.array(list(range(X.shape[0]))).reshape((-1, 1))
+                # Return mean and variance
                 return rval, rval
 
         rf_mock.side_effect = SideEffect()
