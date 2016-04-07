@@ -10,7 +10,7 @@ class MockModel(object):
     def __init__(self, num_targets=1):
         self.num_targets = num_targets
 
-    def predict(self, X):
+    def predict_marginalized_over_instances(self, X):
         return np.array([np.mean(X, axis=1).reshape((1, -1))] *
                         self.num_targets).reshape((-1, 1)), \
                np.array([np.mean(X, axis=1).reshape((1, -1))] *

@@ -16,7 +16,7 @@ from smac.smbo.local_search import LocalSearch
 from smac.smbo.intensification import Intensifier
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import RunHistory2EPM
-from smac.smbo.objective import average_cost, total_cost
+from smac.smbo.objective import average_cost, total_runtime
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 
@@ -131,7 +131,7 @@ class SMBO(BaseSolver):
                                          impute_state=[StatusType.TIMEOUT, ],
                                          imputor=imputor,
                                          log_y=self.scenario.run_obj == "runtime")
-            self.objective = total_cost
+            self.objective = average_cost
         else:
             self.rh2EPM = RunHistory2EPM(scenario=self.scenario,
                                          num_params=num_params,

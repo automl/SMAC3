@@ -10,7 +10,7 @@ import numpy
 
 from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
 
-from smac.smbo.objective import total_cost
+from smac.smbo.objective import total_runtime
 from smac.utils.io.traj_logging import TrajLogger
 from smac.stats.stats import Stats
 
@@ -191,10 +191,10 @@ class Intensifier(object):
                     # Run challenger on all <config,seed> to run
                     if self.run_obj_time:
                         # TODO: do we have to consider PAR10 here instead of PAR1?
-                        inc_time = total_cost(incumbent, inst_seed_pairs,
-                                              run_history)
-                        chal_time = total_cost(challenger, chall_inst_seeds,
-                                               run_history)
+                        inc_time = total_runtime(incumbent, inst_seed_pairs,
+                                                 run_history)
+                        chal_time = total_runtime(challenger, chall_inst_seeds,
+                                                  run_history)
                         cutoff = min(self.cutoff,
                                      (inc_time - chal_time) *
                                         self.Adaptive_Capping_Slackfactor)
