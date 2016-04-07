@@ -16,7 +16,7 @@ from smac.smbo.local_search import LocalSearch
 from smac.smbo.intensification import Intensifier
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import RunHistory2EPM
-from smac.tae.execute_ta_run_old import ExecuteTARunOld
+from smac.smbo.objective import average_cost, total_runtime
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 
@@ -131,6 +131,7 @@ class SMBO(BaseSolver):
                                          impute_state=[StatusType.TIMEOUT, ],
                                          imputor=imputor,
                                          log_y=self.scenario.run_obj == "runtime")
+            self.objective = average_cost
         else:
             self.rh2EPM = RunHistory2EPM(scenario=self.scenario,
                                          num_params=num_params,
@@ -138,6 +139,7 @@ class SMBO(BaseSolver):
                                          impute_censored_data=False,
                                          impute_state=None,
                                          log_y=self.scenario.run_obj == "runtime")
+            self.objective = average_cost
 
     def run_initial_design(self):
         '''
@@ -172,6 +174,10 @@ class SMBO(BaseSolver):
                             instance_id=rand_inst,
                             seed=initial_seed,
                             additional_info=additional_info)
+        defaul_inst_seeds = set(self.runhistory.get_runs_for_config(default_conf))
+        default_perf = self.objective(default_conf, self.runhistory,
+                                      defaul_inst_seeds)
+        self.runhistory.update_cost(default_conf, default_perf)
 
     def run(self, max_iters=10):
         '''
@@ -214,6 +220,7 @@ class SMBO(BaseSolver):
                 challengers=challengers,
                 incumbent=self.incumbent,
                 run_history=self.runhistory,
+                objective=self.objective,
                 time_bound=max(0.01, time_spend))
 
             # TODO: Write run history into database
@@ -252,14 +259,17 @@ class SMBO(BaseSolver):
             List of 2020 suggested configurations to evaluate.
         """
         self.model.train(X, Y)
-        
-        #TODO: How to get the target value of the run
-        incumbent_value = np.min(Y)
-        self.acquisition_func.update(self.model, incumbent_value)
+
+        if self.runhistory.empty():
+            incumbent_value = 0.0
+        else:
+            incumbent_value = self.runhistory.get_cost(self.incumbent)
+
+        self.acquisition_func.update(model=self.model, eta=incumbent_value)
 
         # Remove dummy acquisition function value
-        next_configs_by_random_search = map(
-            lambda x: x[1], self._get_next_by_random_search(num_points=1010))
+        next_configs_by_random_search = [x[1] for x in
+                                         self._get_next_by_random_search(num_points=1010)]
 
         # Get configurations sorted by EI
         next_configs_by_random_search_sorted = \

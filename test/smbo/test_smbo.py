@@ -8,8 +8,8 @@ import unittest
 
 import numpy as np
 from ConfigSpace import ConfigurationSpace, Configuration
-from ConfigSpace.util import impute_inactive_values
 
+from smac.runhistory.runhistory import RunHistory
 from smac.smbo.smbo import SMBO
 from smac.scenario.scenario import Scenario
 from smac.smbo.acquisition import EI
@@ -59,6 +59,7 @@ class TestSMBO(unittest.TestCase):
     def test_choose_next(self):
         seed = 42
         smbo = SMBO(self.scenario, seed)
+        smbo.runhistory = RunHistory()
         X = self.scenario.cs.sample_configuration().get_array()[None, :]
 
         Y = self.branin(X)
@@ -67,12 +68,13 @@ class TestSMBO(unittest.TestCase):
 
     def test_choose_next_2(self):
         def side_effect(X, derivative):
-            return [[np.sum(X)]]
+            return np.mean(X, axis=1).reshape((-1, 1))
 
         smbo = SMBO(self.scenario, 1)
+        smbo.runhistory = RunHistory()
         smbo.model = mock.MagicMock()
-        smbo.acquisition_func.compute = mock.MagicMock()
-        smbo.acquisition_func.compute.side_effect = side_effect
+        smbo.acquisition_func._compute = mock.MagicMock()
+        smbo.acquisition_func._compute.side_effect = side_effect
         # local search would call the underlying local search maximizer,
         # which would have to be mocked out. Replacing the method by random
         # search is way easier!
@@ -84,8 +86,7 @@ class TestSMBO(unittest.TestCase):
         x = smbo.choose_next(X, Y)
 
         self.assertEqual(smbo.model.train.call_count, 1)
-        # Will be called once for each data point by random search
-        self.assertEqual(smbo.acquisition_func.compute.call_count, 1000)
+        self.assertEqual(smbo.acquisition_func._compute.call_count, 1)
         self.assertEqual(len(x), 2020)
         num_random_search = 0
         for i in range(0, 2020, 2):
@@ -112,6 +113,7 @@ class TestSMBO(unittest.TestCase):
         patch_impute.side_effect = lambda x: x
         smbo = SMBO(self.scenario, 1)
         rval = smbo._get_next_by_random_search(10, True)
+        self.assertEqual(len(rval), 10)
         for i in range(10):
             self.assertIsInstance(rval[i][1], ConfigurationMock)
             self.assertEqual(rval[i][1].value, 10 - i)
@@ -131,6 +133,7 @@ class TestSMBO(unittest.TestCase):
         patch.side_effect = side_effect
         smbo = SMBO(self.scenario, 1)
         rval = smbo._get_next_by_random_search(10, False)
+        self.assertEqual(len(rval), 10)
         for i in range(10):
             self.assertIsInstance(rval[i][1], ConfigurationMock)
             self.assertEqual(rval[i][1].origin, 'Random Search')

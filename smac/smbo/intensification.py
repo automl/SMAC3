@@ -10,6 +10,7 @@ import numpy
 
 from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
 
+from smac.smbo.objective import total_runtime
 from smac.utils.io.traj_logging import TrajLogger
 from smac.stats.stats import Stats
 
@@ -77,13 +78,13 @@ class Intensifier(object):
         if self.run_limit < 1:
             raise ValueError("run_limit must be > 1")
 
-    def intensify(self,
-                  challengers, incumbent, run_history,
-                  time_bound=MAXINT
-                  ):
+    def intensify(self, challengers, incumbent, run_history, objective,
+                  time_bound=MAXINT):
         '''
             running intensification to determine the incumbent configuration
             Side effect: adds runs to run_history
+
+            Implementation of Procedure 2 in Hutter et al. (2011).
 
             Parameters
             ----------
@@ -94,7 +95,7 @@ class Intensifier(object):
                 best configuration so far
             run_history : runhistory
                 all runs on all instance,seed pairs for incumbent
-            time_bound : int
+            time_bound : int, optional (default=2 ** 31 - 1)
                 time in [sec] available to perform intensify
 
             Returns
@@ -102,32 +103,31 @@ class Intensifier(object):
             incumbent: Configuration()
                 current (maybe new) incumbent configuration
         '''
+
         self.start_time = time.time()
         
         if time_bound < 0.01:
             raise ValueError("time_bound must be >= 0.01")
 
         num_run = 0
+
+        # Line 1 + 2
         for challenger in challengers:
             self.logger.debug("Intensify on %s", challenger)
             if hasattr(challenger, 'origin'):
                 self.logger.debug("Configuration origin: %s", challenger.origin)
             inc_runs = run_history.get_runs_for_config(incumbent)
+
+            # Line 3
             # First evaluate incumbent on a new instance
             if len(inc_runs) <= self.maxR:
+                # Line 4
                 # find all instances that have the most runs on the inc
                 inc_inst = [s.instance for s in inc_runs]
                 inc_inst = list(Counter(inc_inst).items())
                 inc_inst.sort(key=lambda x: x[1], reverse=True)
                 max_runs = inc_inst[0][1]
-                inc_inst = set(
-                    map(lambda x: x[0], filter(lambda x: x[1] == max_runs, inc_inst)))
-
-                if self.deterministic:
-                    next_seed = 0
-                else:
-                    next_seed = self.rs.randint(low=0, high=MAXINT,
-                                                size=1)[0]
+                inc_inst = set([x[0] for x in inc_inst if x[1] == max_runs])
 
                 available_insts = (self.instances - inc_inst)
 
@@ -136,8 +136,17 @@ class Intensifier(object):
                 if not self.deterministic and not available_insts:
                     available_insts = self.instances
 
+                # Line 6 (Line 5 is further down...)
+                if self.deterministic:
+                    next_seed = 0
+                else:
+                    next_seed = self.rs.randint(low=0, high=MAXINT,
+                                                size=1)[0]
+
                 if available_insts:
+                    # Line 5 (here for easier code)
                     next_instance = random.choice(list(available_insts))
+                    # Line 7
                     status, cost, dur, res = self.tae.run(config=incumbent,
                                                           instance=next_instance,
                                                           seed=next_seed,
@@ -147,38 +156,49 @@ class Intensifier(object):
                                     cost=cost, time=dur, status=status,
                                     instance_id=next_instance, seed=next_seed,
                                     additional_info=res)
+                    # TODO update incumbent performance here!
+
                     num_run += 1
                 else:
                     self.logger.debug(
                         "No further instance-seed pairs for incumbent available.")
-            N = 1
-            inc_inst_seeds = set(map(lambda x: (
-                x.instance, x.seed), run_history.get_runs_for_config(incumbent)))
 
+            # Line 8
+            N = 1
+
+            inc_inst_seeds = set(run_history.get_runs_for_config(incumbent))
+
+            # Line 9
             while True:
                 chall_inst_seeds = set(map(lambda x: (
                     x.instance, x.seed), run_history.get_runs_for_config(challenger)))
 
+                # Line 10
                 missing_runs = list(inc_inst_seeds - chall_inst_seeds)
 
+                # Line 11
                 self.rs.shuffle(missing_runs)
                 to_run = missing_runs[:min(N, len(missing_runs))]
+                # Line 13 (Line 12 comes below...)
                 missing_runs = missing_runs[min(N, len(missing_runs)):]
 
                 inst_seed_pairs = list(inc_inst_seeds - set(missing_runs))
-                inc_perf, inc_time = self.get_perf_and_time(
-                    incumbent, inst_seed_pairs, run_history)
+                inc_perf = objective(incumbent, run_history, inst_seed_pairs)
+                run_history.update_cost(incumbent, inc_perf)
 
-                _, chal_time = self.get_perf_and_time(
-                    challenger, chall_inst_seeds, run_history)
-                # TODO: do we have to consider PAR10 here instead of PAR1?
-
+                # Line 12
                 for instance, seed in to_run:
                     # Run challenger on all <config,seed> to run
                     if self.run_obj_time:
-                        cutoff = min(
-                            self.cutoff, (inc_perf - chal_time) * self.Adaptive_Capping_Slackfactor)
-                        #print("Adaptive Capping cutoff: %f" %(cutoff))
+                        # TODO: do we have to consider PAR10 here instead of PAR1?
+                        inc_time = total_runtime(incumbent, inst_seed_pairs,
+                                                 run_history)
+                        chal_time = total_runtime(challenger, chall_inst_seeds,
+                                                  run_history)
+                        cutoff = min(self.cutoff,
+                                     (inc_time - chal_time) *
+                                        self.Adaptive_Capping_Slackfactor)
+
                     else:
                         cutoff = self.cutoff
                     status, cost, dur, res = self.tae.run(config=challenger,
@@ -193,14 +213,16 @@ class Intensifier(object):
                                     additional_info=res)
                     num_run += 1
 
-                chal_perf, chal_time = self.get_perf_and_time(
-                    challenger, inst_seed_pairs, run_history)
+                chal_perf = objective(challenger, run_history, inst_seed_pairs)
+                run_history.update_cost(challenger, chal_perf)
 
+                # Line 15
                 if chal_perf > inc_perf:
                     # Incumbent beats challenger
                     self.logger.debug("Incumbent (%.4f) is better than challenger (%.4f) on %d runs." % (
                         inc_perf, chal_perf, len(inst_seed_pairs)))
                     break
+                # Line 16
                 elif len(missing_runs) == 0:
                     # Challenger is as good as incumbent -> change incu
 
@@ -210,11 +232,13 @@ class Intensifier(object):
                     self.logger.info(
                         "Changing incumbent to challenger: %s" % (challenger))
                     incumbent = challenger
+                    inc_perf = chal_perf
                     Stats.inc_changed += 1
                     self.trajLogger.add_entry(train_perf=chal_perf / n_samples,
                                               incumbent_id=Stats.inc_changed,
                                               incumbent=challenger)
                     break
+                # Line 17
                 else:
                     # challenger is not worse, continue
                     N = 2 * N
@@ -231,44 +255,8 @@ class Intensifier(object):
 
         # output estimated performance of incumbent
         inc_runs = run_history.get_runs_for_config(incumbent)
-
-        # TODO maybe change to list comprehension for better readability in python3?
-        inc_perf = numpy.mean(list(map(lambda x: x.cost, inc_runs)))
+        inc_perf = objective(incumbent, run_history, inc_runs)
         self.logger.info("Updated estimated performance of incumbent on %d runs: %.4f" % (
             len(inc_runs), inc_perf))
 
         return incumbent
-
-    def get_perf_and_time(self, config, inst_seeds, run_history):
-        '''
-        returns perf and used runtime of a configuration
-
-        Parameters
-        ----------
-        config: Configuration()
-            configuration to get stats for
-        inst_seeds: list
-            list of tuples of instance-seeds pairs
-
-        Returns
-        ----------
-        perf : float 
-            sum of cost values in runhistory
-        time: float
-            sum of time values in runhistory
-        '''
-
-        try:
-            id_ = run_history.config_ids[config.__repr__()]
-        except KeyError:  # challenger was not running so far
-            return MAXINT, 0
-        perfs = []
-        times = []
-        for i, r in inst_seeds:
-            k = run_history.RunKey(id_, i, r)
-            perfs.append(run_history.data[k].cost)
-            times.append(run_history.data[k].time)
-        perf = sum(perfs)
-        time = sum(times)
-
-        return perf, time
