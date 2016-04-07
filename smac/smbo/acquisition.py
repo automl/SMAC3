@@ -159,7 +159,7 @@ class EI(AcquisitionFunction):
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
 
-        m, v = self.model.predict(X)
+        m, v = self.model.predict_marginalized_over_instances(X)
         s = np.sqrt(v)
 
         if self.eta is None:
