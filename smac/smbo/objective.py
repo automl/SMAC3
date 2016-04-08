@@ -38,7 +38,7 @@ def _runtime(config, run_history, instance_seed_pairs=None):
     runtimes = []
     for i, r in instance_seed_pairs:
         k = run_history.RunKey(id_, i, r)
-        runtimes.append(run_history.data[k].runtime)
+        runtimes.append(run_history.data[k].time)
     return runtimes
 
 
