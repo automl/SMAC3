@@ -1,4 +1,5 @@
 # encoding=utf8
+import abc
 import logging
 from scipy.stats import norm
 import numpy as np
@@ -11,7 +12,8 @@ __email__ = "kleinaa@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class AcquisitionFunction(object):
+class AbstractAcquisitionFunction(object):
+    __metaclass__ = abc.ABCMeta
     long_name = ""
 
     def __str__(self):
@@ -75,6 +77,7 @@ class AcquisitionFunction(object):
             acq[idx, :] = -np.finfo(np.float).max
         return acq
 
+    @abc.abstractmethod
     def _compute(self, X, derivative=False):
         """
         Computes the acquisition value for a given point X. This function has
@@ -99,7 +102,7 @@ class AcquisitionFunction(object):
         raise NotImplementedError()
 
 
-class EI(AcquisitionFunction):
+class EI(AbstractAcquisitionFunction):
 
     def __init__(self,
                  model,
