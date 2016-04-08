@@ -94,27 +94,29 @@ class RandomForestWithInstances(object):
         # Never use a lower variance than this
         self.var_threshold = 10 ** -5
 
-    def train(self, X, Y, **kwargs):
-        '''
-        Trains the random forest on X and Y.
+    def train(self, X, y, **kwargs):
+        """Trains the random forest on X and y.
 
         Parameters
         ----------
-        X: np.ndarray (N, D)
-            Input data points. The dimensionality of X is (N, D),
-            with N as the number of points and D is the number of features.
-        Y: np.ndarray (N, 1)
+        X : np.ndarray [n_samples, n_features (config + instance features)]
+            Input data points.
+        Y : np.ndarray [n_samples, ]
             The corresponding target values.
-        '''
+
+        Returns
+        -------
+        self
+        """
 
         self.X = X
-        self.Y = Y
+        self.y = y
 
-        data = pyrfr.regression.numpy_data_container(self.X,
-                                                     self.Y[:, 0],
-                                                     self.types)
+        y = y.flatten()
+        data = pyrfr.regression.numpy_data_container(self.X, y, self.types)
 
         self.rf.fit(data)
+        return self
 
     def predict(self, X):
         """Predict means and variances for given X.

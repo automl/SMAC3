@@ -53,9 +53,10 @@ class RunhistoryTest(unittest.TestCase):
         
         scen = Scenario({"cutoff_time": 10})
 
-        self.assertRaises(TypeError, runhistory2epm.RunHistory2EPM)
+        self.assertRaises(TypeError, runhistory2epm.RunHistory2EPM4LogCost)
 
-        rh2epm = runhistory2epm.RunHistory2EPM(num_params=2, scenario=scen)
+        rh2epm = runhistory2epm.RunHistory2EPM4LogCost(num_params=2,
+                                                       scenario=scen)
         rhArr = rh2epm.transform(rh)
 
         # We expect

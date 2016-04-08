@@ -15,7 +15,8 @@ from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.smbo.local_search import LocalSearch
 from smac.smbo.intensification import Intensifier
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm import RunHistory2EPM
+from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, \
+    RunHistory2EPM4LogCost
 from smac.smbo.objective import average_cost, total_runtime
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
@@ -124,21 +125,18 @@ class SMBO(BaseSolver):
                                    model=self.model,
                                    change_threshold=0.01,
                                    max_iter=10)
-            self.rh2EPM = RunHistory2EPM(scenario=self.scenario,
-                                         num_params=num_params,
-                                         success_states=[StatusType.SUCCESS, ],
-                                         impute_censored_data=True,
-                                         impute_state=[StatusType.TIMEOUT, ],
-                                         imputor=imputor,
-                                         log_y=self.scenario.run_obj == "runtime")
+            self.rh2EPM = RunHistory2EPM4LogCost(
+                scenario=self.scenario, num_params=num_params,
+                success_states=[StatusType.SUCCESS, ],
+                impute_censored_data=True,
+                impute_state=[StatusType.TIMEOUT, ],
+                imputor=imputor)
             self.objective = average_cost
         else:
-            self.rh2EPM = RunHistory2EPM(scenario=self.scenario,
-                                         num_params=num_params,
-                                         success_states=[StatusType.SUCCESS, ],
-                                         impute_censored_data=False,
-                                         impute_state=None,
-                                         log_y=self.scenario.run_obj == "runtime")
+            self.rh2EPM = RunHistory2EPM4Cost\
+                (scenario=self.scenario, num_params=num_params,
+                 success_states=[StatusType.SUCCESS, ],
+                 impute_censored_data=False, impute_state=None)
             self.objective = average_cost
 
     def run_initial_design(self):
@@ -250,7 +248,7 @@ class SMBO(BaseSolver):
         X : (N, D) numpy array
             Each row contains a configuration and one set of
             instance features.
-        Y : (N, 1) numpy array
+        Y : (N, O) numpy array
             The function values for each configuration instance pair.
 
         Returns
