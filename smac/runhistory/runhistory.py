@@ -136,9 +136,9 @@ class RunHistory(object):
         '''
 
         id_vec = dict([(id_, conf.get_array().tolist())
-                       for id_, conf in self.ids_config.iteritems()])
+                       for id_, conf in self.ids_config.items()])
 
-        data = [(list(k), list(v)) for k, v in self.data.iteritems()]
+        data = [([int(k.config_id), str(k.instance_id), int(k.seed)], list(v)) for k, v in self.data.items()]
 
         with open(fn, "w") as fp:
             json.dump({"data": data,
@@ -161,11 +161,11 @@ class RunHistory(object):
             all_data = json.load(fp)
 
         self.ids_config = dict([(int(id_), Configuration(
-            cs, vector=numpy.array(vec))) for id_, vec in all_data["id_config"].iteritems()])
+            cs, vector=numpy.array(vec))) for id_, vec in all_data["id_config"].items()])
 
 
         self.config_ids = dict([(Configuration(
-            cs, vector=numpy.array(vec)).__repr__(), id_) for id_, vec in all_data["id_config"].iteritems()])
+            cs, vector=numpy.array(vec)).__repr__(), id_) for id_, vec in all_data["id_config"].items()])
         self._n_id = len(self.config_ids)
         
         self.data = dict([(self.RunKey(int(k[0]), k[1], int(k[2])),

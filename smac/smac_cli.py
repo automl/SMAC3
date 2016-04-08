@@ -3,10 +3,10 @@ import sys
 import logging
 import numpy as np
 
-from utils.io.cmd_reader import CMDReader
-from scenario.scenario import Scenario
-from smbo.smbo import SMBO
-from stats.stats import Stats
+from smac.utils.io.cmd_reader import CMDReader
+from smac.scenario.scenario import Scenario
+from smac.smbo.smbo import SMBO
+from smac.stats.stats import Stats
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"

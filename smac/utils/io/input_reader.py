@@ -6,7 +6,7 @@ __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 import numpy as np
-from ConfigSpace.io import pcs
+from smac.configspace import pcs
 
 class InputReader(object):
 

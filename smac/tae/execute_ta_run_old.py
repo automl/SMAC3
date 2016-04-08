@@ -97,7 +97,7 @@ class ExecuteTARunOld(object):
                 cmd.extend(["-" + str(p), str(config[p])])
 
         self.logger.debug("Calling: %s" % (" ".join(cmd)))
-        p = Popen(cmd, shell=False, stdout=PIPE, stderr=PIPE)
+        p = Popen(cmd, shell=False, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         stdout_, stderr_ = p.communicate()
 
         self.logger.debug("Stdout: %s" % (stdout_))
@@ -110,7 +110,7 @@ class ExecuteTARunOld(object):
         for line in stdout_.split("\n"):
             if line.startswith("Result of this algorithm run:") or line.startswith("Result for ParamILS") or line.startswith("Result for SMAC"):
                 fields = line.split(":")[1].split(",")
-                fields = map(lambda x: x.strip(" "), fields)
+                fields = list(map(lambda x: x.strip(" "), fields))
                 if len(fields) == 5:
                     status, runtime, runlength, quality, seed = fields
                     additional_info = {}

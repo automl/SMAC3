@@ -127,7 +127,7 @@ class Scenario(object):
 
         if self.feature_dict:
             self.n_features = len(
-                self.feature_dict[self.feature_dict.keys()[0]])
+                self.feature_dict[list(self.feature_dict.keys())[0]])
             self.feature_array = []
             for inst_ in self.train_insts:
                 self.feature_array.append(self.feature_dict[inst_])
