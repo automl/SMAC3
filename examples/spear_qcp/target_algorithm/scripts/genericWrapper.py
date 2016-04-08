@@ -606,7 +606,7 @@ class OArgumentParser(object):
         iterator_args = iter(args)
         while True:
             try:
-                name = iterator_args.__next__()
+                name = next(iterator_args)
             except StopIteration:
                 break
         #for name, value in zip(args[::2], args[1::2]):
@@ -614,7 +614,7 @@ class OArgumentParser(object):
             #    self.print_help()
             if self.options.get(name):
                 try:
-                    value = iterator_args.__next__()
+                    value = next(iterator_args)
                 except StopIteration:
                     sys.stderr.write("%s is missing some value\n" %(name))
                     sys.exit(2)
