@@ -186,8 +186,11 @@ class RandomForestWithInstances(object):
         """
         if self.instance_features is None or \
                         len(self.instance_features) == 0:
-            raise ValueError('No instance features given!')
-        n_instance_features = self.instance_features.shape[1]
+            return self.predict(X)
+        else:
+            n_instance_features = self.instance_features.shape[1]
+            n_instances = len(self.instance_features)
+
         if len(X.shape) != 2:
             raise ValueError('Expected 2d array, got %dd array!' % len(X.shape))
         if X.shape[1] != self.types.shape[0] - n_instance_features:
@@ -195,7 +198,6 @@ class RandomForestWithInstances(object):
                              (self.types.shape[0] - n_instance_features,
                               X.shape[1]))
 
-        n_instances = self.instance_features.shape[0]
         mean = np.zeros(X.shape[0])
         var = np.zeros(X.shape[0])
         for i, x in enumerate(X):

@@ -262,6 +262,9 @@ class SMBO(BaseSolver):
 
         if self.runhistory.empty():
             incumbent_value = 0.0
+        elif self.incumbent is None:
+            # TODO try to calculate an incumbent from the runhistory!
+            incumbent_value = 0.0
         else:
             incumbent_value = self.runhistory.get_cost(self.incumbent)
 

@@ -95,15 +95,17 @@ class TestRFWithInstances(unittest.TestCase):
                                            "but have 5!",
                                model.predict_marginalized_over_instances, X)
 
-    def test_predict_marginalized_over_instances_no_features(self):
+    @mock.patch.object(RandomForestWithInstances, 'predict')
+    def test_predict_marginalized_over_instances_no_features(self, rf_mock):
+        """The RF should fall back to the regular predict() method."""
+
         rs = np.random.RandomState(1)
         X = rs.rand(20, 10)
         Y = rs.rand(10, 1)
         model = RandomForestWithInstances(np.zeros((10,), dtype=np.uint))
         model.train(X[:10], Y[:10])
-        self.assertRaisesRegex(ValueError, 'No instance features given!',
-                               model.predict_marginalized_over_instances,
-                               X[10:])
+        model.predict(X[10:])
+        self.assertEqual(rf_mock.call_count, 1)
 
     def test_predict_marginalized_over_instances(self):
         rs = np.random.RandomState(1)
