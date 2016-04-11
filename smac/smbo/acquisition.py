@@ -1,4 +1,5 @@
 # encoding=utf8
+import abc
 import logging
 from scipy.stats import norm
 import numpy as np
@@ -11,7 +12,8 @@ __email__ = "kleinaa@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class AcquisitionFunction(object):
+class AbstractAcquisitionFunction(object):
+    __metaclass__ = abc.ABCMeta
     long_name = ""
 
     def __str__(self):
@@ -75,6 +77,7 @@ class AcquisitionFunction(object):
             acq[idx, :] = -np.finfo(np.float).max
         return acq
 
+    @abc.abstractmethod
     def _compute(self, X, derivative=False):
         """
         Computes the acquisition value for a given point X. This function has
@@ -99,7 +102,7 @@ class AcquisitionFunction(object):
         raise NotImplementedError()
 
 
-class EI(AcquisitionFunction):
+class EI(AbstractAcquisitionFunction):
 
     def __init__(self,
                  model,
@@ -153,13 +156,13 @@ class EI(AcquisitionFunction):
         np.ndarray(N,1)
             Derivative of Expected Improvement at X (only if derivative=True)
         """
-        #if X.shape[0] > 1:
-        #    raise ValueError("EI is only for single test points")
 
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
 
         m, v = self.model.predict_marginalized_over_instances(X)
+        assert m.shape[1] == 1
+        assert v.shape[1] == 1
         s = np.sqrt(v)
 
         if self.eta is None:
@@ -187,3 +190,86 @@ class EI(AcquisitionFunction):
             return f, df
         else:
             return f
+
+
+class EIPS(EI):
+    def __init__(self,
+                 model,
+                 par=0.01,
+                 **kwargs):
+        r"""
+        Computes for a given x the expected improvement as
+        acquisition value.
+        :math:`EI(X) :=
+            \frac{\mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) -
+                  f_{t+1}(\mathbf{X}) - \xi\right] \} ]}
+                  {np.log10(r(x))}`,
+        with :math:`f(X^+)` as the incumbent and :math:`r(x)` as runtime.
+
+        Parameters
+        ----------
+        model: Model object
+            A model that implements at least
+                 - predict(X)
+                 - getCurrentBestX().
+            If you want to calculate derivatives than it should also support
+                 - predictive_gradients(X)
+        par: float
+            Controls the balance between exploration
+            and exploitation of the acquisition function. Default is 0.01
+        """
+
+        super(EIPS, self).__init__(model)
+        self.long_name = 'Expected Improvement per Second'
+
+    def _compute(self, X, derivative=False, **kwargs):
+        """
+        Computes the EIPS value.
+
+        Parameters
+        ----------
+        X: np.ndarray(N, D), The input point where the acquisition function
+            should be evaluate. The dimensionality of X is (N, D), with N as
+            the number of points to evaluate at and D is the number of
+            dimensions of one X.
+
+        derivative: Boolean
+            Raises NotImplementedError if True.
+
+        Returns
+        -------
+        np.ndarray(N,1)
+            Expected Improvement per Second of X
+        """
+
+        if derivative:
+            raise NotImplementedError()
+
+        if len(X.shape) == 1:
+            X = X[:, np.newaxis]
+
+        m, v = self.model.predict_marginalized_over_instances(X)
+        assert m.shape[1] == 2
+        assert v.shape[1] == 2
+        m_cost = m[:, 0]
+        v_cost = v[:, 0]
+        # The model already predicts log(runtime)
+        m_runtime = m[:, 1]
+        s = np.sqrt(v_cost)
+
+        if self.eta is None:
+            raise ValueError('No current best specified. Call update('
+                             'eta=<int>) to inform the acquisition function '
+                             'about the current best value.')
+
+        z = (self.eta - m_cost - self.par) / s
+        f = (self.eta - m_cost - self.par) * norm.cdf(z) + s * norm.pdf(z)
+        f = f / m_runtime
+        f[s == 0.0] = 0.0
+
+        if (f < 0).any():
+            self.logger.error("Expected Improvement per Second is smaller than "
+                              "0!")
+            raise ValueError
+
+        return f.reshape((-1, 1))

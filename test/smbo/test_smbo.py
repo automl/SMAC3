@@ -10,11 +10,16 @@ import numpy as np
 from ConfigSpace import ConfigurationSpace, Configuration
 
 from smac.runhistory.runhistory import RunHistory
-from smac.smbo.smbo import SMBO
+from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, \
+    RunHistory2EPM4LogCost, RunHistory2EPM4EIPS
+from smac.smbo.smbo import SMBO, get_types
 from smac.scenario.scenario import Scenario
-from smac.smbo.acquisition import EI
+from smac.smbo.acquisition import EI, EIPS
 from smac.smbo.local_search import LocalSearch
 from smac.utils import test_helpers
+from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.epm.uncorrelated_mo_rf_with_instances import \
+    UncorrelatedMultiObjectiveRandomForestWithInstances
 
 if sys.version_info[0] == 2:
     import mock
@@ -41,20 +46,49 @@ class TestSMBO(unittest.TestCase):
 
         return y[:, np.newaxis]        
 
+    def test_init_only_scenario_runtime(self):
+        smbo = SMBO(self.scenario)
+        self.assertIsInstance(smbo.model, RandomForestWithInstances)
+        np.testing.assert_allclose(smbo.types, smbo.model.types)
+        self.assertIsInstance(smbo.rh2EPM, RunHistory2EPM4LogCost)
+        self.assertIsInstance(smbo.acquisition_func, EI)
+
+    def test_init_only_scenario_quality(self):
+        self.scenario.run_obj = 'quality'
+        smbo = SMBO(self.scenario)
+        self.assertIsInstance(smbo.model, RandomForestWithInstances)
+        np.testing.assert_allclose(smbo.types, smbo.model.types)
+        self.assertIsInstance(smbo.rh2EPM, RunHistory2EPM4Cost)
+        self.assertIsInstance(smbo.acquisition_func, EI)
+
+    def test_init_EIPS_as_arguments(self):
+        for objective in ['runtime', 'quality']:
+            self.scenario.run_obj = objective
+            types = get_types(self.scenario.cs, None)
+            umrfwi = UncorrelatedMultiObjectiveRandomForestWithInstances(
+                ['cost', 'runtime'], types)
+            eips = EIPS(umrfwi)
+            rh2EPM = RunHistory2EPM4EIPS(self.scenario, 2)
+            smbo = SMBO(self.scenario, model=umrfwi, acquisition_function=eips,
+                        runhistory2epm=rh2EPM)
+            self.assertIs(umrfwi, smbo.model)
+            self.assertIs(eips, smbo.acquisition_func)
+            self.assertIs(rh2EPM, smbo.rh2EPM)
+
     def test_rng(self):
-        smbo = SMBO(self.scenario, None)
+        smbo = SMBO(self.scenario, rng=None)
         self.assertIsInstance(smbo.rng, np.random.RandomState)
-        smbo = SMBO(self.scenario, 1)
+        smbo = SMBO(self.scenario, rng=1)
         rng = np.random.RandomState(1)
         self.assertIsInstance(smbo.rng, np.random.RandomState)
-        smbo = SMBO(self.scenario, rng)
+        smbo = SMBO(self.scenario, rng=rng)
         self.assertIs(smbo.rng, rng)
         # ML: I don't understand the following line and it throws an error
         self.assertRaisesRegexp(TypeError,
                                 "Unknown type <(class|type) 'str'> for argument "
                                 'rng. Only accepts None, int or '
                                 'np.random.RandomState',
-                                SMBO, self.scenario, 'BLA')
+                                SMBO, self.scenario, rng='BLA')
 
     def test_choose_next(self):
         seed = 42
