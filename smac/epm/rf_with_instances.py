@@ -1,10 +1,8 @@
 import numpy as np
 import logging
-import time
 
 import pyrfr.regression
 
-from smac.utils.duplicate_filter_logging import DuplicateFilter
 
 __author__ = "Aaron Klein"
 __copyright__ = "Copyright 2015, ML4AAD"
