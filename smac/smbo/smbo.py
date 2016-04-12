@@ -281,7 +281,9 @@ class SMBO(BaseSolver):
 
         return self.incumbent
 
-    def choose_next(self, X, Y):
+    def choose_next(self, X, Y, num_interleaved_random=1010,
+                    num_configurations_by_random_search_sorted=1000,
+                    num_configurations_by_local_search=10):
         """Choose next candidate solution with Bayesian optimization.
 
         Parameters
@@ -311,13 +313,14 @@ class SMBO(BaseSolver):
 
         # Remove dummy acquisition function value
         next_configs_by_random_search = [x[1] for x in
-                                         self._get_next_by_random_search(num_points=1010)]
+                                         self._get_next_by_random_search(num_points=num_interleaved_random)]
 
         # Get configurations sorted by EI
         next_configs_by_random_search_sorted = \
-            self._get_next_by_random_search(1000, _sorted=True)
+            self._get_next_by_random_search(
+                num_configurations_by_random_search_sorted, _sorted=True)
         next_configs_by_local_search = \
-            self._get_next_by_local_search(10)
+            self._get_next_by_local_search(num_configurations_by_local_search)
 
         next_configs_by_acq_value = next_configs_by_random_search_sorted + \
                                     next_configs_by_local_search
