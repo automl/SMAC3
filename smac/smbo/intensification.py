@@ -10,7 +10,7 @@ import numpy
 
 from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
 
-from smac.smbo.objective import total_runtime
+from smac.smbo.objective import total_runtime, sum_cost
 from smac.utils.io.traj_logging import TrajLogger
 from smac.stats.stats import Stats
 
@@ -105,7 +105,7 @@ class Intensifier(object):
         '''
 
         self.start_time = time.time()
-        
+
         if time_bound < 0.01:
             raise ValueError("time_bound must be >= 0.01")
 
@@ -115,7 +115,8 @@ class Intensifier(object):
         for challenger in challengers:
             self.logger.debug("Intensify on %s", challenger)
             if hasattr(challenger, 'origin'):
-                self.logger.debug("Configuration origin: %s", challenger.origin)
+                self.logger.debug(
+                    "Configuration origin: %s", challenger.origin)
             inc_runs = run_history.get_runs_for_config(incumbent)
 
             # Line 3
@@ -186,21 +187,28 @@ class Intensifier(object):
                 inc_perf = objective(incumbent, run_history, inst_seed_pairs)
                 run_history.update_cost(incumbent, inc_perf)
 
+                inc_sum_cost = sum_cost(config=incumbent, instance_seed_pairs=inst_seed_pairs,
+                                        run_history=run_history)
+
                 # Line 12
                 for instance, seed in to_run:
                     # Run challenger on all <config,seed> to run
                     if self.run_obj_time:
-                        # TODO: do we have to consider PAR10 here instead of PAR1?
-                        inc_time = total_runtime(config=incumbent, instance_seed_pairs=inst_seed_pairs,
+                        chall_inst_seeds = set(map(lambda x: (
+                            x.instance, x.seed), run_history.get_runs_for_config(challenger)))
+                        chal_sum_cost = sum_cost(config=challenger, instance_seed_pairs=chall_inst_seeds,
                                                  run_history=run_history)
-                        chal_time = total_runtime(config=challenger, instance_seed_pairs=chall_inst_seeds,
-                                                  run_history=run_history)
                         cutoff = min(self.cutoff,
-                                     (inc_time - chal_time) *
-                                        self.Adaptive_Capping_Slackfactor)
+                                     (inc_sum_cost - chal_sum_cost) *
+                                     self.Adaptive_Capping_Slackfactor)
+
+                        if cutoff < 0:  # no time left to validate challenger
+                            self.logger.debug("Stop challenger itensification due to adaptive capping.")
+                            break
 
                     else:
                         cutoff = self.cutoff
+
                     status, cost, dur, res = self.tae.run(config=challenger,
                                                           instance=instance,
                                                           seed=seed,
@@ -213,7 +221,11 @@ class Intensifier(object):
                                     additional_info=res)
                     num_run += 1
 
-                chal_perf = objective(challenger, run_history, inst_seed_pairs)
+                # we cannot use inst_seed_pairs here since we could have less runs
+                # for the challenger due to the adaptive capping
+                chall_inst_seeds = set(map(lambda x: (
+                    x.instance, x.seed), run_history.get_runs_for_config(challenger)))
+                chal_perf = objective(challenger, run_history, chall_inst_seeds)
                 run_history.update_cost(challenger, chal_perf)
 
                 # Line 15
@@ -250,7 +262,7 @@ class Intensifier(object):
             elif time.time() - self.start_time - time_bound >= 0:
                 self.logger.debug("Timelimit for intensification reached ("
                                   "used: %f sec, available: %f sec)" % (
-                    time.time() - self.start_time, time_bound))
+                                      time.time() - self.start_time, time_bound))
                 break
 
         # output estimated performance of incumbent

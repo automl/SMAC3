@@ -116,3 +116,24 @@ def average_cost(config, run_history, instance_seed_pairs=None):
     float
     """
     return np.mean(_cost(config, run_history, instance_seed_pairs))
+
+def sum_cost(config, run_history, instance_seed_pairs=None):
+    """Return the sum of costs of a configuration.
+
+    This is the sum of costs of all instance-seed pairs.
+
+    Parameters
+    ----------
+    config : Configuration
+        configuration to calculate objective for
+    run_history : RunHistory
+        RunHistory object from which the objective value is computed.
+    instance_seed_pairs : list, optional (default=None)
+        list of tuples of instance-seeds pairs. If None, the run_history is
+        queried for all runs of the given configuration.
+
+    Returns
+    ----------
+    float
+    """
+    return np.sum(_cost(config, run_history, instance_seed_pairs))
