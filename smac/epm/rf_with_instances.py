@@ -1,5 +1,6 @@
 import numpy as np
 import logging
+import time
 
 import pyrfr.regression
 
@@ -55,7 +56,7 @@ class RandomForestWithInstances(object):
                  num_trees=30,
                  do_bootstrapping=True,
                  n_points_per_tree=0,
-                 ratio_features=5./6.,
+                 ratio_features=5. / 6.,
                  min_samples_split=3,
                  min_samples_leaf=3,
                  max_depth=20,
@@ -72,7 +73,7 @@ class RandomForestWithInstances(object):
         self.rf.do_bootstrapping = do_bootstrapping
         self.rf.num_data_points_per_tree = n_points_per_tree
         max_features = 0 if ratio_features >= 1.0 else \
-                       max(1, int(types.shape[0] * ratio_features))
+            max(1, int(types.shape[0] * ratio_features))
         self.rf.max_features = max_features
         self.rf.min_samples_to_split = min_samples_split
         self.rf.min_samples_in_leaf = min_samples_leaf
@@ -87,9 +88,6 @@ class RandomForestWithInstances(object):
         self.seed = seed
 
         self.logger = logging.getLogger("RF")
-        # TODO: check this -- it could slow us down
-        dub_filter = DuplicateFilter()
-        self.logger.addFilter(dub_filter)
 
         # Never use a lower variance than this
         self.var_threshold = 10 ** -5
@@ -134,7 +132,8 @@ class RandomForestWithInstances(object):
             Predictive variance
         """
         if len(X.shape) != 2:
-            raise ValueError('Expected 2d array, got %dd array!' % len(X.shape))
+            raise ValueError(
+                'Expected 2d array, got %dd array!' % len(X.shape))
         if X.shape[1] != self.types.shape[0]:
             raise ValueError('Rows in X should have %d entries but have %d!' %
                              (self.types.shape[0], X.shape[1]))
@@ -162,10 +161,6 @@ class RandomForestWithInstances(object):
             Predictive variance
         """
         mean, var = self.rf.predict(x)
-        if var < self.var_threshold:
-            self.logger.debug(
-                "Variance is small, capping to 10^-5")
-            var = self.var_threshold
 
         return mean, var
 
@@ -186,15 +181,17 @@ class RandomForestWithInstances(object):
         vars : np.ndarray  of shape = [n_samples, 1]
             Predictive variance
         """
+
         if self.instance_features is None or \
-                        len(self.instance_features) == 0:
+                len(self.instance_features) == 0:
             return self.predict(X)
         else:
             n_instance_features = self.instance_features.shape[1]
             n_instances = len(self.instance_features)
 
         if len(X.shape) != 2:
-            raise ValueError('Expected 2d array, got %dd array!' % len(X.shape))
+            raise ValueError(
+                'Expected 2d array, got %dd array!' % len(X.shape))
         if X.shape[1] != self.types.shape[0] - n_instance_features:
             raise ValueError('Rows in X should have %d entries but have %d!' %
                              (self.types.shape[0] - n_instance_features,
@@ -206,7 +203,11 @@ class RandomForestWithInstances(object):
             X_ = np.hstack(
                 (np.tile(x, (n_instances, 1)), self.instance_features))
             means, vars = self.predict(X_)
-            var[i] = np.mean(vars) + np.var(means)
+            var_x = np.mean(vars) + np.var(means)
+            if var_x < self.var_threshold:
+                var_x = self.var_threshold
+
+            var[i] = var_x
             mean[i] = np.mean(means)
 
         var[var < self.var_threshold] = self.var_threshold
