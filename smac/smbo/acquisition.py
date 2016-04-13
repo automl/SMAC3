@@ -1,4 +1,5 @@
 # encoding=utf8
+import abc
 import logging
 from scipy.stats import norm
 import numpy as np
@@ -11,7 +12,8 @@ __email__ = "kleinaa@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class AcquisitionFunction(object):
+class AbstractAcquisitionFunction(object):
+    __metaclass__ = abc.ABCMeta
     long_name = ""
 
     def __str__(self):
@@ -31,18 +33,23 @@ class AcquisitionFunction(object):
 
         self.logger = logging.getLogger("AcquisitionFunction")
 
-    def update(self, model):
-        """
+    def update(self, **kwargs):
+        """Update the acquisition functions values.
+
         This method will be called if the model is updated. E.g.
-        Entropy search uses it to update it's approximation of P(x=x_min)
+        Entropy search uses it to update it's approximation of P(x=x_min),
+        EI uses it to update the current fmin.
+
+        The default implementation takes all keyword arguments and sets the
+        respective attributes for the acquisition function object.
 
         Parameters
         ----------
-        model : Model object
-            Models the objective function.
+        kwargs
         """
 
-        self.model = model
+        for key in kwargs:
+            setattr(self, key, kwargs[key])
 
     def __call__(self, X, derivative=False):
         """
@@ -50,12 +57,13 @@ class AcquisitionFunction(object):
 
         Parameters
         ----------
-        X: np.ndarray(1, D), The input point where the acquisition function
-            should be evaluate. The dimensionality of X is (N, D), with N as
+        X : np.ndarray
+            The input points where the acquisition function
+            should be evaluated. The dimensionality of X is (N, D), with N as
             the number of points to evaluate at and D is the number of
             dimensions of one X.
 
-        derivative: Boolean
+        derivative : Boolean
             If is set to true also the derivative of the acquisition
             function at X is returned
         """
@@ -63,46 +71,38 @@ class AcquisitionFunction(object):
         if len(X.shape) == 1:
             X = X[np.newaxis, :]
 
-        if derivative:
-            acq, grad = zip(
-                *[self.compute(x[np.newaxis, :], derivative) for x in X])
-            acq = np.array(acq)[:, :, 0]
-            grad = np.array(grad)[:, :, 0]
+        acq = self._compute(X, derivative)
+        if np.any(np.isnan(acq)):
+            idx = np.where(np.isnan(acq))[0]
+            acq[idx, :] = -np.finfo(np.float).max
+        return acq
 
-            if np.any(np.isnan(acq)):
-                idx = np.where(np.isnan(acq))[0]
-                acq[idx, :] = -np.finfo(np.float).max
-                grad[idx, :] = -np.inf
-            return acq, grad
-
-        else:
-            acq = [self.compute(x[np.newaxis, :], derivative) for x in X]
-            acq = np.array(acq)[:, :, 0]
-            if np.any(np.isnan(acq)):
-                idx = np.where(np.isnan(acq))[0]
-                acq[idx, :] = -np.finfo(np.float).max
-            return acq
-
-    def compute(self, X, derivative=False):
+    @abc.abstractmethod
+    def _compute(self, X, derivative=False):
         """
         Computes the acquisition value for a given point X. This function has
         to be overwritten in a derived class.
 
         Parameters
         ----------
-        X: np.ndarray(1, D), The input point where the acquisition function
-            should be evaluate. The dimensionality of X is (N, D), with N as
+        X : np.ndarray
+            The input points where the acquisition function
+            should be evaluated. The dimensionality of X is (N, D), with N as
             the number of points to evaluate at and D is the number of
             dimensions of one X.
 
-        derivative: Boolean
+        derivative : Boolean
             If is set to true also the derivative of the acquisition
             function at X is returned
+
+        Returns
+        -------
+        np.ndarray :
         """
         raise NotImplementedError()
 
 
-class EI(AcquisitionFunction):
+class EI(AbstractAcquisitionFunction):
 
     def __init__(self,
                  model,
@@ -124,43 +124,24 @@ class EI(AcquisitionFunction):
                  - getCurrentBestX().
             If you want to calculate derivatives than it should also support
                  - predictive_gradients(X)
-
-        X_lower: np.ndarray (D)
-            Lower bounds of the input space
-        X_upper: np.ndarray (D)
-            Upper bounds of the input space
-        compute_incumbent: func
-            A python function that takes as input a model and returns
-            a np.array as incumbent
         par: float
             Controls the balance between exploration
             and exploitation of the acquisition function. Default is 0.01
         """
 
         super(EI, self).__init__(model)
+        self.long_name = 'Expected Improvement'
         self.par = par
         self.eta = None
 
-    def update(self, model, incumbent_value):
-        """
-        This method will be called if the model is updated.
-        Parameters
-        ----------
-        model : Model object
-            Models the objective function.
-        """
-
-        super(EI, self).update(model)
-        self.eta = incumbent_value
-
-    def compute(self, X, derivative=False, **kwargs):
+    def _compute(self, X, derivative=False, **kwargs):
         """
         Computes the EI value and its derivatives.
 
         Parameters
         ----------
-        X: np.ndarray(1, D), The input point where the acquisition function
-            should be evaluate. The dimensionality of X is (N, D), with N as
+        X: np.ndarray(N, D), The input points where the acquisition function
+            should be evaluated. The dimensionality of X is (N, D), with N as
             the number of points to evaluate at and D is the number of
             dimensions of one X.
 
@@ -170,38 +151,125 @@ class EI(AcquisitionFunction):
 
         Returns
         -------
-        np.ndarray(1,1)
+        np.ndarray(N,1)
             Expected Improvement of X
-        np.ndarray(1,D)
+        np.ndarray(N,1)
             Derivative of Expected Improvement at X (only if derivative=True)
         """
-        if X.shape[0] > 1:
-            raise ValueError("EI is only for single test points")
 
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
 
-        m, v = self.model.predict(X, full_cov=True)
-
+        m, v = self.model.predict_marginalized_over_instances(X)
+        assert m.shape[1] == 1
+        assert v.shape[1] == 1
         s = np.sqrt(v)
-        if (s == 0).any():
-            f = np.array([[0]])
-            df = np.zeros((1, X.shape[1]))
 
-        else:
-            z = (self.eta - m - self.par) / s
-            f = (self.eta - m - self.par) * norm.cdf(z) + s * norm.pdf(z)
-            if derivative:
-                dmdx, ds2dx = self.model.predictive_gradients(X)
-                dmdx = dmdx[0]
-                ds2dx = ds2dx[0][:, None]
-                dsdx = ds2dx / (2 * s)
-                df = (-dmdx * norm.cdf(z) + (dsdx * norm.pdf(z))).T
-            if (f < 0).any():
-                self.logger.error("Expected Improvement is smaller than 0!")
-                raise ValueError
+        if self.eta is None:
+            raise ValueError('No current best specified. Call update('
+                             'eta=<int>) to inform the acquisition function '
+                             'about the current best value.')
+
+        z = (self.eta - m - self.par) / s
+        f = (self.eta - m - self.par) * norm.cdf(z) + s * norm.pdf(z)
+        f[s == 0.0] = 0.0
+
+        if derivative:
+            dmdx, ds2dx = self.model.predictive_gradients(X)
+            dmdx = dmdx[0]
+            ds2dx = ds2dx[0][:, None]
+            dsdx = ds2dx / (2 * s)
+            df = (-dmdx * norm.cdf(z) + (dsdx * norm.pdf(z))).T
+            df[s == 0.0] = 0.0
+
+        if (f < 0).any():
+            self.logger.error("Expected Improvement is smaller than 0!")
+            raise ValueError
 
         if derivative:
             return f, df
         else:
             return f
+
+
+class EIPS(EI):
+    def __init__(self,
+                 model,
+                 par=0.01,
+                 **kwargs):
+        r"""
+        Computes for a given x the expected improvement as
+        acquisition value.
+        :math:`EI(X) :=
+            \frac{\mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) -
+                  f_{t+1}(\mathbf{X}) - \xi\right] \} ]}
+                  {np.log10(r(x))}`,
+        with :math:`f(X^+)` as the incumbent and :math:`r(x)` as runtime.
+
+        Parameters
+        ----------
+        model: Model object
+            A model that implements at least
+                 - predict(X)
+                 - getCurrentBestX().
+            If you want to calculate derivatives than it should also support
+                 - predictive_gradients(X)
+        par: float
+            Controls the balance between exploration
+            and exploitation of the acquisition function. Default is 0.01
+        """
+
+        super(EIPS, self).__init__(model)
+        self.long_name = 'Expected Improvement per Second'
+
+    def _compute(self, X, derivative=False, **kwargs):
+        """
+        Computes the EIPS value.
+
+        Parameters
+        ----------
+        X: np.ndarray(N, D), The input point where the acquisition function
+            should be evaluate. The dimensionality of X is (N, D), with N as
+            the number of points to evaluate at and D is the number of
+            dimensions of one X.
+
+        derivative: Boolean
+            Raises NotImplementedError if True.
+
+        Returns
+        -------
+        np.ndarray(N,1)
+            Expected Improvement per Second of X
+        """
+
+        if derivative:
+            raise NotImplementedError()
+
+        if len(X.shape) == 1:
+            X = X[:, np.newaxis]
+
+        m, v = self.model.predict_marginalized_over_instances(X)
+        assert m.shape[1] == 2
+        assert v.shape[1] == 2
+        m_cost = m[:, 0]
+        v_cost = v[:, 0]
+        # The model already predicts log(runtime)
+        m_runtime = m[:, 1]
+        s = np.sqrt(v_cost)
+
+        if self.eta is None:
+            raise ValueError('No current best specified. Call update('
+                             'eta=<int>) to inform the acquisition function '
+                             'about the current best value.')
+
+        z = (self.eta - m_cost - self.par) / s
+        f = (self.eta - m_cost - self.par) * norm.cdf(z) + s * norm.pdf(z)
+        f = f / m_runtime
+        f[s == 0.0] = 0.0
+
+        if (f < 0).any():
+            self.logger.error("Expected Improvement per Second is smaller than "
+                              "0!")
+            raise ValueError
+
+        return f.reshape((-1, 1))

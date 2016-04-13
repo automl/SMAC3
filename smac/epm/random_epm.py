@@ -1,8 +1,7 @@
 import logging
-import numpy
+import numpy as np
 
 import smac.runhistory.runhistory
-import smac.epm.base_epm
 import smac.configspace
 
 __author__ = "Katharina Eggensperger"
@@ -13,67 +12,41 @@ __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class RandomEpm(smac.epm.base_epm.baseEPM):
+class RandomEpm(object):
     '''implement an epm, which returns only random values'''
 
-    def __init__(self, rng):
+    def __init__(self, seed):
         '''
         initialize random number generator and logger
 
         Parameters
         ----------
-        rng : int
+        seed : int
         '''
         self.logger = logging.getLogger("random_epm")
-        numpy.random.seed(rng)
+        self.rng = np.random.RandomState(seed)
 
-    def fit(self, run_history):
+    def train(self, X, Y, **kwargs):
         '''
-        fit model to run history
+        Trains the random forest on X and Y.
 
         Parameters
         ----------
-        run_history : dict
-            Object that keeps complete run_history
+        X: np.ndarray (N, D)
+            Input data points. The dimensionality of X is (N, D),
+            with N as the number of points and D is the number of features.
+        Y: np.ndarray (N, 1)
+            The corresponding target values.
         '''
 
-        # (KE) I assume a model can either read run_history or run_history
-        # provides a method to transform data to a matrix
-        if not isinstance(run_history, smac.runhistory.runhistory.RunHistory):
-            raise NotImplementedError("Can only fit on run_history")
+        if not isinstance(X, np.ndarray):
+            raise NotImplementedError("X has to be of type np.ndarray")
+        if not isinstance(Y, np.ndarray):
+            raise NotImplementedError("Y has to be of type np.ndarray")
+
         self.logger.debug("Fit model to data")
 
-    def update(self, config, value, instance_feature=None):
-                '''
-        Update model (if possible)
-
-        Parameters
-        ----------
-        config : configSpace.config
-            configuration
-        value : float
-            costs for config
-        instance_features : list
-            list of instance features
-        '''
-
-        if not isinstance(config, smac.configspace.configuration):
-            raise NotImplementedError("Can only update with "
-                                      "smac.configspace.configuration")
-        if not isinstance(value, (float, int)):
-            raise NotImplementedError("Accepts only floats as objective value")
-        if instance_feature is not None and \
-                not isinstance(instance_feature, list):
-            raise NotImplementedError("Can only update with instance_feature"
-                                      " being a list")
-
-        dummy_run_history = smac.runhistory.runhistory.RunHistory()
-        dummy_run_history.add(config, value, instance_feature)
-        # (KE) If a model is updateable, it will read a run_history entry
-        # or matrix
-        self.logger.debug("Update model with one sample")
-
-    def predict(self, configs, instance_features=None):
+    def predict(self, X):
         '''
         Predict values for configs
 
@@ -89,8 +62,6 @@ class RandomEpm(smac.epm.base_epm.baseEPM):
         -------
         predictions
         '''
-        if not isinstance(configs, list):
-            raise NotImplementedError("Can only predict for lists of configs")
-        # (KE): I assume a model can either read a list of config or configspace
-        # provides a method to transform data to matrix
-        return numpy.random.rand(len(configs), 1)
+        if not isinstance(X, np.ndarray):
+            raise NotImplementedError("X has to be of type np.ndarray")
+        return self.rng.rand(len(X), 1), self.rng.rand(len(X), 1)

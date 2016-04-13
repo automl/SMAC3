@@ -3,10 +3,10 @@ import sys
 import logging
 import numpy as np
 
-from utils.io.cmd_reader import CMDReader
-from scenario.scenario import Scenario
-from smbo.smbo import SMBO
-from stats.stats import Stats
+from smac.utils.io.cmd_reader import CMDReader
+from smac.scenario.scenario import Scenario
+from smac.smbo.smbo import SMBO
+from smac.stats.stats import Stats
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -33,7 +33,7 @@ class SMAC(object):
         '''
 
         cmd_reader = CMDReader()
-        args_ = cmd_reader.read_cmd()
+        args_, misc_args = cmd_reader.read_cmd()
 
         logging.basicConfig(level=args_.verbose_level)
 
@@ -42,7 +42,7 @@ class SMAC(object):
         if args_.verbose_level == "DEBUG":
             self.logger.parent.level = 10
 
-        scen = Scenario(args_.scenario_file)
+        scen = Scenario(args_.scenario_file, misc_args)
 
         # necessary to use stats options related to scenario information
         Stats.scenario = scen

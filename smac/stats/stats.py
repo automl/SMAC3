@@ -35,7 +35,7 @@ class Stats(object):
         if Stats.scenario:
             Stats._start_time = time.time()
         else:
-            raise "Scenario is missing"
+            raise ValueError("Scenario is missing")
 
     @staticmethod
     def get_used_wallclock_time():

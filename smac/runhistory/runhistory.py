@@ -11,6 +11,8 @@ __maintainer__ = "Marius Lindauer"
 __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
+MAXINT = 2 ** 31 - 1
+
 
 class RunHistory(object):
 
@@ -36,6 +38,8 @@ class RunHistory(object):
         self.config_ids = {}  # config -> id
         self.ids_config = {}  # id -> config
         self._n_id = 0
+
+        self.cost_per_config = {} # config_id -> cost
 
     def add(self, config, cost, time,
             status, instance_id=None,
@@ -82,24 +86,31 @@ class RunHistory(object):
 
         self.data[k] = v
 
+    def update_cost(self, config, cost):
+        config_id = self.config_ids[config.__repr__()]
+        self.cost_per_config[config_id] = cost
+
+    def get_cost(self, config):
+        config_id = self.config_ids[config.__repr__()]
+        return self.cost_per_config[config_id]
+
     def get_runs_for_config(self, config):
-        '''
-        given a configuration return all runs (instance, seed) of this config
-        Attributes
+        """Return all runs (instance seed pairs) for a configuration.
+
+        Parameters
         ----------
-            config: Configuration from ConfigSpace
-                parameter configuration
+        config : Configuration from ConfigSpace
+            parameter configuration
         Returns
         ----------
             list: tuples of instance, seed, time
-        '''
-        InstSeedTuple = collections.namedtuple(
-            "Inst_Seed", ["instance", "seed", "time", "cost"])
+        """
+        InstanceSeedPair = collections.namedtuple("InstanceSeedPair",
+                                                  ["instance", "seed"])
         list_ = []
         for k in self.data:
             if config == self.ids_config[k.config_id]:
-                ist = InstSeedTuple(
-                    k.instance_id, k.seed, self.data[k].time, self.data[k].cost)
+                ist = InstanceSeedPair(k.instance_id, k.seed)
                 list_.append(ist)
         return list_
 
@@ -125,9 +136,9 @@ class RunHistory(object):
         '''
 
         id_vec = dict([(id_, conf.get_array().tolist())
-                       for id_, conf in self.ids_config.iteritems()])
+                       for id_, conf in self.ids_config.items()])
 
-        data = [(list(k), list(v)) for k, v in self.data.iteritems()]
+        data = [([int(k.config_id), str(k.instance_id), int(k.seed)], list(v)) for k, v in self.data.items()]
 
         with open(fn, "w") as fp:
             json.dump({"data": data,
@@ -150,11 +161,11 @@ class RunHistory(object):
             all_data = json.load(fp)
 
         self.ids_config = dict([(int(id_), Configuration(
-            cs, vector=numpy.array(vec))) for id_, vec in all_data["id_config"].iteritems()])
+            cs, vector=numpy.array(vec))) for id_, vec in all_data["id_config"].items()])
 
 
         self.config_ids = dict([(Configuration(
-            cs, vector=numpy.array(vec)).__repr__(), id_) for id_, vec in all_data["id_config"].iteritems()])
+            cs, vector=numpy.array(vec)).__repr__(), id_) for id_, vec in all_data["id_config"].items()])
         self._n_id = len(self.config_ids)
         
         self.data = dict([(self.RunKey(int(k[0]), k[1], int(k[2])),

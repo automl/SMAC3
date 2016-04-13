@@ -1,8 +1,9 @@
+import abc
 import copy
 from collections import OrderedDict
 import logging
 
-import numpy
+import numpy as np
 
 from smac.tae.execute_ta_run import StatusType
 from smac.runhistory.runhistory import RunHistory
@@ -27,7 +28,9 @@ class RunType(object):
     CENSORED = 3
 
 
-class RunHistory2EPM(object):
+class AbstractRunHistory2EPM(object):
+    __metaclass__ = abc.ABCMeta
+
     '''
         takes a runhistory object and preprocess data in order to train EPM
     '''
@@ -35,7 +38,7 @@ class RunHistory2EPM(object):
     def __init__(self, scenario, num_params,
                  success_states=None,
                  impute_censored_data=False, impute_state=None, imputor=None,
-                 log_y=False, rs=None):
+                 rs=None):
         '''
         Constructor
         Parameters
@@ -55,8 +58,6 @@ class RunHistory2EPM(object):
             in combination with runtime < cutoff_time
         rs : numpy.random.RandomState
             only used for reshuffling data after imputation
-        log_y: bool
-            if we optimize runtime, we use a log-transformation on y
         '''
         self.logger = logging.getLogger("runhistory2epm")
 
@@ -74,7 +75,7 @@ class RunHistory2EPM(object):
 
         # Fill with some default values
         if rs is None:
-            self.rs = numpy.random.RandomState()
+            self.rs = np.random.RandomState()
 
         if self.impute_state is None:
             self.impute_state = [StatusType.TIMEOUT, ]
@@ -94,7 +95,6 @@ class RunHistory2EPM(object):
 
         self.logger = logging.getLogger("runhistory2epm")
         self.num_params = num_params
-        self.log_y = log_y
 
         # Sanity checks
         # TODO: Decide whether we need this
@@ -116,30 +116,9 @@ class RunHistory2EPM(object):
                              "smac.epm.base_imputor.BaseImputor, but %s" %
                              type(self.imputor))
 
+    @abc.abstractmethod
     def _build_matrix(self, run_list, runhistory, instances=None):
-        # First build nan-matrix of size #configs x #params+1
-        n_rows = len(run_list)
-        n_cols = self.num_params
-        X = numpy.ones([n_rows, n_cols+self.n_feats]) * numpy.nan
-        Y = numpy.ones([n_rows, 1])
-
-        # Then populate matrix
-        for row, (key, run) in enumerate(run_list.items()):
-            # Scaling is automatically done in configSpace
-            conf = runhistory.ids_config[key.config_id]
-            conf = impute_inactive_values(conf)
-            if self.n_feats:
-                feats = self.instance_features[key.instance_id]
-                X[row, :] = numpy.hstack((conf.get_array(), feats))
-            else:
-                X[row, :] = conf.get_array()
-            #run_array[row, -1] = instances[row]
-            Y[row, 0] = run.cost
-
-        if self.log_y:
-            Y = numpy.log10(Y)
-            
-        return X, Y
+        raise NotImplementedError()
 
     def transform(self, runhistory):
         '''
@@ -183,8 +162,8 @@ class RunHistory2EPM(object):
                                                   instances=c_instance_id_list)
 
                 # Also impute TIMEOUTS
-                cen_X = numpy.vstack((cen_X, tX))
-                cen_Y = numpy.concatenate((cen_Y, tY))
+                cen_X = np.vstack((cen_X, tX))
+                cen_Y = np.concatenate((cen_Y, tY))
                 self.logger.debug("%d TIMOUTS, %d censored, %d regular" %
                                   (tX.shape[0], cen_X.shape[0], X.shape[0]))
 
@@ -192,12 +171,12 @@ class RunHistory2EPM(object):
                                             uncensored_X=X, uncensored_y=Y)
 
                 # Shuffle data to mix censored and imputed data
-                X = numpy.vstack((X, cen_X))
-                Y = numpy.concatenate((Y, imp_Y))
+                X = np.vstack((X, cen_X))
+                Y = np.concatenate((Y, imp_Y))
         else:
             # If we do not impute,we also return TIMEOUT data
-            X = numpy.vstack((X, tX))
-            Y = numpy.concatenate((Y, tY))
+            X = np.vstack((X, tX))
+            Y = np.concatenate((Y, tY))
 
         return X, Y
 
@@ -242,3 +221,78 @@ class RunHistory2EPM(object):
             raise ValueError(err_msg)
 
         return new_dict
+
+
+class RunHistory2EPM4LogCost(AbstractRunHistory2EPM):
+    def _build_matrix(self, run_list, runhistory, instances=None):
+        # First build nan-matrix of size #configs x #params+1
+        n_rows = len(run_list)
+        n_cols = self.num_params
+        X = np.ones([n_rows, n_cols + self.n_feats]) * np.nan
+        y = np.ones([n_rows, 1])
+
+        # Then populate matrix
+        for row, (key, run) in enumerate(run_list.items()):
+            # Scaling is automatically done in configSpace
+            conf = runhistory.ids_config[key.config_id]
+            conf = impute_inactive_values(conf)
+            if self.n_feats:
+                feats = self.instance_features[key.instance_id]
+                X[row, :] = np.hstack((conf.get_array(), feats))
+            else:
+                X[row, :] = conf.get_array()
+            # run_array[row, -1] = instances[row]
+            y[row, 0] = run.cost
+
+        y = np.log10(y)
+
+        return X, y
+
+
+class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
+    def _build_matrix(self, run_list, runhistory, instances=None):
+        # First build nan-matrix of size #configs x #params+1
+        n_rows = len(run_list)
+        n_cols = self.num_params
+        X = np.ones([n_rows, n_cols + self.n_feats]) * np.nan
+        y = np.ones([n_rows, 1])
+
+        # Then populate matrix
+        for row, (key, run) in enumerate(run_list.items()):
+            # Scaling is automatically done in configSpace
+            conf = runhistory.ids_config[key.config_id]
+            conf = impute_inactive_values(conf)
+            if self.n_feats:
+                feats = self.instance_features[key.instance_id]
+                X[row, :] = np.hstack((conf.get_array(), feats))
+            else:
+                X[row, :] = conf.get_array()
+            # run_array[row, -1] = instances[row]
+            y[row, 0] = run.cost
+
+        return X, y
+
+
+class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
+    def _build_matrix(self, run_list, runhistory, instances=None):
+        # First build nan-matrix of size #configs x #params+1
+        n_rows = len(run_list)
+        n_cols = self.num_params
+        X = np.ones([n_rows, n_cols + self.n_feats]) * np.nan
+        Y = np.ones([n_rows, 2])
+
+        # Then populate matrix
+        for row, (key, run) in enumerate(run_list.items()):
+            # Scaling is automatically done in configSpace
+            conf = runhistory.ids_config[key.config_id]
+            conf = impute_inactive_values(conf)
+            if self.n_feats:
+                feats = self.instance_features[key.instance_id]
+                X[row, :] = np.hstack((conf.get_array(), feats))
+            else:
+                X[row, :] = conf.get_array()
+            # run_array[row, -1] = instances[row]
+            Y[row, 0] = run.cost
+            Y[row, 1] = np.log(1 + run.time)
+
+        return X, Y

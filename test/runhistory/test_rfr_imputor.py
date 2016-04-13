@@ -152,10 +152,9 @@ class ImputorTest(unittest.TestCase):
                                              change_threshold=0.01, max_iter=10,
                                              model=self.model)
 
-        r2e = runhistory2epm.RunHistory2EPM(scenario=self.scen, num_params=3,
-                                            success_states=[StatusType.SUCCESS, ],
-                                            impute_censored_data=True,
-                                            impute_state=[StatusType.TIMEOUT],
-                                            imputor=imputor,
-                                            rs=rs)
+        r2e = runhistory2epm.RunHistory2EPM4LogCost(
+            scenario=self.scen, num_params=3,
+            success_states=[StatusType.SUCCESS, ],
+            impute_censored_data=True, impute_state=[StatusType.TIMEOUT],
+            imputor=imputor, rs=rs)
         print("%s" % str(r2e.transform(self.rh)[0]))
