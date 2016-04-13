@@ -263,9 +263,8 @@ class SMBO(BaseSolver):
             return self.config_space.sample_configuration()
 
         self.model.train(X, Y)
-        
         #TODO: How to get the target value of the run
-        incumbent_value = np.min(Y)
+        incumbent_value = np.array([[np.min(Y)]])
         self.acquisition_func.update(self.model, incumbent_value)
 
         configs_acq = []
@@ -278,7 +277,6 @@ class SMBO(BaseSolver):
                 start_point = self.config_space.sample_configuration()
 
             configuration, acq_val = self.local_search.maximize(start_point)
-
             configs_acq.append((configuration, acq_val[0][0]))
 
         # shuffle for random tie-break
