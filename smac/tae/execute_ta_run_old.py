@@ -118,6 +118,7 @@ class ExecuteTARunOld(object):
                     status, runtime, runlength, quality, seed, additional_info = fields
                     additional_info = {"additional_info": additional_info}
 
+                Stats.ta_time_used += float(runtime)
                 runtime = min(float(runtime), cutoff)
                 quality = float(quality)
                 seed = int(seed)
@@ -134,8 +135,6 @@ class ExecuteTARunOld(object):
             sys.exit(43)
         elif status in ["MEMOUT"]:
             status = StatusType.MEMOUT
-
-        Stats.ta_time_used += float(runtime)
 
         if status in [StatusType.CRASHED, StatusType.ABORT]:
             self.logger.warn(
