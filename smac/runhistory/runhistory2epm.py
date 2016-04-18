@@ -147,6 +147,11 @@ class AbstractRunHistory2EPM(object):
         tX, tY = self._build_matrix(run_list=t_run_list, runhistory=runhistory,
                                     instances=t_instance_id_list)
 
+        # if we don't have successful runs,
+        # we have to return all timeout runs
+        if not s_run_list:
+            return tX, tY
+
         if self.impute_censored_data:
             # Get all censored runs
             c_run_list = self.__select_runs(rh_data=copy.deepcopy(runhistory.data),
@@ -224,6 +229,7 @@ class AbstractRunHistory2EPM(object):
 
 
 class RunHistory2EPM4LogCost(AbstractRunHistory2EPM):
+
     def _build_matrix(self, run_list, runhistory, instances=None):
         # First build nan-matrix of size #configs x #params+1
         n_rows = len(run_list)
@@ -250,6 +256,7 @@ class RunHistory2EPM4LogCost(AbstractRunHistory2EPM):
 
 
 class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
+
     def _build_matrix(self, run_list, runhistory, instances=None):
         # First build nan-matrix of size #configs x #params+1
         n_rows = len(run_list)
@@ -274,6 +281,7 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
 
 
 class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
+
     def _build_matrix(self, run_list, runhistory, instances=None):
         # First build nan-matrix of size #configs x #params+1
         n_rows = len(run_list)
