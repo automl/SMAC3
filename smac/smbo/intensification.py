@@ -121,7 +121,7 @@ class Intensifier(object):
 
             # Line 3
             # First evaluate incumbent on a new instance
-            if len(inc_runs) <= self.maxR:
+            if len(inc_runs) < self.maxR:
                 # Line 4
                 # find all instances that have the most runs on the inc
                 inc_inst = [s.instance for s in inc_runs]
