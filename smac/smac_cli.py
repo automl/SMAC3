@@ -17,6 +17,7 @@ __version__ = "0.0.1"
 
 
 class SMAC(object):
+
     '''
     main class of SMAC
     '''
@@ -37,10 +38,8 @@ class SMAC(object):
 
         logging.basicConfig(level=args_.verbose_level)
 
-        # TODO: hack to set logger level as long as some of our dependencies does not handle logger
-        # in a correct ways
-        if args_.verbose_level == "DEBUG":
-            self.logger.parent.level = 10
+        root_logger = logging.getLogger()
+        root_logger.setLevel(args_.verbose_level)
 
         scen = Scenario(args_.scenario_file, misc_args)
 
@@ -54,6 +53,6 @@ class SMAC(object):
         finally:
             Stats.print_stats()
             self.logger.info("Final Incumbent: %s" % (smbo.incumbent))
- 
+
             smbo.runhistory.save_json()
             #smbo.runhistory.load_json(fn="runhistory.json", cs=smbo.config_space)
