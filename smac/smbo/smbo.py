@@ -21,6 +21,7 @@ from smac.smbo.objective import average_cost, total_runtime
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
+from smac.utils.io.traj_logging import TrajLogger
 
 from smac.epm.rfr_imputator import RFRImputator
 
@@ -28,7 +29,7 @@ MAXINT = 2 ** 31 - 1
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"
-__license__ = "GPLv3"
+__license__ = "AGPLv3"
 #__maintainer__ = "???"
 #__email__ = "???"
 __version__ = "0.0.1"
@@ -37,7 +38,7 @@ __version__ = "0.0.1"
 def get_types(config_space, instance_features=None):
     # Extract types vector for rf from config space
     types = np.zeros(len(config_space.get_hyperparameters()),
-                          dtype=np.uint)
+                     dtype=np.uint)
 
     for i, param in enumerate(config_space.get_hyperparameters()):
         if isinstance(param, (CategoricalHyperparameter)):
@@ -182,6 +183,7 @@ class SMBO(BaseSolver):
             raise ValueError('Unknown run objective: %s. Should be either '
                              'quality or runtime.' % self.scenario.run_obj)
 
+        self.trajLogger = TrajLogger()
 
     def run_initial_design(self):
         '''
@@ -189,6 +191,11 @@ class SMBO(BaseSolver):
             default implementation: running the default configuration on
                                     a random instance-seed pair
             Side effect: adds runs to self.runhistory
+
+            Returns
+            -------
+            incumbent: Configuration()
+                initial incumbent configuration
         '''
 
         default_conf = self.config_space.get_default_configuration()
@@ -216,10 +223,14 @@ class SMBO(BaseSolver):
                             instance_id=rand_inst,
                             seed=initial_seed,
                             additional_info=additional_info)
-        defaul_inst_seeds = set(self.runhistory.get_runs_for_config(default_conf))
+        defaul_inst_seeds = set(
+            self.runhistory.get_runs_for_config(default_conf))
         default_perf = self.objective(default_conf, self.runhistory,
                                       defaul_inst_seeds)
         self.runhistory.update_cost(default_conf, default_perf)
+
+        Stats.inc_changed += 1  # first incumbent
+        return default_conf
 
     def run(self, max_iters=10):
         '''
@@ -239,7 +250,13 @@ class SMBO(BaseSolver):
 
         #self.runhistory = RunHisory()
 
-        self.run_initial_design()
+        self.incumbent = self.run_initial_design()
+
+        self.trajLogger.add_entry(train_perf=999999999,
+                                  incumbent_id=Stats.inc_changed,
+                                  incumbent=self.incumbent)
+
+        inc_id = Stats.inc_changed  # ID of incumbent
 
         # Main BO loop
         iteration = 1
@@ -258,7 +275,7 @@ class SMBO(BaseSolver):
 
             self.logger.debug("Intensify")
 
-            self.incumbent = self.inten.intensify(
+            self.incumbent, inc_perf = self.inten.intensify(
                 challengers=challengers,
                 incumbent=self.incumbent,
                 run_history=self.runhistory,
@@ -281,6 +298,12 @@ class SMBO(BaseSolver):
                     Stats.get_remaining_ta_budget() < 0 or \
                     Stats.get_remaining_ta_runs() < 0:
                 break
+
+            if Stats.inc_changed > inc_id:
+                self.trajLogger.add_entry(train_perf=inc_perf,
+                                          incumbent_id=Stats.inc_changed,
+                                          incumbent=self.incumbent)
+                inc_id = Stats.inc_changed
 
         return self.incumbent
 
@@ -326,12 +349,12 @@ class SMBO(BaseSolver):
             self._get_next_by_local_search(num_configurations_by_local_search)
 
         next_configs_by_acq_value = next_configs_by_random_search_sorted + \
-                                    next_configs_by_local_search
+            next_configs_by_local_search
         next_configs_by_acq_value.sort(reverse=True, key=lambda x: x[0])
         next_configs_by_acq_value = [_[1] for _ in next_configs_by_acq_value]
 
-        challengers =list(itertools.chain(*zip(next_configs_by_acq_value,
-                                               next_configs_by_random_search)))
+        challengers = list(itertools.chain(*zip(next_configs_by_acq_value,
+                                                next_configs_by_random_search)))
         return challengers
 
     def _get_next_by_random_search(self, num_points=1000, _sorted=False):
@@ -355,11 +378,13 @@ class SMBO(BaseSolver):
         if _sorted:
             imputed_rand_configs = map(ConfigSpace.util.impute_inactive_values,
                                        rand_configs)
-            imputed_rand_configs = [x.get_array() for x in imputed_rand_configs]
+            imputed_rand_configs = [x.get_array()
+                                    for x in imputed_rand_configs]
             imputed_rand_configs = np.array(imputed_rand_configs,
                                             dtype=np.float64)
             acq_values = self.acquisition_func(imputed_rand_configs)
-            # From here http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values
+            # From here
+            # http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values
             random = self.rng.rand(len(acq_values))
             # Last column is primary sort key!
             indices = np.lexsort((random.flatten(), acq_values.flatten()))
@@ -413,4 +438,3 @@ class SMBO(BaseSolver):
         configs_acq.sort(reverse=True, key=lambda x: x[0])
 
         return configs_acq
-
