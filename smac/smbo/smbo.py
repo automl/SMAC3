@@ -90,6 +90,9 @@ class SMBO(BaseSolver):
         rng: numpy.random.RandomState
             Random number generator
         '''
+        
+        self.runhistory = RunHistory()
+        
         self.logger = logging.getLogger("smbo")
 
         if rng is None:
@@ -234,7 +237,7 @@ class SMBO(BaseSolver):
         '''
         Stats.start_timing()
 
-        self.runhistory = RunHistory()
+        #self.runhistory = RunHisory()
 
         self.run_initial_design()
 
