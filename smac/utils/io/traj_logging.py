@@ -137,3 +137,4 @@ class TrajLogger(object):
 
         with open(self.aclib_traj_fn, "a") as fp:
             json.dump(traj_entry, fp)
+            fp.write("\n")
