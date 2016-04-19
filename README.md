@@ -1,6 +1,6 @@
 # SMAC v3 Project
 
-Copyright (C) 2016  [ML4AAD Group](http://aad.informatik.uni-freiburg.de/)
+Copyright (C) 2016  [ML4AAD Group](http://www.ml4aad.org/)
 
 __Attention__: This package is under heavy development and subject to change. 
 A stable release of SMAC (v2) in Java can be found [here](http://www.cs.ubc.ca/labs/beta/Projects/SMAC/).
@@ -46,13 +46,21 @@ You should have received a copy of the GNU Affero General Public License
 along with this program (see LICENSE file). 
 If not, see <http://www.gnu.org/licenses/>.
 
+# USAGE
+
+The usage of SMAC v3 is mainly the same as provided with [SMAC v2.08](www.cs.ubc.ca/labs/beta/Projects/SMAC/v2.08.00/manual.pdf).
+It supports the same parameter configuration space syntax and interface to target algorithms.
+Please note that we do not support the extended parameter configuration syntax introduced in SMACv2.10.
+
 # Examples
 
 See examples/
 
-  * examples/rosenbrock.py - example on how to optimize a Python function (REQUIRES PYNISHER: https://github.com/sfalkner/pynisher)
+  * examples/rosenbrock.py - example on how to optimize a Python function (REQUIRES [PYNISHER](https://github.com/sfalkner/pynisher) )
   * examples/spear_qcp/run.sh - example on how to optimize the SAT solver Spear on a set of SAT formulas
  
 # Contact
  
-SMAC v3 is developed by the [ML4AAD Group of the University of Freiburg](http://aad.informatik.uni-freiburg.de/).
+SMAC v3 is developed by the [ML4AAD Group of the University of Freiburg](http://www.ml4aad.org/).
+
+If you found a bug, please report to https://bitbucket.org/aadfreiburg/smac3/
