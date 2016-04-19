@@ -11,7 +11,6 @@ import numpy
 from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
 
 from smac.smbo.objective import total_runtime, sum_cost
-from smac.utils.io.traj_logging import TrajLogger
 from smac.stats.stats import Stats
 
 __author__ = "Katharina Eggensperger, Marius Lindauer"
@@ -72,7 +71,6 @@ class Intensifier(object):
         self.run_obj_time = run_obj_time
         self.tae = executor
 
-        self.trajLogger = TrajLogger()
         self.Adaptive_Capping_Slackfactor = 1.2
 
         if self.run_limit < 1:
@@ -102,6 +100,8 @@ class Intensifier(object):
             -------
             incumbent: Configuration()
                 current (maybe new) incumbent configuration
+            inc_perf: float
+                empirical performance of incumbent configuration 
         '''
 
         self.start_time = time.time()
@@ -246,9 +246,6 @@ class Intensifier(object):
                     incumbent = challenger
                     inc_perf = chal_perf
                     Stats.inc_changed += 1
-                    self.trajLogger.add_entry(train_perf=chal_perf / n_samples,
-                                              incumbent_id=Stats.inc_changed,
-                                              incumbent=challenger)
                     break
                 # Line 17
                 else:
@@ -271,4 +268,4 @@ class Intensifier(object):
         self.logger.info("Updated estimated performance of incumbent on %d runs: %.4f" % (
             len(inc_runs), inc_perf))
 
-        return incumbent
+        return incumbent, inc_perf
