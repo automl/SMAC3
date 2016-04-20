@@ -28,5 +28,6 @@ setuptools.setup(
     ],
     platforms=['Linux'],
     install_requires=requirements,
+    tests_require=['mock', 'nose'],
     test_suite='nose.collector'
 )
