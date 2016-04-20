@@ -26,7 +26,6 @@ class BaseImputor(object):
         Parameters
         ----------
         censored_x : array
-            Object that keeps complete run_history
         censored_y : list
         uncensored_x : array
         uncensored_y : list
