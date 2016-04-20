@@ -27,7 +27,11 @@ class RunHistory(object):
         '''
         Constructor
         '''
-        self.data = {}
+
+        # By having the data in a deterministic order we can do useful tests
+        # when we serialize the data and can assume it's still in the same
+        # order as it was added.
+        self.data = collections.OrderedDict()
 
         self.RunKey = collections.namedtuple(
             'RunKey', ['config_id', 'instance_id', 'seed'])
@@ -138,24 +142,27 @@ class RunHistory(object):
         id_vec = dict([(id_, conf.get_array().tolist())
                        for id_, conf in self.ids_config.items()])
 
-        data = [([int(k.config_id), str(k.instance_id), int(k.seed)], list(v)) for k, v in self.data.items()]
+        data = [([int(k.config_id),
+                  str(k.instance_id) if k.instance_id is not None else None,
+                  int(k.seed)], list(v))
+                for k, v in self.data.items()]
 
         with open(fn, "w") as fp:
             json.dump({"data": data,
                        "id_config": id_vec}, fp)
 
     def load_json(self, fn, cs):
-        '''
-        loads runhistory from disk in json represantation
+        """Load and runhistory in json representation from disk.
+
         Overwrites current runthistory!
 
         Parameters
         ----------
-        fn: str
+        fn : str
             file name to load from
-        cs: ConfigSpace
+        cs : ConfigSpace
             instance of configuration space
-        '''
+        """
 
         with open(fn) as fp:
             all_data = json.load(fp)
@@ -172,3 +179,29 @@ class RunHistory(object):
                            self.RunValue(float(v[0]), float(v[1]), v[2], v[3]))
                           for k, v in all_data["data"]
                           ])
+
+    def update_from_json(self, fn, cs):
+        """Update the current runhistory by adding new runs from a json file.
+
+        Parameters
+        ----------
+        fn : str
+            file name to load from
+        cs : ConfigSpace
+            instance of configuration space
+        """
+
+        new_runhistory = RunHistory()
+        new_runhistory.load_json(fn, cs)
+
+        # Configurations might be already known, but by a different ID. This
+        # does not matter here because the add() method handles this
+        # correctly by assigning an ID to unknown configurations and re-using
+        #  the ID
+        for key, value in new_runhistory.data.items():
+            config_id, instance_id, seed = key
+            cost, time, status, additional_info = value
+            config = new_runhistory.ids_config[config_id]
+            self.add(config=config, cost=cost, time=time,
+                     status=status, instance_id=instance_id,
+                     seed=seed, additional_info=additional_info)

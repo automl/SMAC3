@@ -23,7 +23,7 @@ class TrajLogger(object):
         logger : Logger oject
     """
 
-    def __init__(self, output_dir="smac3-output"):
+    def __init__(self, output_dir):
         """
         Constructor 
 

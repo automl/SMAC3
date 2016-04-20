@@ -1,6 +1,7 @@
 import itertools
 import logging
 import numpy as np
+import os
 import random
 import sys
 import time
@@ -14,6 +15,7 @@ from smac.smbo.base_solver import BaseSolver
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.smbo.local_search import LocalSearch
 from smac.smbo.intensification import Intensifier
+from smac.smbo import pSMAC
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, \
     RunHistory2EPM4LogCost
@@ -95,6 +97,11 @@ class SMBO(BaseSolver):
         self.runhistory = RunHistory()
         
         self.logger = logging.getLogger("smbo")
+
+        if isinstance(rng, int):
+            self.num_run = rng
+        else:
+            self.num_run = np.random.randint(200000)
 
         if rng is None:
             self.rng = np.random.RandomState(seed=np.random.randint(10000))
@@ -183,7 +190,7 @@ class SMBO(BaseSolver):
             raise ValueError('Unknown run objective: %s. Should be either '
                              'quality or runtime.' % self.scenario.run_obj)
 
-        self.trajLogger = TrajLogger()
+        self.trajLogger = TrajLogger(self.scenario.output_dir)
 
     def run_initial_design(self):
         '''
@@ -261,6 +268,11 @@ class SMBO(BaseSolver):
         # Main BO loop
         iteration = 1
         while True:
+            if self.scenario.shared_model:
+                pSMAC.read(run_history=self.runhistory,
+                           output_directory=self.scenario.output_dir,
+                           configuration_space=self.config_space,
+                           logger=self.logger)
 
             start_time = time.time()
             X, Y = self.rh2EPM.transform(self.runhistory)
@@ -283,6 +295,10 @@ class SMBO(BaseSolver):
                 time_bound=max(0.01, time_spend))
 
             # TODO: Write run history into database
+            if self.scenario.shared_model:
+                pSMAC.write(run_history=self.runhistory,
+                            output_directory=self.scenario.output_dir,
+                            num_run=self.num_run)
 
             if iteration == max_iters:
                 break
