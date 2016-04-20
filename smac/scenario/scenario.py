@@ -53,7 +53,7 @@ class Scenario(object):
         self.execdir = scenario.get("execdir", ".")
         self.deterministic = scenario.get("deterministic", "0") == "1" \
                              or scenario.get("deterministic", "0") == "true" \
-                             or scenario.get('deterministic', '0')
+                             or scenario.get('deterministic', '0') is True
         self.pcs_fn = scenario.get("paramfile", None)
         self.run_obj = scenario.get("run_obj", "runtime")
         self.overall_obj = scenario.get("overall_obj", "par10")
@@ -69,7 +69,7 @@ class Scenario(object):
         self.output_dir = scenario.get("output_dir", "smac3-output")
         self.shared_model = scenario.get("shared_model", "0") == "1" \
                             or scenario.get("shared_model", "0") == "true" \
-                            or scenario.get('shared_model', '0')
+                            or scenario.get('shared_model', '0') is True
 
         self.train_insts = scenario.get("instances", [[None]])
         self.test_insts = scenario.get("test_instances", [])
