@@ -70,8 +70,8 @@ class RunhistoryTest(unittest.TestCase):
         #print(ist[0])
         #print(ist[1])
         self.assertEqual(len(ist), 2)
-        self.assertEqual(ist[0].instance, 2)
-        self.assertEqual(ist[1].instance, 1)
+        self.assertEqual(ist[0].instance, 1)
+        self.assertEqual(ist[1].instance, 2)
 
 
 if __name__ == "__main__":

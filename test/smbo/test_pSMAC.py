@@ -1,0 +1,138 @@
+import json
+import os
+import shutil
+import unittest
+
+from smac.runhistory.runhistory import RunHistory
+from smac.utils import test_helpers
+from smac.tae.execute_ta_run import StatusType
+from smac.smbo import pSMAC
+
+
+class TestPSMAC(unittest.TestCase):
+    def setUp(self):
+        self.tmp_dir = os.path.join(os.path.dirname(__file__), '.test_pSMAC')
+        self._remove_tmp_dir()
+        os.makedirs(self.tmp_dir)
+
+    def tearDown(self):
+        self._remove_tmp_dir()
+
+    def _remove_tmp_dir(self):
+        try:
+            shutil.rmtree(self.tmp_dir)
+        except:
+            pass
+
+    def test_write(self):
+        # The nulls make sure that we correctly emit the python None value
+        fixture = '{"data": [[[1, "branin", 1], [1, 1, 1, null]], ' \
+                  '[[1, "branini", 1], [1, 1, 1, null]], ' \
+                  '[[2, "branini", 1], [1, 1, 1, null]], ' \
+                  '[[2, null, 1], [1, 1, 1, null]], ' \
+                  '[[3, "branin-hoo", 1], [1, 1, 1, null]], ' \
+                  '[[4, null, 1], [1, 1, 1, null]]], ' \
+                  '"id_config": {"4": [0.1862602113776709, 0.34556072704304774], ' \
+                  '"3": [0.14675589081711304, 0.0923385947687978], ' \
+                  '"1": [0.417022004702574, 0.7203244934421581], ' \
+                  '"2": [0.00011437481734488664, 0.30233257263183977]}}'
+
+        run_history = RunHistory()
+        configuration_space = test_helpers.get_branin_config_space()
+        configuration_space.seed(1)
+
+        config = configuration_space.sample_configuration()
+        # Config on two instances
+        run_history.add(config, 1, 1, StatusType.SUCCESS, seed=1,
+                        instance_id='branin')
+        run_history.add(config, 1, 1, StatusType.SUCCESS, seed=1,
+                        instance_id='branini')
+        config_2 = configuration_space.sample_configuration()
+        # Another config on a known instance
+        run_history.add(config_2, 1, 1, StatusType.SUCCESS, seed=1,
+                        instance_id='branini')
+        # Known Config on no instance
+        run_history.add(config_2, 1, 1, StatusType.SUCCESS, seed=1)
+        # New config on new instance
+        config_3 = configuration_space.sample_configuration()
+        run_history.add(config_3, 1, 1, StatusType.SUCCESS, seed=1,
+                        instance_id='branin-hoo')
+        # New config on no instance
+        config_4 = configuration_space.sample_configuration()
+        run_history.add(config_4, 1, 1, StatusType.SUCCESS, seed=1)
+
+        pSMAC.write(run_history, self.tmp_dir, 20)
+
+        output_filename = os.path.join(self.tmp_dir, '.runhistory_20.json')
+        self.assertTrue(os.path.exists(output_filename))
+
+        fixture = json.loads(fixture)
+        with open(output_filename) as fh:
+            output = json.load(fh)
+
+        print(output)
+        print(fixture)
+        self.assertEqual(output, fixture)
+
+    def test_load(self):
+        configuration_space = test_helpers.get_branin_config_space()
+
+        other_runhistory = '{"data": [[[2, "branini", 1], [1, 1, 1, null]], ' \
+        '[[1, "branin", 1], [1, 1, 1, null]], ' \
+        '[[3, "branin-hoo", 1], [1, 1, 1, null]], ' \
+        '[[2, null, 1], [1, 1, 1, null]], ' \
+        '[[1, "branini", 1], [1, 1, 1, null]], ' \
+        '[[4, null, 1], [1, 1, 1, null]]], ' \
+        '"id_config": {"1": [0.417022004702574, 0.7203244934421581], ' \
+        '"2": [0.00011437481734488664, 0.30233257263183977], ' \
+        '"3": [0.14675589081711304, 0.0923385947687978], ' \
+        '"4": [0.1862602113776709, 0.34556072704304774]}}'
+
+        other_runhistory_filename = os.path.join(self.tmp_dir,
+                                                 '.runhistory_20.json')
+        with open(other_runhistory_filename, 'w') as fh:
+            fh.write(other_runhistory)
+
+        # load from an empty runhistory
+        runhistory = RunHistory()
+        runhistory.load_json(other_runhistory_filename, configuration_space)
+        self.assertEqual(sorted(list(runhistory.ids_config.keys())),
+                         [1, 2, 3, 4])
+        self.assertEqual(len(runhistory.data), 6)
+
+        # load from non-empty runhistory, but existing run will be overridden
+        #  because it alread existed
+        runhistory = RunHistory()
+        configuration_space.seed(1)
+        config = configuration_space.sample_configuration()
+        runhistory.add(config, 1, 1, StatusType.SUCCESS, seed=1,
+                        instance_id='branin')
+        id_before = id(runhistory.data[runhistory.RunKey(1, 'branin', 1)])
+        runhistory.update_from_json(other_runhistory_filename,
+                                    configuration_space)
+        id_after = id(runhistory.data[runhistory.RunKey(1, 'branin', 1)])
+        self.assertEqual(len(runhistory.data), 6)
+        self.assertNotEqual(id_before, id_after)
+
+        # load from non-empty runhistory, but existing run will not be
+        # overridden, but config_id will be re-used
+        runhistory = RunHistory()
+        configuration_space.seed(1)
+        config = configuration_space.sample_configuration()
+        config = configuration_space.sample_configuration()
+        # This is the former config_3
+        config = configuration_space.sample_configuration()
+        runhistory.add(config, 1, 1, StatusType.SUCCESS, seed=1,
+                       instance_id='branin')
+        id_before = id(runhistory.data[runhistory.RunKey(1, 'branin', 1)])
+        runhistory.update_from_json(other_runhistory_filename,
+                                    configuration_space)
+        id_after = id(runhistory.data[runhistory.RunKey(1, 'branin', 1)])
+        self.assertEqual(len(runhistory.data), 7)
+        self.assertEqual(id_before, id_after)
+        print(runhistory.config_ids)
+        self.assertEqual(sorted(list(runhistory.ids_config.keys())),
+                         [1, 2, 3, 4])
+        print(list(runhistory.data.keys()))
+
+
