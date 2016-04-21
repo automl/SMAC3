@@ -78,10 +78,13 @@ class TestSMBO(unittest.TestCase):
     def test_rng(self):
         smbo = SMBO(self.scenario, rng=None)
         self.assertIsInstance(smbo.rng, np.random.RandomState)
+        self.assertIsInstance(smbo.num_run, int)
         smbo = SMBO(self.scenario, rng=1)
         rng = np.random.RandomState(1)
+        self.assertEqual(smbo.num_run, 1)
         self.assertIsInstance(smbo.rng, np.random.RandomState)
         smbo = SMBO(self.scenario, rng=rng)
+        self.assertIsInstance(smbo.num_run, int)
         self.assertIs(smbo.rng, rng)
         # ML: I don't understand the following line and it throws an error
         self.assertRaisesRegexp(TypeError,

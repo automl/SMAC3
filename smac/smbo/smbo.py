@@ -98,16 +98,14 @@ class SMBO(BaseSolver):
         
         self.logger = logging.getLogger("smbo")
 
-        if isinstance(rng, int):
-            self.num_run = rng
-        else:
-            self.num_run = np.random.randint(200000)
-
         if rng is None:
-            self.rng = np.random.RandomState(seed=np.random.randint(10000))
+            self.num_run = np.random.randint(1234567980)
+            self.rng = np.random.RandomState(seed=self.num_run)
         elif isinstance(rng, int):
+            self.num_run = rng
             self.rng = np.random.RandomState(seed=rng)
         elif isinstance(rng, np.random.RandomState):
+            self.num_run = rng.randint(1234567980)
             self.rng = rng
         else:
             raise TypeError('Unknown type %s for argument rng. Only accepts '
