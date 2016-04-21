@@ -17,16 +17,16 @@ class TestRFWithInstances(unittest.TestCase):
 
         model = RandomForestWithInstances(np.zeros((10,), dtype=np.uint))
         X = rs.rand(10)
-        self.assertRaisesRegex(ValueError, "Expected 2d array, got 1d array!",
-                               model.predict, X)
+        self.assertRaisesRegexp(ValueError, "Expected 2d array, got 1d array!",
+                                model.predict, X)
         X = rs.rand(10, 10, 10)
-        self.assertRaisesRegex(ValueError, "Expected 2d array, got 3d array!",
-                               model.predict, X)
+        self.assertRaisesRegexp(ValueError, "Expected 2d array, got 3d array!",
+                                model.predict, X)
 
         X = rs.rand(10, 5)
-        self.assertRaisesRegex(ValueError, "Rows in X should have 10 entries "
-                                           "but have 5!",
-                               model.predict, X)
+        self.assertRaisesRegexp(ValueError, "Rows in X should have 10 entries "
+                                            "but have 5!",
+                                model.predict, X)
 
     def test_predict(self):
         rs = np.random.RandomState(1)
@@ -74,9 +74,9 @@ class TestRFWithInstances(unittest.TestCase):
         m_hat, v_hat = model._predict(X[10])
         self.assertIsInstance(m_hat, float)
         self.assertIsInstance(v_hat, float)
-        self.assertRaisesRegex(ValueError, 'Buffer has wrong number of '
-                                           'dimensions \(expected 1, got 2\)',
-                               model._predict, X[10:])
+        self.assertRaisesRegexp(ValueError, 'Buffer has wrong number of '
+                                            'dimensions \(expected 1, got 2\)',
+                                model._predict, X[10:])
 
     def test_predict_marginalized_over_instances_wrong_X_dimensions(self):
         rs = np.random.RandomState(1)
@@ -84,16 +84,16 @@ class TestRFWithInstances(unittest.TestCase):
         model = RandomForestWithInstances(np.zeros((10,), dtype=np.uint),
                                           instance_features=rs.rand(10, 2))
         X = rs.rand(10)
-        self.assertRaisesRegex(ValueError, "Expected 2d array, got 1d array!",
-                               model.predict_marginalized_over_instances, X)
+        self.assertRaisesRegexp(ValueError, "Expected 2d array, got 1d array!",
+                                model.predict_marginalized_over_instances, X)
         X = rs.rand(10, 10, 10)
-        self.assertRaisesRegex(ValueError, "Expected 2d array, got 3d array!",
-                               model.predict_marginalized_over_instances, X)
+        self.assertRaisesRegexp(ValueError, "Expected 2d array, got 3d array!",
+                                model.predict_marginalized_over_instances, X)
 
         X = rs.rand(10, 5)
-        self.assertRaisesRegex(ValueError, "Rows in X should have 8 entries "
-                                           "but have 5!",
-                               model.predict_marginalized_over_instances, X)
+        self.assertRaisesRegexp(ValueError, "Rows in X should have 8 entries "
+                                            "but have 5!",
+                                model.predict_marginalized_over_instances, X)
 
     @mock.patch.object(RandomForestWithInstances, 'predict')
     def test_predict_marginalized_over_instances_no_features(self, rf_mock):
