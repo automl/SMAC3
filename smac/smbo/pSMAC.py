@@ -40,13 +40,13 @@ def read(run_history, output_directory, configuration_space, logger):
 
             new_numruns_in_runhistory = len(run_history.data)
             difference = new_numruns_in_runhistory - numruns_in_runhistory
-            logger.info('Shared model mode: Loaded %d new runs from %s' %
-                        (difference, file_in_output_directory))
+            logger.debug('Shared model mode: Loaded %d new runs from %s' %
+                         (difference, file_in_output_directory))
             numruns_in_runhistory = new_numruns_in_runhistory
 
     difference = numruns_in_runhistory - initial_numruns_in_runhistory
-    logger.info('Shared model mode: Finished loading new runs, found %d new '
-                'runs.' % difference)
+    logger.debug('Shared model mode: Finished loading new runs, found %d new '
+                 'runs.' % difference)
 
 
 def write(run_history, output_directory, num_run):
