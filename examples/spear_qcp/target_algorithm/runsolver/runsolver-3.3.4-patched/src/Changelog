@@ -1,0 +1,130 @@
+version 3.3.4	2013-11-28
+
+- fix compilation problems on Ubuntu and get rid of compilation warnings
+
+version 3.3.3	2013-07-19
+
+- fixed a bug which occurs on very short executions of the solver
+  (such as `echo test`). In such a case, runsolver did not have the time to
+  get the correct process group id (i.e. the watcher read /proc
+  before the child could run setpgid()) and in the end runsolver
+  signalled its own process group and killed itself. Besides, the
+  default ProcessTree::currentRootPID was set to 1, which means that
+  we could kill our whole session (kill(-1,...))
+
+- fixed 2 bugs in timestamping: the CPU time didn't take into
+  account the lostCPUtime and the EOF line didn't appear on its own
+  line when the solver didn't print an EOL at the end.
+
+version 3.3.2	2013-04-19
+
+- add option -v to save the most relevant information (times, ...)
+  in a separate file which is easy to parse (VAR=VALUE format)
+
+- display option --core in the help message and clarified the core
+  numbering scheme used by this option
+
+- new option --phys-core to select cores by their physical id
+
+- new option --add-eof:
+
+  when timestamps are used, request to add an 'EOF' line at the
+  end of the solver output
+
+version 3.3.1	2011-06-12
+
+- make sure to kill processes which are stopped and in their own
+  session
+
+version 3.3.0	2011-05-01
+
+- support for core information and selection
+- fixed a bug in case of input redirection (runsolver cmd < file)
+- use long instead of int for memory limits
+
+version 3.2.9a	2010-03-09
+
+- release under the GPL
+
+version 3.2.9	2009-03-27
+
+- when the main process terminates, kill each children that could remain
+
+version 3.2.8	2009-03-27
+
+- fixed a bug in the --output-limit start,max option
+
+  when the output size was between start and max, "start" bytes of
+  garbage was appended to the ouput.
+
+- --output-limit now implies --timestamp
+
+version 3.2.7	2009-03-26
+
+- added the --cleanup-ipc-queues option
+
+version 3.2.6	2009-03-24
+
+- added support for identification of heavy processes run by another user
+
+version 3.2.5	2007-05-20
+
+- the stack size command line argument was incorrectly understood as a
+limit in GiB instead of a limit in MiB.
+
+version 3.2.4	2007-05-9
+
+- add a test to indicate if the solver has dumped a core (when
+supported by the system)
+
+version 3.2.3	2007-04-16
+
+- lostCPUTime must be taken into account when deciding when the solver
+times out
+
+- added tests to check that fgets() correctly reads the /proc/pid/stat
+and statm files in ProcessData::read(). It is hoped this will fix some
+incoherent data read such as:
+
+[startup+402.301 s]
+/proc/loadavg: 1.00 0.99 0.91 2/78 12763
+/proc/meminfo: memFree=1564840/2055920 swapFree=4169436/4192956
+[pid=12688] ppid=12686 vsize=19880 CPUtime=402.13
+/proc/12688/stat : 12688 (cmusat) R 12686 12688 12410 0 -1 4194304 44325 0 0 0 40175 38 0 0 25 0 1 0 323084685 20357120 4250 18446744073709551615 134512640 135508737 4294956704 18446744073709551615 135092575 0 0 4096 35 0 0 0 17 1 0 0
+/proc/12688/statm: 4970 4251 119 243 0 4724 0
+Current children cumulated CPU time (s) 402.13
+Current children cumulated vsize (KiB) 19880
+
+Solver just ended. Dumping a history of the last processes samples
+
+[startup+402.503 s]
+/proc/loadavg: 1.00 0.99 0.91 1/77 12763
+/proc/meminfo: memFree=1679792/2055920 swapFree=4169436/4192956
+[pid=12688] ppid=-1 vsize=0 CPUtime=0
+/proc/12688/stat : 7 (events/1) S 1 0 0 0 -1 33088 0 0 0 0 0 5 0 0 5 -10 1 0 27 0 0 18446744073709551615 0 0 0 0 0 0 2147483647 65536 0 18446744073709551615 0 0 17 1 0 0
+/proc/12688/statm: 0 0 0 0 0 0 0
+Current children cumulated CPU time (s) 0
+Current children cumulated vsize (KiB) 0
+
+Notice that in the last sample, we fetch information about process
+12688 but actually get information about pid 7 (and ppid is set to
+-1). The most likely explanation is that the fopen("/proc/pid/stat")
+succeeds but the following fgets fails because the file has
+disappeared.
+
+
+version 3.2.2	2007-04-13
+
+- added code to detect when the time of a child is not reported to its
+parent. When this occurs, the 'lost time' is recorded and added at the
+end.  
+
+- minors changes in the messages that are printed when the time of a
+child is not reported to its parent.
+
+version 3.2.1	2007-02-27
+
+- added option --wall-clock-limit to deal with frozen solvers
+
+- minor changes in the timer thread
+

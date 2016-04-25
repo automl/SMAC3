@@ -7,7 +7,7 @@ from smac.configspace import impute_inactive_values, get_one_exchange_neighbourh
 
 __author__ = "Aaron Klein, Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
-__license__ = "GPLv3"
+__license__ = "AGPLv3"
 __maintainer__ = "Aaron Klein"
 __email__ = "kleinaa@cs.uni-freiburg.de"
 __version__ = "0.0.1"
@@ -98,7 +98,9 @@ class LocalSearch(object):
                 s_time = time.time()
                 neighbor_ = impute_inactive_values(neighbor)
                 n_array = neighbor_.get_array()
+
                 acq_val = self.acquisition_function(n_array, *args)
+
                 neighbors_looked_at += 1
 
                 time_n.append(time.time() - s_time)

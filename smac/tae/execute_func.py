@@ -10,7 +10,7 @@ import pynisher
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
-__license__ = "GPLv3"
+__license__ = "AGPLv3"
 __maintainer__ = "Marius Lindauer"
 __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
@@ -87,7 +87,10 @@ class ExecuteTAFunc(object):
         obj = pynisher.enforce_limits(
             cpu_time_in_s=int(math.ceil(cutoff)), logger=logging.getLogger("pynisher"))(self.func)
 
-        result = obj(config)
+        if instance:
+            result = obj(config, instance)
+        else:
+            result = obj(config)
 
         #self.logger.debug("Function value: %.4f" % (result))
 

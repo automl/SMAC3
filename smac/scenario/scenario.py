@@ -3,15 +3,13 @@ import sys
 import logging
 import numpy
 import shlex
-import traceback
 
 from smac.utils.io.input_reader import InputReader
 from smac.configspace import pcs
-from smac.tae.execute_ta_run_old import ExecuteTARunOld
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
-__license__ = "GPLv3"
+__license__ = "AGPLv3"
 __maintainer__ = "Marius Lindauer"
 __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
@@ -23,19 +21,18 @@ class Scenario(object):
     main class of SMAC
     '''
 
-    def __init__(self, scenario, tae_runner=None):
-        '''
-            constructor
-            Attributes
-            ----------
-                scenario: str or dict
-                    if str, it will be interpreted as to a path a scenario file
-                    if dict, it will be directly to get all scenario related information
-                tae_runner: object
-                    object that implements the following method to call the target algorithm (or any other arbitrary function):
-                    run(self, config)
-                    If not set, it will be initialized with the tae.ExecuteTARunOld()
-        '''
+    def __init__(self, scenario, cmd_args=None):
+        """Construct scenario object from file or dictionary.
+
+        Parameters
+        ----------
+        scenario : str or dict
+            if str, it will be interpreted as to a path a scenario file
+            if dict, it will be directly to get all scenario related information
+        cmd_args : dict
+            command line arguments that were not processed by argparse
+
+        """
         self.logger = logging.getLogger("scenario")
 
         if type(scenario) is str:
@@ -49,10 +46,14 @@ class Scenario(object):
             raise TypeError(
                 "Wrong type of scenario (str or dict are supported)")
 
+        if cmd_args:
+            scenario.update(cmd_args)
+
         self.ta = shlex.split(scenario.get("algo", ""))
         self.execdir = scenario.get("execdir", ".")
-        self.deterministic = scenario.get("deterministic", "0") == "1" or scenario.get(
-            "deterministic", "0") == "true"
+        self.deterministic = scenario.get("deterministic", "0") == "1" \
+                             or scenario.get("deterministic", "0") == "true" \
+                             or scenario.get('deterministic', '0') is True
         self.pcs_fn = scenario.get("paramfile", None)
         self.run_obj = scenario.get("run_obj", "runtime")
         self.overall_obj = scenario.get("overall_obj", "par10")
@@ -65,7 +66,10 @@ class Scenario(object):
         self.train_inst_fn = scenario.get("instance_file", None)
         self.test_inst_fn = scenario.get("test_instance_file", None)
         self.feature_fn = scenario.get("feature_file")
-        # not handled: outdir (and some more)
+        self.output_dir = scenario.get("output_dir", "smac3-output")
+        self.shared_model = scenario.get("shared_model", "0") == "1" \
+                            or scenario.get("shared_model", "0") == "true" \
+                            or scenario.get('shared_model', '0') is True
 
         self.train_insts = scenario.get("instances", [[None]])
         self.test_insts = scenario.get("test_instances", [])
@@ -122,7 +126,7 @@ class Scenario(object):
 
         if self.feature_dict:
             self.n_features = len(
-                self.feature_dict[self.feature_dict.keys()[0]])
+                self.feature_dict[list(self.feature_dict.keys())[0]])
             self.feature_array = []
             for inst_ in self.train_insts:
                 self.feature_array.append(self.feature_dict[inst_])
@@ -138,10 +142,3 @@ class Scenario(object):
             self.logger.error("Have not found pcs file: %s" %
                               (self.pcs_fn))
             sys.exit(1)
-
-        if tae_runner is None:
-            self.tae_runner = ExecuteTARunOld(
-                ta=self.ta, run_obj=self.run_obj,
-                par_factor=self.par_factor)
-        else:
-            self.tae_runner = tae_runner

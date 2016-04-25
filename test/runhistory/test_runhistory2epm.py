@@ -12,6 +12,7 @@ from smac.runhistory import runhistory, runhistory2epm
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 from smac.runhistory.runhistory import RunHistory
+from smac.scenario.scenario import Scenario
 
 def get_config_space():
     cs = ConfigurationSpace()
@@ -49,17 +50,20 @@ class RunhistoryTest(unittest.TestCase):
                status=StatusType.TIMEOUT, instance_id=1,
                seed=45,
                additional_info={"start_time": 10})
+        
+        scen = Scenario({"cutoff_time": 10})
 
-        self.assertRaises(TypeError, runhistory2epm.RunHistory2EPM)
+        self.assertRaises(TypeError, runhistory2epm.RunHistory2EPM4LogCost)
 
-        rh2epm = runhistory2epm.RunHistory2EPM(num_params=2, cutoff_time=10)
+        rh2epm = runhistory2epm.RunHistory2EPM4LogCost(num_params=2,
+                                                       scenario=scen)
         rhArr = rh2epm.transform(rh)
 
         # We expect
         #  1  2 23     0 0 23
         #  1 25  1  -> 0 1  1
         # 21  2  1     1 0  1
-
+        #TODO: ML I don't understand this comment
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,8 +1,3 @@
-'''
-Created on Nov 19, 2015
-
-@author: lindauer
-'''
 import unittest
 import logging
 
@@ -32,7 +27,9 @@ class RunhistoryTest(unittest.TestCase):
         cs = get_config_space()
         config = Configuration(cs,
                                values={'a': 1, 'b': 2})
-        assert rh.empty() == True
+
+        self.assertTrue(rh.empty())
+
         rh.add(config=config, cost=10, time=20,
                status=StatusType.SUCCESS, instance_id=None,
                seed=None,
@@ -42,7 +39,8 @@ class RunhistoryTest(unittest.TestCase):
                status=StatusType.SUCCESS, instance_id=1,
                seed=12354,
                additional_info={"start_time": 10})
-        assert rh.empty() == False
+
+        self.assertFalse(rh.empty())
 
     def test_get_config_runs(self):
         '''
@@ -71,7 +69,10 @@ class RunhistoryTest(unittest.TestCase):
         #print(ist)
         #print(ist[0])
         #print(ist[1])
-        assert len(ist) == 2
+        self.assertEqual(len(ist), 2)
+        self.assertEqual(ist[0].instance, 1)
+        self.assertEqual(ist[1].instance, 2)
+
 
 if __name__ == "__main__":
     unittest.main()

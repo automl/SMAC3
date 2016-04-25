@@ -3,11 +3,10 @@ import logging
 
 import pyrfr.regression
 
-from smac.utils.duplicate_filter_logging import DuplicateFilter
 
 __author__ = "Aaron Klein"
 __copyright__ = "Copyright 2015, ML4AAD"
-__license__ = "GPLv3"
+__license__ = "AGPLv3"
 __maintainer__ = "Aaron Klein"
 __email__ = "kleinaa@cs.uni-freiburg.de"
 __version__ = "0.0.1"
@@ -51,13 +50,13 @@ class RandomForestWithInstances(object):
     '''
 
     def __init__(self, types,
-                 instance_features,
+                 instance_features=None,
                  num_trees=30,
                  do_bootstrapping=True,
                  n_points_per_tree=0,
-                 ratio_features=1,
-                 min_samples_split=2,
-                 min_samples_leaf=2,
+                 ratio_features=5. / 6.,
+                 min_samples_split=3,
+                 min_samples_leaf=3,
                  max_depth=20,
                  eps_purity=1e-8,
                  max_num_nodes=1000,
@@ -71,7 +70,9 @@ class RandomForestWithInstances(object):
         self.rf.seed = seed
         self.rf.do_bootstrapping = do_bootstrapping
         self.rf.num_data_points_per_tree = n_points_per_tree
-        self.rf.max_features = int(types.shape[0] * ratio_features)
+        max_features = 0 if ratio_features >= 1.0 else \
+            max(1, int(types.shape[0] * ratio_features))
+        self.rf.max_features = max_features
         self.rf.min_samples_to_split = min_samples_split
         self.rf.min_samples_in_leaf = min_samples_leaf
         self.rf.max_depth = max_depth
@@ -85,108 +86,134 @@ class RandomForestWithInstances(object):
         self.seed = seed
 
         self.logger = logging.getLogger("RF")
-        # TODO: check this -- it could slow us down
-        dub_filter = DuplicateFilter()
-        self.logger.addFilter(dub_filter)
 
-        # Never use a lower std than this
+        # Never use a lower variance than this
         self.var_threshold = 10 ** -5
 
-    def train(self, X, Y, **kwargs):
-        '''
-        Trains the random forest on X and Y.
+    def train(self, X, y, **kwargs):
+        """Trains the random forest on X and y.
 
         Parameters
         ----------
-        X: np.ndarray (N, D)
-            Input data points. The dimensionality of X is (N, D),
-            with N as the number of points and D is the number of features.
-        Y: np.ndarray (N, 1)
+        X : np.ndarray [n_samples, n_features (config + instance features)]
+            Input data points.
+        Y : np.ndarray [n_samples, ]
             The corresponding target values.
-        '''
-
-        self.X = X
-        self.Y = Y
-
-        data = pyrfr.regression.numpy_data_container(self.X,
-                                                     self.Y[:, 0],
-                                                     self.types)
-
-        self.rf.fit(data)
-
-    def predict(self, Xtest, **kwargs):
-        """
-        Returns the predictive mean and variance marginalised over all
-        instances for a single test point.
-
-        Parameters
-        ----------
-        Xtest: np.ndarray (1, D)
-            Input test point
-
-        Returns
-        ----------
-        np.array(1,)
-            predictive mean over all instances
-        np.array(1,)
-            predictive variance over all instances
-        """
-        # first we make sure this does not break in cases
-        # where we have no instance features
-        if self.instance_features is None or len(self.instance_features) == 0:
-            X_ = Xtest
-        else:
-            nfeats = self.instance_features.shape[0]
-            # TODO: Use random forest data container for instances
-            X_ = np.hstack(
-                (np.tile(Xtest, (nfeats, 1)), self.instance_features))
-
-        mean = np.zeros(X_.shape[0])
-        var = np.zeros(X_.shape[0])
-
-        # TODO: Would be nice if the random forest supports batch predictions
-        for i, x in enumerate(X_):
-            mean[i], var[i] = self.rf.predict(x)
-
-        var = np.mean(var) + np.var(mean)
-        mean = np.mean(mean)
-
-        return mean, var
-
-    def _predict(self, X):
-        """
-        Wraps rfr predict method to predict for multiple X's and returns y's (means and stds)
-        This method does not handles instances in a special way
-        Method written for imputation of censored data
-
-        Parameters
-        ----------
-        m : pyrfr.regression.binary_rss
-        X : array
 
         Returns
         -------
-        mean: vector
-            mean predictions on X
-        var: vector
-            variance predictions on X
+        self
         """
-        if len(X.shape) > 1:
-            pred = np.array([self.rf.predict(x) for x in X])
-            mean = pred[:, 0]
-            var = pred[:, 1]
-            var[var < self.var_threshold] = self.var_threshold
-            var[np.isnan(var)] = self.var_threshold
 
-            mean = np.array(mean)
-            var = np.array(var)
+        self.X = X
+        self.y = y
+
+        y = y.flatten()
+        data = pyrfr.regression.numpy_data_container(self.X, y, self.types)
+
+        self.rf.fit(data)
+        return self
+
+    def predict(self, X):
+        """Predict means and variances for given X.
+
+        Parameters
+        ----------
+        X : np.ndarray of shape = [n_samples, n_features (config + instance
+        features)]
+
+        Returns
+        -------
+        means : np.ndarray of shape = [n_samples, 1]
+            Predictive mean
+        vars : np.ndarray  of shape = [n_samples, 1]
+            Predictive variance
+        """
+        if len(X.shape) != 2:
+            raise ValueError(
+                'Expected 2d array, got %dd array!' % len(X.shape))
+        if X.shape[1] != self.types.shape[0]:
+            raise ValueError('Rows in X should have %d entries but have %d!' %
+                             (self.types.shape[0], X.shape[1]))
+
+        means = np.ndarray((X.shape[0], 1))
+        vars = np.ndarray((X.shape[0], 1))
+        for i, x in enumerate(X):
+            m, v = self._predict(x)
+            means[i] = m
+            vars[i] = v
+        return means, vars
+
+    def _predict(self, x):
+        """Predict mean and variance for given x.
+
+        Parameters
+        ----------
+        x : np.ndarray of shape = [n_features (config + instance features), ]
+
+        Returns
+        -------
+        mean : float
+            Predictive mean
+        var : float
+            Predictive variance
+        """
+        mean, var = self.rf.predict(x)
+
+        return mean, var
+
+    def predict_marginalized_over_instances(self, X):
+        """Predict mean and variance marginalized over all instances.
+
+        Returns the predictive mean and variance marginalised over all
+        instances for a set of configurations.
+
+        Parameters
+        ----------
+        X : np.ndarray of shape = [n_features (config), ]
+
+        Returns
+        -------
+        means : np.ndarray of shape = [n_samples, 1]
+            Predictive mean
+        vars : np.ndarray  of shape = [n_samples, 1]
+            Predictive variance
+        """
+
+        if self.instance_features is None or \
+                len(self.instance_features) == 0:
+            return self.predict(X)
         else:
-            mean, var = self.rf.predict(X)
-            if var < self.var_threshold:
-                self.logger.debug(
-                    "Standard deviation is small, capping to 10^-5")
-                var = self.var_threshold
-            var = np.array([var])
-            mean = np.array([mean, ])
+            n_instance_features = self.instance_features.shape[1]
+            n_instances = len(self.instance_features)
+
+        if len(X.shape) != 2:
+            raise ValueError(
+                'Expected 2d array, got %dd array!' % len(X.shape))
+        if X.shape[1] != self.types.shape[0] - n_instance_features:
+            raise ValueError('Rows in X should have %d entries but have %d!' %
+                             (self.types.shape[0] - n_instance_features,
+                              X.shape[1]))
+
+        mean = np.zeros(X.shape[0])
+        var = np.zeros(X.shape[0])
+        for i, x in enumerate(X):
+            X_ = np.hstack(
+                (np.tile(x, (n_instances, 1)), self.instance_features))
+            means, vars = self.predict(X_)
+            var_x = np.mean(vars) + np.var(means)
+            if var_x < self.var_threshold:
+                var_x = self.var_threshold
+
+            var[i] = var_x
+            mean[i] = np.mean(means)
+
+        var[var < self.var_threshold] = self.var_threshold
+        var[np.isnan(var)] = self.var_threshold
+
+        if len(mean.shape) == 1:
+            mean = mean.reshape((-1, 1))
+        if len(var.shape) == 1:
+            var = var.reshape((-1, 1))
 
         return mean, var
