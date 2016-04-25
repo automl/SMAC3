@@ -7,7 +7,7 @@ from smac.stats.stats import Stats
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
-__license__ = "GPLv3"
+__license__ = "AGPLv3"
 __maintainer__ = "Marius Lindauer"
 __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
@@ -97,7 +97,7 @@ class ExecuteTARunOld(object):
                 cmd.extend(["-" + str(p), str(config[p])])
 
         self.logger.debug("Calling: %s" % (" ".join(cmd)))
-        p = Popen(cmd, shell=False, stdout=PIPE, stderr=PIPE)
+        p = Popen(cmd, shell=False, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         stdout_, stderr_ = p.communicate()
 
         self.logger.debug("Stdout: %s" % (stdout_))
@@ -110,7 +110,7 @@ class ExecuteTARunOld(object):
         for line in stdout_.split("\n"):
             if line.startswith("Result of this algorithm run:") or line.startswith("Result for ParamILS") or line.startswith("Result for SMAC"):
                 fields = line.split(":")[1].split(",")
-                fields = map(lambda x: x.strip(" "), fields)
+                fields = list(map(lambda x: x.strip(" "), fields))
                 if len(fields) == 5:
                     status, runtime, runlength, quality, seed = fields
                     additional_info = {}
@@ -118,6 +118,7 @@ class ExecuteTARunOld(object):
                     status, runtime, runlength, quality, seed, additional_info = fields
                     additional_info = {"additional_info": additional_info}
 
+                Stats.ta_time_used += float(runtime)
                 runtime = min(float(runtime), cutoff)
                 quality = float(quality)
                 seed = int(seed)
@@ -134,8 +135,6 @@ class ExecuteTARunOld(object):
             sys.exit(43)
         elif status in ["MEMOUT"]:
             status = StatusType.MEMOUT
-
-        Stats.ta_time_used += float(runtime)
 
         if status in [StatusType.CRASHED, StatusType.ABORT]:
             self.logger.warn(

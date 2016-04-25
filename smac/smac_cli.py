@@ -3,20 +3,21 @@ import sys
 import logging
 import numpy as np
 
-from utils.io.cmd_reader import CMDReader
-from scenario.scenario import Scenario
-from smbo.smbo import SMBO
-from stats.stats import Stats
+from smac.utils.io.cmd_reader import CMDReader
+from smac.scenario.scenario import Scenario
+from smac.smbo.smbo import SMBO
+from smac.stats.stats import Stats
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
-__license__ = "GPLv3"
+__license__ = "AGPLv3"
 __maintainer__ = "Marius Lindauer"
 __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
 class SMAC(object):
+
     '''
     main class of SMAC
     '''
@@ -33,16 +34,14 @@ class SMAC(object):
         '''
 
         cmd_reader = CMDReader()
-        args_ = cmd_reader.read_cmd()
+        args_, misc_args = cmd_reader.read_cmd()
 
         logging.basicConfig(level=args_.verbose_level)
 
-        # TODO: hack to set logger level as long as some of our dependencies does not handle logger
-        # in a correct ways
-        if args_.verbose_level == "DEBUG":
-            self.logger.parent.level = 10
+        root_logger = logging.getLogger()
+        root_logger.setLevel(args_.verbose_level)
 
-        scen = Scenario(args_.scenario_file)
+        scen = Scenario(args_.scenario_file, misc_args)
 
         # necessary to use stats options related to scenario information
         Stats.scenario = scen

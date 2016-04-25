@@ -125,15 +125,14 @@ scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative r
                      "runcount-limit": 400,  # at most 200 function evaluations
                      "cs": cs, # configuration space
                      "deterministic": "true" 
-                     },
-                    tae_runner=taf  # above defined target algorithm function
-                    )
+                     })
  
 # necessary to use stats options related to scenario information
 Stats.scenario = scenario
  
 # Optimize
-smbo = SMBO(scenario=scenario, rng=np.random.RandomState(42))
+smbo = SMBO(scenario=scenario, rng=np.random.RandomState(42),
+            tae_runner=taf)
 smbo.run(max_iters=999)
  
 Stats.print_stats()

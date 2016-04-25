@@ -1,6 +1,6 @@
 import logging
 import numpy
-import scipy.stats
+from scipy.stats import truncnorm
 
 import smac.epm.base_imputor
 
@@ -9,7 +9,7 @@ from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, \
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
-__license__ = "GPLv3"
+__license__ = "AGPLv3"
 __maintainer__ = "Katharina Eggensperger"
 __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
@@ -39,8 +39,6 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             epm model (i.e. RandomForestWithInstances)
         change_threshold : float 
             stop imputation if change is less than this
-        log_y : bool
-            if True use log10(y)
         -------
         """
 
@@ -53,6 +51,9 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         self.seed = rs.random_integers(low=0, high=1000)
 
         self.model = model
+
+        # Never use a lower variance than this
+        self.var_threshold = 10 ** -2
 
     def impute(self, censored_X, censored_y, uncensored_X, uncensored_y):
         """
@@ -90,25 +91,26 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             self.logger.debug("Iteration %d of %d" % (it, self.max_iter))
 
             # predict censored y values
-            y_mean, y_var = self.model._predict(censored_X)
+            y_mean, y_var = self.model.predict(censored_X)
+            y_var[y_var < self.var_threshold] = self.var_threshold
             y_stdev = numpy.sqrt(y_var)
 
             imputed_y = \
-                [scipy.stats.truncnorm.stats(a=(censored_y[index] -
-                                                y_mean[index]) / y_stdev[index],
-                                             b=(numpy.inf - y_mean[index]) /
-                                             y_stdev[index],
-                                             loc=y_mean[index],
-                                             scale=y_stdev[index],
-                                             moments='m')
+                [truncnorm.stats(a=(censored_y[index] -
+                                    y_mean[index]) / y_stdev[index],
+                                 b=(self.cutoff * 10 - y_mean[index]) /
+                                 y_stdev[index],
+                                 loc=y_mean[index],
+                                 scale=y_stdev[index],
+                                 moments='m')
                  for index in range(len(censored_y))]
             imputed_y = numpy.array(imputed_y)
 
             if sum(numpy.isfinite(imputed_y) == False) > 0:
                 # Replace all nans with threshold
                 self.logger.debug("Going to replace %d nan-value(s) with "
-                                     "threshold" %
-                                     sum(numpy.isfinite(imputed_y) == False))
+                                  "threshold" %
+                                  sum(numpy.isfinite(imputed_y) == False))
                 imputed_y[numpy.isfinite(imputed_y) == False] = self.threshold
 
             if it > 0:

@@ -3,7 +3,7 @@ import logging
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
-__license__ = "GPLv3"
+__license__ = "AGPLv3"
 __maintainer__ = "Katharina Eggensperger"
 __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
@@ -26,7 +26,6 @@ class BaseImputor(object):
         Parameters
         ----------
         censored_x : array
-            Object that keeps complete run_history
         censored_y : list
         uncensored_x : array
         uncensored_y : list

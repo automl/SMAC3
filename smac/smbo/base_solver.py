@@ -6,7 +6,7 @@ import logging
 
 __author__ = "Aaron Klein"
 __copyright__ = "Copyright 2015, ML4AAD"
-__license__ = "GPLv3"
+__license__ = "AGPLv3"
 __maintainer__ = "Aaron Klein"
 __email__ = "kleinaa@cs.uni-freiburg.de"
 __version__ = "0.0.1"
@@ -84,7 +84,7 @@ class BaseSolver(object):
         """
         pass
 
-    def choose_next(self, X=None, Y=None):
+    def choose_next(self, X, Y):
         """
         Chooses the next configuration by optimizing the acquisition function.
 
