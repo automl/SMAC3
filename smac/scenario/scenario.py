@@ -41,7 +41,7 @@ class Scenario(object):
             in_reader = InputReader()
             scenario = in_reader.read_scenario_file(scenario_fn)
         elif type(scenario) is dict:
-            pass
+            in_reader = InputReader()
         else:
             raise TypeError(
                 "Wrong type of scenario (str or dict are supported)")
