@@ -1,10 +1,8 @@
 setuptools
 numpy>=1.6.1
 scipy>=0.13.1
-pynisher>=0.4.1
-
 six
 Cython
-
-git+https://github.com/automl/HPOlibConfigSpace@refactor
-git+https://bitbucket.org/aadfreiburg/random_forest_run.git@master
+pynisher>=0.4.1
+ConfigSpace
+pyrfr
