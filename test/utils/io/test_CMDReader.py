@@ -31,7 +31,7 @@ class CMDReaderTest(unittest.TestCase):
             self.cr._check_args(targs)
     
     def test_check_args(self):  # Tests if no Exception is raised
-        targs = TestArgs('../../../test_files/scenario_test/scenario.txt', 1234, 2, 'DEBUG')
+        targs = TestArgs('test/test_files/scenario_test/scenario.txt', 1234, 2, 'DEBUG')
         self.cr._check_args(targs)
 
 if __name__ == "__main__":

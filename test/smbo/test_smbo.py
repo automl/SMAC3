@@ -3,6 +3,7 @@ Created on Dec 15, 2015
 
 @author: Aaron Klein
 '''
+import os
 import sys
 import unittest
 
@@ -210,6 +211,10 @@ class TestSMBO(unittest.TestCase):
         self.assertEqual(patch.call_args_list[9][0][0], 'Incumbent')
         for i in range(10):
             self.assertEqual(rval[i][1].origin, 'Local Search')
+
+    def tearDown(self):
+        os.remove('smac3-output/traj_old.csv')
+        os.rmdir('smac3-output')
 
 
 if __name__ == "__main__":
