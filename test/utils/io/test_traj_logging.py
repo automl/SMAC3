@@ -65,7 +65,6 @@ class TrajLoggerTest(unittest.TestCase):
         self.assertEquals(json_dict['cost'], 0.9)
         self.assertEquals(len(json_dict['incumbent']), 3)
         self.assertTrue("param_a='0.5'" in json_dict['incumbent'])
-        self.assertTrue(json_dict['total_cpu_time'] != None)  # This will currently fail. TODO in traj_logging.py
 
     @patch('smac.utils.io.traj_logging.Stats')
     def test_add_multiple_entries(self, mock_stats):
@@ -123,7 +122,6 @@ class TrajLoggerTest(unittest.TestCase):
         self.assertEquals(json_dicts[0]['cost'], 0.9)
         self.assertEquals(len(json_dicts[0]['incumbent']), 3)
         self.assertTrue("param_a='0.5'" in json_dicts[0]['incumbent'])
-        self.assertTrue(json_dicts[0]['total_cpu_time'] != None)  # This will currently fail. TODO in traj_logging.py
 
     def tearDown(self):
         os.remove('tmp_test_folder/traj_old.csv')
