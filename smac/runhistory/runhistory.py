@@ -107,7 +107,7 @@ class RunHistory(object):
             parameter configuration
         Returns
         ----------
-            list: tuples of instance, seed, time
+            list: tuples of instance, seed
         """
         InstanceSeedPair = collections.namedtuple("InstanceSeedPair",
                                                   ["instance", "seed"])
