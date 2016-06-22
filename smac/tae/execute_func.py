@@ -1,6 +1,5 @@
 import sys
 import logging
-from subprocess import Popen, PIPE
 
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
@@ -20,7 +19,7 @@ __version__ = "0.0.1"
 class ExecuteTAFunc(object):
 
     """
-        executes a function  with given inputs (i.e., the configuratoin)
+        executes a function  with given inputs (i.e., the configuration)
         and some resource limitations
 
         Attributes

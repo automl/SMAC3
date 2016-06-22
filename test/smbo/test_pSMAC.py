@@ -134,5 +134,3 @@ class TestPSMAC(unittest.TestCase):
         self.assertEqual(sorted(list(runhistory.ids_config.keys())),
                          [1, 2, 3, 4])
         print(list(runhistory.data.keys()))
-
-
