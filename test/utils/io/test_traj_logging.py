@@ -52,7 +52,7 @@ class TrajLoggerTest(unittest.TestCase):
         self.assertEquals(header[0], '"CPU Time Used"')
         self.assertEquals(header[-1], '"Configuration..."')
 
-        data = map(lambda x: x.split(', '), data[1:])
+        data = list(map(lambda x: x.split(', '), data[1:]))
         frmt_str = '%1.6f'
         self.assertEquals(frmt_str % .5, data[0][0])
         self.assertEquals(frmt_str % .9, data[0][1])
@@ -97,7 +97,7 @@ class TrajLoggerTest(unittest.TestCase):
         self.assertEquals(header[0], '"CPU Time Used"')
         self.assertEquals(header[-1], '"Configuration..."')
 
-        data = map(lambda x: x.split(', '), data[1:])
+        data = list(map(lambda x: x.split(', '), data[1:]))
         frmt_str = '%1.6f'
         self.assertEquals(frmt_str % 0.5, data[0][0])
         self.assertEquals(frmt_str % 0.9, data[0][1])
