@@ -21,7 +21,6 @@ class Stats(object):
         
         self.ta_runs = 0
         self.wallclock_time_used = 0
-        self.incumbent_changed = 0
         self.ta_time_used = 0
         self.inc_changed = 0
     
