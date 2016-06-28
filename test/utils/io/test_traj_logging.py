@@ -11,6 +11,9 @@ import os
 from mock import patch
 from smac.utils.io.traj_logging import TrajLogger
 
+from smac.scenario.scenario import Scenario
+from smac.stats.stats import Stats
+
 class TrajLoggerTest(unittest.TestCase):
 
     def mocked_get_used_wallclock_time(self):
@@ -24,14 +27,16 @@ class TrajLoggerTest(unittest.TestCase):
         self.value = 0
 
     def test_init(self):
-        TrajLogger(output_dir='./tmp_test_folder')
+        scen = Scenario(scenario={}, cmd_args=None)
+        stats = Stats(scen)
+        TrajLogger(output_dir='./tmp_test_folder', stats=stats)
         self.assertFalse(os.path.exists('smac3-output'))
         self.assertTrue(os.path.exists('tmp_test_folder'))
 
     @patch('smac.utils.io.traj_logging.Stats')
     def test_add_entry(self,mock_stats):
 
-        tl = TrajLogger(output_dir='./tmp_test_folder')
+        tl = TrajLogger(output_dir='./tmp_test_folder', stats=mock_stats)
         test_config = {'param_a': 0.5,
                        'param_b': 1,
                        'param_c': 'value'}
@@ -68,7 +73,7 @@ class TrajLoggerTest(unittest.TestCase):
 
     @patch('smac.utils.io.traj_logging.Stats')
     def test_add_multiple_entries(self, mock_stats):
-        tl = TrajLogger(output_dir='./tmp_test_folder')
+        tl = TrajLogger(output_dir='./tmp_test_folder', stats=mock_stats)
         
         test_config = {'param_a': 0.5,
                        'param_b': 1,

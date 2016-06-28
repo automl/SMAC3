@@ -29,7 +29,7 @@ class Intensifier(object):
         takes challenger and incumbents and performs intensify
     '''
 
-    def __init__(self, executor, instances=None,
+    def __init__(self, executor, stats, instances=None,
                  instance_specifics={},
                  cutoff=MAXINT, deterministic=False, run_obj_time=True,
                  run_limit=MAXINT, maxR=2000, rng=0):
@@ -40,6 +40,8 @@ class Intensifier(object):
         ----------
         executor : tae.executre_ta_run_*.ExecuteTARun* Object
             target algorithm run executor
+        stats: Stats()
+                stats object             
         instances : list
             list of all instance ids
         instance_specifics : dict
@@ -55,6 +57,7 @@ class Intensifier(object):
         maxR : int
             maximum number of runs per config
         '''
+        self.stats = stats
         # general attributes
         if instances is None:
             instances = []
@@ -93,6 +96,8 @@ class Intensifier(object):
                 best configuration so far
             run_history : runhistory
                 all runs on all instance,seed pairs for incumbent
+            objective: func
+                objective function
             time_bound : int, optional (default=2 ** 31 - 1)
                 time in [sec] available to perform intensify
 
@@ -203,7 +208,8 @@ class Intensifier(object):
                                      self.Adaptive_Capping_Slackfactor)
 
                         if cutoff < 0:  # no time left to validate challenger
-                            self.logger.debug("Stop challenger itensification due to adaptive capping.")
+                            self.logger.debug(
+                                "Stop challenger itensification due to adaptive capping.")
                             break
 
                     else:
@@ -225,7 +231,8 @@ class Intensifier(object):
                 # for the challenger due to the adaptive capping
                 chall_inst_seeds = set(map(lambda x: (
                     x.instance, x.seed), run_history.get_runs_for_config(challenger)))
-                chal_perf = objective(challenger, run_history, chall_inst_seeds)
+                chal_perf = objective(
+                    challenger, run_history, chall_inst_seeds)
                 run_history.update_cost(challenger, chal_perf)
 
                 # Line 15
@@ -245,7 +252,7 @@ class Intensifier(object):
                         "Changing incumbent to challenger: %s" % (challenger))
                     incumbent = challenger
                     inc_perf = chal_perf
-                    Stats.inc_changed += 1
+                    self.stats.inc_changed += 1
                     break
                 # Line 17
                 else:

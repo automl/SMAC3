@@ -67,7 +67,7 @@ def get_types(config_space, instance_features=None):
 class SMBO(BaseSolver):
 
     def __init__(self, scenario, tae_runner=None, acquisition_function=None,
-                 model=None, runhistory2epm=None, rng=None):
+                 model=None, runhistory2epm=None, stats=None, rng=None):
         '''
         Interface that contains the main Bayesian optimization loop
 
@@ -90,9 +90,16 @@ class SMBO(BaseSolver):
             Object that implements the AbstractRunHistory2EPM. If None,
             will use RunHistory2EPM4Cost if objective is cost or
             RunHistory2EPM4LogCost if objective is runtime.
+        stats: Stats
+            optional stats object
         rng: numpy.random.RandomState
             Random number generator
         '''
+        
+        if stats:
+            self.stats = stats
+        else:
+            self.stats = Stats(scenario)
         
         self.runhistory = RunHistory()
         
@@ -134,12 +141,14 @@ class SMBO(BaseSolver):
 
         if tae_runner is None:
             self.executor = ExecuteTARunOld(ta=scenario.ta,
+                                            stats=self.stats,
                                             run_obj=scenario.run_obj,
                                             par_factor=scenario.par_factor)
         else:
             self.executor = tae_runner
 
         self.inten = Intensifier(executor=self.executor,
+                                 stats = self.stats,
                                  instances=self.scenario.train_insts,
                                  cutoff=self.scenario.cutoff,
                                  deterministic=self.scenario.deterministic,
@@ -188,7 +197,7 @@ class SMBO(BaseSolver):
             raise ValueError('Unknown run objective: %s. Should be either '
                              'quality or runtime.' % self.scenario.run_obj)
 
-        self.trajLogger = TrajLogger(self.scenario.output_dir)
+        self.trajLogger = TrajLogger(output_dir=self.scenario.output_dir,stats=self.stats)
 
     def run_initial_design(self):
         '''
@@ -234,7 +243,7 @@ class SMBO(BaseSolver):
                                       defaul_inst_seeds)
         self.runhistory.update_cost(default_conf, default_perf)
 
-        Stats.inc_changed += 1  # first incumbent
+        self.stats.inc_changed += 1  # first incumbent
         return default_conf
 
     def run(self, max_iters=10):
@@ -251,17 +260,17 @@ class SMBO(BaseSolver):
         incumbent: np.array(1, H)
             The best found configuration
         '''
-        Stats.start_timing()
+        self.stats.start_timing()
 
         #self.runhistory = RunHisory()
 
         self.incumbent = self.run_initial_design()
 
         self.trajLogger.add_entry(train_perf=999999999,
-                                  incumbent_id=Stats.inc_changed,
+                                  incumbent_id=self.stats.inc_changed,
                                   incumbent=self.incumbent)
 
-        inc_id = Stats.inc_changed  # ID of incumbent
+        inc_id = self.stats.inc_changed  # ID of incumbent
 
         # Main BO loop
         iteration = 1
@@ -304,20 +313,20 @@ class SMBO(BaseSolver):
             iteration += 1
 
             logging.debug("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
-                Stats.get_remaing_time_budget(),
-                Stats.get_remaining_ta_budget(),
-                Stats.get_remaining_ta_runs()))
+                self.stats.get_remaing_time_budget(),
+                self.stats.get_remaining_ta_budget(),
+                self.stats.get_remaining_ta_runs()))
 
-            if Stats.get_remaing_time_budget() < 0 or \
-                    Stats.get_remaining_ta_budget() < 0 or \
-                    Stats.get_remaining_ta_runs() < 0:
+            if self.stats.get_remaing_time_budget() < 0 or \
+                    self.stats.get_remaining_ta_budget() < 0 or \
+                    self.stats.get_remaining_ta_runs() < 0:
                 break
 
-            if Stats.inc_changed > inc_id:
+            if self.stats.inc_changed > inc_id:
                 self.trajLogger.add_entry(train_perf=inc_perf,
-                                          incumbent_id=Stats.inc_changed,
+                                          incumbent_id=self.stats.inc_changed,
                                           incumbent=self.incumbent)
-                inc_id = Stats.inc_changed
+                inc_id = self.stats.inc_changed
 
         return self.incumbent
 

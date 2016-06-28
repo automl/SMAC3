@@ -45,9 +45,6 @@ def rosenbrock_4d(cfg):
 logger = logging.getLogger("Optimizer") # Enable to show Debug outputs
 logger.parent.level = 20 #info level:20; debug:10
 
-# register function to be optimize
-taf = ExecuteTAFunc(rosenbrock_4d)
-
 # build Configuration Space which defines all parameters and their ranges
 # to illustrate different parameter types, 
 # we use continuous, integer and categorical parameters
@@ -62,26 +59,30 @@ cs.add_hyperparameter(x3)
 x4 = UniformIntegerHyperparameter("x4", -5, 5, default=5)
 cs.add_hyperparameter(x4)
 
-# example call of the function
-# it returns: Status, Cost, Runtime, Additional Infos
-def_value = taf.run( cs.get_default_configuration() )[1]
-print("Default Value: %.2f" %(def_value))
-
+# SMAC scenario object
 scenario = Scenario({"run_obj":"quality", # we optimize quality (alternative runtime)
                      "runcount-limit": 200, # at most 200 function evaluations
                      "cs": cs, # configuration space
                      "deterministic": "true"
                      })
+stats = Stats(scenario)
 
-# necessary to use stats options related to scenario information        
-Stats.scenario = scenario
+# register function to be optimize
+taf = ExecuteTAFunc(rosenbrock_4d, stats)
+
+# example call of the function
+# it returns: Status, Cost, Runtime, Additional Infos
+def_value = taf.run( cs.get_default_configuration() )[1]
+print("Default Value: %.2f" %(def_value))
 
 # Optimize
 smbo = SMBO(scenario=scenario, tae_runner=taf,
+            stats=stats,
             rng=np.random.RandomState(42))
-smbo.run(max_iters=999)
-
-Stats.print_stats()
+try:
+    smbo.run(max_iters=999)
+finally:
+    smbo.stats.print_stats()
 print("Final Incumbent: %s" %(smbo.incumbent))
 
 inc_value = taf.run( smbo.incumbent )[1]
