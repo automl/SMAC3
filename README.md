@@ -33,18 +33,15 @@ Its [Random Forest](https://bitbucket.org/aadfreiburg/random_forest_run) is writ
 # License
 
 This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
+it under the terms of the 3-clause BSD license (please see the LICENSE file).
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-You should have received a copy of the GNU Affero General Public License
+You should have received a copy of the 3-clause BSD license 
 along with this program (see LICENSE file). 
-If not, see <http://www.gnu.org/licenses/>.
+If not, see <https://opensource.org/licenses/BSD-3-Clause>.
 
 # USAGE
 

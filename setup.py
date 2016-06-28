@@ -16,7 +16,7 @@ setuptools.setup(
     author_email="fh@cs.uni-freiburg.de",
     description=("SMAC3, a python implementation of 'Sequential Model-based "
                  "Algorithm Configuration'."),
-    license="GPLv3",
+    license="3-clause BSD",
     keywords="machine learning algorithm configuration hyperparameter "
              "optimization tuning",
     url="",
