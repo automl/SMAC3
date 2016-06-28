@@ -31,7 +31,7 @@ class ExecuteTARunAClib(object):
             penalized average runtime factor
     """
 
-    def __init__(self, ta, run_obj="runtime", par_factor=1):
+    def __init__(self, ta, stats, run_obj="runtime", par_factor=1):
         """
         Constructor
 
@@ -39,12 +39,15 @@ class ExecuteTARunAClib(object):
         ----------
             ta : list
                 target algorithm command line as list of arguments
+            stats: Stats()
+                 stats object to collect statistics about runtime and so on
             run_obj: str
                 run objective of SMAC
             par_factor: int
                 penalized average runtime factor
         """
         self.ta = ta
+        self.stats = stats
         self.logger = logging.getLogger("ExecuteTARun")
         self.run_obj = run_obj
         self.par_factor = par_factor
@@ -82,7 +85,7 @@ class ExecuteTARunAClib(object):
                     all further additional run information
         """
 
-        Stats.ta_runs += 1
+        self.stats.ta_runs += 1
 
         if instance is None:
             instance = "0"
@@ -143,7 +146,7 @@ class ExecuteTARunAClib(object):
 
         runtime = float(results["runtime"])
         
-        Stats.ta_time_used += float(runtime)
+        self.stats.ta_time_used += float(runtime)
 
         if self.run_obj == "quality" and results.get("cost") is None:
             self.logger.error(

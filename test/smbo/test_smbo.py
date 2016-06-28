@@ -6,6 +6,8 @@ Created on Dec 15, 2015
 import os
 import sys
 import unittest
+import shutil
+import glob
 
 import numpy as np
 from ConfigSpace import ConfigurationSpace, Configuration
@@ -26,7 +28,7 @@ if sys.version_info[0] == 2:
     import mock
 else:
     from unittest import mock
-
+    
 
 class ConfigurationMock(object):
     def __init__(self, value=None):
@@ -213,8 +215,8 @@ class TestSMBO(unittest.TestCase):
             self.assertEqual(rval[i][1].origin, 'Local Search')
 
     def tearDown(self):
-        os.remove('smac3-output/traj_old.csv')
-        os.rmdir('smac3-output')
+            for d in glob.glob('smac3-output*'):
+                shutil.rmtree(d)
 
 
 if __name__ == "__main__":

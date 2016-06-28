@@ -32,20 +32,23 @@ class ExecuteTAFunc(object):
             penalized average runtime factor
     """
 
-    def __init__(self, func, run_obj="quality", par_factor=1):
+    def __init__(self, func, stats, run_obj="quality", par_factor=1):
         """
         Constructor
 
         Parameters
         ----------
-            func : function
-                target algorithm function 
+            func: function
+                target algorithm function
+            stats: Stats()
+                 stats object to collect statistics about runtime and so on
             run_obj: str
                 run objective of SMAC
             par_factor: int
                 penalized average runtime factor
         """
         self.func = func
+        self.stats = stats
         self.logger = logging.getLogger("ExecuteTAFunc")
         self.run_obj = run_obj
         self.par_factor = par_factor
@@ -113,8 +116,8 @@ class ExecuteTAFunc(object):
                 cost = runtime
 
         # update SMAC stats
-        Stats.ta_runs += 1
-        Stats.ta_time_used += float(runtime)
+        self.stats.ta_runs += 1
+        self.stats.ta_time_used += float(runtime)
 
         self.logger.debug("Return: %s,%.4f,%.4f" % (status, cost, runtime))
 

@@ -6,7 +6,6 @@ import numpy as np
 from smac.utils.io.cmd_reader import CMDReader
 from smac.scenario.scenario import Scenario
 from smac.smbo.smbo import SMBO
-from smac.stats.stats import Stats
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -43,15 +42,12 @@ class SMAC(object):
 
         scen = Scenario(args_.scenario_file, misc_args)
 
-        # necessary to use stats options related to scenario information
-        Stats.scenario = scen
-
         try:
             smbo = SMBO(scenario=scen, rng=np.random.RandomState(args_.seed))
             smbo.run(max_iters=args_.max_iterations)
 
         finally:
-            Stats.print_stats()
+            smbo.stats.print_stats()
             self.logger.info("Final Incumbent: %s" % (smbo.incumbent))
 
             smbo.runhistory.save_json()

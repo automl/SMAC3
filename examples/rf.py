@@ -83,10 +83,7 @@ y = np.array(np.loadtxt(os.path.join(folder,"data/y.csv")), dtype=np.float32)
 
 # cv folds
 kf = KFold(X.shape[0], n_folds=4)
- 
-# register function to be optimize
-taf = ExecuteTAFunc(rfr)
- 
+
 # build Configuration Space which defines all parameters and their ranges
 # to illustrate different parameter types,
 # we use continuous, integer and categorical parameters
@@ -116,27 +113,31 @@ cs.add_hyperparameter(max_depth)
 max_num_nodes = UniformIntegerHyperparameter("max_num_nodes", 100, 100000, default=1000)
 cs.add_hyperparameter(max_num_nodes)
  
-# example call of the function
-# it returns: Status, Cost, Runtime, Additional Infos
-def_value = taf.run(cs.get_default_configuration())[1]
-print("Default Value: %.2f" % (def_value))
- 
+# SMAC scenario oject
 scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative runtime)
                      "runcount-limit": 400,  # at most 200 function evaluations
                      "cs": cs, # configuration space
                      "deterministic": "true" 
                      })
+stats = Stats(scenario)
  
-# necessary to use stats options related to scenario information
-Stats.scenario = scenario
+# register function to be optimize
+taf = ExecuteTAFunc(rfr, stats=stats)
+ 
+# example call of the function
+# it returns: Status, Cost, Runtime, Additional Infos
+def_value = taf.run(cs.get_default_configuration())[1]
+print("Default Value: %.2f" % (def_value))
  
 # Optimize
 smbo = SMBO(scenario=scenario, rng=np.random.RandomState(42),
-            tae_runner=taf)
-smbo.run(max_iters=999)
- 
-Stats.print_stats()
-print("Final Incumbent: %s" % (smbo.incumbent))
+            tae_runner=taf, stats=stats)
+try:
+
+    smbo.run(max_iters=999)
+finally:
+    smbo.stats.print_stats()
+    print("Final Incumbent: %s" % (smbo.incumbent))
  
 inc_value = taf.run(smbo.incumbent)[1]
 print("Optimized Value: %.2f" % (inc_value))
