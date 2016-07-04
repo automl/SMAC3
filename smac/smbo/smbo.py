@@ -95,14 +95,14 @@ class SMBO(BaseSolver):
         rng: numpy.random.RandomState
             Random number generator
         '''
-        
+
         if stats:
             self.stats = stats
         else:
             self.stats = Stats(scenario)
-        
+
         self.runhistory = RunHistory()
-        
+
         self.logger = logging.getLogger("smbo")
 
         if rng is None:
@@ -148,7 +148,7 @@ class SMBO(BaseSolver):
             self.executor = tae_runner
 
         self.inten = Intensifier(executor=self.executor,
-                                 stats = self.stats,
+                                 stats=self.stats,
                                  instances=self.scenario.train_insts,
                                  cutoff=self.scenario.cutoff,
                                  deterministic=self.scenario.deterministic,
@@ -197,7 +197,8 @@ class SMBO(BaseSolver):
             raise ValueError('Unknown run objective: %s. Should be either '
                              'quality or runtime.' % self.scenario.run_obj)
 
-        self.trajLogger = TrajLogger(output_dir=self.scenario.output_dir,stats=self.stats)
+        self.trajLogger = TrajLogger(
+            output_dir=self.scenario.output_dir, stats=self.stats)
 
     def run_initial_design(self):
         '''
@@ -374,6 +375,9 @@ class SMBO(BaseSolver):
         next_configs_by_acq_value = next_configs_by_random_search_sorted + \
             next_configs_by_local_search
         next_configs_by_acq_value.sort(reverse=True, key=lambda x: x[0])
+        self.logger.debug(
+            "First 10 acq func values of selected configurations: %s" %
+            (str([_[0] for _ in next_configs_by_acq_value[:10]])))
         next_configs_by_acq_value = [_[1] for _ in next_configs_by_acq_value]
 
         challengers = list(itertools.chain(*zip(next_configs_by_acq_value,
@@ -417,7 +421,7 @@ class SMBO(BaseSolver):
 
             # Cannot use zip here because the indices array cannot index the
             # rand_configs list, because the second is a pure python list
-            return [(acq_values[ind], rand_configs[ind])
+            return [(acq_values[ind][0], rand_configs[ind])
                     for ind in indices[::-1]]
         else:
             for i in range(len(rand_configs)):

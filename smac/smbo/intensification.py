@@ -118,6 +118,9 @@ class Intensifier(object):
 
         # Line 1 + 2
         for challenger in challengers:
+            if challenger == incumbent:
+                self.logger.warn("Challenger was the same as the current incumbent; Skipping challenger")
+                continue
             self.logger.debug("Intensify on %s", challenger)
             if hasattr(challenger, 'origin'):
                 self.logger.debug(
