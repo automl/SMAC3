@@ -149,7 +149,7 @@ class TestSMBO(unittest.TestCase):
                                               patch_impute):
         values = (10, 1, 9, 2, 8, 3, 7, 4, 6, 5)
         patch_sample.return_value = [ConfigurationMock(i) for i in values]
-        patch_ei.return_value = np.array(values, dtype=float)
+        patch_ei.return_value = np.array([[_] for _ in values], dtype=float)
         patch_impute.side_effect = lambda x: x
         smbo = SMBO(self.scenario, 1)
         rval = smbo._get_next_by_random_search(10, True)
