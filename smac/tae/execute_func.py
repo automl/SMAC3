@@ -91,9 +91,9 @@ class ExecuteTAFunc(object):
             cpu_time_in_s=int(math.ceil(cutoff)), logger=logging.getLogger("pynisher"))(self.func)
 
         if instance:
-            result = obj(config, instance)
+            result = obj(config, instance, seed)
         else:
-            result = obj(config)
+            result = obj(config, seed)
 
         #self.logger.debug("Function value: %.4f" % (result))
 
