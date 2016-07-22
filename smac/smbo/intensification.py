@@ -117,7 +117,7 @@ class Intensifier(object):
         num_run = 0
 
         # Line 1 + 2
-        for challenger in challengers:
+        for chall_indx, challenger in enumerate(challengers):
             if challenger == incumbent:
                 self.logger.warn("Challenger was the same as the current incumbent; Skipping challenger")
                 continue
@@ -262,11 +262,11 @@ class Intensifier(object):
                     # challenger is not worse, continue
                     N = 2 * N
 
-            if num_run > self.run_limit:
+            if chall_indx >= 1 and num_run > self.run_limit:
                 self.logger.debug(
                     "Maximum #runs for intensification reached")
                 break
-            elif time.time() - self.start_time - time_bound >= 0:
+            elif chall_indx >= 1 and time.time() - self.start_time - time_bound >= 0:
                 self.logger.debug("Timelimit for intensification reached ("
                                   "used: %f sec, available: %f sec)" % (
                                       time.time() - self.start_time, time_bound))
