@@ -25,6 +25,8 @@ before_cache:
 
 # command to install dependencies
 addons:
+  sources:
+    - ubuntu-toolchain-r-test
   apt:
     packages:
     - gcc-4.8
