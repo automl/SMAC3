@@ -2,6 +2,7 @@ language: python
 python:
   - "2.7"
   - "3.4"
+  - "3.5"
 
 os:
   - linux
@@ -10,7 +11,7 @@ os:
 matrix:
   allow_failures:
     - os: osx
-    - python: "3.4"
+    - python: "2.7"
 
 cache:
   directories:
@@ -38,7 +39,7 @@ before_install:
   - conda update --yes conda
 
 install:
-  - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy=1.9 scipy>=0.13.2 nose matplotlib setuptools
+  - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy>=1.6.1 scipy>=0.13.1 six nose matplotlib setuptools Cython
   - pip install pep8 python-coveralls
   - pip install coverage
   - pip install psutil
