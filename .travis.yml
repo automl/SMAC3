@@ -27,7 +27,7 @@ before_cache:
 addons:
   sources:
     # necessary for rfr 
-    - ubuntu-toolchain-r-test
+    - sourceline: 'ppa:ubuntu-toolchain-r/test'
   apt:
     packages:
     # necessary for rfr
