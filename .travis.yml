@@ -26,14 +26,16 @@ before_cache:
 # command to install dependencies
 addons:
   sources:
+    # necessary for rfr 
     - ubuntu-toolchain-r-test
   apt:
     packages:
+    # necessary for rfr
     - gcc-4.8
     - g++-4.8
-    - libatlas3gf-base
     - libatlas-dev
     - liblapack-dev
+    - libatlas-base-dev
     - gfortran
 
 before_install:
@@ -47,6 +49,7 @@ install:
   - pip install pep8 python-coveralls
   - pip install coverage
   - pip install psutil
+  # necessary for rfr
   - export CXX="g++-4.8" CC="gcc-4.8"
   - python setup.py install
 
