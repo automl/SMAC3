@@ -27,6 +27,8 @@ before_cache:
 addons:
   apt:
     packages:
+    - gcc-4.8
+    - g++-4.8
     - libatlas3gf-base
     - libatlas-dev
     - liblapack-dev
@@ -48,6 +50,6 @@ install:
 
 # command to run tests, e.g. python setup.py test
 script:
-  - python setup.py test
+  - nosetests -sv --with-coverage
 after_success:
   - coveralls
