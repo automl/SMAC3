@@ -43,7 +43,7 @@ install:
   - pip install pep8 python-coveralls
   - pip install coverage
   - pip install psutil
-
+  - export CXX="g++-4.8" CC="gcc-4.8"
   - python setup.py install
 
 # command to run tests, e.g. python setup.py test
