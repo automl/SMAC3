@@ -5,6 +5,7 @@ Copyright (C) 2016  [ML4AAD Group](http://www.ml4aad.org/)
 __Attention__: This package is under heavy development and subject to change. 
 A stable release of SMAC (v2) in Java can be found [here](http://www.cs.ubc.ca/labs/beta/Projects/SMAC/).
 
+Status for master branch:
 
 [![Build Status](https://travis-ci.org/automl/SMAC3.svg?branch=master)](https://travis-ci.org/automl/SMAC3)
 [![Code Health](https://landscape.io/github/automl/SMAC3/master/landscape.png)](https://landscape.io/github/automl/SMAC3/master)
