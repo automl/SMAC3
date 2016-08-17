@@ -1,0 +1,52 @@
+language: python
+python:
+  - "2.7"
+  - "3.4"
+
+os:
+  - linux
+  - osx
+
+matrix:
+  allow_failures:
+    - os: osx
+    - python: "3.4"
+
+cache:
+  directories:
+    - $HOME/.cache/pip
+  pip: true
+
+sudo: false
+
+before_cache:
+  - rm -f $HOME/.cache/pip/log/debug.log
+
+# command to install dependencies
+addons:
+  apt:
+    packages:
+    - libatlas3gf-base
+    - libatlas-dev
+    - liblapack-dev
+    - gfortran
+
+before_install:
+  - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - conda update --yes conda
+
+install:
+  - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy=1.9 scipy>=0.13.2 nose matplotlib setuptools
+  - pip install pep8 python-coveralls
+  - pip install coverage
+  - pip install psutil
+
+  - python setup.py install
+
+# command to run tests, e.g. python setup.py test
+script:
+  - python setup.py test
+after_success:
+  - coveralls
