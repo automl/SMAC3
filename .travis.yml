@@ -25,10 +25,10 @@ before_cache:
 
 # command to install dependencies
 addons:
-  sources:
-    # necessary for rfr 
-    - sourceline: 'ppa:ubuntu-toolchain-r/test'
   apt:
+    sources:
+    # necessary for rfr 
+    - ubuntu-toolchain-r-test
     packages:
     # necessary for rfr
     - gcc-4.8
