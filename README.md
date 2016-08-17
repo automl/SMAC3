@@ -5,6 +5,18 @@ Copyright (C) 2016  [ML4AAD Group](http://www.ml4aad.org/)
 __Attention__: This package is under heavy development and subject to change. 
 A stable release of SMAC (v2) in Java can be found [here](http://www.cs.ubc.ca/labs/beta/Projects/SMAC/).
 
+
+[![Build Status](https://travis-ci.org/automl/SMAC3.svg?branch=master)](https://travis-ci.org/automl/SMAC3)
+[![Code Health](https://landscape.io/github/automl/SMAC3/master/landscape.png)](https://landscape.io/github/automl/SMAC3/master)
+[![Coverage Status](https://coveralls.io/repos/automl/auto-sklearn/badge.svg?branch=master&service=github)](https://coveralls.io/github/automl/SMAC3?branch=master)
+
+Status for development branch
+
+[![Build Status](https://travis-ci.org/automl/SMAC3.svg?branch=development)](https://travis-ci.org/automl/SMAC3)
+[![Code Health](https://landscape.io/github/automl/SMAC3/development/landscape.png)](https://landscape.io/github/automl/SMAC3/development)
+[![Coverage Status](https://coveralls.io/repos/automl/SMAC3/badge.svg?branch=development&service=github)](https://coveralls.io/github/automl/SMAC3?branch=development)
+
+
 #OVERVIEW
 
 SMAC is a tool for algorithm configuration 
