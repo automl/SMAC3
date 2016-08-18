@@ -1,6 +1,6 @@
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
-__license__ = "AGPLv3"
+__license__ = "3-clause BSD"
 __maintainer__ = "Marius Lindauer"
 __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
@@ -23,7 +23,7 @@ class TrajLogger(object):
         logger : Logger oject
     """
 
-    def __init__(self, output_dir):
+    def __init__(self, output_dir, stats):
         """
         Constructor 
 
@@ -33,7 +33,10 @@ class TrajLogger(object):
         ---------
         output_dir: str
             directory for logging
+        stats: Stats()
+            Stats object
         """
+        self.stats = stats
         self.logger = logging.getLogger("TrajLogger")
 
         if not os.path.isdir(output_dir):
@@ -91,8 +94,8 @@ class TrajLogger(object):
             if not incumbent[p] is None:
                 conf.append("%s='%s'" % (p, incumbent[p]))
 
-        ta_time_used = Stats.ta_time_used
-        wallclock_time = Stats.get_used_wallclock_time()
+        ta_time_used = self.stats.ta_time_used
+        wallclock_time = self.stats.get_used_wallclock_time()
 
         with open(self.old_traj_fn, "a") as fp:
             fp.write("%f, %f, %f, %d, %f, %s\n" % (
@@ -124,13 +127,13 @@ class TrajLogger(object):
             if not incumbent[p] is None:
                 conf.append("%s='%s'" % (p, incumbent[p]))
 
-        ta_time_used = Stats.ta_time_used
-        wallclock_time = Stats.get_used_wallclock_time()
+        ta_time_used = self.stats.ta_time_used
+        wallclock_time = self.stats.get_used_wallclock_time()
 
         traj_entry = {"cpu_time": ta_time_used,
                       "total_cpu_time": None,  # TODO: fix this
                       "wallclock_time": wallclock_time,
-                      "evaluations": Stats.ta_runs,
+                      "evaluations": self.stats.ta_runs,
                       "cost": train_perf,
                       "incumbent": conf
                       }

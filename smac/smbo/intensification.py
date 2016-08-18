@@ -15,7 +15,7 @@ from smac.stats.stats import Stats
 
 __author__ = "Katharina Eggensperger, Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
-__license__ = "AGPLv3"
+__license__ = "3-clause BSD"
 __maintainer__ = "Katharina Eggensperger"
 __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
@@ -29,7 +29,7 @@ class Intensifier(object):
         takes challenger and incumbents and performs intensify
     '''
 
-    def __init__(self, executor, instances=None,
+    def __init__(self, executor, stats, instances=None,
                  instance_specifics={},
                  cutoff=MAXINT, deterministic=False, run_obj_time=True,
                  run_limit=MAXINT, maxR=2000, rng=0):
@@ -40,6 +40,8 @@ class Intensifier(object):
         ----------
         executor : tae.executre_ta_run_*.ExecuteTARun* Object
             target algorithm run executor
+        stats: Stats()
+                stats object             
         instances : list
             list of all instance ids
         instance_specifics : dict
@@ -55,6 +57,7 @@ class Intensifier(object):
         maxR : int
             maximum number of runs per config
         '''
+        self.stats = stats
         # general attributes
         if instances is None:
             instances = []
@@ -93,6 +96,8 @@ class Intensifier(object):
                 best configuration so far
             run_history : runhistory
                 all runs on all instance,seed pairs for incumbent
+            objective: func
+                objective function
             time_bound : int, optional (default=2 ** 31 - 1)
                 time in [sec] available to perform intensify
 
@@ -112,7 +117,10 @@ class Intensifier(object):
         num_run = 0
 
         # Line 1 + 2
-        for challenger in challengers:
+        for chall_indx, challenger in enumerate(challengers):
+            if challenger == incumbent:
+                self.logger.warn("Challenger was the same as the current incumbent; Skipping challenger")
+                continue
             self.logger.debug("Intensify on %s", challenger)
             if hasattr(challenger, 'origin'):
                 self.logger.debug(
@@ -203,7 +211,8 @@ class Intensifier(object):
                                      self.Adaptive_Capping_Slackfactor)
 
                         if cutoff < 0:  # no time left to validate challenger
-                            self.logger.debug("Stop challenger itensification due to adaptive capping.")
+                            self.logger.debug(
+                                "Stop challenger itensification due to adaptive capping.")
                             break
 
                     else:
@@ -225,7 +234,8 @@ class Intensifier(object):
                 # for the challenger due to the adaptive capping
                 chall_inst_seeds = set(map(lambda x: (
                     x.instance, x.seed), run_history.get_runs_for_config(challenger)))
-                chal_perf = objective(challenger, run_history, chall_inst_seeds)
+                chal_perf = objective(
+                    challenger, run_history, chall_inst_seeds)
                 run_history.update_cost(challenger, chal_perf)
 
                 # Line 15
@@ -245,18 +255,18 @@ class Intensifier(object):
                         "Changing incumbent to challenger: %s" % (challenger))
                     incumbent = challenger
                     inc_perf = chal_perf
-                    Stats.inc_changed += 1
+                    self.stats.inc_changed += 1
                     break
                 # Line 17
                 else:
                     # challenger is not worse, continue
                     N = 2 * N
 
-            if num_run > self.run_limit:
+            if chall_indx >= 1 and num_run > self.run_limit:
                 self.logger.debug(
                     "Maximum #runs for intensification reached")
                 break
-            elif time.time() - self.start_time - time_bound >= 0:
+            elif chall_indx >= 1 and time.time() - self.start_time - time_bound >= 0:
                 self.logger.debug("Timelimit for intensification reached ("
                                   "used: %f sec, available: %f sec)" % (
                                       time.time() - self.start_time, time_bound))

@@ -3,13 +3,15 @@ import sys
 import logging
 import numpy
 import shlex
+import time
+import datetime
 
 from smac.utils.io.input_reader import InputReader
 from smac.configspace import pcs
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
-__license__ = "AGPLv3"
+__license__ = "3-clause BSD"
 __maintainer__ = "Marius Lindauer"
 __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
@@ -41,7 +43,7 @@ class Scenario(object):
             in_reader = InputReader()
             scenario = in_reader.read_scenario_file(scenario_fn)
         elif type(scenario) is dict:
-            pass
+            in_reader = InputReader()
         else:
             raise TypeError(
                 "Wrong type of scenario (str or dict are supported)")
@@ -52,8 +54,8 @@ class Scenario(object):
         self.ta = shlex.split(scenario.get("algo", ""))
         self.execdir = scenario.get("execdir", ".")
         self.deterministic = scenario.get("deterministic", "0") == "1" \
-                             or scenario.get("deterministic", "0") == "true" \
-                             or scenario.get('deterministic', '0') is True
+            or scenario.get("deterministic", "0") == "true" \
+            or scenario.get('deterministic', '0') is True
         self.pcs_fn = scenario.get("paramfile", None)
         self.run_obj = scenario.get("run_obj", "runtime")
         self.overall_obj = scenario.get("overall_obj", "par10")
@@ -66,10 +68,12 @@ class Scenario(object):
         self.train_inst_fn = scenario.get("instance_file", None)
         self.test_inst_fn = scenario.get("test_instance_file", None)
         self.feature_fn = scenario.get("feature_file")
-        self.output_dir = scenario.get("output_dir", "smac3-output")
+        self.output_dir = scenario.get("output_dir", "smac3-output_%s" % (
+            datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S')))
+        self.logger.info("Output to %s" %(self.output_dir))
         self.shared_model = scenario.get("shared_model", "0") == "1" \
-                            or scenario.get("shared_model", "0") == "true" \
-                            or scenario.get('shared_model', '0') is True
+            or scenario.get("shared_model", "0") == "true" \
+            or scenario.get('shared_model', '0') is True
 
         self.train_insts = scenario.get("instances", [[None]])
         self.test_insts = scenario.get("test_instances", [])

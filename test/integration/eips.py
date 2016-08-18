@@ -9,7 +9,6 @@ from smac.epm.uncorrelated_mo_rf_with_instances import \
     UncorrelatedMultiObjectiveRandomForestWithInstances
 from smac.smbo.acquisition import EIPS
 from smac.tae.execute_func import ExecuteTAFunc
-from smac.stats.stats import Stats
 
 
 def test_function(conf):
@@ -25,7 +24,6 @@ class TestEIPS(unittest.TestCase):
         scenario = Scenario({'cs': test_helpers.get_branin_config_space(),
                              'run_obj': 'quality',
                              'deterministic': True})
-        Stats.scenario = scenario
         types = get_types(scenario.cs, None)
         umrfwi = UncorrelatedMultiObjectiveRandomForestWithInstances(
             ['cost', 'runtime'], types)

@@ -8,15 +8,12 @@ A stable release of SMAC (v2) in Java can be found [here](http://www.cs.ubc.ca/l
 Status for master branch:
 
 [![Build Status](https://travis-ci.org/automl/SMAC3.svg?branch=master)](https://travis-ci.org/automl/SMAC3)
-[![Code Health](https://landscape.io/github/automl/SMAC3/master/landscape.png)](https://landscape.io/github/automl/SMAC3/master)
 [![Coverage Status](https://coveralls.io/repos/automl/auto-sklearn/badge.svg?branch=master&service=github)](https://coveralls.io/github/automl/SMAC3?branch=master)
 
 Status for development branch
 
 [![Build Status](https://travis-ci.org/automl/SMAC3.svg?branch=development)](https://travis-ci.org/automl/SMAC3)
-[![Code Health](https://landscape.io/github/automl/SMAC3/development/landscape.png)](https://landscape.io/github/automl/SMAC3/development)
 [![Coverage Status](https://coveralls.io/repos/automl/SMAC3/badge.svg?branch=development&service=github)](https://coveralls.io/github/automl/SMAC3?branch=development)
-
 
 #OVERVIEW
 
@@ -46,18 +43,15 @@ Its [Random Forest](https://bitbucket.org/aadfreiburg/random_forest_run) is writ
 # License
 
 This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
+it under the terms of the 3-clause BSD license (please see the LICENSE file).
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-You should have received a copy of the GNU Affero General Public License
+You should have received a copy of the 3-clause BSD license 
 along with this program (see LICENSE file). 
-If not, see <http://www.gnu.org/licenses/>.
+If not, see <https://opensource.org/licenses/BSD-3-Clause>.
 
 # USAGE
 

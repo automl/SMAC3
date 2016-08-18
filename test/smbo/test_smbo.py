@@ -3,8 +3,11 @@ Created on Dec 15, 2015
 
 @author: Aaron Klein
 '''
+import os
 import sys
 import unittest
+import shutil
+import glob
 
 import numpy as np
 from ConfigSpace import ConfigurationSpace, Configuration
@@ -25,7 +28,7 @@ if sys.version_info[0] == 2:
     import mock
 else:
     from unittest import mock
-
+    
 
 class ConfigurationMock(object):
     def __init__(self, value=None):
@@ -146,7 +149,7 @@ class TestSMBO(unittest.TestCase):
                                               patch_impute):
         values = (10, 1, 9, 2, 8, 3, 7, 4, 6, 5)
         patch_sample.return_value = [ConfigurationMock(i) for i in values]
-        patch_ei.return_value = np.array(values, dtype=float)
+        patch_ei.return_value = np.array([[_] for _ in values], dtype=float)
         patch_impute.side_effect = lambda x: x
         smbo = SMBO(self.scenario, 1)
         rval = smbo._get_next_by_random_search(10, True)
@@ -210,6 +213,10 @@ class TestSMBO(unittest.TestCase):
         self.assertEqual(patch.call_args_list[9][0][0], 'Incumbent')
         for i in range(10):
             self.assertEqual(rval[i][1].origin, 'Local Search')
+
+    def tearDown(self):
+            for d in glob.glob('smac3-output*'):
+                shutil.rmtree(d)
 
 
 if __name__ == "__main__":

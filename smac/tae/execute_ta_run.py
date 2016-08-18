@@ -3,7 +3,7 @@ from subprocess import Popen, PIPE
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
-__license__ = "AGPLv3"
+__license__ = "3-clause BSD"
 __maintainer__ = "Marius Lindauer"
 __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
@@ -33,7 +33,7 @@ class ExecuteTARun(object):
             the command line call to the target algorithm (wrapper)
     """
 
-    def __init__(self, ta, run_obj="runtime"):
+    def __init__(self, ta, stats, run_obj="runtime"):
         """
         Constructor
 
@@ -41,10 +41,13 @@ class ExecuteTARun(object):
         ----------
             ta : list
                 target algorithm command line as list of arguments
+            stats: Stats()
+                 stats object to collect statistics about runtime and so on                
             run_obj: str
                 run objective of SMAC
         """
         self.ta = ta
+        self.stats = stats
         self.logger = logging.getLogger("ExecuteTARun")
         pass
 

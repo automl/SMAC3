@@ -1,6 +1,5 @@
 import sys
 import logging
-from subprocess import Popen, PIPE
 
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
@@ -11,7 +10,7 @@ import pynisher
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
-__license__ = "AGPLv3"
+__license__ = "3-clause BSD"
 __maintainer__ = "Marius Lindauer"
 __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
@@ -20,7 +19,7 @@ __version__ = "0.0.1"
 class ExecuteTAFunc(object):
 
     """
-        executes a function  with given inputs (i.e., the configuratoin)
+        executes a function  with given inputs (i.e., the configuration)
         and some resource limitations
 
         Attributes
@@ -33,20 +32,23 @@ class ExecuteTAFunc(object):
             penalized average runtime factor
     """
 
-    def __init__(self, func, run_obj="quality", par_factor=1):
+    def __init__(self, func, stats, run_obj="quality", par_factor=1):
         """
         Constructor
 
         Parameters
         ----------
-            func : function
-                target algorithm function 
+            func: function
+                target algorithm function
+            stats: Stats()
+                 stats object to collect statistics about runtime and so on
             run_obj: str
                 run objective of SMAC
             par_factor: int
                 penalized average runtime factor
         """
         self.func = func
+        self.stats = stats
         self.logger = logging.getLogger("ExecuteTAFunc")
         self.run_obj = run_obj
         self.par_factor = par_factor
@@ -89,9 +91,9 @@ class ExecuteTAFunc(object):
             cpu_time_in_s=int(math.ceil(cutoff)), logger=logging.getLogger("pynisher"))(self.func)
 
         if instance:
-            result = obj(config, instance)
+            result = obj(config, instance, seed)
         else:
-            result = obj(config)
+            result = obj(config, seed)
 
         #self.logger.debug("Function value: %.4f" % (result))
 
@@ -114,8 +116,8 @@ class ExecuteTAFunc(object):
                 cost = runtime
 
         # update SMAC stats
-        Stats.ta_runs += 1
-        Stats.ta_time_used += float(runtime)
+        self.stats.ta_runs += 1
+        self.stats.ta_time_used += float(runtime)
 
         self.logger.debug("Return: %s,%.4f,%.4f" % (status, cost, runtime))
 
