@@ -26,7 +26,7 @@ from smac.smbo.smbo import SMBO
 from smac.stats.stats import Stats
 
 
-def rfr(cfg):
+def rfr(cfg, seed):
     """
     We optimize our own random forest with SMAC 
     """

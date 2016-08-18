@@ -22,7 +22,7 @@ from smac.scenario.scenario import Scenario
 from smac.smbo.smbo import SMBO
 from smac.stats.stats import Stats
 
-def rosenbrock_4d(cfg):
+def rosenbrock_4d(cfg, seed):
     """ The 4 dimensional Rosenbrock function as a toy model
     The Rosenbrock function is well know in the optimization community and
     often serves as a toy problem. It can be defined for arbitrary
