@@ -3,9 +3,9 @@ Created on Apr 12, 2015
 
 @author: Andre Biedenkapp
 '''
+import os
 import unittest
 import logging
-import numpy as np
 
 from smac.utils.io.cmd_reader import CMDReader
 
@@ -24,6 +24,14 @@ class CMDReaderTest(unittest.TestCase):
         self.logger = logging.getLogger('CMDReader Test')
         self.logger.setLevel(logging.DEBUG)
         self.cr = CMDReader()
+        self.current_dir = os.getcwd()
+        base_directory = os.path.split(__file__)[0]
+        base_directory = os.path.abspath(os.path.join(base_directory, '..',
+                                                      '..', '..'))
+        os.chdir(base_directory)
+
+    def tearDown(self):
+        os.chdir(self.current_dir)
 
     def test_check_args_exception(self):  # Tests if the Exception is correctly raised
         targs = TestArgs('.', 1234, 2, 'DEBUG')
