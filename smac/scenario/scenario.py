@@ -65,7 +65,6 @@ class Scenario(object):
                              str(list(scenario.keys())))
 
         for arg_name, arg_value in parsed_arguments.items():
-            print(arg_name, arg_value)
             setattr(self, arg_name, arg_value)
 
         self._transform_arguments()
@@ -117,31 +116,31 @@ class Scenario(object):
         self.add_argument(name='deterministic', default="0", help=None,
                           callback=lambda arg: arg in ["1", "true", True])
         self.add_argument(name='paramfile', help=None, dest='pcs_fn')
-        self.add_argument(name='run-obj', help=None, default='runtime')
+        self.add_argument(name='run_obj', help=None, default='runtime')
         self.add_argument(name='overall_obj', help=None, default='par10')
-        self.add_argument(name='cutoff-time', help=None, default=999999999,
+        self.add_argument(name='cutoff_time', help=None, default=999999999,
                           dest='cutoff', callback=lambda arg: float(arg))
-        self.add_argument(name='tunerTimeout', help=None, default=numpy.inf,
+        self.add_argument(name='tuner-timeout', help=None, default=numpy.inf,
                           dest='algo_runs_timelimit',
                           callback=lambda arg: float(arg))
-        self.add_argument(name='wallclock-limit', help=None, default=numpy.inf,
+        self.add_argument(name='wallclock_limit', help=None, default=numpy.inf,
                           callback=lambda arg: float(arg))
-        self.add_argument(name='runcount-limit', help=None, default=numpy.inf,
-                          callback=lambda arg: float(arg))
-        self.add_argument(name='instance-file', help=None, dest='train_inst_fn')
-        self.add_argument(name='test-instance-file', help=None,
+        self.add_argument(name='runcount_limit', help=None, default=numpy.inf,
+                          callback=lambda arg: float(arg), dest="ta_run_limit")
+        self.add_argument(name='instance_file', help=None, dest='train_inst_fn')
+        self.add_argument(name='test_instance_file', help=None,
                           dest='test_inst_fn')
-        self.add_argument(name='feature-file', help=None, dest='feature_fn')
-        self.add_argument(name='output-dir', help=None,
+        self.add_argument(name='feature_file', help=None, dest='feature_fn')
+        self.add_argument(name='output_dir', help=None,
                           default="smac3-output_%s" % (
                               datetime.datetime.fromtimestamp(
                                   time.time()).strftime(
                                   '%Y-%m-%d_%H:%M:%S')))
-        self.add_argument(name='shared-model', help=None, default='0',
+        self.add_argument(name='shared_model', help=None, default='0',
                           callback=lambda arg: arg in ['1', 'true', True])
         self.add_argument(name='instances', default=[[None]], help=None,
                           dest='train_insts')
-        self.add_argument(name='test-instances', default=[[None]], help=None,
+        self.add_argument(name='test_instances', default=[[None]], help=None,
                           dest='test_insts')
         # instance name -> feature vector
         self.add_argument(name='features', default={}, help=None,
