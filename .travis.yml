@@ -45,7 +45,7 @@ before_install:
   - conda update --yes conda
 
 install:
-  - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy>=1.6.1 scipy>=0.13.1 six nose matplotlib setuptools Cython mock
+  - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy>=1.6.1 scipy>=0.13.1 six nose matplotlib setuptools Cython
   - if [ "$TRAVIS_PYTHON_VERSION" == "2.7" ]; pip install mock; fi
   - pip install pep8 python-coveralls
   - pip install coverage
