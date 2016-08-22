@@ -72,14 +72,23 @@ class Stats(object):
         if self.__scenario:
             return self.__scenario.algo_runs_timelimit - self.ta_time_used
 
-    def print_stats(self):
+    def print_stats(self, debug_out:bool=False):
         '''
             prints all statistics
+            
+            Arguments
+            ---------
+            debug: bool
+                use logging.debug instead of logging.info if set to true
         '''
-        self._logger.info("##########################################################")
-        self._logger.info("Statistics:")
-        self._logger.info("#Target algorithm runs: %d" %(self.ta_runs))
-        self._logger.info("Used wallclock time: %.2f sec" %(time.time() - self._start_time))
-        self._logger.info("Used target algorithm runtime: %.2f sec" %(self.ta_time_used))
+        log_func = self._logger.info
+        if debug_out:
+            log_func = self._logger.debug
         
-        self._logger.info("##########################################################")    
+        log_func("##########################################################")
+        log_func("Statistics:")
+        log_func("#Target algorithm runs: %d" %(self.ta_runs))
+        log_func("Used wallclock time: %.2f sec" %(time.time() - self._start_time))
+        log_func("Used target algorithm runtime: %.2f sec" %(self.ta_time_used))
+        
+        log_func("##########################################################")    

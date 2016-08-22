@@ -328,6 +328,8 @@ class SMBO(BaseSolver):
                                           incumbent_id=self.stats.inc_changed,
                                           incumbent=self.incumbent)
                 inc_id = self.stats.inc_changed
+                
+            self.stats.print_stats(debug_out=True)
 
         return self.incumbent
 
