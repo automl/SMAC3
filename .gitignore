@@ -17,3 +17,7 @@ target_algo_runs.json
 # Other
 .tox
 *~
+
+#eclipse files
+.pydevproject 
+.project
