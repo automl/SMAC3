@@ -45,7 +45,7 @@ class ScenarioTest(unittest.TestCase):
     def test_Exception(self):
         with self.assertRaises(TypeError):
             s = Scenario(['a', 'b'])
-    
+
     def test_string_scenario(self):
         scenario = Scenario('test/test_files/scenario_test/scenario.txt')
         
@@ -81,6 +81,15 @@ class ScenarioTest(unittest.TestCase):
         test_dict = {'d' : 1, 'e' : 2, 'f' : 3}
         self.assertEquals(scenario.feature_dict, test_dict)
         self.assertEquals(scenario.feature_array[0], 1)
+
+    def unknown_parameter_in_scenario(self):
+        self.assertRaisesRegex(ValueError,
+                               'Could not parse the following arguments: '
+                               'duairznbvulncbzpneairzbnuqdae',
+                               Scenario,
+                               {'wallclock-limit': '12345',
+                                'duairznbvulncbzpneairzbnuqdae': 'uqpab'})
+
 
 if __name__ == "__main__":
     unittest.main()

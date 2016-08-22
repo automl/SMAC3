@@ -9,12 +9,12 @@ import datetime
 from smac.utils.io.input_reader import InputReader
 from smac.configspace import pcs
 
-__author__ = "Marius Lindauer"
-__copyright__ = "Copyright 2015, ML4AAD"
+__author__ = "Marius Lindauer, Matthias Feurer"
+__copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 __maintainer__ = "Marius Lindauer"
 __email__ = "lindauer@cs.uni-freiburg.de"
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 
 class Scenario(object):
@@ -36,14 +36,14 @@ class Scenario(object):
 
         """
         self.logger = logging.getLogger("scenario")
+        self.in_reader = InputReader()
 
         if type(scenario) is str:
             scenario_fn = scenario
             self.logger.info("Reading scenario file: %s" % (scenario_fn))
-            in_reader = InputReader()
-            scenario = in_reader.read_scenario_file(scenario_fn)
+            scenario = self.in_reader.read_scenario_file(scenario_fn)
         elif type(scenario) is dict:
-            in_reader = InputReader()
+            pass
         else:
             raise TypeError(
                 "Wrong type of scenario (str or dict are supported)")
@@ -51,37 +51,105 @@ class Scenario(object):
         if cmd_args:
             scenario.update(cmd_args)
 
-        self.ta = shlex.split(scenario.get("algo", ""))
-        self.execdir = scenario.get("execdir", ".")
-        self.deterministic = scenario.get("deterministic", "0") == "1" \
-            or scenario.get("deterministic", "0") == "true" \
-            or scenario.get('deterministic', '0') is True
-        self.pcs_fn = scenario.get("paramfile", None)
-        self.run_obj = scenario.get("run_obj", "runtime")
-        self.overall_obj = scenario.get("overall_obj", "par10")
-        self.cutoff = float(scenario.get("cutoff_time", 999999999))
-        self.algo_runs_timelimit = float(
-            scenario.get("tunerTimeout", numpy.inf))
-        self.wallclock_limit = float(
-            scenario.get("wallclock-limit", numpy.inf))
-        self.ta_run_limit = float(scenario.get("runcount-limit", numpy.inf))
-        self.train_inst_fn = scenario.get("instance_file", None)
-        self.test_inst_fn = scenario.get("test_instance_file", None)
-        self.feature_fn = scenario.get("feature_file")
-        self.output_dir = scenario.get("output_dir", "smac3-output_%s" % (
-            datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S')))
-        self.logger.info("Output to %s" %(self.output_dir))
-        self.shared_model = scenario.get("shared_model", "0") == "1" \
-            or scenario.get("shared_model", "0") == "true" \
-            or scenario.get('shared_model', '0') is True
+        self._arguments = {}
+        self._add_arguments()
 
-        self.train_insts = scenario.get("instances", [[None]])
-        self.test_insts = scenario.get("test_instances", [])
+        # Parse arguments
+        parsed_arguments = {}
+        for key, value in self._arguments.items():
+            arg_name, arg_value = self._parse_argument(key, scenario, **value)
+            parsed_arguments[arg_name] = arg_value
+
+        if len(scenario) != 0:
+            raise ValueError('Could not parse the following arguments: %s' %
+                             str(list(scenario.keys())))
+
+        for arg_name, arg_value in parsed_arguments.items():
+            setattr(self, arg_name, arg_value)
+
+        self._transform_arguments()
+
+    def add_argument(self, name, help, callback=None, default=None,
+                     dest=None, required=False):
+        if not isinstance(required, bool):
+            raise TypeError("Argument required must be of type 'bool'.")
+
+        self._arguments[name] = {'default': default,
+                                 'required': required,
+                                 'help': help,
+                                 'dest': dest,
+                                 'callback': callback}
+
+    def _parse_argument(self, name, scenario, help, callback=None, default=None,
+                        dest=None, required=False):
+        normalized_name = name.lower().replace('-', '').replace('_', '')
+        value = None
+
+        # Allows us to pop elements in order to remove all parsed elements
+        # from the dictionary
+        for key in list(scenario.keys()):
+            # Check all possible ways to spell an argument
+            normalized_key = key.lower().replace('-', '').replace('_', '')
+            if normalized_key == normalized_name:
+                value = scenario.pop(key)
+
+        if dest is None:
+            dest = name.lower().replace('-', '_')
+
+        if required is True:
+            if value is None:
+                raise ValueError('Required argument %s not given.' % name)
+
+        if value is None:
+            value = default
+
+        if value is not None and callable(callback):
+            value = callback(value)
+
+        return dest, value
+
+    def _add_arguments(self):
+        # Add allowed arguments
+        self.add_argument(name='algo', help=None, dest='ta',
+                          callback=lambda arg: shlex.split(arg))
+        self.add_argument(name='execdir', default='.', help=None)
+        self.add_argument(name='deterministic', default="0", help=None,
+                          callback=lambda arg: arg in ["1", "true", True])
+        self.add_argument(name='paramfile', help=None, dest='pcs_fn')
+        self.add_argument(name='run_obj', help=None, default='runtime')
+        self.add_argument(name='overall_obj', help=None, default='par10')
+        self.add_argument(name='cutoff_time', help=None, default=999999999,
+                          dest='cutoff', callback=lambda arg: float(arg))
+        self.add_argument(name='tuner-timeout', help=None, default=numpy.inf,
+                          dest='algo_runs_timelimit',
+                          callback=lambda arg: float(arg))
+        self.add_argument(name='wallclock_limit', help=None, default=numpy.inf,
+                          callback=lambda arg: float(arg))
+        self.add_argument(name='runcount_limit', help=None, default=numpy.inf,
+                          callback=lambda arg: float(arg), dest="ta_run_limit")
+        self.add_argument(name='instance_file', help=None, dest='train_inst_fn')
+        self.add_argument(name='test_instance_file', help=None,
+                          dest='test_inst_fn')
+        self.add_argument(name='feature_file', help=None, dest='feature_fn')
+        self.add_argument(name='output_dir', help=None,
+                          default="smac3-output_%s" % (
+                              datetime.datetime.fromtimestamp(
+                                  time.time()).strftime(
+                                  '%Y-%m-%d_%H:%M:%S')))
+        self.add_argument(name='shared_model', help=None, default='0',
+                          callback=lambda arg: arg in ['1', 'true', True])
+        self.add_argument(name='instances', default=[[None]], help=None,
+                          dest='train_insts')
+        self.add_argument(name='test_instances', default=[[None]], help=None,
+                          dest='test_insts')
         # instance name -> feature vector
-        self.feature_dict = scenario.get("features", {})
+        self.add_argument(name='features', default={}, help=None,
+                          dest='feature_dict')
+        self.add_argument(name='cs', help=None)  # ConfigSpace object
+
+    def _transform_arguments(self):
         self.n_features = len(self.feature_dict)
         self.feature_array = None
-        self.cs = scenario.get("cs", None)  # ConfigSpace object
 
         if self.overall_obj[:3] in ["PAR", "par"]:
             self.par_factor = int(self.overall_obj[3:])
@@ -93,7 +161,7 @@ class Scenario(object):
         # read instance files
         if self.train_inst_fn:
             if os.path.isfile(self.train_inst_fn):
-                self.train_insts = in_reader.read_instance_file(
+                self.train_insts = self.in_reader.read_instance_file(
                     self.train_inst_fn)
             else:
                 self.logger.error(
@@ -101,11 +169,12 @@ class Scenario(object):
                 sys.exit(1)
         if self.test_inst_fn:
             if os.path.isfile(self.test_inst_fn):
-                self.test_insts = in_reader.read_instance_file(
+                self.test_insts = self.in_reader.read_instance_file(
                     self.test_inst_fn)
             else:
                 self.logger.error(
-                    "Have not found test instance file: %s" % (self.test_inst_fn))
+                    "Have not found test instance file: %s" % (
+                    self.test_inst_fn))
                 sys.exit(1)
 
         self.instance_specific = {}
@@ -125,7 +194,7 @@ class Scenario(object):
         # read feature file
         if self.feature_fn:
             if os.path.isfile(self.feature_fn):
-                self.feature_dict = in_reader.read_instance_features_file(
+                self.feature_dict = self.in_reader.read_instance_features_file(
                     self.feature_fn)[1]
 
         if self.feature_dict:
@@ -146,3 +215,7 @@ class Scenario(object):
             self.logger.error("Have not found pcs file: %s" %
                               (self.pcs_fn))
             sys.exit(1)
+
+        self.logger.info("Output to %s" % (self.output_dir))
+
+
