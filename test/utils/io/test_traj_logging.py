@@ -8,7 +8,11 @@ import logging
 import json
 import os
 
-from mock import patch
+try:
+    import unittest.mock
+    from unittest.mock import patch
+except:
+    from mock import patch
 from smac.utils.io.traj_logging import TrajLogger
 
 from smac.scenario.scenario import Scenario
