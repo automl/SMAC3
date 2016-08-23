@@ -85,7 +85,7 @@ def _cost(config, run_history, instance_seed_pairs=None):
         id_ = run_history.config_ids[config.__repr__()]
     except KeyError:  # challenger was not running so far
         return []
-
+    
     if instance_seed_pairs is None:
         instance_seed_pairs = run_history.get_runs_for_config(config)
 

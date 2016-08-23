@@ -73,12 +73,21 @@ class RunHistory(object):
                 information from TA or fields such as start time and host_id)
         '''
 
-        # TODO: replace str casting of config when we have something hashable
-        # as a config object
-        # TODO JTS: We might have to execute one config multiple times
-        #           since the results can be noisy and then we can't simply
-        #           overwrite the old config result here!
+        # that alone is not enough since we use sometime the __eq__ of Configuration
+        # which uses np.allclose() and not a np.all()
         config_id = self.config_ids.get(config.__repr__())
+        
+        #iterate over all configs to find "close" configs
+        if config_id is None:
+            for known_config in self.config_ids.keys():
+                known_config = self.ids_config[self.config_ids[known_config]]
+                if  known_config == config: # np.allclose
+                    config_id = self.config_ids[known_config.__repr__()]
+                    # register the close configuration also under the same id
+                    self.config_ids[config.__repr__()] = config_id
+                    break
+
+        # if config_id is still unknown, generate a new one        
         if config_id is None:
             self._n_id += 1
             self.config_ids[config.__repr__()] = self._n_id
@@ -112,8 +121,11 @@ class RunHistory(object):
         InstanceSeedPair = collections.namedtuple("InstanceSeedPair",
                                                   ["instance", "seed"])
         list_ = []
+        config_id = self.config_ids.get(config.__repr__())
         for k in self.data:
-            if config == self.ids_config[k.config_id]:
+            # we have to compare base on ids 
+            # to avoid np.allclose issues 
+            if config_id == k.config_id: 
                 ist = InstanceSeedPair(k.instance_id, k.seed)
                 list_.append(ist)
         return list_
@@ -172,7 +184,7 @@ class RunHistory(object):
 
 
         self.config_ids = dict([(Configuration(
-            cs, vector=numpy.array(vec)).__repr__(), id_) for id_, vec in all_data["id_config"].items()])
+            cs, vector=numpy.array(vec)), id_) for id_, vec in all_data["id_config"].items()])
         self._n_id = len(self.config_ids)
         
         self.data = dict([(self.RunKey(int(k[0]), k[1], int(k[2])),
