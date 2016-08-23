@@ -75,23 +75,23 @@ class RunHistory(object):
 
         # that alone is not enough since we use sometime the __eq__ of Configuration
         # which uses np.allclose() and not a np.all()
-        config_id = self.config_ids.get(config.__repr__())
+        config_id = self.config_ids.get(config)
         
         #iterate over all configs to find "close" configs
         if config_id is None:
             for known_config in self.config_ids.keys():
                 known_config = self.ids_config[self.config_ids[known_config]]
                 if  known_config == config: # np.allclose
-                    config_id = self.config_ids[known_config.__repr__()]
+                    config_id = self.config_ids[known_config]
                     # register the close configuration also under the same id
-                    self.config_ids[config.__repr__()] = config_id
+                    self.config_ids[config] = config_id
                     break
 
         # if config_id is still unknown, generate a new one        
         if config_id is None:
             self._n_id += 1
-            self.config_ids[config.__repr__()] = self._n_id
-            config_id = self.config_ids.get(config.__repr__())
+            self.config_ids[config] = self._n_id
+            config_id = self.config_ids.get(config)
             self.ids_config[self._n_id] = config
 
         k = self.RunKey(config_id, instance_id, seed)
@@ -100,11 +100,11 @@ class RunHistory(object):
         self.data[k] = v
 
     def update_cost(self, config, cost):
-        config_id = self.config_ids[config.__repr__()]
+        config_id = self.config_ids[config]
         self.cost_per_config[config_id] = cost
 
     def get_cost(self, config):
-        config_id = self.config_ids[config.__repr__()]
+        config_id = self.config_ids[config]
         return self.cost_per_config[config_id]
 
     def get_runs_for_config(self, config):
@@ -121,7 +121,7 @@ class RunHistory(object):
         InstanceSeedPair = collections.namedtuple("InstanceSeedPair",
                                                   ["instance", "seed"])
         list_ = []
-        config_id = self.config_ids.get(config.__repr__())
+        config_id = self.config_ids.get(config)
         for k in self.data:
             # we have to compare base on ids 
             # to avoid np.allclose issues 
