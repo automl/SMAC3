@@ -37,8 +37,8 @@ class TrajLoggerTest(unittest.TestCase):
         self.assertFalse(os.path.exists('smac3-output'))
         self.assertTrue(os.path.exists('tmp_test_folder'))
 
-    @patch('smac.utils.io.traj_logging.Stats')
-    def test_add_entry(self,mock_stats):
+    @patch('smac.stats.stats.Stats')
+    def test_add_entry(self, mock_stats):
 
         tl = TrajLogger(output_dir='./tmp_test_folder', stats=mock_stats)
         test_config = {'param_a': 0.5,
@@ -75,7 +75,7 @@ class TrajLoggerTest(unittest.TestCase):
         self.assertEquals(len(json_dict['incumbent']), 3)
         self.assertTrue("param_a='0.5'" in json_dict['incumbent'])
 
-    @patch('smac.utils.io.traj_logging.Stats')
+    @patch('smac.stats.stats.Stats')
     def test_add_multiple_entries(self, mock_stats):
         tl = TrajLogger(output_dir='./tmp_test_folder', stats=mock_stats)
         
