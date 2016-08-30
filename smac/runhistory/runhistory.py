@@ -106,9 +106,10 @@ class RunHistory(object):
         """
         InstanceSeedPair = collections.namedtuple("InstanceSeedPair",
                                                   ["instance", "seed"])
+        config_id = self.config_ids.get(config)
         list_ = []
         for k in self.data:
-            if config == self.ids_config[k.config_id]:
+            if config_id == k.config_id:
                 ist = InstanceSeedPair(k.instance_id, k.seed)
                 list_.append(ist)
         return list_
