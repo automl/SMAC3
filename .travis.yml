@@ -1,6 +1,5 @@
 language: python
 python:
-  - "2.7"
   - "3.4"
   - "3.5"
 
@@ -11,7 +10,6 @@ os:
 matrix:
   allow_failures:
     - os: osx
-    - python: "2.7"
 
 cache:
   directories:
