@@ -245,6 +245,11 @@ class SMBO(BaseSolver):
         self.runhistory.update_cost(default_conf, default_perf)
 
         self.stats.inc_changed += 1  # first incumbent
+
+        self.trajLogger.add_entry(train_perf=default_perf,
+                                  incumbent_id=self.stats.inc_changed,
+                                  incumbent=self.incumbent)
+        
         return default_conf
 
     def run(self, max_iters=10):
@@ -266,10 +271,6 @@ class SMBO(BaseSolver):
         #self.runhistory = RunHisory()
 
         self.incumbent = self.run_initial_design()
-
-        self.trajLogger.add_entry(train_perf=999999999,
-                                  incumbent_id=self.stats.inc_changed,
-                                  incumbent=self.incumbent)
 
         inc_id = self.stats.inc_changed  # ID of incumbent
 
