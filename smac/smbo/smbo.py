@@ -319,17 +319,17 @@ class SMBO(BaseSolver):
                 self.stats.get_remaining_ta_budget(),
                 self.stats.get_remaining_ta_runs()))
 
-            if self.stats.get_remaing_time_budget() < 0 or \
-                    self.stats.get_remaining_ta_budget() < 0 or \
-                    self.stats.get_remaining_ta_runs() < 0:
-                break
-
             if self.stats.inc_changed > inc_id:
                 self.trajLogger.add_entry(train_perf=inc_perf,
                                           incumbent_id=self.stats.inc_changed,
                                           incumbent=self.incumbent)
                 inc_id = self.stats.inc_changed
-                
+
+            if self.stats.get_remaing_time_budget() < 0 or \
+                    self.stats.get_remaining_ta_budget() < 0 or \
+                    self.stats.get_remaining_ta_runs() < 0:
+                break
+
             self.stats.print_stats(debug_out=True)
 
         return self.incumbent
