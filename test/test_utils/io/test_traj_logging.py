@@ -85,7 +85,6 @@ class TrajLoggerTest(unittest.TestCase):
         mock_stats.ta_time_used = 0.5
         mock_stats.get_used_wallclock_time = self.mocked_get_used_wallclock_time
         mock_stats.ta_runs = 1
-
         tl.add_entry(0.9, 1, test_config)
         
         mock_stats.ta_runs = 2
@@ -114,11 +113,11 @@ class TrajLoggerTest(unittest.TestCase):
 
         self.assertEquals(frmt_str % 0, data[1][0])
         self.assertEquals(frmt_str % 1.3, data[1][1])
-        self.assertEquals(frmt_str % 3, data[1][-4])
+        self.assertEquals(frmt_str % 2, data[1][-4])
 
         self.assertEquals(frmt_str % 0, data[2][0])
         self.assertEquals(frmt_str % .7, data[2][1])
-        self.assertEquals(frmt_str % 5, data[2][-4])
+        self.assertEquals(frmt_str % 3, data[2][-4])
 
         json_dicts = []
         with open('tmp_test_folder/traj_aclib2.json') as js:

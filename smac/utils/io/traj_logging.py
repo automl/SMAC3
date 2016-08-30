@@ -102,7 +102,7 @@ class TrajLogger(object):
                 conf.append("%s='%s'" % (p, repr(incumbent[p])))
 
         with open(self.old_traj_fn, "a") as fp:
-            fp.write("%g, %f, %g, %d, %g, %s\n" % (
+            fp.write("%f, %f, %f, %d, %f, %s\n" % (
                 ta_time_used,
                 train_perf,
                 wallclock_time,
