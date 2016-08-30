@@ -7,10 +7,8 @@ __version__ = "0.0.1"
 
 import os
 import logging
-import numpy
 import json
 
-from smac.stats.stats import Stats
 
 
 class TrajLogger(object):
@@ -92,7 +90,7 @@ class TrajLogger(object):
         conf = []
         for p in incumbent:
             if not incumbent[p] is None:
-                conf.append("%s='%s'" % (p, incumbent[p]))
+                conf.append("%s='%s'" % (p, repr(incumbent[p])))
 
         ta_time_used = self.stats.ta_time_used
         wallclock_time = self.stats.get_used_wallclock_time()
@@ -125,7 +123,7 @@ class TrajLogger(object):
         conf = []
         for p in incumbent:
             if not incumbent[p] is None:
-                conf.append("%s='%s'" % (p, incumbent[p]))
+                conf.append("%s='%s'" % (p, repr(incumbent[p])))
 
         ta_time_used = self.stats.ta_time_used
         wallclock_time = self.stats.get_used_wallclock_time()

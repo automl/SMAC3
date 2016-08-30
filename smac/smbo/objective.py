@@ -28,7 +28,7 @@ def _runtime(config, run_history, instance_seed_pairs=None):
     list
     """
     try:
-        id_ = run_history.config_ids[config.__repr__()]
+        id_ = run_history.config_ids[config]
     except KeyError:  # challenger was not running so far
         return []
 
@@ -82,7 +82,7 @@ def _cost(config, run_history, instance_seed_pairs=None):
     list
     """
     try:
-        id_ = run_history.config_ids[config.__repr__()]
+        id_ = run_history.config_ids[config]
     except KeyError:  # challenger was not running so far
         return []
 
