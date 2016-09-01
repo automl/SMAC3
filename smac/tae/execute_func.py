@@ -1,7 +1,7 @@
 import sys
 import logging
 
-from smac.tae.execute_ta_run import StatusType
+from smac.tae.execute_ta_run import StatusType, ExecuteTARun
 from smac.stats.stats import Stats
 
 import math
@@ -16,7 +16,7 @@ __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class ExecuteTAFunc(object):
+class ExecuteTAFunc(ExecuteTARun):
 
     """
         executes a function  with given inputs (i.e., the configuration)
@@ -47,12 +47,15 @@ class ExecuteTAFunc(object):
             par_factor: int
                 penalized average runtime factor
         """
+        super()
+        
         self.func = func
         self.stats = stats
         self.logger = logging.getLogger("ExecuteTAFunc")
         self.run_obj = run_obj
         self.par_factor = par_factor
 
+    
     def run(self, config, instance=None,
             cutoff=99999999999999.,
             seed=12345,
@@ -114,11 +117,5 @@ class ExecuteTAFunc(object):
                 cost = cutoff * self.par_factor
             else:
                 cost = runtime
-
-        # update SMAC stats
-        self.stats.ta_runs += 1
-        self.stats.ta_time_used += float(runtime)
-
-        self.logger.debug("Return: %s,%.4f,%.4f" % (status, cost, runtime))
 
         return status, cost, runtime, {}

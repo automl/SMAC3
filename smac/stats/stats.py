@@ -71,6 +71,18 @@ class Stats(object):
         '''
         if self.__scenario:
             return self.__scenario.algo_runs_timelimit - self.ta_time_used
+        
+    def is_budget_exhausted(self):
+        '''
+            check whether the configuration budget for time budget, ta_budget and ta_runs is empty 
+            
+            Returns
+            -------
+                true if one of the budgets is exhausted
+        '''
+        return  self.get_remaing_time_budget() < 0 or \
+                self.get_remaining_ta_budget() < 0 or \
+                self.get_remaining_ta_runs() <= 0
 
     def print_stats(self, debug_out:bool=False):
         '''

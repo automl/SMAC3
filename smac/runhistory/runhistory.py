@@ -3,6 +3,7 @@ import json
 import numpy
 
 from smac.configspace import Configuration
+from smac.tae.execute_ta_run import StatusType
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -109,7 +110,7 @@ class RunHistory(object):
         config_id = self.config_ids.get(config)
         list_ = []
         for k in self.data:
-            if config_id == k.config_id:
+            if config_id == k.config_id and self.data[k].status not in [StatusType.ABORT] :
                 ist = InstanceSeedPair(k.instance_id, k.seed)
                 list_.append(ist)
         return list_

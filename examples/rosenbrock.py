@@ -1,6 +1,5 @@
 from __future__ import division, print_function
 
-
 #TODO: remove really ugly boilerplate
 import logging
 import sys
@@ -9,7 +8,7 @@ import inspect
 cmd_folder = os.path.realpath(os.path.abspath(os.path.split(inspect.getfile( inspect.currentframe() ))[0]))
 cmd_folder = os.path.realpath(os.path.join(cmd_folder, ".."))
 if cmd_folder not in sys.path:
-    sys.path.append(cmd_folder)
+    sys.path.insert(0,cmd_folder)
     
 import numpy as np
 
@@ -63,7 +62,9 @@ cs.add_hyperparameter(x4)
 scenario = Scenario({"run_obj":"quality", # we optimize quality (alternative runtime)
                      "runcount-limit": 200, # at most 200 function evaluations
                      "cs": cs, # configuration space
-                     "deterministic": "true"
+                     "deterministic": "true",
+                     "tuner-timeout" : 1,
+                     "wallclock_limit": 2
                      })
 stats = Stats(scenario)
 
