@@ -177,6 +177,8 @@ class Intensifier(object):
             N = 1
 
             inc_inst_seeds = set(run_history.get_runs_for_config(incumbent))
+            inc_perf = objective(incumbent, run_history, inc_inst_seeds)
+            run_history.update_cost(incumbent, inc_perf)
 
             # Line 9
             while True:
@@ -193,9 +195,7 @@ class Intensifier(object):
                 missing_runs = missing_runs[min(N, len(missing_runs)):]
 
                 inst_seed_pairs = list(inc_inst_seeds - set(missing_runs))
-                inc_perf = objective(incumbent, run_history, inst_seed_pairs)
-                run_history.update_cost(incumbent, inc_perf)
-
+                
                 inc_sum_cost = sum_cost(config=incumbent, instance_seed_pairs=inst_seed_pairs,
                                         run_history=run_history)
 
@@ -236,12 +236,14 @@ class Intensifier(object):
                 chall_inst_seeds = set(map(lambda x: (
                     x.instance, x.seed), run_history.get_runs_for_config(challenger)))
                 
-                if not chall_inst_seeds:
-                    self.logger.debug("No valid runs for challenger.")
+                if len(chall_inst_seeds) < len(inst_seed_pairs):
+                    #challenger got not enough runs because of exhausted config budget
+                    self.logger.debug("No (or not enough) valid runs for challenger.")
                     break
                 else:
                     chal_perf = objective(challenger, run_history, chall_inst_seeds)
                     run_history.update_cost(challenger, chal_perf)
+                    inc_perf = objective(incumbent, run_history, chall_inst_seeds)
                     # Line 15
                     if chal_perf > inc_perf:
                         # Incumbent beats challenger
@@ -260,6 +262,7 @@ class Intensifier(object):
                         "Changing incumbent to challenger: %s" % (challenger))
                     incumbent = challenger
                     inc_perf = chal_perf
+                    run_history.update_cost(challenger, chal_perf)
                     self.stats.inc_changed += 1
                     break
                 # Line 17

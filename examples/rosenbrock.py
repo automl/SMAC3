@@ -63,8 +63,8 @@ scenario = Scenario({"run_obj":"quality", # we optimize quality (alternative run
                      "runcount-limit": 200, # at most 200 function evaluations
                      "cs": cs, # configuration space
                      "deterministic": "true",
-                     "tuner-timeout" : 1,
-                     "wallclock_limit": 2
+                     #"tuner-timeout" : 1,
+                     #"wallclock_limit": 2
                      })
 stats = Stats(scenario)
 

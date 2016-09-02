@@ -110,7 +110,9 @@ class RunHistory(object):
         config_id = self.config_ids.get(config)
         list_ = []
         for k in self.data:
-            if config_id == k.config_id and self.data[k].status not in [StatusType.ABORT] :
+            # TA will return ABORT if config. budget was exhausted and
+            # we don't want to collect such runs to compute the cost of a configuration
+            if config_id == k.config_id and self.data[k].status not in [StatusType.ABORT] : 
                 ist = InstanceSeedPair(k.instance_id, k.seed)
                 list_.append(ist)
         return list_
