@@ -7,7 +7,7 @@ dist
 *.pyc
 *.pyo
 
-# IDEs
+# Pycharm
 .idea
 
 # SMAC output
