@@ -3,7 +3,7 @@ import logging
 import json
 from subprocess import Popen, PIPE
 
-from smac.tae.execute_ta_run import StatusType
+from smac.tae.execute_ta_run import StatusType, ExecuteTARun
 from smac.stats.stats import Stats
 
 __author__ = "Marius Lindauer"
@@ -14,7 +14,7 @@ __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class ExecuteTARunAClib(object):
+class ExecuteTARunAClib(ExecuteTARun):
 
     """
         executes a target algorithm run with a given configuration
@@ -46,6 +46,7 @@ class ExecuteTARunAClib(object):
             par_factor: int
                 penalized average runtime factor
         """
+        super()
         self.ta = ta
         self.stats = stats
         self.logger = logging.getLogger("ExecuteTARun")
@@ -84,8 +85,6 @@ class ExecuteTARunAClib(object):
                 additional_info: dict
                     all further additional run information
         """
-
-        self.stats.ta_runs += 1
 
         if instance is None:
             instance = "0"
@@ -146,8 +145,6 @@ class ExecuteTARunAClib(object):
 
         runtime = float(results["runtime"])
         
-        self.stats.ta_time_used += float(runtime)
-
         if self.run_obj == "quality" and results.get("cost") is None:
             self.logger.error(
                 "The target algorithm has not returned a quality/cost value" +

@@ -182,7 +182,10 @@ class RandomForestWithInstances(object):
 
         if self.instance_features is None or \
                 len(self.instance_features) == 0:
-            return self.predict(X)
+            mean, var = self.predict(X)
+            var[var < self.var_threshold] = self.var_threshold
+            var[np.isnan(var)] = self.var_threshold
+            return mean, var
         else:
             n_instance_features = self.instance_features.shape[1]
             n_instances = len(self.instance_features)

@@ -224,8 +224,10 @@ class SMBO(BaseSolver):
         else:
             initial_seed = random.randint(0, MAXINT)
 
-        status, cost, runtime, additional_info = self.executor.run(
-            default_conf, instance=rand_inst, cutoff=self.scenario.cutoff,
+        status, cost, runtime, additional_info = self.executor.start(
+            default_conf,
+            instance=rand_inst,
+            cutoff=self.scenario.cutoff,
             seed=initial_seed,
             instance_specific=self.scenario.instance_specific.get(rand_inst, "0"))
 
@@ -325,9 +327,7 @@ class SMBO(BaseSolver):
                                           incumbent=self.incumbent)
                 inc_id = self.stats.inc_changed
 
-            if self.stats.get_remaing_time_budget() < 0 or \
-                    self.stats.get_remaining_ta_budget() < 0 or \
-                    self.stats.get_remaining_ta_runs() < 0:
+            if self.stats.is_budget_exhausted():
                 break
 
             self.stats.print_stats(debug_out=True)

@@ -10,7 +10,7 @@ cmd_folder = os.path.realpath(
     os.path.abspath(os.path.split(inspect.getfile(inspect.currentframe()))[0]))
 cmd_folder = os.path.realpath(os.path.join(cmd_folder, ".."))
 if cmd_folder not in sys.path:
-    sys.path.append(cmd_folder)
+    sys.path.insert(0,cmd_folder)
 
 import numpy as np
 from sklearn.cross_validation import KFold
