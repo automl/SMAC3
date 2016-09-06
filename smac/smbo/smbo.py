@@ -100,7 +100,7 @@ class SMBO(BaseSolver):
             self.stats = stats
         else:
             self.stats = Stats(scenario)
-
+            
         self.runhistory = RunHistory()
 
         self.logger = logging.getLogger("smbo")
@@ -120,6 +120,8 @@ class SMBO(BaseSolver):
 
         self.scenario = scenario
         self.config_space = scenario.cs
+        self.traj_logger = TrajLogger(
+            output_dir=self.scenario.output_dir, stats=self.stats)
 
         self.types = get_types(self.config_space, scenario.feature_array)
         if model is None:
@@ -149,6 +151,7 @@ class SMBO(BaseSolver):
 
         self.inten = Intensifier(executor=self.executor,
                                  stats=self.stats,
+                                 traj_logger = self.traj_logger,
                                  instances=self.scenario.train_insts,
                                  cutoff=self.scenario.cutoff,
                                  deterministic=self.scenario.deterministic,
@@ -196,9 +199,6 @@ class SMBO(BaseSolver):
         else:
             raise ValueError('Unknown run objective: %s. Should be either '
                              'quality or runtime.' % self.scenario.run_obj)
-
-        self.trajLogger = TrajLogger(
-            output_dir=self.scenario.output_dir, stats=self.stats)
 
     def run_initial_design(self):
         '''
@@ -248,7 +248,7 @@ class SMBO(BaseSolver):
 
         self.stats.inc_changed += 1  # first incumbent
 
-        self.trajLogger.add_entry(train_perf=default_perf,
+        self.traj_logger.add_entry(train_perf=default_perf,
                                   incumbent_id=self.stats.inc_changed,
                                   incumbent=self.incumbent)
         
@@ -273,8 +273,6 @@ class SMBO(BaseSolver):
         #self.runhistory = RunHisory()
 
         self.incumbent = self.run_initial_design()
-
-        inc_id = self.stats.inc_changed  # ID of incumbent
 
         # Main BO loop
         iteration = 1
@@ -320,12 +318,6 @@ class SMBO(BaseSolver):
                 self.stats.get_remaing_time_budget(),
                 self.stats.get_remaining_ta_budget(),
                 self.stats.get_remaining_ta_runs()))
-
-            if self.stats.inc_changed > inc_id:
-                self.trajLogger.add_entry(train_perf=inc_perf,
-                                          incumbent_id=self.stats.inc_changed,
-                                          incumbent=self.incumbent)
-                inc_id = self.stats.inc_changed
 
             if self.stats.is_budget_exhausted():
                 break
