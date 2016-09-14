@@ -23,6 +23,7 @@ from smac.smbo.objective import average_cost, total_runtime
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
+from smac.tae.execute_func import ExecuteTAFunc
 from smac.utils.io.traj_logging import TrajLogger
 
 from smac.epm.rfr_imputator import RFRImputator
@@ -148,6 +149,10 @@ class SMBO(BaseSolver):
                                             par_factor=scenario.par_factor)
         else:
             self.executor = tae_runner
+        if scenario.memory_limit is not None and \
+                not isinstance(tae_runner, ExecuteTAFunc):
+            raise ValueError('Argument memory limit can only be used together '
+                             'with a python function (ExecuteTAFunc).')
 
         self.inten = Intensifier(executor=self.executor,
                                  stats=self.stats,

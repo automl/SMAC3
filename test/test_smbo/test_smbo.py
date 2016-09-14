@@ -19,6 +19,8 @@ from smac.smbo.smbo import SMBO, get_types
 from smac.scenario.scenario import Scenario
 from smac.smbo.acquisition import EI, EIPS
 from smac.smbo.local_search import LocalSearch
+from smac.tae.execute_func import ExecuteTAFunc
+from smac.stats.stats import Stats
 from smac.utils import test_helpers
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.uncorrelated_mo_rf_with_instances import \
@@ -42,6 +44,17 @@ class TestSMBO(unittest.TestCase):
 
     def setUp(self):
         self.scenario = Scenario({'cs': test_helpers.get_branin_config_space()})
+
+    def test_set_memory_limit(self):
+        self.scenario.memory_limit = 1024
+        self.assertRaisesRegex(ValueError, 'Argument memory limit can only be '
+                                           'used together with a python '
+                                           'function \(ExecuteTAFunc\)',
+                               SMBO, self.scenario)
+        stats = Stats(self.scenario)
+        SMBO(tae_runner=ExecuteTAFunc(lambda: 1, stats=stats),
+             scenario=self.scenario,
+             stats=stats)
         
     def branin(self, x):
         y = (x[:, 1] - (5.1 / (4 * np.pi ** 2)) * x[:, 0] ** 2 + 5 * x[:, 0] / np.pi - 6) ** 2
