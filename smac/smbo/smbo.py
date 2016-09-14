@@ -100,7 +100,7 @@ class SMBO(BaseSolver):
             self.stats = stats
         else:
             self.stats = Stats(scenario)
-            
+
         self.runhistory = RunHistory()
 
         self.logger = logging.getLogger("smbo")
@@ -151,7 +151,7 @@ class SMBO(BaseSolver):
 
         self.inten = Intensifier(executor=self.executor,
                                  stats=self.stats,
-                                 traj_logger = self.traj_logger,
+                                 traj_logger=self.traj_logger,
                                  instances=self.scenario.train_insts,
                                  cutoff=self.scenario.cutoff,
                                  deterministic=self.scenario.deterministic,
@@ -215,6 +215,12 @@ class SMBO(BaseSolver):
 
         default_conf = self.config_space.get_default_configuration()
         self.incumbent = default_conf
+
+        # add this incumbent right away to have an entry to time point 0
+        self.traj_logger.add_entry(train_perf=2**31,
+                                   incumbent_id=1,
+                                   incumbent=self.incumbent)
+
         rand_inst_id = self.rng.randint(0, len(self.scenario.train_insts))
         # ignore instance specific values
         rand_inst = self.scenario.train_insts[rand_inst_id]
@@ -249,9 +255,9 @@ class SMBO(BaseSolver):
         self.stats.inc_changed += 1  # first incumbent
 
         self.traj_logger.add_entry(train_perf=default_perf,
-                                  incumbent_id=self.stats.inc_changed,
-                                  incumbent=self.incumbent)
-        
+                                   incumbent_id=self.stats.inc_changed,
+                                   incumbent=self.incumbent)
+
         return default_conf
 
     def run(self, max_iters=10):
