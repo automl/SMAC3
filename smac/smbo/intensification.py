@@ -29,7 +29,7 @@ class Intensifier(object):
         takes challenger and incumbents and performs intensify
     '''
 
-    def __init__(self, executor, stats, instances=None,
+    def __init__(self, executor, stats, traj_logger, instances=None,
                  instance_specifics={},
                  cutoff=MAXINT, deterministic=False, run_obj_time=True,
                  run_limit=MAXINT, maxR=2000, rng=0):
@@ -41,7 +41,9 @@ class Intensifier(object):
         executor : tae.executre_ta_run_*.ExecuteTARun* Object
             target algorithm run executor
         stats: Stats()
-                stats object             
+            stats object            
+        traj_logger: TrajLogger()
+            TrajLogger object to log all new incumbents
         instances : list
             list of all instance ids
         instance_specifics : dict
@@ -58,6 +60,7 @@ class Intensifier(object):
             maximum number of runs per config
         '''
         self.stats = stats
+        self.traj_logger = traj_logger
         # general attributes
         if instances is None:
             instances = []
@@ -264,6 +267,9 @@ class Intensifier(object):
                     inc_perf = chal_perf
                     run_history.update_cost(challenger, chal_perf)
                     self.stats.inc_changed += 1
+                    self.traj_logger.add_entry(train_perf=inc_perf,
+                                               incumbent_id=self.stats.inc_changed,
+                                               incumbent=incumbent)
                     break
                 # Line 17
                 else:
