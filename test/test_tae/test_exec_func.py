@@ -78,11 +78,11 @@ class TestExecuteFunc(unittest.TestCase):
         self.assertGreaterEqual(rval[2], 1)
         self.assertEqual(rval[3], dict())
 
-    @unittest.mock.patch('autosklearn.evaluation.eval_holdout')
-    def test_fail_silent(self, pynisher_mock):
-        pynisher_mock.return_value = None
+    def test_fail_silent(self):
+        def function(*args):
+            return
 
-        taf = ExecuteTAFunc(func=pynisher_mock, stats=self.stats)
+        taf = ExecuteTAFunc(func=function, stats=self.stats)
         rval = taf.run(config=None, cutoff=1)
         self.assertEqual(rval[0], StatusType.CRASHED)
         self.assertEqual(rval[1], 1234567890)
