@@ -41,7 +41,7 @@ before_install:
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - conda update --yes conda
-  - conda update --all python=$TRAVIS_PYTHON_VERSION
+  - conda update --yes --all python=$TRAVIS_PYTHON_VERSION
 
 install:
   - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy>=1.6.1 scipy>=0.13.1 six nose setuptools Cython
