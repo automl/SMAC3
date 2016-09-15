@@ -43,6 +43,8 @@ class ExecuteTAFunc(ExecuteTARun):
         self.run_obj = run_obj
         self.par_factor = par_factor
 
+        self._supports_memory_limit = True
+
     def run(self, config, instance=None,
             cutoff=None,
             memory_limit=None,

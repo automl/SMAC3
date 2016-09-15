@@ -149,10 +149,6 @@ class SMBO(BaseSolver):
                                             par_factor=scenario.par_factor)
         else:
             self.executor = tae_runner
-        if scenario.memory_limit is not None and \
-                not isinstance(tae_runner, ExecuteTAFunc):
-            raise ValueError('Argument memory limit can only be used together '
-                             'with a python function (ExecuteTAFunc).')
 
         self.inten = Intensifier(executor=self.executor,
                                  stats=self.stats,

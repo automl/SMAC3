@@ -44,17 +44,6 @@ class TestSMBO(unittest.TestCase):
 
     def setUp(self):
         self.scenario = Scenario({'cs': test_helpers.get_branin_config_space()})
-
-    def test_set_memory_limit(self):
-        self.scenario.memory_limit = 1024
-        self.assertRaisesRegex(ValueError, 'Argument memory limit can only be '
-                                           'used together with a python '
-                                           'function \(ExecuteTAFunc\)',
-                               SMBO, self.scenario)
-        stats = Stats(self.scenario)
-        SMBO(tae_runner=ExecuteTAFunc(lambda: 1, stats=stats),
-             scenario=self.scenario,
-             stats=stats)
         
     def branin(self, x):
         y = (x[:, 1] - (5.1 / (4 * np.pi ** 2)) * x[:, 0] ** 2 + 5 * x[:, 0] / np.pi - 6) ** 2
