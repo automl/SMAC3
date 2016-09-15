@@ -37,13 +37,16 @@ addons:
     - gfortran
 
 before_install:
-  - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+  - wget http://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
-  - conda update --yes conda
+  # comment out because otherwise installation fails because of 
+  # dependency issues
+  # - conda update --yes conda
+  - conda update --yes --all python=$TRAVIS_PYTHON_VERSION
 
 install:
-  - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy>=1.6.1 scipy>=0.13.1 six nose matplotlib setuptools Cython
+  - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy>=1.6.1 scipy>=0.13.1 six nose setuptools Cython
   - pip install pep8 python-coveralls
   - pip install coverage
   - pip install psutil
