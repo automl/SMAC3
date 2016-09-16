@@ -23,6 +23,7 @@ from smac.smbo.objective import average_cost, total_runtime
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
+from smac.tae.execute_func import ExecuteTAFunc
 from smac.utils.io.traj_logging import TrajLogger
 
 from smac.epm.rfr_imputator import RFRImputator
@@ -120,6 +121,8 @@ class SMBO(BaseSolver):
 
         self.scenario = scenario
         self.config_space = scenario.cs
+        self.traj_logger = TrajLogger(
+            output_dir=self.scenario.output_dir, stats=self.stats)
 
         self.types = get_types(self.config_space, scenario.feature_array)
         if model is None:
@@ -149,6 +152,7 @@ class SMBO(BaseSolver):
 
         self.inten = Intensifier(executor=self.executor,
                                  stats=self.stats,
+                                 traj_logger=self.traj_logger,
                                  instances=self.scenario.train_insts,
                                  cutoff=self.scenario.cutoff,
                                  deterministic=self.scenario.deterministic,
@@ -197,9 +201,6 @@ class SMBO(BaseSolver):
             raise ValueError('Unknown run objective: %s. Should be either '
                              'quality or runtime.' % self.scenario.run_obj)
 
-        self.trajLogger = TrajLogger(
-            output_dir=self.scenario.output_dir, stats=self.stats)
-
     def run_initial_design(self):
         '''
             runs algorithm runs for a initial design;
@@ -215,6 +216,12 @@ class SMBO(BaseSolver):
 
         default_conf = self.config_space.get_default_configuration()
         self.incumbent = default_conf
+
+        # add this incumbent right away to have an entry to time point 0
+        self.traj_logger.add_entry(train_perf=2**31,
+                                   incumbent_id=1,
+                                   incumbent=self.incumbent)
+
         rand_inst_id = self.rng.randint(0, len(self.scenario.train_insts))
         # ignore instance specific values
         rand_inst = self.scenario.train_insts[rand_inst_id]
@@ -224,14 +231,16 @@ class SMBO(BaseSolver):
         else:
             initial_seed = random.randint(0, MAXINT)
 
-        status, cost, runtime, additional_info = self.executor.run(
-            default_conf, instance=rand_inst, cutoff=self.scenario.cutoff,
+        status, cost, runtime, additional_info = self.executor.start(
+            default_conf,
+            instance=rand_inst,
+            cutoff=self.scenario.cutoff,
             seed=initial_seed,
             instance_specific=self.scenario.instance_specific.get(rand_inst, "0"))
 
         if status in [StatusType.CRASHED or StatusType.ABORT]:
-            self.logger.info("First run crashed -- Abort")
-            sys.exit(42)
+            self.logger.critical("First run crashed -- Abort")
+            sys.exit(1)
 
         self.runhistory.add(config=default_conf, cost=cost, time=runtime,
                             status=status,
@@ -245,6 +254,11 @@ class SMBO(BaseSolver):
         self.runhistory.update_cost(default_conf, default_perf)
 
         self.stats.inc_changed += 1  # first incumbent
+
+        self.traj_logger.add_entry(train_perf=default_perf,
+                                   incumbent_id=self.stats.inc_changed,
+                                   incumbent=self.incumbent)
+
         return default_conf
 
     def run(self, max_iters=10):
@@ -266,12 +280,6 @@ class SMBO(BaseSolver):
         #self.runhistory = RunHisory()
 
         self.incumbent = self.run_initial_design()
-
-        self.trajLogger.add_entry(train_perf=999999999,
-                                  incumbent_id=self.stats.inc_changed,
-                                  incumbent=self.incumbent)
-
-        inc_id = self.stats.inc_changed  # ID of incumbent
 
         # Main BO loop
         iteration = 1
@@ -318,16 +326,10 @@ class SMBO(BaseSolver):
                 self.stats.get_remaining_ta_budget(),
                 self.stats.get_remaining_ta_runs()))
 
-            if self.stats.get_remaing_time_budget() < 0 or \
-                    self.stats.get_remaining_ta_budget() < 0 or \
-                    self.stats.get_remaining_ta_runs() < 0:
+            if self.stats.is_budget_exhausted():
                 break
 
-            if self.stats.inc_changed > inc_id:
-                self.trajLogger.add_entry(train_perf=inc_perf,
-                                          incumbent_id=self.stats.inc_changed,
-                                          incumbent=self.incumbent)
-                inc_id = self.stats.inc_changed
+            self.stats.print_stats(debug_out=True)
 
         return self.incumbent
 

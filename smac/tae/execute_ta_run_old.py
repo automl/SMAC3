@@ -2,7 +2,7 @@ import sys
 import logging
 from subprocess import Popen, PIPE
 
-from smac.tae.execute_ta_run import StatusType
+from smac.tae.execute_ta_run import StatusType, ExecuteTARun
 from smac.stats.stats import Stats
 
 __author__ = "Marius Lindauer"
@@ -13,7 +13,7 @@ __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class ExecuteTARunOld(object):
+class ExecuteTARunOld(ExecuteTARun):
 
     """
         executes a target algorithm run with a given configuration
@@ -45,6 +45,7 @@ class ExecuteTARunOld(object):
             par_factor: int
                 penalized average runtime factor
         """
+        super()
         self.ta = ta
         self.stats = stats
         self.logger = logging.getLogger("ExecuteTARun")
@@ -52,7 +53,7 @@ class ExecuteTARunOld(object):
         self.par_factor = par_factor
 
     def run(self, config, instance=None,
-            cutoff=99999999999999.,
+            cutoff=None,
             seed=12345,
             instance_specific="0"
             ):
@@ -85,10 +86,10 @@ class ExecuteTARunOld(object):
                     all further additional run information
         """
 
-        self.stats.ta_runs += 1
-
         if instance is None:
             instance = "0"
+        if cutoff is None:
+            cutoff = 99999999999999.
 
         # TOOD: maybe replace fixed instance specific and cutoff_length (0) to
         # other value
@@ -121,7 +122,6 @@ class ExecuteTARunOld(object):
                     status, runtime, runlength, quality, seed, additional_info = fields
                     additional_info = {"additional_info": additional_info}
 
-                self.stats.ta_time_used += float(runtime)
                 runtime = min(float(runtime), cutoff)
                 quality = float(quality)
                 seed = int(seed)

@@ -8,7 +8,11 @@ import logging
 import json
 import os
 
-from mock import patch
+try:
+    import unittest.mock
+    from unittest.mock import patch
+except:
+    from mock import patch
 from smac.utils.io.traj_logging import TrajLogger
 
 from smac.scenario.scenario import Scenario
@@ -33,8 +37,8 @@ class TrajLoggerTest(unittest.TestCase):
         self.assertFalse(os.path.exists('smac3-output'))
         self.assertTrue(os.path.exists('tmp_test_folder'))
 
-    @patch('smac.utils.io.traj_logging.Stats')
-    def test_add_entry(self,mock_stats):
+    @patch('smac.stats.stats.Stats')
+    def test_add_entry(self, mock_stats):
 
         tl = TrajLogger(output_dir='./tmp_test_folder', stats=mock_stats)
         test_config = {'param_a': 0.5,
@@ -71,7 +75,7 @@ class TrajLoggerTest(unittest.TestCase):
         self.assertEquals(len(json_dict['incumbent']), 3)
         self.assertTrue("param_a='0.5'" in json_dict['incumbent'])
 
-    @patch('smac.utils.io.traj_logging.Stats')
+    @patch('smac.stats.stats.Stats')
     def test_add_multiple_entries(self, mock_stats):
         tl = TrajLogger(output_dir='./tmp_test_folder', stats=mock_stats)
         
@@ -81,7 +85,6 @@ class TrajLoggerTest(unittest.TestCase):
         mock_stats.ta_time_used = 0.5
         mock_stats.get_used_wallclock_time = self.mocked_get_used_wallclock_time
         mock_stats.ta_runs = 1
-
         tl.add_entry(0.9, 1, test_config)
         
         mock_stats.ta_runs = 2
@@ -110,11 +113,11 @@ class TrajLoggerTest(unittest.TestCase):
 
         self.assertEquals(frmt_str % 0, data[1][0])
         self.assertEquals(frmt_str % 1.3, data[1][1])
-        self.assertEquals(frmt_str % 3, data[1][-4])
+        self.assertEquals(frmt_str % 2, data[1][-4])
 
         self.assertEquals(frmt_str % 0, data[2][0])
         self.assertEquals(frmt_str % .7, data[2][1])
-        self.assertEquals(frmt_str % 5, data[2][-4])
+        self.assertEquals(frmt_str % 3, data[2][-4])
 
         json_dicts = []
         with open('tmp_test_folder/traj_aclib2.json') as js:

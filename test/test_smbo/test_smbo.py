@@ -19,6 +19,8 @@ from smac.smbo.smbo import SMBO, get_types
 from smac.scenario.scenario import Scenario
 from smac.smbo.acquisition import EI, EIPS
 from smac.smbo.local_search import LocalSearch
+from smac.tae.execute_func import ExecuteTAFunc
+from smac.stats.stats import Stats
 from smac.utils import test_helpers
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.uncorrelated_mo_rf_with_instances import \
@@ -41,7 +43,8 @@ class ConfigurationMock(object):
 class TestSMBO(unittest.TestCase):
 
     def setUp(self):
-        self.scenario = Scenario({'cs': test_helpers.get_branin_config_space()})
+        self.scenario = Scenario({'cs': test_helpers.get_branin_config_space(),
+                                  'run_obj': 'quality'})
         
     def branin(self, x):
         y = (x[:, 1] - (5.1 / (4 * np.pi ** 2)) * x[:, 0] ** 2 + 5 * x[:, 0] / np.pi - 6) ** 2
@@ -50,6 +53,8 @@ class TestSMBO(unittest.TestCase):
         return y[:, np.newaxis]        
 
     def test_init_only_scenario_runtime(self):
+        self.scenario.run_obj = 'runtime'
+        self.scenario.cutoff = 300
         smbo = SMBO(self.scenario)
         self.assertIsInstance(smbo.model, RandomForestWithInstances)
         np.testing.assert_allclose(smbo.types, smbo.model.types)
@@ -57,7 +62,6 @@ class TestSMBO(unittest.TestCase):
         self.assertIsInstance(smbo.acquisition_func, EI)
 
     def test_init_only_scenario_quality(self):
-        self.scenario.run_obj = 'quality'
         smbo = SMBO(self.scenario)
         self.assertIsInstance(smbo.model, RandomForestWithInstances)
         np.testing.assert_allclose(smbo.types, smbo.model.types)

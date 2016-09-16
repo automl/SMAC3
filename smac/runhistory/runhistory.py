@@ -3,6 +3,7 @@ import json
 import numpy
 
 from smac.configspace import Configuration
+from smac.tae.execute_ta_run import StatusType
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -73,16 +74,11 @@ class RunHistory(object):
                 information from TA or fields such as start time and host_id)
         '''
 
-        # TODO: replace str casting of config when we have something hashable
-        # as a config object
-        # TODO JTS: We might have to execute one config multiple times
-        #           since the results can be noisy and then we can't simply
-        #           overwrite the old config result here!
-        config_id = self.config_ids.get(config.__repr__())
+        config_id = self.config_ids.get(config)
         if config_id is None:
             self._n_id += 1
-            self.config_ids[config.__repr__()] = self._n_id
-            config_id = self.config_ids.get(config.__repr__())
+            self.config_ids[config] = self._n_id
+            config_id = self.config_ids.get(config)
             self.ids_config[self._n_id] = config
 
         k = self.RunKey(config_id, instance_id, seed)
@@ -91,11 +87,11 @@ class RunHistory(object):
         self.data[k] = v
 
     def update_cost(self, config, cost):
-        config_id = self.config_ids[config.__repr__()]
+        config_id = self.config_ids[config]
         self.cost_per_config[config_id] = cost
 
     def get_cost(self, config):
-        config_id = self.config_ids[config.__repr__()]
+        config_id = self.config_ids[config]
         return self.cost_per_config[config_id]
 
     def get_runs_for_config(self, config):
@@ -111,9 +107,12 @@ class RunHistory(object):
         """
         InstanceSeedPair = collections.namedtuple("InstanceSeedPair",
                                                   ["instance", "seed"])
+        config_id = self.config_ids.get(config)
         list_ = []
         for k in self.data:
-            if config == self.ids_config[k.config_id]:
+            # TA will return ABORT if config. budget was exhausted and
+            # we don't want to collect such runs to compute the cost of a configuration
+            if config_id == k.config_id and self.data[k].status not in [StatusType.ABORT] : 
                 ist = InstanceSeedPair(k.instance_id, k.seed)
                 list_.append(ist)
         return list_
@@ -139,8 +138,8 @@ class RunHistory(object):
             file name
         '''
 
-        id_vec = dict([(id_, conf.get_array().tolist())
-                       for id_, conf in self.ids_config.items()])
+        configs = {id_: conf.get_dictionary()
+                   for id_, conf in self.ids_config.items()}
 
         data = [([int(k.config_id),
                   str(k.instance_id) if k.instance_id is not None else None,
@@ -149,7 +148,7 @@ class RunHistory(object):
 
         with open(fn, "w") as fp:
             json.dump({"data": data,
-                       "id_config": id_vec}, fp)
+                       "configs": configs}, fp)
 
     def load_json(self, fn, cs):
         """Load and runhistory in json representation from disk.
@@ -167,18 +166,18 @@ class RunHistory(object):
         with open(fn) as fp:
             all_data = json.load(fp)
 
-        self.ids_config = dict([(int(id_), Configuration(
-            cs, vector=numpy.array(vec))) for id_, vec in all_data["id_config"].items()])
+        self.ids_config = {int(id_): Configuration(cs, values=values)
+                           for id_, values in all_data["configs"].items()}
 
 
-        self.config_ids = dict([(Configuration(
-            cs, vector=numpy.array(vec)).__repr__(), id_) for id_, vec in all_data["id_config"].items()])
+        self.config_ids = {Configuration(cs, values=values): int(id_)
+                           for id_, values in all_data["configs"].items()}
+
         self._n_id = len(self.config_ids)
         
-        self.data = dict([(self.RunKey(int(k[0]), k[1], int(k[2])),
-                           self.RunValue(float(v[0]), float(v[1]), v[2], v[3]))
-                          for k, v in all_data["data"]
-                          ])
+        self.data = {self.RunKey(int(k[0]), k[1], int(k[2])):
+                     self.RunValue(float(v[0]), float(v[1]), v[2], v[3])
+                     for k, v in all_data["data"]}
 
     def update_from_json(self, fn, cs):
         """Update the current runhistory by adding new runs from a json file.

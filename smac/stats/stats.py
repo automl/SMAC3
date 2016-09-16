@@ -71,15 +71,37 @@ class Stats(object):
         '''
         if self.__scenario:
             return self.__scenario.algo_runs_timelimit - self.ta_time_used
+        
+    def is_budget_exhausted(self):
+        '''
+            check whether the configuration budget for time budget, ta_budget and ta_runs is empty 
+            
+            Returns
+            -------
+                true if one of the budgets is exhausted
+        '''
+        return  self.get_remaing_time_budget() < 0 or \
+                self.get_remaining_ta_budget() < 0 or \
+                self.get_remaining_ta_runs() <= 0
 
-    def print_stats(self):
+    def print_stats(self, debug_out:bool=False):
         '''
             prints all statistics
+            
+            Arguments
+            ---------
+            debug: bool
+                use logging.debug instead of logging.info if set to true
         '''
-        self._logger.info("##########################################################")
-        self._logger.info("Statistics:")
-        self._logger.info("#Target algorithm runs: %d" %(self.ta_runs))
-        self._logger.info("Used wallclock time: %.2f sec" %(time.time() - self._start_time))
-        self._logger.info("Used target algorithm runtime: %.2f sec" %(self.ta_time_used))
+        log_func = self._logger.info
+        if debug_out:
+            log_func = self._logger.debug
         
-        self._logger.info("##########################################################")    
+        log_func("##########################################################")
+        log_func("Statistics:")
+        log_func("#Incumbent changed: %d" %(self.inc_changed - 1)) # first change is default conf
+        log_func("#Target algorithm runs: %d / %d" %(self.ta_runs, self.__scenario.ta_run_limit))
+        log_func("Used wallclock time: %.2f / %.2f sec " %(time.time() - self._start_time, self.__scenario.wallclock_limit))
+        log_func("Used target algorithm runtime: %.2f / %.2f sec" %(self.ta_time_used, self.__scenario.algo_runs_timelimit))
+        
+        log_func("##########################################################")    

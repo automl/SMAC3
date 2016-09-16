@@ -7,10 +7,8 @@ __version__ = "0.0.1"
 
 import os
 import logging
-import numpy
 import json
 
-from smac.stats.stats import Stats
 
 
 class TrajLogger(object):
@@ -56,10 +54,10 @@ class TrajLogger(object):
 
         self.aclib_traj_fn = os.path.join(output_dir, "traj_aclib2.json")
 
-    def add_entry(self, train_perf,
-                  incumbent_id, incumbent):
+    def add_entry(self, train_perf, incumbent_id, incumbent):
         """
-            adds entries to trajectory files (several formats)
+            adds entries to trajectory files (several formats) with using the
+            same timestamps for each entry
 
             Parameters
             ----------
@@ -71,11 +69,16 @@ class TrajLogger(object):
                 current incumbent configuration
         """
 
-        self._add_in_old_format(train_perf, incumbent_id, incumbent)
-        self._add_in_aclib_format(train_perf, incumbent_id, incumbent)
+        ta_time_used = self.stats.ta_time_used
+        wallclock_time = self.stats.get_used_wallclock_time()
 
-    def _add_in_old_format(self, train_perf,
-                           incumbent_id, incumbent):
+        self._add_in_old_format(train_perf, incumbent_id, incumbent,
+                                ta_time_used, wallclock_time)
+        self._add_in_aclib_format(train_perf, incumbent_id, incumbent,
+                                  ta_time_used, wallclock_time)
+
+    def _add_in_old_format(self, train_perf, incumbent_id, incumbent,
+                           ta_time_used, wallclock_time):
         """
             adds entries to old SMAC2-like trajectory file
 
@@ -87,15 +90,16 @@ class TrajLogger(object):
                 id of incumbent
             incumbent: Configuration()
                 current incumbent configuration
+            ta_time_used: float
+                CPU time used by the target algorithm
+            wallclock_time: float
+                wallclock time used so far
         """
 
         conf = []
         for p in incumbent:
             if not incumbent[p] is None:
-                conf.append("%s='%s'" % (p, incumbent[p]))
-
-        ta_time_used = self.stats.ta_time_used
-        wallclock_time = self.stats.get_used_wallclock_time()
+                conf.append("%s='%s'" % (p, repr(incumbent[p])))
 
         with open(self.old_traj_fn, "a") as fp:
             fp.write("%f, %f, %f, %d, %f, %s\n" % (
@@ -107,8 +111,8 @@ class TrajLogger(object):
                 ", ".join(conf)
             ))
 
-    def _add_in_aclib_format(self, train_perf,
-                             incumbent_id, incumbent):
+    def _add_in_aclib_format(self, train_perf, incumbent_id, incumbent,
+                             ta_time_used, wallclock_time):
         """
             adds entries to AClib2-like trajectory file
 
@@ -120,15 +124,16 @@ class TrajLogger(object):
                 id of incumbent
             incumbent: Configuration()
                 current incumbent configuration
+            ta_time_used: float
+                CPU time used by the target algorithm
+            wallclock_time: float
+                wallclock time used so far
         """
 
         conf = []
         for p in incumbent:
             if not incumbent[p] is None:
-                conf.append("%s='%s'" % (p, incumbent[p]))
-
-        ta_time_used = self.stats.ta_time_used
-        wallclock_time = self.stats.get_used_wallclock_time()
+                conf.append("%s='%s'" % (p, repr(incumbent[p])))
 
         traj_entry = {"cpu_time": ta_time_used,
                       "total_cpu_time": None,  # TODO: fix this
