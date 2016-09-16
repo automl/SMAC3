@@ -239,8 +239,8 @@ class SMBO(BaseSolver):
             instance_specific=self.scenario.instance_specific.get(rand_inst, "0"))
 
         if status in [StatusType.CRASHED or StatusType.ABORT]:
-            self.logger.info("First run crashed -- Abort")
-            sys.exit(42)
+            self.logger.critical("First run crashed -- Abort")
+            sys.exit(1)
 
         self.runhistory.add(config=default_conf, cost=cost, time=runtime,
                             status=status,

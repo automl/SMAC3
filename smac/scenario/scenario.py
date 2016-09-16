@@ -118,7 +118,7 @@ class Scenario(object):
         self.add_argument(name='paramfile', help=None, dest='pcs_fn')
         self.add_argument(name='run_obj', help=None, default='runtime')
         self.add_argument(name='overall_obj', help=None, default='par10')
-        self.add_argument(name='cutoff_time', help=None, default=999999999,
+        self.add_argument(name='cutoff_time', help=None, default=None,
                           dest='cutoff', callback=lambda arg: float(arg))
         self.add_argument(name='memory_limit', help=None)
         self.add_argument(name='tuner-timeout', help=None, default=numpy.inf,

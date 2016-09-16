@@ -84,11 +84,9 @@ class ExecuteTAFunc(ExecuteTARun):
                     all further additional run information
         """
 
-        arguments = {'logger': logging.getLogger("pynisher")}
-        if cutoff is not None:
-            arguments['wall_time_in_s'] = int(math.ceil(cutoff))
-        if memory_limit is not None:
-            arguments['mem_in_mb'] = int(math.ceil(memory_limit))
+        arguments = {'logger': logging.getLogger("pynisher"),
+                     'wall_time_in_s': cutoff,
+                     'mem_in_mb': memory_limit}
 
         obj = pynisher.enforce_limits(**arguments)(self.func)
 

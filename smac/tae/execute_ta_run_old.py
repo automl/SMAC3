@@ -53,7 +53,7 @@ class ExecuteTARunOld(ExecuteTARun):
         self.par_factor = par_factor
 
     def run(self, config, instance=None,
-            cutoff=99999999999999.,
+            cutoff=None,
             seed=12345,
             instance_specific="0"
             ):
@@ -88,6 +88,8 @@ class ExecuteTARunOld(ExecuteTARun):
 
         if instance is None:
             instance = "0"
+        if cutoff is None:
+            cutoff = 99999999999999.
 
         # TOOD: maybe replace fixed instance specific and cutoff_length (0) to
         # other value

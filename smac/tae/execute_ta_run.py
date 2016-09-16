@@ -1,5 +1,5 @@
 import logging
-from subprocess import Popen, PIPE
+import math
 
 import numpy as np
 
@@ -55,7 +55,7 @@ class ExecuteTARun(object):
         self._supports_memory_limit = False
 
     def start(self, config, instance,
-              cutoff=99999999999999.,
+              cutoff=None,
               memory_limit=None,
               seed=12345,
               instance_specific="0"):
@@ -93,7 +93,13 @@ class ExecuteTARun(object):
                 "Skip target algorithm run due to exhausted configuration budget")
             return StatusType.ABORT, np.nan, 0, {"misc": "exhausted bugdet -- ABORT"}
 
+        if cutoff is not None:
+            cutoff = int(math.ceil(cutoff))
+        if memory_limit is not None:
+            memory_limit = int(math.ceil(memory_limit))
+
         additional_arguments = {}
+
         if self._supports_memory_limit is True:
             additional_arguments['memory_limit'] = memory_limit
         else:
@@ -117,7 +123,7 @@ class ExecuteTARun(object):
         return status, cost, runtime, additional_info
 
     def run(self, config, instance,
-            cutoff=99999999999999.,
+            cutoff=None,
             memory_limit=None,
             seed=12345,
             instance_specific="0"):
