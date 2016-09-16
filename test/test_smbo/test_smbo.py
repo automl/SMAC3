@@ -19,6 +19,8 @@ from smac.smbo.smbo import SMBO, get_types
 from smac.scenario.scenario import Scenario
 from smac.smbo.acquisition import EI, EIPS
 from smac.smbo.local_search import LocalSearch
+from smac.tae.execute_func import ExecuteTAFunc
+from smac.stats.stats import Stats
 from smac.utils import test_helpers
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.uncorrelated_mo_rf_with_instances import \

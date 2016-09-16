@@ -18,35 +18,23 @@ __version__ = "0.0.1"
 
 class ExecuteTAFunc(ExecuteTARun):
 
-    """
-        executes a function  with given inputs (i.e., the configuration)
-        and some resource limitations
+    """Evaluate function for given configuration and resource limit.
 
-        Attributes
-        ----------
-        func : Python function handle 
-            function to be optimized
-        run_obj: str
-            run objective (runtime or quality)
-        par_factor: int
-            penalized average runtime factor
+    Parameters
+    ----------
+    func : callable
+        Function to be optimized. Needs to accept at least a configuration and a
+        seed. Can return a float (the loss) or a tuple (the loss and additional
+        run information in a dictionary).
+    stats : smac.stats.stats.Stats
+        Stats object to collect statistics about runtime etc.
+    run_obj: str
+        Run objective (runtime or quality)
+    par_factor: int
+        Penalized average runtime factor. Only used when `run_obj='runtime'`
     """
 
     def __init__(self, func, stats, run_obj="quality", par_factor=1):
-        """
-        Constructor
-
-        Parameters
-        ----------
-            func: function
-                target algorithm function
-            stats: Stats()
-                 stats object to collect statistics about runtime and so on
-            run_obj: str
-                run objective of SMAC
-            par_factor: int
-                penalized average runtime factor
-        """
         super()
         
         self.func = func
@@ -55,9 +43,11 @@ class ExecuteTAFunc(ExecuteTARun):
         self.run_obj = run_obj
         self.par_factor = par_factor
 
-    
+        self._supports_memory_limit = True
+
     def run(self, config, instance=None,
-            cutoff=99999999999999.,
+            cutoff=None,
+            memory_limit=None,
             seed=12345,
             instance_specific="0"
             ):
@@ -70,10 +60,14 @@ class ExecuteTAFunc(ExecuteTARun):
             ----------
                 config : dictionary (or similar)
                     dictionary param -> value
-                instance : string
+                instance : str
                     problem instance
-                cutoff : double
-                    runtime cutoff -- will be casted to int
+                cutoff : int, optional
+                    Wallclock time limit of the target algorithm. If no value is
+                    provided no limit will be enforced.
+                memory_limit : int, optional
+                    Memory limit in MB enforced on the target algorithm If no
+                    value is provided no limit will be enforced.
                 seed : int
                     random seed
                 instance_specific: str
@@ -90,20 +84,33 @@ class ExecuteTAFunc(ExecuteTARun):
                     all further additional run information
         """
 
-        obj = pynisher.enforce_limits(
-            cpu_time_in_s=int(math.ceil(cutoff)), logger=logging.getLogger("pynisher"))(self.func)
+        arguments = {'logger': logging.getLogger("pynisher")}
+        if cutoff is not None:
+            arguments['wall_time_in_s'] = int(math.ceil(cutoff))
+        if memory_limit is not None:
+            arguments['mem_in_mb'] = int(math.ceil(memory_limit))
+
+        obj = pynisher.enforce_limits(**arguments)(self.func)
 
         if instance:
-            result = obj(config, instance, seed)
+            rval = obj(config, instance, seed)
         else:
-            result = obj(config, seed)
+            rval = obj(config, seed)
 
-        #self.logger.debug("Function value: %.4f" % (result))
+        if isinstance(rval, tuple):
+            result = rval[0]
+            additional_run_info = rval[1]
+        else:
+            result = rval
+            additional_run_info = {}
 
-        if obj.exit_status is pynisher.CpuTimeoutException:
+        if obj.exit_status is pynisher.TimeoutException:
             status = StatusType.TIMEOUT
             cost = 1234567890
-        elif obj.exit_status == 0:
+        elif obj.exit_status is pynisher.MemorylimitException:
+            status = StatusType.MEMOUT
+            cost = 1234567890
+        elif obj.exit_status == 0 and result is not None:
             status = StatusType.SUCCESS
             cost = result
         else:
@@ -118,4 +125,4 @@ class ExecuteTAFunc(ExecuteTARun):
             else:
                 cost = runtime
 
-        return status, cost, runtime, {}
+        return status, cost, runtime, additional_run_info

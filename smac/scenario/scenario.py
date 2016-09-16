@@ -120,6 +120,7 @@ class Scenario(object):
         self.add_argument(name='overall_obj', help=None, default='par10')
         self.add_argument(name='cutoff_time', help=None, default=999999999,
                           dest='cutoff', callback=lambda arg: float(arg))
+        self.add_argument(name='memory_limit', help=None)
         self.add_argument(name='tuner-timeout', help=None, default=numpy.inf,
                           dest='algo_runs_timelimit',
                           callback=lambda arg: float(arg))

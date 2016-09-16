@@ -52,8 +52,11 @@ class ExecuteTARun(object):
         self.stats = stats
         self.logger = logging.getLogger("ExecuteTARun")
 
+        self._supports_memory_limit = False
+
     def start(self, config, instance,
               cutoff=99999999999999.,
+              memory_limit=None,
               seed=12345,
               instance_specific="0"):
         """
@@ -90,11 +93,20 @@ class ExecuteTARun(object):
                 "Skip target algorithm run due to exhausted configuration budget")
             return StatusType.ABORT, np.nan, 0, {"misc": "exhausted bugdet -- ABORT"}
 
+        additional_arguments = {}
+        if self._supports_memory_limit is True:
+            additional_arguments['memory_limit'] = memory_limit
+        else:
+            raise ValueError('Target algorithm executor %s does not support '
+                             'restricting the memory usage.' %
+                             self.__class__.__name__)
+
         status, cost, runtime, additional_info = self.run(config=config,
                                                           instance=instance,
                                                           cutoff=cutoff,
                                                           seed=seed,
-                                                          instance_specific=instance_specific)
+                                                          instance_specific=instance_specific,
+                                                          **additional_arguments)
         # update SMAC stats
         self.stats.ta_runs += 1
         self.stats.ta_time_used += float(runtime)
@@ -106,6 +118,7 @@ class ExecuteTARun(object):
 
     def run(self, config, instance,
             cutoff=99999999999999.,
+            memory_limit=None,
             seed=12345,
             instance_specific="0"):
         """
@@ -119,8 +132,12 @@ class ExecuteTARun(object):
                     dictionary param -> value
                 instance : string
                     problem instance
-                cutoff : double
-                    runtime cutoff
+                cutoff : int, optional
+                    Wallclock time limit of the target algorithm. If no value is
+                    provided no limit will be enforced.
+                memory_limit : int, optional
+                    Memory limit in MB enforced on the target algorithm If no
+                    value is provided no limit will be enforced.
                 seed : int
                     random seed
                 instance_specific: str

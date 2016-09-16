@@ -23,6 +23,7 @@ from smac.smbo.objective import average_cost, total_runtime
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
+from smac.tae.execute_func import ExecuteTAFunc
 from smac.utils.io.traj_logging import TrajLogger
 
 from smac.epm.rfr_imputator import RFRImputator
