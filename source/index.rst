@@ -25,6 +25,12 @@ efficiently decide which of two configuration performs better.
 SMAC v3 is mainly written in Python 3.5.
 Its `Random Forest <https://bitbucket.org/aadfreiburg/random_forest_run>`_ is written in C++.
 
+.. note::
+
+    This version is not meant to be a reference implementation for SMAC according the above cited LION paper.
+    Please use SMAC v2 (Java) for comparisons against SMAC.
+
+
 Contents:
 ---------
 .. toctree::
