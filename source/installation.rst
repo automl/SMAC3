@@ -1,27 +1,18 @@
 Installation
 ============
 
-.. role:: bash(code)
-    :language: bash
-
-Requirements
+.. _installation_pypi:
+Installation from pypi
 ------------
-SMAC3 requires:
+| To install SMAC3 from pypi, please use the following command on the command line:
+.. code-block:: bash
 
-* `NumPy <https://pypi.python.org/pypi/numpy/1.6.1>`_ (Version >= 1.6.1)
-* `SciPy <https://pypi.python.org/pypi/scipy/0.15.1>`_ (Version >= 0.13.1)
-* `pynisher <https://pypi.python.org/pypi/pynisher/0.4.1>`_ (Version >= 0.4.1)
-* `ConfigSpace <https://pypi.python.org/pypi/ConfigSpace/0.2.0>`_ (Version >= 0.2.0)
-* `setuptools <https://pypi.python.org/pypi/setuptools>`_
-* `six <https://pypi.python.org/pypi/six>`_
-* `Cython <https://pypi.python.org/pypi/Cython/>`_
-* `pyrfr <https://pypi.python.org/pypi/pyrfr/0.2.0>`_
+    pip install smac
 
-.. _installation:
-
+.. _manual_installation:
 Manual Installation
 -------------------
-| To install EPM from command line type the following commands in the terminal:
+| To install SMAC3 from command line, please type the following commands on the command line
 .. code-block:: bash
 
     cat requirements.txt | xargs -n 1 -L 1 pip install

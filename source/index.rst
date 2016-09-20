@@ -3,12 +3,13 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to SMAC3's documentation!
+SMAC3 documentation!
 =================================
 SMAC is a tool for algorithm configuration
 to optimize the parameters of arbitrary algorithms across a set of instances.
-This also includes hyperparameter optimization of ML algorithms.
-The main core consists of Bayesian Optimization in combination with a simple racing mechanism to
+This also includes parameters optimization of any kind of algorithm,
+e.g., hard combinatorial problem solver and hyperparameter optimization of ML algorithms.
+The main core consists of Bayesian Optimization in combination with a simple racing mechanism on the instances to
 efficiently decide which of two configuration performs better.
 
 .. note::
@@ -21,7 +22,7 @@ efficiently decide which of two configuration performs better.
       In: Proceedings of the conference on Learning and Intelligent OptimizatioN (LION 5)
 
 
-SMAC v3 is mainly written in Python 3.4. We expect that it should be also compatible with Python 2.7.
+SMAC v3 is mainly written in Python 3.5.
 Its `Random Forest <https://bitbucket.org/aadfreiburg/random_forest_run>`_ is written in C++.
 
 Contents:
