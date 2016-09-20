@@ -10,8 +10,8 @@ In the following we will show how to use **SMAC3**.
 
 Quick Start
 -----------
-| If you haven't installed *SMAC* yet take a look at the `installation instructions <installation.html>`_ and make sure that all the requirements are fulfilled.
-| In the examples folder you can find examples that illustrate how to write scenario files that allow you to use *SMAC* to automatically configure an algorithm, as well as examples that show how to directly use *SMAC* in python.
+| If you have not installed *SMAC* yet take a look at the `installation instructions <installation.html>`_ and make sure that all the requirements are fulfilled.
+| In the examples folder, you can find examples that illustrate how to reads scenario files that allow you to automatically configure an algorithm, as well as examples that show how to directly use *SMAC* in Python.
 
 We'll demonstrate the usage of *SMAC* on the most basic scenario, the optimization of a continuous blackbox function. The first simple example is the minimization of a standard 2-dimensional continuous test function (`branin <https://www.sfu.ca/~ssurjano/branin.html>`_).
 
@@ -20,7 +20,7 @@ To run the example scenario, change into the root-directory of *SMAC* and type t
 .. code-block:: bash
 
     cd examples/branin
-    python ../../scripts/smac --scenario branin_scenario.txt --verbose DEBUG
+    python ../../scripts/smac --scenario branin_scenario.txt
 
 The python command runs *SMAC* with the specified scenario. The scenario file contains the following four lines:
 
@@ -31,7 +31,7 @@ The python command runs *SMAC* with the specified scenario. The scenario file co
     run_obj = quality
     runcount_limit = 500
 
-The **algo** parameter specifies how *SMAC* can call the function or evaluate an algorithm that *SMAC* is optimizing. An algorithm call by *SMAC* will look something like this:
+The **algo** parameter specifies how *SMAC* can call the function or evaluate an algorithm that *SMAC* is optimizing. An algorithm call by *SMAC* will look like this:
 
     .. code-block:: bash
 
@@ -42,6 +42,11 @@ The **algo** parameter specifies how *SMAC* can call the function or evaluate an
     The third parameter gives the runtime cutoff (maximal runtime) an algorithm is allowed to run and the fourth the runlength (maximal number of steps).
 
     The fifth parameter is the random seed which is followed by the algorithm/function parameters.
+    
+    The general syntax of algorithm calls is the following
+    .. code-block:: bash
+
+        <algo> <instance> <instance specific> <running time cutoff> <run length> <seed> <algorithm parameters>
 
 The **paramfile** parameter tells *SMAC* which Parameter Configuration File to use. This file contains a list of the algorithm's parameters, their domains and default values as follows:
 
@@ -57,13 +62,13 @@ For *SMAC* to be able to interpret the results of an algorithm run, a wrapper sh
 
     .. code-block:: bash
 
-        Result for SMAC: STATUS, runtime, runlength, quality, seed, instance-specifics
+        Result for SMAC: <STATUS>, <running time>, <run length>, <quality>, <seed>, <instance-specifics>
         Result for SMAC: SUCCESS, 0, 0, 48.948190, 1148756733
 
     | The second line is the result of the above listed algorithm call.
     | *STATUS*: can be either *SUCCESS*, *CRASHED*, *SAT*, *UNSAT*, *TIMEOUT*
-    | *runtime*: is the measured runtime for an algorithm call
-    | *runlength*: are the amount of steps needed to find a solution
+    | *running time*: is the measured running time for an algorithm call
+    | *run length*: are the amount of steps needed to find a solution
     | *quality*: the solution quality
     | *seed*: the seed that was used with the algorithm call
     | *instance-specifics*: additional information
@@ -93,6 +98,7 @@ Using *SMAC* directly in python
 | For demonstration purposes we are going to look at the example :bash:`leadingones.py`
 |
 | In this example we are going to optimize the following function with 16 categorical parameters.
+| For a given sequence of 0,1, we count how many leading 1s we have at the beginning of the sequence. 
 
     .. code-block:: python
 
@@ -117,10 +123,10 @@ Using *SMAC* directly in python
 
 | Thus the optimum is -16 and the optimal configuration is x_1 = 1, ..., x_16 = 1
 |
-| To use *SMAC* directly with python we first have to import the necessary modules
+| To use *SMAC* directly with Python, we first have to import the necessary modules
 
     .. code-block:: python
-        :lineno-start: 12
+        :lineno-start: 3
 
         import numpy as np
 
@@ -134,12 +140,12 @@ Using *SMAC* directly in python
         from smac.smbo.smbo import SMBO
         from smac.stats.stats import Stats
 
-In lines 14-17 we import the ConfigurationSpace and Parametertypes in order to later be able to declare different parameters.
+First, we import the ConfigurationSpace and Parametertypes in order to later declare different parameters.
 
-Now we can build the Configuration Space:
+Now, we build the Configuration Space:
 
     .. code-block:: python
-        :lineno-start: 47
+        :lineno-start: 38
 
         # build Configuration Space which defines all parameters and their ranges
         n_params = 16
@@ -158,15 +164,23 @@ Now we can build the Configuration Space:
 
             previous_param = p
 
-cs is the Configuration space Object. In line 54 we declare each of the 16 parameters to be Categorical parameters that can take the values 0 or 1 and are set by default to 0. They are also given the names '1' to '16'.
-Further we can showcase how to setup conditionals/conditionalities in this example.
+cs is the Configuration space Object. 
+We declare each of the 16 parameters to be Categorical parameters 
+that can take the values 0 or 1 and are set by default to 0. 
+They are also given the names '1' to '16'.
+Further we illustrate how to setup conditionals in this example.
 
-Parameter 'i+1' is conditioned on parameter 'i' and thus only activated if parameter 'i' is set to 1. For example parameter '1' is only active once parameter '0' is set to 1. Using conditionals in such a way restricts the search space quite a bit. This way *SMAC* won't have to query regions in the searchspace that are non-improving, like '0100000000000000' or '0100000000000001'. Both return the same value as the default namely 0.
+Parameter 'i+1' is conditioned on parameter 'i' 
+and thus only activated if parameter 'i' is set to 1. 
+For example parameter '1' is only active once parameter '0' is set to 1. 
+Using conditionals in such a way restricts the search space quite a bit. 
+This way *SMAC* won't have to query regions in the search space that are non-improving, 
+like '0100000000000000' or '0100000000000001'. Both return the same value as the default, i.e. 0.
 
-After the config space was setup we can create a scenario object and initialise the Stats object with it.
+After the configuration space was setup we can create a scenario object and initialize the Stats object with it.
 
     .. code-block:: python
-        :lineno-start: 64
+        :lineno-start: 55
 
         # SMAC scenario object
         scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative runtime)
@@ -177,14 +191,16 @@ After the config space was setup we can create a scenario object and initialise 
 
         stats = Stats(scenario)
 
-The Scenario object contains information about the optimization scenario, such as the runcout-limit or what metric to optimize.
+The Scenario object contains information about the optimization scenario, such as the runcount-limit or what metric to optimize.
+It uses the same keywords as a scenario files, we showed in the branin example.
 
-The Stats object keeps track of all the function evaluations that *SMAC* executes, the budget that has been spent on the configuration scenario, and the incumbent.
+The Stats object keeps track of all the function evaluations that *SMAC* executes, 
+the budget that has been spent on the configuration scenario.
 
-To now evaluate the function we register it with the TargetAlgorithmFunction evaluator.
+To evaluate the "leading ones" function, we register it with the TargetAlgorithmFunction evaluator.
 
     .. code-block:: python
-        :lineno-start: 73
+        :lineno-start: 64
 
         # register function to be optimized
         taf = ExecuteTAFunc(leading_ones, stats)
@@ -194,14 +210,18 @@ To now evaluate the function we register it with the TargetAlgorithmFunction eva
         def_value = taf.run(cs.get_default_configuration())[1]
         print("Default Value: %.2f" % (def_value))
 
-In line 74 we register the function to optimize together with the stats object, we use to keep track of the optimization with the evaluator that handles calling the function with a specified configuration.
+We register first the function to optimize together with the stats object, 
+we use to keep track of the optimization with the evaluator that handles calling the function with a specified configuration.
 
-In line 78 the default value is queried by calling the run method of the evaluator with the default configuration of the configuration space.
+Afterwards,
+the default value is queried by calling the run method of the evaluator with the default configuration of the configuration space.
 
-To handle the Bayesian optimization loop we can create a SMBO object. To automatically handle the exploration of the search space and querying of the function the SMBO object needs as inputs the scenario object as well as the function evaluator.
+To handle the Bayesian optimization loop we can create a SMBO object. 
+To automatically handle the exploration of the search space 
+and querying of the function the SMBO object needs as inputs the scenario object as well as the function evaluator.
 
     .. code-block:: python
-        :lineno-start: 81
+        :lineno-start: 72
 
         # Optimize
         smbo = SMBO(scenario=scenario, tae_runner=taf,
@@ -216,13 +236,13 @@ To handle the Bayesian optimization loop we can create a SMBO object. To automat
         inc_value = taf.run(smbo.incumbent)[1]
         print("Optimized Value: %.2f" % (inc_value))
 
-In line 86 we start the optimization loop and set the maximum number of iterations to 999.
+We start the optimization loop and set the maximum number of iterations to 999.
 
 After successful execution of the optimization loop the stats opject outputs the result of the loop.
 
 We can directly access the incumbent configuration which is stored in the smbo object and print it to the terminal (line 89).
 
-We further query the target function at the incumbent by using the function evaluator (line 91).
+We further query the target function at the incumbent by using the function evaluator.
 
 
 
@@ -235,7 +255,7 @@ Spear-QCP
 
     cd examples/spear_qcp && ls -l
 
-In this folder you'll see the following files and directories:
+In this folder you see the following files and directories:
     * **features.txt**:
      The feature file is contains the features for each instance in a csv-format.
 
@@ -260,16 +280,16 @@ In this folder you'll see the following files and directories:
 
                 python -u ./target_algorithm/scripts/SATCSSCWrapper.py --mem-limit 1024 --script ./target_algorithm/spear-python/spearCSSCWrapper.py
 
-            This specifies the wrapper that *SMAC* executes with a prespecified syntax in order to evaluate the algorithm to be optimized.
+            This specifies the wrapper that *SMAC* executes with a pre-specified syntax in order to evaluate the algorithm to be optimized.
             This wrapper script takes an instantiation of the parameters as input, runs the algorithm with these parameters, and returns
-            how well it did; since every algorithm has a different input and output format, this wrapper acts as a mediator between the
+            the performance of the algorithm; since every algorithm has a different input and output format, this wrapper acts as a interface between the
             algorithm and *SMAC*, which executes the wrapper through a command line call.
 
             An example call would look something like this:
 
             .. code-block:: bash
 
-                <algo> <instance> <instance_specifics> <runtime cutoff> <runlength> <seed> <solver parameters>
+                <algo> <instance> <instance_specifics> <running time cutoff> <run length> <seed> <algorithm parameters>
 
             For *SMAC* to be able to interpret the results of the algorithm run, the wrapper returns the results of the algorithm run as follows:
             :bash:`STATUS, runtime, runlength, quality, seed, instance-specifics`
@@ -337,10 +357,10 @@ To run the example type one of the two commands below into a terminal:
       sp-variable-decay, Value: 1.91690063007
 
 
-The first line shows why *SMAC* terminated. The wallclock time-budget is exhausted. The target algorithm runtime (ta cost) and target algorithm runs were not exhausted since the budget for these were not specified and thus defaulted to infinity.
+The first line shows why *SMAC* terminated. The wallclock time-budget is exhausted. The target algorithm runtime (ta cost) and target algorithm runs were not exhausted since the budget for these were not specified and thus set to the default, i.e., infinity.
 
 The statistics further show the used wallclock time, target algorithm runtime and the number of executed target algorithm runs.
 
-| The directory in which you invoked *SMAC* now contain a new folder called **SMAC3-output_YYYY-MM-DD_HH:MM:SS** as well as a file called **target_algo_run.json**.
+| The directory in which you invoked *SMAC* now contain a new folder called **SMAC3-output_YYYY-MM-DD_HH:MM:SS**.
 | The .json file contains the information about the target algorithms *SMAC* just executed. In this file you can see the *status* of the algorithm run, *misc*, the *instance* on which the algorithm was evaluated, which *seed* was used, how much *time* the algorithm needed and with which *configuration* the algorithm was run.
 | In the folder *SMAC* generates a file for the runhistory, and two files for the trajectory.
