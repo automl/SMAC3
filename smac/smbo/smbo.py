@@ -25,6 +25,8 @@ from smac.stats.stats import Stats
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.execute_func import ExecuteTAFunc
 from smac.utils.io.traj_logging import TrajLogger
+from smac.initial_design.initial_design import InitialDesign
+from smac.initial_design.default_design import DefaultDesign
 
 from smac.epm.rfr_imputator import RFRImputator
 
@@ -68,7 +70,9 @@ def get_types(config_space, instance_features=None):
 class SMBO(BaseSolver):
 
     def __init__(self, scenario, tae_runner=None, acquisition_function=None,
-                 model=None, runhistory2epm=None, stats=None, rng=None):
+                 model=None, runhistory2epm=None, 
+                 initial_design=None, 
+                 stats=None, rng=None):
         '''
         Interface that contains the main Bayesian optimization loop
 
@@ -91,6 +95,8 @@ class SMBO(BaseSolver):
             Object that implements the AbstractRunHistory2EPM. If None,
             will use RunHistory2EPM4Cost if objective is cost or
             RunHistory2EPM4LogCost if objective is runtime.
+        initial_design: InitialDesign
+            initial sampling design
         stats: Stats
             optional stats object
         rng: numpy.random.RandomState
@@ -142,13 +148,27 @@ class SMBO(BaseSolver):
                                         self.config_space)
         self.incumbent = None
 
+        self.objective = average_cost
+
         if tae_runner is None:
             self.executor = ExecuteTARunOld(ta=scenario.ta,
                                             stats=self.stats,
                                             run_obj=scenario.run_obj,
+                                            runhistory=self.runhistory,
+                                            aggregate_func=self.objective,
                                             par_factor=scenario.par_factor)
         else:
             self.executor = tae_runner
+            
+        if initial_design is None:
+            self.initial_design = DefaultDesign(tae_runner=self.executor,
+                                                 scenario=self.scenario,
+                                                 stats=self.stats,
+                                                 traj_logger=self.traj_logger,
+                                                 runhistory=self.runhistory,
+                                                 rng=self.rng)
+        else:
+            self.initial_design = initial_design
 
         self.inten = Intensifier(executor=self.executor,
                                  stats=self.stats,
@@ -161,7 +181,7 @@ class SMBO(BaseSolver):
 
         num_params = len(self.config_space.get_hyperparameters())
 
-        self.objective = average_cost
+        
         if self.scenario.run_obj == "runtime":
 
             if runhistory2epm is None:
@@ -201,66 +221,6 @@ class SMBO(BaseSolver):
             raise ValueError('Unknown run objective: %s. Should be either '
                              'quality or runtime.' % self.scenario.run_obj)
 
-    def run_initial_design(self):
-        '''
-            runs algorithm runs for a initial design;
-            default implementation: running the default configuration on
-                                    a random instance-seed pair
-            Side effect: adds runs to self.runhistory
-
-            Returns
-            -------
-            incumbent: Configuration()
-                initial incumbent configuration
-        '''
-
-        default_conf = self.config_space.get_default_configuration()
-        self.incumbent = default_conf
-
-        # add this incumbent right away to have an entry to time point 0
-        self.traj_logger.add_entry(train_perf=2**31,
-                                   incumbent_id=1,
-                                   incumbent=self.incumbent)
-
-        rand_inst_id = self.rng.randint(0, len(self.scenario.train_insts))
-        # ignore instance specific values
-        rand_inst = self.scenario.train_insts[rand_inst_id]
-
-        if self.scenario.deterministic:
-            initial_seed = 0
-        else:
-            initial_seed = random.randint(0, MAXINT)
-
-        status, cost, runtime, additional_info = self.executor.start(
-            default_conf,
-            instance=rand_inst,
-            cutoff=self.scenario.cutoff,
-            seed=initial_seed,
-            instance_specific=self.scenario.instance_specific.get(rand_inst, "0"))
-
-        if status in [StatusType.CRASHED or StatusType.ABORT]:
-            self.logger.critical("First run crashed -- Abort")
-            sys.exit(1)
-
-        self.runhistory.add(config=default_conf, cost=cost, time=runtime,
-                            status=status,
-                            instance_id=rand_inst,
-                            seed=initial_seed,
-                            additional_info=additional_info)
-        defaul_inst_seeds = set(
-            self.runhistory.get_runs_for_config(default_conf))
-        default_perf = self.objective(default_conf, self.runhistory,
-                                      defaul_inst_seeds)
-        self.runhistory.update_cost(default_conf, default_perf)
-
-        self.stats.inc_changed += 1  # first incumbent
-
-        self.traj_logger.add_entry(train_perf=default_perf,
-                                   incumbent_id=self.stats.inc_changed,
-                                   incumbent=self.incumbent)
-
-        return default_conf
-
     def run(self, max_iters=10):
         '''
         Runs the Bayesian optimization loop for max_iters iterations
@@ -277,9 +237,7 @@ class SMBO(BaseSolver):
         '''
         self.stats.start_timing()
 
-        #self.runhistory = RunHisory()
-
-        self.incumbent = self.run_initial_design()
+        self.incumbent = self.initial_design.run()
 
         # Main BO loop
         iteration = 1

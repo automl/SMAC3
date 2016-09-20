@@ -165,10 +165,6 @@ class Intensifier(object):
                                                             seed=next_seed,
                                                             cutoff=self.cutoff,
                                                             instance_specific=self.instance_specifics.get(next_instance, "0"))
-                    run_history.add(config=incumbent,
-                                    cost=cost, time=dur, status=status,
-                                    instance_id=next_instance, seed=next_seed,
-                                    additional_info=res)
                     # TODO update incumbent performance here!
 
                     num_run += 1
@@ -227,11 +223,6 @@ class Intensifier(object):
                                                             seed=seed,
                                                             cutoff=cutoff,
                                                             instance_specific=self.instance_specifics.get(instance, "0"))
-
-                    run_history.add(config=challenger,
-                                    cost=cost, time=dur, status=status,
-                                    instance_id=instance, seed=seed,
-                                    additional_info=res)
                     num_run += 1
 
                 # we cannot use inst_seed_pairs here since we could have less runs

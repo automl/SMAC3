@@ -35,7 +35,7 @@ class ExecuteTARun(object):
             the command line call to the target algorithm (wrapper)
     """
 
-    def __init__(self, ta, stats, run_obj="runtime"):
+    def __init__(self, ta, stats, runhistory=None, aggregate_func=None, run_obj="runtime"):
         """
         Constructor
 
@@ -44,12 +44,20 @@ class ExecuteTARun(object):
             ta : list
                 target algorithm command line as list of arguments
             stats: Stats()
-                 stats object to collect statistics about runtime and so on                
+                 stats object to collect statistics about runtime and so on
+            runhistory: RunHistory
+                runhistory to keep track of all runs; only used if set
+            aggregate_func
+                function to aggregate performance across instances
             run_obj: str
                 run objective of SMAC
+
         """
         self.ta = ta
         self.stats = stats
+        self.runhistory = runhistory
+        self.aggregate_func = aggregate_func
+        self.run_obj = run_obj
         self.logger = logging.getLogger("ExecuteTARun")
 
         self._supports_memory_limit = False
@@ -100,9 +108,9 @@ class ExecuteTARun(object):
 
         additional_arguments = {}
 
-        if self._supports_memory_limit is True:
+        if self._supports_memory_limit is True and memory_limit is not None:
             additional_arguments['memory_limit'] = memory_limit
-        else:
+        elif self._supports_memory_limit is False and memory_limit is not None:
             raise ValueError('Target algorithm executor %s does not support '
                              'restricting the memory usage.' %
                              self.__class__.__name__)
@@ -119,6 +127,18 @@ class ExecuteTARun(object):
 
         self.logger.debug("Return: Status: %d, cost: %f, time. %f, additional: %s" % (
             status, cost, runtime, str(additional_info)))
+
+        if self.runhistory:
+            self.runhistory.add(config=config,
+                                cost=cost, time=runtime, status=status,
+                                instance_id=instance, seed=seed,
+                                additional_info=additional_info)
+            
+            inst_seeds = set(
+            self.runhistory.get_runs_for_config(config))
+            perf = self.aggregate_func(config, self.runhistory,
+                                      inst_seeds)
+            self.runhistory.update_cost(config, perf)
 
         return status, cost, runtime, additional_info
 

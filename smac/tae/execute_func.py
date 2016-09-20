@@ -35,12 +35,12 @@ class ExecuteTAFunc(ExecuteTARun):
     """
 
     def __init__(self, func, stats, run_obj="quality", par_factor=1):
-        super()
+        super().__init__(ta=func,
+                 stats=stats,
+                 runhistory=runhistory,
+                 run_obj=run_obj)
         
-        self.func = func
-        self.stats = stats
         self.logger = logging.getLogger("ExecuteTAFunc")
-        self.run_obj = run_obj
         self.par_factor = par_factor
 
         self._supports_memory_limit = True
@@ -88,7 +88,7 @@ class ExecuteTAFunc(ExecuteTARun):
                      'wall_time_in_s': cutoff,
                      'mem_in_mb': memory_limit}
 
-        obj = pynisher.enforce_limits(**arguments)(self.func)
+        obj = pynisher.enforce_limits(**arguments)(self.ta)
 
         if instance:
             rval = obj(config, instance, seed)

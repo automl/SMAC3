@@ -41,16 +41,20 @@ class ExecuteTARunAClib(ExecuteTARun):
                 target algorithm command line as list of arguments
             stats: Stats()
                  stats object to collect statistics about runtime and so on
+            aggregate_func
+                function to aggregate performance across instances
             run_obj: str
                 run objective of SMAC
             par_factor: int
                 penalized average runtime factor
         """
-        super()
-        self.ta = ta
-        self.stats = stats
+        super().__init__(ta=ta,
+                 stats=stats,
+                 runhistory=runhistory,
+                 aggregate_func=aggregate_fun,
+                 run_obj=run_obj)
+        
         self.logger = logging.getLogger("ExecuteTARun")
-        self.run_obj = run_obj
         self.par_factor = par_factor
 
     def run(self, config, instance=None,
