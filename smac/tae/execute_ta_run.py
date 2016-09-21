@@ -104,7 +104,7 @@ class ExecuteTARun(object):
 
         if self._supports_memory_limit is True:
             additional_arguments['memory_limit'] = memory_limit
-        else:
+        elif self._supports_memory_limit is False and memory_limit is not None:
             raise ValueError('Target algorithm executor %s does not support '
                              'restricting the memory usage.' %
                              self.__class__.__name__)
