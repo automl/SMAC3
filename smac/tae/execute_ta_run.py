@@ -35,7 +35,7 @@ class ExecuteTARun(object):
             the command line call to the target algorithm (wrapper)
     """
 
-    def __init__(self, ta, stats, run_obj="runtime"):
+    def __init__(self, ta, stats, run_obj="runtime", par_factor=1):
         """
         Constructor
 
@@ -50,8 +50,10 @@ class ExecuteTARun(object):
         """
         self.ta = ta
         self.stats = stats
-        self.logger = logging.getLogger("ExecuteTARun")
+        self.run_obj = run_obj
+        self.par_factor = par_factor
 
+        self.logger = logging.getLogger(self.__class__.__name__)
         self._supports_memory_limit = False
 
     def start(self, config, instance,
@@ -102,7 +104,7 @@ class ExecuteTARun(object):
 
         if self._supports_memory_limit is True:
             additional_arguments['memory_limit'] = memory_limit
-        else:
+        elif self._supports_memory_limit is False and memory_limit is not None:
             raise ValueError('Target algorithm executor %s does not support '
                              'restricting the memory usage.' %
                              self.__class__.__name__)
@@ -116,6 +118,12 @@ class ExecuteTARun(object):
         # update SMAC stats
         self.stats.ta_runs += 1
         self.stats.ta_time_used += float(runtime)
+
+        if self.run_obj == "runtime":
+            if status != StatusType.SUCCESS:
+                cost = cutoff * self.par_factor
+            else:
+                cost = runtime
 
         self.logger.debug("Return: Status: %d, cost: %f, time. %f, additional: %s" % (
             status, cost, runtime, str(additional_info)))
