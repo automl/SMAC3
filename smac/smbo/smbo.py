@@ -69,7 +69,8 @@ def get_types(config_space, instance_features=None):
 
 class SMBO(BaseSolver):
 
-    def __init__(self, scenario, tae_runner=None, acquisition_function=None,
+    def __init__(self, scenario, 
+                 acquisition_function=None,
                  model=None, runhistory2epm=None, 
                  initial_design=None, 
                  stats=None, rng=None):
@@ -80,11 +81,6 @@ class SMBO(BaseSolver):
         ----------
         scenario: smac.scenario.scenario.Scenario
             Scenario object
-        tae_runner: object
-            object that implements the following method to call the target
-            algorithm (or any other arbitrary function):
-            run(self, config)
-            If not set, it will be initialized with the tae.ExecuteTARunOld()
         acquisition_function : AcquisitionFunction
             Object that implements the AbstractAcquisitionFunction. Will use
             EI if not set.
