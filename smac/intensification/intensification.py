@@ -29,7 +29,7 @@ class Intensifier(object):
         takes challenger and incumbents and performs intensify
     '''
 
-    def __init__(self, executor, stats, traj_logger, instances=None,
+    def __init__(self, tae_runner, stats, traj_logger, instances=None,
                  instance_specifics={},
                  cutoff=MAXINT, deterministic=False, run_obj_time=True,
                  run_limit=MAXINT, maxR=2000, rng=0):
@@ -38,7 +38,7 @@ class Intensifier(object):
 
         Parameters
         ----------
-        executor : tae.executre_ta_run_*.ExecuteTARun* Object
+        tae_runner : tae.executre_ta_run_*.ExecuteTARun* Object
             target algorithm run executor
         stats: Stats()
             stats object            
@@ -75,7 +75,7 @@ class Intensifier(object):
         self.cutoff = cutoff
         self.deterministic = deterministic
         self.run_obj_time = run_obj_time
-        self.tae = executor
+        self.tae = tae_runner
 
         self.Adaptive_Capping_Slackfactor = 1.2
 
