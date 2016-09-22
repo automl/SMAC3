@@ -24,9 +24,15 @@ class RunHistory(object):
         ----------
     '''
 
-    def __init__(self):
+    def __init__(self, aggregate_func):
         '''
         Constructor
+        
+        Arguments
+        ---------
+        aggregate_func: callable
+            function to aggregate perf across instances
+        
         '''
 
         # By having the data in a deterministic order we can do useful tests
@@ -45,6 +51,8 @@ class RunHistory(object):
         self._n_id = 0
 
         self.cost_per_config = {} # config_id -> cost
+        
+        self.aggregate_func = aggregate_func
 
     def add(self, config, cost, time,
             status, instance_id=None,
@@ -85,8 +93,20 @@ class RunHistory(object):
         v = self.RunValue(cost, time, status, additional_info)
 
         self.data[k] = v
+        self.update_cost(config)
 
-    def update_cost(self, config, cost):
+    def update_cost(self, config):
+        '''
+            stoar in self.cost_perf_config the performance of a configuration across the instances;
+            uses self.aggregate_func
+            
+            Arguments
+            --------
+            config: Configuration
+                configuration to update cost based on all runs in runhistory
+        '''
+        inst_seeds = set(self.get_runs_for_config(config))
+        perf = self.aggregate_func(config, self, inst_seeds)
         config_id = self.config_ids[config]
         self.cost_per_config[config_id] = cost
 

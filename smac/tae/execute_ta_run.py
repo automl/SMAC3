@@ -138,8 +138,6 @@ class ExecuteTARun(object):
                                 instance_id=instance, seed=seed,
                                 additional_info=additional_info)
             
-            self.runhistory.update_cost(config)
-
         return status, cost, runtime, additional_info
 
     def run(self, config, instance,
