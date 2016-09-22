@@ -204,7 +204,9 @@ class RandomForestWithInstances(object):
             X_ = np.hstack(
                 (np.tile(x, (n_instances, 1)), self.instance_features))
             means, vars = self.predict(X_)
-            var_x = np.mean(vars) + np.var(means)
+            # use only mean of variance and not the variance of the mean here
+            # since we don't want to reason about the instance hardness distribution
+            var_x = np.mean(vars) # + np.var(means)
             if var_x < self.var_threshold:
                 var_x = self.var_threshold
 
