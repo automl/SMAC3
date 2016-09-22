@@ -1,9 +1,7 @@
 import sys
-import logging
 from subprocess import Popen, PIPE
 
 from smac.tae.execute_ta_run import StatusType, ExecuteTARun
-from smac.stats.stats import Stats
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -29,34 +27,6 @@ class ExecuteTARunOld(ExecuteTARun):
         par_factor: int
             penalized average runtime factor
     """
-
-    def __init__(self, ta, stats, runhistory=None, aggregate_func=None, run_obj="runtime", par_factor=1):
-        """
-        Constructor
-
-        Parameters
-        ----------
-            ta : list
-                target algorithm command line as list of arguments
-            stats: Stats()
-                 stats object to collect statistics about runtime and so on
-            runhistory: RunHistory
-                runhistory to keep track of all runs; only used if set
-            aggregate_func
-                function to aggregate performance across instances
-            run_obj: str
-                run objective of SMAC
-            par_factor: int
-                penalized average runtime factor
-        """
-        super().__init__(ta=ta,
-                         stats=stats,
-                         runhistory=runhistory,
-                         aggregate_func=aggregate_func,
-                         run_obj=run_obj)
-        
-        self.logger = logging.getLogger("ExecuteTARun")
-        self.par_factor = par_factor
 
     def run(self, config, instance=None,
             cutoff=None,
@@ -152,10 +122,7 @@ class ExecuteTARunOld(ExecuteTARun):
             self.logger.warn("\n".join(stderr_.split("\n")[-5:]))
 
         if self.run_obj == "runtime":
-            if status != StatusType.SUCCESS:
-                cost = runtime * self.par_factor
-            else:
-                cost = runtime
+            cost = runtime
         else:
             cost = quality
 

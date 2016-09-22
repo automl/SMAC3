@@ -15,7 +15,7 @@ class TestExecuteTARun(unittest.TestCase):
 
         stats = Stats(Scenario({}))
         stats.start_timing()
-        tae = ExecuteTARun(lambda x : x**2, stats)
+        tae = ExecuteTARun(lambda x : x**2, stats, run_obj='quality')
 
         self.assertRaisesRegex(ValueError, 'Target algorithm executor '
                                            'ExecuteTARun does not support restricting the memory usage.',

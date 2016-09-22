@@ -100,7 +100,7 @@ class Stats(object):
         log_func("##########################################################")
         log_func("Statistics:")
         log_func("#Incumbent changed: %d" %(self.inc_changed - 1)) # first change is default conf
-        log_func("#Target algorithm runs: %d / %d" %(self.ta_runs, self.__scenario.ta_run_limit))
+        log_func("#Target algorithm runs: %d / %s" %(self.ta_runs, str(self.__scenario.ta_run_limit)))
         log_func("Used wallclock time: %.2f / %.2f sec " %(time.time() - self._start_time, self.__scenario.wallclock_limit))
         log_func("Used target algorithm runtime: %.2f / %.2f sec" %(self.ta_time_used, self.__scenario.algo_runs_timelimit))
         

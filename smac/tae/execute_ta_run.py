@@ -35,7 +35,7 @@ class ExecuteTARun(object):
             the command line call to the target algorithm (wrapper)
     """
 
-    def __init__(self, ta, stats, runhistory=None, aggregate_func=None, run_obj="runtime"):
+    def __init__(self, ta, stats, runhistory=None, run_obj="runtime", par_factor=1):
         """
         Constructor
 
@@ -43,23 +43,21 @@ class ExecuteTARun(object):
         ----------
             ta : list
                 target algorithm command line as list of arguments
-            stats: Stats()
-                 stats object to collect statistics about runtime and so on
             runhistory: RunHistory
                 runhistory to keep track of all runs; only used if set
-            aggregate_func
-                function to aggregate performance across instances
+            stats: Stats()
+                 stats object to collect statistics about runtime and so on                
             run_obj: str
                 run objective of SMAC
-
         """
         self.ta = ta
         self.stats = stats
         self.runhistory = runhistory
-        self.aggregate_func = aggregate_func
         self.run_obj = run_obj
-        self.logger = logging.getLogger("ExecuteTARun")
+        
+        self.par_factor = par_factor
 
+        self.logger = logging.getLogger(self.__class__.__name__)
         self._supports_memory_limit = False
 
     def start(self, config, instance,
@@ -108,7 +106,7 @@ class ExecuteTARun(object):
 
         additional_arguments = {}
 
-        if self._supports_memory_limit is True and memory_limit is not None:
+        if self._supports_memory_limit is True:
             additional_arguments['memory_limit'] = memory_limit
         elif self._supports_memory_limit is False and memory_limit is not None:
             raise ValueError('Target algorithm executor %s does not support '
@@ -125,6 +123,12 @@ class ExecuteTARun(object):
         self.stats.ta_runs += 1
         self.stats.ta_time_used += float(runtime)
 
+        if self.run_obj == "runtime":
+            if status != StatusType.SUCCESS:
+                cost = cutoff * self.par_factor
+            else:
+                cost = runtime
+
         self.logger.debug("Return: Status: %d, cost: %f, time. %f, additional: %s" % (
             status, cost, runtime, str(additional_info)))
 
@@ -134,11 +138,7 @@ class ExecuteTARun(object):
                                 instance_id=instance, seed=seed,
                                 additional_info=additional_info)
             
-            inst_seeds = set(
-            self.runhistory.get_runs_for_config(config))
-            perf = self.aggregate_func(config, self.runhistory,
-                                      inst_seeds)
-            self.runhistory.update_cost(config, perf)
+            self.runhistory.update_cost(config)
 
         return status, cost, runtime, additional_info
 
