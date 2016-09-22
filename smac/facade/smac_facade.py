@@ -32,6 +32,7 @@ class SMAC(object):
     def __init__(self,
                  scenario: Scenario,
                  tae_runner: ExecuteTARun=None,
+                 runhistory: RunHistory=None,
                  intensifier: Intensifier=None,
                  acquisition_function: AbstractAcquisitionFunction=None,
                  model=None,
@@ -51,6 +52,8 @@ class SMAC(object):
             algorithm (or any other arbitrary function):
             run(self, config)
             If not set, it will be initialized with the tae.ExecuteTARunOld()
+        runhistory: RunHistory
+            runhistory to store all algorithm runs
         intensifier: Intensifier
             intensification object to issue a racing to decide the current incumbent
         acquisition_function : AcquisitionFunction
@@ -81,7 +84,8 @@ class SMAC(object):
             self.stats = Stats(scenario)
 
         # initialize empty runhistory
-        runhistory = RunHistory(aggregate_func=aggregate_func)
+        if runhistory is None:
+            runhistory = RunHistory(aggregate_func=aggregate_func)
 
         # initialize random number generator
         if rng is None:
