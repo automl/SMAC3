@@ -4,6 +4,7 @@ import numpy
 
 from smac.configspace import Configuration
 from smac.tae.execute_ta_run import StatusType
+from smac.utils.constants import MAXINT
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -11,8 +12,6 @@ __license__ = "3-clause BSD"
 __maintainer__ = "Marius Lindauer"
 __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
-
-MAXINT = 2 ** 31 - 1
 
 
 class RunHistory(object):
@@ -108,7 +107,7 @@ class RunHistory(object):
         inst_seeds = set(self.get_runs_for_config(config))
         perf = self.aggregate_func(config, self, inst_seeds)
         config_id = self.config_ids[config]
-        self.cost_per_config[config_id] = cost
+        self.cost_per_config[config_id] = perf
 
     def get_cost(self, config):
         config_id = self.config_ids[config]

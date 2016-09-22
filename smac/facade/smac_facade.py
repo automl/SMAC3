@@ -3,30 +3,44 @@ import logging
 import numpy as np
 
 from smac.tae.execute_ta_run import ExecuteTARun
+from smac.tae.execute_ta_run_old import ExecuteTARunOld
+from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
-from smac.utils.io.traj_logging import TrajLogger
 from smac.scenario.scenario import Scenario
-from smac.runhistory.runhistory import RunHistory, AbstractRunHistory2EPM
-from smac.smbo.acquisition import AbstractAcquisitionFunction
+from smac.runhistory.runhistory import RunHistory
+from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, RunHistory2EPM4LogCost, RunHistory2EPM4Cost
 from smac.initial_design.initial_design import InitialDesign
+from smac.initial_design.default_design import DefaultDesign
+from smac.intensification.intensification import Intensifier
+from smac.smbo.smbo import SMBO
+from smac.smbo.objective import average_cost
+from smac.smbo.acquisition import EI, AbstractAcquisitionFunction
+from smac.smbo.local_search import LocalSearch
+from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.epm.rfr_imputator import RFRImputator
+from smac.utils.util_funcs import get_types
+from smac.utils.io.traj_logging import TrajLogger
+
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 
+
 class SMAC(object):
-    
-    def __init__(self, 
-                 scenario:Scenario, 
-                 tae_runner:ExecuteTARun=None, 
-                 acquisition_function:AbstractAcquisitionFunction=None,
-                 model=None, 
-                 runhistory2epm:AbstractRunHistory2EPM=None, 
-                 initial_design:InitialDesign=None, 
-                 stats:Stats=None, 
-                 rng:np.random.RandomState=None):
+
+    def __init__(self,
+                 scenario: Scenario,
+                 tae_runner: ExecuteTARun=None,
+                 intensifier: Intensifier=None,
+                 acquisition_function: AbstractAcquisitionFunction=None,
+                 model=None,
+                 runhistory2epm: AbstractRunHistory2EPM=None,
+                 initial_design: InitialDesign=None,
+                 stats: Stats=None,
+                 rng: np.random.RandomState=None):
         '''
-        Interface that contains the main Bayesian optimization loop
+        Facade to use SMAC default mode
 
         Parameters
         ----------
@@ -37,6 +51,8 @@ class SMAC(object):
             algorithm (or any other arbitrary function):
             run(self, config)
             If not set, it will be initialized with the tae.ExecuteTARunOld()
+        intensifier: Intensifier
+            intensification object to issue a racing to decide the current incumbent
         acquisition_function : AcquisitionFunction
             Object that implements the AbstractAcquisitionFunction. Will use
             EI if not set.
@@ -55,7 +71,9 @@ class SMAC(object):
             Random number generator
         '''
         self.logger = logging.getLogger("SMAC")
-        
+
+        aggregate_func = average_cost
+
         # initialize stats object
         if stats:
             self.stats = stats
@@ -63,117 +81,132 @@ class SMAC(object):
             self.stats = Stats(scenario)
 
         # initialize empty runhistory
-        self.runhistory = RunHistory()
+        runhistory = RunHistory(aggregate_func=aggregate_func)
 
         # initialize random number generator
         if rng is None:
-            self.num_run = np.random.randint(1234567980)
-            self.rng = np.random.RandomState(seed=self.num_run)
+            num_run = np.random.randint(1234567980)
+            rng = np.random.RandomState(seed=num_run)
         elif isinstance(rng, int):
-            self.num_run = rng
-            self.rng = np.random.RandomState(seed=rng)
+            num_run = rng
+            rng = np.random.RandomState(seed=rng)
         elif isinstance(rng, np.random.RandomState):
-            self.num_run = rng.randint(1234567980)
-            self.rng = rng
+            num_run = rng.randint(1234567980)
+            rng = rng
         else:
             raise TypeError('Unknown type %s for argument rng. Only accepts '
                             'None, int or np.random.RandomState' % str(type(rng)))
 
-        # initial Trajectory Logger                
+        # initial Trajectory Logger
         traj_logger = TrajLogger(
-            output_dir=self.scenario.output_dir, stats=self.stats)
+            output_dir=scenario.output_dir, stats=self.stats)
 
         # initial EPM
-        types = get_types(self.config_space, scenario.feature_array)
+        types = get_types(scenario.cs, scenario.feature_array)
         if model is None:
-            model = RandomForestWithInstances(types,
-                                               scenario.feature_array,
-                                               seed=self.rng.randint(
-                                                   1234567980))
-        else:
-            model = model
-            
+            model = RandomForestWithInstances(types=types,
+                                              instance_features=scenario.feature_array,
+                                              seed=rng.randint(
+                                                  1234567980))
         # initial acquisition function
         if acquisition_function is None:
-            acquisition_func = EI(self.model)
-        else:
-            acquisition_func = acquisition_function
+            acquisition_func = EI(model=model)
 
         # initialize optimizer on acquisition function
-        local_search = LocalSearch(self.acquisition_func,
-                                        self.config_space)
-        
-        self.incumbent = None
-
-        self.objective = average_cost
+        local_search = LocalSearch(acquisition_func,
+                                   scenario.cs)
 
         if tae_runner is None:
-            self.executor = ExecuteTARunOld(ta=scenario.ta,
-                                            stats=self.stats,
-                                            run_obj=scenario.run_obj,
-                                            runhistory=self.runhistory,
-                                            aggregate_func=self.objective,
-                                            par_factor=scenario.par_factor)
-        else:
-            self.executor = tae_runner
-            
+            tae_runner = ExecuteTARunOld(ta=scenario.ta,
+                                         stats=self.stats,
+                                         run_obj=scenario.run_obj,
+                                         runhistory=runhistory,
+                                         par_factor=scenario.par_factor)
+
+        # initial initial design
         if initial_design is None:
-            self.initial_design = DefaultDesign(tae_runner=self.executor,
-                                                 scenario=self.scenario,
-                                                 stats=self.stats,
-                                                 traj_logger=self.traj_logger,
-                                                 runhistory=self.runhistory,
-                                                 rng=self.rng)
-        else:
-            self.initial_design = initial_design
+            initial_design = DefaultDesign(tae_runner=tae_runner,
+                                           scenario=scenario,
+                                           stats=self.stats,
+                                           traj_logger=traj_logger,
+                                           runhistory=runhistory,
+                                           rng=rng)
 
-        self.inten = Intensifier(executor=self.executor,
-                                 stats=self.stats,
-                                 traj_logger=self.traj_logger,
-                                 instances=self.scenario.train_insts,
-                                 cutoff=self.scenario.cutoff,
-                                 deterministic=self.scenario.deterministic,
-                                 run_obj_time=self.scenario.run_obj == "runtime",
-                                 instance_specifics=self.scenario.instance_specific)
+        # initial intensification
+        if intensifier is None:
+            intensifier = Intensifier(tae_runner=tae_runner,
+                                      stats=self.stats,
+                                      traj_logger=traj_logger,
+                                      instances=scenario.train_insts,
+                                      cutoff=scenario.cutoff,
+                                      deterministic=scenario.deterministic,
+                                      run_obj_time=scenario.run_obj == "runtime",
+                                      instance_specifics=scenario.instance_specific)
 
-        num_params = len(self.config_space.get_hyperparameters())
+        # initial conversion of runhistory into EPM data
+        if runhistory2epm is None:
 
-        
-        if self.scenario.run_obj == "runtime":
+            num_params = len(scenario.cs.get_hyperparameters())
+            if scenario.run_obj == "runtime":
 
-            if runhistory2epm is None:
                 # if we log the performance data,
                 # the RFRImputator will already get
                 # log transform data from the runhistory
-                cutoff = np.log10(self.scenario.cutoff)
-                threshold = np.log10(self.scenario.cutoff *
-                                     self.scenario.par_factor)
+                cutoff = np.log10(scenario.cutoff)
+                threshold = np.log10(scenario.cutoff *
+                                     scenario.par_factor)
 
-                imputor = RFRImputator(cs=self.config_space,
-                                       rs=self.rng,
+                imputor = RFRImputator(cs=scenario.cs,
+                                       rs=rng,
                                        cutoff=cutoff,
                                        threshold=threshold,
-                                       model=self.model,
+                                       model=model,
                                        change_threshold=0.01,
                                        max_iter=10)
-                self.rh2EPM = RunHistory2EPM4LogCost(
-                    scenario=self.scenario, num_params=num_params,
+
+                runhistory2epm = RunHistory2EPM4LogCost(
+                    scenario=scenario, num_params=num_params,
                     success_states=[StatusType.SUCCESS, ],
                     impute_censored_data=True,
                     impute_state=[StatusType.TIMEOUT, ],
                     imputor=imputor)
-            else:
-                self.rh2EPM = runhistory2epm
 
-        elif self.scenario.run_obj == 'quality':
-            if runhistory2epm is None:
-                self.rh2EPM = RunHistory2EPM4Cost\
-                    (scenario=self.scenario, num_params=num_params,
+            elif scenario.run_obj == 'quality':
+                runhistory2epm = RunHistory2EPM4Cost\
+                    (scenario=scenario, num_params=num_params,
                      success_states=[StatusType.SUCCESS, ],
                      impute_censored_data=False, impute_state=None)
-            else:
-                self.rh2EPM = runhistory2epm
 
-        else:
-            raise ValueError('Unknown run objective: %s. Should be either '
-                             'quality or runtime.' % self.scenario.run_obj)
+            else:
+                raise ValueError('Unknown run objective: %s. Should be either '
+                                 'quality or runtime.' % self.scenario.run_obj)
+
+        self.solver = SMBO(scenario=scenario,
+                           stats=self.stats,
+                           initial_design=initial_design,
+                           runhistory=runhistory,
+                           runhistory2epm=runhistory2epm,
+                           intensifier=intensifier,
+                           aggreagte_func=aggregate_func,
+                           num_run=num_run,
+                           model=model,
+                           acp_optimizer=local_search,
+                           acquisition_func=acquisition_func,
+                           rng=rng)
+
+    def optimize(self, max_iters: int=np.inf):
+        '''
+            optimize the algorithm provided in scenario (given in constructor)
+
+            Arguments
+            ---------
+            max_iters: int
+                maximal number of iterations
+        '''
+        incumbent = None
+        try:
+            incumbent = self.solver.run(max_iters=max_iters)
+        finally:
+            self.solver.stats.print_stats()
+            self.logger.info("Final Incumbent: %s" % (self.solver.incumbent))
+        return incumbent

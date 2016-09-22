@@ -9,6 +9,7 @@ from smac.utils.io.traj_logging import TrajLogger
 from smac.scenario.scenario import Scenario
 from smac.tae.execute_ta_run import StatusType
 from smac.runhistory.runhistory import RunHistory
+from smac.utils import constants
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -73,7 +74,7 @@ class DefaultDesign(InitialDesign):
         if self.scenario.deterministic:
             initial_seed = 0
         else:
-            initial_seed = random.randint(0, MAXINT)
+            initial_seed = self.rng.randint(0, constants.MAXINT)
 
         status, cost, runtime, additional_info = self.tae_runner.start(
             default_conf,

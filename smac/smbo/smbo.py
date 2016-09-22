@@ -6,31 +6,21 @@ import random
 import sys
 import time
 
-from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
-    UniformFloatHyperparameter, UniformIntegerHyperparameter, Constant
 import ConfigSpace.util
 
-from smac.smbo.acquisition import EI
+from smac.smbo.acquisition import AbstractAcquisitionFunction
 from smac.smbo.base_solver import BaseSolver
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.smbo.local_search import LocalSearch
-from smac.smbo.intensification import Intensifier
+from smac.intensification.intensification import Intensifier
 from smac.smbo import pSMAC
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, \
-    RunHistory2EPM4LogCost
-from smac.smbo.objective import average_cost, total_runtime
-from smac.tae.execute_ta_run import StatusType
+from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.stats.stats import Stats
-from smac.tae.execute_ta_run_old import ExecuteTARunOld
-from smac.tae.execute_func import ExecuteTAFunc
-from smac.utils.io.traj_logging import TrajLogger
 from smac.initial_design.initial_design import InitialDesign
-from smac.initial_design.default_design import DefaultDesign
+from smac.scenario.scenario import Scenario
 
 from smac.epm.rfr_imputator import RFRImputator
-
-MAXINT = 2 ** 31 - 1
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -40,40 +30,21 @@ __license__ = "3-clause BSD"
 __version__ = "0.0.1"
 
 
-def get_types(config_space, instance_features=None):
-    # Extract types vector for rf from config space
-    types = np.zeros(len(config_space.get_hyperparameters()),
-                     dtype=np.uint)
-
-    for i, param in enumerate(config_space.get_hyperparameters()):
-        if isinstance(param, (CategoricalHyperparameter)):
-            n_cats = len(param.choices)
-            types[i] = n_cats
-
-        elif isinstance(param, Constant):
-            # for constants we simply set types to 0
-            # which makes it a numerical parameter
-            types[i] = 0
-            # and we leave the bounds to be 0 for now
-        elif not isinstance(param, (UniformFloatHyperparameter,
-                                    UniformIntegerHyperparameter)):
-            raise TypeError("Unknown hyperparameter type %s" % type(param))
-
-    if instance_features is not None:
-        types = np.hstack(
-            (types, np.zeros((instance_features.shape[1]))))
-
-    types = np.array(types, dtype=np.uint)
-    return types
-
-
 class SMBO(BaseSolver):
 
-    def __init__(self, scenario, 
-                 acquisition_function=None,
-                 model=None, runhistory2epm=None, 
-                 initial_design=None, 
-                 stats=None, rng=None):
+    def __init__(self, 
+                 scenario:Scenario,
+                 stats: Stats,
+                 initial_design: InitialDesign,
+                 runhistory: RunHistory,
+                 runhistory2epm: AbstractRunHistory2EPM,
+                 intensifier: Intensifier,
+                 aggreagte_func: callable,
+                 num_run: int,
+                 model: RandomForestWithInstances,
+                 acp_optimizer: LocalSearch,
+                 acquisition_func: AbstractAcquisitionFunction,
+                 rng:np.random.RandomState):
         '''
         Interface that contains the main Bayesian optimization loop
 
@@ -81,141 +52,45 @@ class SMBO(BaseSolver):
         ----------
         scenario: smac.scenario.scenario.Scenario
             Scenario object
-        acquisition_function : AcquisitionFunction
-            Object that implements the AbstractAcquisitionFunction. Will use
-            EI if not set.
-        model : object
-            Model that implements train() and predict(). Will use a
-            RandomForest if not set.
-        runhistory2epm : RunHistory2EMP
-            Object that implements the AbstractRunHistory2EPM. If None,
-            will use RunHistory2EPM4Cost if objective is cost or
-            RunHistory2EPM4LogCost if objective is runtime.
+        stats: Stats
+            statistics object with configuration budgets
         initial_design: InitialDesign
             initial sampling design
-        stats: Stats
-            optional stats object
-        rng: numpy.random.RandomState
+        runhistory: RunHistory
+            runhistory with all runs so far
+        runhistory2epm : AbstractRunHistory2EPM
+            Object that implements the AbstractRunHistory2EPM to convert runhistory data into EPM data
+        intensifier: Intensifier
+            intensification of new challengers against incumbent configuration (probably with some kind of racing on the instances)
+        aggreagte_func: callable
+            how to aggregate the runs in the runhistory to get the performance of a configuration
+        num_run: int
+            id of this run (used for pSMAC)
+        model: RandomForestWithInstances
+            empirical performance model (right now, we support only RandomForestWithInstances)
+        acp_optimizer: LocalSearch
+            optimizer on acquisition function (right now, we support only a local search)
+        acquisition_function : AcquisitionFunction
+            Object that implements the AbstractAcquisitionFunction (i.e., infill criterion for acq_optimizer)
+        rng: np.random.RandomState
             Random number generator
         '''
-
-        if stats:
-            self.stats = stats
-        else:
-            self.stats = Stats(scenario)
-
-        self.runhistory = RunHistory()
-
-        self.logger = logging.getLogger("smbo")
-
-        if rng is None:
-            self.num_run = np.random.randint(1234567980)
-            self.rng = np.random.RandomState(seed=self.num_run)
-        elif isinstance(rng, int):
-            self.num_run = rng
-            self.rng = np.random.RandomState(seed=rng)
-        elif isinstance(rng, np.random.RandomState):
-            self.num_run = rng.randint(1234567980)
-            self.rng = rng
-        else:
-            raise TypeError('Unknown type %s for argument rng. Only accepts '
-                            'None, int or np.random.RandomState' % str(type(rng)))
-
+        self.logger = logging.getLogger("SMBO")
+        self.incumbent = None
+        
         self.scenario = scenario
         self.config_space = scenario.cs
-        self.traj_logger = TrajLogger(
-            output_dir=self.scenario.output_dir, stats=self.stats)
-
-        self.types = get_types(self.config_space, scenario.feature_array)
-        if model is None:
-            self.model = RandomForestWithInstances(self.types,
-                                                   scenario.feature_array,
-                                                   seed=self.rng.randint(
-                                                       1234567980))
-        else:
-            self.model = model
-
-        if acquisition_function is None:
-            self.acquisition_func = EI(self.model)
-        else:
-            self.acquisition_func = acquisition_function
-
-        self.local_search = LocalSearch(self.acquisition_func,
-                                        self.config_space)
-        self.incumbent = None
-
-        self.objective = average_cost
-
-        if tae_runner is None:
-            self.executor = ExecuteTARunOld(ta=scenario.ta,
-                                            stats=self.stats,
-                                            run_obj=scenario.run_obj,
-                                            runhistory=self.runhistory,
-                                            aggregate_func=self.objective,
-                                            par_factor=scenario.par_factor)
-        else:
-            self.executor = tae_runner
-            
-        if initial_design is None:
-            self.initial_design = DefaultDesign(tae_runner=self.executor,
-                                                 scenario=self.scenario,
-                                                 stats=self.stats,
-                                                 traj_logger=self.traj_logger,
-                                                 runhistory=self.runhistory,
-                                                 rng=self.rng)
-        else:
-            self.initial_design = initial_design
-
-        self.inten = Intensifier(executor=self.executor,
-                                 stats=self.stats,
-                                 traj_logger=self.traj_logger,
-                                 instances=self.scenario.train_insts,
-                                 cutoff=self.scenario.cutoff,
-                                 deterministic=self.scenario.deterministic,
-                                 run_obj_time=self.scenario.run_obj == "runtime",
-                                 instance_specifics=self.scenario.instance_specific)
-
-        num_params = len(self.config_space.get_hyperparameters())
-
-        
-        if self.scenario.run_obj == "runtime":
-
-            if runhistory2epm is None:
-                # if we log the performance data,
-                # the RFRImputator will already get
-                # log transform data from the runhistory
-                cutoff = np.log10(self.scenario.cutoff)
-                threshold = np.log10(self.scenario.cutoff *
-                                     self.scenario.par_factor)
-
-                imputor = RFRImputator(cs=self.config_space,
-                                       rs=self.rng,
-                                       cutoff=cutoff,
-                                       threshold=threshold,
-                                       model=self.model,
-                                       change_threshold=0.01,
-                                       max_iter=10)
-                self.rh2EPM = RunHistory2EPM4LogCost(
-                    scenario=self.scenario, num_params=num_params,
-                    success_states=[StatusType.SUCCESS, ],
-                    impute_censored_data=True,
-                    impute_state=[StatusType.TIMEOUT, ],
-                    imputor=imputor)
-            else:
-                self.rh2EPM = runhistory2epm
-
-        elif self.scenario.run_obj == 'quality':
-            if runhistory2epm is None:
-                self.rh2EPM = RunHistory2EPM4Cost\
-                    (scenario=self.scenario, num_params=num_params,
-                     success_states=[StatusType.SUCCESS, ],
-                     impute_censored_data=False, impute_state=None)
-            else:
-                self.rh2EPM = runhistory2epm
-
-        else:
-            raise ValueError('Unknown run objective: %s. Should be either '
-                             'quality or runtime.' % self.scenario.run_obj)
+        self.stats = stats        
+        self.initial_design = initial_design
+        self.runhistory = runhistory
+        self.rh2EPM = runhistory2epm
+        self.intensifier = intensifier
+        self.aggreagte_func = aggreagte_func 
+        self.num_run = num_run
+        self.model = model
+        self.acp_optimizer = acp_optimizer
+        self.acquisition_func = acquisition_func
+        self.rng = rng
 
     def run(self, max_iters=10):
         '''
@@ -257,11 +132,11 @@ class SMBO(BaseSolver):
 
             self.logger.debug("Intensify")
 
-            self.incumbent, inc_perf = self.inten.intensify(
+            self.incumbent, inc_perf = self.intensifier.intensify(
                 challengers=challengers,
                 incumbent=self.incumbent,
                 run_history=self.runhistory,
-                objective=self.objective,
+                aggreagte_func=self.aggreagte_func,
                 time_bound=max(0.01, time_spend))
 
             # TODO: Write run history into database
@@ -408,7 +283,7 @@ class SMBO(BaseSolver):
             else:
                 start_point = self.config_space.sample_configuration()
 
-            configuration, acq_val = self.local_search.maximize(start_point)
+            configuration, acq_val = self.acp_optimizer.maximize(start_point)
 
             configuration.origin = 'Local Search'
             configs_acq.append((acq_val[0][0], configuration))

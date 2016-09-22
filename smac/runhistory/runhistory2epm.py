@@ -9,6 +9,7 @@ from smac.tae.execute_ta_run import StatusType
 from smac.runhistory.runhistory import RunHistory
 from smac.configspace import impute_inactive_values
 import smac.epm.base_imputor
+from smac.utils import constants
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -250,6 +251,10 @@ class RunHistory2EPM4LogCost(AbstractRunHistory2EPM):
             # run_array[row, -1] = instances[row]
             y[row, 0] = run.cost
 
+        #ensure that minimal value is larger than 0
+        if np.sum(y<=0) > 0:
+                self.logger.warning("Got cost of smaller/equal to 0. Replace by %f since we use log cost." %(constants.MINIMAL_COST_FOR_LOG))
+                y[y<constants.MINIMAL_COST_FOR_LOG] = constants.MINIMAL_COST_FOR_LOG
         y = np.log10(y)
 
         return X, y
