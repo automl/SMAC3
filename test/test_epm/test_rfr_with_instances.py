@@ -144,4 +144,4 @@ class TestRFWithInstances(unittest.TestCase):
         self.assertEqual(vars.shape, (11, 1))
         for i in range(11):
             self.assertEqual(means[i], 4.5)
-            self.assertEqual(vars[i], 12.75)
+            self.assertEqual(vars[i], 4.5)

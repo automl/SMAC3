@@ -1,3 +1,9 @@
+# 0.1.2
+
+* FIX 58 output of the final statistics
+* FIX 56 using the command line target algorithms (broken since 0.1.1)
+* FIX 50 as variance prediction, we use the average predicted variance across the instances
+
 # 0.1.1
 
 * NEW leading ones examples
