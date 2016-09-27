@@ -1,3 +1,7 @@
+# 0.1.3
+
+* FIX 63 using memory limit for function target algorithms (broken since 0.1.1)
+
 # 0.1.2
 
 * FIX 58 output of the final statistics
