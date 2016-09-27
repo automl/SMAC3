@@ -26,7 +26,7 @@ setuptools.setup(
         "Topic :: Utilities",
         "Topic :: Scientific/Engineering",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
-        "License :: OSI Approved :: GNU Affero General Public License v3",
+        "License :: OSI Approved :: BSD License",
     ],
     platforms=['Linux'],
     install_requires=requirements,
