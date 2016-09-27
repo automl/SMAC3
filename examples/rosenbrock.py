@@ -69,7 +69,7 @@ scenario = Scenario({"run_obj":"quality", # we optimize quality (alternative run
 stats = Stats(scenario)
 
 # register function to be optimize
-taf = ExecuteTAFunc(rosenbrock_4d, stats)
+taf = ExecuteTAFunc(rosenbrock_4d, stats, run_obj='quality')
 
 # example call of the function
 # it returns: Status, Cost, Runtime, Additional Infos

@@ -122,7 +122,7 @@ scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative r
 stats = Stats(scenario)
  
 # register function to be optimize
-taf = ExecuteTAFunc(rfr, stats=stats)
+taf = ExecuteTAFunc(rfr, stats=stats, run_obj='quality')
  
 # example call of the function
 # it returns: Status, Cost, Runtime, Additional Infos
