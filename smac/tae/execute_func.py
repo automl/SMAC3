@@ -30,6 +30,10 @@ class ExecuteTAFunc(ExecuteTARun):
         Penalized average runtime factor. Only used when `run_obj='runtime'`
     """
 
+    def __init__(self, ta, stats, run_obj="runtime", par_factor=1):
+        super().__init__(ta, stats, run_obj, par_factor)
+        self._supports_memory_limit = True
+
     def run(self, config, instance=None,
             cutoff=None,
             memory_limit=None,
