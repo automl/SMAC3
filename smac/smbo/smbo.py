@@ -157,7 +157,8 @@ class SMBO(BaseSolver):
                                  cutoff=self.scenario.cutoff,
                                  deterministic=self.scenario.deterministic,
                                  run_obj_time=self.scenario.run_obj == "runtime",
-                                 instance_specifics=self.scenario.instance_specific)
+                                 instance_specifics=self.scenario.instance_specific,
+                                 rng=self.rng)
 
         num_params = len(self.config_space.get_hyperparameters())
 

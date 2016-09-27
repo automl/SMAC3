@@ -3,7 +3,6 @@ from collections import OrderedDict
 import logging
 import sys
 import time
-import random
 from collections import Counter
 
 import numpy as np
@@ -29,10 +28,11 @@ class Intensifier(object):
         takes challenger and incumbents and performs intensify
     '''
 
-    def __init__(self, executor, stats, traj_logger, instances=None,
+    def __init__(self, executor, stats, traj_logger, rng,
+                 instances=None,
                  instance_specifics={},
                  cutoff=MAXINT, deterministic=False, run_obj_time=True,
-                 run_limit=MAXINT, maxR=2000, rng=0):
+                 run_limit=MAXINT, maxR=2000):
         '''
         Constructor
 
@@ -44,6 +44,7 @@ class Intensifier(object):
             stats object            
         traj_logger: TrajLogger()
             TrajLogger object to log all new incumbents
+        rng : np.random.RandomState
         instances : list
             list of all instance ids
         instance_specifics : dict
@@ -69,7 +70,7 @@ class Intensifier(object):
         self.logger = logging.getLogger("intensifier")
         self.run_limit = run_limit
         self.maxR = maxR
-        self.rs = np.random.RandomState(rng)
+        self.rs = rng
 
         # scenario info
         self.cutoff = cutoff
@@ -158,7 +159,7 @@ class Intensifier(object):
 
                 if available_insts:
                     # Line 5 (here for easier code)
-                    next_instance = random.choice(list(available_insts))
+                    next_instance = self.rs.choice(list(available_insts))
                     # Line 7
                     status, cost, dur, res = self.tae.start(config=incumbent,
                                                             instance=next_instance,
