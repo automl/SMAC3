@@ -15,7 +15,7 @@ __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 
-class DefaultDesign(InitialDesign):
+class DefaultConfiguration(InitialDesign):
     
     def __init__(self, 
                  tae_runner:ExecuteTARun,

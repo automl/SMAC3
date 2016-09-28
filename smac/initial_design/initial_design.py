@@ -58,4 +58,4 @@ class InitialDesign(object):
                 initial incumbent configuration
         '''
 
-        raise("Not implemented")
+        raise NotImplementedError

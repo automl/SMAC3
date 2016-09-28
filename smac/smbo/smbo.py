@@ -42,7 +42,7 @@ class SMBO(BaseSolver):
                  aggreagte_func: callable,
                  num_run: int,
                  model: RandomForestWithInstances,
-                 acp_optimizer: LocalSearch,
+                 acq_optimizer: LocalSearch,
                  acquisition_func: AbstractAcquisitionFunction,
                  rng:np.random.RandomState):
         '''
@@ -68,7 +68,7 @@ class SMBO(BaseSolver):
             id of this run (used for pSMAC)
         model: RandomForestWithInstances
             empirical performance model (right now, we support only RandomForestWithInstances)
-        acp_optimizer: LocalSearch
+        acq_optimizer: LocalSearch
             optimizer on acquisition function (right now, we support only a local search)
         acquisition_function : AcquisitionFunction
             Object that implements the AbstractAcquisitionFunction (i.e., infill criterion for acq_optimizer)
@@ -88,18 +88,13 @@ class SMBO(BaseSolver):
         self.aggreagte_func = aggreagte_func 
         self.num_run = num_run
         self.model = model
-        self.acp_optimizer = acp_optimizer
+        self.acq_optimizer = acq_optimizer
         self.acquisition_func = acquisition_func
         self.rng = rng
 
-    def run(self, max_iters=10):
+    def run(self):
         '''
-        Runs the Bayesian optimization loop for max_iters iterations
-
-        Parameters
-        ----------
-        max_iters: int
-            The maximum number of iterations
+        Runs the Bayesian optimization loop 
 
         Returns
         ----------
@@ -139,14 +134,10 @@ class SMBO(BaseSolver):
                 aggreagte_func=self.aggreagte_func,
                 time_bound=max(0.01, time_spend))
 
-            # TODO: Write run history into database
             if self.scenario.shared_model:
                 pSMAC.write(run_history=self.runhistory,
                             output_directory=self.scenario.output_dir,
                             num_run=self.num_run)
-
-            if iteration == max_iters:
-                break
 
             iteration += 1
 
@@ -283,7 +274,7 @@ class SMBO(BaseSolver):
             else:
                 start_point = self.config_space.sample_configuration()
 
-            configuration, acq_val = self.acp_optimizer.maximize(start_point)
+            configuration, acq_val = self.acq_optimizer.maximize(start_point)
 
             configuration.origin = 'Local Search'
             configs_acq.append((acq_val[0][0], configuration))

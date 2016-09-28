@@ -1,6 +1,3 @@
-from __future__ import division, print_function
-
-
 # TODO: remove really ugly boilerplate
 import logging
 import sys

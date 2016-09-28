@@ -10,7 +10,7 @@ from smac.scenario.scenario import Scenario
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, RunHistory2EPM4LogCost, RunHistory2EPM4Cost
 from smac.initial_design.initial_design import InitialDesign
-from smac.initial_design.default_design import DefaultDesign
+from smac.initial_design.default_configuration_design import DefaultConfiguration
 from smac.intensification.intensification import Intensifier
 from smac.smbo.smbo import SMBO
 from smac.smbo.objective import average_cost
@@ -129,7 +129,7 @@ class SMAC(object):
 
         # initial initial design
         if initial_design is None:
-            initial_design = DefaultDesign(tae_runner=tae_runner,
+            initial_design = DefaultConfiguration(tae_runner=tae_runner,
                                            scenario=scenario,
                                            stats=self.stats,
                                            traj_logger=traj_logger,
@@ -194,11 +194,11 @@ class SMAC(object):
                            aggreagte_func=aggregate_func,
                            num_run=num_run,
                            model=model,
-                           acp_optimizer=local_search,
+                           acq_optimizer=local_search,
                            acquisition_func=acquisition_func,
                            rng=rng)
 
-    def optimize(self, max_iters: int=np.inf):
+    def optimize(self):
         '''
             optimize the algorithm provided in scenario (given in constructor)
 
@@ -209,7 +209,7 @@ class SMAC(object):
         '''
         incumbent = None
         try:
-            incumbent = self.solver.run(max_iters=max_iters)
+            incumbent = self.solver.run()
         finally:
             self.solver.stats.print_stats()
             self.logger.info("Final Incumbent: %s" % (self.solver.incumbent))

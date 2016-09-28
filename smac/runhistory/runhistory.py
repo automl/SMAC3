@@ -96,7 +96,7 @@ class RunHistory(object):
 
     def update_cost(self, config):
         '''
-            stoar in self.cost_perf_config the performance of a configuration across the instances;
+            store the performance of a configuration across the instances in self.cost_perf_config; 
             uses self.aggregate_func
             
             Arguments

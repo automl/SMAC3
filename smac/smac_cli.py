@@ -43,7 +43,7 @@ class SMACCLI(object):
         scen = Scenario(args_.scenario_file, misc_args)
         
         smac = SMAC(scenario=scen, rng=np.random.RandomState(args_.seed))
-        smac.optimize(max_iters=args_.max_iterations)
+        smac.optimize()
 
         smac.solver.runhistory.save_json(fn=os.path.join(scen.output_dir,"runhistory.json"))
         #smbo.runhistory.load_json(fn="runhistory.json", cs=smbo.config_space)
