@@ -117,12 +117,13 @@ cs.add_hyperparameter(max_num_nodes)
 scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative runtime)
                      "runcount-limit": 400,  # at most 200 function evaluations
                      "cs": cs, # configuration space
-                     "deterministic": "true" 
+                     "deterministic": "true",
+                     "memory_limit": 1024,
                      })
 stats = Stats(scenario)
  
 # register function to be optimize
-taf = ExecuteTAFunc(rfr, stats=stats)
+taf = ExecuteTAFunc(rfr, stats=stats, run_obj='quality')
  
 # example call of the function
 # it returns: Status, Cost, Runtime, Additional Infos

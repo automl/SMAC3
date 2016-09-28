@@ -11,7 +11,7 @@ requirements = ['setuptools',
 
 setuptools.setup(
     name="smac",
-    version="0.1.2",
+    version="0.1.3",
     author="Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter",
     author_email="fh@cs.uni-freiburg.de",
     description=("SMAC3, a Python implementation of 'Sequential Model-based "
@@ -26,7 +26,7 @@ setuptools.setup(
         "Topic :: Utilities",
         "Topic :: Scientific/Engineering",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
-        "License :: OSI Approved :: GNU Affero General Public License v3",
+        "License :: OSI Approved :: BSD License",
     ],
     platforms=['Linux'],
     install_requires=requirements,
