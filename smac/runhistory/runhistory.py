@@ -209,7 +209,7 @@ class RunHistory(object):
             instance of configuration space
         """
 
-        new_runhistory = RunHistory()
+        new_runhistory = RunHistory(self.aggregate_func)
         new_runhistory.load_json(fn, cs)
 
         # Configurations might be already known, but by a different ID. This

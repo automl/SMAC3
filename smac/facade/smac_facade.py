@@ -114,10 +114,10 @@ class SMAC(object):
                                                   1234567980))
         # initial acquisition function
         if acquisition_function is None:
-            acquisition_func = EI(model=model)
+            acquisition_function = EI(model=model)
 
         # initialize optimizer on acquisition function
-        local_search = LocalSearch(acquisition_func,
+        local_search = LocalSearch(acquisition_function,
                                    scenario.cs)
 
         if tae_runner is None:
@@ -195,7 +195,7 @@ class SMAC(object):
                            num_run=num_run,
                            model=model,
                            acq_optimizer=local_search,
-                           acquisition_func=acquisition_func,
+                           acquisition_func=acquisition_function,
                            rng=rng)
 
     def optimize(self):
