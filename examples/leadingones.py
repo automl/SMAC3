@@ -1,13 +1,4 @@
-# TODO: remove really ugly boilerplate
 import logging
-import sys
-import os
-import inspect
-cmd_folder = os.path.realpath(
-    os.path.abspath(os.path.split(inspect.getfile(inspect.currentframe()))[0]))
-cmd_folder = os.path.realpath(os.path.join(cmd_folder, ".."))
-if cmd_folder not in sys.path:
-    sys.path.insert(0,cmd_folder)
 
 import numpy as np
 
@@ -70,7 +61,7 @@ scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative r
 
 stats = Stats(scenario)
 
-# register function to be optimize
+# register function to be optimized
 taf = ExecuteTAFunc(leading_ones, stats)
 
 # example call of the function
