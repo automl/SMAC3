@@ -120,12 +120,19 @@ class SMAC(object):
         local_search = LocalSearch(acquisition_function,
                                    scenario.cs)
 
+        # initialize tae_runner
         if tae_runner is None:
             tae_runner = ExecuteTARunOld(ta=scenario.ta,
                                          stats=self.stats,
                                          run_obj=scenario.run_obj,
                                          runhistory=runhistory,
                                          par_factor=scenario.par_factor)
+        # inject stats if necessary
+        if tae_runner.stats is None:
+            tae_runner.stats = self.stats
+        # inject runhistory if necessary 
+        if tae_runner.runhistory is None:
+            tae_runner.runhistory = runhistory
 
         # initial initial design
         if initial_design is None:

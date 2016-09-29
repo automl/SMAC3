@@ -102,7 +102,6 @@ class SMBO(BaseSolver):
             The best found configuration
         '''
         self.stats.start_timing()
-
         self.incumbent = self.initial_design.run()
 
         # Main BO loop

@@ -35,7 +35,7 @@ class ExecuteTARun(object):
             the command line call to the target algorithm (wrapper)
     """
 
-    def __init__(self, ta, stats, runhistory=None, run_obj="runtime", par_factor=1):
+    def __init__(self, ta, stats=None, runhistory=None, run_obj="runtime", par_factor=1):
         """
         Constructor
 
