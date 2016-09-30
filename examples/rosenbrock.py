@@ -19,8 +19,7 @@ def rosenbrock_4d(cfg, seed):
     The Rosenbrock function is well know in the optimization community and
     often serves as a toy problem. It can be defined for arbitrary
     dimensions. The minimium is always at x_i = 1 with a function value of
-    zero. All input parameters are continuous, but we will pretent that 
-    x2, x3, and x4 can only take integral values. The search domain for
+    zero. All input parameters are continuous. The search domain for
     all x's is the interval [-5, 5].
     """
     x1 = cfg["x1"]
@@ -41,8 +40,8 @@ logger = logging.getLogger("Optimizer") # Enable to show Debug outputs
 
 smac = FuncSMAC(func=rosenbrock_4d,
                  x0 = [-1,0,1,0],
-                 upper_bounds= [1,1,1,1],
-                 lower_bounds= [-1,-1,-1,-1],
+                 upper_bounds= [5,5,5,5],
+                 lower_bounds= [-5,-5,-5,-5],
                  maxfun=100)
 
 incumbent = smac.optimize()
