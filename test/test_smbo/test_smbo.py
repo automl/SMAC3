@@ -77,7 +77,7 @@ class TestSMBO(unittest.TestCase):
                 ['cost', 'runtime'], types)
             eips = EIPS(umrfwi)
             rh2EPM = RunHistory2EPM4EIPS(self.scenario, 2)
-            smbo = smbo = SMAC(self.scenario, model=umrfwi, acquisition_function=eips,
+            smbo = SMAC(self.scenario, model=umrfwi, acquisition_function=eips,
                         runhistory2epm=rh2EPM).solver
             self.assertIs(umrfwi, smbo.model)
             self.assertIs(eips, smbo.acquisition_func)
