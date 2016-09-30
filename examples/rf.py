@@ -20,8 +20,6 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
 from smac.tae.execute_func import ExecuteTAFunc
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_facade import SMAC
-from smac.stats.stats import Stats
-
 
 def rfr(cfg, seed):
     """
