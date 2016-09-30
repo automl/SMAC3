@@ -49,7 +49,10 @@ class ExecuteTARun(object):
                  stats object to collect statistics about runtime and so on                
             run_obj: str
                 run objective of SMAC
+            par_factor: int
+                penalization factor
         """
+        
         self.ta = ta
         self.stats = stats
         self.runhistory = runhistory
