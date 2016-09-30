@@ -127,7 +127,7 @@ class ImputorTest(unittest.TestCase):
             for i in range(num_feat):
                     cs.add_hyperparameter(UniformFloatHyperparameter(
                             name="a_%d" % i, lower=0, upper=1, default=0.5))
-            imputor = rfr_imputator.RFRImputator(cs=cs, rs=rs,
+            imputor = rfr_imputator.RFRImputator(rs=rs,
                                                  cutoff=cutoff,
                                                  threshold=cutoff*10,
                                                  change_threshold=0.01,
@@ -147,7 +147,7 @@ class ImputorTest(unittest.TestCase):
 
     def testRealImputation(self):
         rs = numpy.random.RandomState(1)
-        imputor = rfr_imputator.RFRImputator(cs=self.cs, rs=rs,
+        imputor = rfr_imputator.RFRImputator(rs=rs,
                                              cutoff=self.scen.cutoff,
                                              threshold=self.scen.cutoff*10,
                                              change_threshold=0.01, max_iter=10,

@@ -167,8 +167,7 @@ class SMAC(object):
                 threshold = np.log10(scenario.cutoff *
                                      scenario.par_factor)
 
-                imputor = RFRImputator(cs=scenario.cs,
-                                       rs=rng,
+                imputor = RFRImputator(rs=rng,
                                        cutoff=cutoff,
                                        threshold=threshold,
                                        model=model,
