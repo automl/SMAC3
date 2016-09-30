@@ -31,22 +31,6 @@ class ExecuteTAFunc(ExecuteTARun):
     """
     
     def __init__(self, ta, stats=None, runhistory=None, run_obj="quality", par_factor=1):
-        """
-        Constructor
-
-        Parameters
-        ----------
-            ta : list
-                target algorithm command line as list of arguments
-            runhistory: RunHistory
-                runhistory to keep track of all runs; only used if set
-            stats: Stats()
-                 stats object to collect statistics about runtime and so on                
-            run_obj: str
-                run objective of SMAC
-            par_factor: int
-                penalization factor
-        """
         super().__init__(ta, stats, runhistory, run_obj, par_factor)
 
     def run(self, config, instance=None,
