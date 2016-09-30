@@ -81,7 +81,7 @@ class Intensifier(object):
         if self.run_limit < 1:
             raise ValueError("run_limit must be > 1")
 
-    def intensify(self, challengers, incumbent, run_history, aggreagte_func,
+    def intensify(self, challengers, incumbent, run_history, aggregate_func,
                   time_bound=MAXINT):
         '''
             running intensification to determine the incumbent configuration
@@ -98,7 +98,7 @@ class Intensifier(object):
                 best configuration so far
             run_history : runhistory
                 all runs on all instance,seed pairs for incumbent
-            aggreagte_func: func
+            aggregate_func: func
                 aggregate performance across instances
             time_bound : int, optional (default=2 ** 31 - 1)
                 time in [sec] available to perform intensify
@@ -174,7 +174,7 @@ class Intensifier(object):
             N = 1
 
             inc_inst_seeds = set(run_history.get_runs_for_config(incumbent))
-            inc_perf = aggreagte_func(incumbent, run_history, inc_inst_seeds)
+            inc_perf = aggregate_func(incumbent, run_history, inc_inst_seeds)
 
             # Line 9
             while True:
@@ -232,8 +232,8 @@ class Intensifier(object):
                     self.logger.debug("No (or not enough) valid runs for challenger.")
                     break
                 else:
-                    chal_perf = aggreagte_func(challenger, run_history, chall_inst_seeds)
-                    inc_perf = aggreagte_func(incumbent, run_history, chall_inst_seeds)
+                    chal_perf = aggregate_func(challenger, run_history, chall_inst_seeds)
+                    inc_perf = aggregate_func(incumbent, run_history, chall_inst_seeds)
                     # Line 15
                     if chal_perf > inc_perf:
                         # Incumbent beats challenger
@@ -274,7 +274,7 @@ class Intensifier(object):
 
         # output estimated performance of incumbent
         inc_runs = run_history.get_runs_for_config(incumbent)
-        inc_perf = aggreagte_func(incumbent, run_history, inc_runs)
+        inc_perf = aggregate_func(incumbent, run_history, inc_runs)
         self.logger.info("Updated estimated performance of incumbent on %d runs: %.4f" % (
             len(inc_runs), inc_perf))
 

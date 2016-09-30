@@ -39,7 +39,7 @@ class SMBO(BaseSolver):
                  runhistory: RunHistory,
                  runhistory2epm: AbstractRunHistory2EPM,
                  intensifier: Intensifier,
-                 aggreagte_func: callable,
+                 aggregate_func: callable,
                  num_run: int,
                  model: RandomForestWithInstances,
                  acq_optimizer: LocalSearch,
@@ -62,7 +62,7 @@ class SMBO(BaseSolver):
             Object that implements the AbstractRunHistory2EPM to convert runhistory data into EPM data
         intensifier: Intensifier
             intensification of new challengers against incumbent configuration (probably with some kind of racing on the instances)
-        aggreagte_func: callable
+        aggregate_func: callable
             how to aggregate the runs in the runhistory to get the performance of a configuration
         num_run: int
             id of this run (used for pSMAC)
@@ -85,7 +85,7 @@ class SMBO(BaseSolver):
         self.runhistory = runhistory
         self.rh2EPM = runhistory2epm
         self.intensifier = intensifier
-        self.aggreagte_func = aggreagte_func 
+        self.aggregate_func = aggregate_func 
         self.num_run = num_run
         self.model = model
         self.acq_optimizer = acq_optimizer
@@ -130,7 +130,7 @@ class SMBO(BaseSolver):
                 challengers=challengers,
                 incumbent=self.incumbent,
                 run_history=self.runhistory,
-                aggreagte_func=self.aggreagte_func,
+                aggregate_func=self.aggregate_func,
                 time_bound=max(0.01, time_spend))
 
             if self.scenario.shared_model:

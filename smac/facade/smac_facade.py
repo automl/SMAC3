@@ -197,7 +197,7 @@ class SMAC(object):
                            runhistory=runhistory,
                            runhistory2epm=runhistory2epm,
                            intensifier=intensifier,
-                           aggreagte_func=aggregate_func,
+                           aggregate_func=aggregate_func,
                            num_run=num_run,
                            model=model,
                            acq_optimizer=local_search,
