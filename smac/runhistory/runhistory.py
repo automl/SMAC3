@@ -4,6 +4,7 @@ import numpy
 
 from smac.configspace import Configuration
 from smac.tae.execute_ta_run import StatusType
+from smac.utils.constants import MAXINT
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -11,8 +12,6 @@ __license__ = "3-clause BSD"
 __maintainer__ = "Marius Lindauer"
 __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
-
-MAXINT = 2 ** 31 - 1
 
 
 class RunHistory(object):
@@ -24,9 +23,15 @@ class RunHistory(object):
         ----------
     '''
 
-    def __init__(self):
+    def __init__(self, aggregate_func):
         '''
         Constructor
+        
+        Arguments
+        ---------
+        aggregate_func: callable
+            function to aggregate perf across instances
+        
         '''
 
         # By having the data in a deterministic order we can do useful tests
@@ -45,6 +50,8 @@ class RunHistory(object):
         self._n_id = 0
 
         self.cost_per_config = {} # config_id -> cost
+        
+        self.aggregate_func = aggregate_func
 
     def add(self, config, cost, time,
             status, instance_id=None,
@@ -85,10 +92,22 @@ class RunHistory(object):
         v = self.RunValue(cost, time, status, additional_info)
 
         self.data[k] = v
+        self.update_cost(config)
 
-    def update_cost(self, config, cost):
+    def update_cost(self, config):
+        '''
+            store the performance of a configuration across the instances in self.cost_perf_config; 
+            uses self.aggregate_func
+            
+            Arguments
+            --------
+            config: Configuration
+                configuration to update cost based on all runs in runhistory
+        '''
+        inst_seeds = set(self.get_runs_for_config(config))
+        perf = self.aggregate_func(config, self, inst_seeds)
         config_id = self.config_ids[config]
-        self.cost_per_config[config_id] = cost
+        self.cost_per_config[config_id] = perf
 
     def get_cost(self, config):
         config_id = self.config_ids[config]
@@ -190,7 +209,7 @@ class RunHistory(object):
             instance of configuration space
         """
 
-        new_runhistory = RunHistory()
+        new_runhistory = RunHistory(self.aggregate_func)
         new_runhistory.load_json(fn, cs)
 
         # Configurations might be already known, but by a different ID. This

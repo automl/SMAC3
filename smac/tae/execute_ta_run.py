@@ -35,7 +35,7 @@ class ExecuteTARun(object):
             the command line call to the target algorithm (wrapper)
     """
 
-    def __init__(self, ta, stats, run_obj="runtime", par_factor=1):
+    def __init__(self, ta, stats=None, runhistory=None, run_obj="runtime", par_factor=1):
         """
         Constructor
 
@@ -43,14 +43,21 @@ class ExecuteTARun(object):
         ----------
             ta : list
                 target algorithm command line as list of arguments
+            runhistory: RunHistory
+                runhistory to keep track of all runs; only used if set
             stats: Stats()
                  stats object to collect statistics about runtime and so on                
             run_obj: str
                 run objective of SMAC
+            par_factor: int
+                penalization factor
         """
+        
         self.ta = ta
         self.stats = stats
+        self.runhistory = runhistory
         self.run_obj = run_obj
+        
         self.par_factor = par_factor
 
         self.logger = logging.getLogger(self.__class__.__name__)
@@ -128,6 +135,12 @@ class ExecuteTARun(object):
         self.logger.debug("Return: Status: %d, cost: %f, time. %f, additional: %s" % (
             status, cost, runtime, str(additional_info)))
 
+        if self.runhistory:
+            self.runhistory.add(config=config,
+                                cost=cost, time=runtime, status=status,
+                                instance_id=instance, seed=seed,
+                                additional_info=additional_info)
+            
         return status, cost, runtime, additional_info
 
     def run(self, config, instance,

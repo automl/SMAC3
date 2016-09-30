@@ -26,12 +26,14 @@ class ExecuteTAFunc(ExecuteTARun):
         Stats object to collect statistics about runtime etc.
     run_obj: str
         Run objective (runtime or quality)
+    runhistory: RunHistory
+        runhistory to keep track of all runs; only used if set
     par_factor: int
         Penalized average runtime factor. Only used when `run_obj='runtime'`
     """
-
-    def __init__(self, ta, stats, run_obj="runtime", par_factor=1):
-        super().__init__(ta, stats, run_obj, par_factor)
+    
+    def __init__(self, ta, stats=None, runhistory=None, run_obj="quality", par_factor=1):
+        super().__init__(ta=ta, stats=stats, runhistory=runhistory, run_obj=run_obj, par_factor=par_factor)
         self._supports_memory_limit = True
 
     def run(self, config, instance=None,

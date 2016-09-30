@@ -19,7 +19,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
 
     """Uses an rfr to do imputation"""
 
-    def __init__(self, cs, rs, cutoff, threshold,
+    def __init__(self, rs, cutoff, threshold,
                  model,
                  change_threshold=0.01,
                  max_iter=10):
@@ -28,8 +28,6 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
 
         Parameters
         ----------
-        max_iter : maximum number of iteration
-        cs : config space object
         rs : random state generator
         cutoff : float
             cutoff value used for this scenario
@@ -39,6 +37,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             epm model (i.e. RandomForestWithInstances)
         change_threshold : float 
             stop imputation if change is less than this
+        max_iter : maximum number of iteration            
         -------
         """
 

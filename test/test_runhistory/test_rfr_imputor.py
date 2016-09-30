@@ -15,6 +15,7 @@ from smac.runhistory import runhistory, runhistory2epm
 from smac.scenario import scenario
 from smac.epm import rfr_imputator
 from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.smbo.objective import average_cost
 
 def generate_config(cs, rs):
     i = rs.randint(-10, 10)
@@ -69,7 +70,7 @@ class ImputorTest(unittest.TestCase):
         self.cs.add_hyperparameter(UniformIntegerHyperparameter(
                 name='integer_0_100', lower=-10, upper=10, default=0))
 
-        self.rh = runhistory.RunHistory()
+        self.rh = runhistory.RunHistory(aggregate_func=average_cost)
         rs = numpy.random.RandomState(1)
         to_count = 0
         cn_count = 0
@@ -126,7 +127,7 @@ class ImputorTest(unittest.TestCase):
             for i in range(num_feat):
                     cs.add_hyperparameter(UniformFloatHyperparameter(
                             name="a_%d" % i, lower=0, upper=1, default=0.5))
-            imputor = rfr_imputator.RFRImputator(cs=cs, rs=rs,
+            imputor = rfr_imputator.RFRImputator(rs=rs,
                                                  cutoff=cutoff,
                                                  threshold=cutoff*10,
                                                  change_threshold=0.01,
@@ -146,7 +147,7 @@ class ImputorTest(unittest.TestCase):
 
     def testRealImputation(self):
         rs = numpy.random.RandomState(1)
-        imputor = rfr_imputator.RFRImputator(cs=self.cs, rs=rs,
+        imputor = rfr_imputator.RFRImputator(rs=rs,
                                              cutoff=self.scen.cutoff,
                                              threshold=self.scen.cutoff*10,
                                              change_threshold=0.01, max_iter=10,

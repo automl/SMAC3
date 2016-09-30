@@ -7,7 +7,7 @@ import numpy as np
 from smac.tae.execute_func import ExecuteTAFunc
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
-from smac.smbo.smbo import StatusType
+from smac.tae.execute_ta_run import StatusType
 
 
 class TestExecuteFunc(unittest.TestCase):

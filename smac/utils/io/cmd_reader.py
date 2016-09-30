@@ -45,8 +45,6 @@ class CMDReader(object):
         req_opts = parser.add_argument_group("Optional Options")
         req_opts.add_argument("--seed", default=12345, type=int,
                               help="random seed")
-        req_opts.add_argument("--max_iterations", default=numpy.inf, type=int,
-                              help="maximal number of iterations")
         req_opts.add_argument("--verbose_level", default=logging.INFO,
                               choices=["INFO", "DEBUG"],
                               help="random seed")

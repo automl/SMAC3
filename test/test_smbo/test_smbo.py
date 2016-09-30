@@ -15,7 +15,7 @@ from ConfigSpace import ConfigurationSpace, Configuration
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, \
     RunHistory2EPM4LogCost, RunHistory2EPM4EIPS
-from smac.smbo.smbo import SMBO, get_types
+from smac.smbo.smbo import SMBO
 from smac.scenario.scenario import Scenario
 from smac.smbo.acquisition import EI, EIPS
 from smac.smbo.local_search import LocalSearch
@@ -25,6 +25,9 @@ from smac.utils import test_helpers
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.uncorrelated_mo_rf_with_instances import \
     UncorrelatedMultiObjectiveRandomForestWithInstances
+from smac.utils.util_funcs import get_types
+from smac.facade.smac_facade import SMAC
+from smac.smbo.objective import average_cost
 
 if sys.version_info[0] == 2:
     import mock
@@ -55,16 +58,14 @@ class TestSMBO(unittest.TestCase):
     def test_init_only_scenario_runtime(self):
         self.scenario.run_obj = 'runtime'
         self.scenario.cutoff = 300
-        smbo = SMBO(self.scenario)
+        smbo = SMAC(self.scenario).solver
         self.assertIsInstance(smbo.model, RandomForestWithInstances)
-        np.testing.assert_allclose(smbo.types, smbo.model.types)
         self.assertIsInstance(smbo.rh2EPM, RunHistory2EPM4LogCost)
         self.assertIsInstance(smbo.acquisition_func, EI)
 
     def test_init_only_scenario_quality(self):
-        smbo = SMBO(self.scenario)
+        smbo = SMAC(self.scenario).solver
         self.assertIsInstance(smbo.model, RandomForestWithInstances)
-        np.testing.assert_allclose(smbo.types, smbo.model.types)
         self.assertIsInstance(smbo.rh2EPM, RunHistory2EPM4Cost)
         self.assertIsInstance(smbo.acquisition_func, EI)
 
@@ -76,21 +77,21 @@ class TestSMBO(unittest.TestCase):
                 ['cost', 'runtime'], types)
             eips = EIPS(umrfwi)
             rh2EPM = RunHistory2EPM4EIPS(self.scenario, 2)
-            smbo = SMBO(self.scenario, model=umrfwi, acquisition_function=eips,
-                        runhistory2epm=rh2EPM)
+            smbo = SMAC(self.scenario, model=umrfwi, acquisition_function=eips,
+                        runhistory2epm=rh2EPM).solver
             self.assertIs(umrfwi, smbo.model)
             self.assertIs(eips, smbo.acquisition_func)
             self.assertIs(rh2EPM, smbo.rh2EPM)
 
     def test_rng(self):
-        smbo = SMBO(self.scenario, rng=None)
+        smbo = SMAC(self.scenario, rng=None).solver
         self.assertIsInstance(smbo.rng, np.random.RandomState)
         self.assertIsInstance(smbo.num_run, int)
-        smbo = SMBO(self.scenario, rng=1)
+        smbo = SMAC(self.scenario, rng=1).solver
         rng = np.random.RandomState(1)
         self.assertEqual(smbo.num_run, 1)
         self.assertIsInstance(smbo.rng, np.random.RandomState)
-        smbo = SMBO(self.scenario, rng=rng)
+        smbo = SMAC(self.scenario, rng=rng).solver
         self.assertIsInstance(smbo.num_run, int)
         self.assertIs(smbo.rng, rng)
         # ML: I don't understand the following line and it throws an error
@@ -98,12 +99,12 @@ class TestSMBO(unittest.TestCase):
                                 "Unknown type <(class|type) 'str'> for argument "
                                 'rng. Only accepts None, int or '
                                 'np.random.RandomState',
-                                SMBO, self.scenario, rng='BLA')
+                                SMAC, self.scenario, rng='BLA')
 
     def test_choose_next(self):
         seed = 42
-        smbo = SMBO(self.scenario, seed)
-        smbo.runhistory = RunHistory()
+        smbo = SMAC(self.scenario, rng=seed).solver
+        smbo.runhistory = RunHistory(aggregate_func=average_cost)
         X = self.scenario.cs.sample_configuration().get_array()[None, :]
 
         Y = self.branin(X)
@@ -114,8 +115,8 @@ class TestSMBO(unittest.TestCase):
         def side_effect(X, derivative):
             return np.mean(X, axis=1).reshape((-1, 1))
 
-        smbo = SMBO(self.scenario, 1)
-        smbo.runhistory = RunHistory()
+        smbo = SMAC(self.scenario, rng=1).solver
+        smbo.runhistory = RunHistory(aggregate_func=average_cost)
         smbo.model = mock.MagicMock()
         smbo.acquisition_func._compute = mock.MagicMock()
         smbo.acquisition_func._compute.side_effect = side_effect
@@ -155,7 +156,7 @@ class TestSMBO(unittest.TestCase):
         patch_sample.return_value = [ConfigurationMock(i) for i in values]
         patch_ei.return_value = np.array([[_] for _ in values], dtype=float)
         patch_impute.side_effect = lambda x: x
-        smbo = SMBO(self.scenario, 1)
+        smbo = SMAC(self.scenario, rng=1).solver
         rval = smbo._get_next_by_random_search(10, True)
         self.assertEqual(len(rval), 10)
         for i in range(10):
@@ -175,7 +176,7 @@ class TestSMBO(unittest.TestCase):
         def side_effect(size):
             return [ConfigurationMock()] * size
         patch.side_effect = side_effect
-        smbo = SMBO(self.scenario, 1)
+        smbo = SMAC(self.scenario, rng=1).solver
         rval = smbo._get_next_by_random_search(10, False)
         self.assertEqual(len(rval), 10)
         for i in range(10):
@@ -196,7 +197,7 @@ class TestSMBO(unittest.TestCase):
                 return (ConfigurationMock(rval), [[rval]])
 
         patch.side_effect = SideEffect()
-        smbo = SMBO(self.scenario, 1)
+        smbo = SMAC(self.scenario, rng=1).solver
         rval = smbo._get_next_by_local_search(num_points=9)
         self.assertEqual(len(rval), 9)
         self.assertEqual(patch.call_count, 9)

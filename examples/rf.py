@@ -1,6 +1,3 @@
-from __future__ import division, print_function
-
-
 # TODO: remove really ugly boilerplate
 import logging
 import sys
@@ -22,9 +19,7 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
 
 from smac.tae.execute_func import ExecuteTAFunc
 from smac.scenario.scenario import Scenario
-from smac.smbo.smbo import SMBO
-from smac.stats.stats import Stats
-
+from smac.facade.smac_facade import SMAC
 
 def rfr(cfg, seed):
     """
@@ -72,7 +67,7 @@ def rfr(cfg, seed):
     
 
 logger = logging.getLogger("Optimizer") # Enable to show Debug outputs
-logger.parent.level = 20 #info level:20, debug:10
+logging.basicConfig(level=logging.INFO)
 
 folder = os.path.realpath(
     os.path.abspath(os.path.split(inspect.getfile(inspect.currentframe()))[0]))
@@ -120,10 +115,9 @@ scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative r
                      "deterministic": "true",
                      "memory_limit": 1024,
                      })
-stats = Stats(scenario)
  
 # register function to be optimize
-taf = ExecuteTAFunc(rfr, stats=stats, run_obj='quality')
+taf = ExecuteTAFunc(rfr)
  
 # example call of the function
 # it returns: Status, Cost, Runtime, Additional Infos
@@ -131,14 +125,13 @@ def_value = taf.run(cs.get_default_configuration())[1]
 print("Default Value: %.2f" % (def_value))
  
 # Optimize
-smbo = SMBO(scenario=scenario, rng=np.random.RandomState(42),
-            tae_runner=taf, stats=stats)
+smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
+            tae_runner=taf)
 try:
-
-    smbo.run(max_iters=999)
+    incumbent = smac.optimize()
 finally:
-    smbo.stats.print_stats()
-    print("Final Incumbent: %s" % (smbo.incumbent))
- 
-inc_value = taf.run(smbo.incumbent)[1]
+    smac.stats.print_stats()
+    incumbent = smac.solver.incumbent
+
+inc_value = taf.run(incumbent)[1]
 print("Optimized Value: %.2f" % (inc_value))

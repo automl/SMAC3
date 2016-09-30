@@ -12,6 +12,7 @@ from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
 
 from smac.smbo.objective import total_runtime, sum_cost
 from smac.stats.stats import Stats
+from smac.utils.constants import MAXINT
 
 __author__ = "Katharina Eggensperger, Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -20,8 +21,6 @@ __maintainer__ = "Katharina Eggensperger"
 __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
-MAXINT = 2 ** 31 - 1
-
 
 class Intensifier(object):
 
@@ -29,7 +28,7 @@ class Intensifier(object):
         takes challenger and incumbents and performs intensify
     '''
 
-    def __init__(self, executor, stats, traj_logger, instances=None,
+    def __init__(self, tae_runner, stats, traj_logger, instances=None,
                  instance_specifics={},
                  cutoff=MAXINT, deterministic=False, run_obj_time=True,
                  run_limit=MAXINT, maxR=2000, rng=0):
@@ -38,7 +37,7 @@ class Intensifier(object):
 
         Parameters
         ----------
-        executor : tae.executre_ta_run_*.ExecuteTARun* Object
+        tae_runner : tae.executre_ta_run_*.ExecuteTARun* Object
             target algorithm run executor
         stats: Stats()
             stats object            
@@ -75,14 +74,14 @@ class Intensifier(object):
         self.cutoff = cutoff
         self.deterministic = deterministic
         self.run_obj_time = run_obj_time
-        self.tae = executor
+        self.tae_runner = tae_runner
 
         self.Adaptive_Capping_Slackfactor = 1.2
 
         if self.run_limit < 1:
             raise ValueError("run_limit must be > 1")
 
-    def intensify(self, challengers, incumbent, run_history, objective,
+    def intensify(self, challengers, incumbent, run_history, aggregate_func,
                   time_bound=MAXINT):
         '''
             running intensification to determine the incumbent configuration
@@ -99,8 +98,8 @@ class Intensifier(object):
                 best configuration so far
             run_history : runhistory
                 all runs on all instance,seed pairs for incumbent
-            objective: func
-                objective function
+            aggregate_func: func
+                aggregate performance across instances
             time_bound : int, optional (default=2 ** 31 - 1)
                 time in [sec] available to perform intensify
 
@@ -122,7 +121,7 @@ class Intensifier(object):
         # Line 1 + 2
         for chall_indx, challenger in enumerate(challengers):
             if challenger == incumbent:
-                self.logger.warn(
+                self.logger.warning(
                     "Challenger was the same as the current incumbent; Skipping challenger")
                 continue
             self.logger.debug("Intensify on %s", challenger)
@@ -160,16 +159,11 @@ class Intensifier(object):
                     # Line 5 (here for easier code)
                     next_instance = random.choice(list(available_insts))
                     # Line 7
-                    status, cost, dur, res = self.tae.start(config=incumbent,
+                    status, cost, dur, res = self.tae_runner.start(config=incumbent,
                                                             instance=next_instance,
                                                             seed=next_seed,
                                                             cutoff=self.cutoff,
                                                             instance_specific=self.instance_specifics.get(next_instance, "0"))
-                    run_history.add(config=incumbent,
-                                    cost=cost, time=dur, status=status,
-                                    instance_id=next_instance, seed=next_seed,
-                                    additional_info=res)
-                    # TODO update incumbent performance here!
 
                     num_run += 1
                 else:
@@ -180,8 +174,7 @@ class Intensifier(object):
             N = 1
 
             inc_inst_seeds = set(run_history.get_runs_for_config(incumbent))
-            inc_perf = objective(incumbent, run_history, inc_inst_seeds)
-            run_history.update_cost(incumbent, inc_perf)
+            inc_perf = aggregate_func(incumbent, run_history, inc_inst_seeds)
 
             # Line 9
             while True:
@@ -222,16 +215,11 @@ class Intensifier(object):
                     else:
                         cutoff = self.cutoff
 
-                    status, cost, dur, res = self.tae.start(config=challenger,
+                    status, cost, dur, res = self.tae_runner.start(config=challenger,
                                                             instance=instance,
                                                             seed=seed,
                                                             cutoff=cutoff,
                                                             instance_specific=self.instance_specifics.get(instance, "0"))
-
-                    run_history.add(config=challenger,
-                                    cost=cost, time=dur, status=status,
-                                    instance_id=instance, seed=seed,
-                                    additional_info=res)
                     num_run += 1
 
                 # we cannot use inst_seed_pairs here since we could have less runs
@@ -244,9 +232,8 @@ class Intensifier(object):
                     self.logger.debug("No (or not enough) valid runs for challenger.")
                     break
                 else:
-                    chal_perf = objective(challenger, run_history, chall_inst_seeds)
-                    run_history.update_cost(challenger, chal_perf)
-                    inc_perf = objective(incumbent, run_history, chall_inst_seeds)
+                    chal_perf = aggregate_func(challenger, run_history, chall_inst_seeds)
+                    inc_perf = aggregate_func(incumbent, run_history, chall_inst_seeds)
                     # Line 15
                     if chal_perf > inc_perf:
                         # Incumbent beats challenger
@@ -265,7 +252,6 @@ class Intensifier(object):
                         "Changing incumbent to challenger: %s" % (challenger))
                     incumbent = challenger
                     inc_perf = chal_perf
-                    run_history.update_cost(challenger, chal_perf)
                     self.stats.inc_changed += 1
                     self.traj_logger.add_entry(train_perf=inc_perf,
                                                incumbent_id=self.stats.inc_changed,
@@ -288,7 +274,7 @@ class Intensifier(object):
 
         # output estimated performance of incumbent
         inc_runs = run_history.get_runs_for_config(incumbent)
-        inc_perf = objective(incumbent, run_history, inc_runs)
+        inc_perf = aggregate_func(incumbent, run_history, inc_runs)
         self.logger.info("Updated estimated performance of incumbent on %d runs: %.4f" % (
             len(inc_runs), inc_perf))
 
