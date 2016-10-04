@@ -257,6 +257,7 @@ Spear-QCP
 
 In this folder you see the following files and directories:
     * **features.txt**:
+
      The feature file is contains the features for each instance in a csv-format.
 
      +--------------------+--------------------+--------------------+-----+
