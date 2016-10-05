@@ -148,6 +148,7 @@ class SMAC(object):
             intensifier = Intensifier(tae_runner=tae_runner,
                                       stats=self.stats,
                                       traj_logger=traj_logger,
+                                      rng=rng,
                                       instances=scenario.train_insts,
                                       cutoff=scenario.cutoff,
                                       deterministic=scenario.deterministic,
