@@ -14,6 +14,13 @@ __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
+RunKey = collections.namedtuple(
+    'RunKey', ['config_id', 'instance_id', 'seed'])
+
+RunValue = collections.namedtuple(
+    'RunValue', ['cost', 'time', 'status', 'additional_info'])
+
+
 class RunHistory(object):
 
     '''
@@ -38,12 +45,6 @@ class RunHistory(object):
         # when we serialize the data and can assume it's still in the same
         # order as it was added.
         self.data = collections.OrderedDict()
-
-        self.RunKey = collections.namedtuple(
-            'RunKey', ['config_id', 'instance_id', 'seed'])
-
-        self.RunValue = collections.namedtuple(
-            'RunValue', ['cost', 'time', 'status', 'additional_info'])
 
         self.config_ids = {}  # config -> id
         self.ids_config = {}  # id -> config
@@ -88,8 +89,8 @@ class RunHistory(object):
             config_id = self.config_ids.get(config)
             self.ids_config[self._n_id] = config
 
-        k = self.RunKey(config_id, instance_id, seed)
-        v = self.RunValue(cost, time, status, additional_info)
+        k = RunKey(config_id, instance_id, seed)
+        v = RunValue(cost, time, status, additional_info)
 
         self.data[k] = v
         self.update_cost(config)
@@ -194,8 +195,8 @@ class RunHistory(object):
 
         self._n_id = len(self.config_ids)
         
-        self.data = {self.RunKey(int(k[0]), k[1], int(k[2])):
-                     self.RunValue(float(v[0]), float(v[1]), v[2], v[3])
+        self.data = {RunKey(int(k[0]), k[1], int(k[2])):
+                     RunValue(float(v[0]), float(v[1]), v[2], v[3])
                      for k, v in all_data["data"]}
 
     def update_from_json(self, fn, cs):
