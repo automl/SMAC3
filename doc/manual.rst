@@ -44,6 +44,7 @@ The **algo** parameter specifies how *SMAC* can call the function or evaluate an
     The fifth parameter is the random seed which is followed by the algorithm/function parameters.
     
     The general syntax of algorithm calls is the following
+
     .. code-block:: bash
 
         <algo> <instance> <instance specific> <running time cutoff> <run length> <seed> <algorithm parameters>
@@ -137,8 +138,7 @@ Using *SMAC* directly in python
 
         from smac.tae.execute_func import ExecuteTAFunc
         from smac.scenario.scenario import Scenario
-        from smac.smbo.smbo import SMBO
-        from smac.stats.stats import Stats
+        from smac.facade.smac_facade import SMAC
 
 First, we import the ConfigurationSpace and Parametertypes in order to later declare different parameters.
 
@@ -177,10 +177,10 @@ Using conditionals in such a way restricts the search space quite a bit.
 This way *SMAC* won't have to query regions in the search space that are non-improving, 
 like '0100000000000000' or '0100000000000001'. Both return the same value as the default, i.e. 0.
 
-After the configuration space was setup we can create a scenario object and initialize the Stats object with it.
+After the configuration space was setup we can create a scenario object.
 
     .. code-block:: python
-        :lineno-start: 55
+        :lineno-start: 53
 
         # SMAC scenario object
         scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative runtime)
@@ -189,60 +189,55 @@ After the configuration space was setup we can create a scenario object and init
                              "deterministic": "true"
                              })
 
-        stats = Stats(scenario)
-
 The Scenario object contains information about the optimization scenario, such as the runcount-limit or what metric to optimize.
 It uses the same keywords as a scenario files, we showed in the branin example.
-
-The Stats object keeps track of all the function evaluations that *SMAC* executes, 
-the budget that has been spent on the configuration scenario.
 
 To evaluate the "leading ones" function, we register it with the TargetAlgorithmFunction evaluator.
 
     .. code-block:: python
-        :lineno-start: 64
+        :lineno-start: 60
 
-        # register function to be optimized
-        taf = ExecuteTAFunc(leading_ones, stats)
+        # register function to be optimize
+        taf = ExecuteTAFunc(leading_ones)
 
         # example call of the function
         # it returns: Status, Cost, Runtime, Additional Infos
         def_value = taf.run(cs.get_default_configuration())[1]
         print("Default Value: %.2f" % (def_value))
 
-We register first the function to optimize together with the stats object, 
-we use to keep track of the optimization with the evaluator that handles calling the function with a specified configuration.
+We register the function to optimize together with the evaluator that handles calling the function with a specified configuration.
 
 Afterwards,
 the default value is queried by calling the run method of the evaluator with the default configuration of the configuration space.
 
-To handle the Bayesian optimization loop we can create a SMBO object. 
+To handle the Bayesian optimization loop we can create a SMAC object.
 To automatically handle the exploration of the search space 
-and querying of the function the SMBO object needs as inputs the scenario object as well as the function evaluator.
+and querying of the function SMAC needs as inputs the scenario object as well as the function evaluator.
 
     .. code-block:: python
-        :lineno-start: 72
+        :lineno-start: 68
 
         # Optimize
-        smbo = SMBO(scenario=scenario, tae_runner=taf,
-                    stats=stats,
-                    rng=np.random.RandomState(42))
+        smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
+                    tae_runner=taf)
         try:
-            smbo.run(max_iters=999)
+            incumbent = smac.optimize()
         finally:
-            smbo.stats.print_stats()
-        print("Final Incumbent: %s" % (smbo.incumbent))
+            smac.stats.print_stats()
+            incumbent = smac.solver.incumbent
 
-        inc_value = taf.run(smbo.incumbent)[1]
+        inc_value = taf.run(incumbent)[1]
         print("Optimized Value: %.2f" % (inc_value))
 
 We start the optimization loop and set the maximum number of iterations to 999.
 
+Initernally SMAC keeps track of the number of algorithm calls and the remaining time budget via a stats object.
+
 After successful execution of the optimization loop the stats opject outputs the result of the loop.
 
-We can directly access the incumbent configuration which is stored in the smbo object and print it to the terminal (line 89).
+We can directly access the incumbent configuration which is stored in the SMAC object and print it to the terminal (line 75).
 
-We further query the target function at the incumbent by using the function evaluator.
+We further query the target function at the incumbent, using the function evaluator so that as final output we can see performance value of the incumbent.
 
 
 
