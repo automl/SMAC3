@@ -3,7 +3,7 @@ import os
 import shutil
 import unittest
 
-from smac.runhistory.runhistory import RunHistory
+from smac.runhistory.runhistory import RunHistory, RunKey
 from smac.utils import test_helpers
 from smac.tae.execute_ta_run import StatusType
 from smac.smbo import pSMAC
@@ -110,10 +110,10 @@ class TestPSMAC(unittest.TestCase):
         config = configuration_space.sample_configuration()
         runhistory.add(config, 1, 1, StatusType.SUCCESS, seed=1,
                         instance_id='branin')
-        id_before = id(runhistory.data[runhistory.RunKey(1, 'branin', 1)])
+        id_before = id(runhistory.data[RunKey(1, 'branin', 1)])
         runhistory.update_from_json(other_runhistory_filename,
                                     configuration_space)
-        id_after = id(runhistory.data[runhistory.RunKey(1, 'branin', 1)])
+        id_after = id(runhistory.data[RunKey(1, 'branin', 1)])
         self.assertEqual(len(runhistory.data), 6)
         self.assertNotEqual(id_before, id_after)
 
@@ -127,10 +127,10 @@ class TestPSMAC(unittest.TestCase):
         config = configuration_space.sample_configuration()
         runhistory.add(config, 1, 1, StatusType.SUCCESS, seed=1,
                        instance_id='branin')
-        id_before = id(runhistory.data[runhistory.RunKey(1, 'branin', 1)])
+        id_before = id(runhistory.data[RunKey(1, 'branin', 1)])
         runhistory.update_from_json(other_runhistory_filename,
                                     configuration_space)
-        id_after = id(runhistory.data[runhistory.RunKey(1, 'branin', 1)])
+        id_after = id(runhistory.data[RunKey(1, 'branin', 1)])
         self.assertEqual(len(runhistory.data), 7)
         self.assertEqual(id_before, id_after)
         print(runhistory.config_ids)
