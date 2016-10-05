@@ -1,8 +1,6 @@
 import numpy as np
 
-
-MAXINT = 2 ** 31 - 1
-
+from smac.utils.constants import MAXINT
 
 """Define overall objectives.
 

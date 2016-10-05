@@ -4,7 +4,7 @@ from unittest import mock
 from smac.tae.execute_ta_run import ExecuteTARun
 from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
-from smac.smbo.smbo import StatusType
+from smac.tae.execute_ta_run import StatusType
 
 
 class TestExecuteTARun(unittest.TestCase):

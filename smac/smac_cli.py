@@ -5,7 +5,7 @@ import numpy as np
 
 from smac.utils.io.cmd_reader import CMDReader
 from smac.scenario.scenario import Scenario
-from smac.smbo.smbo import SMBO
+from smac.facade.smac_facade import SMAC
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -15,7 +15,7 @@ __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class SMAC(object):
+class SMACCLI(object):
 
     '''
     main class of SMAC
@@ -41,14 +41,9 @@ class SMAC(object):
         root_logger.setLevel(args_.verbose_level)
 
         scen = Scenario(args_.scenario_file, misc_args)
+        
+        smac = SMAC(scenario=scen, rng=np.random.RandomState(args_.seed))
+        smac.optimize()
 
-        try:
-            smbo = SMBO(scenario=scen, rng=np.random.RandomState(args_.seed))
-            smbo.run(max_iters=args_.max_iterations)
-
-        finally:
-            smbo.stats.print_stats()
-            self.logger.info("Final Incumbent: %s" % (smbo.incumbent))
-
-            smbo.runhistory.save_json(fn=os.path.join(scen.output_dir,"runhistory.json"))
-            #smbo.runhistory.load_json(fn="runhistory.json", cs=smbo.config_space)
+        smac.solver.runhistory.save_json(fn=os.path.join(scen.output_dir,"runhistory.json"))
+        #smbo.runhistory.load_json(fn="runhistory.json", cs=smbo.config_space)

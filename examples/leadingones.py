@@ -9,9 +9,7 @@ from ConfigSpace.conditions import InCondition
 
 from smac.tae.execute_func import ExecuteTAFunc
 from smac.scenario.scenario import Scenario
-from smac.smbo.smbo import SMBO
-from smac.stats.stats import Stats
-
+from smac.facade.smac_facade import SMAC
 
 def leading_ones(cfg, seed):
     """ Leading ones
@@ -33,7 +31,7 @@ def leading_ones(cfg, seed):
     return -count
 
 logger = logging.getLogger("Optimizer")  # Enable to show Debug outputs
-logger.parent.level = 20  # info level:20; debug:10
+logging.basicConfig(level=logging.DEBUG)
 
 # build Configuration Space which defines all parameters and their ranges
 n_params = 16
@@ -59,25 +57,22 @@ scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative r
                      "deterministic": "true"
                      })
 
-stats = Stats(scenario)
-
-# register function to be optimized
-taf = ExecuteTAFunc(leading_ones, stats, run_objective="quality")
+# register function to be optimize
+taf = ExecuteTAFunc(leading_ones)
 
 # example call of the function
 # it returns: Status, Cost, Runtime, Additional Infos
 def_value = taf.run(cs.get_default_configuration())[1]
 print("Default Value: %.2f" % (def_value))
-
+ 
 # Optimize
-smbo = SMBO(scenario=scenario, tae_runner=taf,
-            stats=stats,
-            rng=np.random.RandomState(42))
+smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
+            tae_runner=taf)
 try:
-    smbo.run(max_iters=999)
+    incumbent = smac.optimize()
 finally:
-    smbo.stats.print_stats()
-print("Final Incumbent: %s" % (smbo.incumbent))
+    smac.stats.print_stats()
+    incumbent = smac.solver.incumbent
 
-inc_value = taf.run(smbo.incumbent)[1]
+inc_value = taf.run(incumbent)[1]
 print("Optimized Value: %.2f" % (inc_value))
