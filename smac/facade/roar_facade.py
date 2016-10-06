@@ -113,14 +113,14 @@ class ROAR(SMAC):
                 raise ValueError('Unknown run objective: %s. Should be either '
                                  'quality or runtime.' % self.scenario.run_obj)
                 
-            # use SMAC facade
-            super().__init__(
-                             scenario=scenario,
-                             tae_runner=tae_runner,
-                             runhistory=runhistory,
-                             intensifier=intensifier,
-                             model=model,
-                             runhistory2epm=runhistory2epm,
-                             initial_design=initial_design,
-                             stats=stats,
-                             rng=rng)
+        # use SMAC facade
+        super().__init__(
+                         scenario=scenario,
+                         tae_runner=tae_runner,
+                         runhistory=runhistory,
+                         intensifier=intensifier,
+                         model=model,
+                         runhistory2epm=runhistory2epm,
+                         initial_design=initial_design,
+                         stats=stats,
+                         rng=rng)
