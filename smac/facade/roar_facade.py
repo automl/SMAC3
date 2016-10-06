@@ -46,12 +46,6 @@ class ROAR(SMAC):
             runhistory to store all algorithm runs
         intensifier: Intensifier
             intensification object to issue a racing to decide the current incumbent
-        acquisition_function : AcquisitionFunction
-            Object that implements the AbstractAcquisitionFunction. Will use
-            EI if not set.
-        model : object
-            Model that implements train() and predict(). Will use a
-            RandomForest if not set.
         runhistory2epm : RunHistory2EMP
             Object that implements the AbstractRunHistory2EPM. If None,
             will use RunHistory2EPM4Cost if objective is cost or
