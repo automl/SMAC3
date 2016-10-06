@@ -67,12 +67,12 @@ For *SMAC* to be able to interpret the results of an algorithm run, a wrapper sh
         Result for SMAC: SUCCESS, 0, 0, 48.948190, 1148756733
 
     | The second line is the result of the above listed algorithm call.
-    | *STATUS*: can be either *SUCCESS*, *CRASHED*, *SAT*, *UNSAT*, *TIMEOUT*
-    | *running time*: is the measured running time for an algorithm call
-    | *run length*: are the amount of steps needed to find a solution
-    | *quality*: the solution quality
-    | *seed*: the seed that was used with the algorithm call
-    | *instance-specifics*: additional information
+    | *STATUS:* can be either *SUCCESS*, *CRASHED*, *SAT*, *UNSAT*, *TIMEOUT*
+    | *running time:* is the measured running time for an algorithm call
+    | *run length:* are the amount of steps needed to find a solution
+    | *quality:* the solution quality
+    | *seed:* the seed that was used with the algorithm call
+    | *instance-specifics:* additional information
 
 The **runcount_limit** specifies the maximum number of algorithm calls.
 
@@ -270,7 +270,7 @@ In this folder you see the following files and directories:
         The scenario file contains all the necessary information about the configuration scenario at hand.
         For this example the following options were used:
 
-        * *algo*:
+        * *algo:*
 
             .. code-block:: bash
 
@@ -290,13 +290,30 @@ In this folder you see the following files and directories:
             For *SMAC* to be able to interpret the results of the algorithm run, the wrapper returns the results of the algorithm run as follows:
             :bash:`STATUS, runtime, runlength, quality, seed, instance-specifics`
 
-        * *paramfile*:
+        * *paramfile:*
+
             This parameter specifies which pcs-file to use and where it is located.
 
             The pcs-file specifies the Parameter Configuration Space file, which lists the algorithm's parameters, their domains, and default values (one per line)
 
             In this example we are dealing with 26 parameters of which 12 are categorical and 14 are continuous. Out of these 26
             parameters, 9 parameters are conditionals (they are only active if their parent parameter takes on a certain value).
+
+        * *execdir:* Specifies the directory in which the target algorithm will be run.
+
+        * *deterministic:* Specifies if the configuration scenario is deterministic.
+
+        * *run_obj:* This parameter tells *SMAC* what is to be optimized, i.e. runtime or (solution) quality.
+
+        * *overall_obj:* Specifies how to evaluat the performance values, e.g as mean or PARX.
+
+        * *cutoff_time:* Gives the target algorithms cuttof time.
+
+        * *wallclock-limit:* This parameter is used to give the time budget for the configuration task in seconds.
+
+        * *instance_file:* See instances.txt above.
+
+        * *feature_file:* See features.txt above.
 
     * **run.sh**
         A shell script calling *SMAC* with the following command:
