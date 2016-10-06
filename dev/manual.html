@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -8,8 +7,10 @@
     
     <title>Manual &#8212; SMAC 0.1.3 documentation</title>
     
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootswatch-3.3.6/cosmo/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -24,26 +25,89 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="SMAC 0.1.3 documentation" href="index.html" />
     <link rel="next" title="Contact" href="contact.html" />
     <link rel="prev" title="Installation" href="installation.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
   <body role="document">
-  
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          SMAC3</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
             
+                <li><a href="index.html">Start</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="#">Manual</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="license.html">License</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
   <div class="section" id="manual">
 <h1>Manual<a class="headerlink" href="#manual" title="Permalink to this headline">¶</a></h1>
 <p>In the following we will show how to use <strong>SMAC3</strong>.</p>
@@ -96,12 +160,12 @@ Result <span class="k">for</span> SMAC: SUCCESS, 0, 0, 48.948190, 1148756733
 </div>
 <div class="line-block">
 <div class="line">The second line is the result of the above listed algorithm call.</div>
-<div class="line"><em>STATUS</em>: can be either <em>SUCCESS</em>, <em>CRASHED</em>, <em>SAT</em>, <em>UNSAT</em>, <em>TIMEOUT</em></div>
-<div class="line"><em>running time</em>: is the measured running time for an algorithm call</div>
-<div class="line"><em>run length</em>: are the amount of steps needed to find a solution</div>
-<div class="line"><em>quality</em>: the solution quality</div>
-<div class="line"><em>seed</em>: the seed that was used with the algorithm call</div>
-<div class="line"><em>instance-specifics</em>: additional information</div>
+<div class="line"><em>STATUS:</em> can be either <em>SUCCESS</em>, <em>CRASHED</em>, <em>SAT</em>, <em>UNSAT</em>, <em>TIMEOUT</em></div>
+<div class="line"><em>running time:</em> is the measured running time for an algorithm call</div>
+<div class="line"><em>run length:</em> are the amount of steps needed to find a solution</div>
+<div class="line"><em>quality:</em> the solution quality</div>
+<div class="line"><em>seed:</em> the seed that was used with the algorithm call</div>
+<div class="line"><em>instance-specifics:</em> additional information</div>
 </div>
 </div></blockquote>
 <p>The <strong>runcount_limit</strong> specifies the maximum number of algorithm calls.</p>
@@ -358,7 +422,7 @@ and querying of the function SMAC needs as inputs the scenario object as well as
 <dd><p class="first">The scenario file contains all the necessary information about the configuration scenario at hand.
 For this example the following options were used:</p>
 <ul class="last">
-<li><p class="first"><em>algo</em>:</p>
+<li><p class="first"><em>algo:</em></p>
 <blockquote>
 <div><div class="highlight-bash"><div class="highlight"><pre><span></span>python -u ./target_algorithm/scripts/SATCSSCWrapper.py --mem-limit <span class="m">1024</span> --script ./target_algorithm/spear-python/spearCSSCWrapper.py
 </pre></div>
@@ -375,14 +439,29 @@ algorithm and <em>SMAC</em>, which executes the wrapper through a command line c
 <code class="code bash docutils literal"><span class="pre">STATUS,</span> <span class="pre">runtime,</span> <span class="pre">runlength,</span> <span class="pre">quality,</span> <span class="pre">seed,</span> <span class="pre">instance-specifics</span></code></p>
 </div></blockquote>
 </li>
-<li><dl class="first docutils">
-<dt><em>paramfile</em>:</dt>
-<dd><p class="first">This parameter specifies which pcs-file to use and where it is located.</p>
+<li><p class="first"><em>paramfile:</em></p>
+<blockquote>
+<div><p>This parameter specifies which pcs-file to use and where it is located.</p>
 <p>The pcs-file specifies the Parameter Configuration Space file, which lists the algorithm&#8217;s parameters, their domains, and default values (one per line)</p>
-<p class="last">In this example we are dealing with 26 parameters of which 12 are categorical and 14 are continuous. Out of these 26
+<p>In this example we are dealing with 26 parameters of which 12 are categorical and 14 are continuous. Out of these 26
 parameters, 9 parameters are conditionals (they are only active if their parent parameter takes on a certain value).</p>
-</dd>
-</dl>
+</div></blockquote>
+</li>
+<li><p class="first"><em>execdir:</em> Specifies the directory in which the target algorithm will be run.</p>
+</li>
+<li><p class="first"><em>deterministic:</em> Specifies if the configuration scenario is deterministic.</p>
+</li>
+<li><p class="first"><em>run_obj:</em> This parameter tells <em>SMAC</em> what is to be optimized, i.e. runtime or (solution) quality.</p>
+</li>
+<li><p class="first"><em>overall_obj:</em> Specifies how to evaluat the performance values, e.g as mean or PARX.</p>
+</li>
+<li><p class="first"><em>cutoff_time:</em> Gives the target algorithms cuttof time.</p>
+</li>
+<li><p class="first"><em>wallclock-limit:</em> This parameter is used to give the time budget for the configuration task in seconds.</p>
+</li>
+<li><p class="first"><em>instance_file:</em> See instances.txt above.</p>
+</li>
+<li><p class="first"><em>feature_file:</em> See features.txt above.</p>
 </li>
 </ul>
 </dd>
@@ -458,64 +537,28 @@ INFO:SMAC:Final Incumbent: Configuration:
 </div>
 
 
-          </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Manual</a><ul>
-<li><a class="reference internal" href="#quick-start">Quick Start</a></li>
-<li><a class="reference internal" href="#using-smac-directly-in-python">Using <em>SMAC</em> directly in python</a></li>
-<li><a class="reference internal" href="#spear-qcp">Spear-QCP</a></li>
-</ul>
-</li>
-</ul>
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="installation.html" title="previous chapter">Installation</a></li>
-      <li>Next: <a href="contact.html" title="next chapter">Contact</a></li>
-  </ul></li>
-</ul>
-</div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/manual.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
     </div>
-    <div class="footer">
-      &copy;2015, Marius Lindauer, Stefan Falkner, Katharina Eggensperger, Aaron Klein, Frank Hutter.
       
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.8</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
       
-      |
-      <a href="_sources/manual.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
+        <br/>
+        
+<div id="sourcelink">
+  <a href="_sources/manual.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2015, Marius Lindauer, Stefan Falkner, Katharina Eggensperger, Aaron Klein, Frank Hutter.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8.<br/>
+    </p>
+  </div>
+</footer>
   </body>
 </html>
