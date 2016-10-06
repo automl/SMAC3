@@ -128,20 +128,3 @@ class ROAR(SMAC):
                              initial_design=initial_design,
                              stats=stats,
                              rng=rng)
-
-    def optimize(self):
-        '''
-            optimize the algorithm provided in scenario (given in constructor)
-
-            Arguments
-            ---------
-            max_iters: int
-                maximal number of iterations
-        '''
-        incumbent = None
-        try:
-            incumbent = self.solver.run()
-        finally:
-            self.solver.stats.print_stats()
-            self.logger.info("Final Incumbent: %s" % (self.solver.incumbent))
-        return incumbent
