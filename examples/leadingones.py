@@ -71,7 +71,6 @@ smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
 try:
     incumbent = smac.optimize()
 finally:
-    smac.stats.print_stats()
     incumbent = smac.solver.incumbent
 
 inc_value = taf.run(incumbent)[1]
