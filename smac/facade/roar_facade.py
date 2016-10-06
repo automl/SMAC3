@@ -26,14 +26,12 @@ class ROAR(SMAC):
                  tae_runner: ExecuteTARun=None,
                  runhistory: RunHistory=None,
                  intensifier: Intensifier=None,
-                 acquisition_function: AbstractAcquisitionFunction=None,
-                 model=None,
                  runhistory2epm: AbstractRunHistory2EPM=None,
                  initial_design: InitialDesign=None,
                  stats: Stats=None,
                  rng: np.random.RandomState=None):
         '''
-        Facade to use ROAR default mode
+        Facade to use ROAR mode
 
         Parameters
         ----------
@@ -82,9 +80,8 @@ class ROAR(SMAC):
                             'None, int or np.random.RandomState' % str(type(rng)))
 
         # initial EPM
-        if model is None:
-            #use random predictions to simulate random sampling of configurations
-            model = RandomEpm(rng=rng)
+        #use random predictions to simulate random sampling of configurations
+        model = RandomEpm(rng=rng)
 
         # initial conversion of runhistory into EPM data
         if runhistory2epm is None:
@@ -122,7 +119,6 @@ class ROAR(SMAC):
                              tae_runner=tae_runner,
                              runhistory=runhistory,
                              intensifier=intensifier,
-                             acquisition_function=acquisition_function,
                              model=model,
                              runhistory2epm=runhistory2epm,
                              initial_design=initial_design,
