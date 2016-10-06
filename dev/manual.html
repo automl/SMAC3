@@ -41,6 +41,21 @@
 
   </head>
   <body role="document">
+  
+  <a href="https://github.com/automl/SMAC3"
+     class="visible-desktop hidden-xs"><img
+    id="gh-banner"
+    style="position: absolute; top: 50px; right: 0; border: 0;"
+    src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
+    alt="Fork me on GitHub"></a>
+  <script>
+    // Adjust banner height.
+    $(function () {
+      var navHeight = $(".navbar .container").css("height");
+      $("#gh-banner").css("top", navHeight);
+    });
+  </script>
+
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -106,7 +121,19 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Manual</a><ul>
+<li><a class="reference internal" href="#quick-start">Quick Start</a></li>
+<li><a class="reference internal" href="#using-smac-directly-in-python">Using <em>SMAC</em> directly in python</a></li>
+<li><a class="reference internal" href="#spear-qcp">Spear-QCP</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <div class="section" id="manual">
 <h1>Manual<a class="headerlink" href="#manual" title="Permalink to this headline">¶</a></h1>
