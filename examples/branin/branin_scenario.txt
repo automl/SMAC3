@@ -1,4 +1,0 @@
-algo = python branin.py
-paramfile = branin_pcs.pcs
-run_obj = quality
-runcount_limit = 500
