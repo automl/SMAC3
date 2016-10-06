@@ -66,24 +66,6 @@ class RandomEpm(object):
             raise NotImplementedError("X has to be of type np.ndarray")
         return self.rng.rand(len(X), 1), self.rng.rand(len(X), 1)
     
-    def _predict(self, x):
-        """Predict mean and variance for given x.
-
-        Parameters
-        ----------
-        x : np.ndarray of shape = [n_features (config + instance features), ]
-
-        Returns
-        -------
-        mean : float
-            Predictive mean
-        var : float
-            Predictive variance
-        """
-        mean, var = self.rf.predict(x)
-
-        return self.rng.rand(), self.rng.rand()
-
     def predict_marginalized_over_instances(self, X):
         """Predict mean and variance marginalized over all instances.
 
