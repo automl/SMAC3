@@ -87,19 +87,8 @@ class SMAC(object):
         if runhistory is None:
             runhistory = RunHistory(aggregate_func=aggregate_func)
 
-        # initialize random number generator
-        if rng is None:
-            num_run = np.random.randint(1234567980)
-            rng = np.random.RandomState(seed=num_run)
-        elif isinstance(rng, int):
-            num_run = rng
-            rng = np.random.RandomState(seed=rng)
-        elif isinstance(rng, np.random.RandomState):
-            num_run = rng.randint(1234567980)
-            rng = rng
-        else:
-            raise TypeError('Unknown type %s for argument rng. Only accepts '
-                            'None, int or np.random.RandomState' % str(type(rng)))
+        # initial random number generator
+        num_run, rng = self._get_rng(rng=rng)
 
         # initial Trajectory Logger
         traj_logger = TrajLogger(
@@ -204,6 +193,34 @@ class SMAC(object):
                            acq_optimizer=local_search,
                            acquisition_func=acquisition_function,
                            rng=rng)
+
+    def _get_rng(self, rng):
+        '''
+            initial random number generator 
+           
+            Arguments
+            ---------
+            rng: np.random.RandomState|int|None
+                
+            Returns
+            -------
+            int, np.random.RandomState
+        '''
+        
+        # initialize random number generator
+        if rng is None:
+            num_run = np.random.randint(1234567980)
+            rng = np.random.RandomState(seed=num_run)
+        elif isinstance(rng, int):
+            num_run = rng
+            rng = np.random.RandomState(seed=rng)
+        elif isinstance(rng, np.random.RandomState):
+            num_run = rng.randint(1234567980)
+            rng = rng
+        else:
+            raise TypeError('Unknown type %s for argument rng. Only accepts '
+                            'None, int or np.random.RandomState' % str(type(rng)))
+        return num_run, rng
 
     def optimize(self):
         '''

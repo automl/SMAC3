@@ -59,19 +59,8 @@ class ROAR(SMAC):
         '''
         self.logger = logging.getLogger("ROAR")
 
-        # initialize random number generator
-        if rng is None:
-            num_run = np.random.randint(1234567980)
-            rng = np.random.RandomState(seed=num_run)
-        elif isinstance(rng, int):
-            num_run = rng
-            rng = np.random.RandomState(seed=rng)
-        elif isinstance(rng, np.random.RandomState):
-            num_run = rng.randint(1234567980)
-            rng = rng
-        else:
-            raise TypeError('Unknown type %s for argument rng. Only accepts '
-                            'None, int or np.random.RandomState' % str(type(rng)))
+        # initial random number generator
+        num_run, rng = self._get_rng(rng=rng)
 
         # initial EPM
         #use random predictions to simulate random sampling of configurations
