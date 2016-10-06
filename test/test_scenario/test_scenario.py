@@ -10,6 +10,7 @@ import unittest
 import numpy as np
 
 from smac.scenario.scenario import Scenario
+from smac.configspace import ConfigurationSpace
 
 class ScenarioTest(unittest.TestCase):
 
@@ -22,7 +23,9 @@ class ScenarioTest(unittest.TestCase):
         base_directory = os.path.abspath(os.path.join(base_directory, '..', '..'))
         self.current_dir = os.getcwd()
         os.chdir(base_directory)
-        
+
+        self.cs = ConfigurationSpace()
+
         self.test_scenario_dict = {'algo': 'echo Hello',
                                    'paramfile':
                                        'test/test_files/scenario_test/param.pcs',
@@ -38,6 +41,8 @@ class ScenarioTest(unittest.TestCase):
                                        'test/test_files/scenario_test/test.txt',
                                    'feature_file':
                                        'test/test_files/scenario_test/features.txt'}
+
+
 
     def tearDown(self):
         os.chdir(self.current_dir)

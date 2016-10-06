@@ -1,3 +1,4 @@
+from collections import defaultdict
 import os
 import sys
 import logging
@@ -52,6 +53,7 @@ class Scenario(object):
             scenario.update(cmd_args)
 
         self._arguments = {}
+        self._groups = defaultdict(set)
         self._add_arguments()
 
         # Parse arguments
@@ -64,13 +66,48 @@ class Scenario(object):
             raise ValueError('Could not parse the following arguments: %s' %
                              str(list(scenario.keys())))
 
+        for group, potential_members in self._groups.items():
+            n_members_in_scenario = 0
+            for pm in potential_members:
+                if pm in parsed_arguments:
+                    n_members_in_scenario += 1
+
+            if n_members_in_scenario != 1:
+                raise ValueError('Exactly one of the following arguments must '
+                                 'be specified in the scenario file: %s' %
+                                 str(potential_members))
+
         for arg_name, arg_value in parsed_arguments.items():
             setattr(self, arg_name, arg_value)
 
         self._transform_arguments()
 
     def add_argument(self, name, help, callback=None, default=None,
-                     dest=None, required=False):
+                     dest=None, required=False, required_group=None):
+        """Add argument to the scenario object.
+
+        Parameters
+        ----------
+        name : str
+            Argument name
+        help : str
+            Help text which can be displayed in the documentation.
+        callback : callable, optional
+            If given, the callback will be called when the argument is
+            parsed. Useful for custom casting/typechecking.
+        default : object, optional
+            Default value if the argument is not given. Default to ``None``.
+        dest : str
+            Assign the argument to scenario object by this name.
+        required : bool
+            If True, the scenario will raise an error if the argument is not
+            given.
+        required_group : str
+            Group arguments with similar behaviour by assigning the same string
+            value. The scenario will ensure that exactly one of the arguments is
+            given. Is used for example to ensure that either a configuration
+            space object or a parameter file is passed to the scenario.
+        """
         if not isinstance(required, bool):
             raise TypeError("Argument required must be of type 'bool'.")
 
@@ -79,6 +116,10 @@ class Scenario(object):
                                  'help': help,
                                  'dest': dest,
                                  'callback': callback}
+
+        if required_group:
+            self._groups[required_group].add(name)
+
 
     def _parse_argument(self, name, scenario, help, callback=None, default=None,
                         dest=None, required=False):
@@ -98,7 +139,8 @@ class Scenario(object):
 
         if required is True:
             if value is None:
-                raise ValueError('Required argument %s not given.' % name)
+                raise ValueError('Required scenario argument %s not given.' %
+                                 name)
 
         if value is None:
             value = default
@@ -115,7 +157,8 @@ class Scenario(object):
         self.add_argument(name='execdir', default='.', help=None)
         self.add_argument(name='deterministic', default="0", help=None,
                           callback=lambda arg: arg in ["1", "true", True])
-        self.add_argument(name='paramfile', help=None, dest='pcs_fn')
+        self.add_argument(name='paramfile', help=None, dest='pcs_fn',
+                          required_group='cs')
         self.add_argument(name='run_obj', help=None, default='runtime')
         self.add_argument(name='overall_obj', help=None, default='par10')
         self.add_argument(name='cutoff_time', help=None, default=None,
@@ -146,7 +189,8 @@ class Scenario(object):
         # instance name -> feature vector
         self.add_argument(name='features', default={}, help=None,
                           dest='feature_dict')
-        self.add_argument(name='cs', help=None)  # ConfigSpace object
+        # ConfigSpace object
+        self.add_argument(name='cs', help=None, required_group='cs')
 
     def _transform_arguments(self):
         self.n_features = len(self.feature_dict)

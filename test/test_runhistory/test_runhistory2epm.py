@@ -52,7 +52,7 @@ class RunhistoryTest(unittest.TestCase):
                seed=45,
                additional_info={"start_time": 10})
         
-        scen = Scenario({"cutoff_time": 10})
+        scen = Scenario({"cutoff_time": 10, 'cs': cs})
 
         self.assertRaises(TypeError, runhistory2epm.RunHistory2EPM4LogCost)
 
