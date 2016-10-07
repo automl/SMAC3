@@ -26,7 +26,6 @@ class ROAR(SMAC):
                  tae_runner: ExecuteTARun=None,
                  runhistory: RunHistory=None,
                  intensifier: Intensifier=None,
-                 runhistory2epm: AbstractRunHistory2EPM=None,
                  initial_design: InitialDesign=None,
                  stats: Stats=None,
                  rng: np.random.RandomState=None):
@@ -46,10 +45,6 @@ class ROAR(SMAC):
             runhistory to store all algorithm runs
         intensifier: Intensifier
             intensification object to issue a racing to decide the current incumbent
-        runhistory2epm : RunHistory2EMP
-            Object that implements the AbstractRunHistory2EPM. If None,
-            will use RunHistory2EPM4Cost if objective is cost or
-            RunHistory2EPM4LogCost if objective is runtime.
         initial_design: InitialDesign
             initial sampling design
         stats: Stats
@@ -67,34 +62,13 @@ class ROAR(SMAC):
         model = RandomEpm(rng=rng)
 
         # initial conversion of runhistory into EPM data
-        if runhistory2epm is None:
-
-            num_params = len(scenario.cs.get_hyperparameters())
-            if scenario.run_obj == "runtime":
-
-                # if we log the performance data,
-                # the RFRImputator will already get
-                # log transform data from the runhistory
-                cutoff = np.log10(scenario.cutoff)
-                threshold = np.log10(scenario.cutoff *
-                                     scenario.par_factor)
-
-                # for ROAR we don't need any imputation of censored data
-                runhistory2epm = RunHistory2EPM4LogCost(
-                    scenario=scenario, num_params=num_params,
-                    success_states=[StatusType.SUCCESS, ],
-                    impute_censored_data=False,
-                    impute_state=None)
-
-            elif scenario.run_obj == 'quality':
-                runhistory2epm = RunHistory2EPM4Cost\
-                    (scenario=scenario, num_params=num_params,
-                     success_states=[StatusType.SUCCESS, ],
-                     impute_censored_data=False, impute_state=None)
-
-            else:
-                raise ValueError('Unknown run objective: %s. Should be either '
-                                 'quality or runtime.' % self.scenario.run_obj)
+        # since ROAR does not really use it the converted data
+        # we simply use a cheap RunHistory2EPM here
+        num_params = len(scenario.cs.get_hyperparameters())
+        runhistory2epm = RunHistory2EPM4Cost\
+            (scenario=scenario, num_params=num_params,
+             success_states=[StatusType.SUCCESS, ],
+             impute_censored_data=False, impute_state=None)
                 
         # use SMAC facade
         super().__init__(
