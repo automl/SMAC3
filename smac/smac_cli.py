@@ -6,6 +6,7 @@ import numpy as np
 from smac.utils.io.cmd_reader import CMDReader
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_facade import SMAC
+from smac.facade.roar_facade import ROAR
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -42,8 +43,11 @@ class SMACCLI(object):
 
         scen = Scenario(args_.scenario_file, misc_args)
         
-        smac = SMAC(scenario=scen, rng=np.random.RandomState(args_.seed))
-        smac.optimize()
+        if args_.modus == "SMAC":
+            optimizer = SMAC(scenario=scen, rng=np.random.RandomState(args_.seed))
+        elif args_.modus == "ROAR":
+            optimizer = ROAR(scenario=scen, rng=np.random.RandomState(args_.seed))
+        optimizer.optimize()
 
-        smac.solver.runhistory.save_json(fn=os.path.join(scen.output_dir,"runhistory.json"))
+        optimizer.solver.runhistory.save_json(fn=os.path.join(scen.output_dir,"runhistory.json"))
         #smbo.runhistory.load_json(fn="runhistory.json", cs=smbo.config_space)

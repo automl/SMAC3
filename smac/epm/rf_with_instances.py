@@ -3,6 +3,8 @@ import logging
 
 import pyrfr.regression
 
+from smac.epm.base_epm import AbstractEPM
+
 
 __author__ = "Aaron Klein"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -12,7 +14,7 @@ __email__ = "kleinaa@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class RandomForestWithInstances(object):
+class RandomForestWithInstances(AbstractEPM):
 
     '''
     Interface to the random forest that takes instance features

@@ -18,6 +18,7 @@ from smac.smbo.acquisition import EI, AbstractAcquisitionFunction
 from smac.smbo.local_search import LocalSearch
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
+from smac.epm.base_epm import AbstractEPM
 from smac.utils.util_funcs import get_types
 from smac.utils.io.traj_logging import TrajLogger
 
@@ -35,7 +36,7 @@ class SMAC(object):
                  runhistory: RunHistory=None,
                  intensifier: Intensifier=None,
                  acquisition_function: AbstractAcquisitionFunction=None,
-                 model=None,
+                 model:AbstractEPM=None,
                  runhistory2epm: AbstractRunHistory2EPM=None,
                  initial_design: InitialDesign=None,
                  stats: Stats=None,
@@ -59,7 +60,7 @@ class SMAC(object):
         acquisition_function : AcquisitionFunction
             Object that implements the AbstractAcquisitionFunction. Will use
             EI if not set.
-        model : object
+        model : AbstractEPM
             Model that implements train() and predict(). Will use a
             RandomForest if not set.
         runhistory2epm : RunHistory2EMP
@@ -87,19 +88,8 @@ class SMAC(object):
         if runhistory is None:
             runhistory = RunHistory(aggregate_func=aggregate_func)
 
-        # initialize random number generator
-        if rng is None:
-            num_run = np.random.randint(1234567980)
-            rng = np.random.RandomState(seed=num_run)
-        elif isinstance(rng, int):
-            num_run = rng
-            rng = np.random.RandomState(seed=rng)
-        elif isinstance(rng, np.random.RandomState):
-            num_run = rng.randint(1234567980)
-            rng = rng
-        else:
-            raise TypeError('Unknown type %s for argument rng. Only accepts '
-                            'None, int or np.random.RandomState' % str(type(rng)))
+        # initial random number generator
+        num_run, rng = self._get_rng(rng=rng)
 
         # initial Trajectory Logger
         traj_logger = TrajLogger(
@@ -204,6 +194,34 @@ class SMAC(object):
                            acq_optimizer=local_search,
                            acquisition_func=acquisition_function,
                            rng=rng)
+
+    def _get_rng(self, rng):
+        '''
+            initial random number generator 
+           
+            Arguments
+            ---------
+            rng: np.random.RandomState|int|None
+                
+            Returns
+            -------
+            int, np.random.RandomState
+        '''
+        
+        # initialize random number generator
+        if rng is None:
+            num_run = np.random.randint(1234567980)
+            rng = np.random.RandomState(seed=num_run)
+        elif isinstance(rng, int):
+            num_run = rng
+            rng = np.random.RandomState(seed=rng)
+        elif isinstance(rng, np.random.RandomState):
+            num_run = rng.randint(1234567980)
+            rng = rng
+        else:
+            raise TypeError('Unknown type %s for argument rng. Only accepts '
+                            'None, int or np.random.RandomState' % str(type(rng)))
+        return num_run, rng
 
     def optimize(self):
         '''

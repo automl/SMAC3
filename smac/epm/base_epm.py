@@ -1,33 +1,30 @@
 import logging
 import numpy as np
 
-from smac.epm.base_epm import AbstractEPM
-
-__author__ = "Katharina Eggensperger"
-__copyright__ = "Copyright 2015, ML4AAD"
+__author__ = "Marius Lindauer"
+__copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
-__maintainer__ = "Katharina Eggensperger"
-__email__ = "eggenspk@cs.uni-freiburg.de"
+__maintainer__ = "Marius Lindauer"
+__email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class RandomEPM(AbstractEPM):
-    '''implement an epm, which returns only random values'''
+class AbstractEPM(object):
+    '''Abstract implementation of the EPM API '''
 
     def __init__(self, rng):
         '''
-        initialize random number generator and logger
+        initialize random number generator
 
         Parameters
         ----------
         rng : np.random.RandomState
         '''
-        self.logger = logging.getLogger("RandomEPM")
         self.rng = rng
 
     def train(self, X, Y, **kwargs):
         '''
-        Pseudo training on X and Y.
+        Trains the EPM on X and Y.
 
         Parameters
         ----------
@@ -37,17 +34,11 @@ class RandomEPM(AbstractEPM):
         Y: np.ndarray (N, 1)
             The corresponding target values.
         '''
-
-        if not isinstance(X, np.ndarray):
-            raise NotImplementedError("X has to be of type np.ndarray")
-        if not isinstance(Y, np.ndarray):
-            raise NotImplementedError("Y has to be of type np.ndarray")
-
-        self.logger.debug("(Pseudo) Fit model to data")
+        raise NotImplementedError()
 
     def predict(self, X):
         '''
-        Predict values for configs
+        Predict values for configs in X
 
         Parameters
         ----------
@@ -61,9 +52,7 @@ class RandomEPM(AbstractEPM):
         -------
         predictions
         '''
-        if not isinstance(X, np.ndarray):
-            raise NotImplementedError("X has to be of type np.ndarray")
-        return self.rng.rand(len(X), 1), self.rng.rand(len(X), 1)
+        raise NotImplementedError()
     
     def predict_marginalized_over_instances(self, X):
         """Predict mean and variance marginalized over all instances.
@@ -83,4 +72,4 @@ class RandomEPM(AbstractEPM):
             Predictive variance
         """
 
-        return self.rng.rand(len(X), 1), self.rng.rand(len(X), 1)
+        raise NotImplementedError()
