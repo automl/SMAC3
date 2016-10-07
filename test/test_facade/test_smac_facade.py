@@ -32,3 +32,10 @@ class TestSMACFacade(unittest.TestCase):
         self.assertIsInstance(smac.solver.intensifier.tae_runner,
                               ExecuteTAFunc)
         self.assertIs(smac.solver.intensifier.tae_runner.ta, target_algorithm)
+
+    def test_pass_invalid_tae_runner(self):
+        self.assertRaisesRegexp(TypeError, "Argument 'tae_runner' is <class "
+                                           "'int'>, but must be either a "
+                                           "callable or an instance of "
+                                           "ExecuteTaRun.",
+                                SMAC, tae_runner=1, scenario=self.scenario)
