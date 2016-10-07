@@ -22,3 +22,13 @@ class TestSMACFacade(unittest.TestCase):
         SMAC(tae_runner=ta, scenario=self.scenario)
         self.assertIsInstance(ta.stats, Stats)
         self.assertIsInstance(ta.runhistory, RunHistory)
+
+    def test_pass_callable(self):
+        # Check that SMAC accepts a callable as target algorithm and that it is
+        # correctly wrapped with ExecuteTaFunc
+        def target_algorithm(conf, inst):
+            return 5
+        smac = SMAC(tae_runner=target_algorithm, scenario=self.scenario)
+        self.assertIsInstance(smac.solver.intensifier.tae_runner,
+                              ExecuteTAFunc)
+        self.assertIs(smac.solver.intensifier.tae_runner.ta, target_algorithm)

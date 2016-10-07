@@ -4,6 +4,7 @@ import numpy as np
 
 from smac.tae.execute_ta_run import ExecuteTARun
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
+from smac.tae.execute_func import ExecuteTAFunc
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
@@ -32,7 +33,9 @@ class SMAC(object):
 
     def __init__(self,
                  scenario: Scenario,
-                 tae_runner: ExecuteTARun=None,
+                 # TODO: once we drop python3.4 add type hint
+                 # typing.Union[ExecuteTARun, callable]
+                 tae_runner=None,
                  runhistory: RunHistory=None,
                  intensifier: Intensifier=None,
                  acquisition_function: AbstractAcquisitionFunction=None,
@@ -48,11 +51,10 @@ class SMAC(object):
         ----------
         scenario: smac.scenario.scenario.Scenario
             Scenario object
-        tae_runner: ExecuteTARun
-            object that implements the following method to call the target
-            algorithm (or any other arbitrary function):
-            run(self, config)
-            If not set, it will be initialized with the tae.ExecuteTARunOld()
+        tae_runner: ExecuteTARun or callable
+            Callable or implementation of :class:`ExecuteTaRun`. In case a
+            callable is passed it will be wrapped by tae.ExecuteTaFunc().
+            If not set, tae_runner will be initialized with the tae.ExecuteTARunOld()
         runhistory: RunHistory
             runhistory to store all algorithm runs
         intensifier: Intensifier
@@ -111,7 +113,13 @@ class SMAC(object):
                                    scenario.cs)
 
         # initialize tae_runner
-        if tae_runner is None:
+        if tae_runner is not None and callable(tae_runner):
+            tae_runner = ExecuteTAFunc(ta=tae_runner,
+                                       stats=self.stats,
+                                       run_obj=scenario.run_obj,
+                                       runhistory=runhistory,
+                                       par_factor=scenario.par_factor)
+        elif tae_runner is None:
             tae_runner = ExecuteTARunOld(ta=scenario.ta,
                                          stats=self.stats,
                                          run_obj=scenario.run_obj,
