@@ -3,6 +3,7 @@ Created on Mar 29, 2015
 
 @author: Andre Biedenkapp
 '''
+from collections import defaultdict
 import os
 import logging
 import unittest
@@ -11,6 +12,12 @@ import numpy as np
 
 from smac.scenario.scenario import Scenario
 from smac.configspace import ConfigurationSpace
+
+
+class InitFreeScenario(Scenario):
+    def __init__(self):
+        self._groups = defaultdict(set)
+
 
 class ScenarioTest(unittest.TestCase):
 
@@ -94,6 +101,24 @@ class ScenarioTest(unittest.TestCase):
                                Scenario,
                                {'wallclock-limit': '12345',
                                 'duairznbvulncbzpneairzbnuqdae': 'uqpab'})
+
+    def test_add_argument(self):
+        # Check if adding non-bool required fails
+        scenario = InitFreeScenario()
+        self.assertRaisesRegexp(TypeError, "Argument 'required' must be of "
+                                           "type 'bool'.",
+                                scenario.add_argument, 'name', required=1,
+                                help=None)
+
+        # Check that adding a parameter which is both required and in a
+        # required-group fails
+        self.assertRaisesRegexp(ValueError, "Cannot make argument 'name' "
+                                            "required and add it to a group of "
+                                            "mutually exclusive arguments.",
+                                scenario.add_argument, 'name', required=True,
+                                help=None, mutually_exclusive_group='required')
+
+
 
 
 if __name__ == "__main__":

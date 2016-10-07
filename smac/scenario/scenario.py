@@ -83,7 +83,7 @@ class Scenario(object):
         self._transform_arguments()
 
     def add_argument(self, name, help, callback=None, default=None,
-                     dest=None, required=False, required_group=None):
+                     dest=None, required=False, mutually_exclusive_group=None):
         """Add argument to the scenario object.
 
         Parameters
@@ -102,14 +102,18 @@ class Scenario(object):
         required : bool
             If True, the scenario will raise an error if the argument is not
             given.
-        required_group : str
+        mutually_exclusive_group : str
             Group arguments with similar behaviour by assigning the same string
             value. The scenario will ensure that exactly one of the arguments is
             given. Is used for example to ensure that either a configuration
-            space object or a parameter file is passed to the scenario.
+            space object or a parameter file is passed to the scenario. Can not
+            be used together with ``required``.
         """
         if not isinstance(required, bool):
-            raise TypeError("Argument required must be of type 'bool'.")
+            raise TypeError("Argument 'required' must be of type 'bool'.")
+        if required is not False and mutually_exclusive_group is not None:
+            raise ValueError("Cannot make argument '%s' required and add it to"
+                             " a group of mutually exclusive arguments." % name)
 
         self._arguments[name] = {'default': default,
                                  'required': required,
@@ -117,8 +121,8 @@ class Scenario(object):
                                  'dest': dest,
                                  'callback': callback}
 
-        if required_group:
-            self._groups[required_group].add(name)
+        if mutually_exclusive_group:
+            self._groups[mutually_exclusive_group].add(name)
 
 
     def _parse_argument(self, name, scenario, help, callback=None, default=None,
@@ -158,7 +162,7 @@ class Scenario(object):
         self.add_argument(name='deterministic', default="0", help=None,
                           callback=lambda arg: arg in ["1", "true", True])
         self.add_argument(name='paramfile', help=None, dest='pcs_fn',
-                          required_group='cs')
+                          mutually_exclusive_group='cs')
         self.add_argument(name='run_obj', help=None, default='runtime')
         self.add_argument(name='overall_obj', help=None, default='par10')
         self.add_argument(name='cutoff_time', help=None, default=None,
@@ -190,7 +194,7 @@ class Scenario(object):
         self.add_argument(name='features', default={}, help=None,
                           dest='feature_dict')
         # ConfigSpace object
-        self.add_argument(name='cs', help=None, required_group='cs')
+        self.add_argument(name='cs', help=None, mutually_exclusive_group='cs')
 
     def _transform_arguments(self):
         self.n_features = len(self.feature_dict)
