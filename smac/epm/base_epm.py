@@ -1,8 +1,6 @@
 import logging
 import numpy as np
 
-from smac.epm.base_epm import AbstractEPM
-
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"
@@ -11,8 +9,8 @@ __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class RandomEpm(AbstractEPM):
-    '''implement an epm, which returns only random values'''
+class AbstractEPM(object):
+    '''Abstract implementation of the EPM API '''
 
     def __init__(self, rng):
         '''
@@ -22,7 +20,6 @@ class RandomEpm(AbstractEPM):
         ----------
         rng : np.random.RandomState
         '''
-        self.logger = logging.getLogger("RandomEpm")
         self.rng = rng
 
     def train(self, X, Y, **kwargs):
@@ -37,13 +34,7 @@ class RandomEpm(AbstractEPM):
         Y: np.ndarray (N, 1)
             The corresponding target values.
         '''
-
-        if not isinstance(X, np.ndarray):
-            raise NotImplementedError("X has to be of type np.ndarray")
-        if not isinstance(Y, np.ndarray):
-            raise NotImplementedError("Y has to be of type np.ndarray")
-
-        self.logger.debug("(Pseudo) Fit model to data")
+        raise NotImplementedError()
 
     def predict(self, X):
         '''
@@ -61,9 +52,7 @@ class RandomEpm(AbstractEPM):
         -------
         predictions
         '''
-        if not isinstance(X, np.ndarray):
-            raise NotImplementedError("X has to be of type np.ndarray")
-        return self.rng.rand(len(X), 1), self.rng.rand(len(X), 1)
+        raise NotImplementedError()
     
     def predict_marginalized_over_instances(self, X):
         """Predict mean and variance marginalized over all instances.
@@ -83,4 +72,4 @@ class RandomEpm(AbstractEPM):
             Predictive variance
         """
 
-        return self.rng.rand(len(X), 1), self.rng.rand(len(X), 1)
+        raise NotImplementedError()

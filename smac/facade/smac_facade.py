@@ -18,6 +18,7 @@ from smac.smbo.acquisition import EI, AbstractAcquisitionFunction
 from smac.smbo.local_search import LocalSearch
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
+from smac.epm.base_epm import AbstractEPM
 from smac.utils.util_funcs import get_types
 from smac.utils.io.traj_logging import TrajLogger
 
@@ -35,7 +36,7 @@ class SMAC(object):
                  runhistory: RunHistory=None,
                  intensifier: Intensifier=None,
                  acquisition_function: AbstractAcquisitionFunction=None,
-                 model=None,
+                 model:AbstractEPM=None,
                  runhistory2epm: AbstractRunHistory2EPM=None,
                  initial_design: InitialDesign=None,
                  stats: Stats=None,
@@ -59,7 +60,7 @@ class SMAC(object):
         acquisition_function : AcquisitionFunction
             Object that implements the AbstractAcquisitionFunction. Will use
             EI if not set.
-        model : object
+        model : AbstractEPM
             Model that implements train() and predict(). Will use a
             RandomForest if not set.
         runhistory2epm : RunHistory2EMP
