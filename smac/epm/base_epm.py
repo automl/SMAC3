@@ -1,11 +1,11 @@
 import logging
 import numpy as np
 
-__author__ = "Katharina Eggensperger"
-__copyright__ = "Copyright 2015, ML4AAD"
+__author__ = "Marius Lindauer"
+__copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
-__maintainer__ = "Katharina Eggensperger"
-__email__ = "eggenspk@cs.uni-freiburg.de"
+__maintainer__ = "Marius Lindauer"
+__email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
@@ -14,7 +14,7 @@ class AbstractEPM(object):
 
     def __init__(self, rng):
         '''
-        initialize random number generator and logger
+        initialize random number generator
 
         Parameters
         ----------
@@ -24,7 +24,7 @@ class AbstractEPM(object):
 
     def train(self, X, Y, **kwargs):
         '''
-        Trains the random forest on X and Y.
+        Trains the EPM on X and Y.
 
         Parameters
         ----------
@@ -38,7 +38,7 @@ class AbstractEPM(object):
 
     def predict(self, X):
         '''
-        Predict values for configs
+        Predict values for configs in X
 
         Parameters
         ----------

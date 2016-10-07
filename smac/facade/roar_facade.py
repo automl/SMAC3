@@ -11,7 +11,7 @@ from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, RunHistory2EP
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.smbo.acquisition import AbstractAcquisitionFunction
-from smac.epm.random_epm import RandomEpm
+from smac.epm.random_epm import RandomEPM
 from smac.facade.smac_facade import SMAC
 
 __author__ = "Marius Lindauer"
@@ -59,7 +59,7 @@ class ROAR(SMAC):
 
         # initial EPM
         #use random predictions to simulate random sampling of configurations
-        model = RandomEpm(rng=rng)
+        model = RandomEPM(rng=rng)
 
         # initial conversion of runhistory into EPM data
         # since ROAR does not really use it the converted data

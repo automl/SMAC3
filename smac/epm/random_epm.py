@@ -11,7 +11,7 @@ __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class RandomEpm(AbstractEPM):
+class RandomEPM(AbstractEPM):
     '''implement an epm, which returns only random values'''
 
     def __init__(self, rng):
@@ -22,12 +22,12 @@ class RandomEpm(AbstractEPM):
         ----------
         rng : np.random.RandomState
         '''
-        self.logger = logging.getLogger("RandomEpm")
+        self.logger = logging.getLogger("RandomEPM")
         self.rng = rng
 
     def train(self, X, Y, **kwargs):
         '''
-        Trains the random forest on X and Y.
+        Pseudo training on X and Y.
 
         Parameters
         ----------
