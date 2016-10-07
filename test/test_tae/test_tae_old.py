@@ -7,6 +7,7 @@ import os
 import unittest
 import shlex
 
+from smac.configspace import ConfigurationSpace
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.execute_ta_run import StatusType
 from smac.scenario.scenario import Scenario
@@ -28,7 +29,7 @@ class TaeOldTest(unittest.TestCase):
         '''
             running some simple algo in old style
         '''
-        scen = Scenario(scenario={}, cmd_args=None)
+        scen = Scenario(scenario={'cs': ConfigurationSpace()}, cmd_args=None)
         stats = Stats(scen)
         
         eta = ExecuteTARunOld(

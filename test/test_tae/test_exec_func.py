@@ -4,6 +4,7 @@ import unittest.mock
 
 import numpy as np
 
+from smac.configspace import ConfigurationSpace
 from smac.tae.execute_func import ExecuteTAFunc
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
@@ -13,7 +14,8 @@ from smac.tae.execute_ta_run import StatusType
 class TestExecuteFunc(unittest.TestCase):
 
     def setUp(self):
-        self.scenario = Scenario({})
+        self.cs = ConfigurationSpace()
+        self.scenario = Scenario({'cs': self.cs})
         self.stats = Stats(scenario=self.scenario)
 
     def test_run(self):
