@@ -127,7 +127,10 @@ class SMAC(object):
                                          par_factor=scenario.par_factor)
         elif not isinstance(tae_runner, ExecuteTARun):
             raise TypeError("Argument 'tae_runner' is %s, but must be "
-                            "either a callable or an instance of ExecuteTaRun."
+                            "either a callable or an instance of "
+                            "ExecuteTaRun. Passing 'None' will result in the "
+                            "creation of target algorithm runner based on the "
+                            "call string in the scenario file."
                             % type(tae_runner))
 
         # inject stats if necessary
