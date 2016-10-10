@@ -35,7 +35,7 @@ we refer to
     In: Proceedings of the conference on Learning and Intelligent OptimizatioN (LION 5)
 
 
-SMAC v3 is mainly written in Python 3.4. We expect that it should be also compatible with Python 2.7. 
+SMAC v3 is written in python3 and continuously tested with python3.4 and python3.5. 
 Its [Random Forest](https://bitbucket.org/aadfreiburg/random_forest_run) is written in C++.
 
 #Installation:
