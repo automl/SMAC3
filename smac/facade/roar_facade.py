@@ -36,10 +36,9 @@ class ROAR(SMAC):
         ----------
         scenario: smac.scenario.scenario.Scenario
             Scenario object
-        tae_runner: ExecuteTARun
-            object that implements the following method to call the target
-            algorithm (or any other arbitrary function):
-            run(self, config)
+        tae_runner: ExecuteTARun or callable
+            Callable or implementation of :class:`ExecuteTaRun`. In case a
+            callable is passed it will be wrapped by tae.ExecuteTaFunc().
             If not set, it will be initialized with the tae.ExecuteTARunOld()
         runhistory: RunHistory
             runhistory to store all algorithm runs
