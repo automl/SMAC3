@@ -4,8 +4,8 @@ import unittest.mock
 
 import numpy as np
 
-from smac.configspace import ConfigurationSpace
-from smac.tae.execute_func import ExecuteTAFunc
+from smac.configspace import ConfigurationSpace, Configuration
+from smac.tae.execute_func import ExecuteTAFunc, ExecuteTAFunc4FMIN
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.tae.execute_ta_run import StatusType
@@ -35,6 +35,15 @@ class TestExecuteFunc(unittest.TestCase):
         self.assertEqual(rval[1], 4)
         self.assertGreaterEqual(rval[2], 0.0)
         self.assertEqual(rval[3], {'key': 12345, 'instance': 'test'})
+
+    @unittest.mock.patch.object(Configuration, 'get_dictionary')
+    def test_run_execute_func_for_fmin(self, mock):
+        mock.return_value = {'x1': 2, 'x2': 1}
+        c = Configuration(configuration_space=self.cs, values={})
+        target = lambda x: x[0] ** 2 + x[1]
+        taf = ExecuteTAFunc4FMIN(target, stats=self.stats)
+        rval = taf._call_ta(target, c, None, 1)
+        self.assertEqual(rval, (5, {}))
 
     def test_memout(self):
         def fill_memory(*args):
