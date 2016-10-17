@@ -6,7 +6,7 @@ from smac.facade.smac_facade import SMAC
 from smac.scenario.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.smbo.objective import average_cost
-from smac.runhistory.runhistory import RunHistory, RunKey
+from smac.runhistory.runhistory import RunKey
 from smac.tae.execute_func import ExecuteTAFunc4FMIN
 
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
@@ -35,7 +35,7 @@ def fmin_smac(func: callable,
     bounds : list
         ``(min, max)`` pairs for each element in ``x``, defining the bound on
         that parameters.
-    maxiter : int, optional
+    maxtime : int, optional
         Maximum runtime in seconds.
     maxfun : int, optional
         Maximum number of function evaluations.
@@ -53,8 +53,6 @@ def fmin_smac(func: callable,
     """
 
     aggregate_func = average_cost
-    # initialize empty runhistory; needed to pass to TA
-    runhistory = RunHistory(aggregate_func=aggregate_func)
 
     # create configuration space
     cs = ConfigurationSpace()
@@ -73,9 +71,9 @@ def fmin_smac(func: callable,
                      "cs": cs,  # configuration space
                      "deterministic": "true",
                      }
-    if maxfun > -1:
+    if maxfun > 0:
         scenario_dict["runcount_limit"] = maxfun
-    if maxtime > - 1:
+    if maxtime > 0:
         scenario_dict["wallclock_limit"] = maxtime
     scenario = Scenario(scenario_dict)
 
