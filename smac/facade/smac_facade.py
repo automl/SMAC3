@@ -4,7 +4,7 @@ import numpy as np
 
 from smac.tae.execute_ta_run import ExecuteTARun
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
-from smac.tae.execute_func import ExecuteTAFunc
+from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
@@ -123,11 +123,11 @@ class SMAC(object):
                                          par_factor=scenario.par_factor)
         # Second case, the tae_runner is a function to be optimized
         elif callable(tae_runner):
-            tae_runner = ExecuteTAFunc(ta=tae_runner,
-                                       stats=self.stats,
-                                       run_obj=scenario.run_obj,
-                                       runhistory=runhistory,
-                                       par_factor=scenario.par_factor)
+            tae_runner = ExecuteTAFuncDict(ta=tae_runner,
+                                           stats=self.stats,
+                                           run_obj=scenario.run_obj,
+                                           runhistory=runhistory,
+                                           par_factor=scenario.par_factor)
         # Third case, if it is an ExecuteTaRun we can simply use the
         # instance. Otherwise, the next check raises an exception
         elif not isinstance(tae_runner, ExecuteTARun):

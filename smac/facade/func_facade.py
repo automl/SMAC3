@@ -7,7 +7,7 @@ from smac.scenario.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.smbo.objective import average_cost
 from smac.runhistory.runhistory import RunKey
-from smac.tae.execute_func import ExecuteTAFunc4FMIN
+from smac.tae.execute_func import ExecuteTAFuncArray
 
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
@@ -64,7 +64,7 @@ def fmin_smac(func: callable,
         cs.add_hyperparameter(parameter)
 
     # Create target algorithm runner
-    ta = ExecuteTAFunc4FMIN(ta=func)
+    ta = ExecuteTAFuncArray(ta=func)
 
     # create scenario
     scenario_dict = {"run_obj": "quality",  # we optimize quality
