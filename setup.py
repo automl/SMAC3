@@ -8,7 +8,7 @@ requirements = ['setuptools',
                 'numpy>=1.6.1',
                 'scipy>=0.13.1',
                 'pyrfr',
-                'ConfigSpace',
+                'ConfigSpace>=0.2.1',
                 'pynisher>=0.4.1']
 
 setuptools.setup(
