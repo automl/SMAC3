@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Manual &#8212; SMAC 0.2.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootswatch-3.3.6/cosmo/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="SMAC 0.2.0 documentation" href="index.html" />
+    <link rel="next" title="Contact" href="contact.html" />
+    <link rel="prev" title="Installation" href="installation.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+  
+  <a href="https://github.com/automl/SMAC3"
+     class="visible-desktop hidden-xs"><img
+    id="gh-banner"
+    style="position: absolute; top: 50px; right: 0; border: 0;"
+    src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
+    alt="Fork me on GitHub"></a>
+  <script>
+    // Adjust banner height.
+    $(function () {
+      var navHeight = $(".navbar .container").css("height");
+      $("#gh-banner").css("top", navHeight);
+    });
+  </script>
+
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          SMAC3</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="index.html">Start</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="#">Manual</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="license.html">License</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Manual</a><ul>
+<li><a class="reference internal" href="#quick-start">Quick Start</a></li>
+<li><a class="reference internal" href="#using-smac-directly-in-python">Using <em>SMAC</em> directly in python</a></li>
+<li><a class="reference internal" href="#spear-qcp">Spear-QCP</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    <div class="col-md-9 content">
+      
+  <div class="section" id="manual">
+<h1>Manual<a class="headerlink" href="#manual" title="Permalink to this headline">¶</a></h1>
+<p>In the following we will show how to use <strong>SMAC3</strong>.</p>
+<div class="section" id="quick-start">
+<span id="quick"></span><h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line">If you have not installed <em>SMAC</em> yet take a look at the <a class="reference external" href="installation.html">installation instructions</a> and make sure that all the requirements are fulfilled.</div>
+<div class="line">In the examples folder, you can find examples that illustrate how to reads scenario files that allow you to automatically configure an algorithm, as well as examples that show how to directly use <em>SMAC</em> in Python.</div>
+</div>
+<p>We&#8217;ll demonstrate the usage of <em>SMAC</em> on the most basic scenario, the optimization of a continuous blackbox function. The first simple example is the minimization of a standard 2-dimensional continuous test function (<a class="reference external" href="https://www.sfu.ca/~ssurjano/branin.html">branin</a>).</p>
+<p>To run the example scenario, change into the root-directory of <em>SMAC</em> and type the following commands:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> examples/branin
+python ../../scripts/smac --scenario branin_scenario.txt
+</pre></div>
+</div>
+<p>The python command runs <em>SMAC</em> with the specified scenario. The scenario file contains the following four lines:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nv">algo</span> <span class="o">=</span> python branin.py
+<span class="nv">paramfile</span> <span class="o">=</span> branin_pcs.pcs
+<span class="nv">run_obj</span> <span class="o">=</span> quality
+<span class="nv">runcount_limit</span> <span class="o">=</span> 500
+</pre></div>
+</div>
+<p>The <strong>algo</strong> parameter specifies how <em>SMAC</em> can call the function or evaluate an algorithm that <em>SMAC</em> is optimizing. An algorithm call by <em>SMAC</em> will look like this:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>python branin.py <span class="m">0</span> <span class="m">0</span> 999999999.0 <span class="m">0</span> <span class="m">1148756733</span> -x1 -1.1338595629 -x2 13.8770222718
+</pre></div>
+</div>
+<p>The first two parameter after the branin.py do not matter for this example since no instances are needed for the function optimization. For algorithm optimization, the first parameter holds the instance name on which the algorithm is evaluated and the second can provide extra information about the instance (rarely used).</p>
+<p>The third parameter gives the runtime cutoff (maximal runtime) an algorithm is allowed to run and the fourth the runlength (maximal number of steps).</p>
+<p>The fifth parameter is the random seed which is followed by the algorithm/function parameters.</p>
+<p>The general syntax of algorithm calls is the following</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>&lt;algo&gt; &lt;instance&gt; &lt;instance specific&gt; &lt;running <span class="nb">time</span> cutoff&gt; &lt;run length&gt; &lt;seed&gt; &lt;algorithm parameters&gt;
+</pre></div>
+</div>
+</div></blockquote>
+<p>The <strong>paramfile</strong> parameter tells <em>SMAC</em> which Parameter Configuration File to use. This file contains a list of the algorithm&#8217;s parameters, their domains and default values as follows:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>x1 <span class="o">[</span>-5,10<span class="o">]</span> <span class="o">[</span>0<span class="o">]</span>
+x2 <span class="o">[</span>0,15<span class="o">]</span>  <span class="o">[</span>0<span class="o">]</span>
+</pre></div>
+</div>
+<p>x1 and x2 are both continuous parameters. x1 can take any real value in the range [-5, 10], x2 in the range [0, 15] and both have the default value 0.</p>
+</div></blockquote>
+<p>The <strong>run_obj</strong> parameter specifies what <em>SMAC</em> is supposed to optimize. For this example we are optimizing the solution quality.
+For <em>SMAC</em> to be able to interpret the results of an algorithm run, a wrapper should return the results of the algorithm run as follows:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>Result <span class="k">for</span> SMAC: &lt;STATUS&gt;, &lt;running time&gt;, &lt;run length&gt;, &lt;quality&gt;, &lt;seed&gt;, &lt;instance-specifics&gt;
+Result <span class="k">for</span> SMAC: SUCCESS, 0, 0, 48.948190, 1148756733
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line">The second line is the result of the above listed algorithm call.</div>
+<div class="line"><em>STATUS:</em> can be either <em>SUCCESS</em>, <em>CRASHED</em>, <em>SAT</em>, <em>UNSAT</em>, <em>TIMEOUT</em></div>
+<div class="line"><em>running time:</em> is the measured running time for an algorithm call</div>
+<div class="line"><em>run length:</em> are the amount of steps needed to find a solution</div>
+<div class="line"><em>quality:</em> the solution quality</div>
+<div class="line"><em>seed:</em> the seed that was used with the algorithm call</div>
+<div class="line"><em>instance-specifics:</em> additional information</div>
+</div>
+</div></blockquote>
+<p>The <strong>runcount_limit</strong> specifies the maximum number of algorithm calls.</p>
+<p><em>SMAC</em> will terminate with the following output:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>INFO:intensifier:Updated estimated performance of incumbent on <span class="m">122</span> runs: 0.5063
+DEBUG:root:Remaining budget: inf <span class="o">(</span>wallclock<span class="o">)</span>, inf <span class="o">(</span>ta costs<span class="o">)</span>, -6.000000 <span class="o">(</span>target runs<span class="o">)</span>
+INFO:Stats:##########################################################
+INFO:Stats:Statistics:
+INFO:Stats:#Target algorithm runs: 506
+INFO:Stats:Used wallclock time: 44.00 sec
+INFO:Stats:Used target algorithm runtime: 0.00 sec
+INFO:Stats:##########################################################
+INFO:SMAC:Final Incumbent: Configuration:
+  x1, Value: 9.556406137303922
+  x2, Value: 2.429138598022513
+</pre></div>
+</div>
+<p>Further a folder containing <em>SMACs</em> trajectory and the runhistory will be created in the branin folder.</p>
+</div></blockquote>
+</div>
+<div class="section" id="using-smac-directly-in-python">
+<h2>Using <em>SMAC</em> directly in python<a class="headerlink" href="#using-smac-directly-in-python" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line">For demonstration purposes we are going to look at the example <code class="code bash docutils literal"><span class="pre">leadingones.py</span></code></div>
+<div class="line"><br /></div>
+<div class="line">In this example we are going to optimize the following function with 16 categorical parameters.</div>
+<div class="line">For a given sequence of 0,1, we count how many leading 1s we have at the beginning of the sequence.</div>
+</div>
+<blockquote>
+<div><div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">leading_ones</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">seed</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Leading ones</span>
+<span class="sd">    score is the number of 1 starting from the first parameter</span>
+<span class="sd">    e.g., 111001 -&gt; 3; 0110111 -&gt; 0</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">arr_</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">cfg</span><span class="p">:</span>
+        <span class="n">arr_</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">p</span><span class="p">)]</span> <span class="o">=</span> <span class="n">cfg</span><span class="p">[</span><span class="n">p</span><span class="p">]</span>
+
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">arr_</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">break</span>
+
+    <span class="k">return</span> <span class="o">-</span><span class="n">count</span>
+</pre></div>
+</div>
+</div></blockquote>
+<div class="line-block">
+<div class="line">Thus the optimum is -16 and the optimal configuration is x_1 = 1, ..., x_16 = 1</div>
+<div class="line"><br /></div>
+<div class="line">To use <em>SMAC</em> directly with Python, we first have to import the necessary modules</div>
+</div>
+<blockquote>
+<div><div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span>
+<span class="kn">from</span> <span class="nn">ConfigSpace.hyperparameters</span> <span class="kn">import</span> <span class="n">CategoricalHyperparameter</span><span class="p">,</span> \
+    <span class="n">UniformFloatHyperparameter</span><span class="p">,</span> <span class="n">UniformIntegerHyperparameter</span>
+<span class="kn">from</span> <span class="nn">ConfigSpace.conditions</span> <span class="kn">import</span> <span class="n">InCondition</span>
+
+<span class="kn">from</span> <span class="nn">smac.tae.execute_func</span> <span class="kn">import</span> <span class="n">ExecuteTAFunc</span>
+<span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
+<span class="kn">from</span> <span class="nn">smac.facade.smac_facade</span> <span class="kn">import</span> <span class="n">SMAC</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>First, we import the ConfigurationSpace and Parametertypes in order to later declare different parameters.</p>
+<p>Now, we build the Configuration Space:</p>
+<blockquote>
+<div><div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># build Configuration Space which defines all parameters and their ranges</span>
+<span class="n">n_params</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="n">use_conditionals</span> <span class="o">=</span> <span class="bp">True</span> <span class="c1"># using conditionals should help a lot in this example</span>
+
+<span class="n">cs</span> <span class="o">=</span> <span class="n">ConfigurationSpace</span><span class="p">()</span>
+<span class="n">previous_param</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_params</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameter</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">use_conditionals</span><span class="p">:</span>
+        <span class="n">cond</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span>
+            <span class="n">child</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">previous_param</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">cs</span><span class="o">.</span><span class="n">add_condition</span><span class="p">(</span><span class="n">cond</span><span class="p">)</span>
+
+    <span class="n">previous_param</span> <span class="o">=</span> <span class="n">p</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>cs is the Configuration space Object.
+We declare each of the 16 parameters to be Categorical parameters
+that can take the values 0 or 1 and are set by default to 0.
+They are also given the names &#8216;1&#8217; to &#8216;16&#8217;.
+Further we illustrate how to setup conditionals in this example.</p>
+<p>Parameter &#8216;i+1&#8217; is conditioned on parameter &#8216;i&#8217;
+and thus only activated if parameter &#8216;i&#8217; is set to 1.
+For example parameter &#8216;1&#8217; is only active once parameter &#8216;0&#8217; is set to 1.
+Using conditionals in such a way restricts the search space quite a bit.
+This way <em>SMAC</em> won&#8217;t have to query regions in the search space that are non-improving,
+like &#8216;0100000000000000&#8217; or &#8216;0100000000000001&#8217;. Both return the same value as the default, i.e. 0.</p>
+<p>After the configuration space was setup we can create a scenario object.</p>
+<blockquote>
+<div><div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>53
+54
+55
+56
+57
+58</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># SMAC scenario object</span>
+<span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">({</span><span class="s2">&quot;run_obj&quot;</span><span class="p">:</span> <span class="s2">&quot;quality&quot;</span><span class="p">,</span>  <span class="c1"># we optimize quality (alternative runtime)</span>
+                     <span class="s2">&quot;runcount-limit&quot;</span><span class="p">:</span> <span class="n">n_params</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span>  <span class="c1"># at most 200 function evaluations</span>
+                     <span class="s2">&quot;cs&quot;</span><span class="p">:</span> <span class="n">cs</span><span class="p">,</span>  <span class="c1"># configuration space</span>
+                     <span class="s2">&quot;deterministic&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span>
+                     <span class="p">})</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>The Scenario object contains information about the optimization scenario, such as the runcount-limit or what metric to optimize.
+It uses the same keywords as a scenario files, we showed in the branin example.</p>
+<p>To evaluate the &#8220;leading ones&#8221; function, we register it with the TargetAlgorithmFunction evaluator.</p>
+<blockquote>
+<div><div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>60
+61
+62
+63
+64
+65
+66</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># register function to be optimize</span>
+<span class="n">taf</span> <span class="o">=</span> <span class="n">ExecuteTAFunc</span><span class="p">(</span><span class="n">leading_ones</span><span class="p">)</span>
+
+<span class="c1"># example call of the function</span>
+<span class="c1"># it returns: Status, Cost, Runtime, Additional Infos</span>
+<span class="n">def_value</span> <span class="o">=</span> <span class="n">taf</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">())[</span><span class="mi">1</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Default Value: </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">def_value</span><span class="p">))</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>We register the function to optimize together with the evaluator that handles calling the function with a specified configuration.</p>
+<p>Afterwards,
+the default value is queried by calling the run method of the evaluator with the default configuration of the configuration space.</p>
+<p>To handle the Bayesian optimization loop we can create a SMAC object.
+To automatically handle the exploration of the search space
+and querying of the function SMAC needs as inputs the scenario object as well as the function evaluator.</p>
+<blockquote>
+<div><div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># Optimize</span>
+<span class="n">smac</span> <span class="o">=</span> <span class="n">SMAC</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span>
+            <span class="n">tae_runner</span><span class="o">=</span><span class="n">taf</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">incumbent</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+<span class="k">finally</span><span class="p">:</span>
+    <span class="n">smac</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">print_stats</span><span class="p">()</span>
+    <span class="n">incumbent</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span>
+
+<span class="n">inc_value</span> <span class="o">=</span> <span class="n">taf</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Optimized Value: </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">inc_value</span><span class="p">))</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>We start the optimization loop and set the maximum number of iterations to 999.</p>
+<p>Initernally SMAC keeps track of the number of algorithm calls and the remaining time budget via a stats object.</p>
+<p>After successful execution of the optimization loop the stats opject outputs the result of the loop.</p>
+<p>We can directly access the incumbent configuration which is stored in the SMAC object and print it to the terminal (line 75).</p>
+<p>We further query the target function at the incumbent, using the function evaluator so that as final output we can see performance value of the incumbent.</p>
+</div>
+<div class="section" id="spear-qcp">
+<h2>Spear-QCP<a class="headerlink" href="#spear-qcp" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line">For this example we use <em>SMAC</em> to optimize <a class="reference external" href="http://www.domagoj-babic.com/index.php/ResearchProjects/Spear">Spear</a> on a small subset of the QCP-dataset.</div>
+<div class="line">In <em>SMACs</em> root-directory type:</div>
+</div>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> examples/spear_qcp <span class="o">&amp;&amp;</span> ls -l
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>In this folder you see the following files and directories:</dt>
+<dd><ul class="first simple">
+<li><strong>features.txt</strong>:</li>
+</ul>
+<blockquote>
+<div><p>The feature file is contains the features for each instance in a csv-format.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="31%" />
+<col width="31%" />
+<col width="31%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">instance</th>
+<th class="head">name of feature 1</th>
+<th class="head">name of feature 2</th>
+<th class="head">...</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>name of instance 1</td>
+<td>value of feature 1</td>
+<td>value of feature 2</td>
+<td>...</td>
+</tr>
+<tr class="row-odd"><td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<ul class="last">
+<li><dl class="first docutils">
+<dt><strong>instances.txt</strong></dt>
+<dd><p class="first last">The instance file contains the names of all instances one might want to consider during the optimization process.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>scenario.txt</strong></dt>
+<dd><p class="first">The scenario file contains all the necessary information about the configuration scenario at hand.
+For this example the following options were used:</p>
+<ul class="last">
+<li><p class="first"><em>algo:</em></p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>python -u ./target_algorithm/scripts/SATCSSCWrapper.py --mem-limit <span class="m">1024</span> --script ./target_algorithm/spear-python/spearCSSCWrapper.py
+</pre></div>
+</div>
+<p>This specifies the wrapper that <em>SMAC</em> executes with a pre-specified syntax in order to evaluate the algorithm to be optimized.
+This wrapper script takes an instantiation of the parameters as input, runs the algorithm with these parameters, and returns
+the performance of the algorithm; since every algorithm has a different input and output format, this wrapper acts as a interface between the
+algorithm and <em>SMAC</em>, which executes the wrapper through a command line call.</p>
+<p>An example call would look something like this:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>&lt;algo&gt; &lt;instance&gt; &lt;instance_specifics&gt; &lt;running <span class="nb">time</span> cutoff&gt; &lt;run length&gt; &lt;seed&gt; &lt;algorithm parameters&gt;
+</pre></div>
+</div>
+<p>For <em>SMAC</em> to be able to interpret the results of the algorithm run, the wrapper returns the results of the algorithm run as follows:
+<code class="code bash docutils literal"><span class="pre">STATUS,</span> <span class="pre">runtime,</span> <span class="pre">runlength,</span> <span class="pre">quality,</span> <span class="pre">seed,</span> <span class="pre">instance-specifics</span></code></p>
+</div></blockquote>
+</li>
+<li><p class="first"><em>paramfile:</em></p>
+<blockquote>
+<div><p>This parameter specifies which pcs-file to use and where it is located.</p>
+<p>The pcs-file specifies the Parameter Configuration Space file, which lists the algorithm&#8217;s parameters, their domains, and default values (one per line)</p>
+<p>In this example we are dealing with 26 parameters of which 12 are categorical and 14 are continuous. Out of these 26
+parameters, 9 parameters are conditionals (they are only active if their parent parameter takes on a certain value).</p>
+</div></blockquote>
+</li>
+<li><p class="first"><em>execdir:</em> Specifies the directory in which the target algorithm will be run.</p>
+</li>
+<li><p class="first"><em>deterministic:</em> Specifies if the configuration scenario is deterministic.</p>
+</li>
+<li><p class="first"><em>run_obj:</em> This parameter tells <em>SMAC</em> what is to be optimized, i.e. runtime or (solution) quality.</p>
+</li>
+<li><p class="first"><em>overall_obj:</em> Specifies how to evaluat the performance values, e.g as mean or PARX.</p>
+</li>
+<li><p class="first"><em>cutoff_time:</em> Gives the target algorithms cuttof time.</p>
+</li>
+<li><p class="first"><em>wallclock-limit:</em> This parameter is used to give the time budget for the configuration task in seconds.</p>
+</li>
+<li><p class="first"><em>instance_file:</em> See instances.txt above.</p>
+</li>
+<li><p class="first"><em>feature_file:</em> See features.txt above.</p>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>run.sh</strong></dt>
+<dd><p class="first last">A shell script calling <em>SMAC</em> with the following command:
+<code class="code bash docutils literal"><span class="pre">python</span> <span class="pre">../../scripts/smac</span> <span class="pre">--scenario</span> <span class="pre">scenario.txt</span> <span class="pre">--verbose</span> <span class="pre">DEBUG</span></code>
+This runs <em>SMAC</em> with the scenario options specified in the scenario.txt file.</p>
+</dd>
+</dl>
+</li>
+<li><p class="first"><strong>target_algorithms</strong> contains the wrapper and the executable for Spear.</p>
+</li>
+<li><p class="first"><strong>instances</strong> folder contains the instances on which <em>SMAC</em> will configure Spear.</p>
+</li>
+</ul>
+</dd>
+</dl>
+<p>To run the example type one of the two commands below into a terminal:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>bash run.sh
+python ../../scripts/smac --scenario scenario.txt --verbose DEBUG
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><em>SMAC</em> will run for a few seconds and generate a lot of logging output.</div>
+<div class="line">After <em>SMAC</em> finished the configuration process you&#8217;ll get some final statistics about the configuration process:</div>
+</div>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>DEBUG:root:Remaining budget: -11.897580 <span class="o">(</span>wallclock<span class="o">)</span>, inf <span class="o">(</span>ta costs<span class="o">)</span>, inf <span class="o">(</span>target runs<span class="o">)</span>
+INFO:Stats:##########################################################
+INFO:Stats:Statistics:
+INFO:Stats:#Target algorithm runs: 28
+INFO:Stats:Used wallclock time: 21.90 sec
+INFO:Stats:Used target algorithm runtime: 15.72 sec
+INFO:Stats:##########################################################
+INFO:SMAC:Final Incumbent: Configuration:
+  sp-clause-activity-inc, Value: 0.956325431976
+  sp-clause-decay, Value: 1.77371504106
+  sp-clause-del-heur, Value: 2
+  sp-first-restart, Value: 52
+  sp-learned-clause-sort-heur, Value: 13
+  sp-learned-clauses-inc, Value: 1.12196861555
+  sp-learned-size-factor, Value: 0.760013050806
+  sp-max-res-lit-inc, Value: 0.909236510144
+  sp-max-res-runs, Value: 3
+  sp-orig-clause-sort-heur, Value: 1
+  sp-phase-dec-heur, Value: 6
+  sp-rand-phase-dec-freq, Value: 0.0001
+  sp-rand-phase-scaling, Value: 0.825118640774
+  sp-rand-var-dec-freq, Value: 0.05
+  sp-rand-var-dec-scaling, Value: 1.05290899107
+  sp-res-cutoff-cls, Value: 5
+  sp-res-cutoff-lits, Value: 1378
+  sp-res-order-heur, Value: 6
+  sp-resolution, Value: 1
+  sp-restart-inc, Value: 1.84809841772
+  sp-update-dec-queue, Value: 1
+  sp-use-pure-literal-rule, Value: 0
+  sp-var-activity-inc, Value: 1.00507435273
+  sp-var-dec-heur, Value: 4
+  sp-variable-decay, Value: 1.91690063007
+</pre></div>
+</div>
+<p>The first line shows why <em>SMAC</em> terminated. The wallclock time-budget is exhausted. The target algorithm runtime (ta cost) and target algorithm runs were not exhausted since the budget for these were not specified and thus set to the default, i.e., infinity.</p>
+<p>The statistics further show the used wallclock time, target algorithm runtime and the number of executed target algorithm runs.</p>
+<div class="line-block">
+<div class="line">The directory in which you invoked <em>SMAC</em> now contain a new folder called <strong>SMAC3-output_YYYY-MM-DD_HH:MM:SS</strong>.</div>
+<div class="line">The .json file contains the information about the target algorithms <em>SMAC</em> just executed. In this file you can see the <em>status</em> of the algorithm run, <em>misc</em>, the <em>instance</em> on which the algorithm was evaluated, which <em>seed</em> was used, how much <em>time</em> the algorithm needed and with which <em>configuration</em> the algorithm was run.</div>
+<div class="line">In the folder <em>SMAC</em> generates a file for the runhistory, and two files for the trajectory.</div>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="_sources/manual.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2015-2016, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
