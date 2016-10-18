@@ -15,6 +15,7 @@ except:
     from mock import patch
 from smac.utils.io.traj_logging import TrajLogger
 
+from smac.configspace import ConfigurationSpace
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 
@@ -29,9 +30,10 @@ class TrajLoggerTest(unittest.TestCase):
         self.logger = logging.getLogger('TrajLogger Test')
         self.logger.setLevel(logging.DEBUG)
         self.value = 0
+        self.cs = ConfigurationSpace()
 
     def test_init(self):
-        scen = Scenario(scenario={}, cmd_args=None)
+        scen = Scenario(scenario={'cs': self.cs}, cmd_args=None)
         stats = Stats(scen)
         TrajLogger(output_dir='./tmp_test_folder', stats=stats)
         self.assertFalse(os.path.exists('smac3-output'))

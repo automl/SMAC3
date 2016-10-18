@@ -2,7 +2,6 @@ import unittest
 
 import numpy as np
 
-from smac.epm.random_epm import RandomEpm
 from smac.smbo.acquisition import EI
 
 

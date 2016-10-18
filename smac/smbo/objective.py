@@ -1,8 +1,7 @@
 import numpy as np
 
-
-MAXINT = 2 ** 31 - 1
-
+from smac.utils.constants import MAXINT
+from smac.runhistory.runhistory import RunKey
 
 """Define overall objectives.
 
@@ -37,7 +36,7 @@ def _runtime(config, run_history, instance_seed_pairs=None):
 
     runtimes = []
     for i, r in instance_seed_pairs:
-        k = run_history.RunKey(id_, i, r)
+        k = RunKey(id_, i, r)
         runtimes.append(run_history.data[k].time)
     return runtimes
 
@@ -91,7 +90,7 @@ def _cost(config, run_history, instance_seed_pairs=None):
 
     costs = []
     for i, r in instance_seed_pairs:
-        k = run_history.RunKey(id_, i, r)
+        k = RunKey(id_, i, r)
         costs.append(run_history.data[k].cost)
     return costs
 

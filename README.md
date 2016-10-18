@@ -5,6 +5,8 @@ Copyright (C) 2016  [ML4AAD Group](http://www.ml4aad.org/)
 __Attention__: This package is under heavy development and subject to change. 
 A stable release of SMAC (v2) in Java can be found [here](http://www.cs.ubc.ca/labs/beta/Projects/SMAC/).
 
+The documentation can be found [here](https://automl.github.io/SMAC3/).
+
 Status for master branch:
 
 [![Build Status](https://travis-ci.org/automl/SMAC3.svg?branch=master)](https://travis-ci.org/automl/SMAC3)
@@ -33,7 +35,7 @@ we refer to
     In: Proceedings of the conference on Learning and Intelligent OptimizatioN (LION 5)
 
 
-SMAC v3 is mainly written in Python 3.4. We expect that it should be also compatible with Python 2.7. 
+SMAC v3 is written in python3 and continuously tested with python3.4 and python3.5. 
 Its [Random Forest](https://bitbucket.org/aadfreiburg/random_forest_run) is written in C++.
 
 #Installation:

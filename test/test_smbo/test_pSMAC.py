@@ -3,10 +3,11 @@ import os
 import shutil
 import unittest
 
-from smac.runhistory.runhistory import RunHistory
+from smac.runhistory.runhistory import RunHistory, RunKey
 from smac.utils import test_helpers
 from smac.tae.execute_ta_run import StatusType
 from smac.smbo import pSMAC
+from smac.smbo.objective import average_cost
 
 
 class TestPSMAC(unittest.TestCase):
@@ -38,7 +39,7 @@ class TestPSMAC(unittest.TestCase):
                   '"1": {"x": 1.2553300705386103, "y": 10.804867401632372}, ' \
                   '"2": {"x": -4.998284377739827, "y": 4.534988589477597}}}'
 
-        run_history = RunHistory()
+        run_history = RunHistory(aggregate_func=average_cost)
         configuration_space = test_helpers.get_branin_config_space()
         configuration_space.seed(1)
 
@@ -96,7 +97,7 @@ class TestPSMAC(unittest.TestCase):
             fh.write(other_runhistory)
 
         # load from an empty runhistory
-        runhistory = RunHistory()
+        runhistory = RunHistory(aggregate_func=average_cost)
         runhistory.load_json(other_runhistory_filename, configuration_space)
         self.assertEqual(sorted(list(runhistory.ids_config.keys())),
                          [1, 2, 3, 4])
@@ -104,21 +105,21 @@ class TestPSMAC(unittest.TestCase):
 
         # load from non-empty runhistory, but existing run will be overridden
         #  because it alread existed
-        runhistory = RunHistory()
+        runhistory = RunHistory(aggregate_func=average_cost)
         configuration_space.seed(1)
         config = configuration_space.sample_configuration()
         runhistory.add(config, 1, 1, StatusType.SUCCESS, seed=1,
                         instance_id='branin')
-        id_before = id(runhistory.data[runhistory.RunKey(1, 'branin', 1)])
+        id_before = id(runhistory.data[RunKey(1, 'branin', 1)])
         runhistory.update_from_json(other_runhistory_filename,
                                     configuration_space)
-        id_after = id(runhistory.data[runhistory.RunKey(1, 'branin', 1)])
+        id_after = id(runhistory.data[RunKey(1, 'branin', 1)])
         self.assertEqual(len(runhistory.data), 6)
         self.assertNotEqual(id_before, id_after)
 
         # load from non-empty runhistory, but existing run will not be
         # overridden, but config_id will be re-used
-        runhistory = RunHistory()
+        runhistory = RunHistory(aggregate_func=average_cost)
         configuration_space.seed(1)
         config = configuration_space.sample_configuration()
         config = configuration_space.sample_configuration()
@@ -126,10 +127,10 @@ class TestPSMAC(unittest.TestCase):
         config = configuration_space.sample_configuration()
         runhistory.add(config, 1, 1, StatusType.SUCCESS, seed=1,
                        instance_id='branin')
-        id_before = id(runhistory.data[runhistory.RunKey(1, 'branin', 1)])
+        id_before = id(runhistory.data[RunKey(1, 'branin', 1)])
         runhistory.update_from_json(other_runhistory_filename,
                                     configuration_space)
-        id_after = id(runhistory.data[runhistory.RunKey(1, 'branin', 1)])
+        id_after = id(runhistory.data[RunKey(1, 'branin', 1)])
         self.assertEqual(len(runhistory.data), 7)
         self.assertEqual(id_before, id_after)
         print(runhistory.config_ids)

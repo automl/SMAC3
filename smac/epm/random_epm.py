@@ -1,8 +1,7 @@
 import logging
 import numpy as np
 
-import smac.runhistory.runhistory
-import smac.configspace
+from smac.epm.base_epm import AbstractEPM
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -12,23 +11,23 @@ __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class RandomEpm(object):
+class RandomEPM(AbstractEPM):
     '''implement an epm, which returns only random values'''
 
-    def __init__(self, seed):
+    def __init__(self, rng):
         '''
         initialize random number generator and logger
 
         Parameters
         ----------
-        seed : int
+        rng : np.random.RandomState
         '''
-        self.logger = logging.getLogger("random_epm")
-        self.rng = np.random.RandomState(seed)
+        self.logger = logging.getLogger("RandomEPM")
+        self.rng = rng
 
     def train(self, X, Y, **kwargs):
         '''
-        Trains the random forest on X and Y.
+        Pseudo training on X and Y.
 
         Parameters
         ----------
@@ -44,7 +43,7 @@ class RandomEpm(object):
         if not isinstance(Y, np.ndarray):
             raise NotImplementedError("Y has to be of type np.ndarray")
 
-        self.logger.debug("Fit model to data")
+        self.logger.debug("(Pseudo) Fit model to data")
 
     def predict(self, X):
         '''
@@ -64,4 +63,24 @@ class RandomEpm(object):
         '''
         if not isinstance(X, np.ndarray):
             raise NotImplementedError("X has to be of type np.ndarray")
+        return self.rng.rand(len(X), 1), self.rng.rand(len(X), 1)
+    
+    def predict_marginalized_over_instances(self, X):
+        """Predict mean and variance marginalized over all instances.
+
+        Returns the predictive mean and variance marginalised over all
+        instances for a set of configurations.
+
+        Parameters
+        ----------
+        X : np.ndarray of shape = [n_features (config), ]
+
+        Returns
+        -------
+        means : np.ndarray of shape = [n_samples, 1]
+            Predictive mean
+        vars : np.ndarray  of shape = [n_samples, 1]
+            Predictive variance
+        """
+
         return self.rng.rand(len(X), 1), self.rng.rand(len(X), 1)

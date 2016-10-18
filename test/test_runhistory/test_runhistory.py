@@ -6,6 +6,8 @@ from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
 from smac.tae.execute_ta_run import StatusType
 from smac.runhistory.runhistory import RunHistory
+from smac.smbo.objective import average_cost
+
 
 def get_config_space():
     cs = ConfigurationSpace()
@@ -23,7 +25,7 @@ class RunhistoryTest(unittest.TestCase):
         '''
             simply adding some rundata to runhistory
         '''
-        rh = RunHistory()
+        rh = RunHistory(aggregate_func=average_cost)
         cs = get_config_space()
         config = Configuration(cs,
                                values={'a': 1, 'b': 2})
@@ -47,7 +49,7 @@ class RunhistoryTest(unittest.TestCase):
             get some config runs from runhistory
         '''
 
-        rh = RunHistory()
+        rh = RunHistory(aggregate_func=average_cost)
         cs = get_config_space()
         config1 = Configuration(cs,
                                 values={'a': 1, 'b': 2})

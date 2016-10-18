@@ -8,7 +8,7 @@ __version__ = "0.0.1"
 import os
 import logging
 import numpy
-from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
+from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter, SUPPRESS
 
 
 class CMDReader(object):
@@ -45,11 +45,12 @@ class CMDReader(object):
         req_opts = parser.add_argument_group("Optional Options")
         req_opts.add_argument("--seed", default=12345, type=int,
                               help="random seed")
-        req_opts.add_argument("--max_iterations", default=numpy.inf, type=int,
-                              help="maximal number of iterations")
         req_opts.add_argument("--verbose_level", default=logging.INFO,
                               choices=["INFO", "DEBUG"],
                               help="random seed")
+        req_opts.add_argument("--modus", default="SMAC",
+                              choices=["SMAC", "ROAR"],
+                              help=SUPPRESS)
 
         args_, misc = parser.parse_known_args()
         self._check_args(args_)

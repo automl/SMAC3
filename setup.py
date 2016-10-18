@@ -1,18 +1,20 @@
 import os
 import setuptools
 
+import smac
+
 
 requirements = ['setuptools',
                 'numpy>=1.6.1',
                 'scipy>=0.13.1',
                 'pyrfr',
-                'ConfigSpace',
+                'ConfigSpace>=0.2.1',
                 'pynisher>=0.4.1']
 
 setuptools.setup(
     name="smac",
-    version="0.1.3",
-    author="Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter",
+    version=smac.VERSION,
+    author=smac.AUTHORS,
     author_email="fh@cs.uni-freiburg.de",
     description=("SMAC3, a Python implementation of 'Sequential Model-based "
                  "Algorithm Configuration'."),

@@ -1,3 +1,22 @@
+# 0.2
+
+* ADD 55: Separate modules for the initial design and a more flexible 
+  constructor for the SMAC class
+* ADD 41: Add ROAR (random online adaptive racing) class
+* ADD 82: Add fmin_smac, a scipy.optimize.fmin_l_bfgs_b-like interface to the
+  SMAC algorithm
+* NEW documentation at https://automl.github.io/SMAC3/stable and 
+  https://automl.github.io/SMAC3/dev
+* FIX 62: intensification previously used a random seed from np.random 
+  instead of from SMAC's own random number generator
+* FIX 42: class RunHistory can now be pickled
+* FIX 48: stats and runhistory objects are now injected into the target 
+  algorithm execution classes
+* FIX 72: it is now mandatory to either specify a configuration space or to 
+  pass the path to a PCS file
+* FIX 49: allow passing a callable directly to SMAC. SMAC will wrap the 
+  callable with the appropriate target algorithm runner
+
 # 0.1.3
 
 * FIX 63 using memory limit for function target algorithms (broken since 0.1.1)

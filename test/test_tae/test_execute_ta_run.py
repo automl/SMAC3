@@ -1,10 +1,11 @@
 import unittest
 from unittest import mock
 
+from smac.configspace import ConfigurationSpace
 from smac.tae.execute_ta_run import ExecuteTARun
 from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
-from smac.smbo.smbo import StatusType
+from smac.tae.execute_ta_run import StatusType
 
 
 class TestExecuteTARun(unittest.TestCase):
@@ -13,7 +14,7 @@ class TestExecuteTARun(unittest.TestCase):
     def test_memory_limit_usage(self, run_mock):
         run_mock.return_value = StatusType.SUCCESS, 12345.0, 1.2345, {}
 
-        stats = Stats(Scenario({}))
+        stats = Stats(Scenario({'cs': ConfigurationSpace()}))
         stats.start_timing()
         tae = ExecuteTARun(lambda x : x**2, stats, run_obj='quality')
 

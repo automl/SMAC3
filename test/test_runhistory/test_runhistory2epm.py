@@ -13,6 +13,7 @@ from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
+from smac.smbo.objective import average_cost
 
 def get_config_space():
     cs = ConfigurationSpace()
@@ -30,7 +31,7 @@ class RunhistoryTest(unittest.TestCase):
         '''
             simply adding some rundata to runhistory
         '''
-        rh = runhistory.RunHistory()
+        rh = runhistory.RunHistory(aggregate_func=average_cost)
         cs = get_config_space()
         config1 = Configuration(cs,
                                 values={'a': 1, 'b': 2})
@@ -51,7 +52,7 @@ class RunhistoryTest(unittest.TestCase):
                seed=45,
                additional_info={"start_time": 10})
         
-        scen = Scenario({"cutoff_time": 10})
+        scen = Scenario({"cutoff_time": 10, 'cs': cs})
 
         self.assertRaises(TypeError, runhistory2epm.RunHistory2EPM4LogCost)
 
