@@ -4,84 +4,87 @@ import numpy as np
 
 from smac.facade.smac_facade import SMAC
 from smac.scenario.scenario import Scenario
-from smac.stats.stats import Stats
 from smac.configspace import ConfigurationSpace
-from smac.tae.execute_func import ExecuteTAFunc
 from smac.smbo.objective import average_cost
-from smac.runhistory.runhistory import RunHistory
+from smac.runhistory.runhistory import RunKey
+from smac.tae.execute_func import ExecuteTAFuncArray
 
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
-__author__ = "Marius Lindauer"
+__author__ = "Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class FuncSMAC(SMAC):
+def fmin_smac(func: callable,
+              x0: list,
+              bounds: list,
+              maxfun: int=-1,
+              maxtime: int=-1,
+              rng: np.random.RandomState=None):
+    """Minimize a function func using the SMAC algorithm.
 
-    def __init__(self,
-                 func: callable,
-                 x0: list,
-                 upper_bounds: list,
-                 lower_bounds: list,
-                 maxfun: int=np.inf,
-                 maxtime: int=np.inf,
-                 rng: np.random.RandomState=None):
-        '''
-        Special facade to use SMAC to optimize a Python function
+    This method is a convenience wrapper for the SMAC class.
 
-        Parameters
-        ----------
-        func: callable
-            function to be optimized
-        x0: list
-            initial guess
-        upper_bounds: list
-            upper bound of each input
-        lower_bounds: list
-            lower bound of each input
-        maxfun:int
-            maximal number of function evaluations
-        maxtime:int
-            maximal time to run (in sec)
-        rng: np.random.RandomState
-            Random number generator
-        '''
+    Parameters
+    ----------
+    func : callable f(x)
+        Function to minimize.
+    x0 : list
+        Initial guess/default configuration.
+    bounds : list
+        ``(min, max)`` pairs for each element in ``x``, defining the bound on
+        that parameters.
+    maxtime : int, optional
+        Maximum runtime in seconds.
+    maxfun : int, optional
+        Maximum number of function evaluations.
+    rng : np.random.RandomState, optional
+            Random number generator used by SMAC.
 
-        self.logger = logging.getLogger("FuncSMAC")
-        
-        aggregate_func = average_cost
-        # initialize empty runhistory; needed to pass to TA
-        runhistory = RunHistory(aggregate_func=aggregate_func)
+    Returns
+    -------
+    x : list
+        Estimated position of the minimum.
+    f : float
+        Value of `func` at the minimum.
+    r : :class:`smac.runhistory.runhistory.RunHistory`
+        Information on the SMAC run.
+    """
 
-        # create configuration space
-        cs = ConfigurationSpace()
-        for indx in range(0, len(x0)):
-            parameter = UniformFloatHyperparameter(name="x%d" % (indx+1),
-                                                   lower=lower_bounds[indx],
-                                                   upper=upper_bounds[indx],
-                                                   default=x0[indx])
-            cs.add_hyperparameter(parameter)
+    aggregate_func = average_cost
 
-        # create scenario
-        scenario_dict = {"run_obj": "quality",  # we optimize quality
-                         "cs": cs,  # configuration space
-                         "deterministic": "true",
-                         }
-        if maxfun < np.inf:
-            scenario_dict["runcount_limit"] = maxfun
-        if maxtime < np.inf:
-            scenario_dict["wallclock_limit"] = maxtime
-        scenario = Scenario(scenario_dict)
+    # create configuration space
+    cs = ConfigurationSpace()
+    for idx, (lower_bound, upper_bound) in enumerate(bounds):
+        parameter = UniformFloatHyperparameter(name="x%d" % (idx + 1),
+                                               lower=lower_bound,
+                                               upper=upper_bound,
+                                               default=x0[idx])
+        cs.add_hyperparameter(parameter)
 
-        # create statistics
-        self.stats = Stats(scenario)
-        # register target algorithm
-        taf = ExecuteTAFunc(ta=func, stats=self.stats, run_obj="quality", runhistory=runhistory )
+    # Create target algorithm runner
+    ta = ExecuteTAFuncArray(ta=func)
 
-        # use SMAC facade
-        super().__init__(scenario=scenario,
-                         tae_runner=taf,
-                         stats=self.stats,
-                         runhistory=runhistory,
-                         rng=rng)
+    # create scenario
+    scenario_dict = {"run_obj": "quality",  # we optimize quality
+                     "cs": cs,  # configuration space
+                     "deterministic": "true",
+                     }
+    if maxfun > 0:
+        scenario_dict["runcount_limit"] = maxfun
+    if maxtime > 0:
+        scenario_dict["wallclock_limit"] = maxtime
+    scenario = Scenario(scenario_dict)
+
+    smac = SMAC(scenario=scenario, tae_runner=ta, rng=rng)
+    smac.logger = logging.getLogger("fmin_smac")
+    incumbent = smac.optimize()
+
+    config_id = smac.solver.runhistory.config_ids[incumbent]
+    run_key = RunKey(config_id, None, 0)
+    incumbent_performance = smac.solver.runhistory.data[run_key]
+    incumbent = np.array([incumbent['x%d' % (idx + 1)]
+                          for idx in range(len(bounds))], dtype=np.float)
+    return incumbent, incumbent_performance.cost, \
+           smac.solver.runhistory

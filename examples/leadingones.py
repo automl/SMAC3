@@ -7,7 +7,7 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformFloatHyperparameter, UniformIntegerHyperparameter
 from ConfigSpace.conditions import InCondition
 
-from smac.tae.execute_func import ExecuteTAFunc
+from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_facade import SMAC
 
@@ -58,7 +58,7 @@ scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative r
                      })
 
 # register function to be optimize
-taf = ExecuteTAFunc(leading_ones)
+taf = ExecuteTAFuncDict(leading_ones)
 
 # example call of the function
 # it returns: Status, Cost, Runtime, Additional Infos
