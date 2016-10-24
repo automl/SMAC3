@@ -190,6 +190,9 @@ class Scenario(object):
                           dest='train_insts')
         self.add_argument(name='test_instances', default=[[None]], help=None,
                           dest='test_insts')
+        self.add_argument(name='initial_incumbent', default="DEFAULT",
+                          help=None, dest='initial_incumbent',
+                          callback=lambda arg: arg if arg in ['DEFAULT', 'RANDOM'] else None)
         # instance name -> feature vector
         self.add_argument(name='features', default={}, help=None,
                           dest='feature_dict')

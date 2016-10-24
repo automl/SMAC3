@@ -11,6 +11,7 @@ from smac.scenario.scenario import Scenario
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, RunHistory2EPM4LogCost, RunHistory2EPM4Cost
 from smac.initial_design.initial_design import InitialDesign
+from smac.initial_design.random_configuration_design import RandomConfiguration
 from smac.initial_design.default_configuration_design import DefaultConfiguration
 from smac.intensification.intensification import Intensifier
 from smac.smbo.smbo import SMBO
@@ -145,14 +146,25 @@ class SMAC(object):
         if tae_runner.runhistory is None:
             tae_runner.runhistory = runhistory
 
-        # initial initial design
+        # initial design
         if initial_design is None:
-            initial_design = DefaultConfiguration(tae_runner=tae_runner,
-                                           scenario=scenario,
-                                           stats=self.stats,
-                                           traj_logger=traj_logger,
-                                           runhistory=runhistory,
-                                           rng=rng)
+            if scenario.initial_incumbent == "DEFAULT":
+                initial_design = DefaultConfiguration(tae_runner=tae_runner,
+                                                      scenario=scenario,
+                                                      stats=self.stats,
+                                                      traj_logger=traj_logger,
+                                                      runhistory=runhistory,
+                                                      rng=rng)
+            elif scenario.initial_incumbent == "RANDOM":
+                initial_design = RandomConfiguration(tae_runner=tae_runner,
+                                                     scenario=scenario,
+                                                     stats=self.stats,
+                                                     traj_logger=traj_logger,
+                                                     runhistory=runhistory,
+                                                     rng=rng)
+            else:
+                raise ValueError("Don't know what kind of initial_incumbent "
+                                 "'%s' is" % scenario.initial_incumbent)
 
         # initial intensification
         if intensifier is None:
