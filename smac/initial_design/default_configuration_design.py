@@ -1,4 +1,4 @@
-import logging
+import sys
 
 import numpy as np
 
@@ -44,11 +44,11 @@ class DefaultConfiguration(InitialDesign):
             random state
         '''
         super().__init__(tae_runner=tae_runner, 
-                       scenario=scenario, 
-                       stats=stats,
-                       traj_logger=traj_logger,
-                       runhistory=runhistory,
-                       rng=rng)
+                         scenario=scenario,
+                         stats=stats,
+                         traj_logger=traj_logger,
+                         runhistory=runhistory,
+                         rng=rng)
         
         
     def run(self):
@@ -87,12 +87,10 @@ class DefaultConfiguration(InitialDesign):
             self.logger.critical("First run crashed -- Abort")
             sys.exit(1)
 
-
         self.stats.inc_changed += 1  # first incumbent
         
         self.traj_logger.add_entry(train_perf=cost,
                                    incumbent_id=self.stats.inc_changed,
                                    incumbent=default_conf)
 
-        return default_conf      
-        
+        return default_conf
