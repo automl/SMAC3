@@ -251,13 +251,13 @@ class SMAC(object):
         
         # initialize random number generator
         if rng is None:
-            num_run = np.random.randint(MAXINT)
+            num_run = np.random.randint(1234567980)
             rng = np.random.RandomState(seed=num_run)
         elif isinstance(rng, int):
             num_run = rng
             rng = np.random.RandomState(seed=rng)
         elif isinstance(rng, np.random.RandomState):
-            num_run = rng.randint(MAXINT)
+            num_run = rng.randint(1234567980)
             rng = rng
         else:
             raise TypeError('Unknown type %s for argument rng. Only accepts '
@@ -278,5 +278,5 @@ class SMAC(object):
             incumbent = self.solver.run()
         finally:
             self.solver.stats.print_stats()
-            self.logger.info("Final Incumbent: %s" % self.solver.incumbent)
+            self.logger.info("Final Incumbent: %s" % (self.solver.incumbent))
         return incumbent
