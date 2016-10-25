@@ -22,6 +22,7 @@ from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.base_epm import AbstractEPM
 from smac.utils.util_funcs import get_types
 from smac.utils.io.traj_logging import TrajLogger
+from smac.utils.constants import MAXINT
 
 
 __author__ = "Marius Lindauer"
@@ -93,6 +94,9 @@ class SMAC(object):
         # initial random number generator
         num_run, rng = self._get_rng(rng=rng)
 
+        # reset random number generator in config space
+        scenario.cs.random = np.random.RandomState(rng.randint(MAXINT))
+
         # initial Trajectory Logger
         traj_logger = TrajLogger(
             output_dir=scenario.output_dir, stats=self.stats)
@@ -102,8 +106,7 @@ class SMAC(object):
         if model is None:
             model = RandomForestWithInstances(types=types,
                                               instance_features=scenario.feature_array,
-                                              seed=rng.randint(
-                                                  1234567980))
+                                              seed=rng.randint(MAXINT))
         # initial acquisition function
         if acquisition_function is None:
             acquisition_function = EI(model=model)
@@ -148,11 +151,11 @@ class SMAC(object):
         # initial initial design
         if initial_design is None:
             initial_design = DefaultConfiguration(tae_runner=tae_runner,
-                                           scenario=scenario,
-                                           stats=self.stats,
-                                           traj_logger=traj_logger,
-                                           runhistory=runhistory,
-                                           rng=rng)
+                                                  scenario=scenario,
+                                                  stats=self.stats,
+                                                  traj_logger=traj_logger,
+                                                  runhistory=runhistory,
+                                                  rng=rng)
 
         # initial intensification
         if intensifier is None:
