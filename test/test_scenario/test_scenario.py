@@ -49,8 +49,6 @@ class ScenarioTest(unittest.TestCase):
                                    'feature_file':
                                        'test/test_files/scenario_test/features.txt'}
 
-
-
     def tearDown(self):
         os.chdir(self.current_dir)
 
@@ -118,8 +116,25 @@ class ScenarioTest(unittest.TestCase):
                                 scenario.add_argument, 'name', required=True,
                                 help=None, mutually_exclusive_group='required')
 
+    def test_initial_incumbent(self):
+        scenario = Scenario(self.test_scenario_dict)
+        self.assertEqual(scenario.initial_incumbent, "DEFAULT")
 
+        self.test_scenario_dict["initial_incumbent"] = "RANDOM"
+        scenario = Scenario(self.test_scenario_dict)
+        self.assertEqual(scenario.initial_incumbent, "RANDOM")
 
+        self.test_scenario_dict["initial_incumbent"] = "RanDOm"
+        scenario = Scenario(self.test_scenario_dict)
+        self.assertEqual(scenario.initial_incumbent, "RANDOM")
+
+        self.test_scenario_dict["initial_incumbent"] = "defaUlt "
+        scenario = Scenario(self.test_scenario_dict)
+        self.assertEqual(scenario.initial_incumbent, "DEFAULT")
+
+        self.test_scenario_dict["initial_incumbent"] = "DOESNOTEXIST"
+        scenario = Scenario(self.test_scenario_dict)
+        self.assertIsNone(scenario.initial_incumbent)
 
 if __name__ == "__main__":
     unittest.main()
