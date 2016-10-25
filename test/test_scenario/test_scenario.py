@@ -124,6 +124,14 @@ class ScenarioTest(unittest.TestCase):
         scenario = Scenario(self.test_scenario_dict)
         self.assertEqual(scenario.initial_incumbent, "RANDOM")
 
+        self.test_scenario_dict["initial_incumbent"] = "RanDOm"
+        scenario = Scenario(self.test_scenario_dict)
+        self.assertEqual(scenario.initial_incumbent, "RANDOM")
+
+        self.test_scenario_dict["initial_incumbent"] = "defaUlt "
+        scenario = Scenario(self.test_scenario_dict)
+        self.assertEqual(scenario.initial_incumbent, "DEFAULT")
+
         self.test_scenario_dict["initial_incumbent"] = "DOESNOTEXIST"
         scenario = Scenario(self.test_scenario_dict)
         self.assertIsNone(scenario.initial_incumbent)

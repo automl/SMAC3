@@ -124,7 +124,6 @@ class Scenario(object):
         if mutually_exclusive_group:
             self._groups[mutually_exclusive_group].add(name)
 
-
     def _parse_argument(self, name, scenario, help, callback=None, default=None,
                         dest=None, required=False):
         normalized_name = name.lower().replace('-', '').replace('_', '')
@@ -192,7 +191,8 @@ class Scenario(object):
                           dest='test_insts')
         self.add_argument(name='initial_incumbent', default="DEFAULT",
                           help=None, dest='initial_incumbent',
-                          callback=lambda arg: arg if arg in ['DEFAULT', 'RANDOM'] else None)
+                          callback=lambda arg: str.upper(arg.strip()) if
+                          str.upper(arg.strip()) in ['DEFAULT', 'RANDOM'] else None)
         # instance name -> feature vector
         self.add_argument(name='features', default={}, help=None,
                           dest='feature_dict')
