@@ -96,7 +96,7 @@ class SMAC(object):
 
         # reset random number generator in config space to draw different
         # random configurations with each seed given to SMAC
-        scenario.cs.random = rng
+        scenario.cs.seed(rng.randint(MAXINT))
 
         # initial Trajectory Logger
         traj_logger = TrajLogger(
