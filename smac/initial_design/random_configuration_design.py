@@ -62,7 +62,7 @@ class RandomConfiguration(InitialDesign):
                 initial incumbent configuration
         '''
 
-        random_conf = self.scenario.cs.sample_configuration(1)
+        random_conf = self.scenario.cs.sample_configuration()
 
         # add this incumbent right away to have an entry to time point 0
         self.traj_logger.add_entry(train_perf=2**31,
