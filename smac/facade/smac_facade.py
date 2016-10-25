@@ -9,9 +9,12 @@ from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, RunHistory2EPM4LogCost, RunHistory2EPM4Cost
+from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, \
+    RunHistory2EPM4LogCost, RunHistory2EPM4Cost
 from smac.initial_design.initial_design import InitialDesign
-from smac.initial_design.default_configuration_design import DefaultConfiguration
+from smac.initial_design.default_configuration_design import \
+    DefaultConfiguration
+from smac.initial_design.random_configuration_design import RandomConfiguration
 from smac.intensification.intensification import Intensifier
 from smac.smbo.smbo import SMBO
 from smac.smbo.objective import average_cost
@@ -55,11 +58,13 @@ class SMAC(object):
         tae_runner: ExecuteTARun or callable
             Callable or implementation of :class:`ExecuteTaRun`. In case a
             callable is passed it will be wrapped by tae.ExecuteTaFunc().
-            If not set, tae_runner will be initialized with the tae.ExecuteTARunOld()
+            If not set, tae_runner will be initialized with
+            the tae.ExecuteTARunOld()
         runhistory: RunHistory
             runhistory to store all algorithm runs
         intensifier: Intensifier
-            intensification object to issue a racing to decide the current incumbent
+            intensification object to issue a racing to decide the current
+            incumbent
         acquisition_function : AcquisitionFunction
             Object that implements the AbstractAcquisitionFunction. Will use
             EI if not set.
@@ -246,13 +251,13 @@ class SMAC(object):
         
         # initialize random number generator
         if rng is None:
-            num_run = np.random.randint(1234567980)
+            num_run = np.random.randint(MAXINT)
             rng = np.random.RandomState(seed=num_run)
         elif isinstance(rng, int):
             num_run = rng
             rng = np.random.RandomState(seed=rng)
         elif isinstance(rng, np.random.RandomState):
-            num_run = rng.randint(1234567980)
+            num_run = rng.randint(MAXINT)
             rng = rng
         else:
             raise TypeError('Unknown type %s for argument rng. Only accepts '
@@ -273,5 +278,5 @@ class SMAC(object):
             incumbent = self.solver.run()
         finally:
             self.solver.stats.print_stats()
-            self.logger.info("Final Incumbent: %s" % (self.solver.incumbent))
+            self.logger.info("Final Incumbent: %s" % self.solver.incumbent)
         return incumbent
