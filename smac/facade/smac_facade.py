@@ -11,7 +11,6 @@ from smac.scenario.scenario import Scenario
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, RunHistory2EPM4LogCost, RunHistory2EPM4Cost
 from smac.initial_design.initial_design import InitialDesign
-from smac.initial_design.random_configuration_design import RandomConfiguration
 from smac.initial_design.default_configuration_design import DefaultConfiguration
 from smac.intensification.intensification import Intensifier
 from smac.smbo.smbo import SMBO
@@ -23,6 +22,7 @@ from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.base_epm import AbstractEPM
 from smac.utils.util_funcs import get_types
 from smac.utils.io.traj_logging import TrajLogger
+from smac.utils.constants import MAXINT
 
 
 __author__ = "Marius Lindauer"
@@ -94,6 +94,9 @@ class SMAC(object):
         # initial random number generator
         num_run, rng = self._get_rng(rng=rng)
 
+        # reset random number generator in config space
+        scenario.cs.random = np.random.RandomState(rng.randint(MAXINT))
+
         # initial Trajectory Logger
         traj_logger = TrajLogger(
             output_dir=scenario.output_dir, stats=self.stats)
@@ -103,8 +106,7 @@ class SMAC(object):
         if model is None:
             model = RandomForestWithInstances(types=types,
                                               instance_features=scenario.feature_array,
-                                              seed=rng.randint(
-                                                  1234567980))
+                                              seed=rng.randint(MAXINT))
         # initial acquisition function
         if acquisition_function is None:
             acquisition_function = EI(model=model)
