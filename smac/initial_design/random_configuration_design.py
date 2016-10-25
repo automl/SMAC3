@@ -1,22 +1,19 @@
-import sys
-
 import numpy as np
 
-from smac.initial_design.initial_design import InitialDesign
+from smac.initial_design.single_config_initial_design import\
+    SingleConfigInitialDesign
 from smac.tae.execute_ta_run import ExecuteTARun
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
 from smac.scenario.scenario import Scenario
-from smac.tae.execute_ta_run import StatusType
 from smac.runhistory.runhistory import RunHistory
-from smac.utils import constants
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class RandomConfiguration(InitialDesign):
+class RandomConfiguration(SingleConfigInitialDesign):
 
     def __init__(self,
                  tae_runner: ExecuteTARun,
@@ -36,7 +33,8 @@ class RandomConfiguration(InitialDesign):
         scenario: Scenario
             scenario with all meta information (including configuration space)
         stats: Stats
-            statistics of experiments; needed in case initial design already exhaust the budget
+            statistics of experiments; needed in case initial design already
+            exhaust the budget
         traj_logger: TrajLogger
             trajectory logging to add new incumbents found by the initial design
         runhistory: RunHistory
@@ -51,46 +49,14 @@ class RandomConfiguration(InitialDesign):
                          runhistory=runhistory,
                          rng=rng)
 
-    def run(self):
+    def _select_configuration(self):
         '''
-            runs the initial design by calling the target algorithm
-            and adding new entries to the trajectory logger
+            selects a single configuration to run
 
             Returns
             -------
-            incumbent: Configuration()
+            config: Configuration()
                 initial incumbent configuration
         '''
 
-        random_conf = self.scenario.cs.sample_configuration()
-
-        # add this incumbent right away to have an entry to time point 0
-        self.traj_logger.add_entry(train_perf=2**31,
-                                   incumbent_id=1,
-                                   incumbent=random_conf)
-
-        rand_inst = self.rng.choice(self.scenario.train_insts)
-
-        if self.scenario.deterministic:
-            initial_seed = 0
-        else:
-            initial_seed = self.rng.randint(0, constants.MAXINT)
-
-        status, cost, runtime, additional_info = self.tae_runner.start(
-            random_conf,
-            instance=rand_inst,
-            cutoff=self.scenario.cutoff,
-            seed=initial_seed,
-            instance_specific=self.scenario.instance_specific.get(rand_inst, "0"))
-
-        if status in [StatusType.CRASHED or StatusType.ABORT]:
-            self.logger.critical("First run crashed -- Abort")
-            sys.exit(1)
-
-        self.stats.inc_changed += 1  # first incumbent
-
-        self.traj_logger.add_entry(train_perf=cost,
-                                   incumbent_id=self.stats.inc_changed,
-                                   incumbent=random_conf)
-
-        return random_conf
+        return self.scenario.cs.sample_configuration()

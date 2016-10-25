@@ -12,15 +12,16 @@ __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 
+
 class InitialDesign(object):
     
     def __init__(self, 
-                 tae_runner:ExecuteTARun,
-                 scenario:Scenario,
-                 stats:Stats,
-                 traj_logger:TrajLogger,
+                 tae_runner: ExecuteTARun,
+                 scenario: Scenario,
+                 stats: Stats,
+                 traj_logger: TrajLogger,
                  runhistory: RunHistory,
-                 rng:np.random.RandomState
+                 rng: np.random.RandomState
                  ):
         '''
         Constructor
@@ -47,7 +48,8 @@ class InitialDesign(object):
         self.traj_logger = traj_logger
         self.runhistory = runhistory
         self.rng = rng
-        
+        self.logger = logging.getLogger("InitialDesign")
+
     def run(self):
         '''
             as an initial design: it simply runs the default configuration on random pair of instance and random seed
