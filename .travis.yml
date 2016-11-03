@@ -40,15 +40,13 @@ before_install:
   - wget http://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
-  # comment out because otherwise installation fails because of 
-  # dependency issues
-  # - conda update --yes conda
-  - conda update --yes --all python=$TRAVIS_PYTHON_VERSION
+  - conda update --yes conda
+  - conda create -n testenv --yes python=$TRAVIS_PYTHON_VERSION pip nose
+  - source activate testenv
 
 install:
-  - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy>=1.6.1 scipy>=0.13.1 six nose setuptools Cython
-  - pip install pep8 python-coveralls
-  - pip install coverage
+  - conda install --yes numpy>=1.6.1 scipy>=0.13.1 six setuptools Cython
+  - pip install coverage pep8 python-coveralls
   - pip install psutil
   # necessary for rfr
   - export CXX="g++-4.8" CC="gcc-4.8"
