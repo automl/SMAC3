@@ -7,6 +7,7 @@ from collections import defaultdict
 import os
 import logging
 import unittest
+import pickle
 
 import numpy as np
 
@@ -135,6 +136,18 @@ class ScenarioTest(unittest.TestCase):
         self.test_scenario_dict["initial_incumbent"] = "DOESNOTEXIST"
         scenario = Scenario(self.test_scenario_dict)
         self.assertIsNone(scenario.initial_incumbent)
+
+    def test_pickle_dump(self):
+        scenario = Scenario(self.test_scenario_dict)
+
+        packed_scenario = pickle.dumps(scenario)
+        self.assertIsNotNone(packed_scenario)
+
+        unpacked_scenario = pickle.loads(packed_scenario)
+        self.assertIsNotNone(unpacked_scenario)
+        self.assertIsNotNone(unpacked_scenario.logger)
+        self.assertEqual(scenario.logger.name, unpacked_scenario.logger.name)
+
 
 if __name__ == "__main__":
     unittest.main()

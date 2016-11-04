@@ -18,6 +18,14 @@ __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.2"
 
 
+def _is_truthy(arg):
+    return arg in ["1", "true", True]
+
+def _parse_initial_incumbent(arg):
+    arg = str.upper(arg.strip())
+    return arg if arg in ['DEFAULT', 'RANDOM'] else None
+
+
 class Scenario(object):
 
     '''
@@ -156,24 +164,24 @@ class Scenario(object):
     def _add_arguments(self):
         # Add allowed arguments
         self.add_argument(name='algo', help=None, dest='ta',
-                          callback=lambda arg: shlex.split(arg))
+                          callback=shlex.split)
         self.add_argument(name='execdir', default='.', help=None)
         self.add_argument(name='deterministic', default="0", help=None,
-                          callback=lambda arg: arg in ["1", "true", True])
+                          callback=_is_truthy)
         self.add_argument(name='paramfile', help=None, dest='pcs_fn',
                           mutually_exclusive_group='cs')
         self.add_argument(name='run_obj', help=None, default='runtime')
         self.add_argument(name='overall_obj', help=None, default='par10')
         self.add_argument(name='cutoff_time', help=None, default=None,
-                          dest='cutoff', callback=lambda arg: float(arg))
+                          dest='cutoff', callback=float)
         self.add_argument(name='memory_limit', help=None)
         self.add_argument(name='tuner-timeout', help=None, default=numpy.inf,
                           dest='algo_runs_timelimit',
-                          callback=lambda arg: float(arg))
+                          callback=float)
         self.add_argument(name='wallclock_limit', help=None, default=numpy.inf,
-                          callback=lambda arg: float(arg))
+                          callback=float)
         self.add_argument(name='runcount_limit', help=None, default=numpy.inf,
-                          callback=lambda arg: float(arg), dest="ta_run_limit")
+                          callback=float, dest="ta_run_limit")
         self.add_argument(name='instance_file', help=None, dest='train_inst_fn')
         self.add_argument(name='test_instance_file', help=None,
                           dest='test_inst_fn')
@@ -184,15 +192,14 @@ class Scenario(object):
                                   time.time()).strftime(
                                   '%Y-%m-%d_%H:%M:%S')))
         self.add_argument(name='shared_model', help=None, default='0',
-                          callback=lambda arg: arg in ['1', 'true', True])
+                          callback=_is_truthy)
         self.add_argument(name='instances', default=[[None]], help=None,
                           dest='train_insts')
         self.add_argument(name='test_instances', default=[[None]], help=None,
                           dest='test_insts')
         self.add_argument(name='initial_incumbent', default="DEFAULT",
                           help=None, dest='initial_incumbent',
-                          callback=lambda arg: str.upper(arg.strip()) if
-                          str.upper(arg.strip()) in ['DEFAULT', 'RANDOM'] else None)
+                          callback=_parse_initial_incumbent)
         # instance name -> feature vector
         self.add_argument(name='features', default={}, help=None,
                           dest='feature_dict')
@@ -270,4 +277,11 @@ class Scenario(object):
 
         self.logger.info("Output to %s" % (self.output_dir))
 
+    def __getstate__(self):
+        d = dict(self.__dict__)
+        del d['logger']
+        return d
 
+    def __setstate__(self, d):
+        self.__dict__.update(d)
+        self.logger = logging.getLogger("scenario")
