@@ -7,12 +7,12 @@ from collections import defaultdict
 import os
 import logging
 import unittest
+import pickle
 
 import numpy as np
 
 from smac.scenario.scenario import Scenario
 from smac.configspace import ConfigurationSpace
-
 
 class InitFreeScenario(Scenario):
     def __init__(self):
@@ -118,7 +118,16 @@ class ScenarioTest(unittest.TestCase):
                                 scenario.add_argument, 'name', required=True,
                                 help=None, mutually_exclusive_group='required')
 
+    def test_pickle_dump(self):
+        scenario = Scenario(self.test_scenario_dict)
 
+        packed_scenario = pickle.dumps(scenario)
+        self.assertIsNotNone(packed_scenario)
+
+        unpacked_scenario = pickle.loads(packed_scenario)
+        self.assertIsNotNone(unpacked_scenario)
+        self.assertIsNotNone(unpacked_scenario.logger)
+        self.assertEqual(scenario.logger.name, unpacked_scenario.logger.name)
 
 
 if __name__ == "__main__":
