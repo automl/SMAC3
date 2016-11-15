@@ -16,7 +16,7 @@ __version__ = "0.0.1"
 class LocalSearch(object):
 
     def __init__(self, acquisition_function, config_space,
-                 epsilon=0.000001, max_iterations=None, rng=None):
+                 epsilon=0.00001, max_iterations=None, rng=None):
         """
         Implementation of SMAC's local search
 
