@@ -46,12 +46,14 @@ class SMACCLI(object):
 
         scen = Scenario(args_.scenario_file, misc_args)
 
+        rh = None
         if args_.warmstart_runhistory:
             aggregate_func = average_cost
             rh = RunHistory(aggregate_func=aggregate_func)
 
-            in_scenario = args_.warmstart_scenario
-            if not in_scenario:
+            if args_.warmstart_scenario:
+                in_scenario = Scenario(args_.warmstart_scenario)
+            else:
                 in_scenario = scen
             scen, rh = merge_foreign_data(scenario=scen,
                                           runhistory=rh,
@@ -64,8 +66,11 @@ class SMACCLI(object):
         elif args_.modus == "ROAR":
             optimizer = ROAR(
                 scenario=scen, rng=np.random.RandomState(args_.seed), runhistory=rh)
-        optimizer.optimize()
+        try:
+            optimizer.optimize()
 
-        optimizer.solver.runhistory.save_json(
-            fn=os.path.join(scen.output_dir, "runhistory.json"))
+        finally:
+            # ensure that the runhistory is always dumped in the end
+            optimizer.solver.runhistory.save_json(
+                fn=os.path.join(scen.output_dir, "runhistory.json"))
         #smbo.runhistory.load_json(fn="runhistory.json", cs=smbo.config_space)
