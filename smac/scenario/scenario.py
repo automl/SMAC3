@@ -7,6 +7,8 @@ import shlex
 import time
 import datetime
 
+from sklearn.decomposition import PCA
+
 from smac.utils.io.input_reader import InputReader
 from smac.configspace import pcs
 
@@ -37,6 +39,8 @@ class Scenario(object):
 
         """
         self.logger = logging.getLogger("scenario")
+        self.PCA_DIM = 7
+
         self.in_reader = InputReader()
 
         if type(scenario) is str:
@@ -174,7 +178,8 @@ class Scenario(object):
                           callback=lambda arg: float(arg))
         self.add_argument(name='runcount_limit', help=None, default=numpy.inf,
                           callback=lambda arg: float(arg), dest="ta_run_limit")
-        self.add_argument(name='instance_file', help=None, dest='train_inst_fn')
+        self.add_argument(
+            name='instance_file', help=None, dest='train_inst_fn')
         self.add_argument(name='test_instance_file', help=None,
                           dest='test_inst_fn')
         self.add_argument(name='feature_file', help=None, dest='feature_fn')
@@ -226,7 +231,7 @@ class Scenario(object):
             else:
                 self.logger.error(
                     "Have not found test instance file: %s" % (
-                    self.test_inst_fn))
+                        self.test_inst_fn))
                 sys.exit(1)
 
         self.instance_specific = {}
@@ -250,12 +255,24 @@ class Scenario(object):
                     self.feature_fn)[1]
 
         if self.feature_dict:
-            self.n_features = len(
-                self.feature_dict[list(self.feature_dict.keys())[0]])
             self.feature_array = []
             for inst_ in self.train_insts:
                 self.feature_array.append(self.feature_dict[inst_])
             self.feature_array = numpy.array(self.feature_array)
+            
+            # reduce dimensionality of features of larger than PCA_DIM
+            if self.feature_array.shape[1] > self.PCA_DIM:
+                X = self.feature_array
+                # scale features
+                X = (X - X.min()) / (X.max() - X.min())
+                X = numpy.nan_to_num(X) # if features with max == min
+                #PCA
+                pca = PCA(n_components=self.PCA_DIM)
+                self.feature_array = pca.fit_transform(X)
+                self.n_features = self.PCA_DIM
+                # update feature dictionary
+                for feat, inst_ in zip(self.feature_array, self.train_insts):
+                    self.feature_dict[inst_] = feat
 
         # read pcs file
         if self.pcs_fn and os.path.isfile(self.pcs_fn):
@@ -269,5 +286,3 @@ class Scenario(object):
             sys.exit(1)
 
         self.logger.info("Output to %s" % (self.output_dir))
-
-

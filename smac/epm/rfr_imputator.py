@@ -149,4 +149,4 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         if not numpy.isfinite(imputed_y).all():
             self.logger.critical("Imputed values are not finite, %s" %
                                  str(imputed_y))
-        return imputed_y
+        return numpy.reshape(imputed_y, [imputed_y.shape[0], 1])
