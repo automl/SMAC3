@@ -9,7 +9,8 @@ requirements = ['setuptools',
                 'scipy>=0.13.1',
                 'pyrfr',
                 'ConfigSpace>=0.2.1',
-                'pynisher>=0.4.1']
+                'pynisher>=0.4.1',
+		'scikit-learn']
 
 setuptools.setup(
     name="smac",
