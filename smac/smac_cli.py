@@ -9,6 +9,7 @@ from smac.facade.smac_facade import SMAC
 from smac.facade.roar_facade import ROAR
 from smac.runhistory.runhistory import RunHistory
 from smac.smbo.objective import average_cost
+from smac.utils.merge_foreign_data import merge_foreign_data
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -44,19 +45,27 @@ class SMACCLI(object):
         root_logger.setLevel(args_.verbose_level)
 
         scen = Scenario(args_.scenario_file, misc_args)
-        
-        rh = None
-        if args_.warmstart:
+
+        if args_.warmstart_runhistory:
             aggregate_func = average_cost
             rh = RunHistory(aggregate_func=aggregate_func)
-            for fn in args_.warmstart:
-                rh.load_json(fn=fn, cs=scen.cs)
-        
+
+            in_scenario = args_.warmstart_scenario
+            if not in_scenario:
+                in_scenario = scen
+            scen, rh = merge_foreign_data(scenario=scen,
+                                          runhistory=rh,
+                                          in_scenario=in_scenario,
+                                          in_runhistory_fn_list=args_.warmstart_runhistory)
+
         if args_.modus == "SMAC":
-            optimizer = SMAC(scenario=scen, rng=np.random.RandomState(args_.seed), runhistory=rh)
+            optimizer = SMAC(
+                scenario=scen, rng=np.random.RandomState(args_.seed), runhistory=rh)
         elif args_.modus == "ROAR":
-            optimizer = ROAR(scenario=scen, rng=np.random.RandomState(args_.seed), runhistory=rh)
+            optimizer = ROAR(
+                scenario=scen, rng=np.random.RandomState(args_.seed), runhistory=rh)
         optimizer.optimize()
 
-        optimizer.solver.runhistory.save_json(fn=os.path.join(scen.output_dir,"runhistory.json"))
+        optimizer.solver.runhistory.save_json(
+            fn=os.path.join(scen.output_dir, "runhistory.json"))
         #smbo.runhistory.load_json(fn="runhistory.json", cs=smbo.config_space)
