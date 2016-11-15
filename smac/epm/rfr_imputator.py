@@ -22,7 +22,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
     def __init__(self, rs, cutoff, threshold,
                  model,
                  change_threshold=0.01,
-                 max_iter=10):
+                 max_iter=2):
         """
         initialize imputator module
 
