@@ -51,6 +51,9 @@ class CMDReader(object):
         req_opts.add_argument("--modus", default="SMAC",
                               choices=["SMAC", "ROAR"],
                               help=SUPPRESS)
+        req_opts.add_argument("--warmstart", default=None,
+                              nargs="*",
+                              help=SUPPRESS) # list of runhistory dump files
 
         args_, misc = parser.parse_known_args()
         self._check_args(args_)
