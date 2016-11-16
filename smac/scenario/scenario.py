@@ -259,6 +259,7 @@ class Scenario(object):
             for inst_ in self.train_insts:
                 self.feature_array.append(self.feature_dict[inst_])
             self.feature_array = numpy.array(self.feature_array)
+            self.n_features = self.feature_array.shape[1]
             
             # reduce dimensionality of features of larger than PCA_DIM
             if self.feature_array.shape[1] > self.PCA_DIM:
