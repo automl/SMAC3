@@ -67,6 +67,7 @@ class Scenario(object):
             arg_name, arg_value = self._parse_argument(key, scenario, **value)
             parsed_arguments[arg_name] = arg_value
 
+        
         if len(scenario) != 0:
             raise ValueError('Could not parse the following arguments: %s' %
                              str(list(scenario.keys())))

@@ -58,6 +58,7 @@ class CMDReader(object):
         # scenario corresponding to --warmstart_runhistory; 
         # pcs and feature space has to be identical to --scenario_file
         req_opts.add_argument("--warmstart_scenario", default=None,
+                              nargs="*",
                               help=SUPPRESS)  
 
         args_, misc = parser.parse_known_args()

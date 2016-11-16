@@ -209,18 +209,27 @@ class RunHistory(object):
         cs : ConfigSpace
             instance of configuration space
         """
-
         new_runhistory = RunHistory(self.aggregate_func)
         new_runhistory.load_json(fn, cs)
+        self.update(runhistory=new_runhistory)
+        
+    def update(self, runhistory):
+        """Update the current runhistory by adding new runs from a json file.
+
+        Parameters
+        ----------
+        runhistory: RunHistory
+            runhistory with additional data to be added to self
+        """
 
         # Configurations might be already known, but by a different ID. This
         # does not matter here because the add() method handles this
         # correctly by assigning an ID to unknown configurations and re-using
         #  the ID
-        for key, value in new_runhistory.data.items():
+        for key, value in runhistory.data.items():
             config_id, instance_id, seed = key
             cost, time, status, additional_info = value
-            config = new_runhistory.ids_config[config_id]
+            config = runhistory.ids_config[config_id]
             self.add(config=config, cost=cost, time=time,
                      status=status, instance_id=instance_id,
                      seed=seed, additional_info=additional_info)

@@ -9,7 +9,7 @@ from smac.facade.smac_facade import SMAC
 from smac.facade.roar_facade import ROAR
 from smac.runhistory.runhistory import RunHistory
 from smac.smbo.objective import average_cost
-from smac.utils.merge_foreign_data import merge_foreign_data
+from smac.utils.merge_foreign_data import merge_foreign_data_from_file
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -51,14 +51,13 @@ class SMACCLI(object):
             aggregate_func = average_cost
             rh = RunHistory(aggregate_func=aggregate_func)
 
-            if args_.warmstart_scenario:
-                in_scenario = Scenario(args_.warmstart_scenario)
-            else:
-                in_scenario = scen
-            scen, rh = merge_foreign_data(scenario=scen,
-                                          runhistory=rh,
-                                          in_scenario=in_scenario,
-                                          in_runhistory_fn_list=args_.warmstart_runhistory)
+            scen, rh = merge_foreign_data_from_file(
+                        scenario=scen, 
+                        runhistory=rh,
+                        in_scenario_fn_list=args_.warmstart_scenario, 
+                        in_runhistory_fn_list=args_.warmstart_runhistory,
+                        cs=scen.cs,
+                        aggregate_func=aggregate_func)
 
         if args_.modus == "SMAC":
             optimizer = SMAC(
