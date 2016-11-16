@@ -8,6 +8,7 @@ import time
 import datetime
 
 from sklearn.decomposition import PCA
+from sklearn.preprocessing import MinMaxScaler
 
 from smac.utils.io.input_reader import InputReader
 from smac.configspace import pcs
@@ -265,7 +266,7 @@ class Scenario(object):
             if self.feature_array.shape[1] > self.PCA_DIM:
                 X = self.feature_array
                 # scale features
-                X = (X - X.min()) / (X.max() - X.min())
+                X = MinMaxScaler().fit_transform(X)
                 X = numpy.nan_to_num(X) # if features with max == min
                 #PCA
                 pca = PCA(n_components=self.PCA_DIM)
