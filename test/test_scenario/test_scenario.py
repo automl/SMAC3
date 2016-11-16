@@ -151,8 +151,8 @@ class ScenarioTest(unittest.TestCase):
     def test_merge_foreign_data(self):
         ''' test smac.utils.merge_foreign_data '''
 
-        scenario = Scenario(copy.copy(self.test_scenario_dict))
-        scenario_2 = Scenario(copy.copy(self.test_scenario_dict))
+        scenario = Scenario(self.test_scenario_dict)
+        scenario_2 = Scenario(self.test_scenario_dict)
         scenario_2.feature_dict = {"inst_new": [4]}
 
         # init cs

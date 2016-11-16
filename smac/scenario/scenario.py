@@ -6,6 +6,7 @@ import numpy
 import shlex
 import time
 import datetime
+import copy
 
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
@@ -49,7 +50,7 @@ class Scenario(object):
             self.logger.info("Reading scenario file: %s" % (scenario_fn))
             scenario = self.in_reader.read_scenario_file(scenario_fn)
         elif type(scenario) is dict:
-            pass
+            scenario = copy.copy(scenario)
         else:
             raise TypeError(
                 "Wrong type of scenario (str or dict are supported)")
