@@ -140,7 +140,7 @@ class RandomForestWithInstances(AbstractEPM):
 
         means, vars = self.rf.batch_predictions(X)
         
-        return np.reshape(means,[means.shape[0], 1]), np.reshape(vars, [vars.shape[0], 1])
+        return means.reshape((-1, 1)), vars.reshape((-1, 1))
 
     def predict_marginalized_over_instances(self, X):
         """Predict mean and variance marginalized over all instances.
