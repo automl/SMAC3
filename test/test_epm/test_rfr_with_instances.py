@@ -38,46 +38,6 @@ class TestRFWithInstances(unittest.TestCase):
         self.assertEqual(m_hat.shape, (10, 1))
         self.assertEqual(v_hat.shape, (10, 1))
 
-    @mock.patch.object(RandomForestWithInstances, '_predict')
-    def test_predict_mocked(self, rf_mock):
-        """Use mock to count the number of calls to _predict"""
-        class SideEffect(object):
-            def __init__(self):
-                self.counter = 0
-
-            def __call__(self, X):
-                self.counter += 1
-                # Return mean and variance
-                return self.counter, self.counter
-
-        rf_mock.side_effect = SideEffect()
-
-        rs = np.random.RandomState(1)
-        X = rs.rand(20, 10)
-        Y = rs.rand(10, 1)
-        model = RandomForestWithInstances(np.zeros((10,), dtype=np.uint))
-        model.train(X[:10], Y[:10])
-        m_hat, v_hat = model.predict(X[10:])
-        self.assertEqual(m_hat.shape, (10, 1))
-        self.assertEqual(v_hat.shape, (10, 1))
-        self.assertEqual(rf_mock.call_count, 10)
-        for i in range(10):
-            self.assertEqual(m_hat[i], i+1)
-            self.assertEqual(v_hat[i], i + 1)
-
-    def test__predict(self):
-        rs = np.random.RandomState(1)
-        X = rs.rand(20, 10)
-        Y = rs.rand(10, 1)
-        model = RandomForestWithInstances(np.zeros((10,), dtype=np.uint))
-        model.train(X[:10], Y[:10])
-        m_hat, v_hat = model._predict(X[10])
-        self.assertIsInstance(m_hat, float)
-        self.assertIsInstance(v_hat, float)
-        self.assertRaisesRegexp(ValueError, 'Buffer has wrong number of '
-                                            'dimensions \(expected 1, got 2\)',
-                                model._predict, X[10:])
-
     def test_predict_marginalized_over_instances_wrong_X_dimensions(self):
         rs = np.random.RandomState(1)
 
