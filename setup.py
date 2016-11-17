@@ -10,7 +10,8 @@ requirements = ['setuptools',
                 'pyrfr',
                 'ConfigSpace>=0.2.1',
                 'pynisher>=0.4.1',
-		'scikit-learn']
+                'scikit-learn',
+                'typing']
 
 setuptools.setup(
     name="smac",
