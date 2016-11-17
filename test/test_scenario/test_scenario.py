@@ -7,14 +7,23 @@ from collections import defaultdict
 import os
 import logging
 import unittest
+import copy
 
 import numpy as np
 
+from ConfigSpace import Configuration, ConfigurationSpace
+from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
+
 from smac.scenario.scenario import Scenario
 from smac.configspace import ConfigurationSpace
+from smac.utils.merge_foreign_data import merge_foreign_data
+from smac.runhistory.runhistory import RunHistory
+from smac.smbo.objective import average_cost
+from smac.tae.execute_ta_run import StatusType
 
 
 class InitFreeScenario(Scenario):
+
     def __init__(self):
         self._groups = defaultdict(set)
 
@@ -27,7 +36,8 @@ class ScenarioTest(unittest.TestCase):
         self.logger.setLevel(logging.DEBUG)
 
         base_directory = os.path.split(__file__)[0]
-        base_directory = os.path.abspath(os.path.join(base_directory, '..', '..'))
+        base_directory = os.path.abspath(
+            os.path.join(base_directory, '..', '..'))
         self.current_dir = os.getcwd()
         os.chdir(base_directory)
 
@@ -58,11 +68,12 @@ class ScenarioTest(unittest.TestCase):
 
     def test_string_scenario(self):
         scenario = Scenario('test/test_files/scenario_test/scenario.txt')
-        
+
         self.assertEquals(scenario.ta, ['echo', 'Hello'])
         self.assertEquals(scenario.execdir, '.')
         self.assertFalse(scenario.deterministic)
-        self.assertEquals(scenario.pcs_fn, 'test/test_files/scenario_test/param.pcs')
+        self.assertEquals(
+            scenario.pcs_fn, 'test/test_files/scenario_test/param.pcs')
         self.assertEquals(scenario.overall_obj, 'mean10')
         self.assertEquals(scenario.cutoff, 5.)
         self.assertEquals(scenario.algo_runs_timelimit, np.inf)
@@ -70,17 +81,18 @@ class ScenarioTest(unittest.TestCase):
         self.assertEquals(scenario.par_factor, 10)
         self.assertEquals(scenario.train_insts, ['d', 'e', 'f'])
         self.assertEquals(scenario.test_insts, ['a', 'b', 'c'])
-        test_dict = {'d' : 1, 'e' : 2, 'f' : 3}
+        test_dict = {'d': 1, 'e': 2, 'f': 3}
         self.assertEquals(scenario.feature_dict, test_dict)
         self.assertEquals(scenario.feature_array[0], 1)
 
     def test_dict_scenario(self):
         scenario = Scenario(self.test_scenario_dict)
-        
+
         self.assertEquals(scenario.ta, ['echo', 'Hello'])
         self.assertEquals(scenario.execdir, '.')
         self.assertFalse(scenario.deterministic)
-        self.assertEquals(scenario.pcs_fn, 'test/test_files/scenario_test/param.pcs')
+        self.assertEquals(
+            scenario.pcs_fn, 'test/test_files/scenario_test/param.pcs')
         self.assertEquals(scenario.overall_obj, 'mean10')
         self.assertEquals(scenario.cutoff, 5.)
         self.assertEquals(scenario.algo_runs_timelimit, np.inf)
@@ -88,7 +100,7 @@ class ScenarioTest(unittest.TestCase):
         self.assertEquals(scenario.par_factor, 10)
         self.assertEquals(scenario.train_insts, ['d', 'e', 'f'])
         self.assertEquals(scenario.test_insts, ['a', 'b', 'c'])
-        test_dict = {'d' : 1, 'e' : 2, 'f' : 3}
+        test_dict = {'d': 1, 'e': 2, 'f': 3}
         self.assertEquals(scenario.feature_dict, test_dict)
         self.assertEquals(scenario.feature_array[0], 1)
 
@@ -135,6 +147,46 @@ class ScenarioTest(unittest.TestCase):
         self.test_scenario_dict["initial_incumbent"] = "DOESNOTEXIST"
         scenario = Scenario(self.test_scenario_dict)
         self.assertIsNone(scenario.initial_incumbent)
+
+    def test_merge_foreign_data(self):
+        ''' test smac.utils.merge_foreign_data '''
+
+        scenario = Scenario(self.test_scenario_dict)
+        scenario_2 = Scenario(self.test_scenario_dict)
+        scenario_2.feature_dict = {"inst_new": [4]}
+
+        # init cs
+        cs = ConfigurationSpace()
+        cs.add_hyperparameter(UniformIntegerHyperparameter(name='a',
+                                                           lower=0,
+                                                           upper=100))
+        cs.add_hyperparameter(UniformIntegerHyperparameter(name='b',
+                                                           lower=0,
+                                                           upper=100))
+        # build runhistory
+        rh_merge = RunHistory(aggregate_func=average_cost)
+        config = Configuration(cs, values={'a': 1, 'b': 2})
+
+        rh_merge.add(config=config, instance_id="inst_new", cost=10, time=20,
+                     status=StatusType.SUCCESS,
+                     seed=None,
+                     additional_info=None)
+
+        # build empty rh
+        rh_base = RunHistory(aggregate_func=average_cost)
+
+        merge_foreign_data(scenario=scenario, runhistory=rh_base,
+                           in_scenario_list=[scenario_2], in_runhistory_list=[rh_merge])
+
+        assert len(rh_base.data) == 1
+
+        rh_merge.add(config=config, instance_id="inst_new_2", cost=10, time=20,
+                     status=StatusType.SUCCESS,
+                     seed=None,
+                     additional_info=None)
+        
+        self.assertRaises(ValueError, merge_foreign_data, **{"scenario":scenario, "runhistory":rh_base, "in_scenario_list":[scenario_2], "in_runhistory_list":[rh_merge]})
+
 
 if __name__ == "__main__":
     unittest.main()
