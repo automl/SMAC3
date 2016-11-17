@@ -138,31 +138,9 @@ class RandomForestWithInstances(AbstractEPM):
             raise ValueError('Rows in X should have %d entries but have %d!' %
                              (self.types.shape[0], X.shape[1]))
 
-        means = np.ndarray((X.shape[0], 1))
-        vars = np.ndarray((X.shape[0], 1))
-        for i, x in enumerate(X):
-            m, v = self._predict(x)
-            means[i] = m
-            vars[i] = v
-        return means, vars
-
-    def _predict(self, x):
-        """Predict mean and variance for given x.
-
-        Parameters
-        ----------
-        x : np.ndarray of shape = [n_features (config + instance features), ]
-
-        Returns
-        -------
-        mean : float
-            Predictive mean
-        var : float
-            Predictive variance
-        """
-        mean, var = self.rf.predict(x)
-
-        return mean, var
+        means, vars = self.rf.batch_predictions(X)
+        
+        return np.reshape(means,[means.shape[0], 1]), np.reshape(vars, [vars.shape[0], 1])
 
     def predict_marginalized_over_instances(self, X):
         """Predict mean and variance marginalized over all instances.
