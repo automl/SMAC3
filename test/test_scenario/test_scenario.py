@@ -199,6 +199,22 @@ class ScenarioTest(unittest.TestCase):
         self.assertIsNotNone(unpacked_scenario.logger)
         self.assertEqual(scenario.logger.name, unpacked_scenario.logger.name)
 
+    def test_choice_argument(self):
+        scenario_dict = self.test_scenario_dict
+        scenario_dict['initial_incumbent'] = 'DEFAULT'
+        scenario = Scenario(scenario_dict)
+        self.assertEqual(scenario.initial_incumbent, 'DEFAULT')
+
+        self.assertRaisesRegex(TypeError, 'Choice must be of type '
+                                          'list/set/tuple.',
+                               scenario.add_argument, name='a', choice='abc',
+                               help=None)
+
+        scenario_dict['initial_incumbent'] = 'Default'
+        self.assertRaisesRegex(ValueError,
+                               "Argument initial_incumbent can only take a "
+                               "value in ['DEFAULT, 'RANDOM'] but is Default")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -126,6 +126,8 @@ class Scenario(object):
         if required is not False and mutually_exclusive_group is not None:
             raise ValueError("Cannot make argument '%s' required and add it to"
                              " a group of mutually exclusive arguments." % name)
+        if choice is not None and not isinstance(choice, (list, set, tuple)):
+            raise TypeError('Choice must be of type list/set/tuple.')
 
         self._arguments[name] = {'default': default,
                                  'required': required,
@@ -165,9 +167,10 @@ class Scenario(object):
             value = callback(value)
 
         if value is not None and choice:
-            value = str.upper(value.strip())
+            value = value.strip()
             if value not in choice:
-                value = None
+                raise ValueError('Argument %s can only take a value in %s, '
+                                 'but is %s' % (name, choice, value))
 
         return dest, value
 
