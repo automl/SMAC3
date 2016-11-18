@@ -6,6 +6,10 @@ import numpy
 import shlex
 import time
 import datetime
+import copy
+
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import MinMaxScaler
 
 from smac.utils.io.input_reader import InputReader
 from smac.configspace import pcs
@@ -41,6 +45,8 @@ class Scenario(object):
 
         """
         self.logger = logging.getLogger("scenario")
+        self.PCA_DIM = 7
+
         self.in_reader = InputReader()
 
         if type(scenario) is str:
@@ -48,7 +54,7 @@ class Scenario(object):
             self.logger.info("Reading scenario file: %s" % (scenario_fn))
             scenario = self.in_reader.read_scenario_file(scenario_fn)
         elif type(scenario) is dict:
-            pass
+            scenario = copy.copy(scenario)
         else:
             raise TypeError(
                 "Wrong type of scenario (str or dict are supported)")
@@ -66,6 +72,7 @@ class Scenario(object):
             arg_name, arg_value = self._parse_argument(key, scenario, **value)
             parsed_arguments[arg_name] = arg_value
 
+        
         if len(scenario) != 0:
             raise ValueError('Could not parse the following arguments: %s' %
                              str(list(scenario.keys())))
@@ -236,7 +243,7 @@ class Scenario(object):
             else:
                 self.logger.error(
                     "Have not found test instance file: %s" % (
-                    self.test_inst_fn))
+                        self.test_inst_fn))
                 sys.exit(1)
 
         self.instance_specific = {}
@@ -260,12 +267,25 @@ class Scenario(object):
                     self.feature_fn)[1]
 
         if self.feature_dict:
-            self.n_features = len(
-                self.feature_dict[list(self.feature_dict.keys())[0]])
             self.feature_array = []
             for inst_ in self.train_insts:
                 self.feature_array.append(self.feature_dict[inst_])
             self.feature_array = numpy.array(self.feature_array)
+            self.n_features = self.feature_array.shape[1]
+            
+            # reduce dimensionality of features of larger than PCA_DIM
+            if self.feature_array.shape[1] > self.PCA_DIM:
+                X = self.feature_array
+                # scale features
+                X = MinMaxScaler().fit_transform(X)
+                X = numpy.nan_to_num(X) # if features with max == min
+                #PCA
+                pca = PCA(n_components=self.PCA_DIM)
+                self.feature_array = pca.fit_transform(X)
+                self.n_features = self.PCA_DIM
+                # update feature dictionary
+                for feat, inst_ in zip(self.feature_array, self.train_insts):
+                    self.feature_dict[inst_] = feat
 
         # read pcs file
         if self.pcs_fn and os.path.isfile(self.pcs_fn):

@@ -22,7 +22,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
     def __init__(self, rs, cutoff, threshold,
                  model,
                  change_threshold=0.01,
-                 max_iter=10):
+                 max_iter=2):
         """
         initialize imputator module
 
@@ -73,6 +73,9 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             self.logger.critical("Nothing to impute, return None")
             return None
 
+        censored_y = censored_y.flatten()
+        uncensored_y = uncensored_y.flatten()
+
         # first learn model without censored data
         self.model.train(uncensored_X, uncensored_y)
 
@@ -86,23 +89,22 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
 
         it = 0
         change = 0
+        
         while True:
             self.logger.debug("Iteration %d of %d" % (it, self.max_iter))
 
             # predict censored y values
             y_mean, y_var = self.model.predict(censored_X)
             y_var[y_var < self.var_threshold] = self.var_threshold
-            y_stdev = numpy.sqrt(y_var)
+            y_stdev = numpy.sqrt(y_var)[:,0]
+            y_mean = y_mean[:,0]
 
-            imputed_y = \
-                [truncnorm.stats(a=(censored_y[index] -
-                                    y_mean[index]) / y_stdev[index],
-                                 b=(self.cutoff * 10 - y_mean[index]) /
-                                 y_stdev[index],
-                                 loc=y_mean[index],
-                                 scale=y_stdev[index],
-                                 moments='m')
-                 for index in range(len(censored_y))]
+            imputed_y = truncnorm.stats(a=(censored_y - y_mean) / y_stdev,
+                                    b=(self.cutoff * 10 - y_mean) / y_stdev,
+                                    loc=y_mean,
+                                    scale=y_stdev,
+                                    moments='m')
+            
             imputed_y = numpy.array(imputed_y)
 
             if sum(numpy.isfinite(imputed_y) == False) > 0:
@@ -147,4 +149,4 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         if not numpy.isfinite(imputed_y).all():
             self.logger.critical("Imputed values are not finite, %s" %
                                  str(imputed_y))
-        return imputed_y
+        return numpy.reshape(imputed_y, [imputed_y.shape[0], 1])

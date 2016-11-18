@@ -6,3 +6,5 @@ Cython
 pynisher>=0.4.1
 ConfigSpace>=0.2.1
 pyrfr
+scikit-learn
+typing

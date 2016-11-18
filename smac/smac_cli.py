@@ -7,6 +7,9 @@ from smac.utils.io.cmd_reader import CMDReader
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_facade import SMAC
 from smac.facade.roar_facade import ROAR
+from smac.runhistory.runhistory import RunHistory
+from smac.smbo.objective import average_cost
+from smac.utils.merge_foreign_data import merge_foreign_data_from_file
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -42,12 +45,31 @@ class SMACCLI(object):
         root_logger.setLevel(args_.verbose_level)
 
         scen = Scenario(args_.scenario_file, misc_args)
-        
-        if args_.modus == "SMAC":
-            optimizer = SMAC(scenario=scen, rng=np.random.RandomState(args_.seed))
-        elif args_.modus == "ROAR":
-            optimizer = ROAR(scenario=scen, rng=np.random.RandomState(args_.seed))
-        optimizer.optimize()
 
-        optimizer.solver.runhistory.save_json(fn=os.path.join(scen.output_dir,"runhistory.json"))
+        rh = None
+        if args_.warmstart_runhistory:
+            aggregate_func = average_cost
+            rh = RunHistory(aggregate_func=aggregate_func)
+
+            scen, rh = merge_foreign_data_from_file(
+                        scenario=scen, 
+                        runhistory=rh,
+                        in_scenario_fn_list=args_.warmstart_scenario, 
+                        in_runhistory_fn_list=args_.warmstart_runhistory,
+                        cs=scen.cs,
+                        aggregate_func=aggregate_func)
+
+        if args_.modus == "SMAC":
+            optimizer = SMAC(
+                scenario=scen, rng=np.random.RandomState(args_.seed), runhistory=rh)
+        elif args_.modus == "ROAR":
+            optimizer = ROAR(
+                scenario=scen, rng=np.random.RandomState(args_.seed), runhistory=rh)
+        try:
+            optimizer.optimize()
+
+        finally:
+            # ensure that the runhistory is always dumped in the end
+            optimizer.solver.runhistory.save_json(
+                fn=os.path.join(scen.output_dir, "runhistory.json"))
         #smbo.runhistory.load_json(fn="runhistory.json", cs=smbo.config_space)

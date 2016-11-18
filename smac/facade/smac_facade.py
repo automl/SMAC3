@@ -204,7 +204,7 @@ class SMAC(object):
                                        threshold=threshold,
                                        model=model,
                                        change_threshold=0.01,
-                                       max_iter=10)
+                                       max_iter=2)
 
                 runhistory2epm = RunHistory2EPM4LogCost(
                     scenario=scenario, num_params=num_params,
