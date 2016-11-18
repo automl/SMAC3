@@ -21,21 +21,6 @@ sudo: false
 before_cache:
   - rm -f $HOME/.cache/pip/log/debug.log
 
-# command to install dependencies
-addons:
-  apt:
-    sources:
-    # necessary for rfr 
-    - ubuntu-toolchain-r-test
-    packages:
-    # necessary for rfr
-    - gcc-4.8
-    - g++-4.8
-    - libatlas-dev
-    - liblapack-dev
-    - libatlas-base-dev
-    - gfortran
-
 before_install:
   - wget http://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh
   - bash miniconda.sh -b -p $HOME/miniconda
@@ -43,11 +28,10 @@ before_install:
   - conda update --yes conda
   - conda create -n testenv --yes python=$TRAVIS_PYTHON_VERSION pip wheel nose
   - source activate testenv
+  - conda install gcc
 
 install:
   - pip install coverage pep8 python-coveralls
-  # necessary for rfr
-  - export CXX="g++-4.8" CC="gcc-4.8"
   - cat requirements.txt | xargs -n 1 -L 1 pip install
   - python setup.py install
 
