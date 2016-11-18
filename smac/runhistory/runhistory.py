@@ -23,23 +23,17 @@ RunValue = collections.namedtuple(
 
 class RunHistory(object):
 
-    '''
-         saves all run informations from target algorithm runs
+    '''Container for target algorithm run information.
 
-        Attributes
-        ----------
+    Guaranteed to be picklable.
+
+    Arguments
+    ---------
+    aggregate_func: callable
+        function to aggregate perf across instances
     '''
 
     def __init__(self, aggregate_func):
-        '''
-        Constructor
-        
-        Arguments
-        ---------
-        aggregate_func: callable
-            function to aggregate perf across instances
-        
-        '''
 
         # By having the data in a deterministic order we can do useful tests
         # when we serialize the data and can assume it's still in the same

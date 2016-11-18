@@ -1,5 +1,6 @@
+import pickle
+import tempfile
 import unittest
-import logging
 
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
@@ -21,9 +22,9 @@ def get_config_space():
 
 class RunhistoryTest(unittest.TestCase):
 
-    def test_add(self):
+    def test_add_and_pickle(self):
         '''
-            simply adding some rundata to runhistory
+            simply adding some rundata to runhistory, then pickle it
         '''
         rh = RunHistory(aggregate_func=average_cost)
         cs = get_config_space()
@@ -43,6 +44,15 @@ class RunhistoryTest(unittest.TestCase):
                additional_info={"start_time": 10})
 
         self.assertFalse(rh.empty())
+
+        tmpfile = tempfile.NamedTemporaryFile(mode='wb', delete=False)
+        pickle.dump(rh, tmpfile, -1)
+        name = tmpfile.name
+        tmpfile.close()
+
+        with open(name, 'rb') as fh:
+            loaded_rh = pickle.load(fh)
+        self.assertEqual(loaded_rh.data, rh.data)
 
     def test_get_config_runs(self):
         '''
