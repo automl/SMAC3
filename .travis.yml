@@ -41,15 +41,14 @@ before_install:
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - conda update --yes conda
-  - conda create -n testenv --yes python=$TRAVIS_PYTHON_VERSION pip nose
+  - conda create -n testenv --yes python=$TRAVIS_PYTHON_VERSION pip wheel nose
   - source activate testenv
 
 install:
-  - conda install --yes numpy>=1.6.1 scipy>=0.13.1 six setuptools Cython
   - pip install coverage pep8 python-coveralls
-  - pip install psutil
   # necessary for rfr
   - export CXX="g++-4.8" CC="gcc-4.8"
+  - cat requirements.txt | xargs -n 1 -L 1 pip install
   - python setup.py install
 
 # command to run tests, e.g. python setup.py test
