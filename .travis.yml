@@ -1,15 +1,25 @@
 language: python
-python:
-  - "3.4"
-  - "3.5"
-
-os:
-  - linux
-  - osx
 
 matrix:
-  allow_failures:
-    - os: osx
+
+  include:
+  - os: linux
+    env: DISTRIB="conda" PYTHON_VERSION="3.4"
+  - os: linux
+    env: DISTRIB="conda" PYTHON_VERSION="3.5" COVERAGE="true"
+
+  # Set language to generic to not break travis-ci
+  # https://github.com/travis-ci/travis-ci/issues/2312#issuecomment-195620855
+  # so far, this issue is still open and there is no good solution
+  # python will then be installed by anaconda
+  - os: osx
+    sudo: required
+    language: generic
+    env: DISTRIB="conda" PYTHON_VERSION="3.4"
+  - os: osx
+    sudo: required
+    language: generic
+    env: DISTRIB="conda" PYTHON_VERSION="3.5"
 
 cache:
   directories:
