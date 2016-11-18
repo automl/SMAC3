@@ -21,10 +21,6 @@ __version__ = "0.0.2"
 def _is_truthy(arg):
     return arg in ["1", "true", True]
 
-def _parse_initial_incumbent(arg):
-    arg = str.upper(arg.strip())
-    return arg if arg in ['DEFAULT', 'RANDOM'] else None
-
 
 class Scenario(object):
 
@@ -91,7 +87,8 @@ class Scenario(object):
         self._transform_arguments()
 
     def add_argument(self, name, help, callback=None, default=None,
-                     dest=None, required=False, mutually_exclusive_group=None):
+                     dest=None, required=False, mutually_exclusive_group=None,
+                     choice=None):
         """Add argument to the scenario object.
 
         Parameters
@@ -127,13 +124,14 @@ class Scenario(object):
                                  'required': required,
                                  'help': help,
                                  'dest': dest,
-                                 'callback': callback}
+                                 'callback': callback,
+                                 'choice': choice}
 
         if mutually_exclusive_group:
             self._groups[mutually_exclusive_group].add(name)
 
     def _parse_argument(self, name, scenario, help, callback=None, default=None,
-                        dest=None, required=False):
+                        dest=None, required=False, choice=None):
         normalized_name = name.lower().replace('-', '').replace('_', '')
         value = None
 
@@ -158,6 +156,11 @@ class Scenario(object):
 
         if value is not None and callable(callback):
             value = callback(value)
+
+        if value is not None and choice:
+            value = str.upper(value.strip())
+            if value not in choice:
+                value = None
 
         return dest, value
 
@@ -199,7 +202,7 @@ class Scenario(object):
                           dest='test_insts')
         self.add_argument(name='initial_incumbent', default="DEFAULT",
                           help=None, dest='initial_incumbent',
-                          callback=_parse_initial_incumbent)
+                          choice=['DEFAULT', 'RANDOM'])
         # instance name -> feature vector
         self.add_argument(name='features', default={}, help=None,
                           dest='feature_dict')
