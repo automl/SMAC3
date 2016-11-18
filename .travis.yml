@@ -28,7 +28,7 @@ before_install:
   - conda update --yes conda
   - conda create -n testenv --yes python=$TRAVIS_PYTHON_VERSION pip wheel nose
   - source activate testenv
-  - conda install gcc
+  - conda install --yes gcc
 
 install:
   - pip install coverage pep8 python-coveralls
