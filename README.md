@@ -59,7 +59,7 @@ If not, see <https://opensource.org/licenses/BSD-3-Clause>.
 
 # USAGE
 
-The usage of SMAC v3 is mainly the same as provided with [SMAC v2.08](www.cs.ubc.ca/labs/beta/Projects/SMAC/v2.08.00/manual.pdf).
+The usage of SMAC v3 is mainly the same as provided with [SMAC v2.08](http://www.cs.ubc.ca/labs/beta/Projects/SMAC/v2.08.00/manual.pdf).
 It supports the same parameter configuration space syntax and interface to target algorithms.
 Please note that we do not support the extended parameter configuration syntax introduced in SMACv2.10.
 
