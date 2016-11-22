@@ -1,14 +1,14 @@
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
-__maintainer__ = "Marius Lindauer"
-__email__ = "lindauer@cs.uni-freiburg.de"
-__version__ = "0.0.1"
 
 import os
 import logging
 import json
+import typing
 
+from ConfigSpace.configuration_space import ConfigurationSpace, Configuration
+from ConfigSpace.hyperparameters import FloatHyperparameter, IntegerHyperparameter
 
 
 class TrajLogger(object):
@@ -146,3 +146,66 @@ class TrajLogger(object):
         with open(self.aclib_traj_fn, "a") as fp:
             json.dump(traj_entry, fp)
             fp.write("\n")
+
+    @staticmethod
+    def read_traj_aclib_format(fn: str, cs: ConfigurationSpace):
+        """
+            reads trajectory from file
+
+            Parameters
+            ----------
+            fn: str
+                filename with saved runhistory in self._add_in_aclib_format format
+            cs: ConfigurationSpace
+                Configuration Space to translate dict object into Confiuration object
+
+            Returns
+            -------
+            trajectory: list
+                each entry in the list is a dictionary of the form
+                {"cpu_time": float,
+                 "total_cpu_time": None, # TODO
+                 "wallclock_time": float,
+                 "evaluations": int
+                 "cost": float,
+                 "incumbent": Configuration
+        """
+
+        trajectory = []
+        with open(fn) as fp:
+            for line in fp:
+                entry = json.loads(line)
+                entry["incumbent"] = TrajLogger._convert_dict_to_config(
+                    entry["incumbent"], cs=cs)
+                trajectory.append(entry)
+
+        return trajectory
+
+    @staticmethod
+    def _convert_dict_to_config(config_list: typing.List[str], cs: ConfigurationSpace):
+        '''
+            since we save a configurations in a dictionary str->str
+            we have to try to figure out the type (int, float, str) of each parameter value
+
+            Parameters
+            ----------
+            config_list: typing.List[str]
+                configuration as a list of "str='str'"
+            cs: ConfigurationSpace
+                Configuration Space to translate dict object into Confiuration object
+        '''
+        config_dict = {}
+        for param in config_list:
+            k,v = param.split("=")
+            v = v.strip("'")
+            hp = cs.get_hyperparameter(k)
+            if isinstance(hp, FloatHyperparameter):
+                v = float(v)
+            elif isinstance(hp, IntegerHyperparameter):
+                v = int(v)
+            config_dict[k] = v
+            
+        config = Configuration(configuration_space=cs, values=config_dict)
+        config.origin = "External Trajectory"
+
+        return config

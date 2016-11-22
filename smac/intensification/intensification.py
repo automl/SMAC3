@@ -137,7 +137,11 @@ class Intensifier(object):
                 inc_inst = [s.instance for s in inc_runs]
                 inc_inst = list(Counter(inc_inst).items())
                 inc_inst.sort(key=lambda x: x[1], reverse=True)
-                max_runs = inc_inst[0][1]
+                try:
+                    max_runs = inc_inst[0][1]
+                except IndexError:
+                    self.logger.debug("No run for incumbent found")
+                    max_runs = 0
                 inc_inst = set([x[0] for x in inc_inst if x[1] == max_runs])
 
                 available_insts = (self.instances - inc_inst)
@@ -158,6 +162,7 @@ class Intensifier(object):
                     # Line 5 (here for easier code)
                     next_instance = self.rs.choice(list(available_insts))
                     # Line 7
+                    self.logger.debug("Add run of incumbent")
                     status, cost, dur, res = self.tae_runner.start(config=incumbent,
                                                             instance=next_instance,
                                                             seed=next_seed,
@@ -203,8 +208,9 @@ class Intensifier(object):
                         chal_sum_cost = sum_cost(config=challenger, instance_seed_pairs=chall_inst_seeds,
                                                  run_history=run_history)
                         cutoff = min(self.cutoff,
-                                     (inc_sum_cost - chal_sum_cost) *
-                                     self.Adaptive_Capping_Slackfactor)
+                                     inc_sum_cost * self.Adaptive_Capping_Slackfactor 
+                                       - chal_sum_cost
+                                     )
 
                         if cutoff < 0:  # no time left to validate challenger
                             self.logger.debug(
@@ -214,6 +220,7 @@ class Intensifier(object):
                     else:
                         cutoff = self.cutoff
 
+                    self.logger.debug("Add run of challenger")
                     status, cost, dur, res = self.tae_runner.start(config=challenger,
                                                             instance=instance,
                                                             seed=seed,
