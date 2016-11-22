@@ -1,17 +1,13 @@
-import os
 import setuptools
 
 import smac
 
 
-requirements = ['setuptools',
-                'numpy>=1.6.1',
-                'scipy>=0.13.1',
-                'pyrfr',
-                'ConfigSpace>=0.2.1',
-                'pynisher>=0.4.1',
-                'scikit-learn',
-                'typing']
+with open('requirements.txt') as fh:
+    requirements = fh.read()
+requirements = requirements.split('\n')
+requirements = [requirement.strip() for requirement in requirements]
+
 
 setuptools.setup(
     name="smac",
