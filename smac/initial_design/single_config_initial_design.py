@@ -88,6 +88,8 @@ class SingleConfigInitialDesign(InitialDesign):
         self.traj_logger.add_entry(train_perf=cost,
                                    incumbent_id=self.stats.inc_changed,
                                    incumbent=initial_incumbent)
+        self.runhistory.add(config=initial_incumbent, cost=cost, time=runtime,
+                            status=status, instance_id=rand_inst, seed=initial_seed)
 
         return initial_incumbent
 

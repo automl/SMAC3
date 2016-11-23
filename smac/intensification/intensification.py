@@ -11,7 +11,7 @@ from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
 
 from smac.smbo.objective import total_runtime, sum_cost
 from smac.stats.stats import Stats
-from smac.utils.constants import MAXINT
+from smac.utils.constants import MAXINT, MAX_CUTOFF
 
 __author__ = "Katharina Eggensperger, Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -28,7 +28,7 @@ class Intensifier(object):
     '''
 
     def __init__(self, tae_runner, stats, traj_logger, rng, instances=None,
-                 instance_specifics={}, cutoff=MAXINT, deterministic=False,
+                 instance_specifics={}, cutoff=MAX_CUTOFF, deterministic=False,
                  run_obj_time=True, run_limit=MAXINT, maxR=2000):
         '''
         Constructor
@@ -219,7 +219,7 @@ class Intensifier(object):
 
                     else:
                         cutoff = self.cutoff
-
+                        
                     self.logger.debug("Add run of challenger")
                     status, cost, dur, res = self.tae_runner.start(config=challenger,
                                                             instance=instance,
