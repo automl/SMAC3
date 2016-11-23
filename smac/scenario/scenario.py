@@ -141,6 +141,38 @@ class Scenario(object):
 
     def _parse_argument(self, name, scenario, help, callback=None, default=None,
                         dest=None, required=False, choice=None):
+        """Search the scenario dict for a single allowed argument and parse it.
+
+        Side effect: the argument is removed from the scenario dict if found.
+
+        name : str
+            Argument name, as specified in the Scenario class.
+        scenario : dict
+            Scenario dict as provided by the user or as parsed by the cli
+            interface.
+        help : str
+            Help string of the argument
+        callback : callable, optional (default=None)
+            If given, will be called to transform the given argument.
+        default : object, optional (default=None)
+            Will be used as default value if the argument is not given by the
+            user.
+        dest : str, optional (default=None)
+            Will be used as member name of the scenario.
+        required : bool (default=False)
+            If ``True``, the scenario will raise an Exception if the argument is
+            not given.
+        choice : list, optional (default=None)
+            If given, the scenario checks whether the argument is in the
+            list. If not, it raises an Exception.
+
+        Returns
+        -------
+        str
+            Member name of the attribute.
+        object
+            Value of the attribute.
+        """
         normalized_name = name.lower().replace('-', '').replace('_', '')
         value = None
 
