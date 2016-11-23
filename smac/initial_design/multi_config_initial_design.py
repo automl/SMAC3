@@ -5,6 +5,7 @@ import numpy as np
 from ConfigSpace.configuration_space import Configuration
 
 from smac.initial_design.initial_design import InitialDesign
+from smac.initial_design.single_config_initial_design import SingleConfigInitialDesign
 from smac.intensification.intensification import Intensifier
 
 from smac.tae.execute_ta_run import ExecuteTARun
@@ -14,6 +15,7 @@ from smac.scenario.scenario import Scenario
 from smac.tae.execute_ta_run import StatusType
 from smac.runhistory.runhistory import RunHistory
 from smac.utils import constants
+
 
 
 __author__ = "Marius Lindauer"
@@ -30,7 +32,7 @@ class MultiConfigInitialDesign(InitialDesign):
                  traj_logger: TrajLogger,
                  runhistory: RunHistory,
                  rng: np.random.RandomState,
-                 get_configs: typing.Callable, 
+                 get_configs: typing.Callable,
                  intensifier: Intensifier,
                  aggregate_func: typing.Callable
                  ):
@@ -58,7 +60,7 @@ class MultiConfigInitialDesign(InitialDesign):
             incumbent
         aggregate_func: typing:Callable
             function to aggregate performance of a configuration across instances
-            
+
         '''
         super().__init__(tae_runner=tae_runner,
                          scenario=scenario,
@@ -66,7 +68,7 @@ class MultiConfigInitialDesign(InitialDesign):
                          traj_logger=traj_logger,
                          runhistory=runhistory,
                          rng=rng)
-        
+
         self.get_configs = get_configs
         self.intensifier = intensifier
         self.aggregate_func = aggregate_func
@@ -74,17 +76,38 @@ class MultiConfigInitialDesign(InitialDesign):
     def run(self) -> Configuration:
         '''
             runs the initial design given the configurations from self.get_configs
-            
+
             Returns
             -------
             incumbent: Configuration()
                 initial incumbent configuration
         '''
-        
         configs = self.get_configs()
-        inc, inc_perf = self.intensifier.intensify(challengers=configs[1:], 
-                                              incumbent=configs[0], 
-                                              run_history=self.runhistory, 
-                                              aggregate_func=self.aggregate_func)
+
+        self.traj_logger.add_entry(train_perf=2**31,
+                                   incumbent_id=1,
+                                   incumbent=configs[0])
+
+        if len(set(configs)) > 1:
+            # at least two configuration differ
+            # otherwise intensify will not run any configuration
+            inc, inc_perf = self.intensifier.intensify(challengers=set(configs[1:]),
+                                                   incumbent=configs[0],
+                                                   run_history=self.runhistory,
+                                                   aggregate_func=self.aggregate_func)
+
+        else:
+            self.logger.debug("All initial challengers are identical")
+            scid = SingleConfigInitialDesign(tae_runner=self.tae_runner,
+                                      scenario=self.scenario,
+                                      stats=self.stats,
+                                      traj_logger=self.traj_logger,
+                                      runhistory=self.runhistory,
+                                      rng=self.rng)
+            def get_config():
+                return configs[0]
+            scid._select_configuration = get_config
+            scid.run()
+            inc = configs[0]
 
         return inc

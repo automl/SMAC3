@@ -178,7 +178,7 @@ class SMAC(object):
         # initial design
         if initial_design is not None and initial_configurations is not None:
             raise ValueError(
-                "Either use initial_design or initial_configuration; but not both")
+                "Either use initial_design or initial_configurations; but not both")
             
         if initial_configurations is not None:
             

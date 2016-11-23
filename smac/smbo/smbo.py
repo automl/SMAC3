@@ -150,6 +150,9 @@ class SMBO(BaseSolver):
 
             self.stats.print_stats(debug_out=True)
 
+            if iteration == 3:
+                break
+
         return self.incumbent
 
     def choose_next(self, X, Y, num_interleaved_random=1010,

@@ -59,9 +59,11 @@ class CMDReader(object):
         req_opts.add_argument("--warmstart_scenario", default=None,
                               nargs="*",
                               help=SUPPRESS)  
-        req_opts.add_argument("--warmstart_trajectory", default=None,
+        req_opts.add_argument("--warmstart_incumbent", default=None,
                               nargs="*",
-                              help=SUPPRESS)  # list of trajectory dump files
+                              help=SUPPRESS)# list of trajectory dump files, 
+                                            # reads runhistory 
+                                            # and uses final incumbent as challenger 
 
         args_, misc = parser.parse_known_args()
         self._check_args(args_)
