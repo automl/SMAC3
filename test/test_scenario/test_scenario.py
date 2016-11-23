@@ -7,6 +7,7 @@ from collections import defaultdict
 import os
 import logging
 import unittest
+import pickle
 import copy
 
 import numpy as np
@@ -128,26 +129,6 @@ class ScenarioTest(unittest.TestCase):
                                 scenario.add_argument, 'name', required=True,
                                 help=None, mutually_exclusive_group='required')
 
-    def test_initial_incumbent(self):
-        scenario = Scenario(self.test_scenario_dict)
-        self.assertEqual(scenario.initial_incumbent, "DEFAULT")
-
-        self.test_scenario_dict["initial_incumbent"] = "RANDOM"
-        scenario = Scenario(self.test_scenario_dict)
-        self.assertEqual(scenario.initial_incumbent, "RANDOM")
-
-        self.test_scenario_dict["initial_incumbent"] = "RanDOm"
-        scenario = Scenario(self.test_scenario_dict)
-        self.assertEqual(scenario.initial_incumbent, "RANDOM")
-
-        self.test_scenario_dict["initial_incumbent"] = "defaUlt "
-        scenario = Scenario(self.test_scenario_dict)
-        self.assertEqual(scenario.initial_incumbent, "DEFAULT")
-
-        self.test_scenario_dict["initial_incumbent"] = "DOESNOTEXIST"
-        scenario = Scenario(self.test_scenario_dict)
-        self.assertIsNone(scenario.initial_incumbent)
-
     def test_merge_foreign_data(self):
         ''' test smac.utils.merge_foreign_data '''
 
@@ -186,6 +167,33 @@ class ScenarioTest(unittest.TestCase):
                      additional_info=None)
         
         self.assertRaises(ValueError, merge_foreign_data, **{"scenario":scenario, "runhistory":rh_base, "in_scenario_list":[scenario_2], "in_runhistory_list":[rh_merge]})
+
+    def test_pickle_dump(self):
+        scenario = Scenario(self.test_scenario_dict)
+
+        packed_scenario = pickle.dumps(scenario)
+        self.assertIsNotNone(packed_scenario)
+
+        unpacked_scenario = pickle.loads(packed_scenario)
+        self.assertIsNotNone(unpacked_scenario)
+        self.assertIsNotNone(unpacked_scenario.logger)
+        self.assertEqual(scenario.logger.name, unpacked_scenario.logger.name)
+
+    def test_choice_argument(self):
+        scenario_dict = self.test_scenario_dict
+        scenario_dict['initial_incumbent'] = 'DEFAULT'
+        scenario = Scenario(scenario_dict)
+        self.assertEqual(scenario.initial_incumbent, 'DEFAULT')
+
+        self.assertRaisesRegex(TypeError, 'Choice must be of type '
+                                          'list/set/tuple.',
+                               scenario.add_argument, name='a', choice='abc',
+                               help=None)
+
+        scenario_dict['initial_incumbent'] = 'Default'
+        self.assertRaisesRegex(ValueError,
+                               "Argument initial_incumbent can only take a "
+                               "value in ['DEFAULT, 'RANDOM'] but is Default")
 
 
 if __name__ == "__main__":
