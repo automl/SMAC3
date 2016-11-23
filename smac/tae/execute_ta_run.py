@@ -122,6 +122,11 @@ class ExecuteTARun(object):
                                                           seed=seed,
                                                           instance_specific=instance_specific,
                                                           **additional_arguments)
+        
+        if self.stats.ta_runs == 0 and status in [StatusType.CRASHED, StatusType.ABORT]:
+            self.logger.critical("First run crashed -- Abort")
+            sys.exit(1)
+        
         # update SMAC stats
         self.stats.ta_runs += 1
         self.stats.ta_time_used += float(runtime)
