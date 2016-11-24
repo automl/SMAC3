@@ -35,6 +35,8 @@ def merge_foreign_data_from_file(scenario: Scenario,
             scenario, runhistory
     '''
 
+    if not in_scenario_fn_list:
+        raise ValueError("To read warmstart data from previous runhistories, the corresponding scenarios are required. Use option --warmstart_scenario") 
     scens = [Scenario(scenario=scen_fn) for scen_fn in in_scenario_fn_list]
     rhs = []
     for rh_fn in in_runhistory_fn_list:
