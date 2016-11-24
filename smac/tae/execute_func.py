@@ -80,9 +80,6 @@ class AbstractTAFunc(ExecuteTARun):
                      'wall_time_in_s': cutoff,
                      'mem_in_mb': memory_limit}
         
-        if cutoff is not None and cutoff > MAX_CUTOFF:
-            self.logger.warn("Pynisher may only limit the cutoff for up to %d" %(MAX_CUTOFF))
-
         obj = pynisher.enforce_limits(**arguments)(self.ta)
 
         obj_kwargs = {}
