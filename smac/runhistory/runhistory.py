@@ -45,6 +45,7 @@ class RunHistory(object):
         self._n_id = 0
 
         self.cost_per_config = {} # config_id -> cost
+        self.runs_per_config = {} # config_id -> number of runs
         
         self.aggregate_func = aggregate_func
 
@@ -87,11 +88,13 @@ class RunHistory(object):
         v = RunValue(cost, time, status, additional_info)
 
         self.data[k] = v
-        self.update_cost(config)
+        # assumes an average across runs as cost function
+        self.incremental_update_cost(config, cost)
 
     def update_cost(self, config):
         '''
-            store the performance of a configuration across the instances in self.cost_perf_config; 
+            store the performance of a configuration across the instances in self.cost_perf_config
+            and also updates self.runs_per_config;
             uses self.aggregate_func
             
             Arguments
@@ -103,6 +106,48 @@ class RunHistory(object):
         perf = self.aggregate_func(config, self, inst_seeds)
         config_id = self.config_ids[config]
         self.cost_per_config[config_id] = perf
+        self.runs_per_config[config_id] = len(inst_seeds)
+        
+    def compute_all_costs(self, instances:typing.List[str]=None):
+        '''
+            computes the cost of all configurations from scratch
+            and overwrites self.cost_perf_config and self.runs_per_config accordingly;
+            Since we iterate over the runhistory for every configuration,
+            this function can be quite expensive.
+            
+            Arguments
+            ---------
+            instances: typing.List[str]
+                list of instances; if given, cost is only computed with wrt to this instance set
+        '''
+        
+        self.cost_per_config = {}
+        self.runs_per_config = {}
+        for config, config_id in self.config_ids.items():
+            inst_seeds = set(self.get_runs_for_config(config))
+            if instances is not None:
+                inst_seeds = filter(lambda x: x.instance in instances, inst_seeds)
+            perf = self.aggregate_func(config, self, inst_seeds)
+            self.cost_per_config[config_id] = perf
+            self.runs_per_config[config_id] = len(inst_seeds)
+        
+    def incremental_update_cost(self, config:Configuration, cost:float):
+        '''
+            incrementally updates the performance of a configuration by using a moving average; 
+            
+            Arguments
+            --------
+            config: Configuration
+                configuration to update cost based on all runs in runhistory
+            cost: float
+                cost of new run of config
+        '''
+        
+        config_id = self.config_ids[config]
+        n_runs = self.runs_per_config.get(config_id,0)
+        old_cost = self.cost_per_config.get(config_id,0.)
+        self.cost_per_config[config_id] = ((old_cost * n_runs) + cost) / (n_runs + 1)
+        self.runs_per_config[config_id] = n_runs + 1
 
     def get_cost(self, config):
         config_id = self.config_ids[config]
