@@ -40,7 +40,7 @@ class TrajLogger(object):
 
         self.output_dir = output_dir
         if output_dir is None:
-            self.logger.warn("No output directory for trajectory logging specified -- trajectory will not be logged.")
+            self.logger.info("No output directory for trajectory logging specified -- trajectory will not be logged.")
 
         else:
             if not os.path.isdir(output_dir):
