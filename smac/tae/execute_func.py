@@ -5,7 +5,7 @@ import numpy as np
 import pynisher
 
 from smac.tae.execute_ta_run import StatusType, ExecuteTARun
-
+from smac.utils.constants import MAX_CUTOFF
 
 __author__ = "Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -79,7 +79,7 @@ class AbstractTAFunc(ExecuteTARun):
         arguments = {'logger': logging.getLogger("pynisher"),
                      'wall_time_in_s': cutoff,
                      'mem_in_mb': memory_limit}
-
+        
         obj = pynisher.enforce_limits(**arguments)(self.ta)
 
         obj_kwargs = {}

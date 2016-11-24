@@ -1,4 +1,5 @@
 import logging
+import typing
 
 import numpy as np
 
@@ -15,6 +16,8 @@ from smac.initial_design.initial_design import InitialDesign
 from smac.initial_design.default_configuration_design import \
     DefaultConfiguration
 from smac.initial_design.random_configuration_design import RandomConfiguration
+from smac.initial_design.multi_config_initial_design import \
+    MultiConfigInitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.smbo.smbo import SMBO
 from smac.smbo.objective import average_cost
@@ -26,6 +29,7 @@ from smac.epm.base_epm import AbstractEPM
 from smac.utils.util_funcs import get_types
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.constants import MAXINT
+from smac.configspace import Configuration
 
 
 __author__ = "Marius Lindauer"
@@ -43,9 +47,10 @@ class SMAC(object):
                  runhistory: RunHistory=None,
                  intensifier: Intensifier=None,
                  acquisition_function: AbstractAcquisitionFunction=None,
-                 model:AbstractEPM=None,
+                 model: AbstractEPM=None,
                  runhistory2epm: AbstractRunHistory2EPM=None,
                  initial_design: InitialDesign=None,
+                 initial_configurations: typing.List[Configuration]=None,
                  stats: Stats=None,
                  rng: np.random.RandomState=None):
         '''
@@ -77,6 +82,9 @@ class SMAC(object):
             RunHistory2EPM4LogCost if objective is runtime.
         initial_design: InitialDesign
             initial sampling design
+        initial_configuration: typing.List[Configuration]
+            list of initial configurations for initial design -- 
+            cannot be used togehter with initial_design
         stats: Stats
             optional stats object
         rng: np.random.RandomState
@@ -150,12 +158,39 @@ class SMAC(object):
         # inject stats if necessary
         if tae_runner.stats is None:
             tae_runner.stats = self.stats
-        # inject runhistory if necessary 
+        # inject runhistory if necessary
         if tae_runner.runhistory is None:
             tae_runner.runhistory = runhistory
 
+
+        # initial intensification
+        if intensifier is None:
+            intensifier = Intensifier(tae_runner=tae_runner,
+                                      stats=self.stats,
+                                      traj_logger=traj_logger,
+                                      rng=rng,
+                                      instances=scenario.train_insts,
+                                      cutoff=scenario.cutoff,
+                                      deterministic=scenario.deterministic,
+                                      run_obj_time=scenario.run_obj == "runtime",
+                                      instance_specifics=scenario.instance_specific)
+
         # initial design
-        if initial_design is None:
+        if initial_design is not None and initial_configurations is not None:
+            raise ValueError(
+                "Either use initial_design or initial_configurations; but not both")
+            
+        if initial_configurations is not None:
+            initial_design = MultiConfigInitialDesign(tae_runner=tae_runner,
+                                                      scenario=scenario,
+                                                      stats=self.stats,
+                                                      traj_logger=traj_logger,
+                                                      runhistory=runhistory,
+                                                      rng=rng,
+                                                      configs=initial_configurations, 
+                                                      intensifier=intensifier,
+                                                      aggregate_func=aggregate_func)
+        elif initial_design is None:
             if scenario.initial_incumbent == "DEFAULT":
                 initial_design = DefaultConfiguration(tae_runner=tae_runner,
                                                       scenario=scenario,
@@ -173,18 +208,6 @@ class SMAC(object):
             else:
                 raise ValueError("Don't know what kind of initial_incumbent "
                                  "'%s' is" % scenario.initial_incumbent)
-
-        # initial intensification
-        if intensifier is None:
-            intensifier = Intensifier(tae_runner=tae_runner,
-                                      stats=self.stats,
-                                      traj_logger=traj_logger,
-                                      rng=rng,
-                                      instances=scenario.train_insts,
-                                      cutoff=scenario.cutoff,
-                                      deterministic=scenario.deterministic,
-                                      run_obj_time=scenario.run_obj == "runtime",
-                                      instance_specifics=scenario.instance_specific)
 
         # initial conversion of runhistory into EPM data
         if runhistory2epm is None:
@@ -239,16 +262,16 @@ class SMAC(object):
     def _get_rng(self, rng):
         '''
             initial random number generator 
-           
+
             Arguments
             ---------
             rng: np.random.RandomState|int|None
-                
+
             Returns
             -------
             int, np.random.RandomState
         '''
-        
+
         # initialize random number generator
         if rng is None:
             num_run = np.random.randint(1234567980)
