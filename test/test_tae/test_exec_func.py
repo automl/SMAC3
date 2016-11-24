@@ -1,3 +1,5 @@
+import os
+import sys
 import time
 import unittest
 import unittest.mock
@@ -9,7 +11,6 @@ from smac.tae.execute_func import ExecuteTAFuncDict, ExecuteTAFuncArray
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.tae.execute_ta_run import StatusType
-
 
 class TestExecuteFunc(unittest.TestCase):
 
@@ -66,10 +67,24 @@ class TestExecuteFunc(unittest.TestCase):
 
         taf = ExecuteTAFuncDict(ta=fill_memory, stats=self.stats)
         rval = taf.run(config=None, memory_limit=1024)
-        self.assertEqual(rval[0], StatusType.MEMOUT)
-        self.assertEqual(rval[1], 1234567890)
-        self.assertGreaterEqual(rval[2], 0.0)
-        self.assertEqual(rval[3], dict())
+
+        platform = os.getenv('TRAVIS_OS_NAME')
+        if platform is None:
+            platform = {'linux': 'linux',
+                        'darwin': 'osx'}.get(sys.platform)
+
+        print(platform, sys.platform)
+        if platform == 'linux':
+            self.assertEqual(rval[0], StatusType.MEMOUT)
+            self.assertEqual(rval[1], 1234567890)
+            self.assertGreaterEqual(rval[2], 0.0)
+            self.assertEqual(rval[3], dict())
+        elif platform == 'osx':
+            self.assertEqual(rval[0], StatusType.SUCCESS)
+        else:
+            raise ValueError('Test cannot be performed on platform %s' %
+                             sys.platform)
+
 
     def test_timeout(self):
         def run_over_time(*args):
