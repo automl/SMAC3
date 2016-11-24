@@ -32,7 +32,7 @@ class MultiConfigInitialDesign(InitialDesign):
                  traj_logger: TrajLogger,
                  runhistory: RunHistory,
                  rng: np.random.RandomState,
-                 get_configs: typing.Callable,
+                 configs: typing.List[Configuration],
                  intensifier: Intensifier,
                  aggregate_func: typing.Callable
                  ):
@@ -53,8 +53,8 @@ class MultiConfigInitialDesign(InitialDesign):
             runhistory with all target algorithm runs
         rng: np.random.RandomState
             random state
-        get_configs: typing.Callable
-            callable to get a list of initial configurations
+        configs: typing.List[Configuration]
+            list of initial configurations
         intensifier: Intensifier
             intensification object to issue a racing to decide the current
             incumbent
@@ -69,7 +69,7 @@ class MultiConfigInitialDesign(InitialDesign):
                          runhistory=runhistory,
                          rng=rng)
 
-        self.get_configs = get_configs
+        self.configs = configs
         self.intensifier = intensifier
         self.aggregate_func = aggregate_func
 
@@ -82,7 +82,7 @@ class MultiConfigInitialDesign(InitialDesign):
             incumbent: Configuration()
                 initial incumbent configuration
         '''
-        configs = self.get_configs()
+        configs = self.configs
 
         self.traj_logger.add_entry(train_perf=2**31,
                                    incumbent_id=1,

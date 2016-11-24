@@ -39,7 +39,7 @@ class TestMultiInitialDesign(unittest.TestCase):
         configs = [Configuration(configuration_space=self.cs, values={"x1":4}),
                    Configuration(configuration_space=self.cs, values={"x1":2})]
         dc = MultiConfigInitialDesign(tae_runner=self.ta, scenario=self.scenario, stats=stats,
-                             traj_logger=tj, runhistory=rh, rng=rng, get_configs=lambda : configs,
+                             traj_logger=tj, runhistory=rh, rng=rng, configs=configs,
                              intensifier=intensifier, aggregate_func=average_cost)
 
         inc = dc.run()

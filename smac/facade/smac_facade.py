@@ -181,17 +181,13 @@ class SMAC(object):
                 "Either use initial_design or initial_configurations; but not both")
             
         if initial_configurations is not None:
-            
-            def get_init_configs():
-                return initial_configurations
-            
             initial_design = MultiConfigInitialDesign(tae_runner=tae_runner,
                                                       scenario=scenario,
                                                       stats=self.stats,
                                                       traj_logger=traj_logger,
                                                       runhistory=runhistory,
                                                       rng=rng,
-                                                      get_configs=get_init_configs, 
+                                                      configs=initial_configurations, 
                                                       intensifier=intensifier,
                                                       aggregate_func=aggregate_func)
         elif initial_design is None:
