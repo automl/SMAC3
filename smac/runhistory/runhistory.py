@@ -127,10 +127,12 @@ class RunHistory(object):
         for config, config_id in self.config_ids.items():
             inst_seeds = set(self.get_runs_for_config(config))
             if instances is not None:
-                inst_seeds = filter(lambda x: x.instance in instances, inst_seeds)
-            perf = self.aggregate_func(config, self, inst_seeds)
-            self.cost_per_config[config_id] = perf
-            self.runs_per_config[config_id] = len(inst_seeds)
+                inst_seeds = list(filter(lambda x: x.instance in instances, inst_seeds))
+                
+            if inst_seeds: # can be empty if never saw any runs on <instances>
+                perf = self.aggregate_func(config, self, inst_seeds)
+                self.cost_per_config[config_id] = perf
+                self.runs_per_config[config_id] = len(inst_seeds)
         
     def incremental_update_cost(self, config:Configuration, cost:float):
         '''
