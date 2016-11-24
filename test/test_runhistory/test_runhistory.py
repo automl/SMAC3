@@ -23,9 +23,6 @@ def get_config_space():
 
 class RunhistoryTest(unittest.TestCase):
     
-    def setUp(self):
-        numpy.seterr(all='raise')
-
     def test_add_and_pickle(self):
         '''
             simply adding some rundata to runhistory, then pickle it
