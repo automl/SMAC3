@@ -1,6 +1,7 @@
 import collections
 import json
 import numpy
+import typing
 
 from smac.configspace import Configuration
 from smac.tae.execute_ta_run import StatusType
