@@ -1,3 +1,15 @@
+# 0.2.1
+
+* CI: travis-ci continuous integration on OSX
+* ADD: initial design for mulitple configurations, initial design for a 
+  random configuration
+* MAINT: use sklearn PCA if more than 7 instance features are available (as 
+  in SMAC 1 and 2)
+* MAINT: use same minimum step size for the stochastic local search as in SMAC2.
+* MAINT: use same number of imputation iterations as in SMAC2.
+* FIX 98: automatically seed the configuration space object based on the SMAC
+  seed.
+
 # 0.2
 
 * ADD 55: Separate modules for the initial design and a more flexible 
