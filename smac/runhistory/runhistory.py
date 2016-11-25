@@ -1,6 +1,7 @@
 import collections
 import json
 import numpy
+import typing
 
 from smac.configspace import Configuration
 from smac.tae.execute_ta_run import StatusType
@@ -23,23 +24,17 @@ RunValue = collections.namedtuple(
 
 class RunHistory(object):
 
-    '''
-         saves all run informations from target algorithm runs
+    '''Container for target algorithm run information.
 
-        Attributes
-        ----------
+    Guaranteed to be picklable.
+
+    Arguments
+    ---------
+    aggregate_func: callable
+        function to aggregate perf across instances
     '''
 
     def __init__(self, aggregate_func):
-        '''
-        Constructor
-        
-        Arguments
-        ---------
-        aggregate_func: callable
-            function to aggregate perf across instances
-        
-        '''
 
         # By having the data in a deterministic order we can do useful tests
         # when we serialize the data and can assume it's still in the same
@@ -50,8 +45,10 @@ class RunHistory(object):
         self.ids_config = {}  # id -> config
         self._n_id = 0
 
-        self.cost_per_config = {} # config_id -> cost
-        
+        self.cost_per_config = {}  # config_id -> cost
+        # runs_per_config is necessary for computing the moving average
+        self.runs_per_config = {}  # config_id -> number of runs
+
         self.aggregate_func = aggregate_func
 
     def add(self, config, cost, time,
@@ -93,13 +90,15 @@ class RunHistory(object):
         v = RunValue(cost, time, status, additional_info)
 
         self.data[k] = v
-        self.update_cost(config)
+        # assumes an average across runs as cost function
+        self.incremental_update_cost(config, cost)
 
     def update_cost(self, config):
         '''
-            store the performance of a configuration across the instances in self.cost_perf_config; 
+            store the performance of a configuration across the instances in self.cost_perf_config
+            and also updates self.runs_per_config;
             uses self.aggregate_func
-            
+
             Arguments
             --------
             config: Configuration
@@ -109,6 +108,52 @@ class RunHistory(object):
         perf = self.aggregate_func(config, self, inst_seeds)
         config_id = self.config_ids[config]
         self.cost_per_config[config_id] = perf
+        self.runs_per_config[config_id] = len(inst_seeds)
+
+    def compute_all_costs(self, instances: typing.List[str]=None):
+        '''
+            computes the cost of all configurations from scratch
+            and overwrites self.cost_perf_config and self.runs_per_config accordingly;
+            Since we iterate over the runhistory for every configuration,
+            this function can be quite expensive.
+
+            Arguments
+            ---------
+            instances: typing.List[str]
+                list of instances; if given, cost is only computed wrt to this instance set
+        '''
+
+        self.cost_per_config = {}
+        self.runs_per_config = {}
+        for config, config_id in self.config_ids.items():
+            inst_seeds = set(self.get_runs_for_config(config))
+            if instances is not None:
+                inst_seeds = list(
+                    filter(lambda x: x.instance in instances, inst_seeds))
+
+            if inst_seeds:  # can be empty if never saw any runs on <instances>
+                perf = self.aggregate_func(config, self, inst_seeds)
+                self.cost_per_config[config_id] = perf
+                self.runs_per_config[config_id] = len(inst_seeds)
+
+    def incremental_update_cost(self, config: Configuration, cost: float):
+        '''
+            incrementally updates the performance of a configuration by using a moving average; 
+
+            Arguments
+            --------
+            config: Configuration
+                configuration to update cost based on all runs in runhistory
+            cost: float
+                cost of new run of config
+        '''
+
+        config_id = self.config_ids[config]
+        n_runs = self.runs_per_config.get(config_id, 0)
+        old_cost = self.cost_per_config.get(config_id, 0.)
+        self.cost_per_config[config_id] = (
+            (old_cost * n_runs) + cost) / (n_runs + 1)
+        self.runs_per_config[config_id] = n_runs + 1
 
     def get_cost(self, config):
         config_id = self.config_ids[config]
@@ -131,8 +176,9 @@ class RunHistory(object):
         list_ = []
         for k in self.data:
             # TA will return ABORT if config. budget was exhausted and
-            # we don't want to collect such runs to compute the cost of a configuration
-            if config_id == k.config_id and self.data[k].status not in [StatusType.ABORT] : 
+            # we don't want to collect such runs to compute the cost of a
+            # configuration
+            if config_id == k.config_id and self.data[k].status not in [StatusType.ABORT]:
                 ist = InstanceSeedPair(k.instance_id, k.seed)
                 list_.append(ist)
         return list_
@@ -189,12 +235,11 @@ class RunHistory(object):
         self.ids_config = {int(id_): Configuration(cs, values=values)
                            for id_, values in all_data["configs"].items()}
 
-
         self.config_ids = {Configuration(cs, values=values): int(id_)
                            for id_, values in all_data["configs"].items()}
 
         self._n_id = len(self.config_ids)
-        
+
         self.data = {RunKey(int(k[0]), k[1], int(k[2])):
                      RunValue(float(v[0]), float(v[1]), v[2], v[3])
                      for k, v in all_data["data"]}
@@ -209,18 +254,27 @@ class RunHistory(object):
         cs : ConfigSpace
             instance of configuration space
         """
-
         new_runhistory = RunHistory(self.aggregate_func)
         new_runhistory.load_json(fn, cs)
+        self.update(runhistory=new_runhistory)
+
+    def update(self, runhistory):
+        """Update the current runhistory by adding new runs from a json file.
+
+        Parameters
+        ----------
+        runhistory: RunHistory
+            runhistory with additional data to be added to self
+        """
 
         # Configurations might be already known, but by a different ID. This
         # does not matter here because the add() method handles this
         # correctly by assigning an ID to unknown configurations and re-using
         #  the ID
-        for key, value in new_runhistory.data.items():
+        for key, value in runhistory.data.items():
             config_id, instance_id, seed = key
             cost, time, status, additional_info = value
-            config = new_runhistory.ids_config[config_id]
+            config = runhistory.ids_config[config_id]
             self.add(config=config, cost=cost, time=time,
                      status=status, instance_id=instance_id,
                      seed=seed, additional_info=additional_info)

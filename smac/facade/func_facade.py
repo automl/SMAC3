@@ -70,6 +70,7 @@ def fmin_smac(func: callable,
     scenario_dict = {"run_obj": "quality",  # we optimize quality
                      "cs": cs,  # configuration space
                      "deterministic": "true",
+                     "initial_incumbent": "DEFAULT"
                      }
     if maxfun > 0:
         scenario_dict["runcount_limit"] = maxfun

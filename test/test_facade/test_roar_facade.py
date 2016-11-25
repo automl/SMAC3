@@ -1,5 +1,7 @@
 import unittest
 
+import numpy as np
+
 from smac.configspace import ConfigurationSpace
 
 from smac.runhistory.runhistory import RunHistory
@@ -9,7 +11,7 @@ from smac.stats.stats import Stats
 from smac.tae.execute_func import ExecuteTAFuncArray
 
 
-class TestSMACFacade(unittest.TestCase):
+class TestROARFacade(unittest.TestCase):
 
     def setUp(self):
         self.cs = ConfigurationSpace()

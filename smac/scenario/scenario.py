@@ -6,6 +6,10 @@ import numpy
 import shlex
 import time
 import datetime
+import copy
+
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import MinMaxScaler
 
 from smac.utils.io.input_reader import InputReader
 from smac.configspace import pcs
@@ -16,6 +20,10 @@ __license__ = "3-clause BSD"
 __maintainer__ = "Marius Lindauer"
 __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.2"
+
+
+def _is_truthy(arg):
+    return arg in ["1", "true", True]
 
 
 class Scenario(object):
@@ -37,6 +45,8 @@ class Scenario(object):
 
         """
         self.logger = logging.getLogger("scenario")
+        self.PCA_DIM = 7
+
         self.in_reader = InputReader()
 
         if type(scenario) is str:
@@ -44,7 +54,7 @@ class Scenario(object):
             self.logger.info("Reading scenario file: %s" % (scenario_fn))
             scenario = self.in_reader.read_scenario_file(scenario_fn)
         elif type(scenario) is dict:
-            pass
+            scenario = copy.copy(scenario)
         else:
             raise TypeError(
                 "Wrong type of scenario (str or dict are supported)")
@@ -62,6 +72,7 @@ class Scenario(object):
             arg_name, arg_value = self._parse_argument(key, scenario, **value)
             parsed_arguments[arg_name] = arg_value
 
+        
         if len(scenario) != 0:
             raise ValueError('Could not parse the following arguments: %s' %
                              str(list(scenario.keys())))
@@ -83,7 +94,8 @@ class Scenario(object):
         self._transform_arguments()
 
     def add_argument(self, name, help, callback=None, default=None,
-                     dest=None, required=False, mutually_exclusive_group=None):
+                     dest=None, required=False, mutually_exclusive_group=None,
+                     choice=None):
         """Add argument to the scenario object.
 
         Parameters
@@ -114,19 +126,53 @@ class Scenario(object):
         if required is not False and mutually_exclusive_group is not None:
             raise ValueError("Cannot make argument '%s' required and add it to"
                              " a group of mutually exclusive arguments." % name)
+        if choice is not None and not isinstance(choice, (list, set, tuple)):
+            raise TypeError('Choice must be of type list/set/tuple.')
 
         self._arguments[name] = {'default': default,
                                  'required': required,
                                  'help': help,
                                  'dest': dest,
-                                 'callback': callback}
+                                 'callback': callback,
+                                 'choice': choice}
 
         if mutually_exclusive_group:
             self._groups[mutually_exclusive_group].add(name)
 
-
     def _parse_argument(self, name, scenario, help, callback=None, default=None,
-                        dest=None, required=False):
+                        dest=None, required=False, choice=None):
+        """Search the scenario dict for a single allowed argument and parse it.
+
+        Side effect: the argument is removed from the scenario dict if found.
+
+        name : str
+            Argument name, as specified in the Scenario class.
+        scenario : dict
+            Scenario dict as provided by the user or as parsed by the cli
+            interface.
+        help : str
+            Help string of the argument
+        callback : callable, optional (default=None)
+            If given, will be called to transform the given argument.
+        default : object, optional (default=None)
+            Will be used as default value if the argument is not given by the
+            user.
+        dest : str, optional (default=None)
+            Will be used as member name of the scenario.
+        required : bool (default=False)
+            If ``True``, the scenario will raise an Exception if the argument is
+            not given.
+        choice : list, optional (default=None)
+            If given, the scenario checks whether the argument is in the
+            list. If not, it raises an Exception.
+
+        Returns
+        -------
+        str
+            Member name of the attribute.
+        object
+            Value of the attribute.
+        """
         normalized_name = name.lower().replace('-', '').replace('_', '')
         value = None
 
@@ -152,29 +198,35 @@ class Scenario(object):
         if value is not None and callable(callback):
             value = callback(value)
 
+        if value is not None and choice:
+            value = value.strip()
+            if value not in choice:
+                raise ValueError('Argument %s can only take a value in %s, '
+                                 'but is %s' % (name, choice, value))
+
         return dest, value
 
     def _add_arguments(self):
         # Add allowed arguments
         self.add_argument(name='algo', help=None, dest='ta',
-                          callback=lambda arg: shlex.split(arg))
+                          callback=shlex.split)
         self.add_argument(name='execdir', default='.', help=None)
         self.add_argument(name='deterministic', default="0", help=None,
-                          callback=lambda arg: arg in ["1", "true", True])
+                          callback=_is_truthy)
         self.add_argument(name='paramfile', help=None, dest='pcs_fn',
                           mutually_exclusive_group='cs')
         self.add_argument(name='run_obj', help=None, default='runtime')
         self.add_argument(name='overall_obj', help=None, default='par10')
         self.add_argument(name='cutoff_time', help=None, default=None,
-                          dest='cutoff', callback=lambda arg: float(arg))
+                          dest='cutoff', callback=float)
         self.add_argument(name='memory_limit', help=None)
         self.add_argument(name='tuner-timeout', help=None, default=numpy.inf,
                           dest='algo_runs_timelimit',
-                          callback=lambda arg: float(arg))
+                          callback=float)
         self.add_argument(name='wallclock_limit', help=None, default=numpy.inf,
-                          callback=lambda arg: float(arg))
+                          callback=float)
         self.add_argument(name='runcount_limit', help=None, default=numpy.inf,
-                          callback=lambda arg: float(arg), dest="ta_run_limit")
+                          callback=float, dest="ta_run_limit")
         self.add_argument(name='instance_file', help=None, dest='train_inst_fn')
         self.add_argument(name='test_instance_file', help=None,
                           dest='test_inst_fn')
@@ -185,11 +237,14 @@ class Scenario(object):
                                   time.time()).strftime(
                                   '%Y-%m-%d_%H:%M:%S')))
         self.add_argument(name='shared_model', help=None, default='0',
-                          callback=lambda arg: arg in ['1', 'true', True])
+                          callback=_is_truthy)
         self.add_argument(name='instances', default=[[None]], help=None,
                           dest='train_insts')
         self.add_argument(name='test_instances', default=[[None]], help=None,
                           dest='test_insts')
+        self.add_argument(name='initial_incumbent', default="DEFAULT",
+                          help=None, dest='initial_incumbent',
+                          choice=['DEFAULT', 'RANDOM'])
         # instance name -> feature vector
         self.add_argument(name='features', default={}, help=None,
                           dest='feature_dict')
@@ -223,7 +278,7 @@ class Scenario(object):
             else:
                 self.logger.error(
                     "Have not found test instance file: %s" % (
-                    self.test_inst_fn))
+                        self.test_inst_fn))
                 sys.exit(1)
 
         self.instance_specific = {}
@@ -247,12 +302,25 @@ class Scenario(object):
                     self.feature_fn)[1]
 
         if self.feature_dict:
-            self.n_features = len(
-                self.feature_dict[list(self.feature_dict.keys())[0]])
             self.feature_array = []
             for inst_ in self.train_insts:
                 self.feature_array.append(self.feature_dict[inst_])
             self.feature_array = numpy.array(self.feature_array)
+            self.n_features = self.feature_array.shape[1]
+            
+            # reduce dimensionality of features of larger than PCA_DIM
+            if self.feature_array.shape[1] > self.PCA_DIM:
+                X = self.feature_array
+                # scale features
+                X = MinMaxScaler().fit_transform(X)
+                X = numpy.nan_to_num(X) # if features with max == min
+                #PCA
+                pca = PCA(n_components=self.PCA_DIM)
+                self.feature_array = pca.fit_transform(X)
+                self.n_features = self.PCA_DIM
+                # update feature dictionary
+                for feat, inst_ in zip(self.feature_array, self.train_insts):
+                    self.feature_dict[inst_] = feat
 
         # read pcs file
         if self.pcs_fn and os.path.isfile(self.pcs_fn):
@@ -267,4 +335,11 @@ class Scenario(object):
 
         self.logger.info("Output to %s" % (self.output_dir))
 
+    def __getstate__(self):
+        d = dict(self.__dict__)
+        del d['logger']
+        return d
 
+    def __setstate__(self, d):
+        self.__dict__.update(d)
+        self.logger = logging.getLogger("scenario")
