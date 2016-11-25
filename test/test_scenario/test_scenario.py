@@ -152,6 +152,12 @@ class ScenarioTest(unittest.TestCase):
                      status=StatusType.SUCCESS,
                      seed=None,
                      additional_info=None)
+        
+        # "d" is an instance in <scenario>
+        rh_merge.add(config=config, instance_id="d", cost=5, time=20,
+                     status=StatusType.SUCCESS,
+                     seed=None,
+                     additional_info=None)
 
         # build empty rh
         rh_base = RunHistory(aggregate_func=average_cost)
@@ -159,7 +165,11 @@ class ScenarioTest(unittest.TestCase):
         merge_foreign_data(scenario=scenario, runhistory=rh_base,
                            in_scenario_list=[scenario_2], in_runhistory_list=[rh_merge])
 
-        assert len(rh_base.data) == 1
+        # both runs should be in the runhistory
+        # but only the run on "d" should be used for the cost of <config>
+        self.assertTrue(len(rh_base.data) == 2)
+        self.assertTrue(rh_base.get_cost(config) == 5)
+        
 
         rh_merge.add(config=config, instance_id="inst_new_2", cost=10, time=20,
                      status=StatusType.SUCCESS,
