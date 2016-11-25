@@ -83,15 +83,13 @@ class SingleConfigInitialDesign(InitialDesign):
             seed=initial_seed,
             instance_specific=self.scenario.instance_specific.get(rand_inst, "0"))
 
-        if status in [StatusType.CRASHED or StatusType.ABORT]:
-            self.logger.critical("First run crashed -- Abort")
-            sys.exit(1)
-
         self.stats.inc_changed += 1  # first incumbent
 
         self.traj_logger.add_entry(train_perf=cost,
                                    incumbent_id=self.stats.inc_changed,
                                    incumbent=initial_incumbent)
+        self.runhistory.add(config=initial_incumbent, cost=cost, time=runtime,
+                            status=status, instance_id=rand_inst, seed=initial_seed)
 
         return initial_incumbent
 

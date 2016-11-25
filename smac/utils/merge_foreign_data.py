@@ -35,6 +35,8 @@ def merge_foreign_data_from_file(scenario: Scenario,
             scenario, runhistory
     '''
 
+    if not in_scenario_fn_list:
+        raise ValueError("To read warmstart data from previous runhistories, the corresponding scenarios are required. Use option --warmstart_scenario") 
     scens = [Scenario(scenario=scen_fn) for scen_fn in in_scenario_fn_list]
     rhs = []
     for rh_fn in in_runhistory_fn_list:
@@ -91,5 +93,7 @@ def merge_foreign_data(scenario: Scenario,
         if scenario.feature_dict.get(date.instance_id) is None:
             raise ValueError(
                 "Instance feature for \"%s\" was not found in scenario data." % (date.instance_id))
+
+    runhistory.compute_all_costs(instances=scenario.train_insts)
 
     return scenario, runhistory
