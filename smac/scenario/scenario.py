@@ -317,7 +317,7 @@ class Scenario(object):
                 #PCA
                 pca = PCA(n_components=self.PCA_DIM)
                 self.feature_array = pca.fit_transform(X)
-                self.n_features = self.PCA_DIM
+                self.n_features = self.feature_array.shape[1]
                 # update feature dictionary
                 for feat, inst_ in zip(self.feature_array, self.train_insts):
                     self.feature_dict[inst_] = feat
