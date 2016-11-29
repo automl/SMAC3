@@ -28,8 +28,9 @@ class Intensifier(object):
     '''
 
     def __init__(self, tae_runner, stats, traj_logger, rng, instances=None,
-                 instance_specifics={}, cutoff=MAX_CUTOFF, deterministic=False,
-                 run_obj_time=True, run_limit=MAXINT, maxR=2000):
+                 instance_specifics={}, cutoff=MAX_CUTOFF, memory_limit=None,
+                 deterministic=False, run_obj_time=True, run_limit=MAXINT,
+                 maxR=2000):
         '''
         Constructor
 
@@ -71,6 +72,7 @@ class Intensifier(object):
 
         # scenario info
         self.cutoff = cutoff
+        self.memory_limit = memory_limit
         self.deterministic = deterministic
         self.run_obj_time = run_obj_time
         self.tae_runner = tae_runner
@@ -163,11 +165,13 @@ class Intensifier(object):
                     next_instance = self.rs.choice(list(available_insts))
                     # Line 7
                     self.logger.debug("Add run of incumbent")
-                    status, cost, dur, res = self.tae_runner.start(config=incumbent,
-                                                            instance=next_instance,
-                                                            seed=next_seed,
-                                                            cutoff=self.cutoff,
-                                                            instance_specific=self.instance_specifics.get(next_instance, "0"))
+                    status, cost, dur, res = self.tae_runner.start(
+                        config=incumbent,
+                        instance=next_instance,
+                        seed=next_seed,
+                        cutoff=self.cutoff,
+                        memory_limit=self.memory_limit,
+                        instance_specific=self.instance_specifics.get(next_instance, "0"))
 
                     num_run += 1
                 else:
@@ -221,11 +225,13 @@ class Intensifier(object):
                         cutoff = self.cutoff
                         
                     self.logger.debug("Add run of challenger")
-                    status, cost, dur, res = self.tae_runner.start(config=challenger,
-                                                            instance=instance,
-                                                            seed=seed,
-                                                            cutoff=cutoff,
-                                                            instance_specific=self.instance_specifics.get(instance, "0"))
+                    status, cost, dur, res = self.tae_runner.start(
+                        config=challenger,
+                        instance=instance,
+                        seed=seed,
+                        cutoff=cutoff,
+                        memory_limit=self.memory_limit,
+                        instance_specific=self.instance_specifics.get(instance, "0"))
                     num_run += 1
 
                 # we cannot use inst_seed_pairs here since we could have less runs

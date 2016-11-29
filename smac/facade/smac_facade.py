@@ -171,6 +171,7 @@ class SMAC(object):
                                       rng=rng,
                                       instances=scenario.train_insts,
                                       cutoff=scenario.cutoff,
+                                      memory_limit=scenario.memory_limit,
                                       deterministic=scenario.deterministic,
                                       run_obj_time=scenario.run_obj == "runtime",
                                       instance_specifics=scenario.instance_specific)

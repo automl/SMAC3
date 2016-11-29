@@ -81,6 +81,7 @@ class SingleConfigInitialDesign(InitialDesign):
             instance=rand_inst,
             cutoff=self.scenario.cutoff,
             seed=initial_seed,
+            memory_limit=self.scenario.memory_limit,
             instance_specific=self.scenario.instance_specific.get(rand_inst, "0"))
 
         self.stats.inc_changed += 1  # first incumbent
