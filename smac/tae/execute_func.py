@@ -1,11 +1,11 @@
 import logging
 import inspect
+import math
 
 import numpy as np
 import pynisher
 
 from smac.tae.execute_ta_run import StatusType, ExecuteTARun
-from smac.utils.constants import MAX_CUTOFF
 
 __author__ = "Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -13,7 +13,6 @@ __license__ = "3-clause BSD"
 __maintainer__ = "Marius Lindauer"
 __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.2"
-
 
 
 class AbstractTAFunc(ExecuteTARun):
@@ -27,16 +26,18 @@ class AbstractTAFunc(ExecuteTARun):
 
         super().__init__(ta=ta, stats=stats, runhistory=runhistory,
                          run_obj=run_obj, par_factor=par_factor)
-        self._supports_memory_limit = True
 
         signature = inspect.signature(ta).parameters
         self._accepts_seed = len(signature) > 1
         self._accepts_instance = len(signature) > 2
+
+        if memory_limit is not None:
+            memory_limit = int(math.ceil(memory_limit))
         self.memory_limit = memory_limit
+
 
     def run(self, config, instance=None,
             cutoff=None,
-            memory_limit=None,
             seed=12345,
             instance_specific="0"):
 
@@ -77,12 +78,9 @@ class AbstractTAFunc(ExecuteTARun):
                     all further additional run information
         """
 
-        memory_limit = memory_limit if memory_limit is not None else \
-            self.memory_limit
-
         arguments = {'logger': logging.getLogger("pynisher"),
                      'wall_time_in_s': cutoff,
-                     'mem_in_mb': memory_limit}
+                     'mem_in_mb': self.memory_limit}
         
         obj = pynisher.enforce_limits(**arguments)(self.ta)
 
@@ -146,11 +144,13 @@ class ExecuteTAFuncDict(AbstractTAFunc):
         Function (target algorithm) to be optimized.
     stats : smac.stats.stats.Stats, optional
         Stats object to collect statistics about runtime etc.
-    run_obj: str, optional
+    run_obj : str, optional
         Run objective (runtime or quality)
-    runhistory: RunHistory, optional
+    runhistory : RunHistory, optional
         runhistory to keep track of all runs; only used if set
-    par_factor: int, optional
+    memory_limit : int, optional
+        Memory limit (in MB) that will be applied to the target algorithm.
+    par_factor : int, optional
         Penalized average runtime factor. Only used when `run_obj='runtime'`
     """
 
@@ -186,6 +186,8 @@ class ExecuteTAFuncArray(AbstractTAFunc):
         Run objective (runtime or quality)
     runhistory: RunHistory, optional
         runhistory to keep track of all runs; only used if set
+    memory_limit : int, optional
+        Memory limit (in MB) that will be applied to the target algorithm.
     par_factor: int, optional
         Penalized average runtime factor. Only used when `run_obj='runtime'`
     """
