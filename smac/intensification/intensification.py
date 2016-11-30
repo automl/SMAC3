@@ -255,7 +255,7 @@ class Intensifier(object):
 
                     n_samples = len(inst_seed_pairs)
                     self.logger.info("Challenger (%.4f) is better than incumbent (%.4f) on %d runs." % (
-                        chal_perf / n_samples, inc_perf / n_samples, n_samples))
+                        chal_perf, inc_perf, n_samples))
                     self.logger.info(
                         "Changing incumbent to challenger: %s" % (challenger))
                     incumbent = challenger
