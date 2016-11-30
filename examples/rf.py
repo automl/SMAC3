@@ -110,21 +110,18 @@ scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative r
                      "memory_limit": 1024,
                      })
  
-# register function to be optimize
-taf = ExecuteTAFuncDict(rfr)
- 
 # example call of the function
 # it returns: Status, Cost, Runtime, Additional Infos
-def_value = taf.run(cs.get_default_configuration())[1]
+def_value = rfr(cs.get_default_configuration(), 1)
 print("Default Value: %.2f" % (def_value))
  
 # Optimize
 smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
-            tae_runner=taf)
+            tae_runner=rfr)
 try:
     incumbent = smac.optimize()
 finally:
     incumbent = smac.solver.incumbent
 
-inc_value = taf.run(incumbent)[1]
+inc_value = rfr(incumbent, 1)
 print("Optimized Value: %.2f" % (inc_value))

@@ -143,6 +143,7 @@ class SMAC(object):
             tae_runner = ExecuteTAFuncDict(ta=tae_runner,
                                            stats=self.stats,
                                            run_obj=scenario.run_obj,
+                                           memory_limit=scenario.memory_limit,
                                            runhistory=runhistory,
                                            par_factor=scenario.par_factor)
         # Third case, if it is an ExecuteTaRun we can simply use the
@@ -171,7 +172,6 @@ class SMAC(object):
                                       rng=rng,
                                       instances=scenario.train_insts,
                                       cutoff=scenario.cutoff,
-                                      memory_limit=scenario.memory_limit,
                                       deterministic=scenario.deterministic,
                                       run_obj_time=scenario.run_obj == "runtime",
                                       instance_specifics=scenario.instance_specific)

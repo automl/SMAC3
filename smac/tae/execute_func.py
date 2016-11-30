@@ -23,7 +23,7 @@ class AbstractTAFunc(ExecuteTARun):
     """
 
     def __init__(self, ta, stats=None, runhistory=None, run_obj="quality",
-                 par_factor=1):
+                 memory_limit=None, par_factor=1):
 
         super().__init__(ta=ta, stats=stats, runhistory=runhistory,
                          run_obj=run_obj, par_factor=par_factor)
@@ -32,6 +32,7 @@ class AbstractTAFunc(ExecuteTARun):
         signature = inspect.signature(ta).parameters
         self._accepts_seed = len(signature) > 1
         self._accepts_instance = len(signature) > 2
+        self.memory_limit = memory_limit
 
     def run(self, config, instance=None,
             cutoff=None,
@@ -75,6 +76,9 @@ class AbstractTAFunc(ExecuteTARun):
                 additional_info: dict
                     all further additional run information
         """
+
+        memory_limit = memory_limit if memory_limit is not None else \
+            self.memory_limit
 
         arguments = {'logger': logging.getLogger("pynisher"),
                      'wall_time_in_s': cutoff,
