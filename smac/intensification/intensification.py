@@ -163,11 +163,12 @@ class Intensifier(object):
                     next_instance = self.rs.choice(list(available_insts))
                     # Line 7
                     self.logger.debug("Add run of incumbent")
-                    status, cost, dur, res = self.tae_runner.start(config=incumbent,
-                                                            instance=next_instance,
-                                                            seed=next_seed,
-                                                            cutoff=self.cutoff,
-                                                            instance_specific=self.instance_specifics.get(next_instance, "0"))
+                    status, cost, dur, res = self.tae_runner.start(
+                        config=incumbent,
+                        instance=next_instance,
+                        seed=next_seed,
+                        cutoff=self.cutoff,
+                        instance_specific=self.instance_specifics.get(next_instance, "0"))
 
                     num_run += 1
                 else:
@@ -221,11 +222,12 @@ class Intensifier(object):
                         cutoff = self.cutoff
                         
                     self.logger.debug("Add run of challenger")
-                    status, cost, dur, res = self.tae_runner.start(config=challenger,
-                                                            instance=instance,
-                                                            seed=seed,
-                                                            cutoff=cutoff,
-                                                            instance_specific=self.instance_specifics.get(instance, "0"))
+                    status, cost, dur, res = self.tae_runner.start(
+                        config=challenger,
+                        instance=instance,
+                        seed=seed,
+                        cutoff=cutoff,
+                        instance_specific=self.instance_specifics.get(instance, "0"))
                     num_run += 1
 
                 # we cannot use inst_seed_pairs here since we could have less runs

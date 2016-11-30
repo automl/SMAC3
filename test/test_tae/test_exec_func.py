@@ -65,8 +65,9 @@ class TestExecuteFunc(unittest.TestCase):
             a = np.random.random_sample((10000, 10000)).astype(np.float64)
             return np.sum(a)
 
-        taf = ExecuteTAFuncDict(ta=fill_memory, stats=self.stats)
-        rval = taf.run(config=None, memory_limit=1024)
+        taf = ExecuteTAFuncDict(ta=fill_memory, stats=self.stats,
+                                memory_limit=1024)
+        rval = taf.run(config=None)
 
         platform = os.getenv('TRAVIS_OS_NAME')
         if platform is None:

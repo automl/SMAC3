@@ -95,9 +95,9 @@ class MultiConfigInitialDesign(InitialDesign):
             # (also not on the incumbent)
             # therefore, at least two different configurations have to be in <configs>
             inc, inc_perf = self.intensifier.intensify(challengers=set(configs[1:]),
-                                                   incumbent=configs[0],
-                                                   run_history=self.runhistory,
-                                                   aggregate_func=self.aggregate_func)
+                                                       incumbent=configs[0],
+                                                       run_history=self.runhistory,
+                                                       aggregate_func=self.aggregate_func)
 
         else:
             self.logger.debug("All initial challengers are identical")

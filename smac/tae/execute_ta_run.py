@@ -36,7 +36,8 @@ class ExecuteTARun(object):
             the command line call to the target algorithm (wrapper)
     """
 
-    def __init__(self, ta, stats=None, runhistory=None, run_obj="runtime", par_factor=1):
+    def __init__(self, ta, stats=None, runhistory=None, run_obj="runtime",
+                 par_factor=1):
         """
         Constructor
 
@@ -66,7 +67,6 @@ class ExecuteTARun(object):
 
     def start(self, config, instance,
               cutoff=None,
-              memory_limit=None,
               seed=12345,
               instance_specific="0"):
         """
@@ -105,24 +105,12 @@ class ExecuteTARun(object):
 
         if cutoff is not None:
             cutoff = int(math.ceil(cutoff))
-        if memory_limit is not None:
-            memory_limit = int(math.ceil(memory_limit))
-
-        additional_arguments = {}
-
-        if self._supports_memory_limit is True:
-            additional_arguments['memory_limit'] = memory_limit
-        elif self._supports_memory_limit is False and memory_limit is not None:
-            raise ValueError('Target algorithm executor %s does not support '
-                             'restricting the memory usage.' %
-                             self.__class__.__name__)
 
         status, cost, runtime, additional_info = self.run(config=config,
                                                           instance=instance,
                                                           cutoff=cutoff,
                                                           seed=seed,
-                                                          instance_specific=instance_specific,
-                                                          **additional_arguments)
+                                                          instance_specific=instance_specific)
         
         if self.stats.ta_runs == 0 and status in [StatusType.CRASHED, StatusType.ABORT]:
             self.logger.critical("First run crashed -- Abort")
@@ -151,7 +139,6 @@ class ExecuteTARun(object):
 
     def run(self, config, instance,
             cutoff=None,
-            memory_limit=None,
             seed=12345,
             instance_specific="0"):
         """
@@ -168,9 +155,6 @@ class ExecuteTARun(object):
                 cutoff : int, optional
                     Wallclock time limit of the target algorithm. If no value is
                     provided no limit will be enforced.
-                memory_limit : int, optional
-                    Memory limit in MB enforced on the target algorithm If no
-                    value is provided no limit will be enforced.
                 seed : int
                     random seed
                 instance_specific: str
