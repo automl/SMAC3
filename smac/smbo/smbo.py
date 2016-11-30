@@ -5,6 +5,7 @@ import os
 import random
 import sys
 import time
+import typing
 
 import ConfigSpace.util
 
@@ -19,15 +20,13 @@ from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.stats.stats import Stats
 from smac.initial_design.initial_design import InitialDesign
 from smac.scenario.scenario import Scenario
+from smac.configspace import Configuration
 
 from smac.epm.rfr_imputator import RFRImputator
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"
-#__maintainer__ = "???"
-#__email__ = "???"
-__version__ = "0.0.1"
 
 
 class SMBO(BaseSolver):
@@ -124,6 +123,8 @@ class SMBO(BaseSolver):
             logging.debug(
                 "Time spend to choose next configurations: %.2f sec" % (time_spend))
 
+            break
+
             self.logger.debug("Intensify")
 
             self.incumbent, inc_perf = self.intensifier.intensify(
@@ -139,7 +140,7 @@ class SMBO(BaseSolver):
                             num_run=self.num_run)
 
             iteration += 1
-
+            
             logging.debug("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
                 self.stats.get_remaing_time_budget(),
                 self.stats.get_remaining_ta_budget(),
@@ -190,8 +191,14 @@ class SMBO(BaseSolver):
         next_configs_by_random_search_sorted = \
             self._get_next_by_random_search(
                 num_configurations_by_random_search_sorted, _sorted=True)
+        
+        # initial SLS by incumbent +
+        # best configuration from next_configs_by_random_search_sorted
         next_configs_by_local_search = \
-            self._get_next_by_local_search(num_configurations_by_local_search)
+            self._get_next_by_local_search(
+                [self.incumbent] + 
+                list(map(lambda x: x[1],
+                    next_configs_by_random_search_sorted[:num_configurations_by_local_search-1])))
 
         next_configs_by_acq_value = next_configs_by_random_search_sorted + \
             next_configs_by_local_search
@@ -249,15 +256,15 @@ class SMBO(BaseSolver):
                 rand_configs[i].origin = 'Random Search'
             return [(0, rand_configs[i]) for i in range(len(rand_configs))]
 
-    def _get_next_by_local_search(self, num_points=10):
+    def _get_next_by_local_search(self, init_points=typing.List[Configuration]):
         """Get candidate solutions via local search.
 
         In case acquisition function values tie, these will be broken randomly.
 
         Parameters
         ----------
-        num_points : int, optional (default=10)
-            Number of local searches and returned values.
+        init_points : typing.List[Configuration]
+            initial starting configurations for local search
 
         Returns
         -------
@@ -267,16 +274,11 @@ class SMBO(BaseSolver):
         configs_acq = []
 
         # Start N local search from different random start points
-        for i in range(num_points):
-            if i == 0 and self.incumbent is not None:
-                start_point = self.incumbent
-            else:
-                start_point = self.config_space.sample_configuration()
-
+        for start_point in init_points:
             configuration, acq_val = self.acq_optimizer.maximize(start_point)
 
             configuration.origin = 'Local Search'
-            configs_acq.append((acq_val[0][0], configuration))
+            configs_acq.append((acq_val[0], configuration))
 
         # shuffle for random tie-break
         random.shuffle(configs_acq, self.rng.rand)
