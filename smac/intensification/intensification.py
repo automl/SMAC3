@@ -270,11 +270,11 @@ class Intensifier(object):
                     # challenger is not worse, continue
                     N = 2 * N
 
-            if chall_indx >= 1 and num_run > self.run_limit:
+            if chall_indx > 1 and num_run > self.run_limit:
                 self.logger.debug(
                     "Maximum #runs for intensification reached")
                 break
-            elif chall_indx >= 1 and time.time() - self.start_time - time_bound >= 0:
+            elif chall_indx > 1 and time.time() - self.start_time - time_bound >= 0:
                 self.logger.debug("Timelimit for intensification reached ("
                                   "used: %f sec, available: %f sec)" % (
                                       time.time() - self.start_time, time_bound))
@@ -285,5 +285,7 @@ class Intensifier(object):
         inc_perf = aggregate_func(incumbent, run_history, inc_runs)
         self.logger.info("Updated estimated performance of incumbent on %d runs: %.4f" % (
             len(inc_runs), inc_perf))
+        
+        self.stats.update_average_configs_per_intensify(n_configs=chall_indx)
 
         return incumbent, inc_perf
