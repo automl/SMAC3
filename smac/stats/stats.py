@@ -104,9 +104,9 @@ class Stats(object):
         self._n_configs_per_intensify += n_configs
         
         if self._n_calls_of_intensify == 1:
-            self._sliding_n_configs_per_intensifiy = n_configs
+            self._ema_n_configs_per_intensifiy = n_configs
         else:
-            self._sliding_n_configs_per_intensifiy = (1 - self._EMA_ALPHA) * self._sliding_n_configs_per_intensifiy \
+            self._ema_n_configs_per_intensifiy = (1 - self._EMA_ALPHA) * self._ema_n_configs_per_intensifiy \
                                                         + self._EMA_ALPHA * n_configs
         
 
@@ -132,6 +132,6 @@ class Stats(object):
         self._logger.debug("Debug Statistics:")
         if self._n_calls_of_intensify > 0:
             self._logger.debug("Average Configurations per Intensify: %.2f" %(self._n_configs_per_intensify / self._n_calls_of_intensify))
-            self._logger.debug("Exponential Moving Average of Configurations per Intensify: %.2f" %(self._sliding_n_configs_per_intensifiy))
+            self._logger.debug("Exponential Moving Average of Configurations per Intensify: %.2f" %(self._ema_n_configs_per_intensifiy))
         
         log_func("##########################################################")    
