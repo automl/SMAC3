@@ -123,8 +123,6 @@ class SMBO(BaseSolver):
             logging.debug(
                 "Time spend to choose next configurations: %.2f sec" % (time_spend))
 
-            break
-
             self.logger.debug("Intensify")
 
             self.incumbent, inc_perf = self.intensifier.intensify(
@@ -204,8 +202,8 @@ class SMBO(BaseSolver):
             next_configs_by_local_search
         next_configs_by_acq_value.sort(reverse=True, key=lambda x: x[0])
         self.logger.debug(
-            "First 10 acq func values of selected configurations: %s" %
-            (str([_[0] for _ in next_configs_by_acq_value[:10]])))
+            "First 10 acq func (origin) values of selected configurations: %s" %
+            (str([[_[0],_[1].origin] for _ in next_configs_by_acq_value[:10]])))
         next_configs_by_acq_value = [_[1] for _ in next_configs_by_acq_value]
 
         challengers = list(itertools.chain(*zip(next_configs_by_acq_value,
