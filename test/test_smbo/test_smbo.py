@@ -106,6 +106,7 @@ class TestSMBO(unittest.TestCase):
         smbo = SMAC(self.scenario, rng=seed).solver
         smbo.runhistory = RunHistory(aggregate_func=average_cost)
         X = self.scenario.cs.sample_configuration().get_array()[None, :]
+        smbo.incumbent = self.scenario.cs.sample_configuration()
 
         Y = self.branin(X)
         x = smbo.choose_next(X, Y)[0].get_array()
@@ -116,14 +117,11 @@ class TestSMBO(unittest.TestCase):
             return np.mean(X, axis=1).reshape((-1, 1))
 
         smbo = SMAC(self.scenario, rng=1).solver
+        smbo.incumbent = self.scenario.cs.sample_configuration()
         smbo.runhistory = RunHistory(aggregate_func=average_cost)
         smbo.model = mock.MagicMock()
         smbo.acquisition_func._compute = mock.MagicMock()
         smbo.acquisition_func._compute.side_effect = side_effect
-        # local search would call the underlying local search maximizer,
-        # which would have to be mocked out. Replacing the method by random
-        # search is way easier!
-        smbo._get_next_by_local_search = smbo._get_next_by_random_search
 
         X = smbo.rng.rand(10, 2)
         Y = smbo.rng.rand(10, 1)
@@ -131,16 +129,20 @@ class TestSMBO(unittest.TestCase):
         x = smbo.choose_next(X, Y)
 
         self.assertEqual(smbo.model.train.call_count, 1)
-        self.assertEqual(smbo.acquisition_func._compute.call_count, 1)
         self.assertEqual(len(x), 2020)
         num_random_search = 0
-        for i in range(0, 2020, 2):
+        num_local_search = 0
+        for i in range(0, 2020,2):
+            #print(x[i].origin)
             self.assertIsInstance(x[i], Configuration)
-            if x[i].origin == 'Random Search':
+            if 'Random Search (sorted)' in x[i].origin:
                 num_random_search += 1
-        # Since we replace local search with random search, we have to count
-        # the occurences of random seacrh instead
-        self.assertEqual(num_random_search, 10)
+            elif 'Local Search' in x[i].origin:
+                num_local_search += 1
+        # number of local search configs has to be least 10
+        # since x can have duplicates 
+        # which can be associated with the local search 
+        self.assertGreaterEqual(num_local_search, 10)
         for i in range(1, 2020, 2):
             self.assertIsInstance(x[i], Configuration)
             self.assertEqual(x[i].origin, 'Random Search')
@@ -194,11 +196,12 @@ class TestSMBO(unittest.TestCase):
             def __call__(self, *args, **kwargs):
                 rval = 9 - self.call_number
                 self.call_number += 1
-                return (ConfigurationMock(rval), [[rval]])
+                return (ConfigurationMock(rval), [rval])
 
         patch.side_effect = SideEffect()
         smbo = SMAC(self.scenario, rng=1).solver
-        rval = smbo._get_next_by_local_search(num_points=9)
+        rand_confs = smbo.config_space.sample_configuration(size=9)
+        rval = smbo._get_next_by_local_search(init_points=rand_confs)
         self.assertEqual(len(rval), 9)
         self.assertEqual(patch.call_count, 9)
         for i in range(9):
@@ -210,7 +213,7 @@ class TestSMBO(unittest.TestCase):
         # With known incumbent
         patch.side_effect = SideEffect()
         smbo.incumbent = 'Incumbent'
-        rval = smbo._get_next_by_local_search(num_points=10)
+        rval = smbo._get_next_by_local_search(init_points=[smbo.incumbent]+rand_confs)
         self.assertEqual(len(rval), 10)
         self.assertEqual(patch.call_count, 19)
         # Only the first local search in each iteration starts from the

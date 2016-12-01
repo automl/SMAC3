@@ -284,7 +284,7 @@ class SMBO(BaseSolver):
                ordered by their acquisition function value
         """
         configs_acq = []
-
+        
         # Start N local search from different random start points
         for start_point in init_points:
             configuration, acq_val = self.acq_optimizer.maximize(start_point)
