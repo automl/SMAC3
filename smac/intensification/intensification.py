@@ -125,7 +125,6 @@ class Intensifier(object):
                     "Challenger was the same as the current incumbent; Skipping challenger")
                 continue
             
-            chall_indx += 1
             self.logger.debug("Intensify on %s", challenger)
             if hasattr(challenger, 'origin'):
                 self.logger.debug(
@@ -183,6 +182,10 @@ class Intensifier(object):
 
             inc_inst_seeds = set(run_history.get_runs_for_config(incumbent))
             inc_perf = aggregate_func(incumbent, run_history, inc_inst_seeds)
+            
+            # at least one run of challenger
+            # to increase chall_indx counter 
+            first_run = False 
 
             # Line 9
             while True:
@@ -191,6 +194,10 @@ class Intensifier(object):
 
                 # Line 10
                 missing_runs = list(inc_inst_seeds - chall_inst_seeds)
+                
+                if (not first_run) and missing_runs:
+                    first_run = True
+                    chall_indx += 1
 
                 # Line 11
                 self.rs.shuffle(missing_runs)
