@@ -44,7 +44,7 @@ class RunHistory(object):
         # order as it was added.
         self.data = collections.OrderedDict()
 
-        # for fast access, we have also a unordered data structure
+        # for fast access, we have also an unordered data structure
         self._configid_to_inst_seed = {}
 
         self.config_ids = {}  # config -> id

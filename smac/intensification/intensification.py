@@ -116,13 +116,16 @@ class Intensifier(object):
             raise ValueError("time_bound must be >= 0.01")
 
         num_run = 0
+        chall_indx = 0
 
         # Line 1 + 2
-        for chall_indx, challenger in enumerate(challengers):
+        for challenger in challengers:
             if challenger == incumbent:
                 self.logger.warning(
                     "Challenger was the same as the current incumbent; Skipping challenger")
                 continue
+            
+            chall_indx += 1
             self.logger.debug("Intensify on %s", challenger)
             if hasattr(challenger, 'origin'):
                 self.logger.debug(
