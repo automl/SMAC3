@@ -43,7 +43,7 @@ class RunHistory(object):
         # when we serialize the data and can assume it's still in the same
         # order as it was added.
         self.data = collections.OrderedDict()
-        
+
         # for fast access, we have also a unordered data structure
         self._configid_to_inst_seed = {}
 
@@ -95,12 +95,13 @@ class RunHistory(object):
         k = RunKey(config_id, instance_id, seed)
         v = RunValue(cost, time, status, additional_info)
         self.data[k] = v
-        
-        #also add to fast data structure
-        is_k = InstSeedKey(instance_id,seed)
-        self._configid_to_inst_seed[config_id] = self._configid_to_inst_seed.get(config_id,{})
+
+        # also add to fast data structure
+        is_k = InstSeedKey(instance_id, seed)
+        self._configid_to_inst_seed[
+            config_id] = self._configid_to_inst_seed.get(config_id, {})
         self._configid_to_inst_seed[config_id][is_k] = v
-        
+
         # assumes an average across runs as cost function
         self.incremental_update_cost(config, cost)
 
@@ -251,12 +252,12 @@ class RunHistory(object):
 
         # important to use add method to use all data structure correctly
         for k, v in all_data["data"]:
-            self.add(config=self.ids_config[int(k[0])], 
-                     cost=float(v[0]), 
-                     time=float(v[1]), 
-                     status=v[2], 
-                     instance_id=k[1], 
-                     seed=int(k[2]), 
+            self.add(config=self.ids_config[int(k[0])],
+                     cost=float(v[0]),
+                     time=float(v[1]),
+                     status=v[2],
+                     instance_id=k[1],
+                     seed=int(k[2]),
                      additional_info=v[3])
 
     def update_from_json(self, fn, cs):
