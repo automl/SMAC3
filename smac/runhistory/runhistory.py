@@ -101,7 +101,7 @@ class RunHistory(object):
         is_k = InstSeedKey(instance_id, seed)
         self._configid_to_inst_seed[
             config_id] = self._configid_to_inst_seed.get(config_id, [])
-        self._configid_to_inst_seed[config_id].append(is_k)    
+        self._configid_to_inst_seed[config_id].append(is_k)
 
         # assumes an average across runs as cost function
         self.incremental_update_cost(config, cost)
