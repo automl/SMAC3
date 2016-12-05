@@ -45,6 +45,7 @@ class RunHistory(object):
         self.data = collections.OrderedDict()
 
         # for fast access, we have also an unordered data structure
+        # to get all instance seed pairs of a configuration
         self._configid_to_inst_seed = {}
 
         self.config_ids = {}  # config -> id
@@ -99,8 +100,8 @@ class RunHistory(object):
         # also add to fast data structure
         is_k = InstSeedKey(instance_id, seed)
         self._configid_to_inst_seed[
-            config_id] = self._configid_to_inst_seed.get(config_id, {})
-        self._configid_to_inst_seed[config_id][is_k] = v
+            config_id] = self._configid_to_inst_seed.get(config_id, [])
+        self._configid_to_inst_seed[config_id].append(is_k)    
 
         # assumes an average across runs as cost function
         self.incremental_update_cost(config, cost)
@@ -187,11 +188,11 @@ class RunHistory(object):
             list: tuples of instance, seed
         """
         config_id = self.config_ids.get(config)
-        is_dict = self._configid_to_inst_seed.get(config_id)
-        if is_dict is None:
+        is_list = self._configid_to_inst_seed.get(config_id)
+        if is_list is None:
             return []
         else:
-            return list(is_dict.keys())
+            return is_list
 
     def empty(self):
         """
