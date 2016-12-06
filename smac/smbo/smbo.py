@@ -5,6 +5,8 @@ import os
 import random
 import sys
 import time
+import typing
+import math
 
 import ConfigSpace.util
 
@@ -19,21 +21,19 @@ from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.stats.stats import Stats
 from smac.initial_design.initial_design import InitialDesign
 from smac.scenario.scenario import Scenario
+from smac.configspace import Configuration
 
 from smac.epm.rfr_imputator import RFRImputator
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"
-#__maintainer__ = "???"
-#__email__ = "???"
-__version__ = "0.0.1"
 
 
 class SMBO(BaseSolver):
 
-    def __init__(self, 
-                 scenario:Scenario,
+    def __init__(self,
+                 scenario: Scenario,
                  stats: Stats,
                  initial_design: InitialDesign,
                  runhistory: RunHistory,
@@ -44,7 +44,7 @@ class SMBO(BaseSolver):
                  model: RandomForestWithInstances,
                  acq_optimizer: LocalSearch,
                  acquisition_func: AbstractAcquisitionFunction,
-                 rng:np.random.RandomState):
+                 rng: np.random.RandomState):
         '''
         Interface that contains the main Bayesian optimization loop
 
@@ -77,15 +77,15 @@ class SMBO(BaseSolver):
         '''
         self.logger = logging.getLogger("SMBO")
         self.incumbent = None
-        
+
         self.scenario = scenario
         self.config_space = scenario.cs
-        self.stats = stats        
+        self.stats = stats
         self.initial_design = initial_design
         self.runhistory = runhistory
         self.rh2EPM = runhistory2epm
         self.intensifier = intensifier
-        self.aggregate_func = aggregate_func 
+        self.aggregate_func = aggregate_func
         self.num_run = num_run
         self.model = model
         self.acq_optimizer = acq_optimizer
@@ -152,9 +152,9 @@ class SMBO(BaseSolver):
 
         return self.incumbent
 
-    def choose_next(self, X, Y, num_interleaved_random=1010,
-                    num_configurations_by_random_search_sorted=1000,
-                    num_configurations_by_local_search=10):
+    def choose_next(self, X, Y,
+                    num_configurations_by_random_search_sorted: int=1000,
+                    num_configurations_by_local_search: int=None):
         """Choose next candidate solution with Bayesian optimization.
 
         Parameters
@@ -164,6 +164,11 @@ class SMBO(BaseSolver):
             instance features.
         Y : (N, O) numpy array
             The function values for each configuration instance pair.
+        num_configurations_by_random_search_sorted: int
+             number of configurations optimized by random search
+        num_configurations_by_local_search: int
+            number of configurations optimized with local search
+            if None, we use min(10, 1 + 0.5 x the number of configurations on exp average in intensify calls) 
 
         Returns
         -------
@@ -182,24 +187,38 @@ class SMBO(BaseSolver):
 
         self.acquisition_func.update(model=self.model, eta=incumbent_value)
 
-        # Remove dummy acquisition function value
-        next_configs_by_random_search = [x[1] for x in
-                                         self._get_next_by_random_search(num_points=num_interleaved_random)]
-
         # Get configurations sorted by EI
         next_configs_by_random_search_sorted = \
             self._get_next_by_random_search(
                 num_configurations_by_random_search_sorted, _sorted=True)
+
+        if num_configurations_by_local_search is None:
+            if self.stats._ema_n_configs_per_intensifiy > 0:
+                num_configurations_by_local_search = min(
+                    10, math.ceil(0.5 * self.stats._ema_n_configs_per_intensifiy) + 1)
+            else:
+                num_configurations_by_local_search = 10
+
+        # initial SLS by incumbent +
+        # best configuration from next_configs_by_random_search_sorted
         next_configs_by_local_search = \
-            self._get_next_by_local_search(num_configurations_by_local_search)
+            self._get_next_by_local_search(
+                [self.incumbent] +
+                list(map(lambda x: x[1],
+                         next_configs_by_random_search_sorted[:num_configurations_by_local_search - 1])))
 
         next_configs_by_acq_value = next_configs_by_random_search_sorted + \
             next_configs_by_local_search
         next_configs_by_acq_value.sort(reverse=True, key=lambda x: x[0])
         self.logger.debug(
-            "First 10 acq func values of selected configurations: %s" %
-            (str([_[0] for _ in next_configs_by_acq_value[:10]])))
+            "First 10 acq func (origin) values of selected configurations: %s" %
+            (str([[_[0], _[1].origin] for _ in next_configs_by_acq_value[:10]])))
         next_configs_by_acq_value = [_[1] for _ in next_configs_by_acq_value]
+
+        # Remove dummy acquisition function value
+        next_configs_by_random_search = [x[1] for x in
+                                         self._get_next_by_random_search(
+                                             num_points=num_configurations_by_local_search + num_configurations_by_random_search_sorted)]
 
         challengers = list(itertools.chain(*zip(next_configs_by_acq_value,
                                                 next_configs_by_random_search)))
@@ -249,15 +268,15 @@ class SMBO(BaseSolver):
                 rand_configs[i].origin = 'Random Search'
             return [(0, rand_configs[i]) for i in range(len(rand_configs))]
 
-    def _get_next_by_local_search(self, num_points=10):
+    def _get_next_by_local_search(self, init_points=typing.List[Configuration]):
         """Get candidate solutions via local search.
 
         In case acquisition function values tie, these will be broken randomly.
 
         Parameters
         ----------
-        num_points : int, optional (default=10)
-            Number of local searches and returned values.
+        init_points : typing.List[Configuration]
+            initial starting configurations for local search
 
         Returns
         -------
@@ -265,18 +284,13 @@ class SMBO(BaseSolver):
                ordered by their acquisition function value
         """
         configs_acq = []
-
+        
         # Start N local search from different random start points
-        for i in range(num_points):
-            if i == 0 and self.incumbent is not None:
-                start_point = self.incumbent
-            else:
-                start_point = self.config_space.sample_configuration()
-
+        for start_point in init_points:
             configuration, acq_val = self.acq_optimizer.maximize(start_point)
 
             configuration.origin = 'Local Search'
-            configs_acq.append((acq_val[0][0], configuration))
+            configs_acq.append((acq_val[0], configuration))
 
         # shuffle for random tie-break
         random.shuffle(configs_acq, self.rng.rand)

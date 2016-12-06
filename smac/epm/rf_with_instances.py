@@ -53,7 +53,7 @@ class RandomForestWithInstances(AbstractEPM):
 
     def __init__(self, types,
                  instance_features=None,
-                 num_trees=30,
+                 num_trees=10,
                  do_bootstrapping=True,
                  n_points_per_tree=0,
                  ratio_features=5. / 6.,
