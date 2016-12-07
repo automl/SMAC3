@@ -1,7 +1,8 @@
 import numpy as np
 
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
-    UniformFloatHyperparameter, UniformIntegerHyperparameter, Constant
+    UniformFloatHyperparameter, UniformIntegerHyperparameter, Constant, \
+    OrdinalHyperparameter
 
 def get_types(config_space, instance_features=None):
     # Extract types vector for rf from config space
@@ -19,7 +20,8 @@ def get_types(config_space, instance_features=None):
             types[i] = 0
             # and we leave the bounds to be 0 for now
         elif not isinstance(param, (UniformFloatHyperparameter,
-                                    UniformIntegerHyperparameter)):
+                                    UniformIntegerHyperparameter,
+                                    OrdinalHyperparameter)):
             raise TypeError("Unknown hyperparameter type %s" % type(param))
 
     if instance_features is not None:
