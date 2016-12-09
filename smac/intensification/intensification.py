@@ -116,13 +116,15 @@ class Intensifier(object):
             raise ValueError("time_bound must be >= 0.01")
 
         num_run = 0
+        chall_indx = 0
 
         # Line 1 + 2
-        for chall_indx, challenger in enumerate(challengers):
+        for challenger in challengers:
             if challenger == incumbent:
                 self.logger.warning(
                     "Challenger was the same as the current incumbent; Skipping challenger")
                 continue
+            
             self.logger.debug("Intensify on %s", challenger)
             if hasattr(challenger, 'origin'):
                 self.logger.debug(
@@ -163,11 +165,12 @@ class Intensifier(object):
                     next_instance = self.rs.choice(list(available_insts))
                     # Line 7
                     self.logger.debug("Add run of incumbent")
-                    status, cost, dur, res = self.tae_runner.start(config=incumbent,
-                                                            instance=next_instance,
-                                                            seed=next_seed,
-                                                            cutoff=self.cutoff,
-                                                            instance_specific=self.instance_specifics.get(next_instance, "0"))
+                    status, cost, dur, res = self.tae_runner.start(
+                        config=incumbent,
+                        instance=next_instance,
+                        seed=next_seed,
+                        cutoff=self.cutoff,
+                        instance_specific=self.instance_specifics.get(next_instance, "0"))
 
                     num_run += 1
                 else:
@@ -179,6 +182,10 @@ class Intensifier(object):
 
             inc_inst_seeds = set(run_history.get_runs_for_config(incumbent))
             inc_perf = aggregate_func(incumbent, run_history, inc_inst_seeds)
+            
+            # at least one run of challenger
+            # to increase chall_indx counter 
+            first_run = False 
 
             # Line 9
             while True:
@@ -187,7 +194,7 @@ class Intensifier(object):
 
                 # Line 10
                 missing_runs = list(inc_inst_seeds - chall_inst_seeds)
-
+                
                 # Line 11
                 self.rs.shuffle(missing_runs)
                 to_run = missing_runs[:min(N, len(missing_runs))]
@@ -219,13 +226,18 @@ class Intensifier(object):
 
                     else:
                         cutoff = self.cutoff
-                        
+
+                    if not first_run:
+                        first_run = True
+                        chall_indx += 1
+                            
                     self.logger.debug("Add run of challenger")
-                    status, cost, dur, res = self.tae_runner.start(config=challenger,
-                                                            instance=instance,
-                                                            seed=seed,
-                                                            cutoff=cutoff,
-                                                            instance_specific=self.instance_specifics.get(instance, "0"))
+                    status, cost, dur, res = self.tae_runner.start(
+                        config=challenger,
+                        instance=instance,
+                        seed=seed,
+                        cutoff=cutoff,
+                        instance_specific=self.instance_specifics.get(instance, "0"))
                     num_run += 1
 
                 # we cannot use inst_seed_pairs here since we could have less runs
@@ -253,7 +265,7 @@ class Intensifier(object):
 
                     n_samples = len(inst_seed_pairs)
                     self.logger.info("Challenger (%.4f) is better than incumbent (%.4f) on %d runs." % (
-                        chal_perf / n_samples, inc_perf / n_samples, n_samples))
+                        chal_perf, inc_perf, n_samples))
                     self.logger.info(
                         "Changing incumbent to challenger: %s" % (challenger))
                     incumbent = challenger
@@ -268,11 +280,11 @@ class Intensifier(object):
                     # challenger is not worse, continue
                     N = 2 * N
 
-            if chall_indx >= 1 and num_run > self.run_limit:
+            if chall_indx > 1 and num_run > self.run_limit:
                 self.logger.debug(
                     "Maximum #runs for intensification reached")
                 break
-            elif chall_indx >= 1 and time.time() - self.start_time - time_bound >= 0:
+            elif chall_indx > 1 and time.time() - self.start_time - time_bound >= 0:
                 self.logger.debug("Timelimit for intensification reached ("
                                   "used: %f sec, available: %f sec)" % (
                                       time.time() - self.start_time, time_bound))
@@ -283,5 +295,7 @@ class Intensifier(object):
         inc_perf = aggregate_func(incumbent, run_history, inc_runs)
         self.logger.info("Updated estimated performance of incumbent on %d runs: %.4f" % (
             len(inc_runs), inc_perf))
+        
+        self.stats.update_average_configs_per_intensify(n_configs=chall_indx)
 
         return incumbent, inc_perf

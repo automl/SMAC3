@@ -18,6 +18,9 @@ __version__ = "0.0.1"
 RunKey = collections.namedtuple(
     'RunKey', ['config_id', 'instance_id', 'seed'])
 
+InstSeedKey = collections.namedtuple(
+    'InstSeedKey', ['instance', 'seed'])
+
 RunValue = collections.namedtuple(
     'RunValue', ['cost', 'time', 'status', 'additional_info'])
 
@@ -40,6 +43,10 @@ class RunHistory(object):
         # when we serialize the data and can assume it's still in the same
         # order as it was added.
         self.data = collections.OrderedDict()
+
+        # for fast access, we have also an unordered data structure
+        # to get all instance seed pairs of a configuration
+        self._configid_to_inst_seed = {}
 
         self.config_ids = {}  # config -> id
         self.ids_config = {}  # id -> config
@@ -88,8 +95,14 @@ class RunHistory(object):
 
         k = RunKey(config_id, instance_id, seed)
         v = RunValue(cost, time, status, additional_info)
-
         self.data[k] = v
+
+        # also add to fast data structure
+        is_k = InstSeedKey(instance_id, seed)
+        self._configid_to_inst_seed[
+            config_id] = self._configid_to_inst_seed.get(config_id, [])
+        self._configid_to_inst_seed[config_id].append(is_k)
+
         # assumes an average across runs as cost function
         self.incremental_update_cost(config, cost)
 
@@ -156,6 +169,10 @@ class RunHistory(object):
         self.runs_per_config[config_id] = n_runs + 1
 
     def get_cost(self, config):
+        '''
+            returns empirical cost for a configuration;
+            uses  self.cost_per_config
+        '''
         config_id = self.config_ids[config]
         return self.cost_per_config[config_id]
 
@@ -170,18 +187,12 @@ class RunHistory(object):
         ----------
             list: tuples of instance, seed
         """
-        InstanceSeedPair = collections.namedtuple("InstanceSeedPair",
-                                                  ["instance", "seed"])
         config_id = self.config_ids.get(config)
-        list_ = []
-        for k in self.data:
-            # TA will return ABORT if config. budget was exhausted and
-            # we don't want to collect such runs to compute the cost of a
-            # configuration
-            if config_id == k.config_id and self.data[k].status not in [StatusType.ABORT]:
-                ist = InstanceSeedPair(k.instance_id, k.seed)
-                list_.append(ist)
-        return list_
+        is_list = self._configid_to_inst_seed.get(config_id)
+        if is_list is None:
+            return []
+        else:
+            return is_list
 
     def empty(self):
         """
@@ -240,9 +251,15 @@ class RunHistory(object):
 
         self._n_id = len(self.config_ids)
 
-        self.data = {RunKey(int(k[0]), k[1], int(k[2])):
-                     RunValue(float(v[0]), float(v[1]), v[2], v[3])
-                     for k, v in all_data["data"]}
+        # important to use add method to use all data structure correctly
+        for k, v in all_data["data"]:
+            self.add(config=self.ids_config[int(k[0])],
+                     cost=float(v[0]),
+                     time=float(v[1]),
+                     status=v[2],
+                     instance_id=k[1],
+                     seed=int(k[2]),
+                     additional_info=v[3])
 
     def update_from_json(self, fn, cs):
         """Update the current runhistory by adding new runs from a json file.

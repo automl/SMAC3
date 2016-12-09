@@ -1,3 +1,19 @@
+# 0.2.2
+
+* FIX 124: SMAC could crash if the number of instances was less than seven
+* FIX 126: Memory limit was not correctly passed to the target algorithm
+  evaluator
+* Local search is now started from the configurations with highest EI, drawn by
+  random sampling
+* Reduce the number of trees to 10 to allow faster predictions (as in SMAC2)
+* Do an adaptive number of stochastic local search iterations instead of a fixd
+  number (a5914a1d97eed2267ae82f22bd53246c92fe1e2c)
+* FIX a bug which didn't make SMAC run at least two configurations per call to
+  intensify
+* ADD more efficient data structure to update the cost of a configuration
+* FIX do only count a challenger as a run if it actually was run
+  (and not only considered)(a993c29abdec98c114fc7d456ded1425a6902ce3)
+
 # 0.2.1
 
 * CI: travis-ci continuous integration on OSX
