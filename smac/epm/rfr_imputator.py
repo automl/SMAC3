@@ -1,4 +1,5 @@
 import logging
+import warnings
 import numpy as np
 from scipy.stats import truncnorm
 
@@ -89,41 +90,51 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
 
         it = 1
         change = 0
-        
+
         while True:
             self.logger.debug("Iteration %d of %d" % (it, self.max_iter))
 
             # predict censored y values
             y_mean, y_var = self.model.predict(censored_X)
             y_var[y_var < self.var_threshold] = self.var_threshold
-            y_stdev = np.sqrt(y_var)[:,0]
-            y_mean = y_mean[:,0]
-            
-            imputed_y = truncnorm.stats(a=(censored_y - y_mean) / y_stdev,
-                                    b=(self.threshold - y_mean) / y_stdev,
-                                    loc=y_mean,
-                                    scale=y_stdev,
-                                    moments='m')
-            
+            y_stdev = np.sqrt(y_var)[:, 0]
+            y_mean = y_mean[:, 0]
+
+            # ignore the warnings of truncnorm.stats
+            # since we handle them appropriately
+            with warnings.catch_warnings():
+                warnings.filterwarnings(
+                    'ignore', r'invalid value encountered in subtract.*')
+                warnings.filterwarnings(
+                    'ignore', r'divide by zero encountered in true_divide.*')
+                imputed_y = truncnorm.stats(a=(censored_y - y_mean) / y_stdev,
+                                            b=(self.threshold - y_mean) /
+                                            y_stdev,
+                                            loc=y_mean,
+                                            scale=y_stdev,
+                                            moments='m')
+
             imputed_y = np.array(imputed_y)
 
             nans = np.isfinite(imputed_y) == False
             n_nans = sum(nans)
             if n_nans > 0:
                 # Replace all nans with maximum of predicted perf and censored value
-                # this happens if the prediction is far smaller than the censored data point
+                # this happens if the prediction is far smaller than the
+                # censored data point
                 self.logger.debug("Going to replace %d nan-value(s) with "
                                   "max(captime, predicted mean)" % n_nans)
-                imputed_y[nans] = np.max([censored_y[nans], y_mean[nans]], axis=0)
-                
+                imputed_y[nans] = np.max(
+                    [censored_y[nans], y_mean[nans]], axis=0)
+
             if it > 1:
                 # Calc mean difference between imputed values this and last
                 # iteration, assume imputed values are always concatenated
                 # after uncensored values
 
                 change = np.mean(abs(imputed_y -
-                                        y[uncensored_y.shape[0]:]) /
-                                    y[uncensored_y.shape[0]:])
+                                     y[uncensored_y.shape[0]:]) /
+                                 y[uncensored_y.shape[0]:])
 
             # lower all values that are higher than threshold
             # should probably never happen
@@ -144,7 +155,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
                 break
 
         self.logger.debug("Imputation used %d/%d iterations, last_change=%f" %
-                          (it-1, self.max_iter, change))
+                          (it - 1, self.max_iter, change))
 
         # replace all y > cutoff with PAR10 values (i.e., threshold)
         imputed_y = np.array(imputed_y, dtype=np.float)
