@@ -174,7 +174,9 @@ class SMAC(object):
                                       cutoff=scenario.cutoff,
                                       deterministic=scenario.deterministic,
                                       run_obj_time=scenario.run_obj == "runtime",
-                                      instance_specifics=scenario.instance_specific)
+                                      instance_specifics=scenario.instance_specific,
+                                      minR=scenario.minR,
+                                      maxR=scenario.maxR)
 
         # initial design
         if initial_design is not None and initial_configurations is not None:

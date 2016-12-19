@@ -227,6 +227,10 @@ class Scenario(object):
                           callback=float)
         self.add_argument(name='runcount_limit', help=None, default=numpy.inf,
                           callback=float, dest="ta_run_limit")
+        self.add_argument(name='minR', help=None, default=1, callback=int,
+                          dest='minR')
+        self.add_argument(name='maxR', help=None, default=2000, callback=int,
+                          dest='maxR')
         self.add_argument(name='instance_file', help=None, dest='train_inst_fn')
         self.add_argument(name='test_instance_file', help=None,
                           dest='test_inst_fn')
