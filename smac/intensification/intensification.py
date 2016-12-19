@@ -28,8 +28,8 @@ class Intensifier(object):
     '''
 
     def __init__(self, tae_runner, stats, traj_logger, rng, instances=None,
-                 instance_specifics={}, cutoff=MAX_CUTOFF, deterministic=False,
-                 run_obj_time=True, run_limit=MAXINT, maxR=2000):
+                 instance_specifics=None, cutoff=MAX_CUTOFF, deterministic=False,
+                 run_obj_time=True, run_limit=MAXINT, minR=1, maxR=2000):
         '''
         Constructor
 
@@ -56,6 +56,8 @@ class Intensifier(object):
             maximum number of runs
         maxR : int
             maximum number of runs per config
+        minR : int
+            minimum number of run per config
         '''
         self.stats = stats
         self.traj_logger = traj_logger
@@ -63,10 +65,11 @@ class Intensifier(object):
         if instances is None:
             instances = []
         self.instances = set(instances)
-        self.instance_specifics = instance_specifics
+        self.instance_specifics = {} if instance_specifics is None else instance_specifics
         self.logger = logging.getLogger("intensifier")
         self.run_limit = run_limit
         self.maxR = maxR
+        self.minR = minR
         self.rs = rng
 
         # scenario info
@@ -134,51 +137,60 @@ class Intensifier(object):
             # Line 3
             # First evaluate incumbent on a new instance
             if len(inc_runs) < self.maxR:
-                # Line 4
-                # find all instances that have the most runs on the inc
-                inc_inst = [s.instance for s in inc_runs]
-                inc_inst = list(Counter(inc_inst).items())
-                inc_inst.sort(key=lambda x: x[1], reverse=True)
-                try:
-                    max_runs = inc_inst[0][1]
-                except IndexError:
-                    self.logger.debug("No run for incumbent found")
-                    max_runs = 0
-                inc_inst = set([x[0] for x in inc_inst if x[1] == max_runs])
+                while True:
+                    # Line 4
+                    # find all instances that have the most runs on the inc
+                    inc_runs = run_history.get_runs_for_config(incumbent)
+                    inc_inst = [s.instance for s in inc_runs]
+                    inc_inst = list(Counter(inc_inst).items())
+                    inc_inst.sort(key=lambda x: x[1], reverse=True)
+                    try:
+                        max_runs = inc_inst[0][1]
+                    except IndexError:
+                        self.logger.debug("No run for incumbent found")
+                        max_runs = 0
+                    inc_inst = set([x[0] for x in inc_inst if x[1] == max_runs])
 
-                available_insts = (self.instances - inc_inst)
+                    available_insts = (self.instances - inc_inst)
 
-                # if all instances were used n times, we can pick an instances
-                # from the complete set again
-                if not self.deterministic and not available_insts:
-                    available_insts = self.instances
+                    # if all instances were used n times, we can pick an instances
+                    # from the complete set again
+                    if not self.deterministic and not available_insts:
+                        available_insts = self.instances
 
-                # Line 6 (Line 5 is further down...)
-                if self.deterministic:
-                    next_seed = 0
-                else:
-                    next_seed = self.rs.randint(low=0, high=MAXINT,
-                                                size=1)[0]
+                    # Line 6 (Line 5 is further down...)
+                    if self.deterministic:
+                        next_seed = 0
+                    else:
+                        next_seed = self.rs.randint(low=0, high=MAXINT,
+                                                    size=1)[0]
 
-                if available_insts:
-                    # Line 5 (here for easier code)
-                    next_instance = self.rs.choice(list(available_insts))
-                    # Line 7
-                    self.logger.debug("Add run of incumbent")
-                    status, cost, dur, res = self.tae_runner.start(
-                        config=incumbent,
-                        instance=next_instance,
-                        seed=next_seed,
-                        cutoff=self.cutoff,
-                        instance_specific=self.instance_specifics.get(next_instance, "0"))
+                    if available_insts:
+                        # Line 5 (here for easier code)
+                        next_instance = self.rs.choice(list(available_insts))
+                        # Line 7
+                        self.logger.debug("Add run of incumbent")
+                        status, cost, dur, res = self.tae_runner.start(
+                            config=incumbent,
+                            instance=next_instance,
+                            seed=next_seed,
+                            cutoff=self.cutoff,
+                            instance_specific=self.instance_specifics.get(next_instance, "0"))
 
-                    num_run += 1
-                else:
-                    self.logger.debug(
-                        "No further instance-seed pairs for incumbent available.")
+                        num_run += 1
+                    else:
+                        self.logger.debug(
+                            "No further instance-seed pairs for incumbent available.")
+                        break
+
+                    inc_runs = run_history.get_runs_for_config(incumbent)
+                    # Termination condition; after exactly one run, this checks
+                    # whether further runs are necessary due to minR
+                    if len(inc_runs) >= self.minR or len(inc_runs) >= self.maxR:
+                        break
 
             # Line 8
-            N = 1
+            N = max(1, self.minR)
 
             inc_inst_seeds = set(run_history.get_runs_for_config(incumbent))
             inc_perf = aggregate_func(incumbent, run_history, inc_inst_seeds)
@@ -253,7 +265,7 @@ class Intensifier(object):
                     chal_perf = aggregate_func(challenger, run_history, chall_inst_seeds)
                     inc_perf = aggregate_func(incumbent, run_history, chall_inst_seeds)
                     # Line 15
-                    if chal_perf > inc_perf:
+                    if chal_perf > inc_perf and len(chall_inst_seeds) >= self.minR:
                         # Incumbent beats challenger
                         self.logger.debug("Incumbent (%.4f) is better than challenger (%.4f) on %d runs." % (
                             inc_perf, chal_perf, len(inst_seed_pairs)))
