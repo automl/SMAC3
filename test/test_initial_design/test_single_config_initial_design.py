@@ -32,7 +32,7 @@ class TestSingleInitialDesign(unittest.TestCase):
         rh = RunHistory(aggregate_func=average_cost)
 
         dc = DefaultConfiguration(tae_runner=self.ta, scenario=self.scenario,
-                                  stats=stats, traj_logger=tj, runhistory=rh,
+                                  stats=stats, traj_logger=tj,
                                   rng=np.random.RandomState(seed=12345))
 
         inc = dc.run()

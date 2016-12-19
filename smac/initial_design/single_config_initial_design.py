@@ -23,7 +23,6 @@ class SingleConfigInitialDesign(InitialDesign):
                  scenario: Scenario,
                  stats: Stats,
                  traj_logger: TrajLogger,
-                 runhistory: RunHistory,
                  rng: np.random.RandomState
                  ):
         '''
@@ -39,8 +38,6 @@ class SingleConfigInitialDesign(InitialDesign):
             statistics of experiments; needed in case initial design already exhaust the budget
         traj_logger: TrajLogger
             trajectory logging to add new incumbents found by the initial design
-        runhistory: RunHistory
-            runhistory with all target algorithm runs
         rng: np.random.RandomState
             random state
         '''
@@ -48,7 +45,6 @@ class SingleConfigInitialDesign(InitialDesign):
                          scenario=scenario,
                          stats=stats,
                          traj_logger=traj_logger,
-                         runhistory=runhistory,
                          rng=rng)
 
     def run(self):
