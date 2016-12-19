@@ -111,10 +111,10 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             n_nans = sum(nans)
             if n_nans > 0:
                 # Replace all nans with maximum of predicted perf and censored value
-                # This case should hopefully never happen -- therefore it is a warning
-                self.logger.warning("Going to replace %d nan-value(s) with "
+                # this happens if the prediction is far smaller than the censored data point
+                self.logger.debug("Going to replace %d nan-value(s) with "
                                   "max(captime, predicted mean)" % n_nans)
-                imputed_y[nans] = max(censored_y[nans], y_mean[nans])
+                imputed_y[nans] = np.max([censored_y[nans], y_mean[nans]], axis=0)
                 
             if it > 1:
                 # Calc mean difference between imputed values this and last
