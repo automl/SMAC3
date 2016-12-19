@@ -156,6 +156,12 @@ class SMAC(object):
                             "call string in the scenario file."
                             % type(tae_runner))
 
+        # Check that overall objective and tae objective are the same
+        if tae_runner.run_obj != scenario.run_obj:
+            raise ValueError("Objective for the target algorithm runner and "
+                             "the scenario must be the same, but are '%s' and "
+                             "'%s'" % (tae_runner.run_obj, scenario.run_obj))
+
         # inject stats if necessary
         if tae_runner.stats is None:
             tae_runner.stats = self.stats
