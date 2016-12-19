@@ -197,14 +197,12 @@ class SMAC(object):
                                                       scenario=scenario,
                                                       stats=self.stats,
                                                       traj_logger=traj_logger,
-                                                      runhistory=runhistory,
                                                       rng=rng)
             elif scenario.initial_incumbent == "RANDOM":
                 initial_design = RandomConfiguration(tae_runner=tae_runner,
                                                      scenario=scenario,
                                                      stats=self.stats,
                                                      traj_logger=traj_logger,
-                                                     runhistory=runhistory,
                                                      rng=rng)
             else:
                 raise ValueError("Don't know what kind of initial_incumbent "
