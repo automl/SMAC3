@@ -146,7 +146,8 @@ class AbstractRunHistory2EPM(object):
 
     def transform(self, runhistory):
         '''
-        returns vector representation of runhistory
+        returns vector representation of runhistory;
+        if imputation is disabled, censored (TIMEOUT with time < cutoff) will be skipped
 
         Parameters
         ----------
@@ -169,7 +170,7 @@ class AbstractRunHistory2EPM(object):
         t_instance_id_list = [k.instance_id for k in s_run_dict.keys()]
 
         tX, tY = self._build_matrix(run_dict=t_run_dict, runhistory=runhistory,
-                                    instances=t_instance_id_list)
+                                    instances=t_instance_id_list, par_factor=self.scenario.par_factor)
 
         # if we don't have successful runs,
         # we have to return all timeout runs
@@ -182,6 +183,9 @@ class AbstractRunHistory2EPM(object):
                                             select=RunType.CENSORED)
             if len(c_run_dict) == 0:
                 self.logger.debug("No censored data found, skip imputation")
+                # If we do not impute, we also return TIMEOUT data
+                X = np.vstack((X, tX))
+                Y = np.concatenate((Y, tY))
             else:
                 # Store a list of instance IDs
                 c_instance_id_list = [k.instance_id for k in c_run_dict.keys()]
@@ -191,12 +195,15 @@ class AbstractRunHistory2EPM(object):
                                                   instances=c_instance_id_list,
                                                   par_factor=1)
 
-                # Also impute TIMEOUTS
+                # Also impute TIMEOUTS using PAR1
+                tX, tY = self._build_matrix(run_dict=t_run_dict, runhistory=runhistory,
+                                    instances=t_instance_id_list, par_factor=1)
                 cen_X = np.vstack((cen_X, tX))
                 cen_Y = np.concatenate((cen_Y, tY))
                 self.logger.debug("%d TIMOUTS, %d censored, %d regular" %
                                   (tX.shape[0], cen_X.shape[0], X.shape[0]))
 
+                # return imp_Y in PAR depending on the used threshold in imputor
                 imp_Y = self.imputor.impute(censored_X=cen_X, censored_y=cen_Y,
                                             uncensored_X=X, uncensored_y=Y)
 
@@ -204,7 +211,7 @@ class AbstractRunHistory2EPM(object):
                 X = np.vstack((X, cen_X))
                 Y = np.concatenate((Y, imp_Y))
         else:
-            # If we do not impute,we also return TIMEOUT data
+            # If we do not impute, we also return TIMEOUT data
             X = np.vstack((X, tX))
             Y = np.concatenate((Y, tY))
 
