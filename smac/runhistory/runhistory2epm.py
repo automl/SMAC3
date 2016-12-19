@@ -2,11 +2,12 @@ import abc
 import copy
 from collections import OrderedDict
 import logging
+import typing
 
 import numpy as np
 
 from smac.tae.execute_ta_run import StatusType
-from smac.runhistory.runhistory import RunHistory
+from smac.runhistory.runhistory import RunHistory, RunKey, RunValue
 from smac.configspace import impute_inactive_values
 import smac.epm.base_imputor
 from smac.utils import constants
@@ -118,7 +119,29 @@ class AbstractRunHistory2EPM(object):
                              type(self.imputor))
 
     @abc.abstractmethod
-    def _build_matrix(self, run_list, runhistory, instances=None):
+    def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
+                      runhistory: RunHistory,
+                      instances: list=None,
+                      par_factor: int=1):
+        '''
+            builds x,y matrixes from selected runs from runhistory
+
+            Parameters
+            ----------
+            run_dict: dict: RunKey -> RunValue
+                dictionary from RunHistory.RunKey to RunHistory.RunValue
+            runhistory: RunHistory
+                runhistory object
+            instances: list
+                list of instances
+            par_factor: int
+                penalization factor for censored runtime data
+
+            Returns
+            -------
+            X: np.ndarray, Y:np.ndarray
+
+        '''
         raise NotImplementedError()
 
     def transform(self, runhistory):
@@ -133,39 +156,40 @@ class AbstractRunHistory2EPM(object):
         assert isinstance(runhistory, RunHistory)
 
         # consider only successfully finished runs
-        s_run_list = self.__select_runs(rh_data=copy.deepcopy(runhistory.data),
+        s_run_dict = self.__select_runs(rh_data=copy.deepcopy(runhistory.data),
                                         select=RunType.SUCCESS)
         # Store a list of instance IDs
-        s_instance_id_list = [k.instance_id for k in s_run_list.keys()]
-        X, Y = self._build_matrix(run_list=s_run_list, runhistory=runhistory,
+        s_instance_id_list = [k.instance_id for k in s_run_dict.keys()]
+        X, Y = self._build_matrix(run_dict=s_run_dict, runhistory=runhistory,
                                   instances=s_instance_id_list)
 
         # Also get TIMEOUT runs
-        t_run_list = self.__select_runs(rh_data=copy.deepcopy(runhistory.data),
+        t_run_dict = self.__select_runs(rh_data=copy.deepcopy(runhistory.data),
                                         select=RunType.TIMEOUT)
-        t_instance_id_list = [k.instance_id for k in s_run_list.keys()]
+        t_instance_id_list = [k.instance_id for k in s_run_dict.keys()]
 
-        tX, tY = self._build_matrix(run_list=t_run_list, runhistory=runhistory,
+        tX, tY = self._build_matrix(run_dict=t_run_dict, runhistory=runhistory,
                                     instances=t_instance_id_list)
 
         # if we don't have successful runs,
         # we have to return all timeout runs
-        if not s_run_list:
+        if not s_run_dict:
             return tX, tY
 
         if self.impute_censored_data:
             # Get all censored runs
-            c_run_list = self.__select_runs(rh_data=copy.deepcopy(runhistory.data),
+            c_run_dict = self.__select_runs(rh_data=copy.deepcopy(runhistory.data),
                                             select=RunType.CENSORED)
-            if len(c_run_list) == 0:
+            if len(c_run_dict) == 0:
                 self.logger.debug("No censored data found, skip imputation")
             else:
                 # Store a list of instance IDs
-                c_instance_id_list = [k.instance_id for k in c_run_list.keys()]
+                c_instance_id_list = [k.instance_id for k in c_run_dict.keys()]
 
-                cen_X, cen_Y = self._build_matrix(run_list=c_run_list,
+                cen_X, cen_Y = self._build_matrix(run_dict=c_run_dict,
                                                   runhistory=runhistory,
-                                                  instances=c_instance_id_list)
+                                                  instances=c_instance_id_list,
+                                                  par_factor=1)
 
                 # Also impute TIMEOUTS
                 cen_X = np.vstack((cen_X, tX))
@@ -200,7 +224,7 @@ class AbstractRunHistory2EPM(object):
             return only runs for this type
         Returns
         -------
-        list of ConfigSpace.config
+        dictionary in the form of RunHistory.data
         '''
         new_dict = dict()
 
@@ -227,19 +251,37 @@ class AbstractRunHistory2EPM(object):
             raise ValueError(err_msg)
 
         return new_dict
+    
+class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
 
+    def _build_matrix(self, run_dict, runhistory, instances=None, par_factor=1):
+        '''
+            builds X,y matrixes from selected runs from runhistory
 
-class RunHistory2EPM4LogCost(AbstractRunHistory2EPM):
+            Parameters
+            ----------
+            run_dict: dict: RunKey -> RunValue
+                dictionary from RunHistory.RunKey to RunHistory.RunValue
+            runhistory: RunHistory
+                runhistory object
+            instances: list
+                list of instances
+            par_factor: int
+                penalization factor for censored runtime data
 
-    def _build_matrix(self, run_list, runhistory, instances=None):
+            Returns
+            -------
+            X: np.ndarray, Y:np.ndarray
+
+        '''
         # First build nan-matrix of size #configs x #params+1
-        n_rows = len(run_list)
+        n_rows = len(run_dict)
         n_cols = self.num_params
         X = np.ones([n_rows, n_cols + self.n_feats]) * np.nan
         y = np.ones([n_rows, 1])
 
         # Then populate matrix
-        for row, (key, run) in enumerate(run_list.items()):
+        for row, (key, run) in enumerate(run_dict.items()):
             # Scaling is automatically done in configSpace
             conf = runhistory.ids_config[key.config_id]
             conf = impute_inactive_values(conf)
@@ -249,53 +291,63 @@ class RunHistory2EPM4LogCost(AbstractRunHistory2EPM):
             else:
                 X[row, :] = conf.get_array()
             # run_array[row, -1] = instances[row]
-            y[row, 0] = run.cost
+            if self.scenario.run_obj == "runtime":
+                if run.status != StatusType.SUCCESS:
+                    y[row, 0] = run.time * par_factor
+                else:
+                    y[row, 0] = run.time
+            else:
+                y[row, 0] = run.cost
 
-        #ensure that minimal value is larger than 0
-        if np.sum(y<=0) > 0:
-                self.logger.warning("Got cost of smaller/equal to 0. Replace by %f since we use log cost." %(constants.MINIMAL_COST_FOR_LOG))
-                y[y<constants.MINIMAL_COST_FOR_LOG] = constants.MINIMAL_COST_FOR_LOG
+        return X, y
+
+class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
+
+    def _build_matrix(self, run_dict, runhistory, instances=None, par_factor=1):
+        '''
+            builds X,y matrixes from selected runs from runhistory;
+            transforms y by using log
+
+            Parameters
+            ----------
+            run_dict: dict: RunKey -> RunValue
+                dictionary from RunHistory.RunKey to RunHistory.RunValue
+            runhistory: RunHistory
+                runhistory object
+            instances: list
+                list of instances
+            par_factor: int
+                penalization factor for censored runtime data
+
+            Returns
+            -------
+            X: np.ndarray, Y:np.ndarray
+
+        '''
+        X, y = super()._build_matrix(run_dict=run_dict, runhistory=runhistory,
+                              instances=instances, par_factor=par_factor)
+
+        # ensure that minimal value is larger than 0
+        if np.sum(y <= 0) > 0:
+            self.logger.warning(
+                "Got cost of smaller/equal to 0. Replace by %f since we use log cost." % (constants.MINIMAL_COST_FOR_LOG))
+            y[y <
+                constants.MINIMAL_COST_FOR_LOG] = constants.MINIMAL_COST_FOR_LOG
         y = np.log10(y)
 
         return X, y
 
-
-class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
-
-    def _build_matrix(self, run_list, runhistory, instances=None):
-        # First build nan-matrix of size #configs x #params+1
-        n_rows = len(run_list)
-        n_cols = self.num_params
-        X = np.ones([n_rows, n_cols + self.n_feats]) * np.nan
-        y = np.ones([n_rows, 1])
-
-        # Then populate matrix
-        for row, (key, run) in enumerate(run_list.items()):
-            # Scaling is automatically done in configSpace
-            conf = runhistory.ids_config[key.config_id]
-            conf = impute_inactive_values(conf)
-            if self.n_feats:
-                feats = self.instance_features[key.instance_id]
-                X[row, :] = np.hstack((conf.get_array(), feats))
-            else:
-                X[row, :] = conf.get_array()
-            # run_array[row, -1] = instances[row]
-            y[row, 0] = run.cost
-
-        return X, y
-
-
 class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
 
-    def _build_matrix(self, run_list, runhistory, instances=None):
+    def _build_matrix(self, run_dict, runhistory, instances=None, par_factor=1):
         # First build nan-matrix of size #configs x #params+1
-        n_rows = len(run_list)
+        n_rows = len(run_dict)
         n_cols = self.num_params
         X = np.ones([n_rows, n_cols + self.n_feats]) * np.nan
         Y = np.ones([n_rows, 2])
 
         # Then populate matrix
-        for row, (key, run) in enumerate(run_list.items()):
+        for row, (key, run) in enumerate(run_dict.items()):
             # Scaling is automatically done in configSpace
             conf = runhistory.ids_config[key.config_id]
             conf = impute_inactive_values(conf)

@@ -1,5 +1,5 @@
 import logging
-import numpy
+import numpy as np
 from scipy.stats import truncnorm
 
 import smac.epm.base_imputor
@@ -87,7 +87,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         # Define variables
         y = None
 
-        it = 0
+        it = 1
         change = 0
         
         while True:
@@ -96,42 +96,45 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             # predict censored y values
             y_mean, y_var = self.model.predict(censored_X)
             y_var[y_var < self.var_threshold] = self.var_threshold
-            y_stdev = numpy.sqrt(y_var)[:,0]
+            y_stdev = np.sqrt(y_var)[:,0]
             y_mean = y_mean[:,0]
-
+            
             imputed_y = truncnorm.stats(a=(censored_y - y_mean) / y_stdev,
-                                    b=(self.cutoff * 10 - y_mean) / y_stdev,
+                                    b=(self.threshold - y_mean) / y_stdev,
                                     loc=y_mean,
                                     scale=y_stdev,
                                     moments='m')
             
-            imputed_y = numpy.array(imputed_y)
+            imputed_y = np.array(imputed_y)
 
-            if sum(numpy.isfinite(imputed_y) == False) > 0:
-                # Replace all nans with threshold
-                self.logger.debug("Going to replace %d nan-value(s) with "
-                                  "threshold" %
-                                  sum(numpy.isfinite(imputed_y) == False))
-                imputed_y[numpy.isfinite(imputed_y) == False] = self.threshold
-
-            if it > 0:
+            nans = np.isfinite(imputed_y) == False
+            n_nans = sum(nans)
+            if n_nans > 0:
+                # Replace all nans with maximum of predicted perf and censored value
+                # This case should hopefully never happen -- therefore it is a warning
+                self.logger.warning("Going to replace %d nan-value(s) with "
+                                  "max(captime, predicted mean)" % n_nans)
+                imputed_y[nans] = max(censored_y[nans], y_mean[nans])
+                
+            if it > 1:
                 # Calc mean difference between imputed values this and last
                 # iteration, assume imputed values are always concatenated
                 # after uncensored values
 
-                change = numpy.mean(abs(imputed_y -
+                change = np.mean(abs(imputed_y -
                                         y[uncensored_y.shape[0]:]) /
                                     y[uncensored_y.shape[0]:])
 
             # lower all values that are higher than threshold
+            # should probably never happen
             imputed_y[imputed_y >= self.threshold] = self.threshold
 
             self.logger.debug("Change: %f" % change)
 
-            X = numpy.concatenate((uncensored_X, censored_X))
-            y = numpy.concatenate((uncensored_y, imputed_y))
+            X = np.concatenate((uncensored_X, censored_X))
+            y = np.concatenate((uncensored_y, imputed_y))
 
-            if change > self.change_threshold or it == 0:
+            if change > self.change_threshold or it == 1:
                 self.model.train(X, y)
             else:
                 break
@@ -141,12 +144,13 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
                 break
 
         self.logger.debug("Imputation used %d/%d iterations, last_change=%f" %
-                          (it, self.max_iter, change))
+                          (it-1, self.max_iter, change))
 
-        imputed_y = numpy.array(imputed_y, dtype=numpy.float)
-        imputed_y[imputed_y >= self.threshold] = self.threshold
+        # replace all y > cutoff with PAR10 values (i.e., threshold)
+        imputed_y = np.array(imputed_y, dtype=np.float)
+        imputed_y[imputed_y >= self.cutoff] = self.threshold
 
-        if not numpy.isfinite(imputed_y).all():
+        if not np.isfinite(imputed_y).all():
             self.logger.critical("Imputed values are not finite, %s" %
                                  str(imputed_y))
-        return numpy.reshape(imputed_y, [imputed_y.shape[0], 1])
+        return np.reshape(imputed_y, [imputed_y.shape[0], 1])
