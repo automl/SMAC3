@@ -106,7 +106,7 @@ class EI(AbstractAcquisitionFunction):
 
     def __init__(self,
                  model,
-                 par=0.01,
+                 par=0.0,
                  **kwargs):
         r"""
         Computes for a given x the expected improvement as
@@ -195,7 +195,7 @@ class EI(AbstractAcquisitionFunction):
 class EIPS(EI):
     def __init__(self,
                  model,
-                 par=0.01,
+                 par=0.0,
                  **kwargs):
         r"""
         Computes for a given x the expected improvement as
@@ -219,7 +219,7 @@ class EIPS(EI):
             and exploitation of the acquisition function. Default is 0.01
         """
 
-        super(EIPS, self).__init__(model)
+        super(EIPS, self).__init__(model, par=par)
         self.long_name = 'Expected Improvement per Second'
 
     def _compute(self, X, derivative=False, **kwargs):

@@ -26,7 +26,7 @@ class TestEI(unittest.TestCase):
         X = np.array([[1.0, 1.0, 1.0]])
         acq = self.ei(X)
         self.assertEqual(acq.shape, (1, 1))
-        self.assertAlmostEqual(acq[0][0], 0.39396222734922848)
+        self.assertAlmostEqual(acq[0][0], 0.3989422804014327)
 
     def test_NxD(self):
         self.ei.update(model=self.model, eta=1.0)
@@ -36,15 +36,15 @@ class TestEI(unittest.TestCase):
         acq = self.ei(X)
         self.assertEqual(acq.shape, (3, 1))
         self.assertAlmostEqual(acq[0][0], 0.0)
-        self.assertAlmostEqual(acq[1][0], 0.89022927659832807)
-        self.assertAlmostEqual(acq[2][0], 0.39396222734922848)
+        self.assertAlmostEqual(acq[1][0], 0.90020601136712231)
+        self.assertAlmostEqual(acq[2][0], 0.3989422804014327)
 
     def test_1x1(self):
         self.ei.update(model=self.model, eta=1.0)
         X = np.array([[1.0]])
         acq = self.ei(X)
         self.assertEqual(acq.shape, (1, 1))
-        self.assertAlmostEqual(acq[0][0], 0.39396222734922848)
+        self.assertAlmostEqual(acq[0][0], 0.3989422804014327)
 
     def test_Nx1(self):
         self.ei.update(model=self.model, eta=1.0)
@@ -53,9 +53,9 @@ class TestEI(unittest.TestCase):
                       [2.0]])
         acq = self.ei(X)
         self.assertEqual(acq.shape, (3, 1))
-        self.assertAlmostEqual(acq[0][0], 0.9899)
-        self.assertAlmostEqual(acq[1][0], 0.39396222734922848)
-        self.assertAlmostEqual(acq[2][0], 0.19725469421480674)
+        self.assertAlmostEqual(acq[0][0], 0.9999)
+        self.assertAlmostEqual(acq[1][0], 0.3989422804014327)
+        self.assertAlmostEqual(acq[2][0], 0.19964122837424575)
 
     def test_zero_variance(self):
         self.ei.update(model=self.model, eta=1.0)
