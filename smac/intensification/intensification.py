@@ -140,6 +140,7 @@ class Intensifier(object):
                 while True:
                     # Line 4
                     # find all instances that have the most runs on the inc
+                    inc_runs = run_history.get_runs_for_config(incumbent)
                     inc_inst = [s.instance for s in inc_runs]
                     inc_inst = list(Counter(inc_inst).items())
                     inc_inst.sort(key=lambda x: x[1], reverse=True)
@@ -184,11 +185,11 @@ class Intensifier(object):
                     inc_runs = run_history.get_runs_for_config(incumbent)
                     # Termination condition; after exactly one run, this checks
                     # whether further runs are necessary due to minR
-                    if len(inc_runs) >= self.minR:
+                    if len(inc_runs) >= self.minR or len(inc_runs) >= self.maxR:
                         break
 
             # Line 8
-            N = 1
+            N = max(1, self.minR)
 
             inc_inst_seeds = set(run_history.get_runs_for_config(incumbent))
             inc_perf = aggregate_func(incumbent, run_history, inc_inst_seeds)
