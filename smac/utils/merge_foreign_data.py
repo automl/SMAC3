@@ -37,7 +37,7 @@ def merge_foreign_data_from_file(scenario: Scenario,
 
     if not in_scenario_fn_list:
         raise ValueError("To read warmstart data from previous runhistories, the corresponding scenarios are required. Use option --warmstart_scenario") 
-    scens = [Scenario(scenario=scen_fn) for scen_fn in in_scenario_fn_list]
+    scens = [Scenario(scenario=scen_fn, cmd_args={"output_dir":""}) for scen_fn in in_scenario_fn_list]
     rhs = []
     for rh_fn in in_runhistory_fn_list:
         rh = RunHistory(aggregate_func)
@@ -87,7 +87,7 @@ def merge_foreign_data(scenario: Scenario,
 
     # extend runhistory
     for rh in in_runhistory_list:
-        runhistory.update(rh)
+        runhistory.update(rh, external_data=True)
 
     for date in runhistory.data:
         if scenario.feature_dict.get(date.instance_id) is None:

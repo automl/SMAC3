@@ -84,6 +84,7 @@ class SMACCLI(object):
 
         finally:
             # ensure that the runhistory is always dumped in the end
-            optimizer.solver.runhistory.save_json(
-                fn=os.path.join(scen.output_dir, "runhistory.json"))
+            if scen.output_dir is not None:
+                optimizer.solver.runhistory.save_json(
+                    fn=os.path.join(scen.output_dir, "runhistory.json"))
         #smbo.runhistory.load_json(fn="runhistory.json", cs=smbo.config_space)

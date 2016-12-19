@@ -183,7 +183,7 @@ class Scenario(object):
             normalized_key = key.lower().replace('-', '').replace('_', '')
             if normalized_key == normalized_name:
                 value = scenario.pop(key)
-
+                
         if dest is None:
             dest = name.lower().replace('-', '_')
 
@@ -333,7 +333,13 @@ class Scenario(object):
                               (self.pcs_fn))
             sys.exit(1)
 
-        self.logger.info("Output to %s" % (self.output_dir))
+        # you cannot set output dir to None directly
+        # because None is replaced by default always
+        if self.output_dir == "":
+            self.output_dir = None
+            self.logger.debug("Deactivate output directory.")
+        else:
+            self.logger.info("Output to %s" % (self.output_dir))
 
     def __getstate__(self):
         d = dict(self.__dict__)

@@ -1,6 +1,6 @@
 import collections
 import json
-import numpy
+import numpy as np
 import typing
 
 from smac.configspace import Configuration
@@ -61,7 +61,8 @@ class RunHistory(object):
     def add(self, config, cost, time,
             status, instance_id=None,
             seed=None,
-            additional_info=None):
+            additional_info=None,
+            external_data:bool=False):
         '''
         adds a data of a new target algorithm (TA) run;
         it will update data if the same key values are used 
@@ -70,7 +71,7 @@ class RunHistory(object):
         Attributes
         ----------
             config : dict (or other type -- depending on config space module)
-                parameter configuratoin
+                parameter configuration
             cost: float
                 cost of TA run (will be minimized)
             time: float
@@ -84,6 +85,9 @@ class RunHistory(object):
             additional_info: dict
                 additional run infos (could include further returned
                 information from TA or fields such as start time and host_id)
+            external_data: bool
+                if True, run will not be added to self._configid_to_inst_seed 
+                and not available through get_runs_for_config()
         '''
 
         config_id = self.config_ids.get(config)
@@ -97,11 +101,12 @@ class RunHistory(object):
         v = RunValue(cost, time, status, additional_info)
         self.data[k] = v
 
-        # also add to fast data structure
-        is_k = InstSeedKey(instance_id, seed)
-        self._configid_to_inst_seed[
-            config_id] = self._configid_to_inst_seed.get(config_id, [])
-        self._configid_to_inst_seed[config_id].append(is_k)
+        if not external_data:
+            # also add to fast data structure
+            is_k = InstSeedKey(instance_id, seed)
+            self._configid_to_inst_seed[
+                config_id] = self._configid_to_inst_seed.get(config_id, [])
+            self._configid_to_inst_seed[config_id].append(is_k)
 
         # assumes an average across runs as cost function
         self.incremental_update_cost(config, cost)
@@ -127,8 +132,6 @@ class RunHistory(object):
         '''
             computes the cost of all configurations from scratch
             and overwrites self.cost_perf_config and self.runs_per_config accordingly;
-            Since we iterate over the runhistory for every configuration,
-            this function can be quite expensive.
 
             Arguments
             ---------
@@ -174,7 +177,7 @@ class RunHistory(object):
             uses  self.cost_per_config
         '''
         config_id = self.config_ids[config]
-        return self.cost_per_config[config_id]
+        return self.cost_per_config.get(config_id, np.nan)
 
     def get_runs_for_config(self, config):
         """Return all runs (instance seed pairs) for a configuration.
@@ -275,13 +278,16 @@ class RunHistory(object):
         new_runhistory.load_json(fn, cs)
         self.update(runhistory=new_runhistory)
 
-    def update(self, runhistory):
+    def update(self, runhistory, external_data:bool=False):
         """Update the current runhistory by adding new runs from a json file.
 
         Parameters
         ----------
         runhistory: RunHistory
             runhistory with additional data to be added to self
+        external_data: bool
+            if True, run will not be added to self._configid_to_inst_seed 
+            and not available through get_runs_for_config()
         """
 
         # Configurations might be already known, but by a different ID. This
@@ -294,4 +300,5 @@ class RunHistory(object):
             config = runhistory.ids_config[config_id]
             self.add(config=config, cost=cost, time=time,
                      status=status, instance_id=instance_id,
-                     seed=seed, additional_info=additional_info)
+                     seed=seed, additional_info=additional_info,
+                     external_data=external_data)
