@@ -181,6 +181,7 @@ class Intensifier(object):
                     else:
                         self.logger.debug(
                             "No further instance-seed pairs for incumbent available.")
+                        break
 
                     inc_runs = run_history.get_runs_for_config(incumbent)
                     # Termination condition; after exactly one run, this checks
