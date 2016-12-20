@@ -175,6 +175,9 @@ class SMBO(BaseSolver):
         list
             List of 2020 suggested configurations to evaluate.
         """
+        if X.shape[0] == 0:
+            return [x[1] for x in self._get_next_by_random_search()]
+
         self.model.train(X, Y)
 
         if self.runhistory.empty():

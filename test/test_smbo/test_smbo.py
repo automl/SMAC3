@@ -119,8 +119,8 @@ class TestSMBO(unittest.TestCase):
         smbo = SMAC(self.scenario, rng=1).solver
         smbo.incumbent = self.scenario.cs.sample_configuration()
         smbo.runhistory = RunHistory(aggregate_func=average_cost)
-        smbo.model = mock.MagicMock()
-        smbo.acquisition_func._compute = mock.MagicMock()
+        smbo.model = mock.Mock(spec=RandomForestWithInstances)
+        smbo.acquisition_func._compute = mock.Mock(spec=RandomForestWithInstances)
         smbo.acquisition_func._compute.side_effect = side_effect
 
         X = smbo.rng.rand(10, 2)
@@ -146,6 +146,22 @@ class TestSMBO(unittest.TestCase):
         for i in range(1, 2020, 2):
             self.assertIsInstance(x[i], Configuration)
             self.assertEqual(x[i].origin, 'Random Search')
+
+    def test_choose_next_empty_X(self):
+        smbo = SMAC(self.scenario, rng=1).solver
+        smbo.incumbent = self.scenario.cs.sample_configuration()
+        smbo.runhistory = RunHistory(aggregate_func=average_cost)
+        smbo.acquisition_func._compute = mock.Mock(spec=RandomForestWithInstances)
+        smbo._get_next_by_random_search = mock.Mock(spec=smbo._get_next_by_random_search)
+        smbo._get_next_by_random_search.return_value = [[0, 0], [0, 1], [0, 2]]
+
+        X = np.zeros((0, 2))
+        Y = np.zeros((0, 1))
+
+        x = smbo.choose_next(X, Y)
+        self.assertEqual(x, [0, 1, 2])
+        self.assertEqual(smbo._get_next_by_random_search.call_count, 1)
+        self.assertEqual(smbo.acquisition_func._compute.call_count, 0)
 
     @mock.patch('ConfigSpace.util.impute_inactive_values')
     @mock.patch.object(EI, '__call__')
