@@ -106,7 +106,7 @@ class EI(AbstractAcquisitionFunction):
 
     def __init__(self,
                  model,
-                 par=0.01,
+                 par=0.0,
                  **kwargs):
         r"""
         Computes for a given x the expected improvement as
@@ -118,15 +118,15 @@ class EI(AbstractAcquisitionFunction):
 
         Parameters
         ----------
-        model: Model object
+        model : Model object
             A model that implements at least
                  - predict(X)
                  - getCurrentBestX().
             If you want to calculate derivatives than it should also support
                  - predictive_gradients(X)
-        par: float
-            Controls the balance between exploration
-            and exploitation of the acquisition function. Default is 0.01
+        par : float, default=0.0
+            Controls the balance between exploration and exploitation of the
+            acquisition function.
         """
 
         super(EI, self).__init__(model)
@@ -195,7 +195,7 @@ class EI(AbstractAcquisitionFunction):
 class EIPS(EI):
     def __init__(self,
                  model,
-                 par=0.01,
+                 par=0.0,
                  **kwargs):
         r"""
         Computes for a given x the expected improvement as
@@ -208,18 +208,18 @@ class EIPS(EI):
 
         Parameters
         ----------
-        model: Model object
+        model : Model object
             A model that implements at least
                  - predict(X)
                  - getCurrentBestX().
             If you want to calculate derivatives than it should also support
                  - predictive_gradients(X)
-        par: float
-            Controls the balance between exploration
-            and exploitation of the acquisition function. Default is 0.01
+        par : float, default=0.0
+            Controls the balance between exploration and exploitation of the
+            acquisition function.
         """
 
-        super(EIPS, self).__init__(model)
+        super(EIPS, self).__init__(model, par=par)
         self.long_name = 'Expected Improvement per Second'
 
     def _compute(self, X, derivative=False, **kwargs):
