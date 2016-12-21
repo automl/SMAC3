@@ -175,6 +175,11 @@ class SMBO(BaseSolver):
         list
             List of 2020 suggested configurations to evaluate.
         """
+        if X.shape[0] == 0:
+            # Only return a single point to avoid an overly high number of
+            # random search iterations
+            return [x[1] for x in self._get_next_by_random_search(num_points=1)]
+
         self.model.train(X, Y)
 
         if self.runhistory.empty():
@@ -241,7 +246,10 @@ class SMBO(BaseSolver):
         list : (acquisition value, Candidate solutions)
         """
 
-        rand_configs = self.config_space.sample_configuration(size=num_points)
+        if num_points > 1:
+            rand_configs = self.config_space.sample_configuration(size=num_points)
+        else:
+            rand_configs = [self.config_space.sample_configuration(size=1)]
         if _sorted:
             imputed_rand_configs = map(ConfigSpace.util.impute_inactive_values,
                                        rand_configs)
