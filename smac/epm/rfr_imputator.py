@@ -116,7 +116,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
 
             imputed_y = np.array(imputed_y)
 
-            nans = np.isfinite(imputed_y) == False
+            nans = ~np.isfinite(imputed_y)
             n_nans = sum(nans)
             if n_nans > 0:
                 # Replace all nans with maximum of predicted perf and censored value
@@ -132,7 +132,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
                 # iteration, assume imputed values are always concatenated
                 # after uncensored values
 
-                change = np.mean(abs(imputed_y -
+                change = np.mean(np.abs(imputed_y -
                                      y[uncensored_y.shape[0]:]) /
                                  y[uncensored_y.shape[0]:])
 

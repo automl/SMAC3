@@ -335,7 +335,7 @@ class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
                               instances=instances, par_factor=par_factor)
 
         # ensure that minimal value is larger than 0
-        if np.sum(y <= 0) > 0:
+        if np.any(y <= 0):
             self.logger.warning(
                 "Got cost of smaller/equal to 0. Replace by %f since we use log cost." % (constants.MINIMAL_COST_FOR_LOG))
             y[y <
