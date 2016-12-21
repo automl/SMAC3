@@ -249,7 +249,7 @@ class SMBO(BaseSolver):
         if num_points > 1:
             rand_configs = self.config_space.sample_configuration(size=num_points)
         else:
-            rand_configs = [self.config_space.sample_configuration()]
+            rand_configs = [self.config_space.sample_configuration(size=1)]
         if _sorted:
             imputed_rand_configs = map(ConfigSpace.util.impute_inactive_values,
                                        rand_configs)
