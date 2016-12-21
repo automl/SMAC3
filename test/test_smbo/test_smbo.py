@@ -149,8 +149,6 @@ class TestSMBO(unittest.TestCase):
 
     def test_choose_next_empty_X(self):
         smbo = SMAC(self.scenario, rng=1).solver
-        smbo.incumbent = self.scenario.cs.sample_configuration()
-        smbo.runhistory = RunHistory(aggregate_func=average_cost)
         smbo.acquisition_func._compute = mock.Mock(spec=RandomForestWithInstances)
         smbo._get_next_by_random_search = mock.Mock(spec=smbo._get_next_by_random_search)
         smbo._get_next_by_random_search.return_value = [[0, 0], [0, 1], [0, 2]]
@@ -162,6 +160,16 @@ class TestSMBO(unittest.TestCase):
         self.assertEqual(x, [0, 1, 2])
         self.assertEqual(smbo._get_next_by_random_search.call_count, 1)
         self.assertEqual(smbo.acquisition_func._compute.call_count, 0)
+
+    def test_choose_next_empty_X_2(self):
+        smbo = SMAC(self.scenario, rng=1).solver
+
+        X = np.zeros((0, 2))
+        Y = np.zeros((0, 1))
+
+        x = smbo.choose_next(X, Y)
+        self.assertEqual(len(x), 1)
+        self.assertIsInstance(x[0], Configuration)
 
     @mock.patch('ConfigSpace.util.impute_inactive_values')
     @mock.patch.object(EI, '__call__')
