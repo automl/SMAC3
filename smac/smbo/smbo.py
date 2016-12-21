@@ -176,7 +176,9 @@ class SMBO(BaseSolver):
             List of 2020 suggested configurations to evaluate.
         """
         if X.shape[0] == 0:
-            return [x[1] for x in self._get_next_by_random_search()]
+            # Only return a single point to avoid an overly high number of
+            # random search iterations
+            return [x[1] for x in self._get_next_by_random_search(num_points=1)]
 
         self.model.train(X, Y)
 
