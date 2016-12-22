@@ -169,6 +169,7 @@ class AbstractRunHistory2EPM(object):
                                         select=RunType.TIMEOUT)
         t_instance_id_list = [k.instance_id for k in s_run_dict.keys()]
 
+        # use penalization (e.g. PAR10) for EPM training
         tX, tY = self._build_matrix(run_dict=t_run_dict, runhistory=runhistory,
                                     instances=t_instance_id_list, par_factor=self.scenario.par_factor)
 
@@ -190,20 +191,23 @@ class AbstractRunHistory2EPM(object):
                 # Store a list of instance IDs
                 c_instance_id_list = [k.instance_id for k in c_run_dict.keys()]
 
+                # better empirical results by using PAR1 instead of PAR10
+                # for censored data imputation
                 cen_X, cen_Y = self._build_matrix(run_dict=c_run_dict,
                                                   runhistory=runhistory,
                                                   instances=c_instance_id_list,
                                                   par_factor=1)
 
-                # Also impute TIMEOUTS using PAR1
+                # Also impute TIMEOUTS
                 tX, tY = self._build_matrix(run_dict=t_run_dict, runhistory=runhistory,
-                                    instances=t_instance_id_list, par_factor=1)
+                                            instances=t_instance_id_list, par_factor=1)
                 cen_X = np.vstack((cen_X, tX))
                 cen_Y = np.concatenate((cen_Y, tY))
                 self.logger.debug("%d TIMOUTS, %d censored, %d regular" %
                                   (tX.shape[0], cen_X.shape[0], X.shape[0]))
 
-                # return imp_Y in PAR depending on the used threshold in imputor
+                # return imp_Y in PAR depending on the used threshold in
+                # imputor
                 imp_Y = self.imputor.impute(censored_X=cen_X, censored_y=cen_Y,
                                             uncensored_X=X, uncensored_y=Y)
 
@@ -258,7 +262,8 @@ class AbstractRunHistory2EPM(object):
             raise ValueError(err_msg)
 
         return new_dict
-    
+
+
 class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
 
     def _build_matrix(self, run_dict, runhistory, instances=None, par_factor=1):
@@ -308,6 +313,7 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
 
         return X, y
 
+
 class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
 
     def _build_matrix(self, run_dict, runhistory, instances=None, par_factor=1):
@@ -332,7 +338,7 @@ class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
 
         '''
         X, y = super()._build_matrix(run_dict=run_dict, runhistory=runhistory,
-                              instances=instances, par_factor=par_factor)
+                                     instances=instances, par_factor=par_factor)
 
         # ensure that minimal value is larger than 0
         if np.any(y <= 0):
@@ -343,6 +349,7 @@ class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
         y = np.log10(y)
 
         return X, y
+
 
 class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
 
