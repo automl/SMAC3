@@ -56,6 +56,7 @@ class Scen(scenario.Scenario):
         self.cutoff = None
         self.feature_dict = None
         self.n_features = 0
+        self.par_factor = 1
 
 
 class ImputorTest(unittest.TestCase):
