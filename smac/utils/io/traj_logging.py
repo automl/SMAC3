@@ -60,6 +60,8 @@ class TrajLogger(object):
     
             self.aclib_traj_fn = os.path.join(output_dir, "traj_aclib2.json")
 
+        self.trajectory = []
+
     def add_entry(self, train_perf, incumbent_id, incumbent):
         """
             adds entries to trajectory files (several formats) with using the
@@ -74,11 +76,11 @@ class TrajLogger(object):
             incumbent: Configuration()
                 current incumbent configuration
         """
-
+        ta_time_used = self.stats.ta_time_used
+        wallclock_time = self.stats.get_used_wallclock_time()
+        self.trajectory.append([train_perf, incumbent_id, incumbent,
+                                ta_time_used, wallclock_time])
         if self.output_dir is not None:
-            ta_time_used = self.stats.ta_time_used
-            wallclock_time = self.stats.get_used_wallclock_time()
-    
             self._add_in_old_format(train_perf, incumbent_id, incumbent,
                                     ta_time_used, wallclock_time)
             self._add_in_aclib_format(train_perf, incumbent_id, incumbent,
