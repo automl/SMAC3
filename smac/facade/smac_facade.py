@@ -309,4 +309,18 @@ class SMAC(object):
         finally:
             self.solver.stats.print_stats()
             self.logger.info("Final Incumbent: %s" % (self.solver.incumbent))
+            self.runhistory = self.solver.runhistory
+            self.trajectory = self.solver.intensifier.traj_logger.trajectory
         return incumbent
+
+    def get_runhistory(self):
+        if not hasattr(self, 'runhistory'):
+            raise ValueError('SMAC was not fitted yet. Call optimize() prior '
+                             'to accessing the runhistory.')
+        return self.runhistory
+
+    def get_trajectory(self):
+        if not hasattr(self, 'trajectory'):
+            raise ValueError('SMAC was not fitted yet. Call optimize() prior '
+                             'to accessing the runhistory.')
+        return self.trajectory
