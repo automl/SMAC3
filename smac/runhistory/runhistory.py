@@ -65,7 +65,7 @@ class RunHistory(object):
             external_data:bool=False):
         '''
         adds a data of a new target algorithm (TA) run;
-        it will update data if the same key values are used 
+        it will update data if the same key values are used
         (config, instance_id, seed)
 
         Attributes
@@ -86,7 +86,7 @@ class RunHistory(object):
                 additional run infos (could include further returned
                 information from TA or fields such as start time and host_id)
             external_data: bool
-                if True, run will not be added to self._configid_to_inst_seed 
+                if True, run will not be added to self._configid_to_inst_seed
                 and not available through get_runs_for_config()
         '''
 
@@ -218,6 +218,19 @@ class RunHistory(object):
             file name
         '''
 
+        class EnumEncoder(json.JSONEncoder):
+            """
+            custom encoder for enum-serialization
+            (implemented for StatusType from tae/execute_ta_run)
+            locally defined because only ever needed here.
+            using encoder implied using object_hook defined in StatusType
+            to deserialize from json.
+            """
+            def default(self, obj):
+                if isinstance(obj, StatusType):
+                    return {"__enum__": str(obj)}
+                return json.JSONEncoder.default(self, obj)
+
         configs = {id_: conf.get_dictionary()
                    for id_, conf in self.ids_config.items()}
 
@@ -228,7 +241,7 @@ class RunHistory(object):
 
         with open(fn, "w") as fp:
             json.dump({"data": data,
-                       "configs": configs}, fp)
+                       "configs": configs}, fp, cls=EnumEncoder)
 
     def load_json(self, fn, cs):
         """Load and runhistory in json representation from disk.
@@ -244,7 +257,7 @@ class RunHistory(object):
         """
 
         with open(fn) as fp:
-            all_data = json.load(fp)
+            all_data = json.load(fp, object_hook=StatusType.enum_hook)
 
         self.ids_config = {int(id_): Configuration(cs, values=values)
                            for id_, values in all_data["configs"].items()}
