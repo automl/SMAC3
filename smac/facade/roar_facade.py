@@ -1,4 +1,5 @@
 import logging
+import typing
 
 import numpy as np
 
@@ -13,6 +14,7 @@ from smac.intensification.intensification import Intensifier
 from smac.smbo.acquisition import AbstractAcquisitionFunction
 from smac.epm.random_epm import RandomEPM
 from smac.facade.smac_facade import SMAC
+from smac.configspace import Configuration
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
