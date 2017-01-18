@@ -27,6 +27,7 @@ class ROAR(SMAC):
                  runhistory: RunHistory=None,
                  intensifier: Intensifier=None,
                  initial_design: InitialDesign=None,
+                 initial_configurations: typing.List[Configuration]=None,
                  stats: Stats=None,
                  rng: np.random.RandomState=None):
         '''
@@ -46,6 +47,9 @@ class ROAR(SMAC):
             intensification object to issue a racing to decide the current incumbent
         initial_design: InitialDesign
             initial sampling design
+        initial_configurations: typing.List[Configuration]
+            list of initial configurations for initial design -- 
+            cannot be used together with initial_design
         stats: Stats
             optional stats object
         rng: np.random.RandomState
@@ -78,5 +82,6 @@ class ROAR(SMAC):
                          model=model,
                          runhistory2epm=runhistory2epm,
                          initial_design=initial_design,
+                         initial_configurations=initial_configurations,
                          stats=stats,
                          rng=rng)
