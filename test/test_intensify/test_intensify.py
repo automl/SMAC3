@@ -343,8 +343,8 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(len(self.rh.data), 2, self.rh.data)
         runs = self.rh.get_runs_for_config(config=self.config1)
         # exactly one run on each instance
-        self.assertTrue(1 in [runs[0].instance, runs[1].instance])
-        self.assertTrue(2 in [runs[0].instance, runs[1].instance])
+        self.assertIn(1, [runs[0].instance, runs[1].instance])
+        self.assertIn(2, [runs[0].instance, runs[1].instance])
         
         intensifier._add_inc_run(incumbent=self.config1, run_history=self.rh)
         self.assertEqual(len(self.rh.data), 3, self.rh.data)
