@@ -31,9 +31,9 @@ class StatusType(Enum):
         if "__enum__" in obj:
             # object is marked as enum
             name, member = obj["__enum__"].split(".")
-            return getattr(globals()[name], member)
-        else:
-            return obj
+            if name == "StatusType":
+                return getattr(globals()[name], member)
+        return obj
 
 
 class ExecuteTARun(object):
