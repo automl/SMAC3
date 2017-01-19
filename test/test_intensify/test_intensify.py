@@ -13,7 +13,7 @@ from smac.stats.stats import Stats
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.intensification.intensification import Intensifier
 from smac.runhistory.runhistory import RunHistory, RunKey
-from smac.smbo.objective import average_cost
+from smac.smbo.objective import average_cost, sum_cost
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
@@ -348,3 +348,49 @@ class TestIntensify(unittest.TestCase):
         
         intensifier._add_inc_run(incumbent=self.config1, run_history=self.rh)
         self.assertEqual(len(self.rh.data), 3, self.rh.data)
+        
+    def test_adaptive_capping(self):
+        '''
+            test _adaptive_capping
+        '''
+        intensifier = Intensifier(
+            tae_runner=None, stats=self.stats,
+            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
+            rng=np.random.RandomState(12345),
+            instances=list(range(5)),
+            deterministic=False)
+        
+        for i in range(5):
+            self.rh.add(config=self.config1, cost=i+1, time=i+1,
+                    status=StatusType.SUCCESS, instance_id=i,
+                    seed=i,
+                    additional_info=None)
+        for i in range(3):
+            self.rh.add(config=self.config2, cost=i+1, time=i+1,
+                    status=StatusType.SUCCESS, instance_id=i,
+                    seed=i,
+                    additional_info=None)
+            
+        inst_seed_pairs = self.rh.get_runs_for_config(self.config1)
+        # cost used by incumbent for going over all runs in inst_seed_pairs
+        inc_sum_cost = sum_cost(config=self.config1, instance_seed_pairs=inst_seed_pairs,
+                                    run_history=self.rh)
+            
+        cutoff = intensifier._adaptive_capping(challenger=self.config2,
+                          incumbent=self.config1,
+                          run_history=self.rh,
+                          inc_sum_cost=inc_sum_cost)
+        # 15*1.2 - 6
+        self.assertEqual(cutoff, 12)
+        
+        intensifier.cutoff = 5
+        
+        cutoff = intensifier._adaptive_capping(challenger=self.config2,
+                          incumbent=self.config1,
+                          run_history=self.rh,
+                          inc_sum_cost=inc_sum_cost)
+        # scenario cutoff
+        self.assertEqual(cutoff, 5)
+        
+        
+        

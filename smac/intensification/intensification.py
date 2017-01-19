@@ -64,8 +64,10 @@ class Intensifier(object):
         if instances is None:
             instances = []
         self.instances = set(instances)
-        self.instance_specifics = {
-        } if instance_specifics is None else instance_specifics
+        if instance_specifics is None:
+            self.instance_specifics = {}
+        else:
+            self.instance_specifics = instance_specifics
         self.logger = logging.getLogger("intensifier")
         self.run_limit = run_limit
         self.maxR = maxR
@@ -82,7 +84,7 @@ class Intensifier(object):
 
         if self.run_limit < 1:
             raise ValueError("run_limit must be > 1")
-        
+
         self._num_run = 0
         self._chall_indx = 0
 
@@ -164,7 +166,8 @@ class Intensifier(object):
         self.logger.info("Updated estimated performance of incumbent on %d runs: %.4f" % (
             len(inc_runs), inc_perf))
 
-        self.stats.update_average_configs_per_intensify(n_configs=self._chall_indx)
+        self.stats.update_average_configs_per_intensify(
+            n_configs=self._chall_indx)
 
         return incumbent, inc_perf
 
@@ -265,12 +268,12 @@ class Intensifier(object):
 
         # Line 8
         N = max(1, self.minR)
-        
+
         inc_inst_seeds = set(run_history.get_runs_for_config(incumbent))
         # Line 9
         while True:
             chall_inst_seeds = set(run_history.get_runs_for_config(challenger))
-            
+
             # Line 10
             missing_runs = list(inc_inst_seeds - chall_inst_seeds)
 
@@ -280,8 +283,10 @@ class Intensifier(object):
             # Line 13 (Line 12 comes below...)
             missing_runs = missing_runs[min(N, len(missing_runs)):]
 
+            # for adaptive capping
+            # because of efficieny computed here
             inst_seed_pairs = list(inc_inst_seeds - set(missing_runs))
-
+            # cost used by incumbent for going over all runs in inst_seed_pairs
             inc_sum_cost = sum_cost(config=incumbent, instance_seed_pairs=inst_seed_pairs,
                                     run_history=run_history)
 
@@ -289,21 +294,14 @@ class Intensifier(object):
             for instance, seed in to_run:
                 # Run challenger on all <config,seed> to run
                 if self.run_obj_time:
-                    chall_inst_seeds = set(map(lambda x: (
-                        x.instance, x.seed), run_history.get_runs_for_config(challenger)))
-                    chal_sum_cost = sum_cost(config=challenger, instance_seed_pairs=chall_inst_seeds,
-                                             run_history=run_history)
-                    cutoff = min(self.cutoff,
-                                 inc_sum_cost *
-                                 self.Adaptive_Capping_Slackfactor
-                                 - chal_sum_cost
-                                 )
-
-                    if cutoff < 0:  # no time left to validate challenger
+                    # adaptive capping
+                    cutoff = self._adaptive_capping(challenger=challenger, incumbent=incumbent,
+                                                    run_history=run_history, inc_sum_cost=inc_sum_cost)
+                    if cutoff <= 0:  # no time left to validate challenger
                         self.logger.debug(
                             "Stop challenger itensification due to adaptive capping.")
-                        break
-
+                        # challenger performs worse than incumbent
+                        return incumbent
                 else:
                     cutoff = self.cutoff
 
@@ -339,6 +337,52 @@ class Intensifier(object):
 
         return incumbent
 
+    def _adaptive_capping(self, challenger: Configuration,
+                          incumbent: Configuration,
+                          run_history: RunHistory,
+                          inc_sum_cost: float):
+        '''
+            compute cutoff based on time so far used for incumbent
+            and reduce cutoff for next run of challenger accordingly
+
+            !Only applicable if self.run_obj_time
+
+            !runs on incumbent should be superset of the runs performed for the challenger
+
+            Parameters
+            ----------
+            challenger : Configuration
+                configuration which challenges incumbent
+            incumbent : Configuration
+                best configuration so far
+            run_history : RunHistory
+                stores all runs we ran so far
+            inc_sum_cost: float
+                sum of runtimes of all incumbent runs
+
+            Returns
+            -------
+            cutoff: int
+                adapted cutoff
+        '''
+
+        if not self.run_obj_time:
+            raise ValueError(
+                "Use adaptive capping only if the run objective is runtime")
+
+        # cost used by challenger for going over all its runs
+        # should be subset of runs of incumbent (not checked for efficiency
+        # reasons)
+        chall_inst_seeds = run_history.get_runs_for_config(challenger)
+        chal_sum_cost = sum_cost(config=challenger, instance_seed_pairs=chall_inst_seeds,
+                                 run_history=run_history)
+        cutoff = min(self.cutoff,
+                     inc_sum_cost *
+                     self.Adaptive_Capping_Slackfactor
+                     - chal_sum_cost
+                     )
+        return cutoff
+
     def _compare_configs(self, incumbent: Configuration, challenger: Configuration, run_history: RunHistory,
                          aggregate_func: typing.Callable):
         '''
@@ -370,7 +414,7 @@ class Intensifier(object):
 
         inc_runs = run_history.get_runs_for_config(incumbent)
         chall_runs = run_history.get_runs_for_config(challenger)
-        
+
         # performance on challenger runs
         chal_perf = aggregate_func(
             challenger, run_history, chall_runs)
