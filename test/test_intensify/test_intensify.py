@@ -77,7 +77,7 @@ class TestIntensify(unittest.TestCase):
                                             aggregate_func=average_cost)
 
         # challenger has enough runs and is better
-        self.assertTrue(conf == self.config2, "conf: %s" % (conf))
+        self.assertEqual(conf, self.config2, "conf: %s" % (conf))
 
     def test_compare_configs_inc(self):
         '''
@@ -105,7 +105,7 @@ class TestIntensify(unittest.TestCase):
                                             aggregate_func=average_cost)
 
         # challenger worse than inc
-        self.assertTrue(conf == self.config1, "conf: %s" % (conf))
+        self.assertEqual(conf, self.config1, "conf: %s" % (conf))
 
     def test_compare_configs_unknow(self):
         '''
@@ -139,7 +139,7 @@ class TestIntensify(unittest.TestCase):
                                             aggregate_func=average_cost)
 
         # challenger worse than inc
-        self.assertTrue(conf is None, "conf: %s" % (conf))
+        self.assertIsNone(conf, "conf: %s" % (conf))
 
     def test_race_challenger(self):
         '''
@@ -147,7 +147,6 @@ class TestIntensify(unittest.TestCase):
         '''
 
         def target(x):
-            time.sleep(min(1, (x['a'] + 1) / 1000.))
             return (x['a'] + 1) / 1000.
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
         taf.runhistory = self.rh
@@ -168,7 +167,7 @@ class TestIntensify(unittest.TestCase):
                                            run_history=self.rh,
                                            aggregate_func=average_cost)
 
-        self.assertTrue(inc == self.config2)
+        self.assertEqual(inc, self.config2)
 
     def test_race_challenger(self):
         '''
@@ -200,15 +199,15 @@ class TestIntensify(unittest.TestCase):
                                            aggregate_func=average_cost)
 
         # self.assertTrue(False)
-        self.assertTrue(inc == self.config1)
-        self.assertTrue(
-            self.rh.get_cost(self.config2) < 2, self.rh.get_cost(self.config2))
+        self.assertEqual(inc, self.config1)
+        self.assertLess(
+            self.rh.get_cost(self.config2), 2, self.rh.get_cost(self.config2))
 
         # get data for config2 to check that the correct run was performed
         run = self.rh.get_runs_for_config(self.config2)[0]
         config_id = self.rh.config_ids[self.config2]
-        self.assertTrue(run.instance == 1, run.instance)
-        self.assertTrue(run.seed == 12345, run.seed)
+        self.assertEqual(run.instance, 1, run.instance)
+        self.assertEqual(run.seed, 12345, run.seed)
         
     def test_race_challenger_large(self):
         '''
@@ -242,9 +241,9 @@ class TestIntensify(unittest.TestCase):
                                            aggregate_func=average_cost)
 
         # self.assertTrue(False)
-        self.assertTrue(inc == self.config2)
-        self.assertTrue(
-            self.rh.get_cost(self.config2) ==1, self.rh.get_cost(self.config2))
+        self.assertEqual(inc, self.config2)
+        self.assertEqual(
+            self.rh.get_cost(self.config2), 1, self.rh.get_cost(self.config2))
         
 
         # get data for config2 to check that the correct run was performed
@@ -283,16 +282,16 @@ class TestIntensify(unittest.TestCase):
                                            aggregate_func=average_cost)
 
         # self.assertTrue(False)
-        self.assertTrue(inc == self.config2)
-        self.assertTrue(
-            self.rh.get_cost(self.config2) ==1, self.rh.get_cost(self.config2))
+        self.assertEqual(inc, self.config2)
+        self.assertEqual(
+            self.rh.get_cost(self.config2), 1, self.rh.get_cost(self.config2))
         
         # get data for config2 to check that the correct run was performed
         runs = self.rh.get_runs_for_config(self.config2)
-        self.assertTrue(len(runs)==10)
+        self.assertEqual(len(runs), 10)
         
         seeds = sorted([r.seed for r in runs])
-        self.assertTrue(seeds == list(range(10)), seeds)
+        self.assertEqual(seeds, list(range(10)), seeds)
 
     def test_add_inc_run_det(self):
         '''
@@ -312,13 +311,13 @@ class TestIntensify(unittest.TestCase):
             deterministic=True)
 
         intensifier._add_inc_run(incumbent=self.config1, run_history=self.rh)
-        self.assertTrue(len(self.rh.data) == 1, self.rh.data)
+        self.assertEqual(len(self.rh.data), 1, self.rh.data)
         
         # since we assume deterministic=1, 
         # the second call should not add any more runs 
         # given only one instance
         intensifier._add_inc_run(incumbent=self.config1, run_history=self.rh)
-        self.assertTrue(len(self.rh.data) == 1, self.rh.data)
+        self.assertEqual(len(self.rh.data), 1, self.rh.data)
         
     def test_add_inc_run_nondet(self):
         '''
@@ -338,14 +337,14 @@ class TestIntensify(unittest.TestCase):
             deterministic=False)
 
         intensifier._add_inc_run(incumbent=self.config1, run_history=self.rh)
-        self.assertTrue(len(self.rh.data) == 1, self.rh.data)
+        self.assertEqual(len(self.rh.data), 1, self.rh.data)
         
         intensifier._add_inc_run(incumbent=self.config1, run_history=self.rh)
-        self.assertTrue(len(self.rh.data) == 2, self.rh.data)
+        self.assertEqual(len(self.rh.data), 2, self.rh.data)
         runs = self.rh.get_runs_for_config(config=self.config1)
         # exactly one run on each instance
         self.assertTrue(1 in [runs[0].instance, runs[1].instance])
         self.assertTrue(2 in [runs[0].instance, runs[1].instance])
         
         intensifier._add_inc_run(incumbent=self.config1, run_history=self.rh)
-        self.assertTrue(len(self.rh.data) == 3, self.rh.data)
+        self.assertEqual(len(self.rh.data), 3, self.rh.data)
