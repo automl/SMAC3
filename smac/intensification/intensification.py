@@ -291,19 +291,16 @@ class Intensifier(object):
                                     run_history=run_history)
 
             # Line 12
+            # Run challenger on all <config,seed> to run
             for instance, seed in to_run:
-                # Run challenger on all <config,seed> to run
-                if self.run_obj_time:
-                    # adaptive capping
-                    cutoff = self._adaptive_capping(challenger=challenger, incumbent=incumbent,
-                                                    run_history=run_history, inc_sum_cost=inc_sum_cost)
-                    if cutoff <= 0:  # no time left to validate challenger
-                        self.logger.debug(
-                            "Stop challenger itensification due to adaptive capping.")
-                        # challenger performs worse than incumbent
-                        return incumbent
-                else:
-                    cutoff = self.cutoff
+
+                cutoff = self._adapt_cutoff(challenger=challenger, incumbent=incumbent,
+                                            run_history=run_history, inc_sum_cost=inc_sum_cost)
+                if cutoff <= 0:  # no time to validate challenger
+                    self.logger.debug(
+                        "Stop challenger itensification due to adaptive capping.")
+                    # challenger performs worse than incumbent
+                    return incumbent
 
                 if not first_run:
                     first_run = True
@@ -337,11 +334,12 @@ class Intensifier(object):
 
         return incumbent
 
-    def _adaptive_capping(self, challenger: Configuration,
-                          incumbent: Configuration,
-                          run_history: RunHistory,
-                          inc_sum_cost: float):
+    def _adapt_cutoff(self, challenger: Configuration,
+                      incumbent: Configuration,
+                      run_history: RunHistory,
+                      inc_sum_cost: float):
         '''
+            adaptive capping: 
             compute cutoff based on time so far used for incumbent
             and reduce cutoff for next run of challenger accordingly
 
@@ -367,8 +365,9 @@ class Intensifier(object):
         '''
 
         if not self.run_obj_time:
-            raise ValueError(
-                "Use adaptive capping only if the run objective is runtime")
+            self.logger.warn(
+                "Adaptive capping should not be used if the run objective is not runtime")
+            return self.cutoff
 
         # cost used by challenger for going over all its runs
         # should be subset of runs of incumbent (not checked for efficiency
@@ -383,7 +382,9 @@ class Intensifier(object):
                      )
         return cutoff
 
-    def _compare_configs(self, incumbent: Configuration, challenger: Configuration, run_history: RunHistory,
+    def _compare_configs(self, incumbent: Configuration, 
+                         challenger: Configuration, 
+                         run_history: RunHistory,
                          aggregate_func: typing.Callable):
         '''
             compare two configuration wrt the runhistory 

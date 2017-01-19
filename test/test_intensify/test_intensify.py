@@ -351,7 +351,7 @@ class TestIntensify(unittest.TestCase):
         
     def test_adaptive_capping(self):
         '''
-            test _adaptive_capping
+            test _adapt_cutoff()
         '''
         intensifier = Intensifier(
             tae_runner=None, stats=self.stats,
@@ -376,7 +376,7 @@ class TestIntensify(unittest.TestCase):
         inc_sum_cost = sum_cost(config=self.config1, instance_seed_pairs=inst_seed_pairs,
                                     run_history=self.rh)
             
-        cutoff = intensifier._adaptive_capping(challenger=self.config2,
+        cutoff = intensifier._adapt_cutoff(challenger=self.config2,
                           incumbent=self.config1,
                           run_history=self.rh,
                           inc_sum_cost=inc_sum_cost)
@@ -385,7 +385,7 @@ class TestIntensify(unittest.TestCase):
         
         intensifier.cutoff = 5
         
-        cutoff = intensifier._adaptive_capping(challenger=self.config2,
+        cutoff = intensifier._adapt_cutoff(challenger=self.config2,
                           incumbent=self.config1,
                           run_history=self.rh,
                           inc_sum_cost=inc_sum_cost)
