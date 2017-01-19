@@ -429,7 +429,7 @@ class Intensifier(object):
             return incumbent
 
         # Line 16
-        if len(chall_runs) == len(inc_runs):
+        if len(chall_runs) >= len(inc_runs):
             # Challenger is as good as incumbent
             # and has the same number of runs
             # -> change incumbent

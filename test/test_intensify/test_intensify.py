@@ -248,7 +248,7 @@ class TestIntensify(unittest.TestCase):
 
         # get data for config2 to check that the correct run was performed
         runs = self.rh.get_runs_for_config(self.config2)
-        self.assertTrue(len(runs)==10)
+        self.assertEqual(len(runs),10)
         
     def test_race_challenger_large_blocked_seed(self):
         '''
