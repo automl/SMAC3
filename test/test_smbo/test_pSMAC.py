@@ -27,12 +27,18 @@ class TestPSMAC(unittest.TestCase):
 
     def test_write(self):
         # The nulls make sure that we correctly emit the python None value
-        fixture = '{"data": [[[1, "branin", 1], [1, 1, 1, null]], ' \
-                  '[[1, "branini", 1], [1, 1, 1, null]], ' \
-                  '[[2, "branini", 1], [1, 1, 1, null]], ' \
-                  '[[2, null, 1], [1, 1, 1, null]], ' \
-                  '[[3, "branin-hoo", 1], [1, 1, 1, null]], ' \
-                  '[[4, null, 1], [1, 1, 1, null]]], ' \
+        fixture = '{"data": [[[1, "branin", 1], [1, 1, {"__enum__": ' \
+                  '"StatusType.SUCCESS"}, null]], ' \
+                  '[[1, "branini", 1], [1, 1, {"__enum__": ' \
+                  '"StatusType.SUCCESS"}, null]], ' \
+                  '[[2, "branini", 1], [1, 1, {"__enum__": ' \
+                  '"StatusType.SUCCESS"}, null]], ' \
+                  '[[2, null, 1], [1, 1, {"__enum__": ' \
+                  '"StatusType.SUCCESS"}, null]], ' \
+                  '[[3, "branin-hoo", 1], [1, 1, {"__enum__": ' \
+                  '"StatusType.SUCCESS"}, null]], ' \
+                  '[[4, null, 1], [1, 1, {"__enum__": ' \
+                  '"StatusType.SUCCESS"}, null]]],' \
                   '"configs": {' \
                   '"4": {"x": -2.2060968293349363, "y": 5.183410905645716}, ' \
                   '"3": {"x": -2.7986616377433045, "y": 1.385078921531967}, ' \
@@ -68,9 +74,9 @@ class TestPSMAC(unittest.TestCase):
         output_filename = os.path.join(self.tmp_dir, '.runhistory_20.json')
         self.assertTrue(os.path.exists(output_filename))
 
-        fixture = json.loads(fixture)
+        fixture = json.loads(fixture, object_hook=StatusType.enum_hook)
         with open(output_filename) as fh:
-            output = json.load(fh)
+            output = json.load(fh, object_hook=StatusType.enum_hook)
 
         print(output)
         print(fixture)
@@ -79,17 +85,23 @@ class TestPSMAC(unittest.TestCase):
     def test_load(self):
         configuration_space = test_helpers.get_branin_config_space()
 
-        other_runhistory = '{"data": [[[2, "branini", 1], [1, 1, 1, null]], ' \
-        '[[1, "branin", 1], [1, 1, 1, null]], ' \
-        '[[3, "branin-hoo", 1], [1, 1, 1, null]], ' \
-        '[[2, null, 1], [1, 1, 1, null]], ' \
-        '[[1, "branini", 1], [1, 1, 1, null]], ' \
-        '[[4, null, 1], [1, 1, 1, null]]], ' \
-        '"configs": {' \
-        '"4": {"x": -2.2060968293349363, "y": 5.183410905645716}, ' \
-        '"3": {"x": -2.7986616377433045, "y": 1.385078921531967}, ' \
-        '"1": {"x": 1.2553300705386103, "y": 10.804867401632372}, ' \
-        '"2": {"x": -4.998284377739827, "y": 4.534988589477597}}}'
+        other_runhistory = '{"data": [[[2, "branini", 1], [1, 1,' \
+                  '{"__enum__": "StatusType.SUCCESS"}, null]], ' \
+                  '[[1, "branin", 1], [1, 1,' \
+                  '{"__enum__": "StatusType.SUCCESS"}, null]], ' \
+                  '[[3, "branin-hoo", 1], [1, 1,' \
+                  '{"__enum__": "StatusType.SUCCESS"}, null]], ' \
+                  '[[2, null, 1], [1, 1,' \
+                  '{"__enum__": "StatusType.SUCCESS"}, null]], ' \
+                  '[[1, "branini", 1], [1, 1,' \
+                  '{"__enum__": "StatusType.SUCCESS"}, null]], ' \
+                  '[[4, null, 1], [1, 1,' \
+                  '{"__enum__": "StatusType.SUCCESS"}, null]]], ' \
+                  '"configs": {' \
+                  '"4": {"x": -2.2060968293349363, "y": 5.183410905645716}, ' \
+                  '"3": {"x": -2.7986616377433045, "y": 1.385078921531967}, ' \
+                  '"1": {"x": 1.2553300705386103, "y": 10.804867401632372}, ' \
+                  '"2": {"x": -4.998284377739827, "y": 4.534988589477597}}}'
 
         other_runhistory_filename = os.path.join(self.tmp_dir,
                                                  '.runhistory_20.json')

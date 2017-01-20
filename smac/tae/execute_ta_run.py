@@ -1,6 +1,7 @@
 import sys
 import logging
 import math
+from enum import Enum
 
 import numpy as np
 
@@ -12,7 +13,7 @@ __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class StatusType(object):
+class StatusType(Enum):
 
     """
         class to define numbers for status types
@@ -22,6 +23,17 @@ class StatusType(object):
     CRASHED = 3
     ABORT = 4
     MEMOUT = 5
+
+    def enum_hook(obj):
+        """
+        hook function passed to json-deserializer as "object_hook"
+        """
+        if "__enum__" in obj:
+            # object is marked as enum
+            name, member = obj["__enum__"].split(".")
+            if name == "StatusType":
+                return getattr(globals()[name], member)
+        return obj
 
 
 class ExecuteTARun(object):
@@ -48,18 +60,18 @@ class ExecuteTARun(object):
             runhistory: RunHistory
                 runhistory to keep track of all runs; only used if set
             stats: Stats()
-                 stats object to collect statistics about runtime and so on                
+                 stats object to collect statistics about runtime and so on
             run_obj: str
                 run objective of SMAC
             par_factor: int
                 penalization factor
         """
-        
+
         self.ta = ta
         self.stats = stats
         self.runhistory = runhistory
         self.run_obj = run_obj
-        
+
         self.par_factor = par_factor
 
         self.logger = logging.getLogger(self.__class__.__name__)
@@ -111,11 +123,11 @@ class ExecuteTARun(object):
                                                           cutoff=cutoff,
                                                           seed=seed,
                                                           instance_specific=instance_specific)
-        
+
         if self.stats.ta_runs == 0 and status in [StatusType.CRASHED, StatusType.ABORT]:
             self.logger.critical("First run crashed -- Abort")
             sys.exit(1)
-        
+
         # update SMAC stats
         self.stats.ta_runs += 1
         self.stats.ta_time_used += float(runtime)
@@ -127,14 +139,14 @@ class ExecuteTARun(object):
                 cost = runtime
 
         self.logger.debug("Return: Status: %d, cost: %f, time. %f, additional: %s" % (
-            status, cost, runtime, str(additional_info)))
+            status.value, cost, runtime, str(additional_info)))
 
         if self.runhistory:
             self.runhistory.add(config=config,
                                 cost=cost, time=runtime, status=status,
                                 instance_id=instance, seed=seed,
                                 additional_info=additional_info)
-            
+
         return status, cost, runtime, additional_info
 
     def run(self, config, instance,
