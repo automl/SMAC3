@@ -365,8 +365,6 @@ class Intensifier(object):
         '''
 
         if not self.run_obj_time:
-            self.logger.warn(
-                "Adaptive capping should not be used if the run objective is not runtime")
             return self.cutoff
 
         # cost used by challenger for going over all its runs
