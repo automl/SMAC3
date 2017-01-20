@@ -296,7 +296,7 @@ class Intensifier(object):
 
                 cutoff = self._adapt_cutoff(challenger=challenger, incumbent=incumbent,
                                             run_history=run_history, inc_sum_cost=inc_sum_cost)
-                if cutoff <= 0:  # no time to validate challenger
+                if cutoff is not None and cutoff <= 0:  # no time to validate challenger
                     self.logger.debug(
                         "Stop challenger itensification due to adaptive capping.")
                     # challenger performs worse than incumbent
