@@ -166,10 +166,13 @@ class ScenarioTest(unittest.TestCase):
                            in_scenario_list=[scenario_2], in_runhistory_list=[rh_merge])
 
         # both runs should be in the runhistory
-        # but only the run on "d" should be used for the cost of <config>
+        # but we should not use the data to update the cost of config
         self.assertTrue(len(rh_base.data) == 2)
-        self.assertTrue(rh_base.get_cost(config) == 5)
+        self.assertTrue(np.isnan(rh_base.get_cost(config)))
         
+        # we should not get direct access to external run data
+        runs = rh_base.get_runs_for_config(config)
+        self.assertTrue(len(runs) == 0)
 
         rh_merge.add(config=config, instance_id="inst_new_2", cost=10, time=20,
                      status=StatusType.SUCCESS,
@@ -177,6 +180,7 @@ class ScenarioTest(unittest.TestCase):
                      additional_info=None)
         
         self.assertRaises(ValueError, merge_foreign_data, **{"scenario":scenario, "runhistory":rh_base, "in_scenario_list":[scenario_2], "in_runhistory_list":[rh_merge]})
+        
 
     def test_pickle_dump(self):
         scenario = Scenario(self.test_scenario_dict)

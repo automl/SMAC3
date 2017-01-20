@@ -77,6 +77,12 @@ class TrajLoggerTest(unittest.TestCase):
         self.assertEquals(len(json_dict['incumbent']), 3)
         self.assertTrue("param_a='0.5'" in json_dict['incumbent'])
 
+        # And finally, test the list that's added to the trajectory class
+        self.assertEqual(tl.trajectory[0], [0.9, 1,
+                                            {'param_c': 'value', 'param_b': 1,
+                                             'param_a': 0.5}, 0.5, 1])
+        self.assertEqual(len(tl.trajectory), 1)
+
     @patch('smac.stats.stats.Stats')
     def test_add_multiple_entries(self, mock_stats):
         tl = TrajLogger(output_dir='./tmp_test_folder', stats=mock_stats)

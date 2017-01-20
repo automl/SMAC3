@@ -66,11 +66,11 @@ class MultiConfigInitialDesign(InitialDesign):
                          scenario=scenario,
                          stats=stats,
                          traj_logger=traj_logger,
-                         runhistory=runhistory,
                          rng=rng)
 
         self.configs = configs
         self.intensifier = intensifier
+        self.runhistory = runhistory
         self.aggregate_func = aggregate_func
 
     def run(self) -> Configuration:
@@ -102,11 +102,10 @@ class MultiConfigInitialDesign(InitialDesign):
         else:
             self.logger.debug("All initial challengers are identical")
             scid = SingleConfigInitialDesign(tae_runner=self.tae_runner,
-                                      scenario=self.scenario,
-                                      stats=self.stats,
-                                      traj_logger=self.traj_logger,
-                                      runhistory=self.runhistory,
-                                      rng=self.rng)
+                                             scenario=self.scenario,
+                                             stats=self.stats,
+                                             traj_logger=self.traj_logger,
+                                             rng=self.rng)
             def get_config():
                 return configs[0]
             scid._select_configuration = get_config

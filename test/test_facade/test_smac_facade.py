@@ -42,6 +42,15 @@ class TestSMACFacade(unittest.TestCase):
                                            "ExecuteTaRun.",
                                 SMAC, tae_runner=1, scenario=self.scenario)
 
+    def test_pass_tae_runner_objective(self):
+        tae = ExecuteTAFuncDict(lambda: 1,
+                                run_obj='runtime')
+        self.assertRaisesRegexp(ValueError, "Objective for the target algorithm"
+                                            " runner and the scenario must be "
+                                            "the same, but are 'runtime' and "
+                                            "'quality'",
+                                SMAC, tae_runner=tae, scenario=self.scenario)
+
     def test_check_random_states(self):
         ta = ExecuteTAFuncDict(lambda x: x**2)
 
@@ -80,3 +89,14 @@ class TestSMACFacade(unittest.TestCase):
                   rng=np.random.RandomState(1))
         S2 = S2.solver.scenario.cs.random
         self.assertEqual(sum(S1.get_state()[1] - S2.get_state()[1]), 0)
+
+    def test_get_runhistory_and_trajectory(self):
+        ta = ExecuteTAFuncDict(lambda x: x ** 2)
+        smac = SMAC(tae_runner=ta, scenario=self.scenario)
+        self.assertRaises(ValueError, smac.get_runhistory)
+        self.assertRaises(ValueError, smac.get_trajectory)
+        smac.trajectory = 'dummy'
+        self.assertEqual(smac.get_trajectory(), 'dummy')
+        smac.runhistory = 'dummy'
+        self.assertEqual(smac.get_runhistory(), 'dummy')
+

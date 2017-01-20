@@ -82,9 +82,9 @@ class SMAC(object):
             RunHistory2EPM4LogCost if objective is runtime.
         initial_design: InitialDesign
             initial sampling design
-        initial_configuration: typing.List[Configuration]
+        initial_configurations: typing.List[Configuration]
             list of initial configurations for initial design -- 
-            cannot be used togehter with initial_design
+            cannot be used together with initial_design
         stats: Stats
             optional stats object
         rng: np.random.RandomState
@@ -156,6 +156,12 @@ class SMAC(object):
                             "call string in the scenario file."
                             % type(tae_runner))
 
+        # Check that overall objective and tae objective are the same
+        if tae_runner.run_obj != scenario.run_obj:
+            raise ValueError("Objective for the target algorithm runner and "
+                             "the scenario must be the same, but are '%s' and "
+                             "'%s'" % (tae_runner.run_obj, scenario.run_obj))
+
         # inject stats if necessary
         if tae_runner.stats is None:
             tae_runner.stats = self.stats
@@ -174,7 +180,9 @@ class SMAC(object):
                                       cutoff=scenario.cutoff,
                                       deterministic=scenario.deterministic,
                                       run_obj_time=scenario.run_obj == "runtime",
-                                      instance_specifics=scenario.instance_specific)
+                                      instance_specifics=scenario.instance_specific,
+                                      minR=scenario.minR,
+                                      maxR=scenario.maxR)
 
         # initial design
         if initial_design is not None and initial_configurations is not None:
@@ -197,14 +205,12 @@ class SMAC(object):
                                                       scenario=scenario,
                                                       stats=self.stats,
                                                       traj_logger=traj_logger,
-                                                      runhistory=runhistory,
                                                       rng=rng)
             elif scenario.initial_incumbent == "RANDOM":
                 initial_design = RandomConfiguration(tae_runner=tae_runner,
                                                      scenario=scenario,
                                                      stats=self.stats,
                                                      traj_logger=traj_logger,
-                                                     runhistory=runhistory,
                                                      rng=rng)
             else:
                 raise ValueError("Don't know what kind of initial_incumbent "
@@ -303,4 +309,18 @@ class SMAC(object):
         finally:
             self.solver.stats.print_stats()
             self.logger.info("Final Incumbent: %s" % (self.solver.incumbent))
+            self.runhistory = self.solver.runhistory
+            self.trajectory = self.solver.intensifier.traj_logger.trajectory
         return incumbent
+
+    def get_runhistory(self):
+        if not hasattr(self, 'runhistory'):
+            raise ValueError('SMAC was not fitted yet. Call optimize() prior '
+                             'to accessing the runhistory.')
+        return self.runhistory
+
+    def get_trajectory(self):
+        if not hasattr(self, 'trajectory'):
+            raise ValueError('SMAC was not fitted yet. Call optimize() prior '
+                             'to accessing the runhistory.')
+        return self.trajectory

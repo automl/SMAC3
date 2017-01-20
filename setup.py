@@ -8,10 +8,13 @@ with open('requirements.txt') as fh:
 requirements = requirements.split('\n')
 requirements = [requirement.strip() for requirement in requirements]
 
+with open("smac/__version__.py") as fh:
+    version = fh.readlines()[-1].split()[-1].strip("\"'")
+
 
 setuptools.setup(
     name="smac",
-    version=smac.VERSION,
+    version=smac.__version__,
     author=smac.AUTHORS,
     author_email="fh@cs.uni-freiburg.de",
     description=("SMAC3, a Python implementation of 'Sequential Model-based "

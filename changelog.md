@@ -1,3 +1,16 @@
+# 0.2.3
+
+* MAINT refactor Intensifcation and adding unit tests
+* CHANGE StatusType to Enum
+* RM parameter importance package
+* FIX ROAR facade bug for cli
+* ADD easy access of runhistory within Python
+* FIX imputation of censored data
+* FIX conversion of runhistory to EPM training data (in particular running time data)
+* FIX initial run only added once in runhistory
+* MV version number to a separate file
+* MAINT more efficient computations in run_history (assumes average as aggregation function across instances)
+
 # 0.2.2
 
 * FIX 124: SMAC could crash if the number of instances was less than seven

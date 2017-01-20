@@ -20,7 +20,6 @@ class InitialDesign(object):
                  scenario: Scenario,
                  stats: Stats,
                  traj_logger: TrajLogger,
-                 runhistory: RunHistory,
                  rng: np.random.RandomState
                  ):
         '''
@@ -36,8 +35,6 @@ class InitialDesign(object):
             statistics of experiments; needed in case initial design already exhaust the budget
         traj_logger: TrajLogger
             trajectory logging to add new incumbents found by the initial design
-        runhistory: RunHistory
-            runhistory with all target algorithm runs
         rng: np.random.RandomState
             random state
         '''
@@ -46,7 +43,6 @@ class InitialDesign(object):
         self.scenario = scenario
         self.stats = stats
         self.traj_logger = traj_logger
-        self.runhistory = runhistory
         self.rng = rng
         self.logger = logging.getLogger("InitialDesign")
 
