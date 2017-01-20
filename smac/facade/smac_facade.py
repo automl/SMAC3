@@ -82,9 +82,9 @@ class SMAC(object):
             RunHistory2EPM4LogCost if objective is runtime.
         initial_design: InitialDesign
             initial sampling design
-        initial_configuration: typing.List[Configuration]
+        initial_configurations: typing.List[Configuration]
             list of initial configurations for initial design -- 
-            cannot be used togehter with initial_design
+            cannot be used together with initial_design
         stats: Stats
             optional stats object
         rng: np.random.RandomState
