@@ -197,6 +197,16 @@ class RunHistory(object):
         else:
             return is_list
 
+    def get_all_configs(self):
+        """ Return all configurations in this RunHistory object
+
+        Returns
+        -------
+            list: parameter configurations
+
+        """
+        return list(self.config_ids.keys())
+
     def empty(self):
         """
         Check whether or not the RunHistory is empty.
