@@ -206,7 +206,7 @@ class SMBO(BaseSolver):
 
         # initiate local search with best configurations from previous runs
         configs_previous_runs = self.runhistory.get_all_configs()
-        configs_previous_runs_sorted = self._get_acq_values_sorted(configs_previous_runs)
+        configs_previous_runs_sorted = self._sort_configs_by_acq_value(configs_previous_runs)
         num_configs_local_search = min(len(configs_previous_runs_sorted), num_configurations_by_local_search)
         next_configs_by_local_search = \
             self._get_next_by_local_search(
@@ -310,7 +310,7 @@ class SMBO(BaseSolver):
 
         return configs_acq
 
-    def _get_acq_values_sorted(self, configs):
+    def _sort_configs_by_acq_value(self, configs):
         """ Sort the given configurations by acquisition value
 
         Parameters
