@@ -252,26 +252,9 @@ class SMBO(BaseSolver):
         else:
             rand_configs = [self.config_space.sample_configuration(size=1)]
         if _sorted:
-            imputed_rand_configs = map(ConfigSpace.util.impute_inactive_values,
-                                       rand_configs)
-            imputed_rand_configs = [x.get_array()
-                                    for x in imputed_rand_configs]
-            imputed_rand_configs = np.array(imputed_rand_configs,
-                                            dtype=np.float64)
-            acq_values = self.acquisition_func(imputed_rand_configs)
-            # From here
-            # http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values
-            random = self.rng.rand(len(acq_values))
-            # Last column is primary sort key!
-            indices = np.lexsort((random.flatten(), acq_values.flatten()))
-
             for i in range(len(rand_configs)):
                 rand_configs[i].origin = 'Random Search (sorted)'
-
-            # Cannot use zip here because the indices array cannot index the
-            # rand_configs list, because the second is a pure python list
-            return [(acq_values[ind][0], rand_configs[ind])
-                    for ind in indices[::-1]]
+            return self._sort_configs_by_acq_value(rand_configs)
         else:
             for i in range(len(rand_configs)):
                 rand_configs[i].origin = 'Random Search'
