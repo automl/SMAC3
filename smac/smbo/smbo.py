@@ -204,13 +204,14 @@ class SMBO(BaseSolver):
             else:
                 num_configurations_by_local_search = 10
 
-        # initial SLS by incumbent +
-        # best configuration from next_configs_by_random_search_sorted
+        # initiate local search with best configurations from previous runs
+        configs_previous_runs = self.runhistory.get_all_configs()
+        configs_previous_runs_sorted = self._sort_configs_by_acq_value(configs_previous_runs)
+        num_configs_local_search = min(len(configs_previous_runs_sorted), num_configurations_by_local_search)
         next_configs_by_local_search = \
             self._get_next_by_local_search(
-                [self.incumbent] +
                 list(map(lambda x: x[1],
-                         next_configs_by_random_search_sorted[:num_configurations_by_local_search - 1])))
+                         configs_previous_runs_sorted[:num_configs_local_search])))
 
         next_configs_by_acq_value = next_configs_by_random_search_sorted + \
             next_configs_by_local_search
@@ -223,7 +224,7 @@ class SMBO(BaseSolver):
         # Remove dummy acquisition function value
         next_configs_by_random_search = [x[1] for x in
                                          self._get_next_by_random_search(
-                                             num_points=num_configurations_by_local_search + num_configurations_by_random_search_sorted)]
+                                             num_points=num_configs_local_search + num_configurations_by_random_search_sorted)]
 
         challengers = list(itertools.chain(*zip(next_configs_by_acq_value,
                                                 next_configs_by_random_search)))
@@ -251,26 +252,9 @@ class SMBO(BaseSolver):
         else:
             rand_configs = [self.config_space.sample_configuration(size=1)]
         if _sorted:
-            imputed_rand_configs = map(ConfigSpace.util.impute_inactive_values,
-                                       rand_configs)
-            imputed_rand_configs = [x.get_array()
-                                    for x in imputed_rand_configs]
-            imputed_rand_configs = np.array(imputed_rand_configs,
-                                            dtype=np.float64)
-            acq_values = self.acquisition_func(imputed_rand_configs)
-            # From here
-            # http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values
-            random = self.rng.rand(len(acq_values))
-            # Last column is primary sort key!
-            indices = np.lexsort((random.flatten(), acq_values.flatten()))
-
             for i in range(len(rand_configs)):
                 rand_configs[i].origin = 'Random Search (sorted)'
-
-            # Cannot use zip here because the indices array cannot index the
-            # rand_configs list, because the second is a pure python list
-            return [(acq_values[ind][0], rand_configs[ind])
-                    for ind in indices[::-1]]
+            return self._sort_configs_by_acq_value(rand_configs)
         else:
             for i in range(len(rand_configs)):
                 rand_configs[i].origin = 'Random Search'
@@ -308,3 +292,36 @@ class SMBO(BaseSolver):
         configs_acq.sort(reverse=True, key=lambda x: x[0])
 
         return configs_acq
+
+    def _sort_configs_by_acq_value(self, configs):
+        """ Sort the given configurations by acquisition value
+
+        Parameters
+        ----------
+        configs : list(Configuration)
+
+        Returns
+        -------
+        list: (acquisition value, Candidate solutions),
+                ordered by their acquisition function value
+
+        """
+
+        imputed_configs = map(ConfigSpace.util.impute_inactive_values,
+                              configs)
+        imputed_configs = [x.get_array()
+                           for x in imputed_configs]
+        imputed_configs = np.array(imputed_configs,
+                                   dtype=np.float64)
+        acq_values = self.acquisition_func(imputed_configs)
+
+        # From here
+        # http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values
+        random = self.rng.rand(len(acq_values))
+        # Last column is primary sort key!
+        indices = np.lexsort((random.flatten(), acq_values.flatten()))
+
+        # Cannot use zip here because the indices array cannot index the
+        # rand_configs list, because the second is a pure python list
+        return [(acq_values[ind][0], configs[ind])
+                for ind in indices[::-1]]
