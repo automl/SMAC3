@@ -5,7 +5,8 @@ max-line-length: 100
 pep8:
   full: true
 ignore-paths: 
-  - ci_scripts
+    - ci_scripts
 ignore-patterns:
-  - (^|/)docs(/|$)
-python-targets: 3
+    - (^|/)docs(/|$)
+python-targets:
+    - 3
