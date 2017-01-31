@@ -22,6 +22,7 @@ from smac.stats.stats import Stats
 from smac.initial_design.initial_design import InitialDesign
 from smac.scenario.scenario import Scenario
 from smac.configspace import Configuration
+from smac.tae.execute_ta_run import TAEAbortException, BudgetExhaustedException
 
 from smac.epm.rfr_imputator import RFRImputator
 
@@ -126,12 +127,16 @@ class SMBO(BaseSolver):
 
             self.logger.debug("Intensify")
 
-            self.incumbent, inc_perf = self.intensifier.intensify(
-                challengers=challengers,
-                incumbent=self.incumbent,
-                run_history=self.runhistory,
-                aggregate_func=self.aggregate_func,
-                time_bound=max(0.01, time_spend))
+            try: self.incumbent, inc_perf = self.intensifier.intensify(
+                  challengers=challengers,
+                  incumbent=self.incumbent,
+                  run_history=self.runhistory,
+                  aggregate_func=self.aggregate_func,
+                  time_bound=max(0.01, time_spend))
+            except (TAEAbortException, BudgetExhaustedException):
+                self.logger.debug("Aborting Bayesian Optimization due to TAE"
+                                  " (either ABORTed run or exhausted budget.")
+                return self.incumbent
 
             if self.scenario.shared_model:
                 pSMAC.write(run_history=self.runhistory,

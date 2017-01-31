@@ -35,6 +35,11 @@ class StatusType(Enum):
                 return getattr(globals()[name], member)
         return obj
 
+class BudgetExhaustedException(Exception):
+    pass
+
+class TAEAbortException(Exception):
+    pass
 
 class ExecuteTARun(object):
 
@@ -113,7 +118,7 @@ class ExecuteTARun(object):
         if self.stats.is_budget_exhausted():
             self.logger.debug(
                 "Skip target algorithm run due to exhausted configuration budget")
-            return StatusType.ABORT, np.nan, 0, {"misc": "exhausted bugdet -- ABORT"}
+            raise BudgetExhaustedException()
 
         if cutoff is not None:
             cutoff = int(math.ceil(cutoff))
@@ -124,9 +129,12 @@ class ExecuteTARun(object):
                                                           seed=seed,
                                                           instance_specific=instance_specific)
 
-        if self.stats.ta_runs == 0 and status in [StatusType.CRASHED, StatusType.ABORT]:
+        if self.stats.ta_runs == 0 and status == StatusType.CRASHED:
             self.logger.critical("First run crashed -- Abort")
-            sys.exit(1)
+            raise TAEAbortException()
+        if status == StatusType.ABORT:
+            self.logger.critical("TAE reports Abort")
+            raise TAEAbortException()
 
         # update SMAC stats
         self.stats.ta_runs += 1
@@ -139,6 +147,8 @@ class ExecuteTARun(object):
                 cost = runtime
 
         self.logger.debug("Return: Status: %d, cost: %f, time. %f, additional: %s" % (
+            status.value, cost, runtime, str(additional_info)))
+        print("Return: Status: %d, cost: %f, time. %f, additional: %s" % (
             status.value, cost, runtime, str(additional_info)))
 
         if self.runhistory:
