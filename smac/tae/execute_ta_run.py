@@ -133,7 +133,7 @@ class ExecuteTARun(object):
             self.logger.critical("First run crashed -- Abort")
             raise TAEAbortException()
         if status == StatusType.ABORT:
-            self.logger.critical("TAE reports Abort")
+            self.logger.error("Target algorithm status ABORT - SMAC will exit.")
             raise TAEAbortException()
 
         # update SMAC stats
@@ -147,8 +147,6 @@ class ExecuteTARun(object):
                 cost = runtime
 
         self.logger.debug("Return: Status: %d, cost: %f, time. %f, additional: %s" % (
-            status.value, cost, runtime, str(additional_info)))
-        print("Return: Status: %d, cost: %f, time. %f, additional: %s" % (
             status.value, cost, runtime, str(additional_info)))
 
         if self.runhistory:

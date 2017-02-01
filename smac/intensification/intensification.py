@@ -14,6 +14,7 @@ from smac.utils.constants import MAXINT, MAX_CUTOFF
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
 from smac.tae.execute_ta_run import StatusType
+from smac.tae.execute_ta_run import TAEAbortException, BudgetExhaustedException
 
 __author__ = "Katharina Eggensperger, Marius Lindauer"
 __copyright__ = "Copyright 2017, ML4AAD"
@@ -73,6 +74,9 @@ class Intensifier(object):
         self.maxR = maxR
         self.minR = minR
         self.rs = rng
+
+        # retrieve incumbent in case of interrupted intensification
+        self.incumbent_on_error = None
 
         # scenario info
         self.cutoff = cutoff
@@ -307,12 +311,15 @@ class Intensifier(object):
                     self._chall_indx += 1
 
                 self.logger.debug("Add run of challenger")
-                status, cost, dur, res = self.tae_runner.start(
-                    config=challenger,
-                    instance=instance,
-                    seed=seed,
-                    cutoff=cutoff,
-                    instance_specific=self.instance_specifics.get(instance, "0"))
+                try: status, cost, dur, res = self.tae_runner.start(
+                       config=challenger,
+                       instance=instance,
+                       seed=seed,
+                       cutoff=cutoff,
+                       instance_specific=self.instance_specifics.get(instance, "0"))
+                except (TAEAbortException, BudgetExhaustedException):
+                    self.incumbent_on_error = incumbent
+                    raise
                 self._num_run += 1
 
                 if status == StatusType.ABORT:
