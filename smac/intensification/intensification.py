@@ -156,7 +156,9 @@ class Intensifier(object):
                                                   aggregate_func=aggregate_func)
             except BudgetExhaustedException:
                 # We return incumbent, SMBO stops due to its own budget checks
-                return incumbent
+                inc_runs = run_history.get_runs_for_config(incumbent)
+                inc_perf = aggregate_func(incumbent, run_history, inc_runs)
+                return incumbent, inc_perf
             except TAEAbortException:
                 # We set intensifier.incumbent_on_abort to incumbent to retrieve
                 # it from SMBO and raise
