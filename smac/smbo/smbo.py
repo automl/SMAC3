@@ -105,9 +105,8 @@ class SMBO(BaseSolver):
         self.stats.start_timing()
         try:
             self.incumbent = self.initial_design.run()
-        except (TAEAbortException, BudgetExhaustedException):
-            self.logger.debug("Aborting during initial design run due to TAE"
-                              " (either status ABORT or exhausted budget.")
+        except TAEAbortException:
+            self.logger.debug("Aborting during initial design run due to TAE.")
             return self.incumbent
 
         # Main BO loop
@@ -138,10 +137,9 @@ class SMBO(BaseSolver):
                   run_history=self.runhistory,
                   aggregate_func=self.aggregate_func,
                   time_bound=max(0.01, time_spend))
-            except (TAEAbortException, BudgetExhaustedException):
-                self.logger.debug("Aborting Bayesian Optimization due to TAE"
-                                  " (either status ABORT or exhausted budget.")
-                return self.intensifier.incumbent_on_error
+            except TAEAbortException:
+                self.logger.debug("Aborting Bayesian Optimization due to TA status ABORT")
+                return self.intensifier.incumbent_on_abort
 
             if self.scenario.shared_model:
                 pSMAC.write(run_history=self.runhistory,

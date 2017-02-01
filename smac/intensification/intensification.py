@@ -38,7 +38,7 @@ class Intensifier(object):
         tae_runner : tae.executre_ta_run_*.ExecuteTARun* Object
             target algorithm run executor
         stats: Stats()
-            stats object            
+            stats object
         traj_logger: TrajLogger()
             TrajLogger object to log all new incumbents
         rng : np.random.RandomState
@@ -76,7 +76,7 @@ class Intensifier(object):
         self.rs = rng
 
         # retrieve incumbent in case of interrupted intensification
-        self.incumbent_on_error = None
+        self.incumbent_on_abort = None
 
         # scenario info
         self.cutoff = cutoff
@@ -122,7 +122,7 @@ class Intensifier(object):
             incumbent: Configuration()
                 current (maybe new) incumbent configuration
             inc_perf: float
-                empirical performance of incumbent configuration 
+                empirical performance of incumbent configuration
         '''
 
         self.start_time = time.time()
@@ -145,14 +145,23 @@ class Intensifier(object):
                 self.logger.debug(
                     "Configuration origin: %s", challenger.origin)
 
-            # Lines 3-7
-            self._add_inc_run(incumbent=incumbent, run_history=run_history)
+            try:
+                # Lines 3-7
+                self._add_inc_run(incumbent=incumbent, run_history=run_history)
 
-            # Lines 8-17
-            incumbent = self._race_challenger(challenger=challenger,
-                                              incumbent=incumbent,
-                                              run_history=run_history,
-                                              aggregate_func=aggregate_func)
+                # Lines 8-17
+                incumbent = self._race_challenger(challenger=challenger,
+                                                  incumbent=incumbent,
+                                                  run_history=run_history,
+                                                  aggregate_func=aggregate_func)
+            except BudgetExhaustedException:
+                # We return incumbent, SMBO stops due to its own budget checks
+                return incumbent
+            except TAEAbortException:
+                # We set intensifier.incumbent_on_abort to incumbent to retrieve
+                # it from SMBO and raise
+                self.incumbent_on_abort = incumbent
+                raise
 
             if self._chall_indx > 1 and self._num_run > self.run_limit:
                 self.logger.debug(
@@ -311,21 +320,13 @@ class Intensifier(object):
                     self._chall_indx += 1
 
                 self.logger.debug("Add run of challenger")
-                try: status, cost, dur, res = self.tae_runner.start(
-                       config=challenger,
-                       instance=instance,
-                       seed=seed,
-                       cutoff=cutoff,
-                       instance_specific=self.instance_specifics.get(instance, "0"))
-                except (TAEAbortException, BudgetExhaustedException):
-                    self.incumbent_on_error = incumbent
-                    raise
+                status, cost, dur, res = self.tae_runner.start(
+                   config=challenger,
+                   instance=instance,
+                   seed=seed,
+                   cutoff=cutoff,
+                   instance_specific=self.instance_specifics.get(instance, "0"))
                 self._num_run += 1
-
-                if status == StatusType.ABORT:
-                    self.logger.debug(
-                        "TAE signaled ABORT -- stop intensification on challenger")
-                    return incumbent
 
             new_incumbent = self._compare_configs(
                 incumbent=incumbent, challenger=challenger, run_history=run_history,
