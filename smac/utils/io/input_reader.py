@@ -123,7 +123,7 @@ class InputReader(object):
 
             Parameters
             ----------
-        fn: string
+                fn: string
                      file name of instance file
 
             Returns
