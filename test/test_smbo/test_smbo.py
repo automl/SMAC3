@@ -20,7 +20,7 @@ from smac.scenario.scenario import Scenario
 from smac.smbo.acquisition import EI, EIPS
 from smac.smbo.local_search import LocalSearch
 from smac.tae.execute_func import ExecuteTAFuncArray
-from smac.tae.execute_ta_run import TAEAbortException
+from smac.tae.execute_ta_run import TAEAbortException, TAEFirstRunCrashedException
 from smac.stats.stats import Stats
 from smac.utils import test_helpers
 from smac.epm.rf_with_instances import RandomForestWithInstances
@@ -248,6 +248,17 @@ class TestSMBO(unittest.TestCase):
         self.assertEqual(patch.call_args_list[9][0][0], 'Incumbent')
         for i in range(10):
             self.assertEqual(rval[i][1].origin, 'Local Search')
+
+    @mock.patch.object(SingleConfigInitialDesign, 'run')
+    def test_abort_on_initial_design(self, patch):
+        def target(x):
+            return 5
+        patch.side_effect = TAEFirstRunCrashedException()
+        scen = Scenario({'cs': test_helpers.get_branin_config_space(),
+                         'run_obj': 'quality',
+                         'abort_on_first_run_crash' : 1})
+        smbo = SMAC(scen, tae_runner=target, rng=1).solver
+        self.assertRaises(TAEAbortException, smbo.run)
 
     @mock.patch.object(Intensifier, '_race_challenger')
     def test_abort_on_intensify(self, patch_intensify):

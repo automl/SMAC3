@@ -13,6 +13,7 @@ import unittest
 from smac.configspace import ConfigurationSpace
 from smac.tae.execute_ta_run import ExecuteTARun, StatusType
 from smac.tae.execute_ta_run import BudgetExhaustedException, TAEAbortException
+from smac.tae.execute_ta_run import TAEFirstRunCrashedException
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 
@@ -78,8 +79,7 @@ class TaeTest(unittest.TestCase):
         eta = ExecuteTARun(ta=lambda *args: None, stats=stats)
 
         self.assertRaises(
-            TAEAbortException, eta.start, config={}, instance=1)
-
+            TAEFirstRunCrashedException, eta.start, config={}, instance=1)
 
 
 if __name__ == "__main__":

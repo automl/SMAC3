@@ -23,6 +23,7 @@ from smac.initial_design.initial_design import InitialDesign
 from smac.scenario.scenario import Scenario
 from smac.configspace import Configuration
 from smac.tae.execute_ta_run import TAEAbortException, BudgetExhaustedException
+from smac.tae.execute_ta_run import TAEFirstRunCrashedException
 
 from smac.epm.rfr_imputator import RFRImputator
 
@@ -103,7 +104,13 @@ class SMBO(BaseSolver):
             The best found configuration
         '''
         self.stats.start_timing()
-        self.incumbent = self.initial_design.run()
+        try:
+            self.incumbent = self.initial_design.run()
+        except TAEFirstRunCrashedException:
+            if (self.scenario.abort_on_first_run_crash):
+                raise TAEAbortException("First run crashed, abort. (To prevent"
+                                        " this, toggle the 'abort_on_first_run"
+                                        "_crash'-option!)")
 
         # Main BO loop
         iteration = 1

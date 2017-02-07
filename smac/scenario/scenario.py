@@ -208,10 +208,12 @@ class Scenario(object):
 
     def _add_arguments(self):
         # Add allowed arguments
+        self.add_argument(name='abort_on_first_run_crash', help=None,
+                          default='1', callback=_is_truthy)
         self.add_argument(name='algo', help=None, dest='ta',
                           callback=shlex.split)
         self.add_argument(name='execdir', default='.', help=None)
-        self.add_argument(name='deterministic', default="0", help=None,
+        self.add_argument(name='deterministic', default='0', help=None,
                           callback=_is_truthy)
         self.add_argument(name='paramfile', help=None, dest='pcs_fn',
                           mutually_exclusive_group='cs')

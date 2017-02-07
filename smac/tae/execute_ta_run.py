@@ -36,9 +36,16 @@ class StatusType(Enum):
         return obj
 
 class BudgetExhaustedException(Exception):
+    """ Exception indicating that time- or memory-budgets are exhausted. """
     pass
 
 class TAEAbortException(Exception):
+    """ Exception indicating that the TAE suggests an ABORT of SMAC. """
+    pass
+
+class TAEFirstRunCrashedException(TAEAbortException):
+    """ Exception indicating that the first run crashed (depending on options
+    this could trigger an ABORT of SMAC. """
     pass
 
 class ExecuteTARun(object):
@@ -128,7 +135,10 @@ class ExecuteTARun(object):
                                                           instance_specific=instance_specific)
 
         if self.stats.ta_runs == 0 and status == StatusType.CRASHED:
-            raise TAEAbortException("First run crashed -- Abort")
+            raise TAEFirstRunCrashedException("First run crashed, abort. (To "
+                                              "prevent this, toggle the "
+                                              "'abort_on_first_run_crash'"
+                                              "-option!)")
         if status == StatusType.ABORT:
             raise TAEAbortException("Target algorithm status ABORT - SMAC will exit.")
 
