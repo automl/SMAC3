@@ -249,15 +249,6 @@ class TestSMBO(unittest.TestCase):
         for i in range(10):
             self.assertEqual(rval[i][1].origin, 'Local Search')
 
-    @mock.patch.object(SingleConfigInitialDesign, 'run') 
-    def test_abort_on_initial_design(self, patch):
-        def target(x):
-            return None
-        patch.side_effect = TAEAbortException()
-        smbo = SMAC(self.scenario, tae_runner=target, rng=1).solver
-        # We check if on crash the smbo.incumbent is returned
-        self.assertEqual(smbo.run(), smbo.incumbent)
-
     @mock.patch.object(Intensifier, '_race_challenger')
     def test_abort_on_intensify(self, patch_intensify):
         def target(x):

@@ -103,11 +103,7 @@ class SMBO(BaseSolver):
             The best found configuration
         '''
         self.stats.start_timing()
-        try:
-            self.incumbent = self.initial_design.run()
-        except TAEAbortException:
-            self.logger.debug("Aborting during initial design run due to TAE.")
-            return self.incumbent
+        self.incumbent = self.initial_design.run()
 
         # Main BO loop
         iteration = 1
@@ -138,7 +134,7 @@ class SMBO(BaseSolver):
                   aggregate_func=self.aggregate_func,
                   time_bound=max(0.01, time_spend))
             except TAEAbortException:
-                self.logger.debug("Aborting Bayesian Optimization due to TA status ABORT")
+                self.logger.error("Aborting Bayesian Optimization due to TA status ABORT")
                 return self.intensifier.incumbent_on_abort
 
             if self.scenario.shared_model:

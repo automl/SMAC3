@@ -116,9 +116,7 @@ class ExecuteTARun(object):
         """
 
         if self.stats.is_budget_exhausted():
-            self.logger.debug(
-                "Skip target algorithm run due to exhausted configuration budget")
-            raise BudgetExhaustedException()
+            raise BudgetExhaustedException("Skip target algorithm run due to exhausted configuration budget")
 
         if cutoff is not None:
             cutoff = int(math.ceil(cutoff))
@@ -130,11 +128,9 @@ class ExecuteTARun(object):
                                                           instance_specific=instance_specific)
 
         if self.stats.ta_runs == 0 and status == StatusType.CRASHED:
-            self.logger.critical("First run crashed -- Abort")
-            raise TAEAbortException()
+            raise TAEAbortException("First run crashed -- Abort")
         if status == StatusType.ABORT:
-            self.logger.error("Target algorithm status ABORT - SMAC will exit.")
-            raise TAEAbortException()
+            raise TAEAbortException("Target algorithm status ABORT - SMAC will exit.")
 
         # update SMAC stats
         self.stats.ta_runs += 1

@@ -33,7 +33,7 @@ class TaeTest(unittest.TestCase):
     def tearDown(self):
         os.chdir(self.current_dir)
 
-    def test_start(self):
+    def test_start_exhausted_budget(self):
         '''
             testing exhausted budget
         '''
@@ -49,7 +49,7 @@ class TaeTest(unittest.TestCase):
             BudgetExhaustedException, eta.start, config={}, instance=1)
 
     @mock.patch.object(ExecuteTARun, 'run')
-    def test_start(self, test_run):
+    def test_start_tae_return_abort(self, test_run):
         '''
             testing abort
         '''
@@ -65,7 +65,7 @@ class TaeTest(unittest.TestCase):
             TAEAbortException, eta.start, config={}, instance=1)
 
     @mock.patch.object(ExecuteTARun, 'run')
-    def test_start(self, test_run):
+    def test_start_crash_first_run(self, test_run):
         '''
             testing crash-on-first-run
         '''
