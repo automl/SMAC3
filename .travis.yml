@@ -7,6 +7,8 @@ matrix:
     env: PYTHON_VERSION="3.4" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh"
   - os: linux
     env: PYTHON_VERSION="3.5" COVERAGE="true" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh"
+  - os: linux
+    env: PYTHON_VERSION="3.6" COVERAGE="true" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh"
 
   # Set language to generic to not break travis-ci
   # https://github.com/travis-ci/travis-ci/issues/2312#issuecomment-195620855
@@ -20,6 +22,10 @@ matrix:
     sudo: required
     language: generic
     env: PYTHON_VERSION="3.5" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh"
+  - os: osx
+    sudo: required
+    language: generic
+    env: PYTHON_VERSION="3.6" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh"
 
 cache:
   directories:
