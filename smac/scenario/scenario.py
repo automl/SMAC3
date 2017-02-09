@@ -262,7 +262,7 @@ class Scenario(object):
         if self.overall_obj[:3] in ["PAR", "par"]:
             self.par_factor = int(self.overall_obj[3:])
         elif self.overall_obj[:4] in ["mean", "MEAN"]:
-            self.par_factor = int(self.overall_obj[4:])
+            self.par_factor = 1
         else:
             self.par_factor = 1
 
@@ -311,7 +311,7 @@ class Scenario(object):
                 self.feature_array.append(self.feature_dict[inst_])
             self.feature_array = numpy.array(self.feature_array)
             self.n_features = self.feature_array.shape[1]
-            
+
             # reduce dimensionality of features of larger than PCA_DIM
             if self.feature_array.shape[1] > self.PCA_DIM:
                 X = self.feature_array
