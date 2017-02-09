@@ -107,10 +107,12 @@ class SMBO(BaseSolver):
         try:
             self.incumbent = self.initial_design.run()
         except TAEFirstRunCrashedException:
-            if (self.scenario.abort_on_first_run_crash):
-                raise TAEAbortException("First run crashed, abort. (To prevent"
-                                        " this, toggle the 'abort_on_first_run"
-                                        "_crash'-option!)")
+            if self.scenario.abort_on_first_run_crash:
+                # We log to make sure the user knows about the reason for abort
+                self.logger.error("First run crashed, abort. (To prevent this,"
+                                  "toggle the 'abort_on_first_run_crash'-optio"
+                                  "n!)")
+                raise TAEAbortException("First run crashed, abort.")
 
         # Main BO loop
         iteration = 1
@@ -134,15 +136,12 @@ class SMBO(BaseSolver):
 
             self.logger.debug("Intensify")
 
-            try: self.incumbent, inc_perf = self.intensifier.intensify(
+            self.incumbent, inc_perf = self.intensifier.intensify(
                   challengers=challengers,
                   incumbent=self.incumbent,
                   run_history=self.runhistory,
                   aggregate_func=self.aggregate_func,
                   time_bound=max(0.01, time_spend))
-            except TAEAbortException:
-                self.logger.error("Aborting Bayesian Optimization due to TA status ABORT")
-                return self.intensifier.incumbent_on_abort
 
             if self.scenario.shared_model:
                 pSMAC.write(run_history=self.runhistory,

@@ -104,8 +104,6 @@ class ExecuteTARunAClib(ExecuteTARun):
             status = StatusType.CRASHED
         elif results["status"] in ["ABORT"]:
             status = StatusType.ABORT
-            self.logger.error("Target algorithm returned ABORT -- Exit!")
-            sys.exit(43)
         elif results["status"] in ["MEMOUT"]:
             status = StatusType.MEMOUT
 
@@ -122,7 +120,7 @@ class ExecuteTARunAClib(ExecuteTARun):
             results["runtime"] = 0
 
         runtime = float(results["runtime"])
-        
+
         if self.run_obj == "quality" and results.get("cost") is None:
             self.logger.error(
                 "The target algorithm has not returned a quality/cost value" +

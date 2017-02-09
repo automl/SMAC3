@@ -14,7 +14,7 @@ from smac.utils.constants import MAXINT, MAX_CUTOFF
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
 from smac.tae.execute_ta_run import StatusType
-from smac.tae.execute_ta_run import TAEAbortException, BudgetExhaustedException
+from smac.tae.execute_ta_run import BudgetExhaustedException
 
 __author__ = "Katharina Eggensperger, Marius Lindauer"
 __copyright__ = "Copyright 2017, ML4AAD"
@@ -74,9 +74,6 @@ class Intensifier(object):
         self.maxR = maxR
         self.minR = minR
         self.rs = rng
-
-        # retrieve incumbent in case of interrupted intensification
-        self.incumbent_on_abort = None
 
         # scenario info
         self.cutoff = cutoff
@@ -159,11 +156,6 @@ class Intensifier(object):
                 inc_runs = run_history.get_runs_for_config(incumbent)
                 inc_perf = aggregate_func(incumbent, run_history, inc_runs)
                 return incumbent, inc_perf
-            except TAEAbortException:
-                # We set intensifier.incumbent_on_abort to incumbent to retrieve
-                # it from SMBO and raise
-                self.incumbent_on_abort = incumbent
-                raise
 
             if self._chall_indx > 1 and self._num_run > self.run_limit:
                 self.logger.debug(

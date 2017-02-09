@@ -260,15 +260,6 @@ class TestSMBO(unittest.TestCase):
         smbo = SMAC(scen, tae_runner=target, rng=1).solver
         self.assertRaises(TAEAbortException, smbo.run)
 
-    @mock.patch.object(Intensifier, '_race_challenger')
-    def test_abort_on_intensify(self, patch_intensify):
-        def target(x):
-            return 5
-        patch_intensify.side_effect = TAEAbortException()
-        smbo = SMAC(self.scenario, tae_runner=target, rng=1).solver
-        self.assertEqual(smbo.run(), smbo.intensifier.incumbent_on_abort)
-
-
     def tearDown(self):
             for d in glob.glob('smac3-output*'):
                 shutil.rmtree(d)
