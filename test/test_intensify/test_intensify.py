@@ -392,5 +392,3 @@ class TestIntensify(unittest.TestCase):
         # scenario cutoff
         self.assertEqual(cutoff, 5)
         
-        
-        
