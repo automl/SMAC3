@@ -210,6 +210,7 @@ class ScenarioTest(unittest.TestCase):
                                "value in ['DEFAULT, 'RANDOM'] but is Default")
 
     def test_par_factor(self):
+        # Test setting the default value of 1 if no factor is given
         scenario_dict = self.test_scenario_dict
         scenario_dict['overall_obj'] = 'mean'
         scenario = Scenario(scenario_dict)
