@@ -260,10 +260,14 @@ class Scenario(object):
         self.feature_array = None
 
         if self.overall_obj[:3] in ["PAR", "par"]:
-            self.par_factor = int(self.overall_obj[3:])
+            par_str = self.overall_obj[3:]
         elif self.overall_obj[:4] in ["mean", "MEAN"]:
-            self.par_factor = 1
+            par_str = self.overall_obj[4:]
+        # Check for par-value as in "par10"/ "mean5"
+        if len(par_str) > 0:
+            self.par_factor = int(par_str)
         else:
+            self.logger.debug("No par-factor detected. Using 1 by default.")
             self.par_factor = 1
 
         # read instance files
