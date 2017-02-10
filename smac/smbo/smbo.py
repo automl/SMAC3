@@ -75,7 +75,7 @@ class SMBO(BaseSolver):
         rng: np.random.RandomState
             Random number generator
         '''
-        self.logger = logging.getLogger("SMBO")
+        self.logger = logging.getLogger("smac.smbo.SMBO")
         self.incumbent = None
 
         self.scenario = scenario
@@ -94,7 +94,7 @@ class SMBO(BaseSolver):
 
     def run(self):
         '''
-        Runs the Bayesian optimization loop 
+        Runs the Bayesian optimization loop
 
         Returns
         ----------
@@ -168,7 +168,7 @@ class SMBO(BaseSolver):
              number of configurations optimized by random search
         num_configurations_by_local_search: int
             number of configurations optimized with local search
-            if None, we use min(10, 1 + 0.5 x the number of configurations on exp average in intensify calls) 
+            if None, we use min(10, 1 + 0.5 x the number of configurations on exp average in intensify calls)
 
         Returns
         -------
@@ -292,7 +292,7 @@ class SMBO(BaseSolver):
                ordered by their acquisition function value
         """
         configs_acq = []
-        
+
         # Start N local search from different random start points
         for start_point in init_points:
             configuration, acq_val = self.acq_optimizer.maximize(start_point)

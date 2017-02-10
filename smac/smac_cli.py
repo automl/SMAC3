@@ -30,7 +30,7 @@ class SMACCLI(object):
         '''
             constructor
         '''
-        self.logger = logging.getLogger("SMAC")
+        self.logger = logging.getLogger("smac.SMAC_cli")
 
     def main_cli(self):
         '''
@@ -53,31 +53,31 @@ class SMACCLI(object):
             rh = RunHistory(aggregate_func=aggregate_func)
 
             scen, rh = merge_foreign_data_from_file(
-                        scenario=scen, 
+                        scenario=scen,
                         runhistory=rh,
-                        in_scenario_fn_list=args_.warmstart_scenario, 
+                        in_scenario_fn_list=args_.warmstart_scenario,
                         in_runhistory_fn_list=args_.warmstart_runhistory,
                         cs=scen.cs,
                         aggregate_func=aggregate_func)
-            
+
         initial_configs = None
         if args_.warmstart_incumbent:
             initial_configs = [scen.cs.get_default_configuration()]
             for traj_fn in args_.warmstart_incumbent:
                 trajectory = TrajLogger.read_traj_aclib_format(fn=traj_fn, cs=scen.cs)
                 initial_configs.append(trajectory[-1]["incumbent"])
-                
+
         if args_.modus == "SMAC":
             optimizer = SMAC(
-                scenario=scen, 
-                rng=np.random.RandomState(args_.seed), 
-                runhistory=rh, 
+                scenario=scen,
+                rng=np.random.RandomState(args_.seed),
+                runhistory=rh,
                 initial_configurations=initial_configs)
         elif args_.modus == "ROAR":
             optimizer = ROAR(
-                scenario=scen, 
-                rng=np.random.RandomState(args_.seed), 
-                runhistory=rh, 
+                scenario=scen,
+                rng=np.random.RandomState(args_.seed),
+                runhistory=rh,
                 initial_configurations=initial_configs)
         try:
             optimizer.optimize()

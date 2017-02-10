@@ -91,7 +91,7 @@ class MultiConfigInitialDesign(InitialDesign):
         if len(set(configs)) > 1:
             # intensify will skip all challenger that are identical with the incumbent;
             # if <configs> has only identical configurations,
-            # intensifiy will not do any configuration runs 
+            # intensifiy will not do any configuration runs
             # (also not on the incumbent)
             # therefore, at least two different configurations have to be in <configs>
             inc, inc_perf = self.intensifier.intensify(challengers=set(configs[1:]),

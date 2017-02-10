@@ -5,14 +5,14 @@ from smac.smbo.objective import average_cost
 
 import typing
 
-def merge_foreign_data_from_file(scenario: Scenario, 
+def merge_foreign_data_from_file(scenario: Scenario,
                                  runhistory: RunHistory,
-                                 in_scenario_fn_list: typing.List[str], 
+                                 in_scenario_fn_list: typing.List[str],
                                  in_runhistory_fn_list: typing.List[str],
                                  cs: ConfigurationSpace,
                                  aggregate_func: typing.Callable = average_cost):
     '''
-        extend <scenario> and <runhistory> with runhistory data from another <in_scenario> 
+        extend <scenario> and <runhistory> with runhistory data from another <in_scenario>
         assuming the same pcs, feature space, but different instances
 
         Arguments
@@ -36,7 +36,7 @@ def merge_foreign_data_from_file(scenario: Scenario,
     '''
 
     if not in_scenario_fn_list:
-        raise ValueError("To read warmstart data from previous runhistories, the corresponding scenarios are required. Use option --warmstart_scenario") 
+        raise ValueError("To read warmstart data from previous runhistories, the corresponding scenarios are required. Use option --warmstart_scenario")
     scens = [Scenario(scenario=scen_fn, cmd_args={"output_dir":""}) for scen_fn in in_scenario_fn_list]
     rhs = []
     for rh_fn in in_runhistory_fn_list:
@@ -47,12 +47,12 @@ def merge_foreign_data_from_file(scenario: Scenario,
     return merge_foreign_data(scenario, runhistory, in_scenario_list=scens, in_runhistory_list=rhs)
 
 
-def merge_foreign_data(scenario: Scenario, 
+def merge_foreign_data(scenario: Scenario,
                        runhistory: RunHistory,
-                       in_scenario_list: typing.List[Scenario], 
+                       in_scenario_list: typing.List[Scenario],
                        in_runhistory_list: typing.List[RunHistory]):
     '''
-        extend <scenario> and <runhistory> with runhistory data from another <in_scenario> 
+        extend <scenario> and <runhistory> with runhistory data from another <in_scenario>
         assuming the same pcs, feature space, but different instances
 
         Arguments
@@ -62,7 +62,7 @@ def merge_foreign_data(scenario: Scenario,
         runhistory: RunHistory
             original runhistory -- will be extended by further data points
         in_scenario_list: typing.List[Scenario]
-            input scenario 
+            input scenario
         in_runhistory_list: typing.List[RunHistory]
             list of runhistories wrt <in_scenario>
 

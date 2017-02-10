@@ -31,7 +31,7 @@ class AbstractAcquisitionFunction(object):
         """
         self.model = model
 
-        self.logger = logging.getLogger("AcquisitionFunction")
+        self.logger = logging.getLogger("smac.smbo.AcquisitionFunction")
 
     def update(self, **kwargs):
         """Update the acquisition functions values.

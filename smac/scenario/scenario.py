@@ -44,7 +44,7 @@ class Scenario(object):
             command line arguments that were not processed by argparse
 
         """
-        self.logger = logging.getLogger("scenario")
+        self.logger = logging.getLogger("smac.scenario.Scenario")
         self.PCA_DIM = 7
 
         self.in_reader = InputReader()
@@ -72,7 +72,7 @@ class Scenario(object):
             arg_name, arg_value = self._parse_argument(key, scenario, **value)
             parsed_arguments[arg_name] = arg_value
 
-        
+
         if len(scenario) != 0:
             raise ValueError('Could not parse the following arguments: %s' %
                              str(list(scenario.keys())))
@@ -183,7 +183,7 @@ class Scenario(object):
             normalized_key = key.lower().replace('-', '').replace('_', '')
             if normalized_key == normalized_name:
                 value = scenario.pop(key)
-                
+
         if dest is None:
             dest = name.lower().replace('-', '_')
 
@@ -262,7 +262,7 @@ class Scenario(object):
         if self.overall_obj[:3] in ["PAR", "par"]:
             self.par_factor = int(self.overall_obj[3:])
         elif self.overall_obj[:4] in ["mean", "MEAN"]:
-            self.par_factor = 1
+            self.par_factor = self.par_factor = int(self.overall_obj[4:])
         else:
             self.par_factor = 1
 
@@ -352,4 +352,4 @@ class Scenario(object):
 
     def __setstate__(self, d):
         self.__dict__.update(d)
-        self.logger = logging.getLogger("scenario")
+        self.logger = logging.getLogger("smac.scenario.Scenario")

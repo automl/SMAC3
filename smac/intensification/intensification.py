@@ -37,7 +37,7 @@ class Intensifier(object):
         tae_runner : tae.executre_ta_run_*.ExecuteTARun* Object
             target algorithm run executor
         stats: Stats()
-            stats object            
+            stats object
         traj_logger: TrajLogger()
             TrajLogger object to log all new incumbents
         rng : np.random.RandomState
@@ -68,7 +68,7 @@ class Intensifier(object):
             self.instance_specifics = {}
         else:
             self.instance_specifics = instance_specifics
-        self.logger = logging.getLogger("intensifier")
+        self.logger = logging.getLogger("smac.intensification.Intensifier")
         self.run_limit = run_limit
         self.maxR = maxR
         self.minR = minR
@@ -118,7 +118,7 @@ class Intensifier(object):
             incumbent: Configuration()
                 current (maybe new) incumbent configuration
             inc_perf: float
-                empirical performance of incumbent configuration 
+                empirical performance of incumbent configuration
         '''
 
         self.start_time = time.time()
@@ -339,7 +339,7 @@ class Intensifier(object):
                       run_history: RunHistory,
                       inc_sum_cost: float):
         '''
-            adaptive capping: 
+            adaptive capping:
             compute cutoff based on time so far used for incumbent
             and reduce cutoff for next run of challenger accordingly
 
@@ -380,19 +380,19 @@ class Intensifier(object):
                      )
         return cutoff
 
-    def _compare_configs(self, incumbent: Configuration, 
-                         challenger: Configuration, 
+    def _compare_configs(self, incumbent: Configuration,
+                         challenger: Configuration,
                          run_history: RunHistory,
                          aggregate_func: typing.Callable):
         '''
-            compare two configuration wrt the runhistory 
+            compare two configuration wrt the runhistory
             and return the one which performs better (or None if the decision is not safe)
 
             Decision strategy to return x as being better than y:
                 1. x has at least as many runs as y
                 2. x performs better than y on the intersection of runs on x and y
 
-            Implicit assumption: 
+            Implicit assumption:
                 challenger was evaluated on the same instance-seed pairs as incumbent
 
             Parameters

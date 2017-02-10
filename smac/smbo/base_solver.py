@@ -30,7 +30,7 @@ class BaseSolver(object):
         if self.save_dir is not None:
             self.create_save_dir()
 
-        self.logger = logging.getLogger("BaseSolver")
+        self.logger = logging.getLogger("smac.smbo.BaseSolver")
 
     def init_last_iteration(self):
         """
