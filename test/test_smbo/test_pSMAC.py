@@ -115,8 +115,8 @@ class TestPSMAC(unittest.TestCase):
                          [1, 2, 3, 4])
         self.assertEqual(len(runhistory.data), 6)
 
-        # load from non-empty runhistory, but existing run will be overridden
-        #  because it alread existed
+        # load from non-empty runhistory, in case of a duplicate the existing
+        # result will be kept and the new one silently discarded
         runhistory = RunHistory(aggregate_func=average_cost)
         configuration_space.seed(1)
         config = configuration_space.sample_configuration()
@@ -127,10 +127,10 @@ class TestPSMAC(unittest.TestCase):
                                     configuration_space)
         id_after = id(runhistory.data[RunKey(1, 'branin', 1)])
         self.assertEqual(len(runhistory.data), 6)
-        self.assertNotEqual(id_before, id_after)
+        self.assertEqual(id_before, id_after)
 
-        # load from non-empty runhistory, but existing run will not be
-        # overridden, but config_id will be re-used
+        # load from non-empty runhistory, in case of a duplicate the existing
+        # result will be kept and the new one silently discarded
         runhistory = RunHistory(aggregate_func=average_cost)
         configuration_space.seed(1)
         config = configuration_space.sample_configuration()
