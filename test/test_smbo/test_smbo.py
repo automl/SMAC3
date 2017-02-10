@@ -33,7 +33,7 @@ if sys.version_info[0] == 2:
     import mock
 else:
     from unittest import mock
-    
+
 
 class ConfigurationMock(object):
     def __init__(self, value=None):
@@ -48,12 +48,12 @@ class TestSMBO(unittest.TestCase):
     def setUp(self):
         self.scenario = Scenario({'cs': test_helpers.get_branin_config_space(),
                                   'run_obj': 'quality'})
-        
+
     def branin(self, x):
         y = (x[:, 1] - (5.1 / (4 * np.pi ** 2)) * x[:, 0] ** 2 + 5 * x[:, 0] / np.pi - 6) ** 2
         y += 10 * (1 - 1 / (8 * np.pi)) * np.cos(x[:, 0]) + 10
 
-        return y[:, np.newaxis]        
+        return y[:, np.newaxis]
 
     def test_init_only_scenario_runtime(self):
         self.scenario.run_obj = 'runtime'
@@ -140,8 +140,8 @@ class TestSMBO(unittest.TestCase):
             elif 'Local Search' in x[i].origin:
                 num_local_search += 1
         # number of local search configs has to be least 10
-        # since x can have duplicates 
-        # which can be associated with the local search 
+        # since x can have duplicates
+        # which can be associated with the local search
         self.assertGreaterEqual(num_local_search, 10)
         for i in range(1, 2020, 2):
             self.assertIsInstance(x[i], Configuration)
