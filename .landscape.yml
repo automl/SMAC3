@@ -1,0 +1,12 @@
+doc-warnings: true
+test-warnings: false
+strictness: veryhigh
+max-line-length: 100
+pep8:
+  full: true
+ignore-paths: 
+    - ci_scripts
+ignore-patterns:
+    - (^|/)docs(/|$)
+python-targets:
+    - 3
