@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Manual &#8212; SMAC 0.2.3 documentation</title>
+    <title>Manual &#8212; SMAC 0.2.4 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.2.3',
+        VERSION:     '0.2.4',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -68,7 +68,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           SMAC3</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.2.3</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.2.4</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -154,12 +154,12 @@ python ../../scripts/smac --scenario branin_scenario.txt
 <div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nv">algo</span> <span class="o">=</span> python branin.py
 <span class="nv">paramfile</span> <span class="o">=</span> branin_pcs.pcs
 <span class="nv">run_obj</span> <span class="o">=</span> quality
-<span class="nv">runcount_limit</span> <span class="o">=</span> 500
+<span class="nv">runcount_limit</span> <span class="o">=</span> <span class="m">500</span>
 </pre></div>
 </div>
 <p>The <strong>algo</strong> parameter specifies how <em>SMAC</em> can call the function or evaluate an algorithm that <em>SMAC</em> is optimizing. An algorithm call by <em>SMAC</em> will look like this:</p>
 <blockquote>
-<div><div class="highlight-bash"><div class="highlight"><pre><span></span>python branin.py <span class="m">0</span> <span class="m">0</span> 999999999.0 <span class="m">0</span> <span class="m">1148756733</span> -x1 -1.1338595629 -x2 13.8770222718
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>python branin.py <span class="m">0</span> <span class="m">0</span> <span class="m">999999999</span>.0 <span class="m">0</span> <span class="m">1148756733</span> -x1 -1.1338595629 -x2 <span class="m">13</span>.8770222718
 </pre></div>
 </div>
 <p>The first two parameter after the branin.py do not matter for this example since no instances are needed for the function optimization. For algorithm optimization, the first parameter holds the instance name on which the algorithm is evaluated and the second can provide extra information about the instance (rarely used).</p>
@@ -172,8 +172,8 @@ python ../../scripts/smac --scenario branin_scenario.txt
 </div></blockquote>
 <p>The <strong>paramfile</strong> parameter tells <em>SMAC</em> which Parameter Configuration File to use. This file contains a list of the algorithm&#8217;s parameters, their domains and default values as follows:</p>
 <blockquote>
-<div><div class="highlight-bash"><div class="highlight"><pre><span></span>x1 <span class="o">[</span>-5,10<span class="o">]</span> <span class="o">[</span>0<span class="o">]</span>
-x2 <span class="o">[</span>0,15<span class="o">]</span>  <span class="o">[</span>0<span class="o">]</span>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>x1 <span class="o">[</span>-5,10<span class="o">]</span> <span class="o">[</span><span class="m">0</span><span class="o">]</span>
+x2 <span class="o">[</span><span class="m">0</span>,15<span class="o">]</span>  <span class="o">[</span><span class="m">0</span><span class="o">]</span>
 </pre></div>
 </div>
 <p>x1 and x2 are both continuous parameters. x1 can take any real value in the range [-5, 10], x2 in the range [0, 15] and both have the default value 0.</p>
@@ -182,7 +182,7 @@ x2 <span class="o">[</span>0,15<span class="o">]</span>  <span class="o">[</span
 For <em>SMAC</em> to be able to interpret the results of an algorithm run, a wrapper should return the results of the algorithm run as follows:</p>
 <blockquote>
 <div><div class="highlight-bash"><div class="highlight"><pre><span></span>Result <span class="k">for</span> SMAC: &lt;STATUS&gt;, &lt;running time&gt;, &lt;run length&gt;, &lt;quality&gt;, &lt;seed&gt;, &lt;instance-specifics&gt;
-Result <span class="k">for</span> SMAC: SUCCESS, 0, 0, 48.948190, 1148756733
+Result <span class="k">for</span> SMAC: SUCCESS, <span class="m">0</span>, <span class="m">0</span>, <span class="m">48</span>.948190, <span class="m">1148756733</span>
 </pre></div>
 </div>
 <div class="line-block">
@@ -198,17 +198,17 @@ Result <span class="k">for</span> SMAC: SUCCESS, 0, 0, 48.948190, 1148756733
 <p>The <strong>runcount_limit</strong> specifies the maximum number of algorithm calls.</p>
 <p><em>SMAC</em> will terminate with the following output:</p>
 <blockquote>
-<div><div class="highlight-bash"><div class="highlight"><pre><span></span>INFO:intensifier:Updated estimated performance of incumbent on <span class="m">122</span> runs: 0.5063
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>INFO:intensifier:Updated estimated performance of incumbent on <span class="m">122</span> runs: <span class="m">0</span>.5063
 DEBUG:root:Remaining budget: inf <span class="o">(</span>wallclock<span class="o">)</span>, inf <span class="o">(</span>ta costs<span class="o">)</span>, -6.000000 <span class="o">(</span>target runs<span class="o">)</span>
 INFO:Stats:##########################################################
 INFO:Stats:Statistics:
-INFO:Stats:#Target algorithm runs: 506
-INFO:Stats:Used wallclock time: 44.00 sec
-INFO:Stats:Used target algorithm runtime: 0.00 sec
+INFO:Stats:#Target algorithm runs: <span class="m">506</span>
+INFO:Stats:Used wallclock time: <span class="m">44</span>.00 sec
+INFO:Stats:Used target algorithm runtime: <span class="m">0</span>.00 sec
 INFO:Stats:##########################################################
 INFO:SMAC:Final Incumbent: Configuration:
-  x1, Value: 9.556406137303922
-  x2, Value: 2.429138598022513
+  x1, Value: <span class="m">9</span>.556406137303922
+  x2, Value: <span class="m">2</span>.429138598022513
 </pre></div>
 </div>
 <p>Further a folder containing <em>SMACs</em> trajectory and the runhistory will be created in the branin folder.</p>
@@ -521,36 +521,36 @@ python ../../scripts/smac --scenario scenario.txt --verbose DEBUG
 <div class="highlight-bash"><div class="highlight"><pre><span></span>DEBUG:root:Remaining budget: -11.897580 <span class="o">(</span>wallclock<span class="o">)</span>, inf <span class="o">(</span>ta costs<span class="o">)</span>, inf <span class="o">(</span>target runs<span class="o">)</span>
 INFO:Stats:##########################################################
 INFO:Stats:Statistics:
-INFO:Stats:#Target algorithm runs: 28
-INFO:Stats:Used wallclock time: 21.90 sec
-INFO:Stats:Used target algorithm runtime: 15.72 sec
+INFO:Stats:#Target algorithm runs: <span class="m">28</span>
+INFO:Stats:Used wallclock time: <span class="m">21</span>.90 sec
+INFO:Stats:Used target algorithm runtime: <span class="m">15</span>.72 sec
 INFO:Stats:##########################################################
 INFO:SMAC:Final Incumbent: Configuration:
-  sp-clause-activity-inc, Value: 0.956325431976
-  sp-clause-decay, Value: 1.77371504106
-  sp-clause-del-heur, Value: 2
-  sp-first-restart, Value: 52
-  sp-learned-clause-sort-heur, Value: 13
-  sp-learned-clauses-inc, Value: 1.12196861555
-  sp-learned-size-factor, Value: 0.760013050806
-  sp-max-res-lit-inc, Value: 0.909236510144
-  sp-max-res-runs, Value: 3
-  sp-orig-clause-sort-heur, Value: 1
-  sp-phase-dec-heur, Value: 6
-  sp-rand-phase-dec-freq, Value: 0.0001
-  sp-rand-phase-scaling, Value: 0.825118640774
-  sp-rand-var-dec-freq, Value: 0.05
-  sp-rand-var-dec-scaling, Value: 1.05290899107
-  sp-res-cutoff-cls, Value: 5
-  sp-res-cutoff-lits, Value: 1378
-  sp-res-order-heur, Value: 6
-  sp-resolution, Value: 1
-  sp-restart-inc, Value: 1.84809841772
-  sp-update-dec-queue, Value: 1
-  sp-use-pure-literal-rule, Value: 0
-  sp-var-activity-inc, Value: 1.00507435273
-  sp-var-dec-heur, Value: 4
-  sp-variable-decay, Value: 1.91690063007
+  sp-clause-activity-inc, Value: <span class="m">0</span>.956325431976
+  sp-clause-decay, Value: <span class="m">1</span>.77371504106
+  sp-clause-del-heur, Value: <span class="m">2</span>
+  sp-first-restart, Value: <span class="m">52</span>
+  sp-learned-clause-sort-heur, Value: <span class="m">13</span>
+  sp-learned-clauses-inc, Value: <span class="m">1</span>.12196861555
+  sp-learned-size-factor, Value: <span class="m">0</span>.760013050806
+  sp-max-res-lit-inc, Value: <span class="m">0</span>.909236510144
+  sp-max-res-runs, Value: <span class="m">3</span>
+  sp-orig-clause-sort-heur, Value: <span class="m">1</span>
+  sp-phase-dec-heur, Value: <span class="m">6</span>
+  sp-rand-phase-dec-freq, Value: <span class="m">0</span>.0001
+  sp-rand-phase-scaling, Value: <span class="m">0</span>.825118640774
+  sp-rand-var-dec-freq, Value: <span class="m">0</span>.05
+  sp-rand-var-dec-scaling, Value: <span class="m">1</span>.05290899107
+  sp-res-cutoff-cls, Value: <span class="m">5</span>
+  sp-res-cutoff-lits, Value: <span class="m">1378</span>
+  sp-res-order-heur, Value: <span class="m">6</span>
+  sp-resolution, Value: <span class="m">1</span>
+  sp-restart-inc, Value: <span class="m">1</span>.84809841772
+  sp-update-dec-queue, Value: <span class="m">1</span>
+  sp-use-pure-literal-rule, Value: <span class="m">0</span>
+  sp-var-activity-inc, Value: <span class="m">1</span>.00507435273
+  sp-var-dec-heur, Value: <span class="m">4</span>
+  sp-variable-decay, Value: <span class="m">1</span>.91690063007
 </pre></div>
 </div>
 <p>The first line shows why <em>SMAC</em> terminated. The wallclock time-budget is exhausted. The target algorithm runtime (ta cost) and target algorithm runs were not exhausted since the budget for these were not specified and thus set to the default, i.e., infinity.</p>
@@ -583,7 +583,7 @@ INFO:SMAC:Final Incumbent: Configuration:
     </p>
     <p>
         &copy; Copyright 2015-2017, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.<br/>
     </p>
   </div>
 </footer>
