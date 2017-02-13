@@ -1,9 +1,9 @@
 import logging
 import time
-import random
 import numpy as np
 
-from smac.configspace import get_one_exchange_neighbourhood
+from smac.configspace import get_one_exchange_neighbourhood, \
+    impute_inactive_hyperparameters
 
 __author__ = "Aaron Klein, Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -82,8 +82,9 @@ class LocalSearch(object):
 
             local_search_steps += 1
             if local_search_steps % 1000 == 0:
-                self.logger.warn("Local search took already %d iterations." \
-                "Is it maybe stuck in a infinite loop?", local_search_steps)
+                self.logger.warn("Local search took already %d iterations."
+                                 "Is it maybe stuck in a infinite loop?",
+                                 local_search_steps)
 
             # Get neighborhood of the current incumbent
             # by randomly drawing configurations
@@ -96,8 +97,7 @@ class LocalSearch(object):
 
             for neighbor in all_neighbors:
                 s_time = time.time()
-                neighbor_array_ = neighbor.get_array()
-                neighbor_array_[~np.isfinite(neighbor_array_)] = -1
+                neighbor_array_ = impute_inactive_hyperparameters([neighbor])
 
                 acq_val = self.acquisition_function(neighbor_array_, *args)
 

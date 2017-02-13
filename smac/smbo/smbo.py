@@ -18,7 +18,7 @@ from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.stats.stats import Stats
 from smac.initial_design.initial_design import InitialDesign
 from smac.scenario.scenario import Scenario
-from smac.configspace import Configuration
+from smac.configspace import Configuration, impute_inactive_hyperparameters
 
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
@@ -303,9 +303,7 @@ class SMBO(BaseSolver):
 
         """
 
-        config_array = np.array([x.get_array() for x in configs], dtype=np.float64)
-        # This imputes inactive values!
-        config_array[~np.isfinite(config_array)] = -1
+        config_array = impute_inactive_hyperparameters(configs)
         acq_values = self.acquisition_func(config_array)
 
         # From here
