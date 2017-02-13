@@ -3,7 +3,7 @@ import time
 import random
 import numpy as np
 
-from smac.configspace import impute_inactive_values, get_one_exchange_neighbourhood, Configuration
+from smac.configspace import get_one_exchange_neighbourhood
 
 __author__ = "Aaron Klein, Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -71,10 +71,9 @@ class LocalSearch(object):
         """
         incumbent = start_point
         # Compute the acquisition value of the incumbent
-        incumbent_ = impute_inactive_values(incumbent)
-        acq_val_incumbent = self.acquisition_function(
-                                            incumbent_.get_array(),
-                                            *args)
+        incumbent_array = incumbent.get_array()
+        incumbent_array[~np.isfinite(incumbent_array)] = -1
+        acq_val_incumbent = self.acquisition_function(incumbent_array, *args)
 
         local_search_steps = 0
         neighbors_looked_at = 0
@@ -96,10 +95,10 @@ class LocalSearch(object):
 
             for neighbor in all_neighbors:
                 s_time = time.time()
-                neighbor_ = impute_inactive_values(neighbor)
-                n_array = neighbor_.get_array()
+                neighbor_array_ = neighbor.get_array()
+                neighbor_array_[~np.isfinite(neighbor_array_)] = -1
 
-                acq_val = self.acquisition_function(n_array, *args)
+                acq_val = self.acquisition_function(neighbor_array_, *args)
 
                 neighbors_looked_at += 1
 
