@@ -71,9 +71,9 @@ class LocalSearch(object):
         """
         incumbent = start_point
         # Compute the acquisition value of the incumbent
-        incumbent_ = incumbent.get_array()
-        incumbent_[~np.isfinite(incumbent_)] = -1
-        acq_val_incumbent = self.acquisition_function(incumbent_, *args)
+        incumbent_array = incumbent.get_array()
+        incumbent_array[~np.isfinite(incumbent_array)] = -1
+        acq_val_incumbent = self.acquisition_function(incumbent_array, *args)
 
         local_search_steps = 0
         neighbors_looked_at = 0
@@ -95,10 +95,10 @@ class LocalSearch(object):
 
             for neighbor in all_neighbors:
                 s_time = time.time()
-                neighbor_ = neighbor.get_array()
-                neighbor_[~np.isfinite(neighbor_)] = -1
+                neighbor_array_ = neighbor.get_array()
+                neighbor_array_[~np.isfinite(neighbor_array_)] = -1
 
-                acq_val = self.acquisition_function(neighbor_, *args)
+                acq_val = self.acquisition_function(neighbor_array_, *args)
 
                 neighbors_looked_at += 1
 
