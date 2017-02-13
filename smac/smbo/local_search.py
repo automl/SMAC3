@@ -89,9 +89,8 @@ class LocalSearch(object):
             # by randomly drawing configurations
             changed_inc = False
 
-            all_neighbors = get_one_exchange_neighbourhood(incumbent,
-                                                    seed=self.rng.seed())
-            self.rng.shuffle(all_neighbors)
+            all_neighbors = get_one_exchange_neighbourhood(
+                incumbent, seed=self.rng.seed())
 
             for neighbor in all_neighbors:
                 s_time = time.time()
