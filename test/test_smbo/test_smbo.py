@@ -211,7 +211,7 @@ class TestSMBO(unittest.TestCase):
         self.assertEqual(len(x), 1)
         self.assertIsInstance(x[0], Configuration)
 
-    @mock.patch('ConfigSpace.util.impute_inactive_values')
+    @mock.patch('smac.smbo.smbo.convert_configurations_to_array')
     @mock.patch.object(EI, '__call__')
     @mock.patch.object(ConfigurationSpace, 'sample_configuration')
     def test_get_next_by_random_search_sorted(self,
@@ -221,7 +221,7 @@ class TestSMBO(unittest.TestCase):
         values = (10, 1, 9, 2, 8, 3, 7, 4, 6, 5)
         patch_sample.return_value = [ConfigurationMock(i) for i in values]
         patch_ei.return_value = np.array([[_] for _ in values], dtype=float)
-        patch_impute.side_effect = lambda x: x
+        patch_impute.side_effect = lambda l: values
         smbo = SMAC(self.scenario, rng=1).solver
         rval = smbo._get_next_by_random_search(10, True)
         self.assertEqual(len(rval), 10)
@@ -234,8 +234,7 @@ class TestSMBO(unittest.TestCase):
         # Check that config.get_array works as desired and imputation is used
         #  in between
         np.testing.assert_allclose(patch_ei.call_args[0][0],
-                                   np.array(values, dtype=float)
-                                   .reshape((-1, 1)))
+                                   np.array(values, dtype=float))
 
     @mock.patch.object(ConfigurationSpace, 'sample_configuration')
     def test_get_next_by_random_search(self, patch):
