@@ -262,7 +262,7 @@ class Scenario(object):
         if self.overall_obj[:3] in ["PAR", "par"]:
             self.par_factor = int(self.overall_obj[3:])
         elif self.overall_obj[:4] in ["mean", "MEAN"]:
-            self.par_factor = self.par_factor = int(self.overall_obj[4:])
+            self.par_factor = int(self.overall_obj[4:])
         else:
             self.par_factor = 1
 
