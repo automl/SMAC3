@@ -6,6 +6,20 @@ from smac.configspace import Configuration
 
 
 def impute_inactive_hyperparameters(configs: List[Configuration]) -> np.ndarray:
+    """Impute inactive hyperparameters in configurations with their default.
+
+    Necessary to apply an EPM to the data.
+
+    Parameters
+    ----------
+    configs : List[Configuration]
+        List of configuration objects.
+
+    Returns
+    np.ndarray
+        Array with configuration hyperparameters. Inactive values are imputed
+        with their default value.
+    """
     configs_array = np.array([config.get_array() for config in configs],
                              dtype=np.float64)
     configuration_space = configs[0].configuration_space
