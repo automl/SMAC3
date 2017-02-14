@@ -282,7 +282,7 @@ class RunHistory(object):
             self.add(config=self.ids_config[int(k[0])],
                      cost=float(v[0]),
                      time=float(v[1]),
-                     status=v[2],
+                     status=StatusType(v[2]),
                      instance_id=k[1],
                      seed=int(k[2]),
                      additional_info=v[3])
