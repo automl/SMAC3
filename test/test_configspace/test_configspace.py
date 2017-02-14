@@ -39,7 +39,7 @@ class ConfigSpaceTest(unittest.TestCase):
         cs.add_condition(EqualsCondition(b, a, 1))
         cs.seed(1)
         configs = cs.sample_configuration(size=100)
-        config_array = smac.configspace.impute_inactive_hyperparameters(configs)
+        config_array = smac.configspace.convert_configurations_to_array(configs)
         for line in config_array:
             if line[0] == 0:
                 self.assertEqual(line[1], 1)

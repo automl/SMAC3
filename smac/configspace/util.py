@@ -5,7 +5,7 @@ import numpy as np
 from smac.configspace import Configuration
 
 
-def impute_inactive_hyperparameters(configs: List[Configuration]) -> np.ndarray:
+def convert_configurations_to_array(configs: List[Configuration]) -> np.ndarray:
     """Impute inactive hyperparameters in configurations with their default.
 
     Necessary to apply an EPM to the data.

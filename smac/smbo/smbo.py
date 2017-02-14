@@ -18,7 +18,7 @@ from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.stats.stats import Stats
 from smac.initial_design.initial_design import InitialDesign
 from smac.scenario.scenario import Scenario
-from smac.configspace import Configuration, impute_inactive_hyperparameters
+from smac.configspace import Configuration, convert_configurations_to_array
 
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
@@ -303,7 +303,7 @@ class SMBO(BaseSolver):
 
         """
 
-        config_array = impute_inactive_hyperparameters(configs)
+        config_array = convert_configurations_to_array(configs)
         acq_values = self.acquisition_func(config_array)
 
         # From here

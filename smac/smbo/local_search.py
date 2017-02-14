@@ -3,7 +3,7 @@ import time
 import numpy as np
 
 from smac.configspace import get_one_exchange_neighbourhood, \
-    impute_inactive_hyperparameters
+    convert_configurations_to_array
 
 __author__ = "Aaron Klein, Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -97,7 +97,7 @@ class LocalSearch(object):
 
             for neighbor in all_neighbors:
                 s_time = time.time()
-                neighbor_array_ = impute_inactive_hyperparameters([neighbor])
+                neighbor_array_ = convert_configurations_to_array([neighbor])
 
                 acq_val = self.acquisition_function(neighbor_array_, *args)
 

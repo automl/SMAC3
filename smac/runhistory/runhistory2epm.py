@@ -8,7 +8,7 @@ import numpy as np
 
 from smac.tae.execute_ta_run import StatusType
 from smac.runhistory.runhistory import RunHistory, RunKey, RunValue
-from smac.configspace import impute_inactive_hyperparameters
+from smac.configspace import convert_configurations_to_array
 import smac.epm.base_imputor
 from smac.utils import constants
 
@@ -296,12 +296,12 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
         for row, (key, run) in enumerate(run_dict.items()):
             # Scaling is automatically done in configSpace
             conf = runhistory.ids_config[key.config_id]
-            conf_array = impute_inactive_hyperparameters([conf])[0]
+            conf_vector = convert_configurations_to_array([conf])[0]
             if self.n_feats:
                 feats = self.instance_features[key.instance_id]
-                X[row, :] = np.hstack((conf_array, feats))
+                X[row, :] = np.hstack((conf_vector, feats))
             else:
-                X[row, :] = conf_array
+                X[row, :] = conf_vector
             # run_array[row, -1] = instances[row]
             if self.scenario.run_obj == "runtime":
                 if run.status != StatusType.SUCCESS:
