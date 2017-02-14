@@ -108,10 +108,8 @@ class RandomForestWithInstances(AbstractEPM):
         """
 
         self.X = X
-        self.y = y
-
-        y = y.flatten()
-        data = pyrfr.regression.numpy_data_container(self.X, y, self.types)
+        self.y = y.flatten()
+        data = pyrfr.regression.numpy_data_container(self.X, self.y, self.types)
 
         self.rf.fit(data)
         return self

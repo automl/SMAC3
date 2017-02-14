@@ -7,6 +7,9 @@ import os
 import unittest
 
 from ConfigSpace.io import pcs
+from ConfigSpace.hyperparameters import CategoricalHyperparameter
+from ConfigSpace.conditions import EqualsCondition
+import smac.configspace
 
 
 class ConfigSpaceTest(unittest.TestCase):
@@ -25,6 +28,22 @@ class ConfigSpaceTest(unittest.TestCase):
         for i in range(100):
             config = cs.sample_configuration()
             print(config.get_dictionary())
+
+
+    def test_impute_inactive_hyperparameters(self):
+        cs = smac.configspace.ConfigurationSpace()
+        a = cs.add_hyperparameter(CategoricalHyperparameter('a', [0, 1],
+                                                            default=0))
+        b = cs.add_hyperparameter(CategoricalHyperparameter('b', [0, 1],
+                                                            default=1))
+        cs.add_condition(EqualsCondition(b, a, 1))
+        cs.seed(1)
+        configs = cs.sample_configuration(size=100)
+        config_array = smac.configspace.convert_configurations_to_array(configs)
+        for line in config_array:
+            if line[0] == 0:
+                self.assertEqual(line[1], 1)
+
 
 
 if __name__ == "__main__":

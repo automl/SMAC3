@@ -132,7 +132,7 @@ class ImputorTest(unittest.TestCase):
                                                  cutoff=cutoff,
                                                  threshold=cutoff*10,
                                                  change_threshold=0.01,
-                                                 max_iter=10,
+                                                 max_iter=5,
                                                  model=self.model)
 
             imp_y = imputor.impute(censored_X=cen_X, censored_y=cen_y,

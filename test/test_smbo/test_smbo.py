@@ -107,6 +107,7 @@ class TestSMBO(unittest.TestCase):
         smbo.runhistory = RunHistory(aggregate_func=average_cost)
         X = self.scenario.cs.sample_configuration().get_array()[None, :]
         smbo.incumbent = self.scenario.cs.sample_configuration()
+        smbo.runhistory.add(smbo.incumbent, 10, 10, 1)
 
         Y = self.branin(X)
         x = smbo.choose_next(X, Y)[0].get_array()
@@ -119,6 +120,45 @@ class TestSMBO(unittest.TestCase):
         smbo = SMAC(self.scenario, rng=1).solver
         smbo.incumbent = self.scenario.cs.sample_configuration()
         smbo.runhistory = RunHistory(aggregate_func=average_cost)
+        smbo.runhistory.add(smbo.incumbent, 10, 10, 1)
+        smbo.model = mock.Mock(spec=RandomForestWithInstances)
+        smbo.acquisition_func._compute = mock.Mock(spec=RandomForestWithInstances)
+        smbo.acquisition_func._compute.side_effect = side_effect
+
+        X = smbo.rng.rand(10, 2)
+        Y = smbo.rng.rand(10, 1)
+
+        x = smbo.choose_next(X, Y)
+
+        self.assertEqual(smbo.model.train.call_count, 1)
+        self.assertEqual(len(x), 2002)
+        num_random_search = 0
+        num_local_search = 0
+        for i in range(0, 2002, 2):
+            # print(x[i].origin)
+            self.assertIsInstance(x[i], Configuration)
+            if 'Random Search (sorted)' in x[i].origin:
+                num_random_search += 1
+            elif 'Local Search' in x[i].origin:
+                num_local_search += 1
+        # number of local search configs has to be least 10
+        # since x can have duplicates
+        # which can be associated with the local search
+        self.assertGreaterEqual(num_local_search, 1)
+        for i in range(1, 2002, 2):
+            self.assertIsInstance(x[i], Configuration)
+            self.assertEqual(x[i].origin, 'Random Search')
+
+    def test_choose_next_3(self):
+        def side_effect(X, derivative):
+            return np.mean(X, axis=1).reshape((-1, 1))
+
+        smbo = SMAC(self.scenario, rng=1).solver
+        smbo.incumbent = self.scenario.cs.sample_configuration()
+        previous_configs = [smbo.incumbent] + [self.scenario.cs.sample_configuration() for i in range(0, 20)]
+        smbo.runhistory = RunHistory(aggregate_func=average_cost)
+        for i in range(0, len(previous_configs)):
+            smbo.runhistory.add(previous_configs[i], i, 10, 1)
         smbo.model = mock.Mock(spec=RandomForestWithInstances)
         smbo.acquisition_func._compute = mock.Mock(spec=RandomForestWithInstances)
         smbo.acquisition_func._compute.side_effect = side_effect
@@ -132,8 +172,8 @@ class TestSMBO(unittest.TestCase):
         self.assertEqual(len(x), 2020)
         num_random_search = 0
         num_local_search = 0
-        for i in range(0, 2020,2):
-            #print(x[i].origin)
+        for i in range(0, 2020, 2):
+            # print(x[i].origin)
             self.assertIsInstance(x[i], Configuration)
             if 'Random Search (sorted)' in x[i].origin:
                 num_random_search += 1
@@ -171,7 +211,7 @@ class TestSMBO(unittest.TestCase):
         self.assertEqual(len(x), 1)
         self.assertIsInstance(x[0], Configuration)
 
-    @mock.patch('ConfigSpace.util.impute_inactive_values')
+    @mock.patch('smac.smbo.smbo.convert_configurations_to_array')
     @mock.patch.object(EI, '__call__')
     @mock.patch.object(ConfigurationSpace, 'sample_configuration')
     def test_get_next_by_random_search_sorted(self,
@@ -181,7 +221,7 @@ class TestSMBO(unittest.TestCase):
         values = (10, 1, 9, 2, 8, 3, 7, 4, 6, 5)
         patch_sample.return_value = [ConfigurationMock(i) for i in values]
         patch_ei.return_value = np.array([[_] for _ in values], dtype=float)
-        patch_impute.side_effect = lambda x: x
+        patch_impute.side_effect = lambda l: values
         smbo = SMAC(self.scenario, rng=1).solver
         rval = smbo._get_next_by_random_search(10, True)
         self.assertEqual(len(rval), 10)
@@ -194,8 +234,7 @@ class TestSMBO(unittest.TestCase):
         # Check that config.get_array works as desired and imputation is used
         #  in between
         np.testing.assert_allclose(patch_ei.call_args[0][0],
-                                   np.array(values, dtype=float)
-                                   .reshape((-1, 1)))
+                                   np.array(values, dtype=float))
 
     @mock.patch.object(ConfigurationSpace, 'sample_configuration')
     def test_get_next_by_random_search(self, patch):

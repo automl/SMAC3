@@ -29,8 +29,7 @@ class RunhistoryTest(unittest.TestCase):
         '''
         rh = RunHistory(aggregate_func=average_cost)
         cs = get_config_space()
-        config = Configuration(cs,
-                               values={'a': 1, 'b': 2})
+        config = Configuration(cs, values={'a': 1, 'b': 2})
 
         self.assertTrue(rh.empty())
 
@@ -54,6 +53,21 @@ class RunhistoryTest(unittest.TestCase):
         with open(name, 'rb') as fh:
             loaded_rh = pickle.load(fh)
         self.assertEqual(loaded_rh.data, rh.data)
+
+    def test_add_multiple_times(self):
+        rh = RunHistory(aggregate_func=average_cost)
+        cs = get_config_space()
+        config = Configuration(cs, values={'a': 1, 'b': 2})
+
+        for i in range(5):
+            rh.add(config=config, cost=i + 1, time=i + 1,
+                   status=StatusType.SUCCESS, instance_id=None,
+                   seed=12345, additional_info=None)
+
+        self.assertEqual(len(rh.data), 1)
+        self.assertEqual(len(rh.get_runs_for_config(config)), 1)
+        self.assertEqual(len(rh._configid_to_inst_seed[1]), 1)
+        self.assertEqual(list(rh.data.values())[0].cost, 1)
 
     def test_get_config_runs(self):
         '''
