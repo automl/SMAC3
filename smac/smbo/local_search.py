@@ -71,8 +71,7 @@ class LocalSearch(object):
         """
         incumbent = start_point
         # Compute the acquisition value of the incumbent
-        incumbent_array = incumbent.get_array()
-        incumbent_array[~np.isfinite(incumbent_array)] = -1
+        incumbent_array = convert_configurations_to_array([incumbent])
         acq_val_incumbent = self.acquisition_function(incumbent_array, *args)
 
         local_search_steps = 0
