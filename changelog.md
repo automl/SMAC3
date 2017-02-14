@@ -1,3 +1,11 @@
+# 0.3
+
+* Major speed improvements when sampling new configurations:
+    * Improved conditional hyperparameter imputation (PR #176)
+    * Faster generation of the one exchange neighborhood (PR #174)
+* FIX #171 potential bug with pSMAC
+* FIX #175 backwards compability for reading runhistory files
+
 # 0.2.4
 
 * CI only check code quality for python3
