@@ -1,14 +1,11 @@
 import itertools
 import logging
 import numpy as np
-import os
 import random
-import sys
 import time
 import typing
 import math
 
-import ConfigSpace.util
 
 from smac.smbo.acquisition import AbstractAcquisitionFunction
 from smac.smbo.base_solver import BaseSolver
@@ -21,9 +18,8 @@ from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.stats.stats import Stats
 from smac.initial_design.initial_design import InitialDesign
 from smac.scenario.scenario import Scenario
-from smac.configspace import Configuration
+from smac.configspace import Configuration, convert_configurations_to_array
 
-from smac.epm.rfr_imputator import RFRImputator
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -307,13 +303,8 @@ class SMBO(BaseSolver):
 
         """
 
-        imputed_configs = map(ConfigSpace.util.impute_inactive_values,
-                              configs)
-        imputed_configs = [x.get_array()
-                           for x in imputed_configs]
-        imputed_configs = np.array(imputed_configs,
-                                   dtype=np.float64)
-        acq_values = self.acquisition_func(imputed_configs)
+        config_array = convert_configurations_to_array(configs)
+        acq_values = self.acquisition_func(config_array)
 
         # From here
         # http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values
@@ -323,5 +314,4 @@ class SMBO(BaseSolver):
 
         # Cannot use zip here because the indices array cannot index the
         # rand_configs list, because the second is a pure python list
-        return [(acq_values[ind][0], configs[ind])
-                for ind in indices[::-1]]
+        return [(acq_values[ind][0], configs[ind]) for ind in indices[::-1]]
