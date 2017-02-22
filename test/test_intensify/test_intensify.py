@@ -51,6 +51,40 @@ class TestIntensify(unittest.TestCase):
 
         self.logger = logging.getLogger("Test")
 
+    def test_compare_configs_no_joint_set(self):
+        intensifier = Intensifier(
+            tae_runner=None, stats=self.stats,
+            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
+            rng=None, instances=[1])
+
+        for i in range(2):
+            self.rh.add(config=self.config1, cost=2, time=2,
+                        status=StatusType.SUCCESS, instance_id=1,
+                        seed=i, additional_info=None)
+
+        for i in range(2, 5):
+            self.rh.add(config=self.config2, cost=1, time=1,
+                        status=StatusType.SUCCESS, instance_id=1,
+                        seed=i, additional_info=None)
+
+        # The sets for the incumbent are completely disjoint.
+        conf = intensifier._compare_configs(incumbent=self.config1,
+                                            challenger=self.config2,
+                                            run_history=self.rh,
+                                            aggregate_func=average_cost)
+        self.assertIsNone(conf)
+
+        # The incumbent has still one instance-seed pair left on which the
+        # challenger was not run yet.
+        self.rh.add(config=self.config2, cost=1, time=1,
+                    status=StatusType.SUCCESS, instance_id=1,
+                    seed=1, additional_info=None)
+        conf = intensifier._compare_configs(incumbent=self.config1,
+                                            challenger=self.config2,
+                                            run_history=self.rh,
+                                            aggregate_func=average_cost)
+        self.assertIsNone(conf)
+
     def test_compare_configs_chall(self):
         '''
             challenger is better but has not enough runs
@@ -169,7 +203,7 @@ class TestIntensify(unittest.TestCase):
 
         self.assertEqual(inc, self.config2)
 
-    def test_race_challenger(self):
+    def test_race_challenger_2(self):
         '''
            test _race_challenger with adaptive capping
         '''
@@ -391,6 +425,4 @@ class TestIntensify(unittest.TestCase):
                           inc_sum_cost=inc_sum_cost)
         # scenario cutoff
         self.assertEqual(cutoff, 5)
-        
-        
         

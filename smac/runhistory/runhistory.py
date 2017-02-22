@@ -99,17 +99,21 @@ class RunHistory(object):
 
         k = RunKey(config_id, instance_id, seed)
         v = RunValue(cost, time, status, additional_info)
-        self.data[k] = v
 
-        if not external_data:
-            # also add to fast data structure
-            is_k = InstSeedKey(instance_id, seed)
-            self._configid_to_inst_seed[
-                config_id] = self._configid_to_inst_seed.get(config_id, [])
-            self._configid_to_inst_seed[config_id].append(is_k)
+        # Each runkey is supposed to be used only once. Repeated tries to add
+        # the same runkey will be ignored silently.
+        if self.data.get(k) is None:
+            self.data[k] = v
 
-        # assumes an average across runs as cost function
-        self.incremental_update_cost(config, cost)
+            if not external_data:
+                # also add to fast data structure
+                is_k = InstSeedKey(instance_id, seed)
+                self._configid_to_inst_seed[
+                    config_id] = self._configid_to_inst_seed.get(config_id, [])
+                self._configid_to_inst_seed[config_id].append(is_k)
+
+            # assumes an average across runs as cost function
+            self.incremental_update_cost(config, cost)
 
     def update_cost(self, config):
         '''
@@ -191,11 +195,17 @@ class RunHistory(object):
             list: tuples of instance, seed
         """
         config_id = self.config_ids.get(config)
-        is_list = self._configid_to_inst_seed.get(config_id)
-        if is_list is None:
-            return []
-        else:
-            return is_list
+        return self._configid_to_inst_seed.get(config_id, [])
+
+    def get_all_configs(self):
+        """ Return all configurations in this RunHistory object
+
+        Returns
+        -------
+            list: parameter configurations
+
+        """
+        return list(self.config_ids.keys())
 
     def empty(self):
         """
@@ -272,7 +282,7 @@ class RunHistory(object):
             self.add(config=self.ids_config[int(k[0])],
                      cost=float(v[0]),
                      time=float(v[1]),
-                     status=v[2],
+                     status=StatusType(v[2]),
                      instance_id=k[1],
                      seed=int(k[2]),
                      additional_info=v[3])

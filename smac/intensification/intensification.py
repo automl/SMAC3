@@ -53,11 +53,13 @@ class Intensifier(object):
         run_obj_time: bool
             whether the run objective is runtime or not (if true, apply adaptive capping)
         run_limit : int
-            maximum number of runs
+            Maximum number of target algorithm runs per call to intensify.
         maxR : int
-            maximum number of runs per config
+            Maximum number of runs per config (summed over all calls to
+            intensifiy).
         minR : int
-            minimum number of run per config
+            Minimum number of run per config (summed over all calls to
+            intensify).
         '''
         self.stats = stats
         self.traj_logger = traj_logger
@@ -414,12 +416,13 @@ class Intensifier(object):
 
         inc_runs = run_history.get_runs_for_config(incumbent)
         chall_runs = run_history.get_runs_for_config(challenger)
+        to_compare_runs = set(inc_runs).intersection(chall_runs)
 
         # performance on challenger runs
         chal_perf = aggregate_func(
-            challenger, run_history, chall_runs)
+            challenger, run_history, to_compare_runs)
         inc_perf = aggregate_func(
-            incumbent, run_history, chall_runs)
+            incumbent, run_history, to_compare_runs)
 
         # Line 15
         if chal_perf > inc_perf and len(chall_runs) >= self.minR:
@@ -429,9 +432,9 @@ class Intensifier(object):
             return incumbent
 
         # Line 16
-        if len(chall_runs) >= len(inc_runs):
+        if not set(inc_runs) - set(chall_runs):
             # Challenger is as good as incumbent
-            # and has the same number of runs
+            # and has at least the same runs as inc
             # -> change incumbent
 
             n_samples = len(chall_runs)
