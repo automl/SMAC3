@@ -52,11 +52,13 @@ class Intensifier(object):
         run_obj_time: bool
             whether the run objective is runtime or not (if true, apply adaptive capping)
         run_limit : int
-            maximum number of runs
+            Maximum number of target algorithm runs per call to intensify.
         maxR : int
-            maximum number of runs per config
+            Maximum number of runs per config (summed over all calls to
+            intensifiy).
         minR : int
-            minimum number of run per config
+            Minimum number of run per config (summed over all calls to
+            intensify).
         '''
         self.stats = stats
         self.traj_logger = traj_logger
