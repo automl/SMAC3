@@ -4,6 +4,7 @@ Created on Mar 29, 2015
 @author: Andre Biedenkapp
 '''
 from collections import defaultdict
+import sys
 import os
 import logging
 import unittest
@@ -21,7 +22,12 @@ from smac.utils.merge_foreign_data import merge_foreign_data
 from smac.runhistory.runhistory import RunHistory
 from smac.smbo.objective import average_cost
 from smac.tae.execute_ta_run import StatusType
+from smac.utils.scenario_options import scenario_options
 
+if sys.version_info[0] == 2:
+    import mock
+else:
+    from unittest import mock
 
 class InitFreeScenario(Scenario):
 
@@ -58,7 +64,9 @@ class ScenarioTest(unittest.TestCase):
                                    'test_instance_file':
                                        'test/test_files/scenario_test/test.txt',
                                    'feature_file':
-                                       'test/test_files/scenario_test/features.txt'}
+                                       'test/test_files/scenario_test/features.txt',
+                                   'output_dir' :
+                                       'test/test_files/scenario_test/tmp'}
 
     def tearDown(self):
         os.chdir(self.current_dir)
@@ -208,6 +216,30 @@ class ScenarioTest(unittest.TestCase):
         self.assertRaisesRegex(ValueError,
                                "Argument initial_incumbent can only take a "
                                "value in ['DEFAULT, 'RANDOM'] but is Default")
+
+    def test_write(self):
+        """ Test whether a reloaded scenario still holds all the necessary
+        information. The "pcs_fn" or "paramfile" is changed, so instead the
+        resulting ConfigSpace itself is checked. """
+        scenario = Scenario(self.test_scenario_dict)
+        path = os.path.join(scenario.output_dir, 'scenario.txt')
+        scenario_reloaded = Scenario(path)
+        for o in scenario_options:
+            k = scenario.options_ext2int[o]
+            if k == "pcs_fn": continue  # Scenarios write-fn changes this value
+            self.assertEqual(scenario.__getstate__()[k],
+                             scenario_reloaded.__getstate__()[k])
+        # Test if config space has been correctly reloaded:
+	# Using repr because of cs-bug (https://github.com/automl/ConfigSpace/issues/25)
+        self.assertEqual(repr(scenario.cs), repr(scenario_reloaded.cs))
+
+    @mock.patch.object(os, 'makedirs')
+    @mock.patch.object(os.path, 'isdir')
+    def test_write_except(self, patch_isdir, patch_mkdirs):
+        patch_isdir.return_value = False
+        patch_mkdirs.side_effect = OSError()
+        with self.assertRaises(OSError) as cm:
+            Scenario(self.test_scenario_dict)
 
 
 if __name__ == "__main__":

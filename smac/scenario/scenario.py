@@ -12,6 +12,7 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
 
 from smac.utils.io.input_reader import InputReader
+from smac.utils.scenario_options import scenario_options
 from smac.configspace import pcs
 
 __author__ = "Marius Lindauer, Matthias Feurer"
@@ -66,13 +67,18 @@ class Scenario(object):
         self._groups = defaultdict(set)
         self._add_arguments()
 
+        # Mapping external to internal aliases
+        self.options_ext2int = {}
+        for o in scenario_options:
+            dest = self._arguments[o]['dest']
+            if dest: self.options_ext2int[o] = dest
+            else:    self.options_ext2int[o] = o
         # Parse arguments
         parsed_arguments = {}
         for key, value in self._arguments.items():
             arg_name, arg_value = self._parse_argument(key, scenario, **value)
             parsed_arguments[arg_name] = arg_value
 
-        
         if len(scenario) != 0:
             raise ValueError('Could not parse the following arguments: %s' %
                              str(list(scenario.keys())))
@@ -92,6 +98,9 @@ class Scenario(object):
             setattr(self, arg_name, arg_value)
 
         self._transform_arguments()
+
+        if self.output_dir:
+            self._write()
 
     def add_argument(self, name, help, callback=None, default=None,
                      dest=None, required=False, mutually_exclusive_group=None,
@@ -208,6 +217,9 @@ class Scenario(object):
 
     def _add_arguments(self):
         # Add allowed arguments
+        # If you add an argument that should be set through the
+        # scenario.txt-file, please make sure to add it to
+        # smac/utils/scenario_options
         self.add_argument(name='algo', help=None, dest='ta',
                           callback=shlex.split)
         self.add_argument(name='execdir', default='.', help=None)
@@ -344,6 +356,57 @@ class Scenario(object):
             self.logger.debug("Deactivate output directory.")
         else:
             self.logger.info("Output to %s" % (self.output_dir))
+
+    def _write(self):
+        """Write scenario to file in a format that can be easily retrieved using
+        the input_reader. Will overwrite if file already exists.
+
+        Sideeffect: creates output-directory if it doesn't exist.
+        """
+        self.logger.debug("Writing scenario-file to {}.".format(self.output_dir))
+        # Reverse mapping of option-names to internal -> external
+        options_int2ext = {v: k for k, v in self.options_ext2int.items()}
+
+        # We need to modify certain values when writing them
+        def transform_value(key, value):
+            ''' returns the correct value to write into a file '''
+            if key == 'pcs_fn':
+                # Write PCS to output_dir and change filepath
+                if value != None:
+                    old_path = os.path.splitext(os.path.split(value)[1])[0]
+                else:
+                    old_path = "configspace"
+                new_path = os.path.join(self.output_dir, old_path+".pcs")
+                with open(new_path, "w") as f:
+                    print(value)
+                    if value != None:
+                        f.write("# This is a copied version of the pcs-file.\n"
+                                "# The old file was located in: "
+                                "{}.\n".format(value))
+                    f.write(pcs.write(self.cs))
+                return new_path
+            # Except for pcs_fn, None should stay None
+            elif value is None: return value
+            elif key == 'ta':   return " ".join(value)
+            else:               return value
+
+        # Create output-dir if necessary
+        if not os.path.isdir(self.output_dir):
+            self.logger.debug("Output directory does not exist! Will be created.")
+            try:
+                os.makedirs(self.output_dir)
+            except OSError:
+                raise OSError("Could not make output directory: "
+                              "{}.".format(self.output_dir))
+
+        # Write all options into output_dir/scenario.txt
+        path = os.path.join(self.output_dir, "scenario.txt")
+        d = self.__getstate__()
+        with open(path, 'w') as f:
+            for key in options_int2ext:
+                new_value = transform_value(key, d[key])
+                if new_value is not None:
+                    f.write("{} = {}\n".format(options_int2ext[key], new_value))
 
     def __getstate__(self):
         d = dict(self.__dict__)
