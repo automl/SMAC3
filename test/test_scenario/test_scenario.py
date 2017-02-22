@@ -66,7 +66,7 @@ class ScenarioTest(unittest.TestCase):
                                        'test/test_files/scenario_test/test.txt',
                                    'feature_file':
                                        'test/test_files/scenario_test/features.txt',
-                                   'output_dir' :
+                                   'output_dir' :  # Will be removed in tearDown()!
                                        'test/test_files/scenario_test/tmp'}
 
     def tearDown(self):
@@ -221,24 +221,28 @@ class ScenarioTest(unittest.TestCase):
                                "value in ['DEFAULT, 'RANDOM'] but is Default")
 
     def test_write(self):
+        """ Test whether a reloaded scenario still holds all the necessary
+        information. The "pcs_fn" or "paramfile" is changed, so instead the
+        resulting ConfigSpace itself is checked. """
         scenario = Scenario(self.test_scenario_dict)
         path = os.path.join(scenario.output_dir, 'scenario.txt')
         scenario_reloaded = Scenario(path)
         for o in scenario_options:
             k = scenario.options_ext2int[o]
+            if k == "pcs_fn": continue  # Scenarios write-fn changes this value
             self.assertEqual(scenario.__getstate__()[k],
                              scenario_reloaded.__getstate__()[k])
+        # Test if config space has been correctly reloaded:
+	# Using repr because of cs-bug (https://github.com/automl/ConfigSpace/issues/25)
+        self.assertEqual(repr(scenario.cs), repr(scenario_reloaded.cs))
 
     @mock.patch.object(os, 'makedirs')
     @mock.patch.object(os.path, 'isdir')
     def test_write_except(self, patch_isdir, patch_mkdirs):
-        self.test_scenario_dict['output_dir'] = 'test/test_files/scenario_test/tmp'
         patch_isdir.return_value = False
         patch_mkdirs.side_effect = OSError()
-        with self.assertRaises(SystemExit) as cm:
+        with self.assertRaises(OSError) as cm:
             Scenario(self.test_scenario_dict)
-        self.assertEqual(cm.exception.code, 3)
-
 
 if __name__ == "__main__":
     unittest.main()
