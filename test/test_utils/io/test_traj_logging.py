@@ -68,14 +68,12 @@ class TrajLoggerTest(unittest.TestCase):
         frmt_str = '%1.6f'
         self.assertEquals(frmt_str % .5, data[0][0])
         self.assertEquals(frmt_str % .9, data[0][1])
-        self.assertEquals(frmt_str % 0.5, data[0][-5])
-        self.assertEquals('1', data[0][5])
+        self.assertEquals(frmt_str % 0.5, data[0][-4])
         
         with open('tmp_test_folder/traj_aclib2.json') as js:
             json_dict = json.load(js)
 
         self.assertEquals(json_dict['cpu_time'], .5)
-        self.assertEquals(json_dict['algo_runs'], 1)
         self.assertEquals(json_dict['cost'], 0.9)
         self.assertEquals(len(json_dict['incumbent']), 3)
         self.assertTrue("param_a='0.5'" in json_dict['incumbent'])
@@ -126,18 +124,15 @@ class TrajLoggerTest(unittest.TestCase):
         frmt_str = '%1.6f'
         self.assertEquals(frmt_str % 0.5, data[0][0])
         self.assertEquals(frmt_str % 0.9, data[0][1])
-        self.assertEquals(frmt_str % 0.5, data[0][-5])
-        self.assertEquals('1', data[0][5])
+        self.assertEquals(frmt_str % 0.5, data[0][-4])
 
         self.assertEquals(frmt_str % 0, data[1][0])
         self.assertEquals(frmt_str % 1.3, data[1][1])
-        self.assertEquals(frmt_str % 2, data[1][-5])
-        self.assertEquals('2', data[1][5])
+        self.assertEquals(frmt_str % 2, data[1][-4])
 
         self.assertEquals(frmt_str % 0, data[2][0])
         self.assertEquals(frmt_str % .7, data[2][1])
-        self.assertEquals(frmt_str % 3, data[2][-5])
-        self.assertEquals('2', data[2][5])
+        self.assertEquals(frmt_str % 3, data[2][-4])
 
         json_dicts = []
         with open('tmp_test_folder/traj_aclib2.json') as js:
@@ -147,7 +142,6 @@ class TrajLoggerTest(unittest.TestCase):
             json_dicts.append(json.loads(d))
 
         self.assertEquals(json_dicts[0]['cpu_time'], .5)
-        self.assertEquals(json_dicts[0]['algo_runs'], 1)
         self.assertEquals(json_dicts[0]['cost'], 0.9)
         self.assertEquals(len(json_dicts[0]['incumbent']), 3)
         self.assertTrue("param_a='0.5'" in json_dicts[0]['incumbent'])
