@@ -153,8 +153,7 @@ class Intensifier(object):
                                                   aggregate_func=aggregate_func)
             except BudgetExhaustedException:
                 # We return incumbent, SMBO stops due to its own budget checks
-                inc_runs = run_history.get_runs_for_config(incumbent)
-                inc_perf = aggregate_func(incumbent, run_history, inc_runs)
+                inc_perf = run_history.get_cost(incumbent)
                 return incumbent, inc_perf
 
             if self._chall_indx > 1 and self._num_run > self.run_limit:
