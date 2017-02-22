@@ -81,10 +81,11 @@ class TrajLoggerTest(unittest.TestCase):
         # And finally, test the list that's added to the trajectory class
         self.assertEqual(tl.trajectory[0], TrajEntry(0.9, 1,
                                             {'param_c': 'value', 'param_b': 1,
-                                             'param_a': 0.5}, 0.5, 1))
+                                             'param_a': 0.5}, 1, 0.5, 1))
         # Test named-tuple-access:
         self.assertEqual(tl.trajectory[0].train_perf, 0.9)
         self.assertEqual(tl.trajectory[0].incumbent_id, 1)
+        self.assertEqual(tl.trajectory[0].ta_runs, 1)
         self.assertEqual(tl.trajectory[0].ta_time_used, 0.5)
         self.assertEqual(tl.trajectory[0].wallclock_time, 1)
         self.assertEqual(len(tl.trajectory), 1)
