@@ -10,7 +10,7 @@ import logging
 import unittest
 import pickle
 import copy
-import shutil
+import glob
 
 import numpy as np
 
@@ -71,7 +71,12 @@ class ScenarioTest(unittest.TestCase):
 
     def tearDown(self):
         if os.path.isdir(self.test_scenario_dict['output_dir']):
-                shutil.rmtree(self.test_scenario_dict['output_dir'])
+            # Remove all files in output_dir, then output_dir
+            tmp_files = glob.glob(os.path.join(
+                self.test_scenario_dict['output_dir'], '*'))
+            for f in tmp_files:
+                os.remove(f)
+            os.rmdir(self.test_scenario_dict['output_dir'])
         os.chdir(self.current_dir)
 
     def test_Exception(self):
