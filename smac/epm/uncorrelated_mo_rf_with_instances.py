@@ -1,9 +1,10 @@
 import numpy as np
 
+from smac.epm.base_epm import AbstractEPM
 from smac.epm.rf_with_instances import RandomForestWithInstances
 
 
-class UncorrelatedMultiObjectiveRandomForestWithInstances(object):
+class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
     def __init__(self, target_names, types, **kwargs):
         """Wrapper for the random forest to predict multiple targets.
 
