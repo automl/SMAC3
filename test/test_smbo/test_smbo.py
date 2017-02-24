@@ -20,7 +20,7 @@ from smac.scenario.scenario import Scenario
 from smac.smbo.acquisition import EI, EIPS
 from smac.smbo.local_search import LocalSearch
 from smac.tae.execute_func import ExecuteTAFuncArray
-from smac.tae.execute_ta_run import TAEAbortException, TAEFirstRunCrashedException
+from smac.tae.execute_ta_run import TAEAbortException, FirstRunCrashedException
 from smac.stats.stats import Stats
 from smac.utils import test_helpers
 from smac.epm.rf_with_instances import RandomForestWithInstances
@@ -292,12 +292,12 @@ class TestSMBO(unittest.TestCase):
     def test_abort_on_initial_design(self, patch):
         def target(x):
             return 5
-        patch.side_effect = TAEFirstRunCrashedException()
+        patch.side_effect = FirstRunCrashedException()
         scen = Scenario({'cs': test_helpers.get_branin_config_space(),
                          'run_obj': 'quality',
                          'abort_on_first_run_crash' : 1})
         smbo = SMAC(scen, tae_runner=target, rng=1).solver
-        self.assertRaises(TAEAbortException, smbo.run)
+        self.assertRaises(FirstRunCrashedException, smbo.run)
 
     def tearDown(self):
             for d in glob.glob('smac3-output*'):

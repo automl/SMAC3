@@ -40,10 +40,12 @@ class BudgetExhaustedException(Exception):
     pass
 
 class TAEAbortException(Exception):
-    """ Exception indicating that the TAE suggests an ABORT of SMAC. """
+    """ Exception indicating that the target algorithm suggests an ABORT of
+    SMAC, usually because it assumes that all further runs will surely fail.
+    """
     pass
 
-class TAEFirstRunCrashedException(TAEAbortException):
+class FirstRunCrashedException(TAEAbortException):
     """ Exception indicating that the first run crashed (depending on options
     this could trigger an ABORT of SMAC. """
     pass
@@ -135,12 +137,14 @@ class ExecuteTARun(object):
                                                           instance_specific=instance_specific)
 
         if self.stats.ta_runs == 0 and status == StatusType.CRASHED:
-            raise TAEFirstRunCrashedException("First run crashed, abort. (To "
-                                              "prevent this, toggle the "
-                                              "'abort_on_first_run_crash'"
-                                              "-option!)")
+            raise FirstRunCrashedException("First run crashed, abort. (To "
+                                           "prevent this, toggle the "
+                                           "'abort_on_first_run_crash'"
+                                           "-option!)")
         if status == StatusType.ABORT:
-            raise TAEAbortException("Target algorithm status ABORT - SMAC will exit.")
+            raise TAEAbortException("Target algorithm status ABORT - SMAC will "
+                                    "exit. The last incumbent can be found "
+                                    "in the trajectory-file.")
 
         # update SMAC stats
         self.stats.ta_runs += 1

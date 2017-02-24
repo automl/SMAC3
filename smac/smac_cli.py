@@ -11,7 +11,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.smbo.objective import average_cost
 from smac.utils.merge_foreign_data import merge_foreign_data_from_file
 from smac.utils.io.traj_logging import TrajLogger
-from smac.tae.execute_ta_run import TAEAbortException
+from smac.tae.execute_ta_run import TAEAbortException, FirstRunCrashedException
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -82,10 +82,8 @@ class SMACCLI(object):
                 initial_configurations=initial_configs)
         try:
             optimizer.optimize()
-        except TAEAbortException:
-            self.logger.error("Target algorithm signaled ABORT. Optimization"
-                              " is stopped. The last incumbent can be found "
-                              "in the trajectory-file.")
+        except (TAEAbortException, FirstRunCrashedException) as err:
+            self.logger.error(err)
         finally:
             # ensure that the runhistory is always dumped in the end
             if scen.output_dir is not None:

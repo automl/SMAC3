@@ -316,11 +316,11 @@ class Intensifier(object):
 
                 self.logger.debug("Add run of challenger")
                 status, cost, dur, res = self.tae_runner.start(
-                   config=challenger,
-                   instance=instance,
-                   seed=seed,
-                   cutoff=cutoff,
-                   instance_specific=self.instance_specifics.get(instance, "0"))
+                    config=challenger,
+                    instance=instance,
+                    seed=seed,
+                    cutoff=cutoff,
+                    instance_specific=self.instance_specifics.get(instance, "0"))
                 self._num_run += 1
 
             new_incumbent = self._compare_configs(

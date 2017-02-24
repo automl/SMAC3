@@ -20,7 +20,7 @@ from smac.initial_design.initial_design import InitialDesign
 from smac.scenario.scenario import Scenario
 from smac.configspace import Configuration, convert_configurations_to_array
 from smac.tae.execute_ta_run import TAEAbortException, BudgetExhaustedException
-from smac.tae.execute_ta_run import TAEFirstRunCrashedException
+from smac.tae.execute_ta_run import FirstRunCrashedException
 
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
@@ -102,13 +102,9 @@ class SMBO(BaseSolver):
         self.stats.start_timing()
         try:
             self.incumbent = self.initial_design.run()
-        except TAEFirstRunCrashedException:
+        except FirstRunCrashedException as err:
             if self.scenario.abort_on_first_run_crash:
-                # We log to make sure the user knows about the reason for abort
-                self.logger.error("First run crashed, abort. (To prevent this,"
-                                  "toggle the 'abort_on_first_run_crash'-optio"
-                                  "n!)")
-                raise TAEAbortException("First run crashed, abort.")
+                raise
 
         # Main BO loop
         iteration = 1
@@ -133,11 +129,11 @@ class SMBO(BaseSolver):
             self.logger.debug("Intensify")
 
             self.incumbent, inc_perf = self.intensifier.intensify(
-                  challengers=challengers,
-                  incumbent=self.incumbent,
-                  run_history=self.runhistory,
-                  aggregate_func=self.aggregate_func,
-                  time_bound=max(0.01, time_spend))
+                challengers=challengers,
+                incumbent=self.incumbent,
+                run_history=self.runhistory,
+                aggregate_func=self.aggregate_func,
+                time_bound=max(0.01, time_spend))
 
             if self.scenario.shared_model:
                 pSMAC.write(run_history=self.runhistory,
