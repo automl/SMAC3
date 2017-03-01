@@ -185,7 +185,7 @@ class Scenario(object):
             normalized_key = key.lower().replace('-', '').replace('_', '')
             if normalized_key == normalized_name:
                 value = scenario.pop(key)
-                
+
         if dest is None:
             dest = name.lower().replace('-', '_')
 
