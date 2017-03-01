@@ -22,7 +22,6 @@ from smac.utils.merge_foreign_data import merge_foreign_data
 from smac.runhistory.runhistory import RunHistory
 from smac.smbo.objective import average_cost
 from smac.tae.execute_ta_run import StatusType
-from smac.utils.scenario_options import scenario_options
 
 if sys.version_info[0] == 2:
     import mock
@@ -66,7 +65,7 @@ class ScenarioTest(unittest.TestCase):
                                    'feature_file':
                                        'test/test_files/scenario_test/features.txt',
                                    'output_dir' :
-                                       'test/test_files/scenario_test/tmp'}
+                                       'test/test_files/scenario_test/tmp_output'}
 
     def tearDown(self):
         os.chdir(self.current_dir)
@@ -224,11 +223,13 @@ class ScenarioTest(unittest.TestCase):
         scenario = Scenario(self.test_scenario_dict)
         path = os.path.join(scenario.output_dir, 'scenario.txt')
         scenario_reloaded = Scenario(path)
-        for o in scenario_options:
-            k = scenario.options_ext2int[o]
+        for o in scenario._arguments:
+            k = scenario._arguments[o]['dest']
+            if not k:  # if 'dest' == None
+                k = o
             if k == "pcs_fn": continue  # Scenarios write-fn changes this value
-            self.assertEqual(scenario.__getstate__()[k],
-                             scenario_reloaded.__getstate__()[k])
+            if k == 'cs' : continue     # CS compared below
+            self.assertEqual(getattr(scenario, k), getattr(scenario_reloaded, k))
         # Test if config space has been correctly reloaded:
 	# Using repr because of cs-bug (https://github.com/automl/ConfigSpace/issues/25)
         self.assertEqual(repr(scenario.cs), repr(scenario_reloaded.cs))

@@ -7,7 +7,6 @@ __version__ = "0.0.1"
 
 import numpy as np
 from smac.configspace import pcs
-from smac.utils.scenario_options import scenario_options
 
 
 class InputReader(object):
@@ -93,9 +92,6 @@ class InputReader(object):
                                  'numRunsLimit': 'runcount-limit',
                                  'numberOfRunsLimit': 'runcount-limit'
                                  }
-        # Actual option-names
-        options = dict([(k, k) for k in scenario_options])
-        options.update(scenario_option_names)
 
         scenario_dict = {}
         with open(fn, 'r') as fh:
@@ -114,7 +110,7 @@ class InputReader(object):
                 else:
                     tmp = line.split()
                 scenario_dict[
-                    options.get(tmp[0], tmp[0])] = " ".join(tmp[1:])
+                    scenario_option_names.get(tmp[0], tmp[0])] = " ".join(tmp[1:])
         return(scenario_dict)
 
     def read_instance_file(self, fn):
