@@ -383,13 +383,13 @@ class Scenario(object):
                 elif key == 'pcs_fn' and self.cs is not None:
                     new_path = os.path.join(self.output_dir, "configspace.pcs")
                     content = pcs.write(self.cs)
-                elif key == 'train_inst_fn' and self.train_insts is not None:
+                elif key == 'train_inst_fn' and self.train_insts != [None]:
                     new_path = os.path.join(self.output_dir, 'train_insts.txt')
-                    content = "".join([i + '\n' for i in self.train_insts])
-                elif key == 'test_inst_fn' and self.test_insts is not None:
+                    content = "\n".join(self.train_insts)
+                elif key == 'test_inst_fn' and self.test_insts != [None]:
                     new_path = os.path.join(self.output_dir, 'test_insts.txt')
-                    content = "".join([i + '\n' for i in self.test_insts])
-                elif key == 'feature_fn' and self.feature_dict is not None:
+                    content = "\n".join(self.test_insts)
+                elif key == 'feature_fn' and self.feature_dict != {}:
                     header = "Instance, " + ", ".join(
                         ["feature"+str(i) for i in range(self.n_features)]) + "\n"
                     body = [", ".join([inst] +
