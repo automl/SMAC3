@@ -7,6 +7,7 @@ import shlex
 import time
 import datetime
 import copy
+import shutil
 
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
@@ -350,50 +351,16 @@ class Scenario(object):
     def _write(self):
         """Write scenario to file in a format that can be easily retrieved using
         the input_reader. Will overwrite if file already exists.
-        options_dest2name maps self._arguments from dest -> name
-        options_name2dest maps self._arguments from name -> dest
 
         Sideeffects:
             - creates output-directory if it doesn't exist.
-            - writes the configspace as a .pcs file to output
+            - copies files pcs_fn, train_inst_fn, test_inst_fn and feature_fn to
+              output if possible, creates the files from attributes otherwise
         """
         if self.output_dir is None:
             self.logger.info("No output directory for scenario logging "
                              "specified -- scenario will not be logged.")
-            return
-
-        path = os.path.join(self.output_dir, "scenario.txt")
-        self.logger.debug("Writing scenario-file to {}.".format(path))
-        # Get mapping of option-names from self._arguments
-        options_name2dest = {v: (self._arguments[v]['dest'] if
-            self._arguments[v]['dest'] else v) for v in self._arguments}
-        options_dest2name = {v: k for k, v in options_name2dest.items()}
-
-        # We need to modify certain values when writing them
-        def transform_value(key, value):
-            ''' returns the correct value to write into a file '''
-            if key == 'pcs_fn':
-                # Write cs to output_dir and change filepath
-                if value != None:
-                    filename = os.path.split(value)[1]
-                else:
-                    filename = "configspace.pcs"
-                new_path = os.path.join(self.output_dir, filename)
-                with open(new_path, "w") as pcs_file:
-                    if value != None:
-                        pcs_file.write("# This is a copied version of the "
-                                       "pcs-file.\n# The old file was located "
-                                       "in: {}.\n".format(value))
-                    pcs_file.write(pcs.write(self.cs))
-                return new_path
-            elif key == 'ta' and not value is None:
-                return " ".join(value)
-            elif key in ['train_insts', 'test_insts', 'cs', 'feature_dict']:
-                # No need to log, recreated from files
-                return None
-            else:
-                return value
-
+            return False
         # Create output-dir if necessary
         if not os.path.isdir(self.output_dir):
             self.logger.debug("Output directory does not exist! Will be "
@@ -404,7 +371,56 @@ class Scenario(object):
                 raise OSError("Could not make output directory: "
                               "{}.".format(self.output_dir))
 
-        # Write all options into output_dir/scenario.txt
+        def transform_value(key, value):
+            ''' returns the correct value to write into a file '''
+            if key in ['pcs_fn', 'train_inst_fn', 'test_inst_fn', 'feature_fn']:
+                # Copy if file exists, else write to new file
+                if value is not None and os.path.isfile(value):
+                    try:
+                        return shutil.copy(value, self.output_dir)
+                    except shutil.SameFileError:
+                        return value  # File is already in output_dir
+                elif key == 'pcs_fn' and self.cs is not None:
+                    new_path = os.path.join(self.output_dir, "configspace.pcs")
+                    content = pcs.write(self.cs)
+                elif key == 'train_inst_fn' and self.train_insts is not None:
+                    new_path = os.path.join(self.output_dir, 'train_insts.txt')
+                    content = "".join([i + '\n' for i in self.train_insts])
+                elif key == 'test_inst_fn' and self.test_insts is not None:
+                    new_path = os.path.join(self.output_dir, 'test_insts.txt')
+                    content = "".join([i + '\n' for i in self.test_insts])
+                elif key == 'feature_fn' and self.feature_dict is not None:
+                    header = "Instance, " + ", ".join(
+                        ["feature"+str(i) for i in range(self.n_features)]) + "\n"
+                    body = [", ".join([inst] +
+                                      [str(f) for f in self.feature_dict[inst]])
+                            + "\n" for inst in self.feature_dict]
+                    new_path = os.path.join(self.output_dir, 'features.txt')
+                    content = header + "".join(body)
+                else:
+                    return None
+                # Write content
+                with open(new_path, 'w') as f:
+                    f.write(content)
+                return new_path
+            elif key == 'ta' and value is not None:
+                # Reversing the callback on 'ta' (shlex.split)
+                return " ".join(value)
+            elif key in ['train_insts', 'test_insts', 'cs', 'feature_dict']:
+                # No need to log, recreated from files
+                return None
+            else:
+                return value
+
+        # options_name2dest maps self._arguments from name -> dest
+        options_name2dest = {v: (self._arguments[v]['dest'] if
+            self._arguments[v]['dest'] else v) for v in self._arguments}
+        # options_dest2name maps self._arguments from dest -> name
+        options_dest2name = {v: k for k, v in options_name2dest.items()}
+
+        # Write all options into "output_dir/scenario.txt"
+        path = os.path.join(self.output_dir, "scenario.txt")
+        self.logger.debug("Writing scenario-file to {}.".format(path))
         with open(path, 'w') as log:
             for key in options_dest2name:
                 new_value = transform_value(key, getattr(self, key))
