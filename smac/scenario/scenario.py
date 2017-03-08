@@ -412,11 +412,9 @@ class Scenario(object):
             else:
                 return value
 
-        # options_name2dest maps self._arguments from name -> dest
-        options_name2dest = {v: (self._arguments[v]['dest'] if
-            self._arguments[v]['dest'] else v) for v in self._arguments}
         # options_dest2name maps self._arguments from dest -> name
-        options_dest2name = {v: k for k, v in options_name2dest.items()}
+        options_dest2name = {(self._arguments[v]['dest'] if
+            self._arguments[v]['dest'] else v) : v for v in self._arguments}
 
         # Write all options into "output_dir/scenario.txt"
         path = os.path.join(self.output_dir, "scenario.txt")
