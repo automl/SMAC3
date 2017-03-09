@@ -440,8 +440,8 @@ class Intensifier(object):
             self.logger.info("Challenger (%.4f) is better than incumbent (%.4f) on %d runs." % (
                 chal_perf, inc_perf, n_samples))
             # Show changes in the configuration
-            params = [(param, incumbent[param], challenger[param]) for param in
-                    challenger.keys()]
+            params = sorted([(param, incumbent[param], challenger[param]) for param in
+                    challenger.keys()])
             self.logger.info("Changes in incumbent:")
             for param in params:
                 if param[1] != param[2]:
