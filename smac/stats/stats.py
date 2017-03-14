@@ -32,7 +32,7 @@ class Stats(object):
         self._EMA_ALPHA = 0.2
 
         self._start_time = None
-        self._logger = logging.getLogger("smac.stats.Stats")
+        self._logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
     def start_timing(self):
         '''

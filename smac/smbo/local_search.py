@@ -43,7 +43,7 @@ class LocalSearch(object):
         else:
             self.rng = rng
 
-        self.logger = logging.getLogger("smac.smbo.LocalSearch")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
     def maximize(self, start_point, *args):
         """

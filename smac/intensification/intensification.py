@@ -68,7 +68,7 @@ class Intensifier(object):
             self.instance_specifics = {}
         else:
             self.instance_specifics = instance_specifics
-        self.logger = logging.getLogger("smac.intensification.Intensifier")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.run_limit = run_limit
         self.maxR = maxR
         self.minR = minR

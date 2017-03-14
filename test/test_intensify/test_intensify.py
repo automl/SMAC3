@@ -49,7 +49,7 @@ class TestIntensify(unittest.TestCase):
         self.stats = Stats(scenario=self.scen)
         self.stats.start_timing()
 
-        self.logger = logging.getLogger("test.test_intensify.TestIntensify")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
     def test_compare_configs_no_joint_set(self):
         intensifier = Intensifier(

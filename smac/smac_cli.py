@@ -30,7 +30,7 @@ class SMACCLI(object):
         '''
             constructor
         '''
-        self.logger = logging.getLogger("smac.SMAC_cli")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
     def main_cli(self):
         '''

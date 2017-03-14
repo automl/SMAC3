@@ -61,7 +61,7 @@ class AbstractRunHistory2EPM(object):
         rs : numpy.random.RandomState
             only used for reshuffling data after imputation
         '''
-        self.logger = logging.getLogger("smac.runhistory.runhistory2epm")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         # General arguments
         self.scenario = scenario

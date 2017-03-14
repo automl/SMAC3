@@ -33,7 +33,7 @@ class ScenarioTest(unittest.TestCase):
 
     def setUp(self):
         logging.basicConfig()
-        self.logger = logging.getLogger('test.test_scenario.ScenarioTest')
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.logger.setLevel(logging.DEBUG)
 
         base_directory = os.path.split(__file__)[0]

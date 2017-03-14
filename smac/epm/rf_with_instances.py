@@ -87,7 +87,7 @@ class RandomForestWithInstances(AbstractEPM):
                        min_samples_leaf, max_depth, eps_purity, seed]
         self.seed = seed
 
-        self.logger = logging.getLogger("smac.epm.RF_with_instances")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         # Never use a lower variance than this
         self.var_threshold = 10 ** -5

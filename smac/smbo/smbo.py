@@ -71,7 +71,7 @@ class SMBO(BaseSolver):
         rng: np.random.RandomState
             Random number generator
         '''
-        self.logger = logging.getLogger("smac.smbo.SMBO")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.incumbent = None
 
         self.scenario = scenario

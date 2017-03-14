@@ -44,7 +44,7 @@ class InitialDesign(object):
         self.stats = stats
         self.traj_logger = traj_logger
         self.rng = rng
-        self.logger = logging.getLogger("smac.initial_design.InitialDesign")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
     def run(self):
         '''

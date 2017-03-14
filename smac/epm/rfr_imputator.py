@@ -43,7 +43,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         """
 
         super(RFRImputator, self).__init__()
-        self.logger = logging.getLogger("smac.epm.RFRImputor")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.max_iter = max_iter
         self.change_threshold = change_threshold
         self.cutoff = cutoff

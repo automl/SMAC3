@@ -21,7 +21,7 @@ class CMDReaderTest(unittest.TestCase):
 
     def setUp(self):
         logging.basicConfig()
-        self.logger = logging.getLogger('test.test_utils.io.CMDReaderTest')
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.logger.setLevel(logging.DEBUG)
         self.cr = CMDReader()
         self.current_dir = os.getcwd()

@@ -90,7 +90,7 @@ class SMAC(object):
         rng: np.random.RandomState
             Random number generator
         '''
-        self.logger = logging.getLogger("smac.facade.SMAC")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         aggregate_func = average_cost
 

@@ -27,7 +27,7 @@ class TrajLoggerTest(unittest.TestCase):
 
     def setUp(self):
         logging.basicConfig()
-        self.logger = logging.getLogger('test.test_utils.io.TrajLoggerTest')
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.logger.setLevel(logging.DEBUG)
         self.value = 0
         self.cs = ConfigurationSpace()

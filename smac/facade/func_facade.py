@@ -79,7 +79,7 @@ def fmin_smac(func: callable,
     scenario = Scenario(scenario_dict)
 
     smac = SMAC(scenario=scenario, tae_runner=ta, rng=rng)
-    smac.logger = logging.getLogger("smac.facade.fmin_smac")
+    smac.logger = logging.getLogger(smac.__module__ + "." + smac.__class__.__name__)
     incumbent = smac.optimize()
 
     config_id = smac.solver.runhistory.config_ids[incumbent]
