@@ -357,7 +357,7 @@ class Scenario(object):
             - copies files pcs_fn, train_inst_fn, test_inst_fn and feature_fn to
               output if possible, creates the files from attributes otherwise
         """
-        if self.output_dir is None:
+        if self.output_dir is None or self.output_dir == "":
             self.logger.info("No output directory for scenario logging "
                              "specified -- scenario will not be logged.")
             return False
@@ -406,7 +406,7 @@ class Scenario(object):
             elif key == 'ta' and value is not None:
                 # Reversing the callback on 'ta' (shlex.split)
                 return " ".join(value)
-            elif key in ['train_insts', 'test_insts', 'cs', 'feature_dict']:
+            elif key in ['train_insts', 'test_insts', 'cs', 'feature_dict', 'output_dir']:
                 # No need to log, recreated from files
                 return None
             else:
