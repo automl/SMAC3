@@ -7,12 +7,12 @@ import shlex
 import time
 import datetime
 import copy
-import shutil
 
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
 
 from smac.utils.io.input_reader import InputReader
+from smac.utils.io.output_writer import OutputWriter
 from smac.configspace import pcs
 
 __author__ = "Marius Lindauer, Matthias Feurer"
@@ -45,10 +45,11 @@ class Scenario(object):
             command line arguments that were not processed by argparse
 
         """
-        self.logger = logging.getLogger("scenario")
+        self.logger = logging.getLogger(self.__module__ + '.' + self.__class__.__name__)
         self.PCA_DIM = 7
 
         self.in_reader = InputReader()
+        self.out_writer = OutputWriter()
 
         if type(scenario) is str:
             scenario_fn = scenario
@@ -93,7 +94,7 @@ class Scenario(object):
 
         self._transform_arguments()
 
-        self._write()
+        self.out_writer.write_scenario_file(self)
 
     def add_argument(self, name, help, callback=None, default=None,
                      dest=None, required=False, mutually_exclusive_group=None,
@@ -313,7 +314,7 @@ class Scenario(object):
                 self.feature_array.append(self.feature_dict[inst_])
             self.feature_array = numpy.array(self.feature_array)
             self.n_features = self.feature_array.shape[1]
-            
+ 
             # reduce dimensionality of features of larger than PCA_DIM
             if self.feature_array.shape[1] > self.PCA_DIM:
                 X = self.feature_array
@@ -347,83 +348,6 @@ class Scenario(object):
         else:
             self.logger.info("Output to %s" % (self.output_dir))
 
-    def _write(self):
-        """Write scenario to file in a format that can be easily retrieved using
-        the input_reader. Will overwrite if file already exists.
-
-        Sideeffects:
-            - creates output-directory if it doesn't exist.
-            - copies files pcs_fn, train_inst_fn, test_inst_fn and feature_fn to
-              output if possible, creates the files from attributes otherwise
-        """
-        if self.output_dir is None or self.output_dir == "":
-            self.logger.info("No output directory for scenario logging "
-                             "specified -- scenario will not be logged.")
-            return False
-        # Create output-dir if necessary
-        if not os.path.isdir(self.output_dir):
-            self.logger.debug("Output directory does not exist! Will be "
-                              "created.")
-            try:
-                os.makedirs(self.output_dir)
-            except OSError:
-                raise OSError("Could not make output directory: "
-                              "{}.".format(self.output_dir))
-
-        def transform_value(key, value):
-            ''' returns the correct value to write into a file '''
-            if key in ['pcs_fn', 'train_inst_fn', 'test_inst_fn', 'feature_fn']:
-                # Copy if file exists, else write to new file
-                if value is not None and os.path.isfile(value):
-                    try:
-                        return shutil.copy(value, self.output_dir)
-                    except shutil.SameFileError:
-                        return value  # File is already in output_dir
-                elif key == 'pcs_fn' and self.cs is not None:
-                    new_path = os.path.join(self.output_dir, "configspace.pcs")
-                    content = pcs.write(self.cs)
-                elif key == 'train_inst_fn' and self.train_insts != [None]:
-                    new_path = os.path.join(self.output_dir, 'train_insts.txt')
-                    content = "\n".join(self.train_insts)
-                elif key == 'test_inst_fn' and self.test_insts != [None]:
-                    new_path = os.path.join(self.output_dir, 'test_insts.txt')
-                    content = "\n".join(self.test_insts)
-                elif key == 'feature_fn' and self.feature_dict != {}:
-                    header = "Instance, " + ", ".join(
-                        ["feature"+str(i) for i in range(self.n_features)]) + "\n"
-                    body = [", ".join([inst] +
-                                      [str(f) for f in self.feature_dict[inst]])
-                            + "\n" for inst in self.feature_dict]
-                    new_path = os.path.join(self.output_dir, 'features.txt')
-                    content = header + "".join(body)
-                else:
-                    return None
-                # Write content
-                with open(new_path, 'w') as f:
-                    f.write(content)
-                return new_path
-            elif key == 'ta' and value is not None:
-                # Reversing the callback on 'ta' (shlex.split)
-                return " ".join(value)
-            elif key in ['train_insts', 'test_insts', 'cs', 'feature_dict', 'output_dir']:
-                # No need to log, recreated from files
-                return None
-            else:
-                return value
-
-        # options_dest2name maps self._arguments from dest -> name
-        options_dest2name = {(self._arguments[v]['dest'] if
-            self._arguments[v]['dest'] else v) : v for v in self._arguments}
-
-        # Write all options into "output_dir/scenario.txt"
-        path = os.path.join(self.output_dir, "scenario.txt")
-        self.logger.debug("Writing scenario-file to {}.".format(path))
-        with open(path, 'w') as log:
-            for key in options_dest2name:
-                new_value = transform_value(key, getattr(self, key))
-                if new_value is not None:
-                    log.write("{} = {}\n".format(options_dest2name[key], new_value))
-
     def __getstate__(self):
         d = dict(self.__dict__)
         del d['logger']
@@ -431,4 +355,4 @@ class Scenario(object):
 
     def __setstate__(self, d):
         self.__dict__.update(d)
-        self.logger = logging.getLogger("scenario")
+        self.logger = logging.getLogger(self.__module__ + '.' + self.__class__.__name__)

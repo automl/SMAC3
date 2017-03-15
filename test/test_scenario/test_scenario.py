@@ -38,7 +38,7 @@ class ScenarioTest(unittest.TestCase):
 
     def setUp(self):
         logging.basicConfig()
-        self.logger = logging.getLogger('ScenarioTest')
+        self.logger = logging.getLogger(self.__module__ + '.' + self.__class__.__name__)
         self.logger.setLevel(logging.DEBUG)
 
         base_directory = os.path.split(__file__)[0]
@@ -226,7 +226,8 @@ class ScenarioTest(unittest.TestCase):
             for name in scen1._arguments:
                 dest = scen1._arguments[name]['dest']
                 name = dest if dest else name  # if 'dest' is None, use 'name'
-                if name in ["pcs_fn", "train_inst_fn", "test_inst_fn", "feature_fn"]:
+                if name in ["pcs_fn", "train_inst_fn", "test_inst_fn",
+                        "feature_fn", "output_dir"]:
                     continue  # Those values are changed upon logging
                 elif name == 'cs' :
                     # Using repr because of cs-bug (https://github.com/automl/ConfigSpace/issues/25)
@@ -267,7 +268,7 @@ class ScenarioTest(unittest.TestCase):
     def test_no_output_dir(self):
         self.test_scenario_dict['output_dir'] = ""
         scenario = Scenario(self.test_scenario_dict)
-        self.assertFalse(scenario._write())
+        self.assertFalse(scenario.out_writer.write_scenario_file(scenario))
 
 
 if __name__ == "__main__":
