@@ -12,6 +12,7 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
 
 from smac.utils.io.input_reader import InputReader
+from smac.utils.io.output_writer import OutputWriter
 from smac.configspace import pcs
 
 __author__ = "Marius Lindauer, Matthias Feurer"
@@ -23,7 +24,7 @@ __version__ = "0.0.2"
 
 
 def _is_truthy(arg):
-    return arg in ["1", "true", True]
+    return arg in ["1", "true", "True", True]
 
 
 class Scenario(object):
@@ -44,10 +45,11 @@ class Scenario(object):
             command line arguments that were not processed by argparse
 
         """
-        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
+        self.logger = logging.getLogger(self.__module__ + '.' + self.__class__.__name__)
         self.PCA_DIM = 7
 
         self.in_reader = InputReader()
+        self.out_writer = OutputWriter()
 
         if type(scenario) is str:
             scenario_fn = scenario
@@ -72,7 +74,6 @@ class Scenario(object):
             arg_name, arg_value = self._parse_argument(key, scenario, **value)
             parsed_arguments[arg_name] = arg_value
 
-
         if len(scenario) != 0:
             raise ValueError('Could not parse the following arguments: %s' %
                              str(list(scenario.keys())))
@@ -92,6 +93,8 @@ class Scenario(object):
             setattr(self, arg_name, arg_value)
 
         self._transform_arguments()
+
+        self.out_writer.write_scenario_file(self)
 
     def add_argument(self, name, help, callback=None, default=None,
                      dest=None, required=False, mutually_exclusive_group=None,
@@ -317,7 +320,6 @@ class Scenario(object):
                 self.feature_array.append(self.feature_dict[inst_])
             self.feature_array = numpy.array(self.feature_array)
             self.n_features = self.feature_array.shape[1]
-
             # reduce dimensionality of features of larger than PCA_DIM
             if self.feature_array.shape[1] > self.PCA_DIM:
                 X = self.feature_array
@@ -358,4 +360,4 @@ class Scenario(object):
 
     def __setstate__(self, d):
         self.__dict__.update(d)
-        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
+        self.logger = logging.getLogger(self.__module__ + '.' + self.__class__.__name__)
