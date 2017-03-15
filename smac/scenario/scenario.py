@@ -93,8 +93,7 @@ class Scenario(object):
 
         self._transform_arguments()
 
-        if self.output_dir:
-            self._write()
+        self._write()
 
     def add_argument(self, name, help, callback=None, default=None,
                      dest=None, required=False, mutually_exclusive_group=None,
