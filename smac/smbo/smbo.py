@@ -19,6 +19,8 @@ from smac.stats.stats import Stats
 from smac.initial_design.initial_design import InitialDesign
 from smac.scenario.scenario import Scenario
 from smac.configspace import Configuration, convert_configurations_to_array
+from smac.tae.execute_ta_run import TAEAbortException, BudgetExhaustedException
+from smac.tae.execute_ta_run import FirstRunCrashedException
 
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
@@ -98,7 +100,11 @@ class SMBO(BaseSolver):
             The best found configuration
         '''
         self.stats.start_timing()
-        self.incumbent = self.initial_design.run()
+        try:
+            self.incumbent = self.initial_design.run()
+        except FirstRunCrashedException as err:
+            if self.scenario.abort_on_first_run_crash:
+                raise
 
         # Main BO loop
         iteration = 1

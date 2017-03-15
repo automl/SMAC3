@@ -35,6 +35,20 @@ class StatusType(Enum):
                 return getattr(globals()[name], member)
         return obj
 
+class BudgetExhaustedException(Exception):
+    """ Exception indicating that time- or memory-budgets are exhausted. """
+    pass
+
+class TAEAbortException(Exception):
+    """ Exception indicating that the target algorithm suggests an ABORT of
+    SMAC, usually because it assumes that all further runs will surely fail.
+    """
+    pass
+
+class FirstRunCrashedException(TAEAbortException):
+    """ Exception indicating that the first run crashed (depending on options
+    this could trigger an ABORT of SMAC. """
+    pass
 
 class ExecuteTARun(object):
 
@@ -111,9 +125,7 @@ class ExecuteTARun(object):
         """
 
         if self.stats.is_budget_exhausted():
-            self.logger.debug(
-                "Skip target algorithm run due to exhausted configuration budget")
-            return StatusType.ABORT, np.nan, 0, {"misc": "exhausted bugdet -- ABORT"}
+            raise BudgetExhaustedException("Skip target algorithm run due to exhausted configuration budget")
 
         if cutoff is not None:
             cutoff = int(math.ceil(cutoff))
@@ -124,9 +136,15 @@ class ExecuteTARun(object):
                                                           seed=seed,
                                                           instance_specific=instance_specific)
 
-        if self.stats.ta_runs == 0 and status in [StatusType.CRASHED, StatusType.ABORT]:
-            self.logger.critical("First run crashed -- Abort")
-            sys.exit(1)
+        if self.stats.ta_runs == 0 and status == StatusType.CRASHED:
+            raise FirstRunCrashedException("First run crashed, abort. (To "
+                                           "prevent this, toggle the "
+                                           "'abort_on_first_run_crash'"
+                                           "-option!)")
+        if status == StatusType.ABORT:
+            raise TAEAbortException("Target algorithm status ABORT - SMAC will "
+                                    "exit. The last incumbent can be found "
+                                    "in the trajectory-file.")
 
         # update SMAC stats
         self.stats.ta_runs += 1

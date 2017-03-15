@@ -110,8 +110,6 @@ class ExecuteTARunOld(ExecuteTARun):
             status = StatusType.CRASHED
         elif status in ["ABORT"]:
             status = StatusType.ABORT
-            self.logger.error("Target algorithm returned ABORT -- Exit!")
-            sys.exit(43)
         elif status in ["MEMOUT"]:
             status = StatusType.MEMOUT
 

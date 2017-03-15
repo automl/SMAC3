@@ -14,6 +14,7 @@ from smac.utils.constants import MAXINT, MAX_CUTOFF
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
 from smac.tae.execute_ta_run import StatusType
+from smac.tae.execute_ta_run import BudgetExhaustedException
 
 __author__ = "Katharina Eggensperger, Marius Lindauer"
 __copyright__ = "Copyright 2017, ML4AAD"
@@ -37,7 +38,7 @@ class Intensifier(object):
         tae_runner : tae.executre_ta_run_*.ExecuteTARun* Object
             target algorithm run executor
         stats: Stats()
-            stats object            
+            stats object
         traj_logger: TrajLogger()
             TrajLogger object to log all new incumbents
         rng : np.random.RandomState
@@ -120,7 +121,7 @@ class Intensifier(object):
             incumbent: Configuration()
                 current (maybe new) incumbent configuration
             inc_perf: float
-                empirical performance of incumbent configuration 
+                empirical performance of incumbent configuration
         '''
 
         self.start_time = time.time()
@@ -143,14 +144,19 @@ class Intensifier(object):
                 self.logger.debug(
                     "Configuration origin: %s", challenger.origin)
 
-            # Lines 3-7
-            self._add_inc_run(incumbent=incumbent, run_history=run_history)
+            try:
+                # Lines 3-7
+                self._add_inc_run(incumbent=incumbent, run_history=run_history)
 
-            # Lines 8-17
-            incumbent = self._race_challenger(challenger=challenger,
-                                              incumbent=incumbent,
-                                              run_history=run_history,
-                                              aggregate_func=aggregate_func)
+                # Lines 8-17
+                incumbent = self._race_challenger(challenger=challenger,
+                                                  incumbent=incumbent,
+                                                  run_history=run_history,
+                                                  aggregate_func=aggregate_func)
+            except BudgetExhaustedException:
+                # We return incumbent, SMBO stops due to its own budget checks
+                inc_perf = run_history.get_cost(incumbent)
+                return incumbent, inc_perf
 
             if self._chall_indx > 1 and self._num_run > self.run_limit:
                 self.logger.debug(
@@ -316,11 +322,6 @@ class Intensifier(object):
                     cutoff=cutoff,
                     instance_specific=self.instance_specifics.get(instance, "0"))
                 self._num_run += 1
-
-                if status == StatusType.ABORT:
-                    self.logger.debug(
-                        "TAE signaled ABORT -- stop intensification on challenger")
-                    return incumbent
 
             new_incumbent = self._compare_configs(
                 incumbent=incumbent, challenger=challenger, run_history=run_history,

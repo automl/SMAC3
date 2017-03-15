@@ -20,6 +20,7 @@ from smac.scenario.scenario import Scenario
 from smac.smbo.acquisition import EI, EIPS
 from smac.smbo.local_search import LocalSearch
 from smac.tae.execute_func import ExecuteTAFuncArray
+from smac.tae.execute_ta_run import TAEAbortException, FirstRunCrashedException
 from smac.stats.stats import Stats
 from smac.utils import test_helpers
 from smac.epm.rf_with_instances import RandomForestWithInstances
@@ -28,12 +29,14 @@ from smac.epm.uncorrelated_mo_rf_with_instances import \
 from smac.utils.util_funcs import get_types
 from smac.facade.smac_facade import SMAC
 from smac.smbo.objective import average_cost
+from smac.initial_design.single_config_initial_design import SingleConfigInitialDesign
+from smac.intensification.intensification import Intensifier
 
 if sys.version_info[0] == 2:
     import mock
 else:
     from unittest import mock
-    
+
 
 class ConfigurationMock(object):
     def __init__(self, value=None):
@@ -284,6 +287,17 @@ class TestSMBO(unittest.TestCase):
         self.assertEqual(patch.call_args_list[9][0][0], 'Incumbent')
         for i in range(10):
             self.assertEqual(rval[i][1].origin, 'Local Search')
+
+    @mock.patch.object(SingleConfigInitialDesign, 'run')
+    def test_abort_on_initial_design(self, patch):
+        def target(x):
+            return 5
+        patch.side_effect = FirstRunCrashedException()
+        scen = Scenario({'cs': test_helpers.get_branin_config_space(),
+                         'run_obj': 'quality',
+                         'abort_on_first_run_crash' : 1})
+        smbo = SMAC(scen, tae_runner=target, rng=1).solver
+        self.assertRaises(FirstRunCrashedException, smbo.run)
 
     def tearDown(self):
             for d in glob.glob('smac3-output*'):
