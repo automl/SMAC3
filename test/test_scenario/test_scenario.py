@@ -209,6 +209,16 @@ class ScenarioTest(unittest.TestCase):
                                "Argument initial_incumbent can only take a "
                                "value in ['DEFAULT, 'RANDOM'] but is Default")
 
+    def test_par_factor(self):
+        # Test setting the default value of 1 if no factor is given
+        scenario_dict = self.test_scenario_dict
+        scenario_dict['overall_obj'] = 'mean'
+        scenario = Scenario(scenario_dict)
+        self.assertEqual(scenario.par_factor, 1)
+        scenario_dict['overall_obj'] = 'par'
+        scenario = Scenario(scenario_dict)
+        self.assertEqual(scenario.par_factor, 1)
+
 
 if __name__ == "__main__":
     unittest.main()
