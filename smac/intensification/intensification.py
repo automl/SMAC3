@@ -156,6 +156,7 @@ class Intensifier(object):
             except BudgetExhaustedException:
                 # We return incumbent, SMBO stops due to its own budget checks
                 inc_perf = run_history.get_cost(incumbent)
+                self.logger.debug("Budget exhausted; Return incumbent")
                 return incumbent, inc_perf
 
             if self._chall_indx > 1 and self._num_run > self.run_limit:
