@@ -88,7 +88,7 @@ class ExecuteTARun(object):
 
         self.par_factor = par_factor
 
-        self.logger = logging.getLogger(self.__class__.__name__)
+        self.logger = logging.getLogger("smac.tae."+self.__class__.__name__)
         self._supports_memory_limit = False
 
     def start(self, config, instance,

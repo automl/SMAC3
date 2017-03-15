@@ -28,7 +28,7 @@ class TrajLoggerTest(unittest.TestCase):
 
     def setUp(self):
         logging.basicConfig()
-        self.logger = logging.getLogger('TrajLogger Test')
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.logger.setLevel(logging.DEBUG)
         self.value = 0
         self.cs = ConfigurationSpace()
@@ -69,7 +69,7 @@ class TrajLoggerTest(unittest.TestCase):
         self.assertEquals(frmt_str % .5, data[0][0])
         self.assertEquals(frmt_str % .9, data[0][1])
         self.assertEquals(frmt_str % 0.5, data[0][-4])
-        
+
         with open('tmp_test_folder/traj_aclib2.json') as js:
             json_dict = json.load(js)
 
@@ -93,7 +93,7 @@ class TrajLoggerTest(unittest.TestCase):
     @patch('smac.stats.stats.Stats')
     def test_add_multiple_entries(self, mock_stats):
         tl = TrajLogger(output_dir='./tmp_test_folder', stats=mock_stats)
-        
+
         test_config = {'param_a': 0.5,
                        'param_b': 1,
                        'param_c': 'value'}
@@ -101,11 +101,11 @@ class TrajLoggerTest(unittest.TestCase):
         mock_stats.get_used_wallclock_time = self.mocked_get_used_wallclock_time
         mock_stats.ta_runs = 1
         tl.add_entry(0.9, 1, test_config)
-        
+
         mock_stats.ta_runs = 2
         mock_stats.ta_time_used = 0
         tl.add_entry(1.3, 1, test_config)
-        
+
         test_config['param_a'] = 0.
         mock_stats.ta_time_used = 0
         tl.add_entry(0.7, 2, test_config)
@@ -137,7 +137,7 @@ class TrajLoggerTest(unittest.TestCase):
         json_dicts = []
         with open('tmp_test_folder/traj_aclib2.json') as js:
             data = js.read().split('\n')[:-1]
-        
+
         for d in data:
             json_dicts.append(json.loads(d))
 

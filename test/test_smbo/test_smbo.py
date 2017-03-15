@@ -51,12 +51,12 @@ class TestSMBO(unittest.TestCase):
     def setUp(self):
         self.scenario = Scenario({'cs': test_helpers.get_branin_config_space(),
                                   'run_obj': 'quality'})
-        
+
     def branin(self, x):
         y = (x[:, 1] - (5.1 / (4 * np.pi ** 2)) * x[:, 0] ** 2 + 5 * x[:, 0] / np.pi - 6) ** 2
         y += 10 * (1 - 1 / (8 * np.pi)) * np.cos(x[:, 0]) + 10
 
-        return y[:, np.newaxis]        
+        return y[:, np.newaxis]
 
     def test_init_only_scenario_runtime(self):
         self.scenario.run_obj = 'runtime'

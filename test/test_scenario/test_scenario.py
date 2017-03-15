@@ -33,7 +33,7 @@ class ScenarioTest(unittest.TestCase):
 
     def setUp(self):
         logging.basicConfig()
-        self.logger = logging.getLogger('ScenarioTest')
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.logger.setLevel(logging.DEBUG)
 
         base_directory = os.path.split(__file__)[0]
@@ -152,7 +152,7 @@ class ScenarioTest(unittest.TestCase):
                      status=StatusType.SUCCESS,
                      seed=None,
                      additional_info=None)
-        
+
         # "d" is an instance in <scenario>
         rh_merge.add(config=config, instance_id="d", cost=5, time=20,
                      status=StatusType.SUCCESS,
@@ -169,7 +169,7 @@ class ScenarioTest(unittest.TestCase):
         # but we should not use the data to update the cost of config
         self.assertTrue(len(rh_base.data) == 2)
         self.assertTrue(np.isnan(rh_base.get_cost(config)))
-        
+
         # we should not get direct access to external run data
         runs = rh_base.get_runs_for_config(config)
         self.assertTrue(len(runs) == 0)
@@ -178,9 +178,9 @@ class ScenarioTest(unittest.TestCase):
                      status=StatusType.SUCCESS,
                      seed=None,
                      additional_info=None)
-        
+
         self.assertRaises(ValueError, merge_foreign_data, **{"scenario":scenario, "runhistory":rh_base, "in_scenario_list":[scenario_2], "in_runhistory_list":[rh_merge]})
-        
+
 
     def test_pickle_dump(self):
         scenario = Scenario(self.test_scenario_dict)

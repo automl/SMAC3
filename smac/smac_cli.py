@@ -31,7 +31,7 @@ class SMACCLI(object):
         '''
             constructor
         '''
-        self.logger = logging.getLogger("SMAC")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
     def main_cli(self):
         '''
@@ -54,9 +54,9 @@ class SMACCLI(object):
             rh = RunHistory(aggregate_func=aggregate_func)
 
             scen, rh = merge_foreign_data_from_file(
-                        scenario=scen, 
+                        scenario=scen,
                         runhistory=rh,
-                        in_scenario_fn_list=args_.warmstart_scenario, 
+                        in_scenario_fn_list=args_.warmstart_scenario,
                         in_runhistory_fn_list=args_.warmstart_runhistory,
                         cs=scen.cs,
                         aggregate_func=aggregate_func)

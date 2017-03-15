@@ -46,4 +46,4 @@ class TestMultiInitialDesign(unittest.TestCase):
         self.assertTrue(stats.ta_runs==2)
         self.assertTrue(len(rh.data)==2)
         self.assertTrue(rh.get_cost(inc) == 4)
-        
+

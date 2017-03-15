@@ -31,7 +31,7 @@ class TaeOldTest(unittest.TestCase):
         '''
         scen = Scenario(scenario={'cs': ConfigurationSpace()}, cmd_args=None)
         stats = Stats(scen)
-        
+
         eta = ExecuteTARunOld(
             ta=shlex.split("python test/test_tae/dummy_ta_wrapper.py 1"),
             stats=stats)
