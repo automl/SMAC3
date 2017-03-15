@@ -24,7 +24,7 @@ __version__ = "0.0.2"
 
 
 def _is_truthy(arg):
-    return arg in ["1", "true", True]
+    return arg in ["1", "true", "True", True]
 
 
 class Scenario(object):
