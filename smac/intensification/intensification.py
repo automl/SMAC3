@@ -441,8 +441,16 @@ class Intensifier(object):
             n_samples = len(chall_runs)
             self.logger.info("Challenger (%.4f) is better than incumbent (%.4f) on %d runs." % (
                 chal_perf, inc_perf, n_samples))
-            self.logger.info(
-                "Changing incumbent to challenger: %s" % (challenger))
+            # Show changes in the configuration
+            params = sorted([(param, incumbent[param], challenger[param]) for param in
+                    challenger.keys()])
+            self.logger.info("Changes in incumbent:")
+            for param in params:
+                if param[1] != param[2]:
+                    self.logger.info("  %s : %r -> %r" % (param))
+                else:
+                    self.logger.debug("  %s remains unchanged: %r" %
+                            (param[0], param[1]))
             self.stats.inc_changed += 1
             self.traj_logger.add_entry(train_perf=chal_perf,
                                        incumbent_id=self.stats.inc_changed,
