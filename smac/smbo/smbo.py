@@ -19,6 +19,8 @@ from smac.stats.stats import Stats
 from smac.initial_design.initial_design import InitialDesign
 from smac.scenario.scenario import Scenario
 from smac.configspace import Configuration, convert_configurations_to_array
+from smac.tae.execute_ta_run import TAEAbortException, BudgetExhaustedException
+from smac.tae.execute_ta_run import FirstRunCrashedException
 
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
@@ -71,7 +73,7 @@ class SMBO(BaseSolver):
         rng: np.random.RandomState
             Random number generator
         '''
-        self.logger = logging.getLogger("SMBO")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.incumbent = None
 
         self.scenario = scenario
@@ -90,7 +92,7 @@ class SMBO(BaseSolver):
 
     def run(self):
         '''
-        Runs the Bayesian optimization loop 
+        Runs the Bayesian optimization loop
 
         Returns
         ----------
@@ -98,7 +100,11 @@ class SMBO(BaseSolver):
             The best found configuration
         '''
         self.stats.start_timing()
-        self.incumbent = self.initial_design.run()
+        try:
+            self.incumbent = self.initial_design.run()
+        except FirstRunCrashedException as err:
+            if self.scenario.abort_on_first_run_crash:
+                raise
 
         # Main BO loop
         iteration = 1
@@ -164,7 +170,7 @@ class SMBO(BaseSolver):
              number of configurations optimized by random search
         num_configurations_by_local_search: int
             number of configurations optimized with local search
-            if None, we use min(10, 1 + 0.5 x the number of configurations on exp average in intensify calls) 
+            if None, we use min(10, 1 + 0.5 x the number of configurations on exp average in intensify calls)
 
         Returns
         -------
@@ -272,7 +278,7 @@ class SMBO(BaseSolver):
                ordered by their acquisition function value
         """
         configs_acq = []
-        
+
         # Start N local search from different random start points
         for start_point in init_points:
             configuration, acq_val = self.acq_optimizer.maximize(start_point)

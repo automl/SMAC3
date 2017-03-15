@@ -186,7 +186,7 @@ class Scenario(object):
             normalized_key = key.lower().replace('-', '').replace('_', '')
             if normalized_key == normalized_name:
                 value = scenario.pop(key)
-                
+
         if dest is None:
             dest = name.lower().replace('-', '_')
 
@@ -211,10 +211,12 @@ class Scenario(object):
 
     def _add_arguments(self):
         # Add allowed arguments
+        self.add_argument(name='abort_on_first_run_crash', help=None,
+                          default='1', callback=_is_truthy)
         self.add_argument(name='algo', help=None, dest='ta',
                           callback=shlex.split)
         self.add_argument(name='execdir', default='.', help=None)
-        self.add_argument(name='deterministic', default="0", help=None,
+        self.add_argument(name='deterministic', default='0', help=None,
                           callback=_is_truthy)
         self.add_argument(name='paramfile', help=None, dest='pcs_fn',
                           mutually_exclusive_group='cs')
@@ -263,10 +265,14 @@ class Scenario(object):
         self.feature_array = None
 
         if self.overall_obj[:3] in ["PAR", "par"]:
-            self.par_factor = int(self.overall_obj[3:])
+            par_str = self.overall_obj[3:]
         elif self.overall_obj[:4] in ["mean", "MEAN"]:
-            self.par_factor = int(self.overall_obj[4:])
+            par_str = self.overall_obj[4:]
+        # Check for par-value as in "par10"/ "mean5"
+        if len(par_str) > 0:
+            self.par_factor = int(par_str)
         else:
+            self.logger.debug("No par-factor detected. Using 1 by default.")
             self.par_factor = 1
 
         # read instance files
@@ -314,7 +320,6 @@ class Scenario(object):
                 self.feature_array.append(self.feature_dict[inst_])
             self.feature_array = numpy.array(self.feature_array)
             self.n_features = self.feature_array.shape[1]
- 
             # reduce dimensionality of features of larger than PCA_DIM
             if self.feature_array.shape[1] > self.PCA_DIM:
                 X = self.feature_array

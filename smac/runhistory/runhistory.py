@@ -158,7 +158,7 @@ class RunHistory(object):
 
     def incremental_update_cost(self, config: Configuration, cost: float):
         '''
-            incrementally updates the performance of a configuration by using a moving average; 
+            incrementally updates the performance of a configuration by using a moving average;
 
             Arguments
             --------
@@ -213,7 +213,7 @@ class RunHistory(object):
 
         Returns
         ----------
-            bool: True if runs have been added to the RunHistory, 
+            bool: True if runs have been added to the RunHistory,
                   False otherwise
         """
         return len(self.data) == 0
@@ -309,7 +309,7 @@ class RunHistory(object):
         runhistory: RunHistory
             runhistory with additional data to be added to self
         external_data: bool
-            if True, run will not be added to self._configid_to_inst_seed 
+            if True, run will not be added to self._configid_to_inst_seed
             and not available through get_runs_for_config()
         """
 

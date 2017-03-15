@@ -14,8 +14,8 @@ __license__ = "3-clause BSD"
 
 
 class InitialDesign(object):
-    
-    def __init__(self, 
+
+    def __init__(self,
                  tae_runner: ExecuteTARun,
                  scenario: Scenario,
                  stats: Stats,
@@ -24,7 +24,7 @@ class InitialDesign(object):
                  ):
         '''
         Constructor
-        
+
         Arguments
         ---------
         tae_runner: ExecuteTARun
@@ -38,18 +38,18 @@ class InitialDesign(object):
         rng: np.random.RandomState
             random state
         '''
-        
+
         self.tae_runner = tae_runner
         self.scenario = scenario
         self.stats = stats
         self.traj_logger = traj_logger
         self.rng = rng
-        self.logger = logging.getLogger("InitialDesign")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
     def run(self):
         '''
             as an initial design: it simply runs the default configuration on random pair of instance and random seed
-            
+
             Returns
             -------
             incumbent: Configuration()

@@ -25,7 +25,7 @@ class CMDReader(object):
         """
         Constructor
         """
-        self.logger = logging.getLogger("CMDReader")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         pass
 
     def read_cmd(self):

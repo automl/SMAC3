@@ -36,14 +36,14 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             highest possible values (e.g. cutoff * par)
         model:
             epm model (i.e. RandomForestWithInstances)
-        change_threshold : float 
+        change_threshold : float
             stop imputation if change is less than this
-        max_iter : maximum number of iteration            
+        max_iter : maximum number of iteration
         -------
         """
 
         super(RFRImputator, self).__init__()
-        self.logger = logging.getLogger("RFRImputor")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.max_iter = max_iter
         self.change_threshold = change_threshold
         self.cutoff = cutoff

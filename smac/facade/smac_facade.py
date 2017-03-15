@@ -83,14 +83,14 @@ class SMAC(object):
         initial_design: InitialDesign
             initial sampling design
         initial_configurations: typing.List[Configuration]
-            list of initial configurations for initial design -- 
+            list of initial configurations for initial design --
             cannot be used together with initial_design
         stats: Stats
             optional stats object
         rng: np.random.RandomState
             Random number generator
         '''
-        self.logger = logging.getLogger("SMAC")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         aggregate_func = average_cost
 
@@ -188,7 +188,7 @@ class SMAC(object):
         if initial_design is not None and initial_configurations is not None:
             raise ValueError(
                 "Either use initial_design or initial_configurations; but not both")
-            
+
         if initial_configurations is not None:
             initial_design = MultiConfigInitialDesign(tae_runner=tae_runner,
                                                       scenario=scenario,
@@ -196,7 +196,7 @@ class SMAC(object):
                                                       traj_logger=traj_logger,
                                                       runhistory=runhistory,
                                                       rng=rng,
-                                                      configs=initial_configurations, 
+                                                      configs=initial_configurations,
                                                       intensifier=intensifier,
                                                       aggregate_func=aggregate_func)
         elif initial_design is None:
@@ -268,7 +268,7 @@ class SMAC(object):
 
     def _get_rng(self, rng):
         '''
-            initial random number generator 
+            initial random number generator
 
             Arguments
             ---------
@@ -312,6 +312,9 @@ class SMAC(object):
             self.runhistory = self.solver.runhistory
             self.trajectory = self.solver.intensifier.traj_logger.trajectory
         return incumbent
+
+    def get_tae_runner(self):
+        return self.solver.intensifier.tae_runner
 
     def get_runhistory(self):
         if not hasattr(self, 'runhistory'):

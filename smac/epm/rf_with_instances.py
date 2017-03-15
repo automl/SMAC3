@@ -87,7 +87,7 @@ class RandomForestWithInstances(AbstractEPM):
                        min_samples_leaf, max_depth, eps_purity, seed]
         self.seed = seed
 
-        self.logger = logging.getLogger("RF")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         # Never use a lower variance than this
         self.var_threshold = 10 ** -5
@@ -137,7 +137,7 @@ class RandomForestWithInstances(AbstractEPM):
                              (self.types.shape[0], X.shape[1]))
 
         means, vars = self.rf.batch_predictions(X)
-        
+
         return means.reshape((-1, 1)), vars.reshape((-1, 1))
 
     def predict_marginalized_over_instances(self, X):

@@ -7,9 +7,15 @@ import sys
 import logging
 import json
 import typing
+import collections
 
 from ConfigSpace.configuration_space import ConfigurationSpace, Configuration
 from ConfigSpace.hyperparameters import FloatHyperparameter, IntegerHyperparameter
+
+
+TrajEntry = collections.namedtuple(
+    'TrajEntry', ['train_perf', 'incumbent_id', 'incumbent',
+                  'ta_runs', 'ta_time_used', 'wallclock_time'])
 
 
 class TrajLogger(object):
@@ -36,11 +42,12 @@ class TrajLogger(object):
             Stats object
         """
         self.stats = stats
-        self.logger = logging.getLogger("TrajLogger")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         self.output_dir = output_dir
         if output_dir is None:
-            self.logger.info("No output directory for trajectory logging specified -- trajectory will not be logged.")
+            self.logger.info("No output directory for trajectory logging "
+                             "specified -- trajectory will not be logged.")
 
         else:
             if not os.path.isdir(output_dir):
@@ -50,14 +57,14 @@ class TrajLogger(object):
                     self.logger.error(
                         "Could not make output directory: %s" % (output_dir))
                     sys.exit(3)
-            
-    
+
+
             self.old_traj_fn = os.path.join(output_dir, "traj_old.csv")
             if not os.path.isfile(self.old_traj_fn):
                 with open(self.old_traj_fn, "w") as fp:
                     fp.write(
                         '"CPU Time Used","Estimated Training Performance","Wallclock Time","Incumbent ID","Automatic Configurator (CPU) Time","Configuration..."\n')
-    
+
             self.aclib_traj_fn = os.path.join(output_dir, "traj_aclib2.json")
 
         self.trajectory = []
@@ -76,10 +83,11 @@ class TrajLogger(object):
             incumbent: Configuration()
                 current incumbent configuration
         """
+        ta_runs = self.stats.ta_runs
         ta_time_used = self.stats.ta_time_used
         wallclock_time = self.stats.get_used_wallclock_time()
-        self.trajectory.append([train_perf, incumbent_id, incumbent,
-                                ta_time_used, wallclock_time])
+        self.trajectory.append(TrajEntry(train_perf, incumbent_id, incumbent,
+                                ta_runs, ta_time_used, wallclock_time))
         if self.output_dir is not None:
             self._add_in_old_format(train_perf, incumbent_id, incumbent,
                                     ta_time_used, wallclock_time)
