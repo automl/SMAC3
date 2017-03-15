@@ -313,6 +313,9 @@ class SMAC(object):
             self.trajectory = self.solver.intensifier.traj_logger.trajectory
         return incumbent
 
+    def get_tae_runner(self):
+        return self.solver.intensifier.tae_runner
+
     def get_runhistory(self):
         if not hasattr(self, 'runhistory'):
             raise ValueError('SMAC was not fitted yet. Call optimize() prior '

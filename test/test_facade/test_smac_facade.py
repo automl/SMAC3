@@ -90,7 +90,7 @@ class TestSMACFacade(unittest.TestCase):
         S2 = S2.solver.scenario.cs.random
         self.assertEqual(sum(S1.get_state()[1] - S2.get_state()[1]), 0)
 
-    def test_get_runhistory_and_trajectory(self):
+    def test_get_runhistory_and_trajectory_and_tae_runner(self):
         ta = ExecuteTAFuncDict(lambda x: x ** 2)
         smac = SMAC(tae_runner=ta, scenario=self.scenario)
         self.assertRaises(ValueError, smac.get_runhistory)
@@ -99,4 +99,5 @@ class TestSMACFacade(unittest.TestCase):
         self.assertEqual(smac.get_trajectory(), 'dummy')
         smac.runhistory = 'dummy'
         self.assertEqual(smac.get_runhistory(), 'dummy')
+        self.assertEqual(smac.get_tae_runner(), ta)
 

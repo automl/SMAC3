@@ -116,8 +116,7 @@ smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
 
 # example call of the function
 # it returns: Status, Cost, Runtime, Additional Infos
-def_value = smac.solver.intensifier.tae_runner.run(
-    cs.get_default_configuration(), 1)[1]
+def_value = smac.get_tae_runner().run(cs.get_default_configuration(), 1)[1]
 print("Default Value: %.2f" % (def_value))
 
 try:
@@ -125,5 +124,5 @@ try:
 finally:
     incumbent = smac.solver.incumbent
 
-inc_value = smac.solver.intensifier.tae_runner.run(incumbent, 1)[1]
+inc_value = smac.get_tae_runner().run(incumbent, 1)[1]
 print("Optimized Value: %.2f" % (inc_value))
