@@ -5,28 +5,35 @@ from smac.configspace import pcs
 
 
 class OutputWriter(object):
-
     """
-    Writing scenario to file.
+        Writing scenario to file.
     """
 
     def __init__(self):
         """
-        Constructor
+            Constructor
         """
+        pass
 
     def write_scenario_file(self, scenario):
         """
-        Write scenario to a file (that is compatible with input_reader).
-        Will overwrite if file exists.
-        If you have arguments that need special parsing when saving, specify so
-        in the _parse_argument-function.
+            Write scenario to a file (format is compatible with input_reader).
+            Will overwrite if file exists.
+            If you have arguments that need special parsing when saving, specify so
+            in the _parse_argument-function.
 
-        Sideeffects:
-            - creates output-directory if it doesn't exist.
+            Parameters:
+            ----------
+                scenario: Scenario
+                    scenario to be written to file
 
-        Returns:
-            False, if writing failed.
+            Sideeffects:
+            ----------
+                - creates output-directory if it doesn't exist.
+
+            Returns:
+            ----------
+                False, if writing failed.
         """
         if scenario.output_dir is None or scenario.output_dir == "":
             scenario.logger.info("No output directory for scenario logging "
@@ -57,25 +64,29 @@ class OutputWriter(object):
 
     def _parse_argument(self, scenario, key, value):
         """
-        Some values of the scenario-file need to be changed upon writing, such
-        as the 'ta' (target algorithm), due to it's callback.
-        Also the configspace, features, train_inst- and test-inst-lists are
-        saved to output_dir, if they exist.
+            Some values of the scenario-file need to be changed upon writing, such
+            as the 'ta' (target algorithm), due to it's callback.
+            Also the configspace, features, train_inst- and test-inst-lists are
+            saved to output_dir, if they exist.
 
-        Args:
-            scenario : Scenario
-                -- scenario-file to be written
-            key : string
-                -- name of the attribute in scenario-file
-            value : Any
-                -- corresponding attribute
+            Parameters:
+            ----------
+                scenario: Scenario
+                    scenario-file to be written
+                key: string
+                    name of the attribute in scenario-file
+                value: Any
+                    corresponding attribute
 
-        Returns:
-            string -- the altered value, to be written to file
+            Returns:
+            ----------
+                new value: string
+                    the altered value, to be written to file
 
-        Sideeffects:
-            - copies files pcs_fn, train_inst_fn, test_inst_fn and feature_fn to
-              output if possible, creates the files from attributes otherwise
+            Sideeffects:
+            ----------
+              - copies files pcs_fn, train_inst_fn, test_inst_fn and feature_fn to
+                output if possible, creates the files from attributes otherwise
         """
         if key in ['pcs_fn', 'train_inst_fn', 'test_inst_fn', 'feature_fn', 'output_dir']:
             # Copy if file exists, else write to new file
