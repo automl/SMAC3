@@ -242,6 +242,58 @@ class TestIntensify(unittest.TestCase):
         config_id = self.rh.config_ids[self.config2]
         self.assertEqual(run.instance, 1, run.instance)
         self.assertEqual(run.seed, 12345, run.seed)
+        
+    def test_race_challenger_3(self):
+        '''
+           test _race_challenger with adaptive capping on a previously capped configuration  
+        '''
+
+        def target(config: Configuration, seed: int, instance: str):
+            if instance == 1:
+                time.sleep(2000)
+            else:
+                time.sleep(0.6)
+            return (config['a'] + 1) / 1000.
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="runtime", par_factor=10)
+        taf.runhistory = self.rh
+
+        intensifier = Intensifier(
+            tae_runner=taf, stats=self.stats,
+            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
+            rng=np.random.RandomState(12345),
+            cutoff=200,
+            instances=[1])
+
+        self.rh.add(config=self.config1, cost=0.5, time=.5,
+                    status=StatusType.SUCCESS, instance_id=1,
+                    seed=12345,
+                    additional_info=None)
+        
+        # config2 should have a timeout (due to adaptive capping)
+        # and config1 should still be the incumbent
+        inc = intensifier._race_challenger(challenger=self.config2,
+                                           incumbent=self.config1,
+                                           run_history=self.rh,
+                                           aggregate_func=average_cost)
+        # self.assertTrue(False)
+        self.assertEqual(inc, self.config1)
+        
+        # further run for incumbent
+        self.rh.add(config=self.config1, cost=200, time=200,
+                    status=StatusType.TIMEOUT, instance_id=2,
+                    seed=12345,
+                    additional_info=None)
+        
+        # give config2 a second chance
+        inc = intensifier._race_challenger(challenger=self.config2,
+                               incumbent=self.config1,
+                               run_history=self.rh,
+                               aggregate_func=average_cost)      
+        
+        # the incumbent should still be config1 because
+        # config2 should get on inst 1 a full timeout
+        # such that c(config1) = 100.25 and c(config2) = 100.3
+        self.assertEqual(inc, self.config1, msg)
 
     def test_race_challenger_large(self):
         '''

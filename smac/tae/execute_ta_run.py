@@ -156,8 +156,8 @@ class ExecuteTARun(object):
             else:
                 cost = runtime
 
-        self.logger.debug("Return: Status: %d, cost: %f, time. %f, additional: %s" % (
-            status.value, cost, runtime, str(additional_info)))
+        self.logger.debug("Return: Status: %r, cost: %f, time: %f, additional: %s" % (
+            status, cost, runtime, str(additional_info)))
 
         if self.runhistory:
             self.runhistory.add(config=config,
