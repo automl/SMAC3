@@ -6,7 +6,6 @@ import inspect
 import numpy as np
 from sklearn.model_selection import KFold
 from sklearn.ensemble import RandomForestRegressor
-from pyrfr import regression32 as regression
 
 from smac.configspace import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
@@ -20,9 +19,6 @@ def rfr(cfg, seed):
     """
     We optimize a random forest regressor with SMAC
     """
-    types=[0,3,0,0,20,6,3,2,0,0,0,20,0,7,0,0,0,20,2,0,0,2,0,20,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-    types = np.array(types, dtype=np.uint)
-
     rf = RandomForestRegressor(
             n_estimators=cfg["num_trees"],
             criterion=cfg["criterion"],
@@ -44,9 +40,6 @@ def rfr(cfg, seed):
         X_test = X[test]
         y_test = y[test]
 
-        data = regression.numpy_data_container(X_train,
-                                                     y_train,
-                                                     types)
         rf.fit(X_train, y_train)
 
         y_pred = rf.predict(X_test)
