@@ -1,4 +1,3 @@
-# TODO: remove really ugly boilerplate
 import logging
 import os
 import inspect
@@ -17,103 +16,107 @@ from smac.facade.smac_facade import SMAC
 
 def rfr(cfg, seed):
     """
-    We optimize a random forest regressor with SMAC
+        Creates a random forest regressor from sklearn and fits the given data on it.
+        This is the function-call we try to optimize. Chosen values are stored in
+        the configuration (cfg).
+
+        Parameters:
+        -----------
+        cfg: Configuration
+            configuration chosen by smac
+        seed: int or RandomState
+            used to initialize the rf's random generator
+
+        Returns:
+        -----------
+        np.mean(rmses): float
+            mean of root mean square errors of random-forest test predictions
+            per cv-fold
     """
-    rf = RandomForestRegressor(
-            n_estimators=cfg["num_trees"],
-            criterion=cfg["criterion"],
-            max_depth=cfg["max_depth"],
-            min_samples_split=cfg["min_samples_to_split"],
-            min_samples_leaf=cfg["min_samples_in_leaf"],
-            min_weight_fraction_leaf=cfg["min_weight_frac_leaf"],
-            max_features=cfg["max_features"],
-            max_leaf_nodes=cfg["max_leaf_nodes"],
-            bootstrap=cfg["do_bootstrapping"],
-            random_state=42)
-
-
+    rfr = RandomForestRegressor(
+        n_estimators=cfg["num_trees"],
+        criterion=cfg["criterion"],
+        max_depth=cfg["max_depth"],
+        min_samples_split=cfg["min_samples_to_split"],
+        min_samples_leaf=cfg["min_samples_in_leaf"],
+        min_weight_fraction_leaf=cfg["min_weight_frac_leaf"],
+        max_features=cfg["max_features"],
+        max_leaf_nodes=cfg["max_leaf_nodes"],
+        bootstrap=cfg["do_bootstrapping"],
+        random_state=seed)
 
     rmses = []
     for train, test in kf:
-        X_train = X[train]
-        y_train = y[train]
-        X_test = X[test]
-        y_test = y[test]
+        # We iterate over cv-folds
+        X_train, X_test = X[train], X[test]
+        y_train, y_test = y[train], y[test]
 
-        rf.fit(X_train, y_train)
+        rfr.fit(X_train, y_train)
 
-        y_pred = rf.predict(X_test)
+        y_pred = rfr.predict(X_test)
 
+        # We use root mean square error as performance measure
         rmse = np.sqrt(np.mean((y_pred - y_test)**2))
         rmses.append(rmse)
-
-        #print(np.mean(rmses))
     return np.mean(rmses)
 
 
-logger = logging.getLogger("RF-example") # Enable to show Debug outputs
+logger = logging.getLogger("RF-example")
 logging.basicConfig(level=logging.INFO)
+#logging.basicConfig(level=logging.DEBUG)  # Enable to show debug-output
 
 folder = os.path.realpath(
     os.path.abspath(os.path.split(inspect.getfile(inspect.currentframe()))[0]))
 
-# load data
-X = np.array(np.loadtxt(os.path.join(folder,"data/X.csv")), dtype=np.float32)
-y = np.array(np.loadtxt(os.path.join(folder,"data/y.csv")), dtype=np.float32)
+# Load data
+X = np.array(np.loadtxt(os.path.join(folder, "data/X.csv")), dtype=np.float32)
+y = np.array(np.loadtxt(os.path.join(folder, "data/y.csv")), dtype=np.float32)
 
-# create cross-validation folds
+# Create cross-validation folds
 kf = KFold(n_splits=4, shuffle=True, random_state=42)
 kf = kf.split(X, y)
 
-# build Configuration Space which defines all parameters and their ranges
-# to illustrate different parameter types,
-# we use continuous, integer and categorical parameters
+# Build Configuration Space which defines all parameters and their ranges.
+# To illustrate different parameter types,
+# we use continuous, integer and categorical parameters.
 cs = ConfigurationSpace()
+
+# We can add single hyperparameters:
 do_bootstrapping = CategoricalHyperparameter(
-    "do_bootstrapping", ["true","false"], default="true")
+    "do_bootstrapping", ["true", "false"], default="true")
 cs.add_hyperparameter(do_bootstrapping)
 
+# Or we can add multiple hyperparameters at once:
 num_trees = UniformIntegerHyperparameter("num_trees", 10, 50, default=10)
-cs.add_hyperparameter(num_trees)
-
-criterion = CategoricalHyperparameter("criterion", ["mse","mae"], default="mse")
-cs.add_hyperparameter(criterion)
-
 max_depth = UniformIntegerHyperparameter("max_depth", 20, 30, default=20)
-cs.add_hyperparameter(max_depth)
-
-min_weight_frac_leaf=UniformFloatHyperparameter("min_weight_frac_leaf", 0.0, 0.5, default=0.0)
-cs.add_hyperparameter(min_weight_frac_leaf)
-
 max_features = UniformIntegerHyperparameter("max_features", 1, X.shape[1], default=1)
-cs.add_hyperparameter(max_features)
-
+min_weight_frac_leaf = UniformFloatHyperparameter("min_weight_frac_leaf", 0.0, 0.5, default=0.0)
+criterion = CategoricalHyperparameter("criterion", ["mse", "mae"], default="mse")
 min_samples_to_split = UniformIntegerHyperparameter("min_samples_to_split", 2, 20, default=2)
-cs.add_hyperparameter(min_samples_to_split)
-
 min_samples_in_leaf = UniformIntegerHyperparameter("min_samples_in_leaf", 1, 20, default=1)
-cs.add_hyperparameter(min_samples_in_leaf)
-
 max_leaf_nodes = UniformIntegerHyperparameter("max_leaf_nodes", 10, 1000, default=100)
-cs.add_hyperparameter(max_leaf_nodes)
+
+cs.add_hyperparameters([num_trees, max_depth, min_weight_frac_leaf, criterion,
+        max_features, min_samples_to_split, min_samples_in_leaf, max_leaf_nodes])
 
 # SMAC scenario oject
 scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative runtime)
-                     "runcount-limit": 50,  # at most 50 function evaluations
-                     "cs": cs, # configuration space
+                     "runcount-limit": 20,  # maximum number of function evaluations
+                     "cs": cs,              # configuration space
                      "deterministic": "true",
                      "memory_limit": 1024,
                      })
 
-# Optimize
+# To optimize, we pass the function to the SMAC-object
 smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
             tae_runner=rfr)
 
-# example call of the function
-# it returns: Status, Cost, Runtime, Additional Infos
+# Example call of the function with default values
+# It returns: Status, Cost, Runtime, Additional Infos
 def_value = smac.get_tae_runner().run(cs.get_default_configuration(), 1)[1]
 print("Value for default configuration: %.2f" % (def_value))
 
+# Start optimization
 try:
     incumbent = smac.optimize()
 finally:
