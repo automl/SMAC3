@@ -103,6 +103,9 @@ class SMAC(object):
         # initialize empty runhistory
         if runhistory is None:
             runhistory = RunHistory(aggregate_func=aggregate_func)
+        # inject aggr_func if necessary
+        if runhistory.aggregate_func is None:
+            runhistory.aggregate_func = aggregate_func
 
         # initial random number generator
         num_run, rng = self._get_rng(rng=rng)
@@ -124,6 +127,9 @@ class SMAC(object):
         # initial acquisition function
         if acquisition_function is None:
             acquisition_function = EI(model=model)
+        # inject model if necessary
+        if acquisition_function.model is None:
+            acquisition_function.model = model
 
         # initialize optimizer on acquisition function
         local_search = LocalSearch(acquisition_function,
@@ -170,7 +176,7 @@ class SMAC(object):
             tae_runner.runhistory = runhistory
 
 
-        # initial intensification
+        # initialize intensification
         if intensifier is None:
             intensifier = Intensifier(tae_runner=tae_runner,
                                       stats=self.stats,
@@ -183,6 +189,13 @@ class SMAC(object):
                                       instance_specifics=scenario.instance_specific,
                                       minR=scenario.minR,
                                       maxR=scenario.maxR)
+        # inject deps if necessary
+        if intensifier.tae_runner is None:
+            intensifier.tae_runner = tae_runner
+        if intensifier.stats is None:
+            intensifier.stats = self.stats
+        if intensifier.traj_logger is None:
+            intensifier.traj_logger = traj_logger
 
         # initial design
         if initial_design is not None and initial_configurations is not None:
@@ -215,6 +228,15 @@ class SMAC(object):
             else:
                 raise ValueError("Don't know what kind of initial_incumbent "
                                  "'%s' is" % scenario.initial_incumbent)
+        # inject deps if necessary
+        if initial_design.tae_runner is None:
+            initial_design.tae_runner = tae_runner
+        if initial_design.scenario is None:
+            initial_design.scenario = scenario
+        if initial_design.stats is None:
+            initial_design.stats = self.stats
+        if initial_design.traj_logger is None:
+            initial_design.traj_logger = traj_logger
 
         # initial conversion of runhistory into EPM data
         if runhistory2epm is None:
@@ -252,6 +274,10 @@ class SMAC(object):
             else:
                 raise ValueError('Unknown run objective: %s. Should be either '
                                  'quality or runtime.' % self.scenario.run_obj)
+
+        # inject scenario if necessary:
+        if runhistory2epm.scenario is None:
+            runhisory2epm.scenario = scenario
 
         self.solver = SMBO(scenario=scenario,
                            stats=self.stats,
