@@ -277,7 +277,7 @@ class SMAC(object):
 
         # inject scenario if necessary:
         if runhistory2epm.scenario is None:
-            runhisory2epm.scenario = scenario
+            runhistory2epm.scenario = scenario
 
         self.solver = SMBO(scenario=scenario,
                            stats=self.stats,
