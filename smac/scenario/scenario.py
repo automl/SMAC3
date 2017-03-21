@@ -215,6 +215,8 @@ class Scenario(object):
         self.add_argument(name='execdir', default='.', help=None)
         self.add_argument(name='deterministic', default='0', help=None,
                           callback=_is_truthy)
+        self.add_argument(name='intensification_percentage', default=0.5,
+                          help=None, callback=float)
         self.add_argument(name='paramfile', help=None, dest='pcs_fn',
                           mutually_exclusive_group='cs')
         self.add_argument(name='run_obj', help=None, default='runtime')

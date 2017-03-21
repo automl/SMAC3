@@ -299,9 +299,25 @@ class TestSMBO(unittest.TestCase):
         smbo = SMAC(scen, tae_runner=target, rng=1).solver
         self.assertRaises(FirstRunCrashedException, smbo.run)
 
+    def test_intensification_percentage_bad_value(self):
+        def target(x):
+            return 5
+        # Test for <= 0
+        scen = Scenario({'cs': test_helpers.get_branin_config_space(),
+                         'run_obj': 'quality',
+                         'intensification_percentage' : 0})
+        smbo = SMAC(scen, tae_runner=target, rng=1).solver
+        self.assertRaises(ValueError, smbo.run)
+        # Test for >= 1
+        scen = Scenario({'cs': test_helpers.get_branin_config_space(),
+                         'run_obj': 'quality',
+                         'intensification_percentage' : 1})
+        smbo = SMAC(scen, tae_runner=target, rng=1).solver
+        self.assertRaises(ValueError, smbo.run)
+
     def tearDown(self):
-            for d in glob.glob('smac3-output*'):
-                shutil.rmtree(d)
+        for d in glob.glob('smac3-output*'):
+            shutil.rmtree(d)
 
 
 if __name__ == "__main__":

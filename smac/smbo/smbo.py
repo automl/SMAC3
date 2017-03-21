@@ -123,8 +123,18 @@ class SMBO(BaseSolver):
             challengers = self.choose_next(X, Y)
 
             time_spend = time.time() - start_time
-            logging.debug(
-                "Time spend to choose next configurations: %.2f sec" % (time_spend))
+
+            # Calculate time left for intensify
+            frac_intensify = self.scenario.intensification_percentage
+            if (frac_intensify <= 0 or frac_intensify >= 1):
+                raise ValueError("The value for intensification_percentage-"
+                                 "option must lie in (0,1), instead: %.2f" % (frac_intensify))
+            total_time = time_spend / (1-frac_intensify)
+            time_left = frac_intensify * total_time
+            self.logger.debug("Total time: %.4f, time spend on choosing next "
+                              "configurations: %.4f (%.2f), time left for "
+                              "intensification: %.4f (%.2f)" % (total_time,
+                    time_spend, (1-frac_intensify), time_left, frac_intensify))
 
             self.logger.debug("Intensify")
 
@@ -133,7 +143,7 @@ class SMBO(BaseSolver):
                 incumbent=self.incumbent,
                 run_history=self.runhistory,
                 aggregate_func=self.aggregate_func,
-                time_bound=max(0.01, time_spend))
+                time_bound=max(0.01, time_left))
 
             if self.scenario.shared_model:
                 pSMAC.write(run_history=self.runhistory,
