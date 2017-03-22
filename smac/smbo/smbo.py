@@ -122,19 +122,19 @@ class SMBO(BaseSolver):
             # get all found configurations sorted according to acq
             challengers = self.choose_next(X, Y)
 
-            time_spend = time.time() - start_time
+            time_spent = time.time() - start_time
 
             # Calculate time left for intensify
             frac_intensify = self.scenario.intensification_percentage
             if (frac_intensify <= 0 or frac_intensify >= 1):
                 raise ValueError("The value for intensification_percentage-"
                                  "option must lie in (0,1), instead: %.2f" % (frac_intensify))
-            total_time = time_spend / (1-frac_intensify)
+            total_time = time_spent / (1-frac_intensify)
             time_left = frac_intensify * total_time
-            self.logger.debug("Total time: %.4f, time spend on choosing next "
+            self.logger.debug("Total time: %.4f, time spent on choosing next "
                               "configurations: %.4f (%.2f), time left for "
                               "intensification: %.4f (%.2f)" % (total_time,
-                    time_spend, (1-frac_intensify), time_left, frac_intensify))
+                    time_spent, (1-frac_intensify), time_left, frac_intensify))
 
             self.logger.debug("Intensify")
 
