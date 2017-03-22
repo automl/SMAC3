@@ -1,3 +1,49 @@
+# 0.3
+
+* Major speed improvements when sampling new configurations:
+    * Improved conditional hyperparameter imputation (PR #176)
+    * Faster generation of the one exchange neighborhood (PR #174)
+* FIX #171 potential bug with pSMAC
+* FIX #175 backwards compability for reading runhistory files
+
+# 0.2.4
+
+* CI only check code quality for python3
+* Perform local search on configurations from previous runs as proposed in the
+  original paper from 2011 instead of random configurations as implemented
+  before
+* CI run travis-ci unit tests with python3.6
+* FIX #167, remove an endless loop which occured when using pSMAC
+
+# 0.2.3
+
+* MAINT refactor Intensifcation and adding unit tests
+* CHANGE StatusType to Enum
+* RM parameter importance package
+* FIX ROAR facade bug for cli
+* ADD easy access of runhistory within Python
+* FIX imputation of censored data
+* FIX conversion of runhistory to EPM training data (in particular running time data)
+* FIX initial run only added once in runhistory
+* MV version number to a separate file
+* MAINT more efficient computations in run_history (assumes average as aggregation function across instances)
+
+# 0.2.2
+
+* FIX 124: SMAC could crash if the number of instances was less than seven
+* FIX 126: Memory limit was not correctly passed to the target algorithm
+  evaluator
+* Local search is now started from the configurations with highest EI, drawn by
+  random sampling
+* Reduce the number of trees to 10 to allow faster predictions (as in SMAC2)
+* Do an adaptive number of stochastic local search iterations instead of a fixd
+  number (a5914a1d97eed2267ae82f22bd53246c92fe1e2c)
+* FIX a bug which didn't make SMAC run at least two configurations per call to
+  intensify
+* ADD more efficient data structure to update the cost of a configuration
+* FIX do only count a challenger as a run if it actually was run
+  (and not only considered)(a993c29abdec98c114fc7d456ded1425a6902ce3)
+
 # 0.2.1
 
 * CI: travis-ci continuous integration on OSX

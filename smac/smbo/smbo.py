@@ -1,14 +1,11 @@
 import itertools
 import logging
 import numpy as np
-import os
 import random
-import sys
 import time
 import typing
 import math
 
-import ConfigSpace.util
 
 from smac.smbo.acquisition import AbstractAcquisitionFunction
 from smac.smbo.base_solver import BaseSolver
@@ -21,9 +18,10 @@ from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.stats.stats import Stats
 from smac.initial_design.initial_design import InitialDesign
 from smac.scenario.scenario import Scenario
-from smac.configspace import Configuration
+from smac.configspace import Configuration, convert_configurations_to_array
+from smac.tae.execute_ta_run import TAEAbortException, BudgetExhaustedException
+from smac.tae.execute_ta_run import FirstRunCrashedException
 
-from smac.epm.rfr_imputator import RFRImputator
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -75,7 +73,7 @@ class SMBO(BaseSolver):
         rng: np.random.RandomState
             Random number generator
         '''
-        self.logger = logging.getLogger("SMBO")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.incumbent = None
 
         self.scenario = scenario
@@ -94,7 +92,7 @@ class SMBO(BaseSolver):
 
     def run(self):
         '''
-        Runs the Bayesian optimization loop 
+        Runs the Bayesian optimization loop
 
         Returns
         ----------
@@ -102,7 +100,11 @@ class SMBO(BaseSolver):
             The best found configuration
         '''
         self.stats.start_timing()
-        self.incumbent = self.initial_design.run()
+        try:
+            self.incumbent = self.initial_design.run()
+        except FirstRunCrashedException as err:
+            if self.scenario.abort_on_first_run_crash:
+                raise
 
         # Main BO loop
         iteration = 1
@@ -168,13 +170,18 @@ class SMBO(BaseSolver):
              number of configurations optimized by random search
         num_configurations_by_local_search: int
             number of configurations optimized with local search
-            if None, we use min(10, 1 + 0.5 x the number of configurations on exp average in intensify calls) 
+            if None, we use min(10, 1 + 0.5 x the number of configurations on exp average in intensify calls)
 
         Returns
         -------
         list
             List of 2020 suggested configurations to evaluate.
         """
+        if X.shape[0] == 0:
+            # Only return a single point to avoid an overly high number of
+            # random search iterations
+            return [x[1] for x in self._get_next_by_random_search(num_points=1)]
+
         self.model.train(X, Y)
 
         if self.runhistory.empty():
@@ -199,13 +206,14 @@ class SMBO(BaseSolver):
             else:
                 num_configurations_by_local_search = 10
 
-        # initial SLS by incumbent +
-        # best configuration from next_configs_by_random_search_sorted
+        # initiate local search with best configurations from previous runs
+        configs_previous_runs = self.runhistory.get_all_configs()
+        configs_previous_runs_sorted = self._sort_configs_by_acq_value(configs_previous_runs)
+        num_configs_local_search = min(len(configs_previous_runs_sorted), num_configurations_by_local_search)
         next_configs_by_local_search = \
             self._get_next_by_local_search(
-                [self.incumbent] +
                 list(map(lambda x: x[1],
-                         next_configs_by_random_search_sorted[:num_configurations_by_local_search - 1])))
+                         configs_previous_runs_sorted[:num_configs_local_search])))
 
         next_configs_by_acq_value = next_configs_by_random_search_sorted + \
             next_configs_by_local_search
@@ -218,7 +226,7 @@ class SMBO(BaseSolver):
         # Remove dummy acquisition function value
         next_configs_by_random_search = [x[1] for x in
                                          self._get_next_by_random_search(
-                                             num_points=num_configurations_by_local_search + num_configurations_by_random_search_sorted)]
+                                             num_points=num_configs_local_search + num_configurations_by_random_search_sorted)]
 
         challengers = list(itertools.chain(*zip(next_configs_by_acq_value,
                                                 next_configs_by_random_search)))
@@ -241,28 +249,14 @@ class SMBO(BaseSolver):
         list : (acquisition value, Candidate solutions)
         """
 
-        rand_configs = self.config_space.sample_configuration(size=num_points)
+        if num_points > 1:
+            rand_configs = self.config_space.sample_configuration(size=num_points)
+        else:
+            rand_configs = [self.config_space.sample_configuration(size=1)]
         if _sorted:
-            imputed_rand_configs = map(ConfigSpace.util.impute_inactive_values,
-                                       rand_configs)
-            imputed_rand_configs = [x.get_array()
-                                    for x in imputed_rand_configs]
-            imputed_rand_configs = np.array(imputed_rand_configs,
-                                            dtype=np.float64)
-            acq_values = self.acquisition_func(imputed_rand_configs)
-            # From here
-            # http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values
-            random = self.rng.rand(len(acq_values))
-            # Last column is primary sort key!
-            indices = np.lexsort((random.flatten(), acq_values.flatten()))
-
             for i in range(len(rand_configs)):
                 rand_configs[i].origin = 'Random Search (sorted)'
-
-            # Cannot use zip here because the indices array cannot index the
-            # rand_configs list, because the second is a pure python list
-            return [(acq_values[ind][0], rand_configs[ind])
-                    for ind in indices[::-1]]
+            return self._sort_configs_by_acq_value(rand_configs)
         else:
             for i in range(len(rand_configs)):
                 rand_configs[i].origin = 'Random Search'
@@ -284,7 +278,7 @@ class SMBO(BaseSolver):
                ordered by their acquisition function value
         """
         configs_acq = []
-        
+
         # Start N local search from different random start points
         for start_point in init_points:
             configuration, acq_val = self.acq_optimizer.maximize(start_point)
@@ -300,3 +294,30 @@ class SMBO(BaseSolver):
         configs_acq.sort(reverse=True, key=lambda x: x[0])
 
         return configs_acq
+
+    def _sort_configs_by_acq_value(self, configs):
+        """ Sort the given configurations by acquisition value
+
+        Parameters
+        ----------
+        configs : list(Configuration)
+
+        Returns
+        -------
+        list: (acquisition value, Candidate solutions),
+                ordered by their acquisition function value
+
+        """
+
+        config_array = convert_configurations_to_array(configs)
+        acq_values = self.acquisition_func(config_array)
+
+        # From here
+        # http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values
+        random = self.rng.rand(len(acq_values))
+        # Last column is primary sort key!
+        indices = np.lexsort((random.flatten(), acq_values.flatten()))
+
+        # Cannot use zip here because the indices array cannot index the
+        # rand_configs list, because the second is a pure python list
+        return [(acq_values[ind][0], configs[ind]) for ind in indices[::-1]]

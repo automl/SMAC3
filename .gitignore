@@ -16,7 +16,12 @@ target_algo_runs.json
 
 # Other
 .tox
+.coverage
+.pypirc
+.ipynb_checkpoints/
+*.ipynb
 *~
+.html/
 
 #eclipse files
 .pydevproject 

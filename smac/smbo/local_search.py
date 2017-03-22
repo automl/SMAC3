@@ -1,9 +1,9 @@
 import logging
 import time
-import random
 import numpy as np
 
-from smac.configspace import impute_inactive_values, get_one_exchange_neighbourhood, Configuration
+from smac.configspace import get_one_exchange_neighbourhood, \
+    convert_configurations_to_array
 
 __author__ = "Aaron Klein, Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -43,7 +43,7 @@ class LocalSearch(object):
         else:
             self.rng = rng
 
-        self.logger = logging.getLogger("localsearch")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
     def maximize(self, start_point, *args):
         """
@@ -71,10 +71,8 @@ class LocalSearch(object):
         """
         incumbent = start_point
         # Compute the acquisition value of the incumbent
-        incumbent_ = impute_inactive_values(incumbent)
-        acq_val_incumbent = self.acquisition_function(
-                                            incumbent_.get_array(),
-                                            *args)
+        incumbent_array = convert_configurations_to_array([incumbent])
+        acq_val_incumbent = self.acquisition_function(incumbent_array, *args)
 
         local_search_steps = 0
         neighbors_looked_at = 0
@@ -83,23 +81,24 @@ class LocalSearch(object):
 
             local_search_steps += 1
             if local_search_steps % 1000 == 0:
-                self.logger.warn("Local search took already %d iterations." \
-                "Is it maybe stuck in a infinite loop?", local_search_steps)
+                self.logger.warn("Local search took already %d iterations."
+                                 "Is it maybe stuck in a infinite loop?",
+                                 local_search_steps)
 
             # Get neighborhood of the current incumbent
             # by randomly drawing configurations
             changed_inc = False
 
-            all_neighbors = get_one_exchange_neighbourhood(incumbent,
-                                                    seed=self.rng.seed())
-            self.rng.shuffle(all_neighbors)
+            # Get one exchange neighborhood returns an iterator (in contrast of
+            # the previously returned list).
+            all_neighbors = get_one_exchange_neighbourhood(
+                incumbent, seed=self.rng.seed())
 
             for neighbor in all_neighbors:
                 s_time = time.time()
-                neighbor_ = impute_inactive_values(neighbor)
-                n_array = neighbor_.get_array()
+                neighbor_array_ = convert_configurations_to_array([neighbor])
 
-                acq_val = self.acquisition_function(n_array, *args)
+                acq_val = self.acquisition_function(neighbor_array_, *args)
 
                 neighbors_looked_at += 1
 

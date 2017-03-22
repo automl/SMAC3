@@ -10,7 +10,7 @@ import logging
 from smac.utils.io.cmd_reader import CMDReader
 
 class TestArgs():
-    
+
     def __init__(self, sf, seed, mi, vl):
         self.scenario_file = sf
         self.seed = seed
@@ -21,7 +21,7 @@ class CMDReaderTest(unittest.TestCase):
 
     def setUp(self):
         logging.basicConfig()
-        self.logger = logging.getLogger('CMDReader Test')
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.logger.setLevel(logging.DEBUG)
         self.cr = CMDReader()
         self.current_dir = os.getcwd()
@@ -37,7 +37,7 @@ class CMDReaderTest(unittest.TestCase):
         targs = TestArgs('.', 1234, 2, 'DEBUG')
         with self.assertRaises(ValueError):
             self.cr._check_args(targs)
-    
+
     def test_check_args(self):  # Tests if no Exception is raised
         targs = TestArgs('test/test_files/scenario_test/scenario.txt', 1234, 2, 'DEBUG')
         self.cr._check_args(targs)

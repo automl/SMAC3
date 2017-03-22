@@ -20,6 +20,7 @@ from smac.scenario.scenario import Scenario
 from smac.smbo.acquisition import EI, EIPS
 from smac.smbo.local_search import LocalSearch
 from smac.tae.execute_func import ExecuteTAFuncArray
+from smac.tae.execute_ta_run import TAEAbortException, FirstRunCrashedException
 from smac.stats.stats import Stats
 from smac.utils import test_helpers
 from smac.epm.rf_with_instances import RandomForestWithInstances
@@ -28,12 +29,14 @@ from smac.epm.uncorrelated_mo_rf_with_instances import \
 from smac.utils.util_funcs import get_types
 from smac.facade.smac_facade import SMAC
 from smac.smbo.objective import average_cost
+from smac.initial_design.single_config_initial_design import SingleConfigInitialDesign
+from smac.intensification.intensification import Intensifier
 
 if sys.version_info[0] == 2:
     import mock
 else:
     from unittest import mock
-    
+
 
 class ConfigurationMock(object):
     def __init__(self, value=None):
@@ -48,12 +51,12 @@ class TestSMBO(unittest.TestCase):
     def setUp(self):
         self.scenario = Scenario({'cs': test_helpers.get_branin_config_space(),
                                   'run_obj': 'quality'})
-        
+
     def branin(self, x):
         y = (x[:, 1] - (5.1 / (4 * np.pi ** 2)) * x[:, 0] ** 2 + 5 * x[:, 0] / np.pi - 6) ** 2
         y += 10 * (1 - 1 / (8 * np.pi)) * np.cos(x[:, 0]) + 10
 
-        return y[:, np.newaxis]        
+        return y[:, np.newaxis]
 
     def test_init_only_scenario_runtime(self):
         self.scenario.run_obj = 'runtime'
@@ -107,6 +110,7 @@ class TestSMBO(unittest.TestCase):
         smbo.runhistory = RunHistory(aggregate_func=average_cost)
         X = self.scenario.cs.sample_configuration().get_array()[None, :]
         smbo.incumbent = self.scenario.cs.sample_configuration()
+        smbo.runhistory.add(smbo.incumbent, 10, 10, 1)
 
         Y = self.branin(X)
         x = smbo.choose_next(X, Y)[0].get_array()
@@ -119,8 +123,47 @@ class TestSMBO(unittest.TestCase):
         smbo = SMAC(self.scenario, rng=1).solver
         smbo.incumbent = self.scenario.cs.sample_configuration()
         smbo.runhistory = RunHistory(aggregate_func=average_cost)
-        smbo.model = mock.MagicMock()
-        smbo.acquisition_func._compute = mock.MagicMock()
+        smbo.runhistory.add(smbo.incumbent, 10, 10, 1)
+        smbo.model = mock.Mock(spec=RandomForestWithInstances)
+        smbo.acquisition_func._compute = mock.Mock(spec=RandomForestWithInstances)
+        smbo.acquisition_func._compute.side_effect = side_effect
+
+        X = smbo.rng.rand(10, 2)
+        Y = smbo.rng.rand(10, 1)
+
+        x = smbo.choose_next(X, Y)
+
+        self.assertEqual(smbo.model.train.call_count, 1)
+        self.assertEqual(len(x), 2002)
+        num_random_search = 0
+        num_local_search = 0
+        for i in range(0, 2002, 2):
+            # print(x[i].origin)
+            self.assertIsInstance(x[i], Configuration)
+            if 'Random Search (sorted)' in x[i].origin:
+                num_random_search += 1
+            elif 'Local Search' in x[i].origin:
+                num_local_search += 1
+        # number of local search configs has to be least 10
+        # since x can have duplicates
+        # which can be associated with the local search
+        self.assertGreaterEqual(num_local_search, 1)
+        for i in range(1, 2002, 2):
+            self.assertIsInstance(x[i], Configuration)
+            self.assertEqual(x[i].origin, 'Random Search')
+
+    def test_choose_next_3(self):
+        def side_effect(X, derivative):
+            return np.mean(X, axis=1).reshape((-1, 1))
+
+        smbo = SMAC(self.scenario, rng=1).solver
+        smbo.incumbent = self.scenario.cs.sample_configuration()
+        previous_configs = [smbo.incumbent] + [self.scenario.cs.sample_configuration() for i in range(0, 20)]
+        smbo.runhistory = RunHistory(aggregate_func=average_cost)
+        for i in range(0, len(previous_configs)):
+            smbo.runhistory.add(previous_configs[i], i, 10, 1)
+        smbo.model = mock.Mock(spec=RandomForestWithInstances)
+        smbo.acquisition_func._compute = mock.Mock(spec=RandomForestWithInstances)
         smbo.acquisition_func._compute.side_effect = side_effect
 
         X = smbo.rng.rand(10, 2)
@@ -132,22 +175,46 @@ class TestSMBO(unittest.TestCase):
         self.assertEqual(len(x), 2020)
         num_random_search = 0
         num_local_search = 0
-        for i in range(0, 2020,2):
-            #print(x[i].origin)
+        for i in range(0, 2020, 2):
+            # print(x[i].origin)
             self.assertIsInstance(x[i], Configuration)
             if 'Random Search (sorted)' in x[i].origin:
                 num_random_search += 1
             elif 'Local Search' in x[i].origin:
                 num_local_search += 1
         # number of local search configs has to be least 10
-        # since x can have duplicates 
-        # which can be associated with the local search 
+        # since x can have duplicates
+        # which can be associated with the local search
         self.assertGreaterEqual(num_local_search, 10)
         for i in range(1, 2020, 2):
             self.assertIsInstance(x[i], Configuration)
             self.assertEqual(x[i].origin, 'Random Search')
 
-    @mock.patch('ConfigSpace.util.impute_inactive_values')
+    def test_choose_next_empty_X(self):
+        smbo = SMAC(self.scenario, rng=1).solver
+        smbo.acquisition_func._compute = mock.Mock(spec=RandomForestWithInstances)
+        smbo._get_next_by_random_search = mock.Mock(spec=smbo._get_next_by_random_search)
+        smbo._get_next_by_random_search.return_value = [[0, 0], [0, 1], [0, 2]]
+
+        X = np.zeros((0, 2))
+        Y = np.zeros((0, 1))
+
+        x = smbo.choose_next(X, Y)
+        self.assertEqual(x, [0, 1, 2])
+        self.assertEqual(smbo._get_next_by_random_search.call_count, 1)
+        self.assertEqual(smbo.acquisition_func._compute.call_count, 0)
+
+    def test_choose_next_empty_X_2(self):
+        smbo = SMAC(self.scenario, rng=1).solver
+
+        X = np.zeros((0, 2))
+        Y = np.zeros((0, 1))
+
+        x = smbo.choose_next(X, Y)
+        self.assertEqual(len(x), 1)
+        self.assertIsInstance(x[0], Configuration)
+
+    @mock.patch('smac.smbo.smbo.convert_configurations_to_array')
     @mock.patch.object(EI, '__call__')
     @mock.patch.object(ConfigurationSpace, 'sample_configuration')
     def test_get_next_by_random_search_sorted(self,
@@ -157,7 +224,7 @@ class TestSMBO(unittest.TestCase):
         values = (10, 1, 9, 2, 8, 3, 7, 4, 6, 5)
         patch_sample.return_value = [ConfigurationMock(i) for i in values]
         patch_ei.return_value = np.array([[_] for _ in values], dtype=float)
-        patch_impute.side_effect = lambda x: x
+        patch_impute.side_effect = lambda l: values
         smbo = SMAC(self.scenario, rng=1).solver
         rval = smbo._get_next_by_random_search(10, True)
         self.assertEqual(len(rval), 10)
@@ -170,8 +237,7 @@ class TestSMBO(unittest.TestCase):
         # Check that config.get_array works as desired and imputation is used
         #  in between
         np.testing.assert_allclose(patch_ei.call_args[0][0],
-                                   np.array(values, dtype=float)
-                                   .reshape((-1, 1)))
+                                   np.array(values, dtype=float))
 
     @mock.patch.object(ConfigurationSpace, 'sample_configuration')
     def test_get_next_by_random_search(self, patch):
@@ -221,6 +287,17 @@ class TestSMBO(unittest.TestCase):
         self.assertEqual(patch.call_args_list[9][0][0], 'Incumbent')
         for i in range(10):
             self.assertEqual(rval[i][1].origin, 'Local Search')
+
+    @mock.patch.object(SingleConfigInitialDesign, 'run')
+    def test_abort_on_initial_design(self, patch):
+        def target(x):
+            return 5
+        patch.side_effect = FirstRunCrashedException()
+        scen = Scenario({'cs': test_helpers.get_branin_config_space(),
+                         'run_obj': 'quality',
+                         'abort_on_first_run_crash' : 1})
+        smbo = SMAC(scen, tae_runner=target, rng=1).solver
+        self.assertRaises(FirstRunCrashedException, smbo.run)
 
     def tearDown(self):
             for d in glob.glob('smac3-output*'):

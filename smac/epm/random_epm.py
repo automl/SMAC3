@@ -22,7 +22,7 @@ class RandomEPM(AbstractEPM):
         ----------
         rng : np.random.RandomState
         '''
-        self.logger = logging.getLogger("RandomEPM")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.rng = rng
 
     def train(self, X, Y, **kwargs):

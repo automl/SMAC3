@@ -14,18 +14,17 @@ __license__ = "3-clause BSD"
 
 
 class DefaultConfiguration(SingleConfigInitialDesign):
-    
-    def __init__(self, 
+
+    def __init__(self,
                  tae_runner: ExecuteTARun,
                  scenario: Scenario,
                  stats: Stats,
                  traj_logger: TrajLogger,
-                 runhistory: RunHistory,
                  rng: np.random.RandomState
                  ):
         '''
         Constructor
-        
+
         Arguments
         ---------
         tae_runner: ExecuteTARun
@@ -37,16 +36,13 @@ class DefaultConfiguration(SingleConfigInitialDesign):
             exhaust the budget
         traj_logger: TrajLogger
             trajectory logging to add new incumbents found by the initial design
-        runhistory: RunHistory
-            runhistory with all target algorithm runs
         rng: np.random.RandomState
             random state
         '''
-        super().__init__(tae_runner=tae_runner, 
+        super().__init__(tae_runner=tae_runner,
                          scenario=scenario,
                          stats=stats,
                          traj_logger=traj_logger,
-                         runhistory=runhistory,
                          rng=rng)
 
     def _select_configuration(self):
