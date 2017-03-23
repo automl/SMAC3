@@ -304,48 +304,29 @@ class TestSMBO(unittest.TestCase):
     def test_intensification_percentage(self):
         def target(x):
             return 5
-        scen = Scenario({'cs': test_helpers.get_branin_config_space(),
-                         'run_obj': 'quality', 'output_dir': "",
-                         'runcount_limit': 1,
-                         'intensification_percentage' : 0.3})
-        smbo = SMAC(scen, tae_runner=target, rng=1).solver
-        # check for correct execution by catching the logs. difficult to do
-        # differently, because no access to local variables possible
-        rgx = re.compile(r".*Total time: (\d+\.\d+), time spent on choosing next "
-                         "configurations: (\d+\.\d+) \((\d+\.\d+)\), time left for "
-                         "intensification: (\d+\.\d+) \((\d+\.\d+)\).*")
-        with self.assertLogs('smac.smbo.smbo.SMBO', level='DEBUG') as cm:
-            smbo.run()
-            match = rgx.match("".join(cm.output))
-
-        total, spent, frac_conf, left, frac_inten = [float(x) for x in match.groups()]
-        self.assertEqual(frac_conf, 0.7)
-        self.assertEqual(frac_inten, 0.3)
-        self.assertAlmostEqual(total*frac_conf, spent, 3)
-        self.assertAlmostEqual(total*frac_inten, left, 3)
-
-    def test_intensification_percentage_bad_value(self):
-        def target(x):
-            return 5
         def get_smbo(intensification_perc):
             """ Return SMBO with intensification_percentage. """
             scen = Scenario({'cs': test_helpers.get_branin_config_space(),
                              'run_obj': 'quality', 'output_dir': "",
                              'intensification_percentage' : intensification_perc})
             return SMAC(scen, tae_runner=target, rng=1).solver
-        # Test for <= 0
+        # Test for valid values
+        smbo = get_smbo(0.3)
+        self.assertAlmostEqual(3.0, smbo._get_timebound_for_intensification(7.0))
+        smbo = get_smbo(0.5)
+        self.assertAlmostEqual(0.03, smbo._get_timebound_for_intensification(0.03))
+        smbo = get_smbo(0.7)
+        self.assertAlmostEqual(1.4, smbo._get_timebound_for_intensification(0.6))
+        # Test for invalid <= 0
         smbo = get_smbo(0)
         self.assertRaises(ValueError, smbo.run)
         smbo = get_smbo(-0.2)
         self.assertRaises(ValueError, smbo.run)
-        # Test for >= 1
+        # Test for invalid >= 1
         smbo = get_smbo(1)
         self.assertRaises(ValueError, smbo.run)
         smbo = get_smbo(1.2)
         self.assertRaises(ValueError, smbo.run)
-
-    def tearDown(self):
-        pass
 
 
 if __name__ == "__main__":
