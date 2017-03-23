@@ -80,7 +80,7 @@ class AbstractRunHistory2EPM(object):
             self.rs = np.random.RandomState()
 
         if self.impute_state is None:
-            self.impute_state = [StatusType.TIMEOUT, StatusType.CAPPED]
+            self.impute_state = [StatusType.CAPPED, ]
 
         if self.success_states is None:
             self.success_states = [StatusType.SUCCESS, ]
