@@ -5,6 +5,8 @@ from enum import Enum
 
 import numpy as np
 
+from smac.configspace import Configuration
+
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"
@@ -23,6 +25,7 @@ class StatusType(Enum):
     CRASHED = 3
     ABORT = 4
     MEMOUT = 5
+    CAPPED = 6
 
     def enum_hook(obj):
         """
@@ -49,6 +52,11 @@ class FirstRunCrashedException(TAEAbortException):
     """ Exception indicating that the first run crashed (depending on options
     this could trigger an ABORT of SMAC. """
     pass
+
+class CappedRunException(Exception):
+    """ Exception indicating that a run was capped with a cutoff smaller than the actual timeout """
+    pass
+
 
 class ExecuteTARun(object):
 
@@ -91,26 +99,31 @@ class ExecuteTARun(object):
         self.logger = logging.getLogger("smac.tae."+self.__class__.__name__)
         self._supports_memory_limit = False
 
-    def start(self, config, instance,
-              cutoff=None,
-              seed=12345,
-              instance_specific="0"):
+    def start(self, config:Configuration, 
+              instance:str,
+              cutoff:float=None,
+              seed:int=12345,
+              instance_specific:str="0",
+              capped:bool=False):
         """
             wrapper function for ExecuteTARun.run() to check configuration budget before the runs
             and to update stats after run
 
             Parameters
             ----------
-                config : dictionary
-                    dictionary param -> value
+                config : Configuration
+                    mainly a dictionary param -> value
                 instance : string
                     problem instance
-                cutoff : double
+                cutoff : float
                     runtime cutoff
                 seed : int
                     random seed
                 instance_specific: str
                     instance specific information (e.g., domain file or solution)
+                capped: bool
+                    if true and status is StatusType.TIMEOUT, 
+                    uses StatusType.CAPPED 
 
             Returns
             -------
@@ -155,15 +168,20 @@ class ExecuteTARun(object):
                 cost = cutoff * self.par_factor
             else:
                 cost = runtime
+            if status == StatusType.TIMEOUT and capped:
+                status = StatusType.CAPPED
 
-        self.logger.debug("Return: Status: %d, cost: %f, time. %f, additional: %s" % (
-            status.value, cost, runtime, str(additional_info)))
+        self.logger.debug("Return: Status: %r, cost: %f, time: %f, additional: %s" % (
+            status, cost, runtime, str(additional_info)))
 
         if self.runhistory:
             self.runhistory.add(config=config,
                                 cost=cost, time=runtime, status=status,
                                 instance_id=instance, seed=seed,
                                 additional_info=additional_info)
+        
+        if status == StatusType.CAPPED:
+            raise CappedRunException("")
 
         return status, cost, runtime, additional_info
 

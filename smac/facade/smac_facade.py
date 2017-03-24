@@ -262,7 +262,7 @@ class SMAC(object):
                     scenario=scenario, num_params=num_params,
                     success_states=[StatusType.SUCCESS, ],
                     impute_censored_data=True,
-                    impute_state=[StatusType.TIMEOUT, ],
+                    impute_state=[StatusType.CAPPED, ],
                     imputor=imputor)
 
             elif scenario.run_obj == 'quality':
