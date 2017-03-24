@@ -55,7 +55,7 @@ class RandomForestWithInstances(AbstractEPM):
                  instance_features=None,
                  num_trees=10,
                  do_bootstrapping=True,
-                 n_points_per_tree=0,
+                 n_points_per_tree=1,
                  ratio_features=5. / 6.,
                  min_samples_split=3,
                  min_samples_leaf=3,
@@ -66,20 +66,21 @@ class RandomForestWithInstances(AbstractEPM):
 
         self.instance_features = instance_features
         self.types = types
+        self.rng = pyrfr.regression.default_random_engine(1)
 
-        self.rf = pyrfr.regression.binary_rss()
-        self.rf.num_trees = num_trees
-        self.rf.seed = seed
-        self.rf.do_bootstrapping = do_bootstrapping
-        self.rf.num_data_points_per_tree = n_points_per_tree
+        self.rf = pyrfr.regression.binary_rss_forest()
+        self.rf.options.num_trees = num_trees
+        self.rf.options.seed = seed
+        self.rf.options.do_bootstrapping = do_bootstrapping
+        self.rf.options.num_data_points_per_tree = n_points_per_tree
         max_features = 0 if ratio_features >= 1.0 else \
             max(1, int(types.shape[0] * ratio_features))
-        self.rf.max_features = max_features
-        self.rf.min_samples_to_split = min_samples_split
-        self.rf.min_samples_in_leaf = min_samples_leaf
-        self.rf.max_depth = max_depth
-        self.rf.epsilon_purity = eps_purity
-        self.rf.max_num_nodes = max_num_nodes
+        self.rf.options.max_features = max_features
+        self.rf.options.min_samples_to_split = min_samples_split
+        self.rf.options.min_samples_in_leaf = min_samples_leaf
+        self.rf.options.max_depth = max_depth
+        self.rf.options.epsilon_purity = eps_purity
+        self.rf.options.max_num_nodes = max_num_nodes
 
         # This list well be read out by save_iteration() in the solver
         self.hypers = [num_trees, max_num_nodes, do_bootstrapping,
@@ -109,9 +110,12 @@ class RandomForestWithInstances(AbstractEPM):
 
         self.X = X
         self.y = y.flatten()
-        data = pyrfr.regression.numpy_data_container(self.X, self.y, self.types)
+        data = pyrfr.regression.data_container(len(self.types))
+        for row_X, row_y in zip(X, self.y):
+            data.add_data_point(row_X, row_y)
+        # data = pyrfr.regression.numpy_data_container(self.X, self.y, self.types)
 
-        self.rf.fit(data)
+        self.rf.fit(data, rng=self.rng)
         return self
 
     def predict(self, X):
@@ -136,9 +140,15 @@ class RandomForestWithInstances(AbstractEPM):
             raise ValueError('Rows in X should have %d entries but have %d!' %
                              (self.types.shape[0], X.shape[1]))
 
-        means, vars = self.rf.batch_predictions(X)
+        means, vars_ = [], []
+        for row_X in X:
+            mean, var = self.rf.predict_mean_var(row_X)
+            means.append(mean)
+            vars_.append(var)
+        means = np.array(means)
+        vars_ = np.array(vars_)
 
-        return means.reshape((-1, 1)), vars.reshape((-1, 1))
+        return means.reshape((-1, 1)), vars_.reshape((-1, 1))
 
     def predict_marginalized_over_instances(self, X):
         """Predict mean and variance marginalized over all instances.
