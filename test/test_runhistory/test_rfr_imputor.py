@@ -8,7 +8,7 @@ from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, \
     CategoricalHyperparameter, UniformFloatHyperparameter
 from ConfigSpace.conditions import InCondition
 
-from pyrfr.regression import binary_rss
+from pyrfr.regression import binary_rss_forest
 
 from smac.tae.execute_ta_run import StatusType
 from smac.runhistory import runhistory, runhistory2epm
@@ -110,8 +110,8 @@ class ImputorTest(unittest.TestCase):
 
             types = numpy.array([0]*num_feat, dtype=numpy.uint)
             self.model = RandomForestWithInstances(types=types,
-                                       instance_features=None,
-                                       seed=1234567980)
+                                                   instance_features=None,
+                                                   seed=1234567980)
 
             cutoff = max(y) * 0.9
             y[y > cutoff] = cutoff
@@ -126,8 +126,8 @@ class ImputorTest(unittest.TestCase):
 
             cs = ConfigurationSpace()
             for i in range(num_feat):
-                    cs.add_hyperparameter(UniformFloatHyperparameter(
-                            name="a_%d" % i, lower=0, upper=1, default=0.5))
+                cs.add_hyperparameter(UniformFloatHyperparameter(
+                    name="a_%d" % i, lower=0, upper=1, default=0.5))
             imputor = rfr_imputator.RFRImputator(rs=rs,
                                                  cutoff=cutoff,
                                                  threshold=cutoff*10,

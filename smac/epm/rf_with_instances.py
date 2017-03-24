@@ -66,7 +66,7 @@ class RandomForestWithInstances(AbstractEPM):
 
         self.instance_features = instance_features
         self.types = types
-        self.rng = pyrfr.regression.default_random_engine(1)
+        self.rng = pyrfr.regression.default_random_engine(seed)
 
         self.rf = pyrfr.regression.binary_rss_forest()
         self.rf.options.num_trees = num_trees
