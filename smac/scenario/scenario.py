@@ -247,6 +247,8 @@ class Scenario(object):
                               datetime.datetime.fromtimestamp(
                                   time.time()).strftime(
                                   '%Y-%m-%d_%H:%M:%S')))
+        self.add_argument(name='input_psmac_dirs', help=None,
+                          default=None)
         self.add_argument(name='shared_model', help=None, default='0',
                           callback=_is_truthy)
         self.add_argument(name='instances', default=[[None]], help=None,
@@ -354,6 +356,11 @@ class Scenario(object):
             self.logger.debug("Deactivate output directory.")
         else:
             self.logger.info("Output to %s" % (self.output_dir))
+            
+        if self.shared_model and self.input_psmac_dirs is None:
+            # per default, we assume that
+            # all psmac runs write to the same directory
+            self.input_psmac_dirs = [self.output_dir] 
 
     def __getstate__(self):
         d = dict(self.__dict__)

@@ -111,7 +111,7 @@ class SMBO(BaseSolver):
         while True:
             if self.scenario.shared_model:
                 pSMAC.read(run_history=self.runhistory,
-                           output_directory=self.scenario.output_dir,
+                           output_dirs=self.scenario.input_psmac_dirs,
                            configuration_space=self.config_space,
                            logger=self.logger)
 
