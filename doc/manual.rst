@@ -274,7 +274,7 @@ In this folder you see the following files and directories:
         The instance file contains the names of all instances one might want to consider during the optimization process.
 
     * **scenario.txt**
-        The scenario file contains all the necessary information about the configuration scenario at hand.
+        The scenario_ file contains all the necessary information about the configuration scenario at hand.
         For this example the following options are used:
 
         * *algo:*
@@ -384,3 +384,61 @@ The statistics further show the used wallclock time, target algorithm runtime an
 | The directory in which you invoked *SMAC* now contain a new folder called **SMAC3-output_YYYY-MM-DD_HH:MM:SS**.
 | The .json file contains the information about the target algorithms *SMAC* just executed. In this file you can see the *status* of the algorithm run, *misc*, the *instance* on which the algorithm was evaluated, which *seed* was used, how much *time* the algorithm needed and with which *configuration* the algorithm was run.
 | In the folder *SMAC* generates a file for the runhistory, and two files for the trajectory.
+
+
+SMAC-options and file-formats
+-----------------------------
+
+*SMAC* is called via the command-line with the following arguments:
+.. code-block:: bash
+
+        python smac --scenario-file SCENARIO --seed INT --verbose-level LEVEL --modus MODUS --warmstart_runhistory RUNHISTORY --warmstart_scenario SCENARIO --warmstart_incumbent INCUMBENT
+
+Required:
+     * *scenario-file*: Path to the file that specifies the scenario_ for this *SMAC*-run.
+Optional:
+     * *seed*: The integer that the random-generator will be based upon. Default: 12345
+     * *verbose-level*: in [INFO, DEBUG], specifies the logging-verbosity. Default: INFO
+     * *modus*: in [SMAC, ROAR]. SMAC will use the bayeasian optimization with an intensification process, whereas ROAR stands for Random Online Adaptive Racing*. Default: SMAC
+     * *warmstart_runhistory*: When warmstarting the optimization-process, this is the list of runhistory-files to use. Default: None
+     * *warmstart_scenario*: When warmstarting, this is the scenario-file that corresponds to the *warmstart_runhistory*. PCS and feature-space need to be identical to the *scenario-file*. Default: None
+     * *warmstart_incumbent*: List of trajectories, from which to use final incumbent as challenger. Default: None
+
+.. _scenario:
+
+Scenario-options
+~~~~~~~~~~~~~~~~
+
+In the scenario-file, most of the options are specified.
+The format is one option per line:
+.. code-block:: bash
+
+        OPTION1 VALUE1
+        OPTION2 VALUE2
+        ...
+
+For boolean options "1" or "true" both evaluate to True.
+
+Required:
+        * *algo* specifies the target-algorithm call that *SMAC* will optimize. Is interpreted as a bash-command.
+        * *paramfile* specifies the path to the PCS-file
+        * *cutoff_time* is the maximum runtime, after which the target-algorithm is cancelled. **Required if *run_obj* is runtime.**
+
+Optional:
+        * *abort_on_first_run_crash* in [true, false]. If true, *SMAC* will abort if the first run of the target algorithm crashes. Default: true.
+        * *execdir* specifies the path to the execution-directory. Default: ".".
+        * *deterministic* in [true, false]. If true, the optimization process will be repeatable. Default: false 
+        * *run_obj* in [runtime, quality]. Defines what metric to optimize. When optimizing runtime, *cutoff_time* is required as well. Default: runtime.
+        * *overall_obj* is PARX, where X is an integer defining the penalty imposed on timeouts (i.e. runtimes that exceed the *cutoff-time*). Default: PAR10.
+        * *memory_limit* is the maximum available memory the target-algorithm can occupy before being cancelled.
+        * *tuner-timeout* is the maximum amount of CPU-time used for optimization. Default: inf.
+        * *wallclock_limit* is the maximum amount of wallclock-time used for optimization. Default: inf.
+        * *runcount_limit* is the maximum number of algorithm-calls during optimization. Default: inf.
+        * *minR* is the minimum number of calls per configuration. Default: 1
+        * *maxR* is the maximum number of calls per configuration. Default: 2000
+        * *instance_file* specifies the file with the training-instances.
+        * *test-instance_file* specifies the file with the test-instances.
+        * *feature_file* specifies the file with the instance-features
+        * *output_dir* specifies the output-directory for all emerging files, such as logging and results. Default: "smac3-output_YEAR-MONTH-DAY_HOUR:MINUTE:SECOND"
+        * *shared_model*:  Default: false
+        * *initial_incumbent*: in [DEFAULT, RANDOM]. DEFAULT is the default from the PCS. Default: DEFAULT.
