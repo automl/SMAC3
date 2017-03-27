@@ -107,6 +107,10 @@ class RunHistory(object):
         if self.data.get(k) is None:
             self._add(k, v, status, external_data)
         elif status != StatusType.CAPPED and self.data[k].status == StatusType.CAPPED:
+            # overwrite capped runs with uncapped runs
+            self._add(k, v, status, external_data)
+        elif status == StatusType.CAPPED and self.data[k].status == StatusType.CAPPED and cost > self.data[k].cost:
+            # overwrite if censored with a larger cutoff
             self._add(k, v, status, external_data)
 
     def _add(self, k, v, status, external_data):

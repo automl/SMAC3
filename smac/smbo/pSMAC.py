@@ -25,7 +25,8 @@ def read(run_history: RunHistory,
         objects stored in the output directory.
 
     output_dirs : typing.Union[str,typing.List[str]]
-        List of SMAC output directory. 
+        List of SMAC output directories
+        or Linux path expression (str) which will be casted into a list with glob.glob(). 
         This function will search the output directories
         for files matching the runhistory regular expression.
 
