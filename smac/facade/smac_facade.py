@@ -90,7 +90,8 @@ class SMAC(object):
         rng: np.random.RandomState
             Random number generator
         '''
-        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
+        self.logger = logging.getLogger(
+            self.__module__ + "." + self.__class__.__name__)
 
         aggregate_func = average_cost
 
@@ -174,7 +175,6 @@ class SMAC(object):
         # inject runhistory if necessary
         if tae_runner.runhistory is None:
             tae_runner.runhistory = runhistory
-
 
         # initialize intensification
         if intensifier is None:
@@ -266,10 +266,10 @@ class SMAC(object):
                     imputor=imputor)
 
             elif scenario.run_obj == 'quality':
-                runhistory2epm = RunHistory2EPM4Cost\
-                    (scenario=scenario, num_params=num_params,
-                     success_states=[StatusType.SUCCESS, ],
-                     impute_censored_data=False, impute_state=None)
+                runhistory2epm = RunHistory2EPM4Cost(scenario=scenario, num_params=num_params,
+                                                     success_states=[
+                                                         StatusType.SUCCESS, ],
+                                                     impute_censored_data=False, impute_state=None)
 
             else:
                 raise ValueError('Unknown run objective: %s. Should be either '
@@ -340,16 +340,71 @@ class SMAC(object):
         return incumbent
 
     def get_tae_runner(self):
+        '''
+            returns target algorithm evaluator (TAE) object
+            which can run the target algorithm given a
+            configuration
+
+            Returns
+            -------
+            smac.tae.execute_ta_run.ExecuteTARun
+        '''
         return self.solver.intensifier.tae_runner
 
     def get_runhistory(self):
+        '''
+            returns the runhistory 
+            (i.e., all evaluated configurations and the results)
+
+            Returns
+            -------
+            smac.runhistory.runhistory.RunHistory
+        '''
         if not hasattr(self, 'runhistory'):
             raise ValueError('SMAC was not fitted yet. Call optimize() prior '
                              'to accessing the runhistory.')
         return self.runhistory
 
     def get_trajectory(self):
+        '''
+            returns the trajectory 
+            (i.e., all incumbent configurations over time)
+
+            Returns
+            -------
+            List of entries with the following fields: 
+            'train_perf', 'incumbent_id', 'incumbent',
+            'ta_runs', 'ta_time_used', 'wallclock_time'
+        '''
+
         if not hasattr(self, 'trajectory'):
             raise ValueError('SMAC was not fitted yet. Call optimize() prior '
                              'to accessing the runhistory.')
         return self.trajectory
+
+    def get_X_y(self):
+        '''
+            returns all data in runhistory
+            in X, y format, 
+
+            Returns
+            ------- 
+            X: matrix of all configurations (+ instance features)
+            y vector of cost values; can include censored runs
+            cen: list of bools indicating whether the y-value is censored
+        '''
+        X = []
+        y = []
+        cen = []
+        feature_dict = self.solver.scenario.feature_dict
+        params = self.solver.scenario.cs.get_hyperparameters()
+        for k, v in self.runhistory.data.items():
+            config = self.runhistory.ids_config[k.config_id]
+            x = [config[p.name] for p in params]
+            features = feature_dict.get(k.instance_id)
+            if features:
+                x.extend(features)
+            X.append(x)
+            y.append(v.cost)
+            cen.append(v.status != StatusType.SUCCESS)
+        return X, y, cen
