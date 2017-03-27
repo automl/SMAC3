@@ -15,7 +15,7 @@ import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
-from smac.scenario.scenario import Scenario
+from smac.scenario.scenario import Scenario, _is_truthy
 from smac.configspace import ConfigurationSpace
 from smac.utils.merge_foreign_data import merge_foreign_data
 from smac.runhistory.runhistory import RunHistory
@@ -218,6 +218,15 @@ class ScenarioTest(unittest.TestCase):
         scenario_dict['overall_obj'] = 'par'
         scenario = Scenario(scenario_dict)
         self.assertEqual(scenario.par_factor, 1)
+
+    def test_truth_value(self):
+        self.assertTrue(_is_truthy("1"))
+        self.assertTrue(_is_truthy("true"))
+        self.assertTrue(_is_truthy(True))
+        self.assertFalse(_is_truthy("0"))
+        self.assertFalse(_is_truthy("false"))
+        self.assertFalse(_is_truthy(False))
+        self.assertRaises(ValueError, _is_truthy, "something")
 
 
 if __name__ == "__main__":
