@@ -87,7 +87,9 @@ class RunHistory(object):
                 information from TA or fields such as start time and host_id)
             external_data: bool
                 if True, run will not be added to self._configid_to_inst_seed
-                and not available through get_runs_for_config()
+                and not available through get_runs_for_config();
+                essentially, intensification will not see this run,
+                but the EPM still gets it
         '''
 
         config_id = self.config_ids.get(config)
@@ -102,18 +104,18 @@ class RunHistory(object):
 
         # Each runkey is supposed to be used only once. Repeated tries to add
         # the same runkey will be ignored silently.
-        if self.data.get(k) is None:
+        if self.data.get(k) is None or self.data.get(k).status==StatusType.CAPPED:
             self.data[k] = v
 
-            if not external_data:
+            if not external_data and status!=StatusType.CAPPED:
                 # also add to fast data structure
                 is_k = InstSeedKey(instance_id, seed)
                 self._configid_to_inst_seed[
                     config_id] = self._configid_to_inst_seed.get(config_id, [])
                 self._configid_to_inst_seed[config_id].append(is_k)
 
-            # assumes an average across runs as cost function
-            self.incremental_update_cost(config, cost)
+                # assumes an average across runs as cost function
+                self.incremental_update_cost(config, cost)
 
     def update_cost(self, config):
         '''
