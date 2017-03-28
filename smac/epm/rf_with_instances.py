@@ -113,9 +113,7 @@ class RandomForestWithInstances(AbstractEPM):
         self.X = X
         self.y = y.flatten()
 
-        # print(X)
-
-        self.rf_opts.num_data_points_per_tree = len(y)
+        self.rf_opts.num_data_points_per_tree = self.X.shape[0]
         self.rf = pyrfr.regression.binary_rss_forest()
         self.rf.options = self.rf_opts
         data = self.__init_data_container(self.X, self.y)

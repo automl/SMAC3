@@ -22,9 +22,11 @@ def get_types(config_space, instance_features=None):
             bounds[i] = (0, np.nan)
             # and we leave the bounds to be 0 for now
         elif isinstance(param, UniformFloatHyperparameter):
-            bounds[i] = (float(param.lower), float(param.upper))
+            # bounds[i] = (float(param.lower), float(param.upper))
+            bounds[i] = (0.0, 1.0)
         elif isinstance(param, UniformIntegerHyperparameter):
-            bounds[i] = (int(param.lower), int(param.upper))
+            # bounds[i] = (int(param.lower), int(param.upper))
+            bounds[i] = (0.0, 1.0)
         elif not isinstance(param, (UniformFloatHyperparameter,
                                     UniformIntegerHyperparameter)):
             raise TypeError("Unknown hyperparameter type %s" % type(param))
