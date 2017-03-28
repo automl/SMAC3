@@ -384,27 +384,18 @@ class SMAC(object):
 
     def get_X_y(self):
         '''
-            returns all data in runhistory
-            in X, y format, 
+            simple interface to obtain all data in runhistory
+            in X, y format 
+            
+            Uses smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()
 
             Returns
             ------- 
-            X: matrix of all configurations (+ instance features)
-            y vector of cost values; can include censored runs
-            cen: list of bools indicating whether the y-value is censored
+            X: numpy.ndarray
+                matrix of all configurations (+ instance features)
+            y numpy.ndarray
+                vector of cost values; can include censored runs
+            cen: numpy.ndarray
+                vector of bools indicating whether the y-value is censored
         '''
-        X = []
-        y = []
-        cen = []
-        feature_dict = self.solver.scenario.feature_dict
-        params = self.solver.scenario.cs.get_hyperparameters()
-        for k, v in self.runhistory.data.items():
-            config = self.runhistory.ids_config[k.config_id]
-            x = [config[p.name] for p in params]
-            features = feature_dict.get(k.instance_id)
-            if features:
-                x.extend(features)
-            X.append(x)
-            y.append(v.cost)
-            cen.append(v.status != StatusType.SUCCESS)
-        return X, y, cen
+        return self.solver.rh2EPM.get_X_y(self.runhistory)
