@@ -77,9 +77,9 @@ class TestSMBO(unittest.TestCase):
     def test_init_EIPS_as_arguments(self):
         for objective in ['runtime', 'quality']:
             self.scenario.run_obj = objective
-            types = get_types(self.scenario.cs, None)
+            types, bounds = get_types(self.scenario.cs, None)
             umrfwi = UncorrelatedMultiObjectiveRandomForestWithInstances(
-                ['cost', 'runtime'], types)
+                ['cost', 'runtime'], types, bounds)
             eips = EIPS(umrfwi)
             rh2EPM = RunHistory2EPM4EIPS(self.scenario, 2)
             smbo = SMAC(self.scenario, model=umrfwi, acquisition_function=eips,

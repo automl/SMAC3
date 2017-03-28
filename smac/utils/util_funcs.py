@@ -7,17 +7,24 @@ def get_types(config_space, instance_features=None):
     # Extract types vector for rf from config space
     types = np.zeros(len(config_space.get_hyperparameters()),
                      dtype=np.uint)
+    bounds = [(np.nan, np.nan)]*types.shape[0]
 
     for i, param in enumerate(config_space.get_hyperparameters()):
         if isinstance(param, (CategoricalHyperparameter)):
             n_cats = len(param.choices)
             types[i] = n_cats
+            bounds[i] = (int(n_cats), np.nan)
 
         elif isinstance(param, Constant):
             # for constants we simply set types to 0
             # which makes it a numerical parameter
             types[i] = 0
+            bounds[i] = (0, np.nan)
             # and we leave the bounds to be 0 for now
+        elif isinstance(param, UniformFloatHyperparameter):
+            bounds[i] = (float(param.lower), float(param.upper))
+        elif isinstance(param, UniformIntegerHyperparameter):
+            bounds[i] = (int(param.lower), int(param.upper))
         elif not isinstance(param, (UniformFloatHyperparameter,
                                     UniformIntegerHyperparameter)):
             raise TypeError("Unknown hyperparameter type %s" % type(param))
@@ -27,4 +34,5 @@ def get_types(config_space, instance_features=None):
             (types, np.zeros((instance_features.shape[1]))))
 
     types = np.array(types, dtype=np.uint)
-    return types
+    bounds = np.array(bounds, dtype=object)
+    return types, bounds

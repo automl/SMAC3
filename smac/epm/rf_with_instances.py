@@ -3,6 +3,7 @@ import logging
 
 import pyrfr.regression
 
+from smac.configspace import CategoricalHyperparameter
 from smac.epm.base_epm import AbstractEPM
 
 
@@ -51,7 +52,7 @@ class RandomForestWithInstances(AbstractEPM):
         The seed that is passed to the random_forest_run library.
     '''
 
-    def __init__(self, types,
+    def __init__(self, types, bounds,
                  instance_features=None,
                  num_trees=10,
                  do_bootstrapping=True,
@@ -66,21 +67,21 @@ class RandomForestWithInstances(AbstractEPM):
 
         self.instance_features = instance_features
         self.types = types
+        self.bounds = bounds
         self.rng = pyrfr.regression.default_random_engine(seed)
 
-        self.rf = pyrfr.regression.binary_rss_forest()
-        self.rf.options.num_trees = num_trees
-        self.rf.options.seed = seed
-        self.rf.options.do_bootstrapping = do_bootstrapping
-        self.rf.options.num_data_points_per_tree = n_points_per_tree
+        self.rf_opts = pyrfr.regression.forest_opts()
+        self.rf_opts.num_trees = num_trees
+        self.rf_opts.seed = seed
+        self.rf_opts.do_bootstrapping = do_bootstrapping
         max_features = 0 if ratio_features >= 1.0 else \
             max(1, int(types.shape[0] * ratio_features))
-        self.rf.options.max_features = max_features
-        self.rf.options.min_samples_to_split = min_samples_split
-        self.rf.options.min_samples_in_leaf = min_samples_leaf
-        self.rf.options.max_depth = max_depth
-        self.rf.options.epsilon_purity = eps_purity
-        self.rf.options.max_num_nodes = max_num_nodes
+        self.rf_opts.max_features = max_features
+        self.rf_opts.min_samples_to_split = min_samples_split
+        self.rf_opts.min_samples_in_leaf = min_samples_leaf
+        self.rf_opts.max_depth = max_depth
+        self.rf_opts.epsilon_purity = eps_purity
+        self.rf_opts.max_num_nodes = max_num_nodes
 
         # This list well be read out by save_iteration() in the solver
         self.hypers = [num_trees, max_num_nodes, do_bootstrapping,
@@ -92,6 +93,7 @@ class RandomForestWithInstances(AbstractEPM):
 
         # Never use a lower variance than this
         self.var_threshold = 10 ** -5
+
 
     def train(self, X, y, **kwargs):
         """Trains the random forest on X and y.
@@ -110,13 +112,29 @@ class RandomForestWithInstances(AbstractEPM):
 
         self.X = X
         self.y = y.flatten()
-        data = pyrfr.regression.data_container(len(self.types))
-        for row_X, row_y in zip(X, self.y):
-            data.add_data_point(row_X, row_y)
-        # data = pyrfr.regression.numpy_data_container(self.X, self.y, self.types)
 
+        # print(X)
+
+        self.rf_opts.num_data_points_per_tree = len(y)
+        self.rf = pyrfr.regression.binary_rss_forest()
+        self.rf.options = self.rf_opts
+        data = self.__init_data_container(self.X, self.y)
         self.rf.fit(data, rng=self.rng)
         return self
+
+    def __init_data_container(self, X, y):
+        # retrieve the types and the bounds from the ConfigSpace
+        data = pyrfr.regression.data_container(X.shape[1])
+
+        for i, (mn, mx) in enumerate(self.bounds):
+            if np.isnan(mx):
+                data.set_type_of_feature(i, mn)
+            else:
+                data.set_bounds_of_feature(i, mn, mx)
+
+        for row_X, row_y in zip(X, y):
+            data.add_data_point(row_X, row_y)
+        return data
 
     def predict(self, X):
         """Predict means and variances for given X.

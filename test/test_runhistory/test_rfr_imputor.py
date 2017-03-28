@@ -16,6 +16,7 @@ from smac.scenario import scenario
 from smac.epm import rfr_imputator
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.smbo.objective import average_cost
+from smac.utils.util_funcs import get_types
 
 def generate_config(cs, rs):
     i = rs.randint(-10, 10)
@@ -92,8 +93,8 @@ class ImputorTest(unittest.TestCase):
         self.scen.overall_obj = "par10"
         self.scen.cutoff = 40
 
-        types = numpy.array([2,0,0], dtype=numpy.uint)
-        self.model = RandomForestWithInstances(types=types,
+        types, bounds = get_types(self.cs, None)
+        self.model = RandomForestWithInstances(types=types, bounds=bounds,
                                        instance_features=None,
                                        seed=1234567980)
 
@@ -107,11 +108,6 @@ class ImputorTest(unittest.TestCase):
             num_censored = int(num_samples*0.1)
             X = rs.rand(num_samples, num_feat)
             y = numpy.sin(X[:, 0:1])
-
-            types = numpy.array([0]*num_feat, dtype=numpy.uint)
-            self.model = RandomForestWithInstances(types=types,
-                                                   instance_features=None,
-                                                   seed=1234567980)
 
             cutoff = max(y) * 0.9
             y[y > cutoff] = cutoff
@@ -128,6 +124,17 @@ class ImputorTest(unittest.TestCase):
             for i in range(num_feat):
                 cs.add_hyperparameter(UniformFloatHyperparameter(
                     name="a_%d" % i, lower=0, upper=1, default=0.5))
+
+            types, bounds = get_types(cs, None)
+            print(types)
+            print(bounds)
+            print('#'*120)
+            print(cen_X)
+            print(uncen_X)
+            print('~'*120)
+            self.model = RandomForestWithInstances(types=types, bounds=bounds,
+                                                   instance_features=None,
+                                                   seed=1234567980)
             imputor = rfr_imputator.RFRImputator(rs=rs,
                                                  cutoff=cutoff,
                                                  threshold=cutoff*10,
