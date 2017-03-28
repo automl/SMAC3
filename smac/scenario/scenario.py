@@ -24,7 +24,13 @@ __version__ = "0.0.2"
 
 
 def _is_truthy(arg):
-    return arg in ["1", "true", "True", True]
+    if arg in ["1", "true", "True", True]:
+        return True
+    elif arg in ["0", "false", "False", False]:
+        return False
+    else:
+        raise ValueError("{} cannot be interpreted as a boolean argument. "
+                         "Please use one of {{0, false, 1, true}}.".format(arg))
 
 
 class Scenario(object):
