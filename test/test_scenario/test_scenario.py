@@ -28,6 +28,7 @@ if sys.version_info[0] == 2:
 else:
     from unittest import mock
 
+
 class InitFreeScenario(Scenario):
 
     def __init__(self):
@@ -38,7 +39,8 @@ class ScenarioTest(unittest.TestCase):
 
     def setUp(self):
         logging.basicConfig()
-        self.logger = logging.getLogger(self.__module__ + '.' + self.__class__.__name__)
+        self.logger = logging.getLogger(
+            self.__module__ + '.' + self.__class__.__name__)
         self.logger.setLevel(logging.DEBUG)
 
         base_directory = os.path.split(__file__)[0]
@@ -64,7 +66,7 @@ class ScenarioTest(unittest.TestCase):
                                        'test/test_files/scenario_test/test.txt',
                                    'feature_file':
                                        'test/test_files/scenario_test/features.txt',
-                                   'output_dir' :
+                                   'output_dir':
                                        'test/test_files/scenario_test/tmp_output'}
 
     def tearDown(self):
@@ -186,8 +188,8 @@ class ScenarioTest(unittest.TestCase):
                      seed=None,
                      additional_info=None)
 
-        self.assertRaises(ValueError, merge_foreign_data, **{"scenario":scenario, "runhistory":rh_base, "in_scenario_list":[scenario_2], "in_runhistory_list":[rh_merge]})
-
+        self.assertRaises(ValueError, merge_foreign_data, **{
+                          "scenario": scenario, "runhistory": rh_base, "in_scenario_list": [scenario_2], "in_runhistory_list": [rh_merge]})
 
     def test_pickle_dump(self):
         scenario = Scenario(self.test_scenario_dict)
@@ -227,18 +229,21 @@ class ScenarioTest(unittest.TestCase):
                 dest = scen1._arguments[name]['dest']
                 name = dest if dest else name  # if 'dest' is None, use 'name'
                 if name in ["pcs_fn", "train_inst_fn", "test_inst_fn",
-                        "feature_fn", "output_dir"]:
+                            "feature_fn", "output_dir"]:
                     continue  # Those values are changed upon logging
-                elif name == 'cs' :
-                    # Using repr because of cs-bug (https://github.com/automl/ConfigSpace/issues/25)
+                elif name == 'cs':
+                    # Using repr because of cs-bug
+                    # (https://github.com/automl/ConfigSpace/issues/25)
                     self.assertEqual(repr(scen1.cs), repr(scen2.cs))
                 elif name == 'feature_dict':
-                    self.assertEqual(len(scen1.feature_dict), len(scen2.feature_dict))
+                    self.assertEqual(len(scen1.feature_dict),
+                                     len(scen2.feature_dict))
                     for key in scen1.feature_dict:
                         self.assertTrue((scen1.feature_dict[key] ==
                                          scen2.feature_dict[key]).all())
                 else:
-                    self.assertEqual(getattr(scen1, name), getattr(scen2, name))
+                    self.assertEqual(getattr(scen1, name),
+                                     getattr(scen2, name))
 
         # First check with file-paths defined
         self.test_scenario_dict['feature_file'] = 'test/test_files/scenario_test/features_multiple.txt'
@@ -249,10 +254,10 @@ class ScenarioTest(unittest.TestCase):
 
         # Now create new scenario without filepaths
         self.test_scenario_dict.update({
-            'paramfile' : None, 'cs' : scenario.cs,
-            'feature_file' : None, 'features' : scenario.feature_dict,
-            'instance_file' : None, 'instances' : scenario.train_insts,
-            'test_instance_file' : None, 'test_instances' : scenario.test_insts})
+            'paramfile': None, 'cs': scenario.cs,
+            'feature_file': None, 'features': scenario.feature_dict,
+            'instance_file': None, 'instances': scenario.train_insts,
+            'test_instance_file': None, 'test_instances': scenario.test_insts})
         scenario_no_fn = Scenario(self.test_scenario_dict)
         scenario_reloaded = Scenario(path)
         check_scen_eq(scenario_no_fn, scenario_reloaded)
@@ -288,6 +293,12 @@ class ScenarioTest(unittest.TestCase):
         self.assertFalse(_is_truthy("false"))
         self.assertFalse(_is_truthy(False))
         self.assertRaises(ValueError, _is_truthy, "something")
+
+    def test_str_cast_instances(self):
+        self.scen = Scenario({'cs': None,
+                              'instances': [[1], [2]]})
+        self.assertIsInstance(self.scen.train_insts[0], str)
+        self.assertIsInstance(self.scen.train_insts[1], str)
 
 
 if __name__ == "__main__":
