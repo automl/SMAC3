@@ -122,7 +122,7 @@ class RandomForestWithInstances(AbstractEPM):
 
     def __init_data_container(self, X, y):
         # retrieve the types and the bounds from the ConfigSpace
-        data = pyrfr.regression.data_container(X.shape[1])
+        data = pyrfr.regression.default_data_container(X.shape[1])
 
         for i, (mn, mx) in enumerate(self.bounds):
             if np.isnan(mx):

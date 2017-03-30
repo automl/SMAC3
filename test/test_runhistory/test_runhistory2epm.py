@@ -102,7 +102,7 @@ class RunhistoryTest(unittest.TestCase):
             X, np.array([[0.005, 0.995], [0.995, 0.005], [0.995, 0.995]]), atol=0.001))
         # both timeouts should be imputed to a PAR10
         self.assertTrue(
-            np.allclose(y, np.array([[0.], [1.209], [2.301]]), atol=0.001))
+            np.allclose(y, np.array([[0.], [2.301], [2.301]]), atol=0.001))
 
     def test_log_cost_without_imputation(self):
         '''
@@ -196,7 +196,7 @@ class RunhistoryTest(unittest.TestCase):
         self.assertTrue(np.allclose(
             X, np.array([[0.005, 0.995], [0.995, 0.005], [0.995, 0.995]]), atol=0.001))
         self.assertTrue(
-            np.allclose(y, np.array([[1.], [11.566], [200.]]), atol=0.001))
+            np.allclose(y, np.array([[1.], [16.467], [200.]]), atol=0.001))
 
     def test_cost_without_imputation(self):
         '''
