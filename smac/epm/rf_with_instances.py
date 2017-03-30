@@ -58,7 +58,7 @@ class RandomForestWithInstances(AbstractEPM):
                  instance_features=None,
                  num_trees=10,
                  do_bootstrapping=True,
-                 n_points_per_tree=1,
+                 n_points_per_tree=-1,
                  ratio_features=5. / 6.,
                  min_samples_split=3,
                  min_samples_leaf=3,
@@ -84,6 +84,9 @@ class RandomForestWithInstances(AbstractEPM):
         self.rf_opts.max_depth = max_depth
         self.rf_opts.epsilon_purity = eps_purity
         self.rf_opts.max_num_nodes = max_num_nodes
+
+        self.n_points_per_tree = n_points_per_tree
+        self.rf = None
 
         # This list well be read out by save_iteration() in the solver
         self.hypers = [num_trees, max_num_nodes, do_bootstrapping,
@@ -114,7 +117,10 @@ class RandomForestWithInstances(AbstractEPM):
         self.X = X
         self.y = y.flatten()
 
-        self.rf_opts.num_data_points_per_tree = self.X.shape[0]
+        if self.n_points_per_tree <= 0:
+            self.rf_opts.num_data_points_per_tree = self.X.shape[0]
+        else:
+            self.rf_opts.num_data_points_per_tree = self.n_points_per_tree
         self.rf = pyrfr.regression.binary_rss_forest()
         self.rf.options = self.rf_opts
         data = self.__init_data_container(self.X, self.y)
