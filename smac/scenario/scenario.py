@@ -13,8 +13,8 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
 
 from smac.utils.io.input_reader import InputReader
+from smac.configspace import pcs, pcs_new
 from smac.utils.io.output_writer import OutputWriter
-from smac.configspace import pcs
 
 __author__ = "Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -354,7 +354,11 @@ class Scenario(object):
         if self.pcs_fn and os.path.isfile(self.pcs_fn):
             with open(self.pcs_fn) as fp:
                 pcs_str = fp.readlines()
-                self.cs = pcs.read(pcs_str)
+                try:
+                    self.cs = pcs.read(pcs_str)
+                except:
+                    self.logger.debug("Could not parse pcs file with old format; trying new format next")
+                    self.cs = pcs_new.read(pcs_str)
                 self.cs.seed(42)
         elif self.pcs_fn:
             self.logger.error("Have not found pcs file: %s" %
