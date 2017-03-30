@@ -29,6 +29,8 @@ class RandomForestWithInstances(AbstractEPM):
         2 dimension where the first dimension consists of 3 different
         categorical choices and the second dimension is continuous than we
         have to pass np.array([2, 0]). Note that we count starting from 0.
+    bounds: np.ndarray (D)
+        Specifies the bounds for continuous features
     instance_features: np.ndarray (I, K)
         Contains the K dimensional instance features
         of the I different instances
@@ -94,7 +96,6 @@ class RandomForestWithInstances(AbstractEPM):
         # Never use a lower variance than this
         self.var_threshold = 10 ** -5
 
-
     def train(self, X, y, **kwargs):
         """Trains the random forest on X and y.
 
@@ -121,6 +122,20 @@ class RandomForestWithInstances(AbstractEPM):
         return self
 
     def __init_data_container(self, X, y):
+        """Fills a pyrfr default data container, s.t. the forest knows categoricals and bounds for continous data
+        
+        Parameters
+        ----------
+        X : np.ndarray [n_samples, n_features]
+            Input data points
+        y : np.ndarray [n_samples, ]
+            Corresponding target values
+
+        Returns
+        -------
+        data: pyrfr.regression.default_data_container
+            The filled data container that pyrfr can interpret
+        """
         # retrieve the types and the bounds from the ConfigSpace
         data = pyrfr.regression.default_data_container(X.shape[1])
 
