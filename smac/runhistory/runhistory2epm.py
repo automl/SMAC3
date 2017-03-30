@@ -61,7 +61,8 @@ class AbstractRunHistory2EPM(object):
         rs : numpy.random.RandomState
             only used for reshuffling data after imputation
         '''
-        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
+        self.logger = logging.getLogger(
+            self.__module__ + "." + self.__class__.__name__)
 
         # General arguments
         self.scenario = scenario
@@ -150,8 +151,15 @@ class AbstractRunHistory2EPM(object):
 
         Parameters
         ----------
-        runhistory : list of dicts
-                parameter configurations
+        runhistory : smac.runhistory.runhistory.RunHistory
+            runhistory of all evaluated configurations x instances
+            
+        Returns
+        -------
+        X: numpy.ndarray
+            configuration vector x instance features
+        Y: numpy.ndarray
+            cost values
         '''
         assert isinstance(runhistory, RunHistory)
 
@@ -261,6 +269,41 @@ class AbstractRunHistory2EPM(object):
             raise ValueError(err_msg)
 
         return new_dict
+
+    def get_X_y(self, runhistory: RunHistory):
+        '''
+            simple interface to obtain all data in runhistory
+            in X, y format 
+
+            Parameters
+            ----------
+            runhistory : smac.runhistory.runhistory.RunHistory
+                runhistory of all evaluated configurations x instances
+
+            Returns
+            ------- 
+            X: numpy.ndarray
+                matrix of all configurations (+ instance features)
+            y numpy.ndarray
+                vector of cost values; can include censored runs
+            cen: numpy.ndarray
+                vector of bools indicating whether the y-value is censored
+        '''
+        X = []
+        y = []
+        cen = []
+        feature_dict = self.scenario.feature_dict
+        params = self.scenario.cs.get_hyperparameters()
+        for k, v in runhistory.data.items():
+            config = runhistory.ids_config[k.config_id]
+            x = [config[p.name] for p in params]
+            features = feature_dict.get(k.instance_id)
+            if features:
+                x.extend(features)
+            X.append(x)
+            y.append(v.cost)
+            cen.append(v.status != StatusType.SUCCESS)
+        return np.array(X), np.array(y), np.array(cen)
 
 
 class RunHistory2EPM4Cost(AbstractRunHistory2EPM):

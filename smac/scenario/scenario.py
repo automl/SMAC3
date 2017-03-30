@@ -7,13 +7,14 @@ import shlex
 import time
 import datetime
 import copy
+import typing
 
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
 
 from smac.utils.io.input_reader import InputReader
+from smac.configspace import pcs, pcs_new
 from smac.utils.io.output_writer import OutputWriter
-from smac.configspace import pcs
 
 __author__ = "Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -24,7 +25,13 @@ __version__ = "0.0.2"
 
 
 def _is_truthy(arg):
-    return arg in ["1", "true", "True", True]
+    if arg in ["1", "true", "True", True]:
+        return True
+    elif arg in ["0", "false", "False", False]:
+        return False
+    else:
+        raise ValueError("{} cannot be interpreted as a boolean argument. "
+                         "Please use one of {{0, false, 1, true}}.".format(arg))
 
 
 class Scenario(object):
@@ -45,7 +52,8 @@ class Scenario(object):
             command line arguments that were not processed by argparse
 
         """
-        self.logger = logging.getLogger(self.__module__ + '.' + self.__class__.__name__)
+        self.logger = logging.getLogger(
+            self.__module__ + '.' + self.__class__.__name__)
         self.PCA_DIM = 7
 
         self.in_reader = InputReader()
@@ -238,7 +246,8 @@ class Scenario(object):
                           dest='minR')
         self.add_argument(name='maxR', help=None, default=2000, callback=int,
                           dest='maxR')
-        self.add_argument(name='instance_file', help=None, dest='train_inst_fn')
+        self.add_argument(name='instance_file',
+                          help=None, dest='train_inst_fn')
         self.add_argument(name='test_instance_file', help=None,
                           dest='test_inst_fn')
         self.add_argument(name='feature_file', help=None, dest='feature_fn')
@@ -247,6 +256,8 @@ class Scenario(object):
                               datetime.datetime.fromtimestamp(
                                   time.time()).strftime(
                                   '%Y-%m-%d_%H:%M:%S')))
+        self.add_argument(name='input_psmac_dirs', help=None,
+                          default=None)
         self.add_argument(name='shared_model', help=None, default='0',
                           callback=_is_truthy)
         self.add_argument(name='instances', default=[[None]], help=None,
@@ -310,6 +321,9 @@ class Scenario(object):
         if self.test_insts:
             self.test_insts = extract_instance_specific(self.test_insts)
 
+        self.train_insts = self._to_str_and_warn(l=self.train_insts)
+        self.test_insts = self._to_str_and_warn(l=self.test_insts)
+
         # read feature file
         if self.feature_fn:
             if os.path.isfile(self.feature_fn):
@@ -327,8 +341,8 @@ class Scenario(object):
                 X = self.feature_array
                 # scale features
                 X = MinMaxScaler().fit_transform(X)
-                X = numpy.nan_to_num(X) # if features with max == min
-                #PCA
+                X = numpy.nan_to_num(X)  # if features with max == min
+                # PCA
                 pca = PCA(n_components=self.PCA_DIM)
                 self.feature_array = pca.fit_transform(X)
                 self.n_features = self.feature_array.shape[1]
@@ -340,7 +354,11 @@ class Scenario(object):
         if self.pcs_fn and os.path.isfile(self.pcs_fn):
             with open(self.pcs_fn) as fp:
                 pcs_str = fp.readlines()
-                self.cs = pcs.read(pcs_str)
+                try:
+                    self.cs = pcs.read(pcs_str)
+                except:
+                    self.logger.debug("Could not parse pcs file with old format; trying new format next")
+                    self.cs = pcs_new.read(pcs_str)
                 self.cs.seed(42)
         elif self.pcs_fn:
             self.logger.error("Have not found pcs file: %s" %
@@ -355,6 +373,11 @@ class Scenario(object):
         else:
             self.logger.info("Output to %s" % (self.output_dir))
 
+        if self.shared_model and self.input_psmac_dirs is None:
+            # per default, we assume that
+            # all psmac runs write to the same directory
+            self.input_psmac_dirs = [self.output_dir]
+
     def __getstate__(self):
         d = dict(self.__dict__)
         del d['logger']
@@ -362,4 +385,18 @@ class Scenario(object):
 
     def __setstate__(self, d):
         self.__dict__.update(d)
-        self.logger = logging.getLogger(self.__module__ + '.' + self.__class__.__name__)
+        self.logger = logging.getLogger(
+            self.__module__ + '.' + self.__class__.__name__)
+
+    def _to_str_and_warn(self, l: typing.List[typing.Any]):
+        warn_ = False
+        for i, e in enumerate(l):
+            if e is not None and not isinstance(e, str):
+                warn_ = True
+                try:
+                    l[i] = str(e)
+                except ValueError:
+                    raise ValueError("Failed to cast all instances to str")
+        if warn_:
+            self.logger.warn("All instances were casted to str.")
+        return l
