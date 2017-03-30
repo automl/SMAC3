@@ -1,7 +1,7 @@
 import numpy as np
 import logging
 
-import pyrfr.regression
+import pyrfr
 
 from smac.configspace import CategoricalHyperparameter
 from smac.epm.base_epm import AbstractEPM
@@ -86,7 +86,7 @@ class RandomForestWithInstances(AbstractEPM):
         self.rf_opts.max_num_nodes = max_num_nodes
 
         self.n_points_per_tree = n_points_per_tree
-        self.rf = None
+        self.rf = None  # type: pyrfr.regression.binary_rss_forest
 
         # This list well be read out by save_iteration() in the solver
         self.hypers = [num_trees, max_num_nodes, do_bootstrapping,
