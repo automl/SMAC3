@@ -196,7 +196,7 @@ class RunhistoryTest(unittest.TestCase):
         self.assertTrue(np.allclose(
             X, np.array([[0.005, 0.995], [0.995, 0.005], [0.995, 0.995]]), atol=0.001))
         self.assertTrue(
-            np.allclose(y, np.array([[1.], [16.467], [200.]]), atol=0.001))
+            np.allclose(y, np.array([[1.], [16.422], [200.]]), atol=0.001))
 
     def test_cost_without_imputation(self):
         '''
