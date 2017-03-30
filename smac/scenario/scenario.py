@@ -387,7 +387,7 @@ class Scenario(object):
     def _to_str_and_warn(self, l: typing.List[typing.Any]):
         warn_ = False
         for i, e in enumerate(l):
-            if not isinstance(e, str):
+            if e is not None and not isinstance(e, str):
                 warn_ = True
                 try:
                     l[i] = str(e)
