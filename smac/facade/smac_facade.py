@@ -1,4 +1,5 @@
 import logging
+import os
 import typing
 
 import numpy as np
@@ -337,6 +338,11 @@ class SMAC(object):
             self.logger.info("Final Incumbent: %s" % (self.solver.incumbent))
             self.runhistory = self.solver.runhistory
             self.trajectory = self.solver.intensifier.traj_logger.trajectory
+
+            if self.solver.scenario.output_dir is not None:
+                self.solver.runhistory.save_json(
+                    fn=os.path.join(self.solver.scenario.output_dir,
+                                    "runhistory.json"))
         return incumbent
 
     def get_tae_runner(self):
