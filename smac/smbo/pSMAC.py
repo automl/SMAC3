@@ -8,8 +8,8 @@ import glob
 from smac.runhistory.runhistory import RunHistory
 from smac.configspace import ConfigurationSpace
 
-RUNHISTORY_FILEPATTERN = '.runhistory_%d.json'
-RUNHISTORY_RE = r'\.runhistory_[0-9]*\.json'
+RUNHISTORY_FILEPATTERN = 'runhistory.json'
+RUNHISTORY_RE = r'runhistory\.json'
 
 
 def read(run_history: RunHistory, 
@@ -79,8 +79,7 @@ def write(run_history:RunHistory, output_directory:str, num_run:int):
 
     """
 
-    output_filename = os.path.join(output_directory,
-                                   RUNHISTORY_FILEPATTERN % num_run)
+    output_filename = os.path.join(output_directory, RUNHISTORY_FILEPATTERN)
 
     with tempfile.NamedTemporaryFile('wb', dir=output_directory,
                                      delete=False) as fh:

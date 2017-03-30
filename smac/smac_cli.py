@@ -84,9 +84,3 @@ class SMACCLI(object):
             optimizer.optimize()
         except (TAEAbortException, FirstRunCrashedException) as err:
             self.logger.error(err)
-        finally:
-            # ensure that the runhistory is always dumped in the end
-            if scen.output_dir is not None:
-                optimizer.solver.runhistory.save_json(
-                    fn=os.path.join(scen.output_dir, "runhistory.json"))
-        #smbo.runhistory.load_json(fn="runhistory.json", cs=smbo.config_space)
