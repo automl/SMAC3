@@ -46,13 +46,14 @@ before_install:
   - conda update --yes conda
   - conda create -n testenv --yes python=$PYTHON_VERSION pip wheel nose
   - source activate testenv
-  - conda install --yes gcc
+  - conda install --yes gcc swig
   - echo "Using GCC at "`which gcc`
   - export CC=`which gcc`
 
 install:
   - pip install coverage pep8 python-coveralls
   - cat requirements.txt | xargs -n 1 -L 1 pip install
+  - pip install git+https://github.com/automl/random_forest_run
   - python setup.py install
 
 # command to run tests, e.g. python setup.py test
