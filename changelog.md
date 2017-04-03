@@ -1,16 +1,16 @@
 # 0.4
 
-* ADD #204: SMAC now always saves runhistory files as `runhistory.py`.
+* ADD #204: SMAC now always saves runhistory files as `runhistory.json`.
 * MAINT #205: the SMAC repository now uses codecov.io instead of coveralls.io.
 * ADD #83: support of ACLIB 2.0 parameter configuration space file.
-* FIX #206: instances are now explicitly cast to `str`, instead the instances
-  are `None`.
+* FIX #206: instances are now explicitly cast to `str`. In case not instance is
+  given, a single `None` is used, which is not cast to `str`.
 * ADD #200: new convenience function to retrieve an `X`, `y` representation
   of the data to feed it to a new fANOVA implementation.
 * MAINT #198: improved pSMAC interface.
 * FIX #201: improved handling of boolean arguments to SMAC.
 * FIX #194: fixes adaptive capping with re-occurring configurations.
-* ADD #190: new argument intensification percentage.
+* ADD #190: new argument `intensification_percentage`.
 * ADD #187: better dependency injection into main SMAC class to avoid
   ill-configured SMAC objects.
 * ADD #161: log scenario object as a file.
@@ -18,7 +18,7 @@
   incumbent change.
 * MAINT #159: consistent naming of loggers.
 * ADD #128: new helper method to get the target algorithm evaluator.
-* FIX #165.
+* FIX #165: default value for par = 1.
 * MAINT #153: entries in the trajectory logger are now named tuples.
 * FIX #155: better handling of SMAC shutdown and crashes if the first
   configuration crashes.
