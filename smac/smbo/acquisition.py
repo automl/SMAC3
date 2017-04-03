@@ -18,7 +18,7 @@ class AbstractAcquisitionFunction(object):
     def __str__(self):
         return type(self).__name__ + " (" + self.long_name + ")"
 
-    def __init__(self, model:AbstractEPM, **kwargs):
+    def __init__(self, model: AbstractEPM, **kwargs):
         """
         A base class for acquisition functions.
 
@@ -51,7 +51,7 @@ class AbstractAcquisitionFunction(object):
         for key in kwargs:
             setattr(self, key, kwargs[key])
 
-    def __call__(self, X:np.ndarray):
+    def __call__(self, X: np.ndarray):
         """
         Computes the acquisition value for a given point X
 
@@ -75,7 +75,7 @@ class AbstractAcquisitionFunction(object):
         return acq
 
     @abc.abstractmethod
-    def _compute(self, X:np.ndarray):
+    def _compute(self, X: np.ndarray):
         """
         Computes the acquisition value for a given point X. This function has
         to be overwritten in a derived class.
@@ -99,8 +99,8 @@ class AbstractAcquisitionFunction(object):
 class EI(AbstractAcquisitionFunction):
 
     def __init__(self,
-                 model:AbstractEPM,
-                 par:float=0.0,
+                 model: AbstractEPM,
+                 par: float=0.0,
                  **kwargs):
         r"""
         Computes for a given x the expected improvement as
@@ -125,7 +125,7 @@ class EI(AbstractAcquisitionFunction):
         self.par = par
         self.eta = None
 
-    def _compute(self, X:np.ndarray, **kwargs):
+    def _compute(self, X: np.ndarray, **kwargs):
         """
         Computes the EI value and its derivatives.
 
@@ -156,21 +156,22 @@ class EI(AbstractAcquisitionFunction):
         z = (self.eta - m - self.par) / s
         f = (self.eta - m - self.par) * norm.cdf(z) + s * norm.pdf(z)
         if np.any(s == 0.0):
-            # if variance is zero, we have observed x on all instances
+            # if std is zero, we have observed x on all instances
             # using a RF, std should be never exactly 0.0
-            self.logger.warn("Predicted variance is 0.0")
+            self.logger.warn("Predicted std is 0.0 for at least one sample.")
             f[s == 0.0] = 0.0
 
         if (f < 0).any():
-            raise ValueError("Expected Improvement is smaller than 0!")
+            raise ValueError(
+                "Expected Improvement is smaller than 0 for at least one sample.")
 
         return f
 
 
 class EIPS(EI):
     def __init__(self,
-                 model:AbstractEPM,
-                 par:float=0.0,
+                 model: AbstractEPM,
+                 par: float=0.0,
                  **kwargs):
         r"""
         Computes for a given x the expected improvement as
@@ -185,7 +186,8 @@ class EIPS(EI):
         ----------
         model : AbstractEPM
             A model that implements at least
-                 - predict_marginalized_over_instances(X)
+                 - predict_marginalized_over_instances(X) returning a tuples of
+                 predicted cost and running time
         par : float, default=0.0
             Controls the balance between exploration and exploitation of the
             acquisition function.
@@ -194,7 +196,7 @@ class EIPS(EI):
         super(EIPS, self).__init__(model, par=par)
         self.long_name = 'Expected Improvement per Second'
 
-    def _compute(self, X:np.ndarray, **kwargs):
+    def _compute(self, X: np.ndarray, **kwargs):
         """
         Computes the EIPS value.
 
@@ -232,14 +234,14 @@ class EIPS(EI):
         f = (self.eta - m_cost - self.par) * norm.cdf(z) + s * norm.pdf(z)
         f = f / m_runtime
         if np.any(s == 0.0):
-            # if variance is zero, we have observed x on all instances
+            # if std is zero, we have observed x on all instances
             # using a RF, std should be never exactly 0.0
-            self.logger.warn("Predicted variance is 0.0")
+            self.logger.warn("Predicted std is 0.0 for at least one sample.")
             f[s == 0.0] = 0.0
 
         if (f < 0).any():
             raise ValueError("Expected Improvement per Second is smaller than "
-                             "0!")
+                             "0 for at least one sample.")
 
         return f.reshape((-1, 1))
 
@@ -247,8 +249,8 @@ class EIPS(EI):
 class LogEI(AbstractAcquisitionFunction):
 
     def __init__(self,
-                 model:AbstractEPM,
-                 par:float=0.0,
+                 model: AbstractEPM,
+                 par: float=0.0,
                  **kwargs):
         r"""
         Computes for a given x the logarithm expected improvement as
@@ -269,7 +271,7 @@ class LogEI(AbstractAcquisitionFunction):
         self.par = par
         self.eta = None
 
-    def _compute(self, X:np.ndarray, **kwargs):
+    def _compute(self, X: np.ndarray, **kwargs):
         """
         Computes the EI value and its derivatives.
 
@@ -301,14 +303,15 @@ class LogEI(AbstractAcquisitionFunction):
         v = (np.log(f_min) - m) / std
         log_ei = (f_min * norm.cdf(v)) - \
             (np.exp(0.5 * var_ + m) * norm.cdf(v - std))
-            
+
         if np.any(std == 0.0):
-            # if variance is zero, we have observed x on all instances
+            # if std is zero, we have observed x on all instances
             # using a RF, std should be never exactly 0.0
-            self.logger.warn("Predicted variance is 0.0")
+            self.logger.warn("Predicted std is 0.0 for at least one sample.")
             log_ei[std == 0.0] = 0.0
 
         if (log_ei < 0).any():
-            raise ValueError("Expected Improvement is smaller than 0!")
+            raise ValueError(
+                "Expected Improvement is smaller than 0 for at least one sample.")
 
         return log_ei.reshape((-1, 1))
