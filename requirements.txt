@@ -6,6 +6,6 @@ Cython
 psutil
 pynisher>=0.4.1
 ConfigSpace>=0.3.1
-pyrfr
+pyrfr==0.2.0
 scikit-learn
 typing
