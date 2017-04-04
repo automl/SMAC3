@@ -1,6 +1,7 @@
 import setuptools
 
-import smac
+AUTHORS = "Marius Lindauer, Matthias Feurer, Katharina Eggensperger, " \
+          "Aaron Klein, Stefan Falkner and Frank Hutter"
 
 
 with open('requirements.txt') as fh:
@@ -14,8 +15,8 @@ with open("smac/__version__.py") as fh:
 
 setuptools.setup(
     name="smac",
-    version=smac.__version__,
-    author=smac.AUTHORS,
+    version=version,
+    author=AUTHORS,
     author_email="fh@cs.uni-freiburg.de",
     description=("SMAC3, a Python implementation of 'Sequential Model-based "
                  "Algorithm Configuration'."),
