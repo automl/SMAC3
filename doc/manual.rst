@@ -20,6 +20,8 @@ hyperparameters in the code and how to get hold of results.
 Thirdly, we show a real-world example, using an algorithm-wrapper to optimize
 the Spear-SAT-solver.
 
+.. _branin:
+
 Branin
 ~~~~~~
 First of, we'll demonstrate the usage of *SMAC* on the most basic scenario, the optimization of a continuous blackbox function.
@@ -104,6 +106,8 @@ The **runcount_limit** specifies the maximum number of algorithm calls.
           x2, Value: 2.429138598022513
 
 Furthermore a folder containing *SMACs* trajectory and the runhistory will be created in the branin folder.
+
+.. _leadingones:
 
 Using *SMAC* directly in Python
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -212,11 +216,11 @@ The Scenario object holds information about the whole optimization-process, such
 - instances and instance-features.
 - ConfigurationSpace and parameters
 - what output-directory to use, etc.
-We provide a list of possible options in the scenario_.a
+We provide a list of possible options in the scenario_.
 
 The initialization of a scenario in the code uses the same keywords as a scenario-file, which we used in the branin example.
 
-To evaluate the "leading ones" function, we register it with the TargetAlgorithmFunction evaluator (TAE_).
+To evaluate the "leading ones" function, we register it with the TargetAlgorithmFunction evaluator (TAE).
 
     .. code-block:: python
 
@@ -236,7 +240,7 @@ Afterwards, the default value is queried by calling the run method of the evalua
 
 To handle the Bayesian optimization loop we can create a SMAC object.
 To automatically handle the exploration of the search space 
-and querying of the function, SMAC needs as inputs the scenario object 
+and evaluation of the function, SMAC needs as inputs the scenario object 
 as well as the function evaluator.
 
     .. code-block:: python
@@ -255,7 +259,7 @@ as well as the function evaluator.
         inc_value = taf.run(incumbent)[1]
         print("Optimized Value: %.2f" % (inc_value))
 
-We start the optimization loop and set the maximum number of iterations to 999.
+We start the optimization loop.
 
 Internally SMAC keeps track of the number of algorithm calls and the remaining time budget via a Stats object.
 
@@ -265,7 +269,7 @@ We can directly access the incumbent configuration which is stored in the SMAC o
 
 We further query the target function at the incumbent, using the function evaluator so that as final output we can see performance value of the incumbent.
 
-
+.. _spear:
 
 Spear-QCP
 ~~~~~~~~~
@@ -304,7 +308,7 @@ In this folder you see the following files and directories:
 
             This specifies the wrapper that *SMAC* executes with a pre-specified syntax in order to evaluate the algorithm to be optimized.
             This wrapper script takes an instantiation of the parameters as input, runs the algorithm with these parameters, and returns
-            the performance of the algorithm; since every algorithm has a different input and output format, this wrapper acts as a interface between the
+            the performance of the algorithm; since every algorithm has a different input and output format, this wrapper acts as an interface between the
             algorithm and *SMAC*, which executes the wrapper through a command line call.
 
             An example call would look something like this:
@@ -407,7 +411,28 @@ The statistics further show the used wallclock time, target algorithm runtime an
 
 SMAC-options and file-formats
 -----------------------------
+In the optimization-process of *SMAC*, there are several ways to configure the
+options:
 
+*Mandatory*:
+
+* Commandline_-options, with which *SMAC* is called directly
+* Scenario_-options, that are specified via a Scenario-object. Either directly
+  in the Python-code or by using a scenario-file.
+* Parameter Configuration Space (PCS_), that provides the legal ranges of
+  parameters to optimize, their types (e.g. int or float) and their default
+  values.
+
+*Optional*:
+
+* Instance_- and feature_-files, that list the instances and features to
+  optimize upon.
+* Target Algorithm Wrapper_, that is used to call the algorithm to be optimized.
+
+.. _commandline:
+
+Commandline
+~~~~~~~~~~~
 *SMAC* is called via the command-line with the following arguments:
 .. code-block:: bash
 
@@ -427,9 +452,10 @@ Optional:
 
 Scenario-options
 ~~~~~~~~~~~~~~~~
-
-In the scenario-file, most of the options are specified.
-The format is one option per line:
+The Scenario-object can be constructed either by prociding an actual
+Scenario-object (see leadingOnes_-example), or by specifing the options in a
+scenario file.
+The format of the scenario file is one option per line:
 .. code-block:: bash
 
         OPTION1 VALUE1
@@ -439,7 +465,7 @@ The format is one option per line:
 For boolean options "1" or "true" both evaluate to True.
 
 Required:
-        * *algo* specifies the target-algorithm call that *SMAC* will optimize. Is interpreted as a bash-command.
+        * *algo* specifies the target-algorithm call that *SMAC* will optimize. Interpreted as a bash-command.
         * *paramfile* specifies the path to the PCS-file
         * *cutoff_time* is the maximum runtime, after which the target-algorithm is cancelled. **Required if *run_obj* is runtime.**
 
@@ -461,3 +487,89 @@ Optional:
         * *output_dir* specifies the output-directory for all emerging files, such as logging and results. Default: "smac3-output_YEAR-MONTH-DAY_HOUR:MINUTE:SECOND"
         * *shared_model*:  Default: false
         * *initial_incumbent*: in [DEFAULT, RANDOM]. DEFAULT is the default from the PCS. Default: DEFAULT.
+
+.. _PCS:
+
+Parameter Configuration Space (PCS)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The Parameter Configuration Space (PCS) defines the legal ranges of the
+parameters to be optimized and their default values. In the examples-folder you
+can find several examples for PCS-files. Generally, the format is:
+
+.. code-block:: bash
+
+        parameter_name categorical {value_1, ..., value_N} [default value]
+        parameter_name ordinal {value_1, ..., value_N} [default value]
+        parameter_name integer [min_value, max_value] [default value]
+        parameter_name integer [min_value, max_value] [default value] log
+        parameter_name real [min_value, max_value] [default value]
+        parameter_name real [min_value, max_value] [default value] log
+
+        # Conditionals:
+        child_name | condition [&&,||] condition ...
+
+        # Condition Operators: 
+        # parent_x [<, >] parent_x_value (if parameter type is ordinal, integer or real)
+        # parent_x [==,!=] parent_x_value (if parameter type is categorical, ordinal or integer)
+        # parent_x in {parent_x_value1, parent_x_value2,...}
+
+        # Forbiddens:
+        {parameter_name_1=value_1, ..., parameter_name_N=value_N}
+
+.. note::
+        The PCS-format of *SMAC3* differs from that of the JAVA-based *SMAC2*.
+
+.. _instance:
+.. _feature:
+
+Instances and Features
+~~~~~~~~~~~~~~~~~~~~~~
+To specify instances and features, simply provide text-files in the following
+format and provide the paths to the instances in the scenario_.
+
+Instance-files are text-files with one instance per line. If you want to use
+training- and test-sets, separate files are expected.
+
+Feature-files are files following the comma-separated-value-format, as can also be
+seen in the SPEAR_-example:
+
+     +--------------------+--------------------+--------------------+-----+
+     |      instance      | name of feature 1  | name of feature 2  | ... |
+     +====================+====================+====================+=====+
+     | name of instance 1 | value of feature 1 | value of feature 2 | ... |
+     +--------------------+--------------------+--------------------+-----+
+     |         ...        |          ...       |          ...       | ... |
+     +--------------------+--------------------+--------------------+-----+
+
+.. _wrapper:
+
+Target Algorithm Wrappers
+~~~~~~~~~~~~~~~~~~~~~~~~~
+In order to evaluate more complex structures to be optimized, you will need to
+provide a wrapper. A wrapper is used to communicate between *SMAC* and the target
+algorithm. *SMAC* will call the wrapper with a set of parameters, the wrapper is
+responsible for executing the target algorithm (e.g. a SAT-solver, a
+machine-learning algorithm or any other blackbox-optimization).
+
+*SMAC* provides a number of different options to register your
+algorithm-to-be-optimized:
+
+* SMAC2-format:
+
+  If you want to use the old *SMAC2*-format (as in branin_), *SMAC* needs as output a printed line in the following format:
+  
+  .. code-block:: bash
+  
+      Result for SMAC: <STATUS>, <runtime>, <runlength>, <quality>, <seed>, <instance-specifics>
+
+  You can then either simply specify your algorithm call in the scenario_
+  (*algo*-parameter), or by explicitly initializing **ExecuteTARunOld** from **smac.tae.execute_ta_run_old**.
+
+
+* Function-evaluators:
+
+  If you want to optimize a function, as in leadingones_ or the rf.py, you can use the **ExecuteTAFuncDict** from **smac.tae.execute_func**.
+  It calls a function and expects from it as return-value a float-value that is
+  interpreted as the loss/quality. In this case, your algorithm will be called
+  with the Configuration-object, which can be interpreted as a dictionary (i.e.
+  indexed)
