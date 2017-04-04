@@ -11,13 +11,13 @@ Status for master branch:
 
 [![Build Status](https://travis-ci.org/automl/SMAC3.svg?branch=master)](https://travis-ci.org/automl/SMAC3)
 [![Code Health](https://landscape.io/github/automl/SMAC3/master/landscape.svg?style=flat)](https://landscape.io/github/automl/SMAC3/master)
-[![Coverage Status](https://coveralls.io/repos/automl/auto-sklearn/badge.svg?branch=master&service=github)](https://coveralls.io/github/automl/SMAC3?branch=master)
+[![codecov Status](https://codecov.io/gh/automl/SMAC3/branch/master/graph/badge.svg)](https://codecov.io/gh/automl/SMAC3)
 
 Status for development branch
 
 [![Build Status](https://travis-ci.org/automl/SMAC3.svg?branch=development)](https://travis-ci.org/automl/SMAC3)
 [![Code Health](https://landscape.io/github/automl/SMAC3/development/landscape.svg?style=flat)](https://landscape.io/github/automl/SMAC3/development)
-[![Coverage Status](https://coveralls.io/repos/automl/SMAC3/badge.svg?branch=development&service=github)](https://coveralls.io/github/automl/SMAC3?branch=development)
+[![codecov](https://codecov.io/gh/automl/SMAC3/branch/development/graph/badge.svg)](https://codecov.io/gh/automl/SMAC3)
 
 # OVERVIEW
 
