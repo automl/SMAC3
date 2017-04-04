@@ -19,7 +19,7 @@ Status for development branch
 [![Code Health](https://landscape.io/github/automl/SMAC3/development/landscape.svg?style=flat)](https://landscape.io/github/automl/SMAC3/development)
 [![Coverage Status](https://coveralls.io/repos/automl/SMAC3/badge.svg?branch=development&service=github)](https://coveralls.io/github/automl/SMAC3?branch=development)
 
-#OVERVIEW
+# OVERVIEW
 
 SMAC is a tool for algorithm configuration 
 to optimize the parameters of arbitrary algorithms across a set of instances.
@@ -38,7 +38,7 @@ we refer to
 SMAC v3 is written in python3 and continuously tested with python3.4 and python3.5. 
 Its [Random Forest](https://bitbucket.org/aadfreiburg/random_forest_run) is written in C++.
 
-#Installation:
+# Installation:
 
     cat requirements.txt | xargs -n 1 -L 1 pip install
     
