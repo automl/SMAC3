@@ -3,7 +3,7 @@
 * ADD #204: SMAC now always saves runhistory files as `runhistory.json`.
 * MAINT #205: the SMAC repository now uses codecov.io instead of coveralls.io.
 * ADD #83: support of ACLIB 2.0 parameter configuration space file.
-* FIX #206: instances are now explicitly cast to `str`. In case not instance is
+* FIX #206: instances are now explicitly cast to `str`. In case no instance is
   given, a single `None` is used, which is not cast to `str`.
 * ADD #200: new convenience function to retrieve an `X`, `y` representation
   of the data to feed it to a new fANOVA implementation.
