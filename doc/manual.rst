@@ -13,7 +13,12 @@ Quick Start
 | If you have not installed *SMAC* yet take a look at the `installation instructions <installation.html>`_ and make sure that all the requirements are fulfilled.
 | Examples to illustrate the usage of *SMAC* - either by reading in a scenario-file, or by directly using *SMAC* in Python - are provided in the examples-folder.
 
-To get started, we will walk you through the examples.
+To get started, we will walk you through a few examples.
+First, we explain the basic usage of *SMAC*, using a scenario_ file to define the options and optimizing a toy example.
+Secondly, we explain the usage of *SMAC* within Python, how to define
+hyperparameters in the code and how to get hold of results.
+Thirdly, we show a real-world example, using an algorithm-wrapper to optimize
+the Spear-SAT-solver.
 
 Branin
 ~~~~~~
@@ -27,7 +32,7 @@ To run the example scenario, change into the root-directory of *SMAC* and type t
     cd examples/branin
     python ../../scripts/smac --scenario branin_scenario.txt
 
-The python command runs *SMAC* with the specified scenario. The scenario file contains the following four lines:
+The python command runs *SMAC* with the specified scenario. The scenario_ file contains the following four lines:
 
 .. code-block:: bash
 
@@ -133,6 +138,7 @@ Using *SMAC* directly in Python
 | To use *SMAC* directly with Python, we first have to import the necessary modules
 
     .. code-block:: python
+
         :lineno-start: 3
 
         import numpy as np
@@ -146,13 +152,14 @@ Using *SMAC* directly in Python
         from smac.scenario.scenario import Scenario
         from smac.facade.smac_facade import SMAC
 
-First, we import the ConfigurationSpace and Parametertypes in order to declare different parameters.
-The ConfigurationSpace is used to define the parametertypes and domains. We also
-import the different parametertypes, e.g. float-, int- and categorical parameters.
+First, we import the ConfigurationSpace and different types of parameters.
+The ConfigurationSpace is used to define the parameters and their domains. The parametertypes are for example
+floats, ints and categorical parameters.
 
-Now, we build the Configuration Space:
+Now, we build the ConfigurationSpace:
 
     .. code-block:: python
+
         :lineno-start: 38
 
         # build Configuration Space which defines all parameters and their ranges
@@ -172,40 +179,50 @@ Now, we build the Configuration Space:
 
             previous_param = p
 
-cs is the Configuration space Object. 
-We declare each of the 16 parameters to be Categorical parameters 
+cs is the ConfigurationSpace Object. 
+We declare each of the 16 parameters to be categorical parameters 
 that can take the values 0 or 1 and are set by default to 0. 
-They are also given the names '1' to '16'.
+They are also given the names '1' to '16' (as strings, note that the names can
+be chosen arbitrarily).
 
-To make things easier, we can use conditions.
-Parameter 'i+1' is conditioned on parameter 'i' 
-and thus only activated (i.e. considered in optimization) if parameter 'i' is set to 1. 
+To ease optimization, we can use conditions.
+Parameter 'i+1' is conditioned on parameter 'i'.
+and thus only activated (i.e. considered for optimization) if parameter 'i' is set to 1. 
 For example parameter '1' is only active once parameter '0' is set to 1. 
 Conditionals help to restrict the search space and improve optimization.
 This way *SMAC* won't have to query regions in the search space that are non-improving, 
 like '0100000000000000' or '0100000000000001'. Both return the same value as the default, i.e. 0.
+This way, human knowledge about the problem is introduced.
 
-After the configuration space was setup we can create a scenario object.
+After the configuration space is set up we can create a scenario_ object.
 
     .. code-block:: python
+
         :lineno-start: 53
 
         # SMAC scenario object
-        scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternatively runtime)
+        scenario = Scenario({"run_obj": "quality",          # we optimize quality (alternatively runtime)
                              "runcount-limit": n_params*2,  # at most 200 function evaluations
-                             "cs": cs,  # configuration space
+                             "cs": cs,                      # ConfigurationSpace
                              "deterministic": "true"
                              })
 
-The Scenario object contains information about the scenario carrying options for the optimization, such as the runcount-limit or what metric to optimize.
-It uses the same keywords as a scenario-file, which we showed in the branin example.
+The Scenario object holds information about the whole optimization-process, such as:
+- runcount-limit or what metric to optimize.
+- instances and instance-features.
+- ConfigurationSpace and parameters
+- what output-directory to use, etc.
+We provide a list of possible options in the scenario_.a
 
-To evaluate the "leading ones" function, we register it with the TargetAlgorithmFunction evaluator.
+The initialization of a scenario in the code uses the same keywords as a scenario-file, which we used in the branin example.
+
+To evaluate the "leading ones" function, we register it with the TargetAlgorithmFunction evaluator (TAE_).
 
     .. code-block:: python
+
         :lineno-start: 60
 
-        # register function to be optimize
+        # register function to optimize
         taf = ExecuteTAFunc(leading_ones)
 
         # example call of the function
@@ -219,9 +236,11 @@ Afterwards, the default value is queried by calling the run method of the evalua
 
 To handle the Bayesian optimization loop we can create a SMAC object.
 To automatically handle the exploration of the search space 
-and querying of the function SMAC needs as inputs the scenario object as well as the function evaluator.
+and querying of the function, SMAC needs as inputs the scenario object 
+as well as the function evaluator.
 
     .. code-block:: python
+
         :lineno-start: 68
 
         # Optimize
@@ -392,13 +411,13 @@ SMAC-options and file-formats
 *SMAC* is called via the command-line with the following arguments:
 .. code-block:: bash
 
-        python smac --scenario-file SCENARIO --seed INT --verbose-level LEVEL --modus MODUS --warmstart_runhistory RUNHISTORY --warmstart_scenario SCENARIO --warmstart_incumbent INCUMBENT
+        python smac --scenario SCENARIO --seed INT --verbose_level LEVEL --modus MODUS --warmstart_runhistory RUNHISTORY --warmstart_scenario SCENARIO --warmstart_incumbent INCUMBENT
 
 Required:
-     * *scenario-file*: Path to the file that specifies the scenario_ for this *SMAC*-run.
+     * *scenario*: Path to the file that specifies the scenario_ for this *SMAC*-run.
 Optional:
      * *seed*: The integer that the random-generator will be based upon. Default: 12345
-     * *verbose-level*: in [INFO, DEBUG], specifies the logging-verbosity. Default: INFO
+     * *verbose_level*: in [INFO, DEBUG], specifies the logging-verbosity. Default: INFO
      * *modus*: in [SMAC, ROAR]. SMAC will use the bayeasian optimization with an intensification process, whereas ROAR stands for Random Online Adaptive Racing*. Default: SMAC
      * *warmstart_runhistory*: When warmstarting the optimization-process, this is the list of runhistory-files to use. Default: None
      * *warmstart_scenario*: When warmstarting, this is the scenario-file that corresponds to the *warmstart_runhistory*. PCS and feature-space need to be identical to the *scenario-file*. Default: None

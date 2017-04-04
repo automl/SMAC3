@@ -47,7 +47,7 @@ for n in range(n_params):
         cond = InCondition(
             child=p, parent=previous_param, values=[1])
         cs.add_condition(cond)
-        
+
     previous_param = p
 
 # SMAC scenario object
@@ -64,7 +64,7 @@ taf = ExecuteTAFuncDict(leading_ones)
 # it returns: Status, Cost, Runtime, Additional Infos
 def_value = taf.run(cs.get_default_configuration())[1]
 print("Default Value: %.2f" % (def_value))
- 
+
 # Optimize
 smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
             tae_runner=taf)
