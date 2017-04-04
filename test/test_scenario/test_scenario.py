@@ -4,6 +4,7 @@ Created on Mar 29, 2015
 @author: Andre Biedenkapp
 '''
 from collections import defaultdict
+import sys
 import os
 import logging
 import unittest
@@ -15,12 +16,17 @@ import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
-from smac.scenario.scenario import Scenario
+from smac.scenario.scenario import Scenario, _is_truthy
 from smac.configspace import ConfigurationSpace
 from smac.utils.merge_foreign_data import merge_foreign_data
 from smac.runhistory.runhistory import RunHistory
 from smac.smbo.objective import average_cost
 from smac.tae.execute_ta_run import StatusType
+
+if sys.version_info[0] == 2:
+    import mock
+else:
+    from unittest import mock
 
 
 class InitFreeScenario(Scenario):
@@ -33,7 +39,8 @@ class ScenarioTest(unittest.TestCase):
 
     def setUp(self):
         logging.basicConfig()
-        self.logger = logging.getLogger('ScenarioTest')
+        self.logger = logging.getLogger(
+            self.__module__ + '.' + self.__class__.__name__)
         self.logger.setLevel(logging.DEBUG)
 
         base_directory = os.path.split(__file__)[0]
@@ -58,7 +65,9 @@ class ScenarioTest(unittest.TestCase):
                                    'test_instance_file':
                                        'test/test_files/scenario_test/test.txt',
                                    'feature_file':
-                                       'test/test_files/scenario_test/features.txt'}
+                                       'test/test_files/scenario_test/features.txt',
+                                   'output_dir':
+                                       'test/test_files/scenario_test/tmp_output'}
 
     def tearDown(self):
         os.chdir(self.current_dir)
@@ -152,7 +161,7 @@ class ScenarioTest(unittest.TestCase):
                      status=StatusType.SUCCESS,
                      seed=None,
                      additional_info=None)
-        
+
         # "d" is an instance in <scenario>
         rh_merge.add(config=config, instance_id="d", cost=5, time=20,
                      status=StatusType.SUCCESS,
@@ -169,7 +178,7 @@ class ScenarioTest(unittest.TestCase):
         # but we should not use the data to update the cost of config
         self.assertTrue(len(rh_base.data) == 2)
         self.assertTrue(np.isnan(rh_base.get_cost(config)))
-        
+
         # we should not get direct access to external run data
         runs = rh_base.get_runs_for_config(config)
         self.assertTrue(len(runs) == 0)
@@ -178,9 +187,9 @@ class ScenarioTest(unittest.TestCase):
                      status=StatusType.SUCCESS,
                      seed=None,
                      additional_info=None)
-        
-        self.assertRaises(ValueError, merge_foreign_data, **{"scenario":scenario, "runhistory":rh_base, "in_scenario_list":[scenario_2], "in_runhistory_list":[rh_merge]})
-        
+
+        self.assertRaises(ValueError, merge_foreign_data, **{
+                          "scenario": scenario, "runhistory": rh_base, "in_scenario_list": [scenario_2], "in_runhistory_list": [rh_merge]})
 
     def test_pickle_dump(self):
         scenario = Scenario(self.test_scenario_dict)
@@ -208,6 +217,88 @@ class ScenarioTest(unittest.TestCase):
         self.assertRaisesRegex(ValueError,
                                "Argument initial_incumbent can only take a "
                                "value in ['DEFAULT, 'RANDOM'] but is Default")
+
+    def test_write(self):
+        """ Test whether a reloaded scenario still holds all the necessary
+        information. A subset of parameters might change, such as the paths to
+        pcs- or instance-files, so they are checked manually. """
+
+        def check_scen_eq(scen1, scen2):
+            """ Customized check for scenario-equality, ignoring file-paths """
+            for name in scen1._arguments:
+                dest = scen1._arguments[name]['dest']
+                name = dest if dest else name  # if 'dest' is None, use 'name'
+                if name in ["pcs_fn", "train_inst_fn", "test_inst_fn",
+                            "feature_fn", "output_dir"]:
+                    continue  # Those values are changed upon logging
+                elif name == 'cs':
+                    # Using repr because of cs-bug
+                    # (https://github.com/automl/ConfigSpace/issues/25)
+                    self.assertEqual(repr(scen1.cs), repr(scen2.cs))
+                elif name == 'feature_dict':
+                    self.assertEqual(len(scen1.feature_dict),
+                                     len(scen2.feature_dict))
+                    for key in scen1.feature_dict:
+                        self.assertTrue((scen1.feature_dict[key] ==
+                                         scen2.feature_dict[key]).all())
+                else:
+                    self.assertEqual(getattr(scen1, name),
+                                     getattr(scen2, name))
+
+        # First check with file-paths defined
+        self.test_scenario_dict['feature_file'] = 'test/test_files/scenario_test/features_multiple.txt'
+        scenario = Scenario(self.test_scenario_dict)
+        path = os.path.join(scenario.output_dir, 'scenario.txt')
+        scenario_reloaded = Scenario(path)
+        check_scen_eq(scenario, scenario_reloaded)
+
+        # Now create new scenario without filepaths
+        self.test_scenario_dict.update({
+            'paramfile': None, 'cs': scenario.cs,
+            'feature_file': None, 'features': scenario.feature_dict,
+            'instance_file': None, 'instances': scenario.train_insts,
+            'test_instance_file': None, 'test_instances': scenario.test_insts})
+        scenario_no_fn = Scenario(self.test_scenario_dict)
+        scenario_reloaded = Scenario(path)
+        check_scen_eq(scenario_no_fn, scenario_reloaded)
+
+    @mock.patch.object(os, 'makedirs')
+    @mock.patch.object(os.path, 'isdir')
+    def test_write_except(self, patch_isdir, patch_mkdirs):
+        patch_isdir.return_value = False
+        patch_mkdirs.side_effect = OSError()
+        with self.assertRaises(OSError) as cm:
+            Scenario(self.test_scenario_dict)
+
+    def test_no_output_dir(self):
+        self.test_scenario_dict['output_dir'] = ""
+        scenario = Scenario(self.test_scenario_dict)
+        self.assertFalse(scenario.out_writer.write_scenario_file(scenario))
+
+    def test_par_factor(self):
+        # Test setting the default value of 1 if no factor is given
+        scenario_dict = self.test_scenario_dict
+        scenario_dict['overall_obj'] = 'mean'
+        scenario = Scenario(scenario_dict)
+        self.assertEqual(scenario.par_factor, 1)
+        scenario_dict['overall_obj'] = 'par'
+        scenario = Scenario(scenario_dict)
+        self.assertEqual(scenario.par_factor, 1)
+
+    def test_truth_value(self):
+        self.assertTrue(_is_truthy("1"))
+        self.assertTrue(_is_truthy("true"))
+        self.assertTrue(_is_truthy(True))
+        self.assertFalse(_is_truthy("0"))
+        self.assertFalse(_is_truthy("false"))
+        self.assertFalse(_is_truthy(False))
+        self.assertRaises(ValueError, _is_truthy, "something")
+
+    def test_str_cast_instances(self):
+        self.scen = Scenario({'cs': None,
+                              'instances': [[1], [2]]})
+        self.assertIsInstance(self.scen.train_insts[0], str)
+        self.assertIsInstance(self.scen.train_insts[1], str)
 
 
 if __name__ == "__main__":

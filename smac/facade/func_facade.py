@@ -48,8 +48,9 @@ def fmin_smac(func: callable,
         Estimated position of the minimum.
     f : float
         Value of `func` at the minimum.
-    r : :class:`smac.runhistory.runhistory.RunHistory`
-        Information on the SMAC run.
+    s : :class:`smac.facade.smac_facade.SMAC`
+        SMAC objects which enables the user to get
+        e.g., the trajectory and runhistory.
     """
 
     aggregate_func = average_cost
@@ -79,7 +80,7 @@ def fmin_smac(func: callable,
     scenario = Scenario(scenario_dict)
 
     smac = SMAC(scenario=scenario, tae_runner=ta, rng=rng)
-    smac.logger = logging.getLogger("fmin_smac")
+    smac.logger = logging.getLogger(smac.__module__ + "." + smac.__class__.__name__)
     incumbent = smac.optimize()
 
     config_id = smac.solver.runhistory.config_ids[incumbent]
@@ -88,4 +89,4 @@ def fmin_smac(func: callable,
     incumbent = np.array([incumbent['x%d' % (idx + 1)]
                           for idx in range(len(bounds))], dtype=np.float)
     return incumbent, incumbent_performance.cost, \
-           smac.solver.runhistory
+           smac

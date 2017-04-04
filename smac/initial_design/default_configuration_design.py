@@ -14,8 +14,8 @@ __license__ = "3-clause BSD"
 
 
 class DefaultConfiguration(SingleConfigInitialDesign):
-    
-    def __init__(self, 
+
+    def __init__(self,
                  tae_runner: ExecuteTARun,
                  scenario: Scenario,
                  stats: Stats,
@@ -24,7 +24,7 @@ class DefaultConfiguration(SingleConfigInitialDesign):
                  ):
         '''
         Constructor
-        
+
         Arguments
         ---------
         tae_runner: ExecuteTARun
@@ -39,7 +39,7 @@ class DefaultConfiguration(SingleConfigInitialDesign):
         rng: np.random.RandomState
             random state
         '''
-        super().__init__(tae_runner=tae_runner, 
+        super().__init__(tae_runner=tae_runner,
                          scenario=scenario,
                          stats=stats,
                          traj_logger=traj_logger,

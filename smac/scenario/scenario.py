@@ -7,12 +7,14 @@ import shlex
 import time
 import datetime
 import copy
+import typing
 
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
 
 from smac.utils.io.input_reader import InputReader
-from smac.configspace import pcs
+from smac.configspace import pcs, pcs_new
+from smac.utils.io.output_writer import OutputWriter
 
 __author__ = "Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -23,7 +25,13 @@ __version__ = "0.0.2"
 
 
 def _is_truthy(arg):
-    return arg in ["1", "true", True]
+    if arg in ["1", "true", "True", True]:
+        return True
+    elif arg in ["0", "false", "False", False]:
+        return False
+    else:
+        raise ValueError("{} cannot be interpreted as a boolean argument. "
+                         "Please use one of {{0, false, 1, true}}.".format(arg))
 
 
 class Scenario(object):
@@ -44,10 +52,12 @@ class Scenario(object):
             command line arguments that were not processed by argparse
 
         """
-        self.logger = logging.getLogger("scenario")
+        self.logger = logging.getLogger(
+            self.__module__ + '.' + self.__class__.__name__)
         self.PCA_DIM = 7
 
         self.in_reader = InputReader()
+        self.out_writer = OutputWriter()
 
         if type(scenario) is str:
             scenario_fn = scenario
@@ -72,7 +82,6 @@ class Scenario(object):
             arg_name, arg_value = self._parse_argument(key, scenario, **value)
             parsed_arguments[arg_name] = arg_value
 
-        
         if len(scenario) != 0:
             raise ValueError('Could not parse the following arguments: %s' %
                              str(list(scenario.keys())))
@@ -92,6 +101,8 @@ class Scenario(object):
             setattr(self, arg_name, arg_value)
 
         self._transform_arguments()
+
+        self.out_writer.write_scenario_file(self)
 
     def add_argument(self, name, help, callback=None, default=None,
                      dest=None, required=False, mutually_exclusive_group=None,
@@ -183,7 +194,7 @@ class Scenario(object):
             normalized_key = key.lower().replace('-', '').replace('_', '')
             if normalized_key == normalized_name:
                 value = scenario.pop(key)
-                
+
         if dest is None:
             dest = name.lower().replace('-', '_')
 
@@ -208,11 +219,15 @@ class Scenario(object):
 
     def _add_arguments(self):
         # Add allowed arguments
+        self.add_argument(name='abort_on_first_run_crash', help=None,
+                          default='1', callback=_is_truthy)
         self.add_argument(name='algo', help=None, dest='ta',
                           callback=shlex.split)
         self.add_argument(name='execdir', default='.', help=None)
-        self.add_argument(name='deterministic', default="0", help=None,
+        self.add_argument(name='deterministic', default='0', help=None,
                           callback=_is_truthy)
+        self.add_argument(name='intensification_percentage', default=0.5,
+                          help=None, callback=float)
         self.add_argument(name='paramfile', help=None, dest='pcs_fn',
                           mutually_exclusive_group='cs')
         self.add_argument(name='run_obj', help=None, default='runtime')
@@ -231,7 +246,8 @@ class Scenario(object):
                           dest='minR')
         self.add_argument(name='maxR', help=None, default=2000, callback=int,
                           dest='maxR')
-        self.add_argument(name='instance_file', help=None, dest='train_inst_fn')
+        self.add_argument(name='instance_file',
+                          help=None, dest='train_inst_fn')
         self.add_argument(name='test_instance_file', help=None,
                           dest='test_inst_fn')
         self.add_argument(name='feature_file', help=None, dest='feature_fn')
@@ -240,6 +256,8 @@ class Scenario(object):
                               datetime.datetime.fromtimestamp(
                                   time.time()).strftime(
                                   '%Y-%m-%d_%H:%M:%S')))
+        self.add_argument(name='input_psmac_dirs', help=None,
+                          default=None)
         self.add_argument(name='shared_model', help=None, default='0',
                           callback=_is_truthy)
         self.add_argument(name='instances', default=[[None]], help=None,
@@ -260,10 +278,14 @@ class Scenario(object):
         self.feature_array = None
 
         if self.overall_obj[:3] in ["PAR", "par"]:
-            self.par_factor = int(self.overall_obj[3:])
+            par_str = self.overall_obj[3:]
         elif self.overall_obj[:4] in ["mean", "MEAN"]:
-            self.par_factor = int(self.overall_obj[4:])
+            par_str = self.overall_obj[4:]
+        # Check for par-value as in "par10"/ "mean5"
+        if len(par_str) > 0:
+            self.par_factor = int(par_str)
         else:
+            self.logger.debug("No par-factor detected. Using 1 by default.")
             self.par_factor = 1
 
         # read instance files
@@ -299,6 +321,9 @@ class Scenario(object):
         if self.test_insts:
             self.test_insts = extract_instance_specific(self.test_insts)
 
+        self.train_insts = self._to_str_and_warn(l=self.train_insts)
+        self.test_insts = self._to_str_and_warn(l=self.test_insts)
+
         # read feature file
         if self.feature_fn:
             if os.path.isfile(self.feature_fn):
@@ -311,14 +336,13 @@ class Scenario(object):
                 self.feature_array.append(self.feature_dict[inst_])
             self.feature_array = numpy.array(self.feature_array)
             self.n_features = self.feature_array.shape[1]
-            
             # reduce dimensionality of features of larger than PCA_DIM
             if self.feature_array.shape[1] > self.PCA_DIM:
                 X = self.feature_array
                 # scale features
                 X = MinMaxScaler().fit_transform(X)
-                X = numpy.nan_to_num(X) # if features with max == min
-                #PCA
+                X = numpy.nan_to_num(X)  # if features with max == min
+                # PCA
                 pca = PCA(n_components=self.PCA_DIM)
                 self.feature_array = pca.fit_transform(X)
                 self.n_features = self.feature_array.shape[1]
@@ -330,7 +354,11 @@ class Scenario(object):
         if self.pcs_fn and os.path.isfile(self.pcs_fn):
             with open(self.pcs_fn) as fp:
                 pcs_str = fp.readlines()
-                self.cs = pcs.read(pcs_str)
+                try:
+                    self.cs = pcs.read(pcs_str)
+                except:
+                    self.logger.debug("Could not parse pcs file with old format; trying new format next")
+                    self.cs = pcs_new.read(pcs_str)
                 self.cs.seed(42)
         elif self.pcs_fn:
             self.logger.error("Have not found pcs file: %s" %
@@ -345,6 +373,11 @@ class Scenario(object):
         else:
             self.logger.info("Output to %s" % (self.output_dir))
 
+        if self.shared_model and self.input_psmac_dirs is None:
+            # per default, we assume that
+            # all psmac runs write to the same directory
+            self.input_psmac_dirs = [self.output_dir]
+
     def __getstate__(self):
         d = dict(self.__dict__)
         del d['logger']
@@ -352,4 +385,18 @@ class Scenario(object):
 
     def __setstate__(self, d):
         self.__dict__.update(d)
-        self.logger = logging.getLogger("scenario")
+        self.logger = logging.getLogger(
+            self.__module__ + '.' + self.__class__.__name__)
+
+    def _to_str_and_warn(self, l: typing.List[typing.Any]):
+        warn_ = False
+        for i, e in enumerate(l):
+            if e is not None and not isinstance(e, str):
+                warn_ = True
+                try:
+                    l[i] = str(e)
+                except ValueError:
+                    raise ValueError("Failed to cast all instances to str")
+        if warn_:
+            self.logger.warn("All instances were casted to str.")
+        return l

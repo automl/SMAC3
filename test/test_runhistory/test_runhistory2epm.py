@@ -105,7 +105,7 @@ class RunhistoryTest(unittest.TestCase):
         '''
             adding some rundata to RunHistory2EPM4LogCost
         '''
-        
+
         rh2epm = runhistory2epm.RunHistory2EPM4LogCost(num_params=2,
                                                        scenario=self.scen)
 
@@ -146,7 +146,7 @@ class RunhistoryTest(unittest.TestCase):
         '''
             adding some rundata to RunHistory2EPM4Cost and impute censored data
         '''
-        
+
         self.imputor = RFRImputator(rs=np.random.RandomState(seed=12345),
                                     cutoff=self.scen.cutoff,
                                     threshold=self.scen.cutoff * self.scen.par_factor,
@@ -169,7 +169,7 @@ class RunhistoryTest(unittest.TestCase):
 
         X, y = rh2epm.transform(self.rh)
         self.assertTrue(np.allclose(X, np.array([[0.005, 0.995]]), atol=0.001))
-        self.assertTrue(np.allclose(y, np.array([[1.]])))  
+        self.assertTrue(np.allclose(y, np.array([[1.]])))
 
         # rh2epm should use time and not cost field later
         self.rh.add(config=self.config3, cost=200, time=20,
@@ -193,12 +193,12 @@ class RunhistoryTest(unittest.TestCase):
             X, np.array([[0.005, 0.995], [0.995, 0.005], [0.995, 0.995]]), atol=0.001))
         self.assertTrue(
             np.allclose(y, np.array([[1.], [18.970], [200.]]), atol=0.001))
-        
+
     def test_cost_without_imputation(self):
         '''
             adding some rundata to RunHistory2EPM4Cost without imputation
         '''
-        
+
         rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
                                                        scenario=self.scen)
 
@@ -209,7 +209,7 @@ class RunhistoryTest(unittest.TestCase):
 
         X, y = rh2epm.transform(self.rh)
         self.assertTrue(np.allclose(X, np.array([[0.005, 0.995]]), atol=0.001))
-        self.assertTrue(np.allclose(y, np.array([[1.]])))  
+        self.assertTrue(np.allclose(y, np.array([[1.]])))
 
         # rh2epm should use time and not cost field later
         self.rh.add(config=self.config3, cost=2, time=20,
@@ -234,13 +234,13 @@ class RunhistoryTest(unittest.TestCase):
             X, np.array([[0.005, 0.995], [0.995, 0.995]]), atol=0.001))
         self.assertTrue(
             np.allclose(y, np.array([[1.], [200.]]), atol=0.001))
-        
+
     def test_cost_quality(self):
         '''
             adding some rundata to RunHistory2EPM4LogCost
         '''
         self.scen = Scenario({"cutoff_time": 20, 'cs': self.cs, 'run_obj': 'quality'})
-        
+
         rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
                                                        scenario=self.scen)
 
@@ -252,7 +252,7 @@ class RunhistoryTest(unittest.TestCase):
         X, y = rh2epm.transform(self.rh)
         self.assertTrue(np.allclose(X, np.array([[0.005, 0.995]]), atol=0.001))
         # should use the cost field and not runtime
-        self.assertTrue(np.allclose(y, np.array([[1.]])))  
+        self.assertTrue(np.allclose(y, np.array([[1.]])))
 
         # rh2epm should use cost and not time field later
         self.rh.add(config=self.config3, cost=200, time=20,
@@ -268,5 +268,57 @@ class RunhistoryTest(unittest.TestCase):
 
         #TODO: unit test for censored data in quality scenario
         
+    def test_get_X_y(self):
+        '''
+            add some data to RH and check returned values in X,y format
+        '''
+        
+        self.scen = Scenario({"cutoff_time": 20, 'cs': self.cs, 
+                              'instances': [['1'],['2']],
+                              'features': {
+                                  '1': [1,1],
+                                  '2': [2,2]
+                                  }})
+
+        rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
+                                                    scenario=self.scen)
+
+        self.rh.add(config=self.config1, cost=1, time=10,
+                    status=StatusType.SUCCESS, instance_id='1',
+                    seed=None,
+                    additional_info=None)
+        
+        self.rh.add(config=self.config1, cost=2, time=10,
+                    status=StatusType.SUCCESS, instance_id='2',
+                    seed=None,
+                    additional_info=None)
+        
+        self.rh.add(config=self.config2, cost=1, time=10,
+                    status=StatusType.TIMEOUT, instance_id='1',
+                    seed=None,
+                    additional_info=None)
+        
+        self.rh.add(config=self.config2, cost=0.1, time=10,
+                    status=StatusType.CAPPED, instance_id='2',
+                    seed=None,
+                    additional_info=None)
+        
+        X,y,c = rh2epm.get_X_y(self.rh)
+        
+        print(X,y,c)
+        
+        X_sol = np.array([[0,100,1,1],
+                          [0,100,2,2],
+                          [100,0,1,1],
+                          [100,0,2,2]])
+        self.assertTrue(np.all(X==X_sol))
+        
+        y_sol = np.array([1,2,1,0.1])
+        self.assertTrue(np.all(y==y_sol))
+        
+        c_sol = np.array([False, False, True, True])
+        self.assertTrue(np.all(c==c_sol))
+        
+
 if __name__ == "__main__":
     unittest.main()

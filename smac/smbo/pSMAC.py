@@ -1,13 +1,21 @@
 import re
 import tempfile
 import os
+import typing
+import logging
+import glob
+
+from smac.runhistory.runhistory import RunHistory
+from smac.configspace import ConfigurationSpace
+
+RUNHISTORY_FILEPATTERN = 'runhistory.json'
+RUNHISTORY_RE = r'runhistory\.json'
 
 
-RUNHISTORY_FILEPATTERN = '.runhistory_%d.json'
-RUNHISTORY_RE = r'\.runhistory_[0-9]*\.json'
-
-
-def read(run_history, output_directory, configuration_space, logger):
+def read(run_history: RunHistory, 
+         output_dirs: typing.Union[str,typing.List[str]],
+         configuration_space: ConfigurationSpace,
+         logger: logging.Logger):
     """Update runhistory with run results from concurrent runs of pSMAC.
 
     Parameters
@@ -16,8 +24,10 @@ def read(run_history, output_directory, configuration_space, logger):
         RunHistory object to be updated with run information from runhistory
         objects stored in the output directory.
 
-    output_directory : str
-        SMAC output directory. This function will search the output directory
+    output_dirs : typing.Union[str,typing.List[str]]
+        List of SMAC output directories
+        or Linux path expression (str) which will be casted into a list with glob.glob(). 
+        This function will search the output directories
         for files matching the runhistory regular expression.
 
     configuration_space : ConfigSpace.ConfigurationSpace
@@ -29,27 +39,30 @@ def read(run_history, output_directory, configuration_space, logger):
     numruns_in_runhistory = len(run_history.data)
     initial_numruns_in_runhistory = numruns_in_runhistory
 
-    files_in_output_directory = os.listdir(output_directory)
-    for file_in_output_directory in files_in_output_directory:
-        match = re.match(RUNHISTORY_RE, file_in_output_directory)
-        if match:
-            runhistory_file = os.path.join(output_directory,
-                                           file_in_output_directory)
-            run_history.update_from_json(runhistory_file,
-                                         configuration_space)
+    if isinstance(output_dirs, str):
+        output_dirs = glob.glob(output_dirs)
 
-            new_numruns_in_runhistory = len(run_history.data)
-            difference = new_numruns_in_runhistory - numruns_in_runhistory
-            logger.debug('Shared model mode: Loaded %d new runs from %s' %
-                         (difference, file_in_output_directory))
-            numruns_in_runhistory = new_numruns_in_runhistory
+    for output_directory in output_dirs:
+        for file_in_output_directory in os.listdir(output_directory):
+            match = re.match(RUNHISTORY_RE, file_in_output_directory)
+            if match:
+                runhistory_file = os.path.join(output_directory,
+                                               file_in_output_directory)
+                run_history.update_from_json(runhistory_file,
+                                             configuration_space)
+
+                new_numruns_in_runhistory = len(run_history.data)
+                difference = new_numruns_in_runhistory - numruns_in_runhistory
+                logger.debug('Shared model mode: Loaded %d new runs from %s' %
+                             (difference, runhistory_file))
+                numruns_in_runhistory = new_numruns_in_runhistory
 
     difference = numruns_in_runhistory - initial_numruns_in_runhistory
     logger.debug('Shared model mode: Finished loading new runs, found %d new '
                  'runs.' % difference)
 
 
-def write(run_history, output_directory, num_run):
+def write(run_history:RunHistory, output_directory:str, num_run:int):
     """Write the runhistory to the output directory.
 
     Overwrites previously outputted runhistories.
@@ -66,8 +79,7 @@ def write(run_history, output_directory, num_run):
 
     """
 
-    output_filename = os.path.join(output_directory,
-                                   RUNHISTORY_FILEPATTERN % num_run)
+    output_filename = os.path.join(output_directory, RUNHISTORY_FILEPATTERN)
 
     with tempfile.NamedTemporaryFile('wb', dir=output_directory,
                                      delete=False) as fh:

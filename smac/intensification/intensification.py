@@ -13,7 +13,7 @@ from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT, MAX_CUTOFF
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
-from smac.tae.execute_ta_run import StatusType
+from smac.tae.execute_ta_run import StatusType, BudgetExhaustedException, CappedRunException
 
 __author__ = "Katharina Eggensperger, Marius Lindauer"
 __copyright__ = "Copyright 2017, ML4AAD"
@@ -37,7 +37,7 @@ class Intensifier(object):
         tae_runner : tae.executre_ta_run_*.ExecuteTARun* Object
             target algorithm run executor
         stats: Stats()
-            stats object            
+            stats object
         traj_logger: TrajLogger()
             TrajLogger object to log all new incumbents
         rng : np.random.RandomState
@@ -52,11 +52,13 @@ class Intensifier(object):
         run_obj_time: bool
             whether the run objective is runtime or not (if true, apply adaptive capping)
         run_limit : int
-            maximum number of runs
+            Maximum number of target algorithm runs per call to intensify.
         maxR : int
-            maximum number of runs per config
+            Maximum number of runs per config (summed over all calls to
+            intensifiy).
         minR : int
-            minimum number of run per config
+            Minimum number of run per config (summed over all calls to
+            intensify).
         '''
         self.stats = stats
         self.traj_logger = traj_logger
@@ -68,7 +70,7 @@ class Intensifier(object):
             self.instance_specifics = {}
         else:
             self.instance_specifics = instance_specifics
-        self.logger = logging.getLogger("intensifier")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.run_limit = run_limit
         self.maxR = maxR
         self.minR = minR
@@ -118,7 +120,7 @@ class Intensifier(object):
             incumbent: Configuration()
                 current (maybe new) incumbent configuration
             inc_perf: float
-                empirical performance of incumbent configuration 
+                empirical performance of incumbent configuration
         '''
 
         self.start_time = time.time()
@@ -141,14 +143,20 @@ class Intensifier(object):
                 self.logger.debug(
                     "Configuration origin: %s", challenger.origin)
 
-            # Lines 3-7
-            self._add_inc_run(incumbent=incumbent, run_history=run_history)
+            try:
+                # Lines 3-7
+                self._add_inc_run(incumbent=incumbent, run_history=run_history)
 
-            # Lines 8-17
-            incumbent = self._race_challenger(challenger=challenger,
-                                              incumbent=incumbent,
-                                              run_history=run_history,
-                                              aggregate_func=aggregate_func)
+                # Lines 8-17
+                incumbent = self._race_challenger(challenger=challenger,
+                                                  incumbent=incumbent,
+                                                  run_history=run_history,
+                                                  aggregate_func=aggregate_func)
+            except BudgetExhaustedException:
+                # We return incumbent, SMBO stops due to its own budget checks
+                inc_perf = run_history.get_cost(incumbent)
+                self.logger.debug("Budget exhausted; Return incumbent")
+                return incumbent, inc_perf
 
             if self._chall_indx > 1 and self._num_run > self.run_limit:
                 self.logger.debug(
@@ -307,17 +315,16 @@ class Intensifier(object):
                     self._chall_indx += 1
 
                 self.logger.debug("Add run of challenger")
-                status, cost, dur, res = self.tae_runner.start(
-                    config=challenger,
-                    instance=instance,
-                    seed=seed,
-                    cutoff=cutoff,
-                    instance_specific=self.instance_specifics.get(instance, "0"))
-                self._num_run += 1
-
-                if status == StatusType.ABORT:
-                    self.logger.debug(
-                        "TAE signaled ABORT -- stop intensification on challenger")
+                try:
+                    status, cost, dur, res = self.tae_runner.start(
+                        config=challenger,
+                        instance=instance,
+                        seed=seed,
+                        cutoff=cutoff,
+                        instance_specific=self.instance_specifics.get(instance, "0"),
+                        capped=(self.cutoff is not None) and (cutoff<self.cutoff))
+                    self._num_run += 1
+                except CappedRunException:
                     return incumbent
 
             new_incumbent = self._compare_configs(
@@ -339,7 +346,7 @@ class Intensifier(object):
                       run_history: RunHistory,
                       inc_sum_cost: float):
         '''
-            adaptive capping: 
+            adaptive capping:
             compute cutoff based on time so far used for incumbent
             and reduce cutoff for next run of challenger accordingly
 
@@ -380,19 +387,19 @@ class Intensifier(object):
                      )
         return cutoff
 
-    def _compare_configs(self, incumbent: Configuration, 
-                         challenger: Configuration, 
+    def _compare_configs(self, incumbent: Configuration,
+                         challenger: Configuration,
                          run_history: RunHistory,
                          aggregate_func: typing.Callable):
         '''
-            compare two configuration wrt the runhistory 
+            compare two configuration wrt the runhistory
             and return the one which performs better (or None if the decision is not safe)
 
             Decision strategy to return x as being better than y:
                 1. x has at least as many runs as y
                 2. x performs better than y on the intersection of runs on x and y
 
-            Implicit assumption: 
+            Implicit assumption:
                 challenger was evaluated on the same instance-seed pairs as incumbent
 
             Parameters
@@ -437,8 +444,16 @@ class Intensifier(object):
             n_samples = len(chall_runs)
             self.logger.info("Challenger (%.4f) is better than incumbent (%.4f) on %d runs." % (
                 chal_perf, inc_perf, n_samples))
-            self.logger.info(
-                "Changing incumbent to challenger: %s" % (challenger))
+            # Show changes in the configuration
+            params = sorted([(param, incumbent[param], challenger[param]) for param in
+                    challenger.keys()])
+            self.logger.info("Changes in incumbent:")
+            for param in params:
+                if param[1] != param[2]:
+                    self.logger.info("  %s : %r -> %r" % (param))
+                else:
+                    self.logger.debug("  %s remains unchanged: %r" %
+                            (param[0], param[1]))
             self.stats.inc_changed += 1
             self.traj_logger.add_entry(train_perf=chal_perf,
                                        incumbent_id=self.stats.inc_changed,

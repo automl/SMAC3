@@ -1,11 +1,10 @@
-# TODO: remove really ugly boilerplate
 import logging
 import os
 import inspect
 
 import numpy as np
-from sklearn.cross_validation import KFold
-from pyrfr import regression32 as regression
+from sklearn.model_selection import KFold
+from sklearn.ensemble import RandomForestRegressor
 
 from smac.configspace import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
@@ -17,113 +16,111 @@ from smac.facade.smac_facade import SMAC
 
 def rfr(cfg, seed):
     """
-    We optimize our own random forest with SMAC 
+        Creates a random forest regressor from sklearn and fits the given data on it.
+        This is the function-call we try to optimize. Chosen values are stored in
+        the configuration (cfg).
+
+        Parameters:
+        -----------
+        cfg: Configuration
+            configuration chosen by smac
+        seed: int or RandomState
+            used to initialize the rf's random generator
+
+        Returns:
+        -----------
+        np.mean(rmses): float
+            mean of root mean square errors of random-forest test predictions
+            per cv-fold
     """
+    rfr = RandomForestRegressor(
+        n_estimators=cfg["num_trees"],
+        criterion=cfg["criterion"],
+        max_depth=cfg["max_depth"],
+        min_samples_split=cfg["min_samples_to_split"],
+        min_samples_leaf=cfg["min_samples_in_leaf"],
+        min_weight_fraction_leaf=cfg["min_weight_frac_leaf"],
+        max_features=cfg["max_features"],
+        max_leaf_nodes=cfg["max_leaf_nodes"],
+        bootstrap=cfg["do_bootstrapping"],
+        random_state=seed)
 
-    types=[0,3,0,0,20,6,3,2,0,0,0,20,0,7,0,0,0,20,2,0,0,2,0,20,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-    types = np.array(types, dtype=np.uint)
-
-    rf = regression.binary_rss()
-    rf.num_trees = cfg["num_trees"]
-    rf.seed = 42
-    rf.do_bootstrapping = cfg["do_bootstrapping"] == "true"
-    rf.num_data_points_per_tree = int(X.shape[0] * (3/4) * cfg["frac_points_per_tree"])
-    rf.max_features = int(types.shape[0] * cfg["ratio_features"])
-    rf.min_samples_to_split = cfg["min_samples_to_split"]
-    rf.min_samples_in_leaf = cfg["min_samples_in_leaf"]
-    rf.max_depth = cfg["max_depth"]
-    #rf.epsilon_purity = cfg["eps_purity"]
-    rf.max_num_nodes = cfg["max_num_nodes"]
-    
     rmses = []
     for train, test in kf:
-        X_train = X[train,:]
-        y_train = y[train]
-        X_test = X[test,:]
-        y_test = y[test]
-        
-        data = regression.numpy_data_container(X_train,
-                                                     y_train,
-                                                     types)
-        rf.fit(data)
-        
-        y_pred = []
-        for x in X_test:
-            y_p = rf.predict(x)[0]
-            y_pred.append(y_p)
-        y_pred = np.array(y_pred)
-        
+        # We iterate over cv-folds
+        X_train, X_test = X[train], X[test]
+        y_train, y_test = y[train], y[test]
+
+        rfr.fit(X_train, y_train)
+
+        y_pred = rfr.predict(X_test)
+
+        # We use root mean square error as performance measure
         rmse = np.sqrt(np.mean((y_pred - y_test)**2))
         rmses.append(rmse)
-        
-        #print(np.mean(rmses))
-    return np.mean(rmses) 
-    
+    return np.mean(rmses)
 
-logger = logging.getLogger("Optimizer") # Enable to show Debug outputs
+
+logger = logging.getLogger("RF-example")
 logging.basicConfig(level=logging.INFO)
+#logging.basicConfig(level=logging.DEBUG)  # Enable to show debug-output
 
 folder = os.path.realpath(
     os.path.abspath(os.path.split(inspect.getfile(inspect.currentframe()))[0]))
 
-# load data
-X = np.array(np.loadtxt(os.path.join(folder,"data/X.csv")), dtype=np.float32)
-y = np.array(np.loadtxt(os.path.join(folder,"data/y.csv")), dtype=np.float32)
+# Load data
+X = np.array(np.loadtxt(os.path.join(folder, "data/X.csv")), dtype=np.float32)
+y = np.array(np.loadtxt(os.path.join(folder, "data/y.csv")), dtype=np.float32)
 
-# cv folds
-kf = KFold(X.shape[0], n_folds=4)
+# Create cross-validation folds
+kf = KFold(n_splits=4, shuffle=True, random_state=42)
+kf = kf.split(X, y)
 
-# build Configuration Space which defines all parameters and their ranges
-# to illustrate different parameter types,
-# we use continuous, integer and categorical parameters
+# Build Configuration Space which defines all parameters and their ranges.
+# To illustrate different parameter types,
+# we use continuous, integer and categorical parameters.
 cs = ConfigurationSpace()
+
+# We can add single hyperparameters:
 do_bootstrapping = CategoricalHyperparameter(
-    "do_bootstrapping", ["true","false"], default="true")
+    "do_bootstrapping", ["true", "false"], default="true")
 cs.add_hyperparameter(do_bootstrapping)
- 
+
+# Or we can add multiple hyperparameters at once:
 num_trees = UniformIntegerHyperparameter("num_trees", 10, 50, default=10)
-cs.add_hyperparameter(num_trees)
- 
-frac_points_per_tree = UniformFloatHyperparameter("frac_points_per_tree", 0.001, 1, default=1)
-cs.add_hyperparameter(frac_points_per_tree)
- 
-ratio_features = UniformFloatHyperparameter("ratio_features", 0.001, 1, default=1)
-cs.add_hyperparameter(ratio_features)
- 
+max_depth = UniformIntegerHyperparameter("max_depth", 20, 30, default=20)
+max_features = UniformIntegerHyperparameter("max_features", 1, X.shape[1], default=1)
+min_weight_frac_leaf = UniformFloatHyperparameter("min_weight_frac_leaf", 0.0, 0.5, default=0.0)
+criterion = CategoricalHyperparameter("criterion", ["mse", "mae"], default="mse")
 min_samples_to_split = UniformIntegerHyperparameter("min_samples_to_split", 2, 20, default=2)
-cs.add_hyperparameter(min_samples_to_split)
- 
 min_samples_in_leaf = UniformIntegerHyperparameter("min_samples_in_leaf", 1, 20, default=1)
-cs.add_hyperparameter(min_samples_in_leaf)
- 
-max_depth = UniformIntegerHyperparameter("max_depth", 20, 100, default=20)
-cs.add_hyperparameter(max_depth)
- 
-max_num_nodes = UniformIntegerHyperparameter("max_num_nodes", 100, 100000, default=1000)
-cs.add_hyperparameter(max_num_nodes)
- 
+max_leaf_nodes = UniformIntegerHyperparameter("max_leaf_nodes", 10, 1000, default=100)
+
+cs.add_hyperparameters([num_trees, max_depth, min_weight_frac_leaf, criterion,
+        max_features, min_samples_to_split, min_samples_in_leaf, max_leaf_nodes])
+
 # SMAC scenario oject
 scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative runtime)
-                     "runcount-limit": 400,  # at most 200 function evaluations
-                     "cs": cs, # configuration space
+                     "runcount-limit": 20,  # maximum number of function evaluations
+                     "cs": cs,              # configuration space
                      "deterministic": "true",
                      "memory_limit": 1024,
                      })
 
-# Optimize
+# To optimize, we pass the function to the SMAC-object
 smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
             tae_runner=rfr)
 
-# example call of the function
-# it returns: Status, Cost, Runtime, Additional Infos
-def_value = smac.solver.intensifier.tae_runner.run(
-    cs.get_default_configuration(), 1)[1]
-print("Default Value: %.2f" % (def_value))
+# Example call of the function with default values
+# It returns: Status, Cost, Runtime, Additional Infos
+def_value = smac.get_tae_runner().run(cs.get_default_configuration(), 1)[1]
+print("Value for default configuration: %.2f" % (def_value))
 
+# Start optimization
 try:
     incumbent = smac.optimize()
 finally:
     incumbent = smac.solver.incumbent
 
-inc_value = smac.solver.intensifier.tae_runner.run(incumbent, 1)[1]
+inc_value = smac.get_tae_runner().run(incumbent, 1)[1]
 print("Optimized Value: %.2f" % (inc_value))

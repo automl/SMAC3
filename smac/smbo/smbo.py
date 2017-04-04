@@ -19,6 +19,8 @@ from smac.stats.stats import Stats
 from smac.initial_design.initial_design import InitialDesign
 from smac.scenario.scenario import Scenario
 from smac.configspace import Configuration, convert_configurations_to_array
+from smac.tae.execute_ta_run import TAEAbortException, BudgetExhaustedException
+from smac.tae.execute_ta_run import FirstRunCrashedException
 
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
@@ -71,7 +73,7 @@ class SMBO(BaseSolver):
         rng: np.random.RandomState
             Random number generator
         '''
-        self.logger = logging.getLogger("SMBO")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.incumbent = None
 
         self.scenario = scenario
@@ -90,7 +92,7 @@ class SMBO(BaseSolver):
 
     def run(self):
         '''
-        Runs the Bayesian optimization loop 
+        Runs the Bayesian optimization loop
 
         Returns
         ----------
@@ -98,14 +100,18 @@ class SMBO(BaseSolver):
             The best found configuration
         '''
         self.stats.start_timing()
-        self.incumbent = self.initial_design.run()
+        try:
+            self.incumbent = self.initial_design.run()
+        except FirstRunCrashedException as err:
+            if self.scenario.abort_on_first_run_crash:
+                raise
 
         # Main BO loop
         iteration = 1
         while True:
             if self.scenario.shared_model:
                 pSMAC.read(run_history=self.runhistory,
-                           output_directory=self.scenario.output_dir,
+                           output_dirs=self.scenario.input_psmac_dirs,
                            configuration_space=self.config_space,
                            logger=self.logger)
 
@@ -116,9 +122,8 @@ class SMBO(BaseSolver):
             # get all found configurations sorted according to acq
             challengers = self.choose_next(X, Y)
 
-            time_spend = time.time() - start_time
-            logging.debug(
-                "Time spend to choose next configurations: %.2f sec" % (time_spend))
+            time_spent = time.time() - start_time
+            time_left = self._get_timebound_for_intensification(time_spent)
 
             self.logger.debug("Intensify")
 
@@ -127,7 +132,7 @@ class SMBO(BaseSolver):
                 incumbent=self.incumbent,
                 run_history=self.runhistory,
                 aggregate_func=self.aggregate_func,
-                time_bound=max(0.01, time_spend))
+                time_bound=max(0.01, time_left))
 
             if self.scenario.shared_model:
                 pSMAC.write(run_history=self.runhistory,
@@ -164,7 +169,7 @@ class SMBO(BaseSolver):
              number of configurations optimized by random search
         num_configurations_by_local_search: int
             number of configurations optimized with local search
-            if None, we use min(10, 1 + 0.5 x the number of configurations on exp average in intensify calls) 
+            if None, we use min(10, 1 + 0.5 x the number of configurations on exp average in intensify calls)
 
         Returns
         -------
@@ -272,7 +277,7 @@ class SMBO(BaseSolver):
                ordered by their acquisition function value
         """
         configs_acq = []
-        
+
         # Start N local search from different random start points
         for start_point in init_points:
             configuration, acq_val = self.acq_optimizer.maximize(start_point)
@@ -315,3 +320,30 @@ class SMBO(BaseSolver):
         # Cannot use zip here because the indices array cannot index the
         # rand_configs list, because the second is a pure python list
         return [(acq_values[ind][0], configs[ind]) for ind in indices[::-1]]
+
+    def _get_timebound_for_intensification(self, time_spent):
+        """ Calculate time left for intensify from the time spent on
+        choosing challengers using the fraction of time intended for
+        intensification (which is specified in
+        scenario.intensification_percentage).
+
+        Parameters
+        ----------
+        time_spent : float
+
+        Returns
+        -------
+        time_left : float
+        """
+        frac_intensify = self.scenario.intensification_percentage
+        if (frac_intensify <= 0 or frac_intensify >= 1):
+            raise ValueError("The value for intensification_percentage-"
+                             "option must lie in (0,1), instead: %.2f" % (frac_intensify))
+        total_time = time_spent / (1-frac_intensify)
+        time_left = frac_intensify * total_time
+        self.logger.debug("Total time: %.4f, time spent on choosing next "
+                          "configurations: %.4f (%.2f), time left for "
+                          "intensification: %.4f (%.2f)" % (total_time,
+                time_spent, (1-frac_intensify), time_left, frac_intensify))
+        return time_left
+

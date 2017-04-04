@@ -30,7 +30,7 @@ class BaseSolver(object):
         if self.save_dir is not None:
             self.create_save_dir()
 
-        self.logger = logging.getLogger("BaseSolver")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
     def init_last_iteration(self):
         """

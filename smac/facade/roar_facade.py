@@ -50,14 +50,14 @@ class ROAR(SMAC):
         initial_design: InitialDesign
             initial sampling design
         initial_configurations: typing.List[Configuration]
-            list of initial configurations for initial design -- 
+            list of initial configurations for initial design --
             cannot be used together with initial_design
         stats: Stats
             optional stats object
         rng: np.random.RandomState
             Random number generator
         '''
-        self.logger = logging.getLogger("ROAR")
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         # initial random number generator
         num_run, rng = self._get_rng(rng=rng)
@@ -74,7 +74,7 @@ class ROAR(SMAC):
             (scenario=scenario, num_params=num_params,
              success_states=[StatusType.SUCCESS, ],
              impute_censored_data=False, impute_state=None)
-                
+
         # use SMAC facade
         super().__init__(
                          scenario=scenario,

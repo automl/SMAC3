@@ -26,14 +26,14 @@ def rosenbrock_4d(cfg):
     val = (100 * (x2 - x1 ** 2) ** 2 + (x1 - 1) ** 2 +
            100 * (x3 - x2 ** 2) ** 2 + (x2 - 1) ** 2 +
            100 * (x4 - x3 ** 2) ** 2 + (x3 - 1) ** 2)
-    
+
     return(val)
 
 class TestLocalSearch(unittest.TestCase):
     def setUp(self):
         current_dir = os.path.dirname(__file__)
         self.test_files_dir = os.path.join(current_dir, '..', 'test_files')
-        seed = np.random.randint(1, 100000)        
+        seed = np.random.randint(1, 100000)
         self.cs = ConfigurationSpace(seed=seed)
         x1 = UniformFloatHyperparameter("x1", -5, 5, default=5)
         self.cs.add_hyperparameter(x1)

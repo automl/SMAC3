@@ -22,7 +22,7 @@ def get_config_space():
     return cs
 
 class RunhistoryTest(unittest.TestCase):
-    
+
     def test_add_and_pickle(self):
         '''
             simply adding some rundata to runhistory, then pickle it
@@ -99,7 +99,7 @@ class RunhistoryTest(unittest.TestCase):
         self.assertEqual(len(ist), 2)
         self.assertEqual(ist[0].instance, 1)
         self.assertEqual(ist[1].instance, 2)
-        
+
     def test_full_update(self):
         rh = RunHistory(aggregate_func=average_cost)
         cs = get_config_space()
@@ -118,9 +118,9 @@ class RunhistoryTest(unittest.TestCase):
         rh.add(config=config2, cost=20, time=20,
                status=StatusType.SUCCESS, instance_id=2,
                seed=2)
-        
+
         cost_config2 = rh.get_cost(config2)
-        
+
         rh.compute_all_costs()
         updated_cost_config2 = rh.get_cost(config2)
         self.assertTrue(cost_config2 == updated_cost_config2)
@@ -129,24 +129,24 @@ class RunhistoryTest(unittest.TestCase):
         updated_cost_config2 = rh.get_cost(config2)
         self.assertTrue(cost_config2 != updated_cost_config2)
         self.assertTrue(updated_cost_config2==20)
-        
+
     def test_incremental_update(self):
-        
+
         rh = RunHistory(aggregate_func=average_cost)
         cs = get_config_space()
         config1 = Configuration(cs,
                                 values={'a': 1, 'b': 2})
-        
+
         rh.add(config=config1, cost=10, time=20,
                status=StatusType.SUCCESS, instance_id=1,
                seed=1)
-        
+
         self.assertTrue(rh.get_cost(config1) == 10)
 
         rh.add(config=config1, cost=20, time=20,
                status=StatusType.SUCCESS, instance_id=2,
                seed=1)
-        
+
         self.assertTrue(rh.get_cost(config1) == 15)
 
 
