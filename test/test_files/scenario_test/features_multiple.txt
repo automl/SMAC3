@@ -1,0 +1,4 @@
+id, mockstuff, answer, random
+d, 1, 42, 122
+e, 2, -42, 313.5
+f, 3, 42, -3.7

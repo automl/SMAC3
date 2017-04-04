@@ -13,8 +13,7 @@ from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT, MAX_CUTOFF
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
-from smac.tae.execute_ta_run import StatusType
-from smac.tae.execute_ta_run import BudgetExhaustedException
+from smac.tae.execute_ta_run import StatusType, BudgetExhaustedException, CappedRunException
 
 __author__ = "Katharina Eggensperger, Marius Lindauer"
 __copyright__ = "Copyright 2017, ML4AAD"
@@ -316,13 +315,17 @@ class Intensifier(object):
                     self._chall_indx += 1
 
                 self.logger.debug("Add run of challenger")
-                status, cost, dur, res = self.tae_runner.start(
-                    config=challenger,
-                    instance=instance,
-                    seed=seed,
-                    cutoff=cutoff,
-                    instance_specific=self.instance_specifics.get(instance, "0"))
-                self._num_run += 1
+                try:
+                    status, cost, dur, res = self.tae_runner.start(
+                        config=challenger,
+                        instance=instance,
+                        seed=seed,
+                        cutoff=cutoff,
+                        instance_specific=self.instance_specifics.get(instance, "0"),
+                        capped=(self.cutoff is not None) and (cutoff<self.cutoff))
+                    self._num_run += 1
+                except CappedRunException:
+                    return incumbent
 
             new_incumbent = self._compare_configs(
                 incumbent=incumbent, challenger=challenger, run_history=run_history,

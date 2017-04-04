@@ -14,7 +14,7 @@ with open("smac/__version__.py") as fh:
 
 setuptools.setup(
     name="smac",
-    version=smac.__version__,
+    version=version,
     author=smac.AUTHORS,
     author_email="fh@cs.uni-freiburg.de",
     description=("SMAC3, a Python implementation of 'Sequential Model-based "

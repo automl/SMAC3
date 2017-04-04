@@ -35,6 +35,7 @@ class InputReader(object):
                 (key, value) pairs are (variable name, variable value)
         """
         # translate the difference option names to a canonical name
+        # kept for backwards-compatibility
         scenario_option_names = {'algo-exec': 'algo',
                                  'algoExec': 'algo',
                                  'algo-exec-dir': 'execdir',

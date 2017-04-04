@@ -8,6 +8,7 @@ import sys
 import unittest
 import shutil
 import glob
+import re
 
 import numpy as np
 from ConfigSpace import ConfigurationSpace, Configuration
@@ -50,7 +51,8 @@ class TestSMBO(unittest.TestCase):
 
     def setUp(self):
         self.scenario = Scenario({'cs': test_helpers.get_branin_config_space(),
-                                  'run_obj': 'quality'})
+                                  'run_obj': 'quality',
+                                  'output_dir': ""})
 
     def branin(self, x):
         y = (x[:, 1] - (5.1 / (4 * np.pi ** 2)) * x[:, 0] ** 2 + 5 * x[:, 0] / np.pi - 6) ** 2
@@ -294,14 +296,37 @@ class TestSMBO(unittest.TestCase):
             return 5
         patch.side_effect = FirstRunCrashedException()
         scen = Scenario({'cs': test_helpers.get_branin_config_space(),
-                         'run_obj': 'quality',
-                         'abort_on_first_run_crash' : 1})
+                         'run_obj': 'quality', 'output_dir': "",
+                         'abort_on_first_run_crash': 1})
         smbo = SMAC(scen, tae_runner=target, rng=1).solver
         self.assertRaises(FirstRunCrashedException, smbo.run)
 
-    def tearDown(self):
-            for d in glob.glob('smac3-output*'):
-                shutil.rmtree(d)
+    def test_intensification_percentage(self):
+        def target(x):
+            return 5
+        def get_smbo(intensification_perc):
+            """ Return SMBO with intensification_percentage. """
+            scen = Scenario({'cs': test_helpers.get_branin_config_space(),
+                             'run_obj': 'quality', 'output_dir': "",
+                             'intensification_percentage' : intensification_perc})
+            return SMAC(scen, tae_runner=target, rng=1).solver
+        # Test for valid values
+        smbo = get_smbo(0.3)
+        self.assertAlmostEqual(3.0, smbo._get_timebound_for_intensification(7.0))
+        smbo = get_smbo(0.5)
+        self.assertAlmostEqual(0.03, smbo._get_timebound_for_intensification(0.03))
+        smbo = get_smbo(0.7)
+        self.assertAlmostEqual(1.4, smbo._get_timebound_for_intensification(0.6))
+        # Test for invalid <= 0
+        smbo = get_smbo(0)
+        self.assertRaises(ValueError, smbo.run)
+        smbo = get_smbo(-0.2)
+        self.assertRaises(ValueError, smbo.run)
+        # Test for invalid >= 1
+        smbo = get_smbo(1)
+        self.assertRaises(ValueError, smbo.run)
+        smbo = get_smbo(1.2)
+        self.assertRaises(ValueError, smbo.run)
 
 
 if __name__ == "__main__":
