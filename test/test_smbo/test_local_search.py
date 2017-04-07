@@ -47,10 +47,12 @@ class TestLocalSearch(unittest.TestCase):
 
     def test_local_search(self):
 
-        def acquisition_function(point):
+        def acquisition_function(configs):
+            from smac.configspace import convert_configurations_to_array
+            points = convert_configurations_to_array(configs)
 
             opt = np.array([1, 1, 1, 1])
-            dist = [euclidean(point, opt)]
+            dist = [euclidean(points, opt)]
             return -np.min(dist)
 
         l = LocalSearch(acquisition_function, self.cs, epsilon=1e-10,
@@ -58,7 +60,7 @@ class TestLocalSearch(unittest.TestCase):
 
         start_point = self.cs.sample_configuration()
 
-        acq_val_start_point = acquisition_function(start_point.get_array())
+        acq_val_start_point = acquisition_function([start_point])
 
         _, acq_val_incumbent = l.maximize(start_point)
 
@@ -74,8 +76,11 @@ class TestLocalSearch(unittest.TestCase):
             config_space = pcs.read(fh.readlines())
             config_space.seed(seed)
 
-        def acquisition_function(point):
-            return np.count_nonzero(np.array(point))
+        def acquisition_function(configs):
+            from smac.configspace import convert_configurations_to_array
+            points = convert_configurations_to_array(configs)
+
+            return np.count_nonzero(np.array(points))
 
         start_point = config_space.get_default_configuration()
 

@@ -18,7 +18,7 @@ from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, \
     RunHistory2EPM4LogCost, RunHistory2EPM4EIPS
 from smac.smbo.smbo import SMBO
 from smac.scenario.scenario import Scenario
-from smac.smbo.acquisition import EI, EIPS
+from smac.smbo.acquisition import EI, EIPS, AcquisitionFunctionWrapper
 from smac.smbo.local_search import LocalSearch
 from smac.tae.execute_func import ExecuteTAFuncArray
 from smac.tae.execute_ta_run import TAEAbortException, FirstRunCrashedException
@@ -66,13 +66,13 @@ class TestSMBO(unittest.TestCase):
         smbo = SMAC(self.scenario).solver
         self.assertIsInstance(smbo.model, RandomForestWithInstances)
         self.assertIsInstance(smbo.rh2EPM, RunHistory2EPM4LogCost)
-        self.assertIsInstance(smbo.acquisition_func, EI)
+        self.assertIsInstance(smbo.acquisition_func.acquisition_func, EI)
 
     def test_init_only_scenario_quality(self):
         smbo = SMAC(self.scenario).solver
         self.assertIsInstance(smbo.model, RandomForestWithInstances)
         self.assertIsInstance(smbo.rh2EPM, RunHistory2EPM4Cost)
-        self.assertIsInstance(smbo.acquisition_func, EI)
+        self.assertIsInstance(smbo.acquisition_func.acquisition_func, EI)
 
     def test_init_EIPS_as_arguments(self):
         for objective in ['runtime', 'quality']:
@@ -82,10 +82,11 @@ class TestSMBO(unittest.TestCase):
                 ['cost', 'runtime'], types)
             eips = EIPS(umrfwi)
             rh2EPM = RunHistory2EPM4EIPS(self.scenario, 2)
-            smbo = SMAC(self.scenario, model=umrfwi, acquisition_function=eips,
+            smbo = SMAC(self.scenario, model=umrfwi,
+                        acquisition_function_wrapper=AcquisitionFunctionWrapper(acquisition_func=eips),
                         runhistory2epm=rh2EPM).solver
             self.assertIs(umrfwi, smbo.model)
-            self.assertIs(eips, smbo.acquisition_func)
+            self.assertIs(eips, smbo.acquisition_func.acquisition_func)
             self.assertIs(rh2EPM, smbo.rh2EPM)
 
     def test_rng(self):
@@ -127,8 +128,8 @@ class TestSMBO(unittest.TestCase):
         smbo.runhistory = RunHistory(aggregate_func=average_cost)
         smbo.runhistory.add(smbo.incumbent, 10, 10, 1)
         smbo.model = mock.Mock(spec=RandomForestWithInstances)
-        smbo.acquisition_func._compute = mock.Mock(spec=RandomForestWithInstances)
-        smbo.acquisition_func._compute.side_effect = side_effect
+        smbo.acquisition_func.acquisition_func._compute = mock.Mock(spec=RandomForestWithInstances)
+        smbo.acquisition_func.acquisition_func._compute.side_effect = side_effect
 
         X = smbo.rng.rand(10, 2)
         Y = smbo.rng.rand(10, 1)
@@ -165,8 +166,8 @@ class TestSMBO(unittest.TestCase):
         for i in range(0, len(previous_configs)):
             smbo.runhistory.add(previous_configs[i], i, 10, 1)
         smbo.model = mock.Mock(spec=RandomForestWithInstances)
-        smbo.acquisition_func._compute = mock.Mock(spec=RandomForestWithInstances)
-        smbo.acquisition_func._compute.side_effect = side_effect
+        smbo.acquisition_func.acquisition_func._compute = mock.Mock(spec=RandomForestWithInstances)
+        smbo.acquisition_func.acquisition_func._compute.side_effect = side_effect
 
         X = smbo.rng.rand(10, 2)
         Y = smbo.rng.rand(10, 1)
@@ -216,7 +217,7 @@ class TestSMBO(unittest.TestCase):
         self.assertEqual(len(x), 1)
         self.assertIsInstance(x[0], Configuration)
 
-    @mock.patch('smac.smbo.smbo.convert_configurations_to_array')
+    @mock.patch('smac.smbo.acquisition.convert_configurations_to_array')
     @mock.patch.object(EI, '__call__')
     @mock.patch.object(ConfigurationSpace, 'sample_configuration')
     def test_get_next_by_random_search_sorted(self,

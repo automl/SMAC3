@@ -11,7 +11,7 @@ from smac.intensification.intensification import Intensifier
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
 from smac.scenario.scenario import Scenario
-from smac.smbo.acquisition import EI, AbstractAcquisitionFunction
+from smac.smbo.acquisition import EI, AbstractAcquisitionFunction, AcquisitionFunctionWrapper
 from smac.stats.stats import Stats
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.tae.execute_ta_run import ExecuteTARun
@@ -111,7 +111,7 @@ class TestSMACFacade(unittest.TestCase):
         # initialize objects with missing dependencies
         ta = ExecuteTAFuncDict(lambda x: x ** 2)
         rh = RunHistory(aggregate_func=None)
-        acqu_func = EI(model=None)
+        acqu_func_wrapper = AcquisitionFunctionWrapper(acquisition_func=EI(model=None))
         intensifier = Intensifier(tae_runner=None,
                                   stats=None,
                                   traj_logger=None,
@@ -127,7 +127,7 @@ class TestSMACFacade(unittest.TestCase):
 
         # assert missing dependencies
         self.assertIsNone(rh.aggregate_func)
-        self.assertIsNone(acqu_func.model)
+        self.assertIsNone(acqu_func_wrapper.acquisition_func.model)
         self.assertIsNone(intensifier.tae_runner)
         self.assertIsNone(intensifier.stats)
         self.assertIsNone(intensifier.traj_logger)
@@ -142,13 +142,13 @@ class TestSMACFacade(unittest.TestCase):
              tae_runner=ta,
              runhistory=rh,
              intensifier=intensifier,
-             acquisition_function=acqu_func,
+             acquisition_function_wrapper=acqu_func_wrapper,
              runhistory2epm=rh2epm,
              initial_design=init_design)
 
         # assert that missing dependencies are injected
         self.assertIsNotNone(rh.aggregate_func, AbstractAcquisitionFunction)
-        self.assertIsInstance(acqu_func.model, AbstractEPM)
+        self.assertIsInstance(acqu_func_wrapper.acquisition_func.model, AbstractEPM)
         self.assertIsInstance(intensifier.tae_runner, ExecuteTARun)
         self.assertIsInstance(intensifier.stats, Stats)
         self.assertIsInstance(intensifier.traj_logger, TrajLogger)
