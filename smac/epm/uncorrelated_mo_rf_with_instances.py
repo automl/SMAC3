@@ -31,7 +31,7 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
                            for i in range(self.num_targets)]
 
 
-    def train(self, X, Y, **kwargs):
+    def _train(self, X, Y, **kwargs):
         """Trains the random forest on X and y.
 
         Parameters
@@ -51,7 +51,7 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
 
         return self
 
-    def predict(self, X):
+    def _predict(self, X):
         """Predict means and variances for given X.
 
         Parameters
