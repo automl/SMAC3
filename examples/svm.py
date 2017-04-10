@@ -1,0 +1,122 @@
+"""
+An example for the usage of SMAC within Python.
+We optimize a simple SVM on the IRIS-benchmark.
+
+Note: SMAC-documentation uses linenumbers to generate docs from this file.
+"""
+
+import logging
+import numpy as np
+from sklearn import svm, datasets
+from sklearn.model_selection import cross_val_score
+
+# Import ConfigSpace and different types of parameters
+from smac.configspace import ConfigurationSpace
+from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
+    UniformFloatHyperparameter, UniformIntegerHyperparameter
+from ConfigSpace.conditions import InCondition
+
+# Import SMAC-utilities
+from smac.tae.execute_func import ExecuteTAFuncDict
+from smac.scenario.scenario import Scenario
+from smac.facade.smac_facade import SMAC
+
+
+# We load the iris-dataset (a widely used benchmark)
+iris = datasets.load_iris()
+
+def svm_from_cfg(cfg):
+    """ Creates a SVM based on a configuration and evaluates it on the
+    iris-dataset using cross-validation.
+
+    Parameters:
+    -----------
+    cfg: Configuration (ConfigSpace.ConfigurationSpace.Configuration)
+        Configuration containing the parameters.
+        Configurations are indexable!
+
+    Returns:
+    --------
+    A crossvalidated mean score for the svm on the loaded data-set.
+    """
+    # We translate boolean values:
+    shrinking = True if cfg["shrinking"] == "true" else False
+    # If we use conditions, Configuration stores None-values for unused parameters.
+    # This is not accepted by the svm, so we set unused values to default.
+    degree = cfg["degree"] if cfg["degree"] else 3
+    coef0 = cfg["coef0"] if cfg["coef0"] else 0.0
+    # And for gamma, we set it to a fixed value or to "auto"
+    gamma = cfg["gamma_value"] if cfg["gamma"] == "value" else "auto"
+
+    clf = svm.SVC(
+        C=cfg["C"], kernel=cfg["kernel"],
+        degree=degree, gamma=gamma, coef0=coef0,
+        shrinking=shrinking,
+        random_state=42)
+
+    scores = cross_val_score(clf, iris.data, iris.target, cv=5)
+    return 1-np.mean(scores)  # Minimize!
+
+logger = logging.getLogger("SVMExample")
+logging.basicConfig(level=logging.INFO)  # logging.DEBUG for debug output
+
+# Build Configuration Space which defines all parameters and their ranges
+cs = ConfigurationSpace()
+use_conditionals = True
+
+# We define a few possible types of SVM-kernels and add them as "kernel" to our cs
+kernel = CategoricalHyperparameter("kernel", ["linear", "rbf", "poly", "sigmoid"], default="poly")
+cs.add_hyperparameter(kernel)
+
+# There are some hyperparameters shared by all kernels
+C = UniformFloatHyperparameter("C", 0.001, 1000.0, default=1.0)
+shrinking = CategoricalHyperparameter("shrinking", ["true", "false"], default="true")
+cs.add_hyperparameters([C, shrinking])
+
+# Others are kernel-specific, so we can add conditions to limit the searchspace
+degree = UniformIntegerHyperparameter("degree", 1, 5, default=3)     # Only used by kernel poly
+coef0 = UniformFloatHyperparameter("coef0", 0.0, 10.0, default=0.0)  # poly, sigmoid
+cs.add_hyperparameters([degree, coef0])
+if use_conditionals:
+    use_degree = InCondition(child=degree, parent=kernel, values=["poly"])
+    use_coef0 = InCondition(child=coef0, parent=kernel, values=["poly", "sigmoid"])
+    cs.add_conditions([use_degree, use_coef0])
+
+# This also works for parameters that are a mix of categorical and values from a range of numbers
+# For example, gamma can be either "auto" or a fixed float
+gamma = CategoricalHyperparameter("gamma", ["auto", "value"], default="auto")  # only rbf, poly, sigmoid
+gamma_value = UniformFloatHyperparameter("gamma_value", 0.0001, 8, default=1)
+cs.add_hyperparameters([gamma, gamma_value])
+# We only activate gamma_value if gamma is set to "value"
+cs.add_condition(InCondition(child=gamma_value, parent=gamma, values=["value"]))
+# And again we can restrict the use of gamma in general to the choice of the kernel
+if use_conditionals:
+    cs.add_condition(
+        InCondition(child=gamma, parent=kernel, values=["rbf", "poly", "sigmoid"]))
+
+
+# Scenario object
+scenario = Scenario({"run_obj": "quality",     # we optimize quality (alternatively runtime)
+                     "runcount-limit": 200,  # maximum function evaluations
+                     "cs": cs,                 # configuration space
+                     "deterministic": "true"
+                     })
+
+# Register function to be optimize using a Target Algorithm Function Evaluator
+taf = ExecuteTAFuncDict(svm_from_cfg)
+
+# Example call of the function
+# It returns: Status, Cost, Runtime, Additional Infos
+def_value = taf.run(cs.get_default_configuration())[1]
+print("Default Value: %.2f" % (def_value))
+
+# Optimize, using a SMAC-object
+smac = SMAC(scenario=scenario, rng=np.random.RandomState(42), tae_runner=taf)
+
+try:
+    incumbent = smac.optimize()
+finally:
+    incumbent = smac.solver.incumbent
+
+inc_value = taf.run(incumbent)[1]
+print("Optimized Value: %.2f" % (inc_value))
