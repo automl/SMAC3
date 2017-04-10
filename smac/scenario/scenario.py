@@ -255,7 +255,7 @@ class Scenario(object):
                           default="smac3-output_%s" % (
                               datetime.datetime.fromtimestamp(
                                   time.time()).strftime(
-                                  '%Y-%m-%d_%H:%M:%S')))
+                                  '%Y-%m-%d_%H:%M:%S_(%f)')))
         self.add_argument(name='input_psmac_dirs', help=None,
                           default=None)
         self.add_argument(name='shared_model', help=None, default='0',
