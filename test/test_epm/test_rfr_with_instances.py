@@ -50,11 +50,6 @@ class TestRFWithInstances(unittest.TestCase):
         self.assertRaisesRegexp(ValueError, "Expected 2d array, got 3d array!",
                                 model.predict_marginalized_over_instances, X)
 
-        X = rs.rand(10, 5)
-        self.assertRaisesRegexp(ValueError, "Rows in X should have 8 entries "
-                                            "but have 5!",
-                                model.predict_marginalized_over_instances, X)
-
     @mock.patch.object(RandomForestWithInstances, 'predict')
     def test_predict_marginalized_over_instances_no_features(self, rf_mock):
         """The RF should fall back to the regular predict() method."""

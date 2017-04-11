@@ -25,6 +25,8 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
             See RandomForestWithInstances documentation
 
         """
+        super().__init__(**kwargs)
+        
         self.target_names = target_names
         self.num_targets = len(self.target_names)
         self.estimators = [RandomForestWithInstances(types, **kwargs)

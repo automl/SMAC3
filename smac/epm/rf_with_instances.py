@@ -28,9 +28,6 @@ class RandomForestWithInstances(AbstractEPM):
         2 dimension where the first dimension consists of 3 different
         categorical choices and the second dimension is continuous than we
         have to pass np.array([2, 0]). Note that we count starting from 0.
-    instance_features: np.ndarray (I, K)
-        Contains the K dimensional instance features
-        of the I different instances
     num_trees: int
         The number of trees in the random forest.
     do_bootstrapping: bool
@@ -52,7 +49,6 @@ class RandomForestWithInstances(AbstractEPM):
     '''
 
     def __init__(self, types,
-                 instance_features=None,
                  num_trees=10,
                  do_bootstrapping=True,
                  n_points_per_tree=0,
@@ -67,7 +63,6 @@ class RandomForestWithInstances(AbstractEPM):
 
         super().__init__(**kwargs)
 
-        self.instance_features = instance_features
         self.types = types
 
         self.rf = pyrfr.regression.binary_rss()
