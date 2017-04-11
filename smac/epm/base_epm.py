@@ -15,9 +15,9 @@ __version__ = "0.0.1"
 class AbstractEPM(object):
     '''Abstract implementation of the EPM API '''
 
-    def __init__(self, 
-                 instance_features:np.ndarray=None,
-                 pca_dims:float=None):
+    def __init__(self,
+                 instance_features: np.ndarray=None,
+                 pca_dims: float=None):
         '''
         initialize random number generator
 
@@ -29,7 +29,7 @@ class AbstractEPM(object):
         pca_dims: float
             if set to a float, use PCA to reduce dimensionality of instance features
             also requires to set n_feats (> pca_dims)
-        
+
         '''
         self.instance_features = instance_features
         self.pca_dims = pca_dims
@@ -37,15 +37,15 @@ class AbstractEPM(object):
             self.n_feats = instance_features.shape[1]
         else:
             self.n_feats = 0
-        
-        self.n_params = None # will be updated on train()
-        
+
+        self.n_params = None  # will be updated on train()
+
         self.pca = None
         self.scaler = None
         if self.pca_dims and self.n_feats > self.pca_dims:
             self.pca = PCA(n_components=self.pca_dims)
             self.scaler = MinMaxScaler()
-            
+
         # Never use a lower variance than this
         self.var_threshold = 10 ** -5
 
@@ -64,26 +64,27 @@ class AbstractEPM(object):
         -------
         self
         '''
-        
+
         self.n_params = X.shape[1] - self.n_feats
-        
+
         # reduce dimensionality of features of larger than PCA_DIM
         if self.pca:
-            X_feats = X[:,:-self.n_feats]
+            X_feats = X[:, :-self.n_feats]
             # scale features
             X_feats = self.scaler.fit_transform(X_feats)
             X_feats = np.nan_to_num(X_feats)  # if features with max == min
             # PCA
             X_feats = self.pca.fit_transform(X_feats)
-            X = np.hstack((X[:, :self.n_params], X_feats ))
+            X = np.hstack((X[:, :self.n_params], X_feats))
             if hasattr(self, "types"):
                 # for RF, adapt types list
-                # if X_feats.shape[0] < self.pca, X_feats.shape[1] ==  X_feats.shape[0] 
-                self.types  = np.array(np.hstack((self.types[:self.n_params], np.zeros((X_feats.shape[1])))),
-                                       dtype=np.uint)
+                # if X_feats.shape[0] < self.pca, X_feats.shape[1] ==
+                # X_feats.shape[0]
+                self.types = np.array(np.hstack((self.types[:self.n_params], np.zeros((X_feats.shape[1])))),
+                                      dtype=np.uint)
         return self._train(X, Y)
-    
-    def _train(self, X:np.ndarray , Y:np.ndarray, **kwargs):
+
+    def _train(self, X: np.ndarray, Y: np.ndarray, **kwargs):
         '''Trains the random forest on X and y.
 
         Parameters
@@ -99,8 +100,8 @@ class AbstractEPM(object):
         self
         '''
         raise NotImplementedError
-        
-    def predict(self, X:np.ndarray):
+
+    def predict(self, X: np.ndarray):
         '''
         Predict means and variances for given X.
 
@@ -117,14 +118,14 @@ class AbstractEPM(object):
             Predictive variance
         '''
         if self.pca:
-            X_feats = X[:,:-self.n_feats]
+            X_feats = X[:, :-self.n_feats]
             X_feats = self.scaler.transform(X_feats)
             X_feats = self.pca.transform(X_feats)
-            X = np.hstack((X[:, :self.n_params], X_feats ))
-        
+            X = np.hstack((X[:, :self.n_params], X_feats))
+
         return self._predict(X)
-    
-    def _predict(self, X:np.ndarray):
+
+    def _predict(self, X: np.ndarray):
         '''
         Predict means and variances for given X.
 
@@ -141,8 +142,8 @@ class AbstractEPM(object):
             Predictive variance
         '''
         raise NotImplementedError()
-    
-    def predict_marginalized_over_instances(self, X:np.ndarray):
+
+    def predict_marginalized_over_instances(self, X: np.ndarray):
         '''Predict mean and variance marginalized over all instances.
 
         Returns the predictive mean and variance marginalised over all
@@ -177,21 +178,22 @@ class AbstractEPM(object):
         if X.shape[1] != self.n_params:
             raise ValueError(
                 "Rows in X should have %d entries "
-                "but have %d!" %(self.n_params, X.shape[1]))
+                "but have %d!" % (self.n_params, X.shape[1]))
 
-        mean = np.zeros((X.shape[0],1))
-        var = np.zeros((X.shape[0],1))
+        mean = np.zeros((X.shape[0], 1))
+        var = np.zeros((X.shape[0], 1))
         for i, x in enumerate(X):
             X_ = np.hstack(
                 (np.tile(x, (n_instances, 1)), self.instance_features))
             means, vars = self.predict(X_)
             # use only mean of variance and not the variance of the mean here
-            # since we don't want to reason about the instance hardness distribution
-            var_x = np.mean(vars) # + np.var(means)
+            # since we don't want to reason about the instance hardness
+            # distribution
+            var_x = np.mean(vars)  # + np.var(means)
             if var_x < self.var_threshold or np.isnan(var_x):
                 var_x = self.var_threshold
 
-            var[i,0] = var_x
-            mean[i,0] = np.mean(means)
+            var[i, 0] = var_x
+            mean[i, 0] = np.mean(means)
 
         return mean, var

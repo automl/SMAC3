@@ -38,6 +38,21 @@ class TestRFWithInstances(unittest.TestCase):
         self.assertEqual(m_hat.shape, (10, 1))
         self.assertEqual(v_hat.shape, (10, 1))
 
+    def test_train_with_pca(self):
+        rs = np.random.RandomState(1)
+        X = rs.rand(20, 20)
+        F = rs.rand(10, 10)
+        Y = rs.rand(20, 1)
+        model = RandomForestWithInstances(np.zeros((20,), dtype=np.uint),
+                                          pca_dims=2,
+                                          instance_features=F)
+        model.train(X, Y)
+        
+        self.assertEqual(model.n_params,10)
+        self.assertEqual(model.n_feats,10)
+        self.assertIsNotNone(model.pca)
+        self.assertIsNotNone(model.scaler)
+        
     def test_predict_marginalized_over_instances_wrong_X_dimensions(self):
         rs = np.random.RandomState(1)
 
