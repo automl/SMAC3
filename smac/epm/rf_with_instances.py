@@ -28,9 +28,6 @@ class RandomForestWithInstances(AbstractEPM):
         2 dimension where the first dimension consists of 3 different
         categorical choices and the second dimension is continuous than we
         have to pass np.array([2, 0]). Note that we count starting from 0.
-    instance_features: np.ndarray (I, K)
-        Contains the K dimensional instance features
-        of the I different instances
     num_trees: int
         The number of trees in the random forest.
     do_bootstrapping: bool
@@ -52,7 +49,6 @@ class RandomForestWithInstances(AbstractEPM):
     '''
 
     def __init__(self, types,
-                 instance_features=None,
                  num_trees=10,
                  do_bootstrapping=True,
                  n_points_per_tree=0,
@@ -62,9 +58,11 @@ class RandomForestWithInstances(AbstractEPM):
                  max_depth=20,
                  eps_purity=1e-8,
                  max_num_nodes=1000,
-                 seed=42):
+                 seed=42,
+                 **kwargs):
 
-        self.instance_features = instance_features
+        super().__init__(**kwargs)
+
         self.types = types
 
         self.rf = pyrfr.regression.binary_rss()
@@ -89,10 +87,7 @@ class RandomForestWithInstances(AbstractEPM):
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
-        # Never use a lower variance than this
-        self.var_threshold = 10 ** -5
-
-    def train(self, X, y, **kwargs):
+    def _train(self, X, y, **kwargs):
         """Trains the random forest on X and y.
 
         Parameters
@@ -114,7 +109,7 @@ class RandomForestWithInstances(AbstractEPM):
         self.rf.fit(data)
         return self
 
-    def predict(self, X):
+    def _predict(self, X):
         """Predict means and variances for given X.
 
         Parameters
@@ -139,64 +134,3 @@ class RandomForestWithInstances(AbstractEPM):
         means, vars = self.rf.batch_predictions(X)
 
         return means.reshape((-1, 1)), vars.reshape((-1, 1))
-
-    def predict_marginalized_over_instances(self, X):
-        """Predict mean and variance marginalized over all instances.
-
-        Returns the predictive mean and variance marginalised over all
-        instances for a set of configurations.
-
-        Parameters
-        ----------
-        X : np.ndarray of shape = [n_features (config), ]
-
-        Returns
-        -------
-        means : np.ndarray of shape = [n_samples, 1]
-            Predictive mean
-        vars : np.ndarray  of shape = [n_samples, 1]
-            Predictive variance
-        """
-
-        if self.instance_features is None or \
-                len(self.instance_features) == 0:
-            mean, var = self.predict(X)
-            var[var < self.var_threshold] = self.var_threshold
-            var[np.isnan(var)] = self.var_threshold
-            return mean, var
-        else:
-            n_instance_features = self.instance_features.shape[1]
-            n_instances = len(self.instance_features)
-
-        if len(X.shape) != 2:
-            raise ValueError(
-                'Expected 2d array, got %dd array!' % len(X.shape))
-        if X.shape[1] != self.types.shape[0] - n_instance_features:
-            raise ValueError('Rows in X should have %d entries but have %d!' %
-                             (self.types.shape[0] - n_instance_features,
-                              X.shape[1]))
-
-        mean = np.zeros(X.shape[0])
-        var = np.zeros(X.shape[0])
-        for i, x in enumerate(X):
-            X_ = np.hstack(
-                (np.tile(x, (n_instances, 1)), self.instance_features))
-            means, vars = self.predict(X_)
-            # use only mean of variance and not the variance of the mean here
-            # since we don't want to reason about the instance hardness distribution
-            var_x = np.mean(vars) # + np.var(means)
-            if var_x < self.var_threshold:
-                var_x = self.var_threshold
-
-            var[i] = var_x
-            mean[i] = np.mean(means)
-
-        var[var < self.var_threshold] = self.var_threshold
-        var[np.isnan(var)] = self.var_threshold
-
-        if len(mean.shape) == 1:
-            mean = mean.reshape((-1, 1))
-        if len(var.shape) == 1:
-            var = var.reshape((-1, 1))
-
-        return mean, var

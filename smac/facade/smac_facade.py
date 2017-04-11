@@ -125,7 +125,8 @@ class SMAC(object):
         if model is None:
             model = RandomForestWithInstances(types=types,
                                               instance_features=scenario.feature_array,
-                                              seed=rng.randint(MAXINT))
+                                              seed=rng.randint(MAXINT),
+                                              pca_components=scenario.PCA_DIM)
         # initial acquisition function
         if acquisition_function is None:
             acquisition_function = EI(model=model)

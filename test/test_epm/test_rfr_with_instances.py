@@ -38,6 +38,21 @@ class TestRFWithInstances(unittest.TestCase):
         self.assertEqual(m_hat.shape, (10, 1))
         self.assertEqual(v_hat.shape, (10, 1))
 
+    def test_train_with_pca(self):
+        rs = np.random.RandomState(1)
+        X = rs.rand(20, 20)
+        F = rs.rand(10, 10)
+        Y = rs.rand(20, 1)
+        model = RandomForestWithInstances(np.zeros((20,), dtype=np.uint),
+                                          pca_components=2,
+                                          instance_features=F)
+        model.train(X, Y)
+        
+        self.assertEqual(model.n_params,10)
+        self.assertEqual(model.n_feats,10)
+        self.assertIsNotNone(model.pca)
+        self.assertIsNotNone(model.scaler)
+        
     def test_predict_marginalized_over_instances_wrong_X_dimensions(self):
         rs = np.random.RandomState(1)
 
@@ -48,11 +63,6 @@ class TestRFWithInstances(unittest.TestCase):
                                 model.predict_marginalized_over_instances, X)
         X = rs.rand(10, 10, 10)
         self.assertRaisesRegexp(ValueError, "Expected 2d array, got 3d array!",
-                                model.predict_marginalized_over_instances, X)
-
-        X = rs.rand(10, 5)
-        self.assertRaisesRegexp(ValueError, "Rows in X should have 8 entries "
-                                            "but have 5!",
                                 model.predict_marginalized_over_instances, X)
 
     @mock.patch.object(RandomForestWithInstances, 'predict')
@@ -98,6 +108,7 @@ class TestRFWithInstances(unittest.TestCase):
 
         model = RandomForestWithInstances(np.zeros((15,), dtype=np.uint),
                                           instance_features=F)
+        model.train(rs.rand(11, 15),rs.rand(11))
         means, vars = model.predict_marginalized_over_instances(rs.rand(11, 10))
         self.assertEqual(rf_mock.call_count, 11)
         self.assertEqual(means.shape, (11, 1))

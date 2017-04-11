@@ -25,7 +25,7 @@ class RandomEPM(AbstractEPM):
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.rng = rng
 
-    def train(self, X, Y, **kwargs):
+    def _train(self, X, Y, **kwargs):
         '''
         Pseudo training on X and Y.
 
@@ -45,7 +45,7 @@ class RandomEPM(AbstractEPM):
 
         self.logger.debug("(Pseudo) Fit model to data")
 
-    def predict(self, X):
+    def _predict(self, X):
         '''
         Predict values for configs
 
@@ -63,24 +63,4 @@ class RandomEPM(AbstractEPM):
         '''
         if not isinstance(X, np.ndarray):
             raise NotImplementedError("X has to be of type np.ndarray")
-        return self.rng.rand(len(X), 1), self.rng.rand(len(X), 1)
-    
-    def predict_marginalized_over_instances(self, X):
-        """Predict mean and variance marginalized over all instances.
-
-        Returns the predictive mean and variance marginalised over all
-        instances for a set of configurations.
-
-        Parameters
-        ----------
-        X : np.ndarray of shape = [n_features (config), ]
-
-        Returns
-        -------
-        means : np.ndarray of shape = [n_samples, 1]
-            Predictive mean
-        vars : np.ndarray  of shape = [n_samples, 1]
-            Predictive variance
-        """
-
         return self.rng.rand(len(X), 1), self.rng.rand(len(X), 1)
