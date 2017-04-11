@@ -194,9 +194,4 @@ class AbstractEPM(object):
             var[i,0] = var_x
             mean[i,0] = np.mean(means)
 
-        if len(mean.shape) == 1:
-            mean = mean.reshape((-1, 1))
-        if len(var.shape) == 1:
-            var = var.reshape((-1, 1))
-
         return mean, var
