@@ -1,4 +1,5 @@
 import logging
+
 import numpy as np
 
 from sklearn.decomposition import PCA
@@ -17,7 +18,7 @@ class AbstractEPM(object):
 
     def __init__(self,
                  instance_features: np.ndarray=None,
-                 pca_dims: float=None):
+                 pca_components: float=None):
         '''
         initialize random number generator
 
@@ -26,13 +27,13 @@ class AbstractEPM(object):
         instance_features: np.ndarray (I, K)
             Contains the K dimensional instance features
             of the I different instances
-        pca_dims: float
+        pca_components: float
             if set to a float, use PCA to reduce dimensionality of instance features
             also requires to set n_feats (> pca_dims)
 
         '''
         self.instance_features = instance_features
-        self.pca_dims = pca_dims
+        self.pca_components = pca_components
         if instance_features is not None:
             self.n_feats = instance_features.shape[1]
         else:
@@ -42,8 +43,8 @@ class AbstractEPM(object):
 
         self.pca = None
         self.scaler = None
-        if self.pca_dims and self.n_feats > self.pca_dims:
-            self.pca = PCA(n_components=self.pca_dims)
+        if self.pca_components and self.n_feats > self.pca_components:
+            self.pca = PCA(n_components=self.pca_components)
             self.scaler = MinMaxScaler()
 
         # Never use a lower variance than this
@@ -69,7 +70,7 @@ class AbstractEPM(object):
 
         # reduce dimensionality of features of larger than PCA_DIM
         if self.pca:
-            X_feats = X[:, :-self.n_feats]
+            X_feats = X[:, -self.n_feats:]
             # scale features
             X_feats = self.scaler.fit_transform(X_feats)
             X_feats = np.nan_to_num(X_feats)  # if features with max == min
@@ -118,7 +119,7 @@ class AbstractEPM(object):
             Predictive variance
         '''
         if self.pca:
-            X_feats = X[:, :-self.n_feats]
+            X_feats = X[:, -self.n_feats:]
             X_feats = self.scaler.transform(X_feats)
             X_feats = self.pca.transform(X_feats)
             X = np.hstack((X[:, :self.n_params], X_feats))

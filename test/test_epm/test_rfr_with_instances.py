@@ -44,7 +44,7 @@ class TestRFWithInstances(unittest.TestCase):
         F = rs.rand(10, 10)
         Y = rs.rand(20, 1)
         model = RandomForestWithInstances(np.zeros((20,), dtype=np.uint),
-                                          pca_dims=2,
+                                          pca_components=2,
                                           instance_features=F)
         model.train(X, Y)
         
