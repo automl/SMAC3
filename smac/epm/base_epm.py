@@ -14,14 +14,21 @@ __version__ = "0.0.1"
 
 
 class AbstractEPM(object):
-    '''Abstract implementation of the EPM API '''
+    '''Abstract implementation of the EPM API 
+        
+        Note: The input dimensions of Y for training
+        and the output dimensions of all predictions 
+        (also called n_objectives)
+        depends on the concrete implementation of this
+        abstract class.
+    '''
 
     def __init__(self,
                  instance_features: np.ndarray=None,
                  pca_components: float=None):
         '''
-        initialize random number generator
-
+        Constructor
+        
         Parameters
         ----------
         instance_features: np.ndarray (I, K)
