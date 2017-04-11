@@ -113,9 +113,9 @@ class AbstractEPM(object):
 
         Returns
         -------
-        means : np.ndarray of shape = [n_samples, 1]
+        means : np.ndarray of shape = [n_samples, n_objectives]
             Predictive mean
-        vars : np.ndarray  of shape = [n_samples, 1]
+        vars : np.ndarray  of shape = [n_samples, n_objectives]
             Predictive variance
         '''
         if self.pca:
@@ -137,9 +137,9 @@ class AbstractEPM(object):
 
         Returns
         -------
-        means : np.ndarray of shape = [n_samples, 1]
+        means : np.ndarray of shape = [n_samples, n_objectives]
             Predictive mean
-        vars : np.ndarray  of shape = [n_samples, 1]
+        vars : np.ndarray  of shape = [n_samples, n_objectives]
             Predictive variance
         '''
         raise NotImplementedError()
