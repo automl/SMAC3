@@ -45,6 +45,9 @@ class AbstractEPM(object):
         if self.pca_dims and self.n_feats > self.pca_dims:
             self.pca = PCA(n_components=self.pca_dims)
             self.scaler = MinMaxScaler()
+            
+        # Never use a lower variance than this
+        self.var_threshold = 10 ** -5
 
     def train(self, X, Y, **kwargs):
         '''Trains the random forest on X and y.
@@ -61,6 +64,9 @@ class AbstractEPM(object):
         -------
         self
         '''
+        
+        self.n_params = X.shape[1] - self.n_feats
+        
         # reduce dimensionality of features of larger than PCA_DIM
         if self.pca:
             X_feats = X[:,:-self.n_feats]
@@ -69,7 +75,6 @@ class AbstractEPM(object):
             X_feats = np.nan_to_num(X_feats)  # if features with max == min
             # PCA
             X_feats = self.pca.fit_transform(X_feats)
-            self.n_params = X.shape[1] - self.n_feats
             X = np.hstack((X[:, :self.n_params], X_feats ))
             if hasattr(self, "types"):
                 # for RF, adapt types list
@@ -145,8 +150,7 @@ class AbstractEPM(object):
 
         Parameters
         ----------
-        X : np.ndarray of shape = [n_samples, n_features (config + instance
-        features)]
+        X : np.ndarray of shape = [n_samples, n_features (config)]
 
         Returns
         -------
@@ -170,8 +174,13 @@ class AbstractEPM(object):
             raise ValueError(
                 'Expected 2d array, got %dd array!' % len(X.shape))
 
-        mean = np.zeros(X.shape[0])
-        var = np.zeros(X.shape[0])
+        if X.shape[1] != self.n_params:
+            raise ValueError(
+                "Rows in X should have %d entries "
+                "but have %d!" %(self.n_params, X.shape[1]))
+
+        mean = np.zeros((X.shape[0],1))
+        var = np.zeros((X.shape[0],1))
         for i, x in enumerate(X):
             X_ = np.hstack(
                 (np.tile(x, (n_instances, 1)), self.instance_features))
@@ -179,14 +188,11 @@ class AbstractEPM(object):
             # use only mean of variance and not the variance of the mean here
             # since we don't want to reason about the instance hardness distribution
             var_x = np.mean(vars) # + np.var(means)
-            if var_x < self.var_threshold:
+            if var_x < self.var_threshold or np.isnan(var_x):
                 var_x = self.var_threshold
 
-            var[i] = var_x
-            mean[i] = np.mean(means)
-
-        var[var < self.var_threshold] = self.var_threshold
-        var[np.isnan(var)] = self.var_threshold
+            var[i,0] = var_x
+            mean[i,0] = np.mean(means)
 
         if len(mean.shape) == 1:
             mean = mean.reshape((-1, 1))

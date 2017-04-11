@@ -93,6 +93,7 @@ class TestRFWithInstances(unittest.TestCase):
 
         model = RandomForestWithInstances(np.zeros((15,), dtype=np.uint),
                                           instance_features=F)
+        model.train(rs.rand(11, 15),rs.rand(11))
         means, vars = model.predict_marginalized_over_instances(rs.rand(11, 10))
         self.assertEqual(rf_mock.call_count, 11)
         self.assertEqual(means.shape, (11, 1))

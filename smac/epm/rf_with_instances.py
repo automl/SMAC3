@@ -87,9 +87,6 @@ class RandomForestWithInstances(AbstractEPM):
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
-        # Never use a lower variance than this
-        self.var_threshold = 10 ** -5
-
     def _train(self, X, y, **kwargs):
         """Trains the random forest on X and y.
 
