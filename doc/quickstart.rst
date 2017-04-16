@@ -1,21 +1,25 @@
+.. _scenario: manual.html#scenario-options
+
 Quick Start
 -----------
 | If you have not installed *SMAC* yet take a look at the `installation instructions <installation.html>`_ and make sure that all the requirements are fulfilled.
 | Examples to illustrate the usage of *SMAC* - either by reading in a scenario-file, or by directly using *SMAC* in Python - are provided in the examples-folder.
 
 To get started, we will walk you through a few examples.
-First, we explain the basic usage of *SMAC*, using a scenario file (see :ref:`scenario`) to define the options and optimizing a toy example.
-Secondly, we explain the usage of *SMAC* within Python, how to define
-hyperparameters in the code and how to get hold of results.
-Thirdly, we show a real-world example, using an algorithm-wrapper to optimize
-the Spear-SAT-solver.
 
-.. _branin:
+* First, we explain the basic usage of *SMAC*, using a `scenario`_ file to optimize the `branin`__-function as a toy example.
+* Secondly, we explain the usage of *SMAC* within Python how to define hyperparameters in the code by optimizing a `Support Vector Machine`__.
+* Thirdly, we show a real-world example, using an algorithm-wrapper to optimize the `Spear-SAT-solver`__.
+
+__ branin-example_
+__ svm-example_
+__ spear-example_
+
+.. _branin-example:
 
 Branin
 ~~~~~~
-First of, we'll demonstrate the usage of *SMAC* on the most basic scenario, the optimization of a continuous blackbox function.
-The first simple example is the minimization of a standard 2-dimensional continuous test function (`branin <https://www.sfu.ca/~ssurjano/branin.html>`_).
+First of, we'll demonstrate the usage of *SMAC* on the minimization of a standard 2-dimensional continuous test function (`branin <https://www.sfu.ca/~ssurjano/branin.html>`_).
 
 To run the example scenario, change into the root-directory of *SMAC* and type the following commands:
 
@@ -33,7 +37,8 @@ The python command runs *SMAC* with the specified scenario. The scenario_ file c
     run_obj = quality
     runcount_limit = 500
 
-The **algo** parameter specifies how *SMAC* can call the function or evaluate an algorithm that *SMAC* is optimizing. An algorithm call by *SMAC* will look like this:
+The **algo** parameter specifies how *SMAC* can call the function or evaluate an algorithm that *SMAC* is optimizing.
+An algorithm call by *SMAC* will look like this:
 
     .. code-block:: bash
 
@@ -98,15 +103,15 @@ The **runcount_limit** specifies the maximum number of algorithm calls.
 Furthermore a folder containing *SMACs* trajectory and the runhistory will be created in the branin folder.
 
 
-.. _svm:
+.. _svm-example:
 
-SVM: Using *SMAC* in Python
+Using *SMAC* in Python: SVM
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-To explain the use of *SMAC* within Python, let's look at a real-world (toy) example,
+To explain the use of *SMAC* within Python, let's look at a real-world example,
 optimizing a Support Vector Machine (SVM) on the widely known `IRIS-dataset
 <http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html>`_.
 
-To use *SMAC* directly with Python, we first have to import the necessary modules
+To use *SMAC* directly with Python, we first import the necessary modules
 
 .. literalinclude:: ../examples/svm.py
    :lines: 9-22 
@@ -122,7 +127,8 @@ their domains. The parametertypes are floats, integers and categorical parameter
 
 We optimize a SVM with the parameters *kernel*, *C*, *gamma*, *coef0*, *degree* and *shrinking*, which
 are further explained in the documentation of sklearn. Note that modifying *C* can
-quickly lead to overfitting, which is why we use cross-validation.
+quickly lead to overfitting, which is why we use cross-validation to evaluate
+the configuration.
 
 Let's start by creating a ConfigSpace-object and adding the first hyperparameter: the choice of
 the kernel. Conditionals to limit the search-space are optional.
@@ -138,10 +144,10 @@ once, by passing them in a list.
    :lines: 71-74
    :lineno-match:
 
-| Not every kernel uses all the parameters. The sklearn-implementation of the SVC accepts all parameters we are optimizing, but ignores all those incompatible with the chosen kernel.
+| Not every kernel uses all the parameters. The sklearn-implementation of the SVM accepts all parameters we are optimizing, but ignores all those incompatible with the chosen kernel.
 | We can reflect this in optimization using conditions, deactivating parameters we know to be irrelevant to the current kernel.
 | Deactivated parameters are not considered during optimization, limiting the search-space to reasonable configurations.
-| This way, human knowledge about the problem is introduced.
+| This way human knowledge about the problem is introduced.
 
 .. literalinclude:: ../examples/svm.py
    :lines: 76-83
@@ -163,16 +169,6 @@ that is only activated if `gamma` is not set to "auto".
    :pyobject: svm_from_cfg
    :lineno-match:
 
-Now we only need a `Scenario`-object to configure the optimization-process.
-We provide a list of possible options in the :ref:`scenario`.
-
-The initialization of a scenario in the code uses the same keywords as a
-scenario-file, which we used in the branin example.
-
-.. literalinclude:: ../examples/svm.py
-   :lines: 98-103 
-   :lineno-match:
-
 We register the function to a Target Algorithm Evaluator, which communicates
 between the function to be optimized and *SMAC* by calling the function with the
 desired configuration and interpreting the output (in this case, simply the
@@ -182,8 +178,20 @@ score). We also call the function to get the default-value.
    :lines: 105-111 
    :lineno-match:
 
+We need a `Scenario`__-object to configure the optimization-process.
+We provide a list of possible options in the :ref:`scenario`.
+
+__ scenario_
+
+The initialization of a scenario in the code uses the same keywords as a
+scenario-file, which we used in the branin example.
+
+.. literalinclude:: ../examples/svm.py
+   :lines: 98-103 
+   :lineno-match:
+
 Now we're ready to create a *SMAC*-instance, which handles the Bayesian
-Optimization-loop and calculate the incumbent. 
+Optimization-loop and calculates the incumbent. 
 To automatically handle the exploration of the search space 
 and evaluation of the function, SMAC needs as inputs the scenario object 
 as well as the function evaluator.
@@ -200,7 +208,7 @@ After successful execution of the optimization loop the Stats object outputs the
 
 We further query the target function at the incumbent, using the function evaluator so that as final output we can see performance value of the incumbent.
 
-.. _spear:
+.. _spear-example:
 
 Spear-QCP
 ~~~~~~~~~
@@ -335,7 +343,7 @@ The first line shows why *SMAC* terminated. The wallclock time-budget is exhaust
 
 The statistics further show the used wallclock time, target algorithm runtime and the number of executed target algorithm runs.
 
-| The directory in which you invoked *SMAC* now contain a new folder called **SMAC3-output_YYYY-MM-DD_HH:MM:SS**.
+| The directory in which you invoked *SMAC* now contains a new folder called **SMAC3-output_YYYY-MM-DD_HH:MM:SS**.
 | The .json file contains the information about the target algorithms *SMAC* just executed. In this file you can see the *status* of the algorithm run, *misc*, the *instance* on which the algorithm was evaluated, which *seed* was used, how much *time* the algorithm needed and with which *configuration* the algorithm was run.
 | In the folder *SMAC* generates a file for the runhistory, and two files for the trajectory.
 

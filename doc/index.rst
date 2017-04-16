@@ -37,6 +37,7 @@ Contents:
    :maxdepth: 2
 
    installation
+   quickstart
    manual
    contact
    license

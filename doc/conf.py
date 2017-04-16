@@ -137,6 +137,7 @@ html_theme_options = {
     'navbar_links': [
         ('Start', 'index'),
         ('Installation', 'installation'),
+        ('Quickstart', 'quickstart'),
         ('Manual', 'manual'),
         ('Contact', 'contact'),
 	('License', 'license'),
