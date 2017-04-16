@@ -18,7 +18,7 @@ from smac.facade.smac_facade import SMAC
 
 boston = load_boston()
 
-def rfr(cfg, seed):
+def rf_from_cfg(cfg, seed):
     """
         Creates a random forest regressor from sklearn and fits the given data on it.
         This is the function-call we try to optimize. Chosen values are stored in
@@ -40,7 +40,6 @@ def rfr(cfg, seed):
     rfr = RandomForestRegressor(
         n_estimators=cfg["num_trees"],
         criterion=cfg["criterion"],
-        max_depth=cfg["max_depth"],
         min_samples_split=cfg["min_samples_to_split"],
         min_samples_leaf=cfg["min_samples_in_leaf"],
         min_weight_fraction_leaf=cfg["min_weight_frac_leaf"],
@@ -75,7 +74,6 @@ cs.add_hyperparameter(do_bootstrapping)
 
 # Or we can add multiple hyperparameters at once:
 num_trees = UniformIntegerHyperparameter("num_trees", 10, 50, default=10)
-max_depth = UniformIntegerHyperparameter("max_depth", 20, 30, default=20)
 max_features = UniformIntegerHyperparameter("max_features", 1, boston.data.shape[1], default=1)
 min_weight_frac_leaf = UniformFloatHyperparameter("min_weight_frac_leaf", 0.0, 0.5, default=0.0)
 criterion = CategoricalHyperparameter("criterion", ["mse", "mae"], default="mse")
@@ -83,20 +81,20 @@ min_samples_to_split = UniformIntegerHyperparameter("min_samples_to_split", 2, 2
 min_samples_in_leaf = UniformIntegerHyperparameter("min_samples_in_leaf", 1, 20, default=1)
 max_leaf_nodes = UniformIntegerHyperparameter("max_leaf_nodes", 10, 1000, default=100)
 
-cs.add_hyperparameters([num_trees, max_depth, min_weight_frac_leaf, criterion,
+cs.add_hyperparameters([num_trees, min_weight_frac_leaf, criterion,
         max_features, min_samples_to_split, min_samples_in_leaf, max_leaf_nodes])
 
 # SMAC scenario oject
 scenario = Scenario({"run_obj": "quality",   # we optimize quality (alternative runtime)
-                     "runcount-limit": 200,  # maximum number of function evaluations
+                     "runcount-limit": 50,  # maximum number of function evaluations
                      "cs": cs,               # configuration space
-                     "deterministic": "false",
+                     "deterministic": "true",
                      "memory_limit": 3072,   # adapt this to reasonable value for your hardware
                      })
 
 # To optimize, we pass the function to the SMAC-object
 smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
-            tae_runner=rfr)
+            tae_runner=rf_from_cfg)
 
 # Example call of the function with default values
 # It returns: Status, Cost, Runtime, Additional Infos
