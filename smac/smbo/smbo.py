@@ -7,7 +7,7 @@ import typing
 import math
 
 
-from smac.smbo.acquisition import AbstractAcquisitionFunction
+from smac.smbo.acquisition import AcquisitionFunctionWrapper
 from smac.smbo.base_solver import BaseSolver
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.smbo.local_search import LocalSearch
@@ -41,7 +41,7 @@ class SMBO(BaseSolver):
                  num_run: int,
                  model: RandomForestWithInstances,
                  acq_optimizer: LocalSearch,
-                 acquisition_func: AbstractAcquisitionFunction,
+                 acquisition_func: AcquisitionFunctionWrapper,
                  rng: np.random.RandomState):
         '''
         Interface that contains the main Bayesian optimization loop
@@ -307,9 +307,7 @@ class SMBO(BaseSolver):
                 ordered by their acquisition function value
 
         """
-
-        config_array = convert_configurations_to_array(configs)
-        acq_values = self.acquisition_func(config_array)
+        acq_values = self.acquisition_func(configs)
 
         # From here
         # http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values

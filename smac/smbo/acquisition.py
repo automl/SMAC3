@@ -273,3 +273,57 @@ class EIPS(EI):
             raise ValueError
 
         return f.reshape((-1, 1))
+
+
+
+from smac.configspace import convert_configurations_to_array
+
+class AcquisitionFunctionWrapper(object):
+
+    def __init__(self, acquisition_func: AbstractAcquisitionFunction):
+        """
+        Wrapper class around the acquisition function to improve
+        extensibility of the acquisition function. In this class
+        preliminary computations can be done on the configurations
+        before they are transformed to their array representation.
+
+        Parameters:
+        ----------
+
+        acquisition_function:  function
+            The wrapped acquisition function
+        """
+        self.acquisition_func = acquisition_func
+
+    def __call__(self, configs, *args):
+        """
+        Computes the acquisition value for given configurations
+
+        Parameters
+        ----------
+        configs : list
+            The configurations were the acquisition function should
+            be evaluated.
+
+        args :
+            Arguments to pass to the acquisition function
+        """
+        configs_array_ = convert_configurations_to_array(configs)
+        return self.acquisition_func(configs_array_, *args)
+
+    def update(self, **kwargs):
+        """
+        Update the acquisition functions values.
+
+        This method will be called if the model is updated. E.g.
+        Entropy search uses it to update it's approximation of P(x=x_min),
+        EI uses it to update the current fmin.
+
+        The default implementation takes all keyword arguments and sets the
+        respective attributes for the acquisition function object.
+
+        Parameters
+        ----------
+        kwargs
+        """
+        self.acquisition_func.update(**kwargs)

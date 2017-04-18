@@ -22,7 +22,7 @@ from smac.initial_design.multi_config_initial_design import \
 from smac.intensification.intensification import Intensifier
 from smac.smbo.smbo import SMBO
 from smac.smbo.objective import average_cost
-from smac.smbo.acquisition import EI, AbstractAcquisitionFunction
+from smac.smbo.acquisition import EI, AcquisitionFunctionWrapper
 from smac.smbo.local_search import LocalSearch
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
@@ -47,7 +47,7 @@ class SMAC(object):
                  tae_runner=None,
                  runhistory: RunHistory=None,
                  intensifier: Intensifier=None,
-                 acquisition_function: AbstractAcquisitionFunction=None,
+                 acquisition_function_wrapper: AcquisitionFunctionWrapper=None,
                  model: AbstractEPM=None,
                  runhistory2epm: AbstractRunHistory2EPM=None,
                  initial_design: InitialDesign=None,
@@ -71,8 +71,8 @@ class SMAC(object):
         intensifier: Intensifier
             intensification object to issue a racing to decide the current
             incumbent
-        acquisition_function : AcquisitionFunction
-            Object that implements the AbstractAcquisitionFunction. Will use
+        acquisition_function_wrapper : AcquisitionFunctionWrapper
+            Object that wraps an AbstractAcquisitionFunction. Will use
             EI if not set.
         model : AbstractEPM
             Model that implements train() and predict(). Will use a
@@ -128,14 +128,15 @@ class SMAC(object):
                                               seed=rng.randint(MAXINT),
                                               pca_components=scenario.PCA_DIM)
         # initial acquisition function
-        if acquisition_function is None:
+        if acquisition_function_wrapper is None:
             acquisition_function = EI(model=model)
+            acquisition_function_wrapper = AcquisitionFunctionWrapper(acquisition_function)
         # inject model if necessary
-        if acquisition_function.model is None:
-            acquisition_function.model = model
+        if acquisition_function_wrapper.acquisition_func.model is None:
+            acquisition_function_wrapper.acquisition_func.model = model
 
         # initialize optimizer on acquisition function
-        local_search = LocalSearch(acquisition_function,
+        local_search = LocalSearch(acquisition_function_wrapper,
                                    scenario.cs)
 
         # initialize tae_runner
@@ -291,7 +292,7 @@ class SMAC(object):
                            num_run=num_run,
                            model=model,
                            acq_optimizer=local_search,
-                           acquisition_func=acquisition_function,
+                           acquisition_func=acquisition_function_wrapper,
                            rng=rng)
 
     def _get_rng(self, rng):
