@@ -39,6 +39,7 @@ Contents:
    installation
    quickstart
    manual
+   api
    contact
    license
 

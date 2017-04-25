@@ -2,8 +2,8 @@
 
 Quick Start
 -----------
-| If you have not installed *SMAC* yet take a look at the `installation instructions <installation.html>`_ and make sure that all the requirements are fulfilled.
-| Examples to illustrate the usage of *SMAC* - either by reading in a scenario-file, or by directly using *SMAC* in Python - are provided in the examples-folder.
+If you have not installed *SMAC* yet take a look at the `installation instructions <installation.html>`_ and make sure that all the requirements are fulfilled.
+Examples to illustrate the usage of *SMAC* - either by reading in a scenario-file, or by directly using *SMAC* in Python - are provided in the examples-folder.
 
 To get started, we will walk you through a few examples.
 
@@ -144,10 +144,10 @@ once, by passing them in a list.
    :lines: 71-74
    :lineno-match:
 
-| Not every kernel uses all the parameters. The sklearn-implementation of the SVM accepts all parameters we are optimizing, but ignores all those incompatible with the chosen kernel.
-| We can reflect this in optimization using conditions, deactivating parameters we know to be irrelevant to the current kernel.
-| Deactivated parameters are not considered during optimization, limiting the search-space to reasonable configurations.
-| This way human knowledge about the problem is introduced.
+Not every kernel uses all the parameters. The sklearn-implementation of the SVM accepts all parameters we are optimizing, but ignores all those incompatible with the chosen kernel.
+We can reflect this in optimization using **conditions** to deactivate parameters that are irrelevant to the current kernel.
+Deactivated parameters are not considered during optimization, limiting the search-space to reasonable configurations.
+This way human knowledge about the problem is introduced.
 
 .. literalinclude:: ../examples/svm.py
    :lines: 76-83
@@ -161,9 +161,9 @@ that is only activated if `gamma` is not set to "auto".
    :lines: 85-95
    :lineno-match:
 
-| Of course we also define a function to evaluate the configured SVM on the IRIS-dataset.
-| Some options, such as the *kernel* or *C*, can be passed directly.
-| Others, such as *gamma*, need to be translated before the call to the SVM.
+Of course we also define a function to evaluate the configured SVM on the IRIS-dataset.
+Some options, such as the *kernel* or *C*, can be passed directly.
+Others, such as *gamma*, need to be translated before the call to the SVM.
 
 .. literalinclude:: ../examples/svm.py
    :pyobject: svm_from_cfg
@@ -178,8 +178,8 @@ score). We also call the function to get the default-value.
    :lines: 105-111 
    :lineno-match:
 
-We need a `Scenario`__-object to configure the optimization-process.
-We provide a list of possible options in the :ref:`scenario`.
+We need a Scenario-object to configure the optimization-process.
+We provide a `list of possible options`__ in the scenario.
 
 __ scenario_
 
@@ -206,14 +206,36 @@ Internally SMAC keeps track of the number of algorithm calls and the remaining t
 
 After successful execution of the optimization loop the Stats object outputs the result of the loop.
 
+.. code-block:: bash
+
+    INFO:smac.stats.stats.Stats:##########################################################
+    INFO:smac.stats.stats.Stats:Statistics:
+    INFO:smac.stats.stats.Stats:#Incumbent changed: 88
+    INFO:smac.stats.stats.Stats:#Target algorithm runs: 200 / 200.0
+    INFO:smac.stats.stats.Stats:Used wallclock time: 41.73 / inf sec 
+    INFO:smac.stats.stats.Stats:Used target algorithm runtime: 17.44 / inf sec
+    INFO:smac.stats.stats.Stats:##########################################################
+    INFO:smac.facade.smac_facade.SMAC:Final Incumbent: Configuration:
+      C, Value: 357.4171743725004
+      coef0, Value: 9.593372746957046
+      degree, Value: 1
+      gamma, Value: 'value'
+      gamma_value, Value: 0.0029046235175726105
+      kernel, Value: 'poly'
+      shrinking, Value: 'false'
+
 We further query the target function at the incumbent, using the function evaluator so that as final output we can see performance value of the incumbent.
+
+.. code-block:: bash
+
+   Optimized Value: 0.02
 
 .. _spear-example:
 
 Spear-QCP
 ~~~~~~~~~
-| For this example we use *SMAC* to optimize `Spear <http://www.domagoj-babic.com/index.php/ResearchProjects/Spear>`_ on a small subset of the QCP-dataset.
-| In *SMACs* root-directory type:
+For this example we use *SMAC* to optimize `Spear <http://www.domagoj-babic.com/index.php/ResearchProjects/Spear>`_ on a small subset of the QCP-dataset.
+In *SMACs* root-directory type:
 
 .. code-block:: bash
 
@@ -299,8 +321,8 @@ To run the example type one of the two commands below into a terminal:
     bash run.sh
     python ../../scripts/smac --scenario scenario.txt --verbose DEBUG
 
-| *SMAC* will run for a few seconds and generate a lot of logging output.
-| After *SMAC* finished the configuration process you'll get some final statistics about the configuration process:
+*SMAC* will run for a few seconds and generate a lot of logging output.
+After *SMAC* finished the configuration process you'll get some final statistics about the configuration process:
 
 .. code-block:: bash
 
@@ -343,7 +365,7 @@ The first line shows why *SMAC* terminated. The wallclock time-budget is exhaust
 
 The statistics further show the used wallclock time, target algorithm runtime and the number of executed target algorithm runs.
 
-| The directory in which you invoked *SMAC* now contains a new folder called **SMAC3-output_YYYY-MM-DD_HH:MM:SS**.
-| The .json file contains the information about the target algorithms *SMAC* just executed. In this file you can see the *status* of the algorithm run, *misc*, the *instance* on which the algorithm was evaluated, which *seed* was used, how much *time* the algorithm needed and with which *configuration* the algorithm was run.
-| In the folder *SMAC* generates a file for the runhistory, and two files for the trajectory.
+The directory in which you invoked *SMAC* now contains a new folder called **SMAC3-output_YYYY-MM-DD_HH:MM:SS**.
+The .json file contains the information about the target algorithms *SMAC* just executed. In this file you can see the *status* of the algorithm run, *misc*, the *instance* on which the algorithm was evaluated, which *seed* was used, how much *time* the algorithm needed and with which *configuration* the algorithm was run.
+In the folder *SMAC* generates a file for the runhistory, and two files for the trajectory.
 

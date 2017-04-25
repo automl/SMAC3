@@ -37,7 +37,7 @@ Optional:
 
 Scenario-options
 ~~~~~~~~~~~~~~~~
-The Scenario-object can be constructed either by prociding an actual
+The Scenario-object can be constructed either by providing an actual
 Scenario-object (see `SVM <quickstart.html#using-smac-in-python-svm>`_-example), or by specifing the options in a
 scenario file.
 The format of the scenario file is one option per line:
@@ -117,7 +117,7 @@ Instance-files are text-files with one instance per line. If you want to use
 training- and test-sets, separate files are expected.
 
 Feature-files are files following the comma-separated-value-format, as can also be
-seen in the SPEAR_-example:
+seen in the `SPEAR-example <quickstart.html#spear-qcp>`_:
 
      +--------------------+--------------------+--------------------+-----+
      |      instance      | name of feature 1  | name of feature 2  | ... |

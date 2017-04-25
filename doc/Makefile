@@ -190,3 +190,9 @@ pseudoxml:
 	$(SPHINXBUILD) -b pseudoxml $(ALLSPHINXOPTS) $(BUILDDIR)/pseudoxml
 	@echo
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
+
+buildapi:
+	sphinx-apidoc -fMo apidoc/ ../smac/
+	@echo
+	@echo "Auto-generation of API documentation finished. " \
+	      "The generated files are in 'apidoc/'"

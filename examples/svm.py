@@ -96,9 +96,9 @@ if use_conditionals:
 
 
 # Scenario object
-scenario = Scenario({"run_obj": "quality",     # we optimize quality (alternatively runtime)
+scenario = Scenario({"run_obj": "quality",   # we optimize quality (alternatively runtime)
                      "runcount-limit": 200,  # maximum function evaluations
-                     "cs": cs,                 # configuration space
+                     "cs": cs,               # configuration space
                      "deterministic": "true"
                      })
 
