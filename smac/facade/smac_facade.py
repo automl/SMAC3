@@ -22,7 +22,7 @@ from smac.initial_design.multi_config_initial_design import \
 from smac.intensification.intensification import Intensifier
 from smac.smbo.smbo import SMBO
 from smac.smbo.objective import average_cost
-from smac.smbo.acquisition import EI, AbstractAcquisitionFunction
+from smac.smbo.acquisition import EI, LogEI, AbstractAcquisitionFunction
 from smac.smbo.local_search import LocalSearch
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
@@ -129,7 +129,10 @@ class SMAC(object):
                                               pca_components=scenario.PCA_DIM)
         # initial acquisition function
         if acquisition_function is None:
-            acquisition_function = EI(model=model)
+            if scenario.run_obj == "runtime":
+                acquisition_function = LogEI(model=model)
+            else:
+                acquisition_function = EI(model=model)
         # inject model if necessary
         if acquisition_function.model is None:
             acquisition_function.model = model
