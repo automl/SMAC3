@@ -10,6 +10,8 @@ import os
 import sys
 import unittest
 
+import numpy as np
+
 from smac.configspace import ConfigurationSpace
 from smac.tae.execute_ta_run import ExecuteTARun, StatusType
 from smac.tae.execute_ta_run import BudgetExhaustedException, TAEAbortException
@@ -80,6 +82,57 @@ class TaeTest(unittest.TestCase):
 
         self.assertRaises(
             FirstRunCrashedException, eta.start, config={}, instance=1)
+
+    @mock.patch.object(ExecuteTARun, 'run')
+    def test_start_tae_return_nan_inf(self, test_run):
+        '''
+            test nan-handling and inf-handling
+        '''
+        def get_tae(obj):
+            """ Create ExecuteTARun-object for testing. """
+            scen = Scenario(scenario={'cs': ConfigurationSpace(), 'run_obj': obj,
+                'abort_on_first_run_crash': '0', 'cutoff_time': '10'}, cmd_args=None)
+            stats = Stats(scen)
+            stats.start_timing()
+            eta = ExecuteTARun(ta=lambda *args: None, stats=stats, run_obj=obj)
+            # Add first run to not trigger FirstRunCrashedException
+            test_run.return_value = StatusType.SUCCESS, 1, 1, {}
+            eta.start(config={}, instance=1)
+            return eta
+
+        # TEST NAN
+        eta = get_tae('runtime')
+        # Patch run-function for custom-return (obj = runtime, cost = nan)
+        test_run.return_value = StatusType.SUCCESS, np.nan, 1, {}
+        self.assertEqual(eta.start(config={}, cutoff=10, instance=1)[0], StatusType.SUCCESS)
+        #                                      (obj = runtime, runtime = nan)
+        test_run.return_value = StatusType.SUCCESS, 1, np.nan, {}
+        self.assertEqual(eta.start(config={}, cutoff=10, instance=1)[0], StatusType.CRASHED)
+
+        eta = get_tae('quality')
+        # Patch run-function for custom-return (obj = quality, cost = nan)
+        test_run.return_value = StatusType.SUCCESS, np.nan, 1, {}
+        self.assertEqual(eta.start(config={}, instance=1)[0], StatusType.CRASHED)
+        #                                      (obj = quality, runtime = nan)
+        test_run.return_value = StatusType.SUCCESS, 1, np.nan, {}
+        self.assertEqual(eta.start(config={}, instance=1)[0], StatusType.SUCCESS)
+
+        # TEST INF
+        eta = get_tae('runtime')
+        # Patch run-function for custom-return (obj = runtime, cost = inf)
+        test_run.return_value = StatusType.SUCCESS, np.inf, 1, {}
+        self.assertEqual(eta.start(config={}, cutoff=10, instance=1)[0], StatusType.SUCCESS)
+        #                                      (obj = runtime, runtime = inf)
+        test_run.return_value = StatusType.SUCCESS, 1, np.inf, {}
+        self.assertEqual(eta.start(config={}, cutoff=10, instance=1)[0], StatusType.CRASHED)
+
+        eta = get_tae('quality')
+        # Patch run-function for custom-return (obj = quality, cost = inf)
+        test_run.return_value = StatusType.SUCCESS, np.inf, 1, {}
+        self.assertEqual(eta.start(config={}, instance=1)[0], StatusType.CRASHED)
+        #                                      (obj = quality, runtime = inf)
+        test_run.return_value = StatusType.SUCCESS, 1, np.inf, {}
+        self.assertEqual(eta.start(config={}, instance=1)[0], StatusType.SUCCESS)
 
 
 if __name__ == "__main__":

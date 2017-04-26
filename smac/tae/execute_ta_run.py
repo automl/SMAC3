@@ -99,7 +99,7 @@ class ExecuteTARun(object):
         self.logger = logging.getLogger("smac.tae."+self.__class__.__name__)
         self._supports_memory_limit = False
 
-    def start(self, config:Configuration, 
+    def start(self, config:Configuration,
               instance:str,
               cutoff:float=None,
               seed:int=12345,
@@ -122,8 +122,8 @@ class ExecuteTARun(object):
                 instance_specific: str
                     instance specific information (e.g., domain file or solution)
                 capped: bool
-                    if true and status is StatusType.TIMEOUT, 
-                    uses StatusType.CAPPED 
+                    if true and status is StatusType.TIMEOUT,
+                    uses StatusType.CAPPED
 
             Returns
             -------
@@ -149,6 +149,12 @@ class ExecuteTARun(object):
                                                           seed=seed,
                                                           instance_specific=instance_specific)
 
+        # Catch NaN or inf.
+        if (self.run_obj == 'runtime' and not np.isfinite(runtime) or
+            self.run_obj == 'quality' and not np.isfinite(cost)):
+            status = StatusType.CRASHED
+            runtime, cost = 0, 0
+
         if self.stats.ta_runs == 0 and status == StatusType.CRASHED:
             raise FirstRunCrashedException("First run crashed, abort. (To "
                                            "prevent this, toggle the "
@@ -165,6 +171,7 @@ class ExecuteTARun(object):
 
         if self.run_obj == "runtime":
             if status != StatusType.SUCCESS:
+                print(cutoff, self.par_factor)
                 cost = cutoff * self.par_factor
             else:
                 cost = runtime
