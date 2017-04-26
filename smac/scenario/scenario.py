@@ -9,9 +9,6 @@ import datetime
 import copy
 import typing
 
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import MinMaxScaler
-
 from smac.utils.io.input_reader import InputReader
 from smac.configspace import pcs, pcs_new
 from smac.utils.io.output_writer import OutputWriter
@@ -255,7 +252,7 @@ class Scenario(object):
                           default="smac3-output_%s" % (
                               datetime.datetime.fromtimestamp(
                                   time.time()).strftime(
-                                  '%Y-%m-%d_%H:%M:%S')))
+                                  '%Y-%m-%d_%H:%M:%S_(%f)')))
         self.add_argument(name='input_psmac_dirs', help=None,
                           default=None)
         self.add_argument(name='shared_model', help=None, default='0',
@@ -336,19 +333,6 @@ class Scenario(object):
                 self.feature_array.append(self.feature_dict[inst_])
             self.feature_array = numpy.array(self.feature_array)
             self.n_features = self.feature_array.shape[1]
-            # reduce dimensionality of features of larger than PCA_DIM
-            if self.feature_array.shape[1] > self.PCA_DIM:
-                X = self.feature_array
-                # scale features
-                X = MinMaxScaler().fit_transform(X)
-                X = numpy.nan_to_num(X)  # if features with max == min
-                # PCA
-                pca = PCA(n_components=self.PCA_DIM)
-                self.feature_array = pca.fit_transform(X)
-                self.n_features = self.feature_array.shape[1]
-                # update feature dictionary
-                for feat, inst_ in zip(self.feature_array, self.train_insts):
-                    self.feature_dict[inst_] = feat
 
         # read pcs file
         if self.pcs_fn and os.path.isfile(self.pcs_fn):

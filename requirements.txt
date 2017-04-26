@@ -5,5 +5,6 @@ six
 psutil
 pynisher>=0.4.1
 ConfigSpace>=0.3.1
+pyrfr==0.3.0
 scikit-learn
 typing

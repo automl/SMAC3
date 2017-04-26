@@ -4,12 +4,11 @@ import logging
 from scipy.stats import norm
 import numpy as np
 
-__author__ = "Aaron Klein"
-__copyright__ = "Copyright 2015, ML4AAD"
+from smac.epm.base_epm import AbstractEPM
+
+__author__ = "Aaron Klein, Marius Lindauer"
+__copyright__ = "Copyright 2017, ML4AAD"
 __license__ = "3-clause BSD"
-__maintainer__ = "Aaron Klein"
-__email__ = "kleinaa@cs.uni-freiburg.de"
-__version__ = "0.0.1"
 
 
 class AbstractAcquisitionFunction(object):
@@ -19,19 +18,20 @@ class AbstractAcquisitionFunction(object):
     def __str__(self):
         return type(self).__name__ + " (" + self.long_name + ")"
 
-    def __init__(self, model, **kwargs):
+    def __init__(self, model: AbstractEPM, **kwargs):
         """
         A base class for acquisition functions.
 
         Parameters
         ----------
-        model : Model object
+        model : AbstractEPM
             Models the objective function.
 
         """
         self.model = model
 
-        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
+        self.logger = logging.getLogger(
+            self.__module__ + "." + self.__class__.__name__)
 
     def update(self, **kwargs):
         """Update the acquisition functions values.
@@ -51,7 +51,7 @@ class AbstractAcquisitionFunction(object):
         for key in kwargs:
             setattr(self, key, kwargs[key])
 
-    def __call__(self, X, derivative=False):
+    def __call__(self, X: np.ndarray):
         """
         Computes the acquisition value for a given point X
 
@@ -63,22 +63,19 @@ class AbstractAcquisitionFunction(object):
             the number of points to evaluate at and D is the number of
             dimensions of one X.
 
-        derivative : Boolean
-            If is set to true also the derivative of the acquisition
-            function at X is returned
         """
 
         if len(X.shape) == 1:
             X = X[np.newaxis, :]
 
-        acq = self._compute(X, derivative)
+        acq = self._compute(X)
         if np.any(np.isnan(acq)):
             idx = np.where(np.isnan(acq))[0]
             acq[idx, :] = -np.finfo(np.float).max
         return acq
 
     @abc.abstractmethod
-    def _compute(self, X, derivative=False):
+    def _compute(self, X: np.ndarray):
         """
         Computes the acquisition value for a given point X. This function has
         to be overwritten in a derived class.
@@ -91,13 +88,10 @@ class AbstractAcquisitionFunction(object):
             the number of points to evaluate at and D is the number of
             dimensions of one X.
 
-        derivative : Boolean
-            If is set to true also the derivative of the acquisition
-            function at X is returned
-
         Returns
         -------
-        np.ndarray :
+        np.ndarray(N,1)
+            Acquisition function values wrt X
         """
         raise NotImplementedError()
 
@@ -105,8 +99,8 @@ class AbstractAcquisitionFunction(object):
 class EI(AbstractAcquisitionFunction):
 
     def __init__(self,
-                 model,
-                 par=0.0,
+                 model: AbstractEPM,
+                 par: float=0.0,
                  **kwargs):
         r"""
         Computes for a given x the expected improvement as
@@ -118,12 +112,9 @@ class EI(AbstractAcquisitionFunction):
 
         Parameters
         ----------
-        model : Model object
+        model : AbstractEPM
             A model that implements at least
-                 - predict(X)
-                 - getCurrentBestX().
-            If you want to calculate derivatives than it should also support
-                 - predictive_gradients(X)
+                 - predict_marginalized_over_instances(X)
         par : float, default=0.0
             Controls the balance between exploration and exploitation of the
             acquisition function.
@@ -134,7 +125,7 @@ class EI(AbstractAcquisitionFunction):
         self.par = par
         self.eta = None
 
-    def _compute(self, X, derivative=False, **kwargs):
+    def _compute(self, X: np.ndarray, **kwargs):
         """
         Computes the EI value and its derivatives.
 
@@ -145,24 +136,16 @@ class EI(AbstractAcquisitionFunction):
             the number of points to evaluate at and D is the number of
             dimensions of one X.
 
-        derivative: Boolean
-            If is set to true also the derivative of the acquisition
-            function at X is returned
-
         Returns
         -------
         np.ndarray(N,1)
             Expected Improvement of X
-        np.ndarray(N,1)
-            Derivative of Expected Improvement at X (only if derivative=True)
         """
 
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
 
         m, v = self.model.predict_marginalized_over_instances(X)
-        assert m.shape[1] == 1
-        assert v.shape[1] == 1
         s = np.sqrt(v)
 
         if self.eta is None:
@@ -172,30 +155,23 @@ class EI(AbstractAcquisitionFunction):
 
         z = (self.eta - m - self.par) / s
         f = (self.eta - m - self.par) * norm.cdf(z) + s * norm.pdf(z)
-        f[s == 0.0] = 0.0
-
-        if derivative:
-            dmdx, ds2dx = self.model.predictive_gradients(X)
-            dmdx = dmdx[0]
-            ds2dx = ds2dx[0][:, None]
-            dsdx = ds2dx / (2 * s)
-            df = (-dmdx * norm.cdf(z) + (dsdx * norm.pdf(z))).T
-            df[s == 0.0] = 0.0
+        if np.any(s == 0.0):
+            # if std is zero, we have observed x on all instances
+            # using a RF, std should be never exactly 0.0
+            self.logger.warn("Predicted std is 0.0 for at least one sample.")
+            f[s == 0.0] = 0.0
 
         if (f < 0).any():
-            self.logger.error("Expected Improvement is smaller than 0!")
-            raise ValueError
+            raise ValueError(
+                "Expected Improvement is smaller than 0 for at least one sample.")
 
-        if derivative:
-            return f, df
-        else:
-            return f
+        return f
 
 
 class EIPS(EI):
     def __init__(self,
-                 model,
-                 par=0.0,
+                 model: AbstractEPM,
+                 par: float=0.0,
                  **kwargs):
         r"""
         Computes for a given x the expected improvement as
@@ -208,12 +184,10 @@ class EIPS(EI):
 
         Parameters
         ----------
-        model : Model object
+        model : AbstractEPM
             A model that implements at least
-                 - predict(X)
-                 - getCurrentBestX().
-            If you want to calculate derivatives than it should also support
-                 - predictive_gradients(X)
+                 - predict_marginalized_over_instances(X) returning a tuples of
+                 predicted cost and running time
         par : float, default=0.0
             Controls the balance between exploration and exploitation of the
             acquisition function.
@@ -222,7 +196,7 @@ class EIPS(EI):
         super(EIPS, self).__init__(model, par=par)
         self.long_name = 'Expected Improvement per Second'
 
-    def _compute(self, X, derivative=False, **kwargs):
+    def _compute(self, X: np.ndarray, **kwargs):
         """
         Computes the EIPS value.
 
@@ -233,17 +207,11 @@ class EIPS(EI):
             the number of points to evaluate at and D is the number of
             dimensions of one X.
 
-        derivative: Boolean
-            Raises NotImplementedError if True.
-
         Returns
         -------
         np.ndarray(N,1)
             Expected Improvement per Second of X
         """
-
-        if derivative:
-            raise NotImplementedError()
 
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
@@ -265,11 +233,85 @@ class EIPS(EI):
         z = (self.eta - m_cost - self.par) / s
         f = (self.eta - m_cost - self.par) * norm.cdf(z) + s * norm.pdf(z)
         f = f / m_runtime
-        f[s == 0.0] = 0.0
+        if np.any(s == 0.0):
+            # if std is zero, we have observed x on all instances
+            # using a RF, std should be never exactly 0.0
+            self.logger.warn("Predicted std is 0.0 for at least one sample.")
+            f[s == 0.0] = 0.0
 
         if (f < 0).any():
-            self.logger.error("Expected Improvement per Second is smaller than "
-                              "0!")
-            raise ValueError
+            raise ValueError("Expected Improvement per Second is smaller than "
+                             "0 for at least one sample.")
 
         return f.reshape((-1, 1))
+
+
+class LogEI(AbstractAcquisitionFunction):
+
+    def __init__(self,
+                 model: AbstractEPM,
+                 par: float=0.0,
+                 **kwargs):
+        r"""
+        Computes for a given x the logarithm expected improvement as
+        acquisition value.
+
+        Parameters
+        ----------
+        model : AbstractEPM
+            A model that implements at least
+                 - predict_marginalized_over_instances(X)
+        par : float, default=0.0
+            Controls the balance between exploration and exploitation of the
+            acquisition function.
+        """
+
+        super(LogEI, self).__init__(model)
+        self.long_name = 'Expected Improvement'
+        self.par = par
+        self.eta = None
+
+    def _compute(self, X: np.ndarray, **kwargs):
+        """
+        Computes the EI value and its derivatives.
+
+        Parameters
+        ----------
+        X: np.ndarray(N, D), The input points where the acquisition function
+            should be evaluated. The dimensionality of X is (N, D), with N as
+            the number of points to evaluate at and D is the number of
+            dimensions of one X.
+
+        Returns
+        -------
+        np.ndarray(N,1)
+            Expected Improvement of X
+        """
+
+        if self.eta is None:
+            raise ValueError('No current best specified. Call update('
+                             'eta=<int>) to inform the acquisition function '
+                             'about the current best value.')
+
+        if len(X.shape) == 1:
+            X = X[:, np.newaxis]
+
+        m, var_ = self.model.predict_marginalized_over_instances(X)
+        std = np.sqrt(var_)
+
+        f_min = self.eta - self.par
+        v = (np.log(f_min) - m) / std
+        log_ei = (f_min * norm.cdf(v)) - \
+            (np.exp(0.5 * var_ + m) * norm.cdf(v - std))
+
+        if np.any(std == 0.0):
+            # if std is zero, we have observed x on all instances
+            # using a RF, std should be never exactly 0.0
+            self.logger.warn("Predicted std is 0.0 for at least one sample.")
+            log_ei[std == 0.0] = 0.0
+
+        if (log_ei < 0).any():
+            raise ValueError(
+                "Expected Improvement is smaller than 0 for at least one sample.")
+
+        return log_ei.reshape((-1, 1))

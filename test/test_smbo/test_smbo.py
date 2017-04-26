@@ -18,7 +18,7 @@ from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, \
     RunHistory2EPM4LogCost, RunHistory2EPM4EIPS
 from smac.smbo.smbo import SMBO
 from smac.scenario.scenario import Scenario
-from smac.smbo.acquisition import EI, EIPS
+from smac.smbo.acquisition import EI, EIPS, LogEI
 from smac.smbo.local_search import LocalSearch
 from smac.tae.execute_func import ExecuteTAFuncArray
 from smac.tae.execute_ta_run import TAEAbortException, FirstRunCrashedException
@@ -66,7 +66,7 @@ class TestSMBO(unittest.TestCase):
         smbo = SMAC(self.scenario).solver
         self.assertIsInstance(smbo.model, RandomForestWithInstances)
         self.assertIsInstance(smbo.rh2EPM, RunHistory2EPM4LogCost)
-        self.assertIsInstance(smbo.acquisition_func, EI)
+        self.assertIsInstance(smbo.acquisition_func, LogEI)
 
     def test_init_only_scenario_quality(self):
         smbo = SMAC(self.scenario).solver
@@ -119,7 +119,7 @@ class TestSMBO(unittest.TestCase):
         assert x.shape == (2,)
 
     def test_choose_next_2(self):
-        def side_effect(X, derivative):
+        def side_effect(X):
             return np.mean(X, axis=1).reshape((-1, 1))
 
         smbo = SMAC(self.scenario, rng=1).solver
@@ -155,7 +155,7 @@ class TestSMBO(unittest.TestCase):
             self.assertEqual(x[i].origin, 'Random Search')
 
     def test_choose_next_3(self):
-        def side_effect(X, derivative):
+        def side_effect(X):
             return np.mean(X, axis=1).reshape((-1, 1))
 
         smbo = SMAC(self.scenario, rng=1).solver

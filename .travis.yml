@@ -51,7 +51,7 @@ before_install:
   - export CC=`which gcc`
 
 install:
-  - pip install coverage pep8 python-coveralls
+  - pip install pep8 codecov
   - cat requirements.txt | xargs -n 1 -L 1 pip install
   - pip install git+https://github.com/automl/random_forest_run
   - python setup.py install
@@ -60,4 +60,4 @@ install:
 script:
   - nosetests -sv --with-coverage --cover-package=smac
 after_success:
-  - coveralls
+  - codecov

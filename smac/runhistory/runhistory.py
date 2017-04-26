@@ -286,8 +286,7 @@ class RunHistory(object):
         self.ids_config = {int(id_): Configuration(cs, values=values)
                            for id_, values in all_data["configs"].items()}
 
-        self.config_ids = {Configuration(cs, values=values): int(id_)
-                           for id_, values in all_data["configs"].items()}
+        self.config_ids = {config: id_ for id_, config in self.ids_config.items()}
 
         self._n_id = len(self.config_ids)
 

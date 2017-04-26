@@ -1,4 +1,5 @@
 import logging
+import os
 import typing
 
 import numpy as np
@@ -21,7 +22,7 @@ from smac.initial_design.multi_config_initial_design import \
 from smac.intensification.intensification import Intensifier
 from smac.smbo.smbo import SMBO
 from smac.smbo.objective import average_cost
-from smac.smbo.acquisition import EI, AbstractAcquisitionFunction
+from smac.smbo.acquisition import EI, LogEI, AbstractAcquisitionFunction
 from smac.smbo.local_search import LocalSearch
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
@@ -124,10 +125,14 @@ class SMAC(object):
         if model is None:
             model = RandomForestWithInstances(types=types, bounds=bounds,
                                               instance_features=scenario.feature_array,
-                                              seed=rng.randint(MAXINT))
+                                              seed=rng.randint(MAXINT),
+                                              pca_components=scenario.PCA_DIM)
         # initial acquisition function
         if acquisition_function is None:
-            acquisition_function = EI(model=model)
+            if scenario.run_obj == "runtime":
+                acquisition_function = LogEI(model=model)
+            else:
+                acquisition_function = EI(model=model)
         # inject model if necessary
         if acquisition_function.model is None:
             acquisition_function.model = model
@@ -337,6 +342,11 @@ class SMAC(object):
             self.logger.info("Final Incumbent: %s" % (self.solver.incumbent))
             self.runhistory = self.solver.runhistory
             self.trajectory = self.solver.intensifier.traj_logger.trajectory
+
+            if self.solver.scenario.output_dir is not None:
+                self.solver.runhistory.save_json(
+                    fn=os.path.join(self.solver.scenario.output_dir,
+                                    "runhistory.json"))
         return incumbent
 
     def get_tae_runner(self):

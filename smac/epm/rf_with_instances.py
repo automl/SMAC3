@@ -65,9 +65,11 @@ class RandomForestWithInstances(AbstractEPM):
                  max_depth=20,
                  eps_purity=1e-8,
                  max_num_nodes=1000,
-                 seed=42):
+                 seed=42,
+                 **kwargs):
 
-        self.instance_features = instance_features
+        super().__init__(**kwargs)
+
         self.types = types
         self.bounds = bounds
         self.rng = pyrfr.regression.default_random_engine(seed)
@@ -96,10 +98,7 @@ class RandomForestWithInstances(AbstractEPM):
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
-        # Never use a lower variance than this
-        self.var_threshold = 10 ** -5
-
-    def train(self, X, y, **kwargs):
+    def _train(self, X, y, **kwargs):
         """Trains the random forest on X and y.
 
         Parameters
