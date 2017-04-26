@@ -111,7 +111,7 @@ class InputReader(object):
                     tmp = line.split()
                 scenario_dict[
                     scenario_option_names.get(tmp[0], tmp[0])] = " ".join(tmp[1:])
-        return(scenario_dict)
+        return scenario_dict
 
     def read_instance_file(self, fn):
         """
