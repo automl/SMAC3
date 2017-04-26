@@ -53,7 +53,7 @@ before_install:
 install:
   - pip install pep8 codecov
   - cat requirements.txt | xargs -n 1 -L 1 pip install
-  - pip install git+https://github.com/automl/random_forest_run
+  - pip install git+https://github.com/AndreBiedenkapp/random_forest_run
   - python setup.py install
 
 # command to run tests, e.g. python setup.py test
