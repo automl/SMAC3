@@ -171,7 +171,6 @@ class ExecuteTARun(object):
 
         if self.run_obj == "runtime":
             if status != StatusType.SUCCESS:
-                print(cutoff, self.par_factor)
                 cost = cutoff * self.par_factor
             else:
                 cost = runtime
