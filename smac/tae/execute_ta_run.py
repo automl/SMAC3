@@ -153,7 +153,6 @@ class ExecuteTARun(object):
         if (self.run_obj == 'runtime' and not np.isfinite(runtime) or
             self.run_obj == 'quality' and not np.isfinite(cost)):
             status = StatusType.CRASHED
-            runtime, cost = 0, 0
 
         if self.stats.ta_runs == 0 and status == StatusType.CRASHED:
             raise FirstRunCrashedException("First run crashed, abort. (To "
