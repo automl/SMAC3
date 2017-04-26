@@ -151,8 +151,8 @@ class AbstractEPM(object):
         '''
         raise NotImplementedError()
 
-    def predict_marginalized_over_instances(self, X: np.ndarray):
-        '''Predict mean and variance marginalized over all instances.
+    def predict_marginalized_over_instances(self, X):
+        """Predict mean and variance marginalized over all instances.
 
         Returns the predictive mean and variance marginalised over all
         instances for a set of configurations.
@@ -167,7 +167,7 @@ class AbstractEPM(object):
             Predictive mean
         vars : np.ndarray  of shape = [n_samples, 1]
             Predictive variance
-        '''
+        """
 
         if self.instance_features is None or \
                 len(self.instance_features) == 0:
@@ -182,26 +182,32 @@ class AbstractEPM(object):
         if len(X.shape) != 2:
             raise ValueError(
                 'Expected 2d array, got %dd array!' % len(X.shape))
+        if X.shape[1] != self.types.shape[0] - n_instance_features:
+            raise ValueError('Rows in X should have %d entries but have %d!' %
+                             (self.types.shape[0] - n_instance_features,
+                              X.shape[1]))
 
-        if X.shape[1] != self.n_params:
-            raise ValueError(
-                "Rows in X should have %d entries "
-                "but have %d!" % (self.n_params, X.shape[1]))
-
-        mean = np.zeros((X.shape[0], 1))
-        var = np.zeros((X.shape[0], 1))
+        mean = np.zeros(X.shape[0])
+        var = np.zeros(X.shape[0])
         for i, x in enumerate(X):
             X_ = np.hstack(
                 (np.tile(x, (n_instances, 1)), self.instance_features))
             means, vars = self.predict(X_)
             # use only mean of variance and not the variance of the mean here
-            # since we don't want to reason about the instance hardness
-            # distribution
-            var_x = np.mean(vars)  # + np.var(means)
-            if var_x < self.var_threshold or np.isnan(var_x):
+            # since we don't want to reason about the instance hardness distribution
+            var_x = np.mean(vars) # + np.var(means)
+            if var_x < self.var_threshold:
                 var_x = self.var_threshold
 
-            var[i, 0] = var_x
-            mean[i, 0] = np.mean(means)
+            var[i] = var_x
+            mean[i] = np.mean(means)
+
+        var[var < self.var_threshold] = self.var_threshold
+        var[np.isnan(var)] = self.var_threshold
+
+        if len(mean.shape) == 1:
+            mean = mean.reshape((-1, 1))
+        if len(var.shape) == 1:
+            var = var.reshape((-1, 1))
 
         return mean, var

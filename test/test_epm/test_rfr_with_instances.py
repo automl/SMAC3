@@ -47,12 +47,13 @@ class TestRFWithInstances(unittest.TestCase):
         F = rs.rand(10, 10)
         Y = rs.rand(20, 1)
         model = RandomForestWithInstances(np.zeros((20,), dtype=np.uint),
+                                          np.array(list(map(lambda x: (0, 10), range(10))), dtype=object),
                                           pca_components=2,
                                           instance_features=F)
         model.train(X, Y)
         
-        self.assertEqual(model.n_params,10)
-        self.assertEqual(model.n_feats,10)
+        self.assertEqual(model.n_params, 10)
+        self.assertEqual(model.n_feats, 10)
         self.assertIsNotNone(model.pca)
         self.assertIsNotNone(model.scaler)
         
@@ -87,9 +88,9 @@ class TestRFWithInstances(unittest.TestCase):
         X = rs.rand(20, 10)
         F = rs.rand(10, 5)
         Y = rs.rand(len(X) * len(F), 1)
-        X_ = rs.rand(200, 10)
+        X_ = rs.rand(200, 15)
 
-        model = RandomForestWithInstances(np.zeros((10,), dtype=np.uint),
+        model = RandomForestWithInstances(np.zeros((15,), dtype=np.uint),
                                           instance_features=F,
                                           bounds=np.array(list(map(lambda x: (0, 10), range(10))), dtype=object))
         model.train(X_, Y)
@@ -149,12 +150,12 @@ class TestRFWithInstances(unittest.TestCase):
                                           bounds=np.array([(0, np.nan), (0, np.nan), (0, np.nan)], dtype=object),
                                           instance_features=None, seed=12345)
         model.train(np.vstack((X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y)))
-        for idx, x in enumerate(X):
-            print(model.rf.all_leaf_values(x))
-            print(x, model.predict(np.array([x]))[0], y[idx])
+        # for idx, x in enumerate(X):
+        #     print(model.rf.all_leaf_values(x))
+        #     print(x, model.predict(np.array([x]))[0], y[idx])
 
         y_hat, _ = model.predict(X)
         for y_i, y_hat_i in zip(y.reshape((1, -1)).flatten(), y_hat.reshape((1, -1)).flatten()):
-            print(y_i, y_hat_i)
+            # print(y_i, y_hat_i)
             self.assertAlmostEqual(y_i, y_hat_i, delta=0.1)
-        print()
+        # print()
