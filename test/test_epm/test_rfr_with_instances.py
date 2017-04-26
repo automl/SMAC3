@@ -87,9 +87,9 @@ class TestRFWithInstances(unittest.TestCase):
         X = rs.rand(20, 10)
         F = rs.rand(10, 5)
         Y = rs.rand(len(X) * len(F), 1)
-        X_ = rs.rand(200, 15)
+        X_ = rs.rand(200, 10)
 
-        model = RandomForestWithInstances(np.zeros((15,), dtype=np.uint),
+        model = RandomForestWithInstances(np.zeros((10,), dtype=np.uint),
                                           instance_features=F,
                                           bounds=np.array(list(map(lambda x: (0, 10), range(10))), dtype=object))
         model.train(X_, Y)
