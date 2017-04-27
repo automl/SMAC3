@@ -37,7 +37,7 @@ class Scenario(object):
     main class of SMAC
     '''
 
-    def __init__(self, scenario, cmd_args=None):
+    def __init__(self, scenario, cmd_args=None, run_id=1):
         """Construct scenario object from file or dictionary.
 
         Parameters
@@ -47,6 +47,8 @@ class Scenario(object):
             if dict, it will be directly to get all scenario related information
         cmd_args : dict
             command line arguments that were not processed by argparse
+        run_id: int
+            run ID will be used as suffix for output_dir
 
         """
         self.logger = logging.getLogger(
@@ -98,6 +100,9 @@ class Scenario(object):
             setattr(self, arg_name, arg_value)
 
         self._transform_arguments()
+        
+        if self.output_dir:
+            self.output_dir += "_run%d" %(run_id)
 
         self.out_writer.write_scenario_file(self)
 
