@@ -16,7 +16,7 @@ from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
-from smac.smbo.objective import average_cost
+from smac.optimizer.objective import average_cost
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.rf_with_instances import RandomForestWithInstances
 
@@ -46,7 +46,8 @@ class RunhistoryTest(unittest.TestCase):
         self.config3 = Configuration(self.cs,
                                      values={'a': 100, 'b': 100})
 
-        self.scen = Scenario({"cutoff_time": 20, 'cs': self.cs})
+        self.scen = Scenario({"cutoff_time": 20, 'cs': self.cs,
+                              'output_dir': ''})
 
     def test_log_runtime_with_imputation(self):
         '''
@@ -239,7 +240,8 @@ class RunhistoryTest(unittest.TestCase):
         '''
             adding some rundata to RunHistory2EPM4LogCost
         '''
-        self.scen = Scenario({"cutoff_time": 20, 'cs': self.cs, 'run_obj': 'quality'})
+        self.scen = Scenario({"cutoff_time": 20, 'cs': self.cs, 'run_obj': 'quality',
+                              'output_dir': ''})
 
         rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
                                                        scenario=self.scen)
@@ -278,7 +280,8 @@ class RunhistoryTest(unittest.TestCase):
                               'features': {
                                   '1': [1,1],
                                   '2': [2,2]
-                                  }})
+                                  },
+                              'output_dir': ''})
 
         rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
                                                     scenario=self.scen)

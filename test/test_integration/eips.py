@@ -3,11 +3,11 @@ import unittest
 
 from smac.scenario.scenario import Scenario
 from smac.utils import test_helpers
-from smac.smbo.smbo import SMBO, get_types
+from smac.optimizer.smbo import SMBO, get_types
 from smac.runhistory.runhistory2epm import RunHistory2EPM4EIPS
 from smac.epm.uncorrelated_mo_rf_with_instances import \
     UncorrelatedMultiObjectiveRandomForestWithInstances
-from smac.smbo.acquisition import EIPS
+from smac.optimizer.acquisition import EIPS
 from smac.tae.execute_func import ExecuteTAFunc
 
 
@@ -23,7 +23,8 @@ class TestEIPS(unittest.TestCase):
     def test_eips(self):
         scenario = Scenario({'cs': test_helpers.get_branin_config_space(),
                              'run_obj': 'quality',
-                             'deterministic': True})
+                             'deterministic': True,
+                             'output_dir': ''})
         types = get_types(scenario.cs, None)
         umrfwi = UncorrelatedMultiObjectiveRandomForestWithInstances(
             ['cost', 'runtime'], types)

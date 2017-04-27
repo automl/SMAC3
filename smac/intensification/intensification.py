@@ -8,7 +8,7 @@ from collections import OrderedDict
 
 import numpy as np
 
-from smac.smbo.objective import sum_cost
+from smac.optimizer.objective import sum_cost
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT, MAX_CUTOFF
 from smac.configspace import Configuration

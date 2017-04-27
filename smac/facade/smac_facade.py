@@ -20,10 +20,10 @@ from smac.initial_design.random_configuration_design import RandomConfiguration
 from smac.initial_design.multi_config_initial_design import \
     MultiConfigInitialDesign
 from smac.intensification.intensification import Intensifier
-from smac.smbo.smbo import SMBO
-from smac.smbo.objective import average_cost
-from smac.smbo.acquisition import EI, LogEI, AbstractAcquisitionFunction
-from smac.smbo.local_search import LocalSearch
+from smac.optimizer.smbo import SMBO
+from smac.optimizer.objective import average_cost
+from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
+from smac.optimizer.local_search import LocalSearch
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.base_epm import AbstractEPM
