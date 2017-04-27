@@ -47,7 +47,7 @@ class TestSMBO(unittest.TestCase):
     def setUp(self):
         self.scenario = Scenario({'cs': test_helpers.get_branin_config_space(),
                                   'run_obj': 'quality',
-                                  'output_dir': ""})
+                                  'output_dir': ''})
 
     def branin(self, x):
         y = (x[:, 1] - (5.1 / (4 * np.pi ** 2)) * x[:, 0] ** 2 + 5 * x[:, 0] / np.pi - 6) ** 2
@@ -291,7 +291,7 @@ class TestSMBO(unittest.TestCase):
             return 5
         patch.side_effect = FirstRunCrashedException()
         scen = Scenario({'cs': test_helpers.get_branin_config_space(),
-                         'run_obj': 'quality', 'output_dir': "",
+                         'run_obj': 'quality', 'output_dir': '',
                          'abort_on_first_run_crash': 1})
         smbo = SMAC(scen, tae_runner=target, rng=1).solver
         self.assertRaises(FirstRunCrashedException, smbo.run)
@@ -302,7 +302,7 @@ class TestSMBO(unittest.TestCase):
         def get_smbo(intensification_perc):
             """ Return SMBO with intensification_percentage. """
             scen = Scenario({'cs': test_helpers.get_branin_config_space(),
-                             'run_obj': 'quality', 'output_dir': "",
+                             'run_obj': 'quality', 'output_dir': '',
                              'intensification_percentage' : intensification_perc})
             return SMAC(scen, tae_runner=target, rng=1).solver
         # Test for valid values
