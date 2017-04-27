@@ -140,9 +140,6 @@ class ExecuteTARun(object):
         if self.stats.is_budget_exhausted():
             raise BudgetExhaustedException("Skip target algorithm run due to exhausted configuration budget")
 
-        if cutoff is not None:
-            cutoff = int(math.ceil(cutoff))
-
         status, cost, runtime, additional_info = self.run(config=config,
                                                           instance=instance,
                                                           cutoff=cutoff,
