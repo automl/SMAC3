@@ -78,7 +78,7 @@ class AbstractTAFunc(ExecuteTARun):
                     all further additional run information
         """
         
-        # walltime for pynisher has to be an rounded up integer
+        # walltime for pynisher has to be a rounded up integer
         if cutoff is not None:
             cutoff = int(math.ceil(cutoff))
 
