@@ -11,7 +11,7 @@ from smac.intensification.intensification import Intensifier
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
 from smac.scenario.scenario import Scenario
-from smac.smbo.acquisition import EI, AbstractAcquisitionFunction
+from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction
 from smac.stats.stats import Stats
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.tae.execute_ta_run import ExecuteTARun

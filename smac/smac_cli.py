@@ -8,7 +8,7 @@ from smac.scenario.scenario import Scenario
 from smac.facade.smac_facade import SMAC
 from smac.facade.roar_facade import ROAR
 from smac.runhistory.runhistory import RunHistory
-from smac.smbo.objective import average_cost
+from smac.optimizer.objective import average_cost
 from smac.utils.merge_foreign_data import merge_foreign_data_from_file
 from smac.utils.io.traj_logging import TrajLogger
 from smac.tae.execute_ta_run import TAEAbortException, FirstRunCrashedException

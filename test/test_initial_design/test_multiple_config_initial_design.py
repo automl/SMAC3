@@ -13,7 +13,7 @@ from smac.stats.stats import Stats
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.initial_design.multi_config_initial_design import MultiConfigInitialDesign
 from smac.utils.io.traj_logging import TrajLogger
-from smac.smbo.objective import average_cost
+from smac.optimizer.objective import average_cost
 from smac.intensification.intensification import Intensifier
 
 class TestMultiInitialDesign(unittest.TestCase):

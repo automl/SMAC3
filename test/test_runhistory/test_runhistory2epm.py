@@ -16,7 +16,7 @@ from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
-from smac.smbo.objective import average_cost
+from smac.optimizer.objective import average_cost
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.rf_with_instances import RandomForestWithInstances
 

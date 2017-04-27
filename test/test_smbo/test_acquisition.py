@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from smac.smbo.acquisition import EI, LogEI
+from smac.optimizer.acquisition import EI, LogEI
 
 
 class MockModel(object):

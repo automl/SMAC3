@@ -11,7 +11,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, RunHistory2EPM4LogCost, RunHistory2EPM4Cost
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.intensification import Intensifier
-from smac.smbo.acquisition import AbstractAcquisitionFunction
+from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.epm.random_epm import RandomEPM
 from smac.facade.smac_facade import SMAC
 from smac.configspace import Configuration
