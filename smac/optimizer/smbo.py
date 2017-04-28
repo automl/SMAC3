@@ -222,13 +222,8 @@ class SMBO(BaseSolver):
             (str([[_[0], _[1].origin] for _ in next_configs_by_acq_value[:10]])))
         next_configs_by_acq_value = [_[1] for _ in next_configs_by_acq_value]
 
-        # Remove dummy acquisition function value
-        next_configs_by_random_search = [x[1] for x in
-                                         self._get_next_by_random_search(
-                                             num_points=num_configs_local_search + num_configurations_by_random_search_sorted)]
-
-        challengers = list(itertools.chain(*zip(next_configs_by_acq_value,
-                                                next_configs_by_random_search)))
+        challengers = ChallengerList(next_configs_by_acq_value,
+                                     self.config_space)
         return challengers
 
     def _get_next_by_random_search(self, num_points=1000, _sorted=False):
@@ -347,3 +342,25 @@ class SMBO(BaseSolver):
                 time_spent, (1-frac_intensify), time_left, frac_intensify))
         return time_left
 
+
+class ChallengerList(object):
+
+    def __init__(self, challengers, configuration_space):
+        self.challengers = challengers
+        self.configuration_space = configuration_space
+        self._index = 0
+        self._next_is_random = False
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self._index == len(self.challengers):
+            raise StopIteration
+        elif self._next_is_random:
+            return self.configuration_space.sample()
+        else:
+            self._index += 1
+            config = self.challengers[self._index - 1]
+            config.origin = 'Random Search'
+            return config
