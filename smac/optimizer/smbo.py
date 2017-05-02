@@ -344,6 +344,21 @@ class SMBO(BaseSolver):
 
 
 class ChallengerList(object):
+    """Helper class to interleave random configurations in a list of challengers.
+
+    Provides an iterator which returns a random configuration in each second
+    iteration. Reduces time necessary to generate a list of new challengers
+    as one does not need to sample several hundreds of random configurations
+    in each iteration which are never looked at.
+
+    Parameters
+    ----------
+    challengers : list
+        List of challengers (without interleaved random configurations)
+
+    configuration_space : ConfigurationSpace
+        ConfigurationSpace from which to sample new random configurations.
+    """
 
     def __init__(self, challengers, configuration_space):
         self.challengers = challengers
