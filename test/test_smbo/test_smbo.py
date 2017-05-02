@@ -110,7 +110,7 @@ class TestSMBO(unittest.TestCase):
         smbo.runhistory.add(smbo.incumbent, 10, 10, 1)
 
         Y = self.branin(X)
-        x = smbo.choose_next(X, Y)[0].get_array()
+        x = next(smbo.choose_next(X, Y)).get_array()
         assert x.shape == (2,)
 
     def test_choose_next_2(self):
@@ -128,9 +128,11 @@ class TestSMBO(unittest.TestCase):
         X = smbo.rng.rand(10, 2)
         Y = smbo.rng.rand(10, 1)
 
-        x = smbo.choose_next(X, Y)
+        challengers = smbo.choose_next(X, Y)
+        x = [c for c in challengers]
 
         self.assertEqual(smbo.model.train.call_count, 1)
+
         self.assertEqual(len(x), 2002)
         num_random_search = 0
         num_local_search = 0
@@ -166,7 +168,8 @@ class TestSMBO(unittest.TestCase):
         X = smbo.rng.rand(10, 2)
         Y = smbo.rng.rand(10, 1)
 
-        x = smbo.choose_next(X, Y)
+        challengers = smbo.choose_next(X, Y)
+        x = [c for c in challengers]
 
         self.assertEqual(smbo.model.train.call_count, 1)
         self.assertEqual(len(x), 2020)

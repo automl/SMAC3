@@ -355,12 +355,15 @@ class ChallengerList(object):
         return self
 
     def __next__(self):
-        if self._index == len(self.challengers):
+        if self._index == len(self.challengers) and not self._next_is_random:
             raise StopIteration
         elif self._next_is_random:
-            return self.configuration_space.sample()
+            self._next_is_random = False
+            config = self.configuration_space.sample_configuration()
+            config.origin = 'Random Search'
+            return config
         else:
+            self._next_is_random = True
             self._index += 1
             config = self.challengers[self._index - 1]
-            config.origin = 'Random Search'
             return config
