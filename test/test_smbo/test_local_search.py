@@ -11,7 +11,7 @@ from scipy.spatial.distance import euclidean
 
 from smac.configspace import pcs
 
-from smac.smbo.local_search import LocalSearch
+from smac.optimizer.local_search import LocalSearch
 from smac.configspace import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformFloatHyperparameter, UniformIntegerHyperparameter

@@ -1,8 +1,3 @@
-'''
-Created on Dec 15, 2015
-
-@author: Aaron Klein
-'''
 import os
 import sys
 import unittest
@@ -16,10 +11,10 @@ from ConfigSpace import ConfigurationSpace, Configuration
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, \
     RunHistory2EPM4LogCost, RunHistory2EPM4EIPS
-from smac.smbo.smbo import SMBO
+from smac.optimizer.smbo import SMBO
 from smac.scenario.scenario import Scenario
-from smac.smbo.acquisition import EI, EIPS, LogEI
-from smac.smbo.local_search import LocalSearch
+from smac.optimizer.acquisition import EI, EIPS, LogEI
+from smac.optimizer.local_search import LocalSearch
 from smac.tae.execute_func import ExecuteTAFuncArray
 from smac.tae.execute_ta_run import TAEAbortException, FirstRunCrashedException
 from smac.stats.stats import Stats
@@ -29,7 +24,7 @@ from smac.epm.uncorrelated_mo_rf_with_instances import \
     UncorrelatedMultiObjectiveRandomForestWithInstances
 from smac.utils.util_funcs import get_types
 from smac.facade.smac_facade import SMAC
-from smac.smbo.objective import average_cost
+from smac.optimizer.objective import average_cost
 from smac.initial_design.single_config_initial_design import SingleConfigInitialDesign
 from smac.intensification.intensification import Intensifier
 
@@ -52,7 +47,7 @@ class TestSMBO(unittest.TestCase):
     def setUp(self):
         self.scenario = Scenario({'cs': test_helpers.get_branin_config_space(),
                                   'run_obj': 'quality',
-                                  'output_dir': ""})
+                                  'output_dir': ''})
 
     def branin(self, x):
         y = (x[:, 1] - (5.1 / (4 * np.pi ** 2)) * x[:, 0] ** 2 + 5 * x[:, 0] / np.pi - 6) ** 2
@@ -216,7 +211,7 @@ class TestSMBO(unittest.TestCase):
         self.assertEqual(len(x), 1)
         self.assertIsInstance(x[0], Configuration)
 
-    @mock.patch('smac.smbo.smbo.convert_configurations_to_array')
+    @mock.patch('smac.optimizer.smbo.convert_configurations_to_array')
     @mock.patch.object(EI, '__call__')
     @mock.patch.object(ConfigurationSpace, 'sample_configuration')
     def test_get_next_by_random_search_sorted(self,
@@ -296,7 +291,7 @@ class TestSMBO(unittest.TestCase):
             return 5
         patch.side_effect = FirstRunCrashedException()
         scen = Scenario({'cs': test_helpers.get_branin_config_space(),
-                         'run_obj': 'quality', 'output_dir': "",
+                         'run_obj': 'quality', 'output_dir': '',
                          'abort_on_first_run_crash': 1})
         smbo = SMAC(scen, tae_runner=target, rng=1).solver
         self.assertRaises(FirstRunCrashedException, smbo.run)
@@ -307,7 +302,7 @@ class TestSMBO(unittest.TestCase):
         def get_smbo(intensification_perc):
             """ Return SMBO with intensification_percentage. """
             scen = Scenario({'cs': test_helpers.get_branin_config_space(),
-                             'run_obj': 'quality', 'output_dir': "",
+                             'run_obj': 'quality', 'output_dir': '',
                              'intensification_percentage' : intensification_perc})
             return SMAC(scen, tae_runner=target, rng=1).solver
         # Test for valid values

@@ -7,12 +7,12 @@ import typing
 import math
 
 
-from smac.smbo.acquisition import AbstractAcquisitionFunction
-from smac.smbo.base_solver import BaseSolver
+from smac.optimizer.acquisition import AbstractAcquisitionFunction
+from smac.optimizer.base_solver import BaseSolver
 from smac.epm.rf_with_instances import RandomForestWithInstances
-from smac.smbo.local_search import LocalSearch
+from smac.optimizer.local_search import LocalSearch
 from smac.intensification.intensification import Intensifier
-from smac.smbo import pSMAC
+from smac.optimizer import pSMAC
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.stats.stats import Stats

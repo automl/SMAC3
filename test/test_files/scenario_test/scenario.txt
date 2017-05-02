@@ -9,3 +9,4 @@ wallclock-limit = 18000
 instance_file = test/test_files/scenario_test/training.txt
 test_instance_file = test/test_files/scenario_test/test.txt
 feature_file = test/test_files/scenario_test/features.txt
+output_dir = ''

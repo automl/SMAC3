@@ -5,7 +5,7 @@ import numpy as np
 from smac.facade.smac_facade import SMAC
 from smac.scenario.scenario import Scenario
 from smac.configspace import ConfigurationSpace
-from smac.smbo.objective import average_cost
+from smac.optimizer.objective import average_cost
 from smac.runhistory.runhistory import RunKey
 from smac.tae.execute_func import ExecuteTAFuncArray
 
