@@ -29,12 +29,14 @@ class RandomForestWithInstances(AbstractEPM):
         2 dimension where the first dimension consists of 3 different
         categorical choices and the second dimension is continuous than we
         have to pass np.array([2, 0]). Note that we count starting from 0.
-    bounds: np.ndarray (D)
+    bounds: np.ndarray (D, 2)
         Specifies the bounds for continuous features
     num_trees: int
         The number of trees in the random forest.
     do_bootstrapping: bool
         Turns on / off bootstrapping in the random forest.
+    n_points_per_tree: int
+        Number of points per tree. If <= 0 X.shape[0] will be used in _train(X, y) instead
     ratio_features: float
         The ratio of features that are considered for splitting.
     min_samples_split: int
