@@ -20,9 +20,9 @@ dependencies:
     - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
     - bash miniconda.sh -b -p $HOME/miniconda
     - export PATH="$HOME/miniconda/bin:$PATH"
-    - if [[ `which conda` ]]; then echo 'Conda installation successful'; else exit 1; fi
+    - which conda
     - conda update --yes conda
-    - conda create -n testenv --yes python=$PYTHON_VERSION pip wheel nose
+    - conda create -n testenv --yes python pip wheel nose
     - source activate testenv
     - conda install --yes gcc
     - echo "Using GCC at "`which gcc`
