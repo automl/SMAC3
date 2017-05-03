@@ -195,15 +195,12 @@ class AbstractEPM(object):
             means, vars = self.predict(X_)
             # use only mean of variance and not the variance of the mean here
             # since we don't want to reason about the instance hardness distribution
-            var_x = np.mean(vars) # + np.var(means)
+            var_x = np.mean(vars)  # + np.var(means)
             if var_x < self.var_threshold:
                 var_x = self.var_threshold
 
             var[i] = var_x
             mean[i] = np.mean(means)
-
-        var[var < self.var_threshold] = self.var_threshold
-        var[np.isnan(var)] = self.var_threshold
 
         if len(mean.shape) == 1:
             mean = mean.reshape((-1, 1))
