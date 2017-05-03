@@ -121,9 +121,9 @@ class SMAC(object):
             output_dir=scenario.output_dir, stats=self.stats)
 
         # initial EPM
-        types = get_types(scenario.cs, scenario.feature_array)
+        types, bounds = get_types(scenario.cs, scenario.feature_array)
         if model is None:
-            model = RandomForestWithInstances(types=types,
+            model = RandomForestWithInstances(types=types, bounds=bounds,
                                               instance_features=scenario.feature_array,
                                               seed=rng.randint(MAXINT),
                                               pca_components=scenario.PCA_DIM)

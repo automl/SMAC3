@@ -19,6 +19,7 @@ from smac.scenario.scenario import Scenario
 from smac.optimizer.objective import average_cost
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.utils.util_funcs import get_types
 
 
 def get_config_space():
@@ -46,6 +47,8 @@ class RunhistoryTest(unittest.TestCase):
         self.config3 = Configuration(self.cs,
                                      values={'a': 100, 'b': 100})
 
+        self.scen = Scenario({"cutoff_time": 20, 'cs': self.cs})
+        self.types, self.bounds = get_types(self.cs, None)
         self.scen = Scenario({"cutoff_time": 20, 'cs': self.cs,
                               'output_dir': ''})
 
@@ -57,7 +60,7 @@ class RunhistoryTest(unittest.TestCase):
                                     cutoff=np.log10(self.scen.cutoff),
                                     threshold=np.log10(
                                         self.scen.cutoff * self.scen.par_factor),
-                                    model=RandomForestWithInstances(types=np.array([0, 0], dtype=np.uint),
+                                    model=RandomForestWithInstances(types=self.types, bounds=self.bounds,
                                                                     instance_features=None,
                                                                     seed=12345)
                                     )
@@ -96,6 +99,7 @@ class RunhistoryTest(unittest.TestCase):
                     additional_info={"start_time": 10})
 
         X, y = rh2epm.transform(self.rh)
+        print(y)
         self.assertTrue(np.allclose(
             X, np.array([[0.005, 0.995], [0.995, 0.005], [0.995, 0.995]]), atol=0.001))
         # both timeouts should be imputed to a PAR10
@@ -151,9 +155,9 @@ class RunhistoryTest(unittest.TestCase):
         self.imputor = RFRImputator(rs=np.random.RandomState(seed=12345),
                                     cutoff=self.scen.cutoff,
                                     threshold=self.scen.cutoff * self.scen.par_factor,
-                                    model=RandomForestWithInstances(types=np.array([0, 0], dtype=np.uint),
+                                    model=RandomForestWithInstances(types=self.types, bounds=self.bounds,
                                                                     instance_features=None,
-                                                                    seed=12345)
+                                                                    seed=12345, n_points_per_tree=90)
                                     )
 
         rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
@@ -190,10 +194,11 @@ class RunhistoryTest(unittest.TestCase):
                     additional_info={"start_time": 10})
 
         X, y = rh2epm.transform(self.rh)
+        print(y)
         self.assertTrue(np.allclose(
             X, np.array([[0.005, 0.995], [0.995, 0.005], [0.995, 0.995]]), atol=0.001))
         self.assertTrue(
-            np.allclose(y, np.array([[1.], [18.970], [200.]]), atol=0.001))
+            np.allclose(y, np.array([[1.], [16.422], [200.]]), atol=0.001))
 
     def test_cost_without_imputation(self):
         '''

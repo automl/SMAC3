@@ -2,6 +2,7 @@ import unittest
 import sys
 
 import numpy as np
+import pyrfr.regression
 
 from smac.epm.rf_with_instances import RandomForestWithInstances
 
@@ -15,7 +16,8 @@ class TestRFWithInstances(unittest.TestCase):
     def test_predict_wrong_X_dimensions(self):
         rs = np.random.RandomState(1)
 
-        model = RandomForestWithInstances(np.zeros((10,), dtype=np.uint))
+        model = RandomForestWithInstances(np.zeros((10,), dtype=np.uint), bounds=np.array(
+            list(map(lambda x: (0, 10), range(10))), dtype=object))
         X = rs.rand(10)
         self.assertRaisesRegexp(ValueError, "Expected 2d array, got 1d array!",
                                 model.predict, X)
@@ -32,7 +34,8 @@ class TestRFWithInstances(unittest.TestCase):
         rs = np.random.RandomState(1)
         X = rs.rand(20, 10)
         Y = rs.rand(10, 1)
-        model = RandomForestWithInstances(np.zeros((10,), dtype=np.uint))
+        model = RandomForestWithInstances(np.zeros((10,), dtype=np.uint), bounds=np.array(
+                list(map(lambda x: (0, 10), range(10))), dtype=object))
         model.train(X[:10], Y[:10])
         m_hat, v_hat = model.predict(X[10:])
         self.assertEqual(m_hat.shape, (10, 1))
@@ -44,12 +47,13 @@ class TestRFWithInstances(unittest.TestCase):
         F = rs.rand(10, 10)
         Y = rs.rand(20, 1)
         model = RandomForestWithInstances(np.zeros((20,), dtype=np.uint),
+                                          np.array(list(map(lambda x: (0, 10), range(10))), dtype=object),
                                           pca_components=2,
                                           instance_features=F)
         model.train(X, Y)
         
-        self.assertEqual(model.n_params,10)
-        self.assertEqual(model.n_feats,10)
+        self.assertEqual(model.n_params, 10)
+        self.assertEqual(model.n_feats, 10)
         self.assertIsNotNone(model.pca)
         self.assertIsNotNone(model.scaler)
         
@@ -57,7 +61,8 @@ class TestRFWithInstances(unittest.TestCase):
         rs = np.random.RandomState(1)
 
         model = RandomForestWithInstances(np.zeros((10,), dtype=np.uint),
-                                          instance_features=rs.rand(10, 2))
+                                          instance_features=rs.rand(10, 2),
+                                          bounds=np.array(list(map(lambda x: (0, 10), range(10))), dtype=object))
         X = rs.rand(10)
         self.assertRaisesRegexp(ValueError, "Expected 2d array, got 1d array!",
                                 model.predict_marginalized_over_instances, X)
@@ -72,7 +77,8 @@ class TestRFWithInstances(unittest.TestCase):
         rs = np.random.RandomState(1)
         X = rs.rand(20, 10)
         Y = rs.rand(10, 1)
-        model = RandomForestWithInstances(np.zeros((10,), dtype=np.uint))
+        model = RandomForestWithInstances(np.zeros((10,), dtype=np.uint), bounds=np.array(
+            list(map(lambda x: (0, 10), range(10))), dtype=object))
         model.train(X[:10], Y[:10])
         model.predict(X[10:])
         self.assertEqual(rf_mock.call_count, 1)
@@ -85,7 +91,8 @@ class TestRFWithInstances(unittest.TestCase):
         X_ = rs.rand(200, 15)
 
         model = RandomForestWithInstances(np.zeros((15,), dtype=np.uint),
-                                          instance_features=F)
+                                          instance_features=F,
+                                          bounds=np.array(list(map(lambda x: (0, 10), range(10))), dtype=object))
         model.train(X_, Y)
         means, vars = model.predict_marginalized_over_instances(X)
         self.assertEqual(means.shape, (20, 1))
@@ -94,6 +101,7 @@ class TestRFWithInstances(unittest.TestCase):
     @mock.patch.object(RandomForestWithInstances, 'predict')
     def test_predict_marginalized_over_instances_mocked(self, rf_mock):
         """Use mock to count the number of calls to predict()"""
+
         class SideEffect(object):
             def __call__(self, X):
                 # Numpy array of number 0 to X.shape[0]
@@ -107,8 +115,8 @@ class TestRFWithInstances(unittest.TestCase):
         F = rs.rand(10, 5)
 
         model = RandomForestWithInstances(np.zeros((15,), dtype=np.uint),
-                                          instance_features=F)
-        model.train(rs.rand(11, 15),rs.rand(11))
+                                          instance_features=F,
+                                          bounds=np.array(list(map(lambda x: (0, 10), range(10))), dtype=object))
         means, vars = model.predict_marginalized_over_instances(rs.rand(11, 10))
         self.assertEqual(rf_mock.call_count, 11)
         self.assertEqual(means.shape, (11, 1))
@@ -116,3 +124,38 @@ class TestRFWithInstances(unittest.TestCase):
         for i in range(11):
             self.assertEqual(means[i], 4.5)
             self.assertEqual(vars[i], 4.5)
+
+    def test_predict_with_actual_values(self):
+        print()
+        X = np.array([
+            [0., 0., 0.],
+            [0., 0., 1.],
+            [0., 1., 0.],
+            [0., 1., 1.],
+            [1., 0., 0.],
+            [1., 0., 1.],
+            [1., 1., 0.],
+            [1., 1., 1.]], dtype=np.float64)
+        y = np.array([
+            [.1],
+            [.2],
+            [9],
+            [9.2],
+            [100.],
+            [100.2],
+            [109.],
+            [109.2]], dtype=np.float64)
+        # print(X.shape, y.shape)
+        model = RandomForestWithInstances(types=np.array([0, 0, 0], dtype=np.uint),
+                                          bounds=np.array([(0, np.nan), (0, np.nan), (0, np.nan)], dtype=object),
+                                          instance_features=None, seed=12345)
+        model.train(np.vstack((X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y)))
+        # for idx, x in enumerate(X):
+        #     print(model.rf.all_leaf_values(x))
+        #     print(x, model.predict(np.array([x]))[0], y[idx])
+
+        y_hat, _ = model.predict(X)
+        for y_i, y_hat_i in zip(y.reshape((1, -1)).flatten(), y_hat.reshape((1, -1)).flatten()):
+            # print(y_i, y_hat_i)
+            self.assertAlmostEqual(y_i, y_hat_i, delta=0.1)
+        # print()
