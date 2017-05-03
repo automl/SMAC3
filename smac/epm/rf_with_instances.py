@@ -1,7 +1,7 @@
 import numpy as np
 import logging
 
-import pyrfr
+from pyrfr import regression
 
 from smac.configspace import CategoricalHyperparameter
 from smac.epm.base_epm import AbstractEPM
@@ -70,9 +70,9 @@ class RandomForestWithInstances(AbstractEPM):
 
         self.types = types
         self.bounds = bounds
-        self.rng = pyrfr.regression.default_random_engine(seed)
+        self.rng = regression.default_random_engine(seed)
 
-        self.rf_opts = pyrfr.regression.forest_opts()
+        self.rf_opts = regression.forest_opts()
         self.rf_opts.num_trees = num_trees
         self.rf_opts.seed = seed
         self.rf_opts.do_bootstrapping = do_bootstrapping
@@ -86,7 +86,7 @@ class RandomForestWithInstances(AbstractEPM):
         self.rf_opts.max_num_nodes = max_num_nodes
 
         self.n_points_per_tree = n_points_per_tree
-        self.rf = None  # type: pyrfr.regression.binary_rss_forest
+        self.rf = None  # type: regression.binary_rss_forest
 
         # This list well be read out by save_iteration() in the solver
         self.hypers = [num_trees, max_num_nodes, do_bootstrapping,
@@ -118,7 +118,7 @@ class RandomForestWithInstances(AbstractEPM):
             self.rf_opts.num_data_points_per_tree = self.X.shape[0]
         else:
             self.rf_opts.num_data_points_per_tree = self.n_points_per_tree
-        self.rf = pyrfr.regression.binary_rss_forest()
+        self.rf = regression.binary_rss_forest()
         self.rf.options = self.rf_opts
         data = self.__init_data_container(self.X, self.y)
         self.rf.fit(data, rng=self.rng)
@@ -136,11 +136,11 @@ class RandomForestWithInstances(AbstractEPM):
 
         Returns
         -------
-        data: pyrfr.regression.default_data_container
+        data: regression.default_data_container
             The filled data container that pyrfr can interpret
         """
         # retrieve the types and the bounds from the ConfigSpace
-        data = pyrfr.regression.default_data_container(X.shape[1])
+        data = regression.default_data_container(X.shape[1])
 
         for i, (mn, mx) in enumerate(self.bounds):
             if np.isnan(mx):
