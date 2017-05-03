@@ -46,7 +46,8 @@ class SMACCLI(object):
         root_logger = logging.getLogger()
         root_logger.setLevel(args_.verbose_level)
 
-        scen = Scenario(args_.scenario_file, misc_args)
+        scen = Scenario(args_.scenario_file, misc_args,
+                        run_id=args_.seed)
 
         rh = None
         if args_.warmstart_runhistory:
