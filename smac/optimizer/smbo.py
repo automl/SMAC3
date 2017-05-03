@@ -214,6 +214,12 @@ class SMBO(BaseSolver):
                 list(map(lambda x: x[1],
                          configs_previous_runs_sorted[:num_configs_local_search])))
 
+        # Having the configurations from random search, sorted by their
+        # acquisition function value is important for the first few iterations
+        # of SMAC. As long as the random forest predicts constant value, we
+        # want to use only random configurations. Having them at the begging of
+        # the list ensures this (even after adding the configurations by local
+        # search, and then sorting them)
         next_configs_by_acq_value = next_configs_by_random_search_sorted + \
             next_configs_by_local_search
         next_configs_by_acq_value.sort(reverse=True, key=lambda x: x[0])
