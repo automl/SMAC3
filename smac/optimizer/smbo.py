@@ -379,6 +379,6 @@ class ChallengerList(object):
             return config
         else:
             self._next_is_random = True
+            config = self.challengers[self._index]
             self._index += 1
-            config = self.challengers[self._index - 1]
             return config
