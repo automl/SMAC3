@@ -108,7 +108,7 @@ class Scenario(object):
         
         self.logger.debug("Scenario Options:")
         for arg_name, arg_value in parsed_arguments.items():
-            if isinstance(arg_value,(int,str)):
+            if isinstance(arg_value,(int,str,float)):
                 self.logger.debug("%s = %s" %(arg_name,arg_value))
 
     def add_argument(self, name, help, callback=None, default=None,
