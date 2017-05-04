@@ -1,10 +1,10 @@
 import logging
-import warnings
 
 import numpy as np
 
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.exceptions import NotFittedError
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -77,16 +77,13 @@ class AbstractEPM(object):
         self.n_params = X.shape[1] - self.n_feats
 
         # reduce dimensionality of features of larger than PCA_DIM
-        if self.pca:
+        if self.pca and X.shape[0] > 1:
             X_feats = X[:, -self.n_feats:]
             # scale features
             X_feats = self.scaler.fit_transform(X_feats)
             X_feats = np.nan_to_num(X_feats)  # if features with max == min
             # PCA
-            with warnings.catch_warnings():
-                warnings.filterwarnings(
-                    'ignore', r'invalid value encountered in true_divide.*')
-                X_feats = self.pca.fit_transform(X_feats)
+            X_feats = self.pca.fit_transform(X_feats)
             X = np.hstack((X[:, :self.n_params], X_feats))
             if hasattr(self, "types"):
                 # for RF, adapt types list
@@ -130,10 +127,13 @@ class AbstractEPM(object):
             Predictive variance
         '''
         if self.pca:
-            X_feats = X[:, -self.n_feats:]
-            X_feats = self.scaler.transform(X_feats)
-            X_feats = self.pca.transform(X_feats)
-            X = np.hstack((X[:, :self.n_params], X_feats))
+            try:
+                X_feats = X[:, -self.n_feats:]
+                X_feats = self.scaler.transform(X_feats)
+                X_feats = self.pca.transform(X_feats)
+                X = np.hstack((X[:, :self.n_params], X_feats))
+            except NotFittedError: 
+                pass # PCA not fitted if only one training sample
 
         return self._predict(X)
 
