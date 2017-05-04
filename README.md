@@ -40,6 +40,10 @@ Its [Random Forest](https://bitbucket.org/aadfreiburg/random_forest_run) is writ
 
 # Installation:
 
+Besides the listed requirements (see `requirements.txt`), the random forest used in SMAC3 requires SWIG.
+
+	apt-get install swig 
+
     cat requirements.txt | xargs -n 1 -L 1 pip install
     
     python setup.py install
