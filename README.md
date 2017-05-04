@@ -1,6 +1,6 @@
 # SMAC v3 Project
 
-Copyright (C) 2016  [ML4AAD Group](http://www.ml4aad.org/)
+Copyright (C) 2017  [ML4AAD Group](http://www.ml4aad.org/)
 
 __Attention__: This package is under heavy development and subject to change. 
 A stable release of SMAC (v2) in Java can be found [here](http://www.cs.ubc.ca/labs/beta/Projects/SMAC/).
