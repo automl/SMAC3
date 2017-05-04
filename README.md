@@ -38,7 +38,7 @@ we refer to
 SMAC v3 is written in python3 and continuously tested with python3.4 and python3.5. 
 Its [Random Forest](https://bitbucket.org/aadfreiburg/random_forest_run) is written in C++.
 
-# Installation:
+# Installation
 
 Besides the listed requirements (see `requirements.txt`), the random forest used in SMAC3 requires SWIG.
 
