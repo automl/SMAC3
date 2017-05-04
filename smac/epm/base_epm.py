@@ -1,4 +1,5 @@
 import logging
+import warnings
 
 import numpy as np
 
@@ -82,7 +83,10 @@ class AbstractEPM(object):
             X_feats = self.scaler.fit_transform(X_feats)
             X_feats = np.nan_to_num(X_feats)  # if features with max == min
             # PCA
-            X_feats = self.pca.fit_transform(X_feats)
+            with warnings.catch_warnings():
+                warnings.filterwarnings(
+                    'ignore', r'invalid value encountered in true_divide.*')
+                X_feats = self.pca.fit_transform(X_feats)
             X = np.hstack((X[:, :self.n_params], X_feats))
             if hasattr(self, "types"):
                 # for RF, adapt types list
