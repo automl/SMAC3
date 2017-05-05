@@ -19,9 +19,7 @@ dependencies:
   # The --user is needed to let sphinx see the source and the binaries
   # The pipefail is requested to propagate exit code
   override:
-    - python setup.py clean
-    - python setup.py develop
-    - set -o pipefail && cd doc && make html 2>&1 | tee ~/log.txt
+    - source ci_scripts/circle_install.sh
 test:
   # Grep error on the documentation
   override:
