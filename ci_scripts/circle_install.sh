@@ -14,7 +14,6 @@ cat requirements.txt | xargs -n 1 -L 1 pip install
 
 python setup.py clean
 python setup.py develop
-set -o pipefail && cd doc && make html 2>&1 | tee ~/log.txt
 
 # pipefail is necessary to propagate exit codes
 set -o pipefail && cd doc && make html-strict 2>&1 | tee ~/log.txt
