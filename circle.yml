@@ -6,6 +6,9 @@ dependencies:
 
   # Various dependencies
   pre:
+    # Get rid of existing virtualenvs on circle ci as they conflict with conda.
+    # From nilearn: https://github.com/nilearn/nilearn/blob/master/circle.yml
+    - cd && rm -rf ~/.pyenv && rm -rf ~/virtualenvs
     # from scikit-learn contrib
     - sudo -E apt-get -yq remove texlive-binaries --purge
     - sudo -E apt-get -yq update
