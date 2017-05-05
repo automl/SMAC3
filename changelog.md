@@ -1,3 +1,38 @@
+# 0.5
+
+## Major changes
+
+* MAINT #192: SMAC uses version 0.4 of the random forest library pyrfr. As a
+  side-effect, the library [swig](http://www.swig.org/) is necessary to build
+  the random forest.
+* MAINT: random samples which are interleaved in the list of challengers are now
+  obtained from a generator. This reduces the overhead of sampling random
+  configurations.
+* FIX #117: only round the cutoff when running a python function as the target
+  algorithm.
+* MAINT #231: Rename the submodule `smac.smbo` to `smac.optimizer`.
+* MAINT #213: Use log(EI) as default acquisition function when optimizing
+  running time of an algorithm.
+* MAINT #223: updated example of optimizing a random forest with SMAC.
+* MAINT #221: refactored the EPM module. The PCA on instance features is now
+  part of fitting the EPM instead of reading a scenario. Because of this
+  restructuring, the PCA can now take instance features which are external
+  data into account.
+
+## Minor changes
+
+* SMAC now outputs scenario options if the log level is `DEBUG` (2f0ceee).
+* SMAC logs the command line call if invoked from the command line (3accfc2).
+* SMAC explicitly checks that it runs in `python>=3.4`.
+* MAINT #226: improve efficientcy when loading the runhistory from a json file.
+* FIX #217: adds milliseconds to the output directory names to avoid race.
+  conditions when starting multiple runs on a cluster.
+* MAINT #209: adds the seed or a pseudo-seed to the output directory name for
+  better identifiability of the output directories.
+* FIX #216: replace broken call to in EIPS acqusition function.
+* MAINT: use codecov.io instead of coveralls.io.
+* MAINT: increase minimal required version of the ConfigSpace package to 0.3.2.
+
 # 0.4
 
 * ADD #204: SMAC now always saves runhistory files as `runhistory.json`.
