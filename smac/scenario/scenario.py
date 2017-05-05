@@ -105,6 +105,11 @@ class Scenario(object):
             self.output_dir += "_run%d" %(run_id)
 
         self.out_writer.write_scenario_file(self)
+        
+        self.logger.debug("Scenario Options:")
+        for arg_name, arg_value in parsed_arguments.items():
+            if isinstance(arg_value,(int,str,float)):
+                self.logger.debug("%s = %s" %(arg_name,arg_value))
 
     def add_argument(self, name, help, callback=None, default=None,
                      dest=None, required=False, mutually_exclusive_group=None,

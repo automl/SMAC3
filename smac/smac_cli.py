@@ -37,6 +37,7 @@ class SMACCLI(object):
         '''
             main function of SMAC for CLI interface
         '''
+        self.logger.info("SMAC call: %s" %(" ".join(sys.argv)))
 
         cmd_reader = CMDReader()
         args_, misc_args = cmd_reader.read_cmd()
