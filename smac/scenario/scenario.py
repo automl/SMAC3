@@ -219,39 +219,77 @@ class Scenario(object):
 
     def _add_arguments(self):
         # Add allowed arguments
-        self.add_argument(name='abort_on_first_run_crash', help=None,
+        self.add_argument(name='abort_on_first_run_crash',
+                          help="If true, *SMAC* will abort if the first run of "
+                               "the target algorithm crashes. Default: true.",
                           default='1', callback=_is_truthy)
-        self.add_argument(name='algo', help=None, dest='ta',
-                          callback=shlex.split)
-        self.add_argument(name='execdir', default='.', help=None)
-        self.add_argument(name='deterministic', default='0', help=None,
+        self.add_argument(name='algo',
+                          help="Specifies the target-algorithm call that *SMAC*"
+                               "will optimize. Interpreted as a bash-command.",
+                          dest='ta', callback=shlex.split)
+        self.add_argument(name='execdir', default='.',
+                          help="specifies the path to the execution-directory."
+                               "Default: \".\".")
+        self.add_argument(name='deterministic', default='0',
+                          help="If true, the optimization process will be"
+                               "repeatable. Default: false.",
                           callback=_is_truthy)
         self.add_argument(name='intensification_percentage', default=0.5,
                           help=None, callback=float)
-        self.add_argument(name='paramfile', help=None, dest='pcs_fn',
-                          mutually_exclusive_group='cs')
-        self.add_argument(name='run_obj', help=None, default='runtime')
-        self.add_argument(name='overall_obj', help=None, default='par10')
-        self.add_argument(name='cutoff_time', help=None, default=None,
+        self.add_argument(name='paramfile', help="specifies the path to the PCS-file",
+                          dest='pcs_fn', mutually_exclusive_group='cs')
+        self.add_argument(name='run_obj',
+                          help="Defines what metric to optimize. When "
+                               "optimizing runtime, *cutoff_time* is "
+                               "required as well. Default: runtime.",
+                          default='runtime')
+        self.add_argument(name='overall_obj',
+                          help="PARX, where X is an integer defining the "
+                               "penalty imposed on timeouts (i.e. runtimes that "
+                               "exceed the *cutoff-time*). Default: PAR10.",
+                          default='par10')
+        self.add_argument(name='cutoff_time',
+                          help="Maximum runtime, after which the "
+                               "target-algorithm is cancelled. **Required "
+                               "if *run_obj* is runtime.**", default=None,
                           dest='cutoff', callback=float)
-        self.add_argument(name='memory_limit', help=None)
-        self.add_argument(name='tuner-timeout', help=None, default=numpy.inf,
+        self.add_argument(name='memory_limit',
+                          help="Maximum available memory the target-algorithm "
+                               "can occupy before being cancelled.")
+        self.add_argument(name='tuner-timeout',
+                          help="Maximum amount of CPU-time used for optimization. "
+                               "Default: inf., default=numpy.inf",
                           dest='algo_runs_timelimit',
                           callback=float)
-        self.add_argument(name='wallclock_limit', help=None, default=numpy.inf,
-                          callback=float)
-        self.add_argument(name='runcount_limit', help=None, default=numpy.inf,
-                          callback=float, dest="ta_run_limit")
-        self.add_argument(name='minR', help=None, default=1, callback=int,
-                          dest='minR')
-        self.add_argument(name='maxR', help=None, default=2000, callback=int,
-                          dest='maxR')
+        self.add_argument(name='wallclock_limit',
+                          help="Maximum amount of wallclock-time used for "
+                               "optimization. Default: inf.",
+                          default=numpy.inf, callback=float)
+        self.add_argument(name='runcount_limit',
+                          help="Maximum number of algorithm-calls during "
+                               "optimization. Default: inf.",
+                          default=numpy.inf, callback=float, dest="ta_run_limit")
+        self.add_argument(name='minR',
+                          help="Minimum number of calls per configuration. "
+                               "Default: 1",
+                          default=1, callback=int, dest='minR')
+        self.add_argument(name='maxR',
+                          help="Maximum number of calls per configuration. "
+                               "Default: 2000",
+                          default=2000, callback=int, dest='maxR')
         self.add_argument(name='instance_file',
-                          help=None, dest='train_inst_fn')
-        self.add_argument(name='test_instance_file', help=None,
+                          help="Specifies the file with the training-instances.",
+                          dest='train_inst_fn')
+        self.add_argument(name='test_instance_file',
+                          help="Specifies the file with the test-instances.",
                           dest='test_inst_fn')
-        self.add_argument(name='feature_file', help=None, dest='feature_fn')
-        self.add_argument(name='output_dir', help=None,
+        self.add_argument(name='feature_file',
+                          help="Specifies the file with the instance-features.",
+                          dest='feature_fn')
+        self.add_argument(name='output_dir',
+                          help="Specifies the output-directory for all emerging "
+                               "files, such as logging and results. Default: "
+                               "\"smac3-output_YEAR-MONTH-DAY_HOUR:MINUTE:SECOND\"",
                           default="smac3-output_%s" % (
                               datetime.datetime.fromtimestamp(
                                   time.time()).strftime(
@@ -265,7 +303,9 @@ class Scenario(object):
         self.add_argument(name='test_instances', default=[[None]], help=None,
                           dest='test_insts')
         self.add_argument(name='initial_incumbent', default="DEFAULT",
-                          help=None, dest='initial_incumbent',
+                          help="In [DEFAULT, RANDOM]. DEFAULT is the default "
+                               "from the PCS. Default: DEFAULT.",
+                          dest='initial_incumbent',
                           choice=['DEFAULT', 'RANDOM'])
         # instance name -> feature vector
         self.add_argument(name='features', default={}, help=None,

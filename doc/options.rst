@@ -24,7 +24,7 @@ Commandline
 *SMAC* is called via the command-line with the following arguments:
 .. code-block:: bash
 
-        python smac --scenario SCENARIO --seed INT --verbose_level LEVEL --modus MODUS
+        python smac  - -scenario SCENARIO --seed INT --verbose_level LEVEL --modus MODUS
 
 Required:
      * *scenario*: Path to the file that specifies the scenario_ for this *SMAC*-run.
