@@ -145,13 +145,13 @@ class TaeTest(unittest.TestCase):
         stats.start_timing()
         # Check quality
         eta = ExecuteTARun(ta=lambda *args: None, stats=stats,
-                run_obj='quality', cost_for_crash=10.7)
+                run_obj='quality', cost_for_crash=100)
         # Add first run to prevent FirstRunCrashedException
         test_run.return_value = StatusType.SUCCESS, 1, 1, {}
         eta.start(config={}, instance=1)
 
         test_run.return_value = StatusType.CRASHED, np.nan, np.nan, {}
-        self.assertEqual(10.7, eta.start(config={}, instance=1)[1])
+        self.assertEqual(100, eta.start(config={}, instance=1)[1])
 
         # Check runtime
         eta = ExecuteTARun(ta=lambda *args: None, stats=stats,
@@ -161,7 +161,7 @@ class TaeTest(unittest.TestCase):
         eta.start(config={}, instance=1)
 
         test_run.return_value = StatusType.CRASHED, np.nan, np.nan, {}
-        self.assertEqual(10.7, eta.start(config={}, instance=1, cutoff=10)[1])
+        self.assertEqual(10.7, eta.start(config={}, instance=1, cutoff=20)[1])
 
 if __name__ == "__main__":
     unittest.main()

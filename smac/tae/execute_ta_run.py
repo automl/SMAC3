@@ -89,7 +89,7 @@ class ExecuteTARun(object):
                 penalization factor
             crash_cost : float
                 cost that is used in case of crashed runs (including runs
-                that returned NaN or inf
+                that returned NaN or inf)
         """
 
         self.ta = ta
@@ -185,6 +185,13 @@ class ExecuteTARun(object):
             if status == StatusType.SUCCESS:
                 cost = runtime
             elif status == StatusType.CRASHED:
+                if cutoff * self.par_factor < self.crash_cost:
+                    self.logger.warning("Cost for timeouts greater than cost "
+                                        "for crashed runs ({} > {}), this can "
+                                        "lead to unexpected behaviour. Please "
+                                        "increase \"cost_for_crash\"-"
+                                        "value".format(cutoff*self.par_factor,
+                                                       self.crash_cost))
                 cost = self.crash_cost
             else:
                 cost = cutoff * self.par_factor
