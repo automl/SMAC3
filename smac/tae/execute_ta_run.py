@@ -71,7 +71,7 @@ class ExecuteTARun(object):
     """
 
     def __init__(self, ta, stats=None, runhistory=None, run_obj="runtime",
-                 par_factor=1):
+                 par_factor=1, cost_for_crash=100000.0):
         """
         Constructor
 
@@ -87,6 +87,9 @@ class ExecuteTARun(object):
                 run objective of SMAC
             par_factor: int
                 penalization factor
+            crash_cost : float
+                cost that is used in case of crashed runs (including runs
+                that returned NaN or inf
         """
 
         self.ta = ta
@@ -95,8 +98,9 @@ class ExecuteTARun(object):
         self.run_obj = run_obj
 
         self.par_factor = par_factor
+        self.crash_cost = cost_for_crash
 
-        self.logger = logging.getLogger("smac.tae."+self.__class__.__name__)
+        self.logger = logging.getLogger(self.__module__ + '.' + self.__class__.__name__)
         self._supports_memory_limit = False
 
     def start(self, config:Configuration,
@@ -152,8 +156,11 @@ class ExecuteTARun(object):
         # Catch NaN or inf.
         if (self.run_obj == 'runtime' and not np.isfinite(runtime) or
             self.run_obj == 'quality' and not np.isfinite(cost)):
-            self.logger.warning("Target Algorithm returned NaN or inf as cost or runtime. "
-                                "Algorithm run is treated as CRASHED.")
+            self.logger.warning("Target Algorithm returned NaN or inf as {} "
+                                "Algorithm run is treated as CRASHED, cost "
+                                "is set to {}. (Change value through "
+                                "\"cost_for_crash\"-option.)".format(self.run_obj,
+                                                              self.crash_cost))
             status = StatusType.CRASHED
 
         if self.stats.ta_runs == 0 and status == StatusType.CRASHED:
@@ -170,11 +177,17 @@ class ExecuteTARun(object):
         self.stats.ta_runs += 1
         self.stats.ta_time_used += float(runtime)
 
+        # set cost/runtime 
+        if status == StatusType.CRASHED:
+            cost = self.crash_cost
+
         if self.run_obj == "runtime":
-            if status != StatusType.SUCCESS:
-                cost = cutoff * self.par_factor
-            else:
+            if status == StatusType.SUCCESS:
                 cost = runtime
+            elif status == StatusType.CRASHED:
+                cost = self.crash_cost
+            else:
+                cost = cutoff * self.par_factor
             if status == StatusType.TIMEOUT and capped:
                 status = StatusType.CAPPED
 
@@ -186,7 +199,7 @@ class ExecuteTARun(object):
                                 cost=cost, time=runtime, status=status,
                                 instance_id=instance, seed=seed,
                                 additional_info=additional_info)
-        
+
         if status == StatusType.CAPPED:
             raise CappedRunException("")
 

@@ -22,10 +22,11 @@ class AbstractTAFunc(ExecuteTARun):
     """
 
     def __init__(self, ta, stats=None, runhistory=None, run_obj="quality",
-                 memory_limit=None, par_factor=1):
+                 memory_limit=None, par_factor=1, cost_for_crash=100000.0):
 
         super().__init__(ta=ta, stats=stats, runhistory=runhistory,
-                         run_obj=run_obj, par_factor=par_factor)
+                         run_obj=run_obj, par_factor=par_factor,
+                         cost_for_crash=cost_for_crash)
 
         signature = inspect.signature(ta).parameters
         self._accepts_seed = len(signature) > 1

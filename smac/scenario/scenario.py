@@ -232,6 +232,9 @@ class Scenario(object):
                           mutually_exclusive_group='cs')
         self.add_argument(name='run_obj', help=None, default='runtime')
         self.add_argument(name='overall_obj', help=None, default='par10')
+        self.add_argument(name='cost_for_crash', default=100000.0,
+                          help="Defines the cost-value for crashed runs.",
+                          callback=float)
         self.add_argument(name='cutoff_time', help=None, default=None,
                           dest='cutoff', callback=float)
         self.add_argument(name='memory_limit', help=None)

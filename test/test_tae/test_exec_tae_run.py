@@ -134,6 +134,34 @@ class TaeTest(unittest.TestCase):
         test_run.return_value = StatusType.SUCCESS, 1, np.inf, {}
         self.assertEqual(eta.start(config={}, instance=1)[0], StatusType.SUCCESS)
 
+    @mock.patch.object(ExecuteTARun, 'run')
+    def test_crashed_cost_value(self, test_run):
+        '''
+            test cost on crashed runs
+        '''
+        # Patch run-function for custom-return
+        scen = Scenario(scenario={'cs': ConfigurationSpace()}, cmd_args=None)
+        stats = Stats(scen)
+        stats.start_timing()
+        # Check quality
+        eta = ExecuteTARun(ta=lambda *args: None, stats=stats,
+                run_obj='quality', cost_for_crash=10.7)
+        # Add first run to prevent FirstRunCrashedException
+        test_run.return_value = StatusType.SUCCESS, 1, 1, {}
+        eta.start(config={}, instance=1)
+
+        test_run.return_value = StatusType.CRASHED, np.nan, np.nan, {}
+        self.assertEqual(10.7, eta.start(config={}, instance=1)[1])
+
+        # Check runtime
+        eta = ExecuteTARun(ta=lambda *args: None, stats=stats,
+                run_obj='runtime', cost_for_crash=10.7)
+        # Add first run to prevent FirstRunCrashedException
+        test_run.return_value = StatusType.SUCCESS, 1, 1, {}
+        eta.start(config={}, instance=1)
+
+        test_run.return_value = StatusType.CRASHED, np.nan, np.nan, {}
+        self.assertEqual(10.7, eta.start(config={}, instance=1, cutoff=10)[1])
 
 if __name__ == "__main__":
     unittest.main()
