@@ -13,7 +13,7 @@ from smac.stats.stats import Stats
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.initial_design.default_configuration_design import DefaultConfiguration
 from smac.utils.io.traj_logging import TrajLogger
-from smac.smbo.objective import average_cost
+from smac.optimizer.objective import average_cost
 
 
 class TestSingleInitialDesign(unittest.TestCase):
@@ -21,7 +21,8 @@ class TestSingleInitialDesign(unittest.TestCase):
     def setUp(self):
         self.cs = ConfigurationSpace()
         self.cs.add_hyperparameter(UniformFloatHyperparameter(name="x1", lower=1, upper=10, default=2))
-        self.scenario = Scenario({'cs': self.cs, 'run_obj': 'quality'})
+        self.scenario = Scenario({'cs': self.cs, 'run_obj': 'quality',
+                                  'output_dir': ''})
         self.ta = ExecuteTAFuncDict(lambda x: x["x1"]**2)
 
     def test_single_default_config_design(self):

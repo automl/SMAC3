@@ -8,7 +8,7 @@ from smac.scenario.scenario import Scenario
 from smac.facade.smac_facade import SMAC
 from smac.facade.roar_facade import ROAR
 from smac.runhistory.runhistory import RunHistory
-from smac.smbo.objective import average_cost
+from smac.optimizer.objective import average_cost
 from smac.utils.merge_foreign_data import merge_foreign_data_from_file
 from smac.utils.io.traj_logging import TrajLogger
 from smac.tae.execute_ta_run import TAEAbortException, FirstRunCrashedException
@@ -37,6 +37,7 @@ class SMACCLI(object):
         '''
             main function of SMAC for CLI interface
         '''
+        self.logger.info("SMAC call: %s" %(" ".join(sys.argv)))
 
         cmd_reader = CMDReader()
         args_, misc_args = cmd_reader.read_cmd()
@@ -46,7 +47,8 @@ class SMACCLI(object):
         root_logger = logging.getLogger()
         root_logger.setLevel(args_.verbose_level)
 
-        scen = Scenario(args_.scenario_file, misc_args)
+        scen = Scenario(args_.scenario_file, misc_args,
+                        run_id=args_.seed)
 
         rh = None
         if args_.warmstart_runhistory:

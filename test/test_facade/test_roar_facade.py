@@ -15,7 +15,8 @@ class TestROARFacade(unittest.TestCase):
 
     def setUp(self):
         self.cs = ConfigurationSpace()
-        self.scenario = Scenario({'cs': self.cs, 'run_obj': 'quality'})
+        self.scenario = Scenario({'cs': self.cs, 'run_obj': 'quality',
+                                  'output_dir': ''})
 
     def test_inject_stats_and_runhistory_object_to_TAE(self):
         ta = ExecuteTAFuncArray(lambda x: x**2)

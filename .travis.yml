@@ -4,11 +4,11 @@ matrix:
 
   include:
   - os: linux
-    env: PYTHON_VERSION="3.4" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh"
+    env: PYTHON_VERSION="3.4" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
   - os: linux
-    env: PYTHON_VERSION="3.5" COVERAGE="true" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh"
+    env: PYTHON_VERSION="3.5" COVERAGE="true" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
   - os: linux
-    env: PYTHON_VERSION="3.6" COVERAGE="true" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh"
+    env: PYTHON_VERSION="3.6" COVERAGE="true" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
 
   # Disable OSX building because it takes too long and hinders progress
   # Set language to generic to not break travis-ci
@@ -46,7 +46,7 @@ before_install:
   - conda update --yes conda
   - conda create -n testenv --yes python=$PYTHON_VERSION pip wheel nose
   - source activate testenv
-  - conda install --yes gcc
+  - conda install --yes gcc swig
   - echo "Using GCC at "`which gcc`
   - export CC=`which gcc`
 

@@ -1,6 +1,6 @@
 # SMAC v3 Project
 
-Copyright (C) 2016  [ML4AAD Group](http://www.ml4aad.org/)
+Copyright (C) 2017  [ML4AAD Group](http://www.ml4aad.org/)
 
 __Attention__: This package is under heavy development and subject to change. 
 A stable release of SMAC (v2) in Java can be found [here](http://www.cs.ubc.ca/labs/beta/Projects/SMAC/).
@@ -11,15 +11,15 @@ Status for master branch:
 
 [![Build Status](https://travis-ci.org/automl/SMAC3.svg?branch=master)](https://travis-ci.org/automl/SMAC3)
 [![Code Health](https://landscape.io/github/automl/SMAC3/master/landscape.svg?style=flat)](https://landscape.io/github/automl/SMAC3/master)
-[![Coverage Status](https://coveralls.io/repos/automl/auto-sklearn/badge.svg?branch=master&service=github)](https://coveralls.io/github/automl/SMAC3?branch=master)
+[![codecov Status](https://codecov.io/gh/automl/SMAC3/branch/master/graph/badge.svg)](https://codecov.io/gh/automl/SMAC3)
 
 Status for development branch
 
 [![Build Status](https://travis-ci.org/automl/SMAC3.svg?branch=development)](https://travis-ci.org/automl/SMAC3)
 [![Code Health](https://landscape.io/github/automl/SMAC3/development/landscape.svg?style=flat)](https://landscape.io/github/automl/SMAC3/development)
-[![Coverage Status](https://coveralls.io/repos/automl/SMAC3/badge.svg?branch=development&service=github)](https://coveralls.io/github/automl/SMAC3?branch=development)
+[![codecov](https://codecov.io/gh/automl/SMAC3/branch/development/graph/badge.svg)](https://codecov.io/gh/automl/SMAC3)
 
-#OVERVIEW
+# OVERVIEW
 
 SMAC is a tool for algorithm configuration 
 to optimize the parameters of arbitrary algorithms across a set of instances.
@@ -38,7 +38,11 @@ we refer to
 SMAC v3 is written in python3 and continuously tested with python3.4 and python3.5. 
 Its [Random Forest](https://bitbucket.org/aadfreiburg/random_forest_run) is written in C++.
 
-#Installation:
+# Installation
+
+Besides the listed requirements (see `requirements.txt`), the random forest used in SMAC3 requires SWIG.
+
+	apt-get install swig 
 
     cat requirements.txt | xargs -n 1 -L 1 pip install
     

@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from smac.smbo.acquisition import EI
+from smac.optimizer.acquisition import EI, LogEI
 
 
 class MockModel(object):
@@ -62,3 +62,26 @@ class TestEI(unittest.TestCase):
         X = np.array([[0.0]])
         acq = np.array(X)
         self.assertAlmostEqual(acq[0][0], 0.0)
+        
+class TestLogEI(unittest.TestCase):
+    def setUp(self):
+        self.model = MockModel()
+        self.ei = LogEI(self.model)
+        
+    def test_1xD(self):
+        self.ei.update(model=self.model, eta=1.0)
+        X = np.array([[1.0, 1.0, 1.0]])
+        acq = self.ei(X)
+        self.assertEqual(acq.shape, (1, 1))
+        self.assertAlmostEqual(acq[0][0], 0.056696236230553559)
+        
+    def test_NxD(self):
+        self.ei.update(model=self.model, eta=1.0)
+        X = np.array([[0.0, 0.0, 0.0],
+                      [0.1, 0.1, 0.1],
+                      [1.0, 1.0, 1.0]])
+        acq = self.ei(X)
+        self.assertEqual(acq.shape, (3, 1))
+        self.assertAlmostEqual(acq[0][0], 0.0)
+        self.assertAlmostEqual(acq[1][0], 0.069719643222631633)
+        self.assertAlmostEqual(acq[2][0], 0.056696236230553559)

@@ -13,7 +13,7 @@ from smac.stats.stats import Stats
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.intensification.intensification import Intensifier
 from smac.runhistory.runhistory import RunHistory, RunKey
-from smac.smbo.objective import average_cost, sum_cost
+from smac.optimizer.objective import average_cost, sum_cost
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
@@ -45,7 +45,7 @@ class TestIntensify(unittest.TestCase):
                                      values={'a': 100, 'b': 100})
 
         self.scen = Scenario({"cutoff_time": 2, 'cs': self.cs,
-                              "output_dir": ""})
+                              "output_dir": ''})
         self.stats = Stats(scenario=self.scen)
         self.stats.start_timing()
 

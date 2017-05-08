@@ -11,7 +11,7 @@ from smac.intensification.intensification import Intensifier
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
 from smac.scenario.scenario import Scenario
-from smac.smbo.acquisition import EI, AbstractAcquisitionFunction
+from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction
 from smac.stats.stats import Stats
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.tae.execute_ta_run import ExecuteTARun
@@ -21,7 +21,8 @@ class TestSMACFacade(unittest.TestCase):
 
     def setUp(self):
         self.cs = ConfigurationSpace()
-        self.scenario = Scenario({'cs': self.cs, 'run_obj': 'quality'})
+        self.scenario = Scenario({'cs': self.cs, 'run_obj': 'quality',
+                                  'output_dir': ''})
 
     def test_inject_stats_and_runhistory_object_to_TAE(self):
         ta = ExecuteTAFuncDict(lambda x: x**2)
