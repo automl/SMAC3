@@ -1,4 +1,3 @@
----
 engines:
   duplication:
     enabled: true
@@ -11,10 +10,6 @@ engines:
     enabled: true
   pep8:
     enabled: true
-    config:
-        full: true
-        max-line-length: 100
-        strictness: veryhigh
 ratings:
   paths:
   - "**.py"
