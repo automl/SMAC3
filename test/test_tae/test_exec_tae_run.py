@@ -161,7 +161,7 @@ class TaeTest(unittest.TestCase):
         eta.start(config={}, instance=1)
 
         test_run.return_value = StatusType.CRASHED, np.nan, np.nan, {}
-        self.assertEqual(10.7, eta.start(config={}, instance=1, cutoff=20)[1])
+        self.assertEqual(20.0, eta.start(config={}, instance=1, cutoff=20)[1])
 
 if __name__ == "__main__":
     unittest.main()
