@@ -1,0 +1,23 @@
+---
+engines:
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - python
+  fixme:
+    enabled: true
+  radon:
+    enabled: true
+  pep8:
+    enabled: true
+    config:
+        full: true
+        max-line-length: 100
+        strictness: veryhigh
+ratings:
+  paths:
+  - "**.py"
+exclude_paths:
+- test/
+- doc/
