@@ -14,7 +14,8 @@ __version__ = "0.0.1"
 class RandomEPM(AbstractEPM):
     '''implement an epm, which returns only random values'''
 
-    def __init__(self, rng):
+    def __init__(self, rng,
+                 **kwargs):
         '''
         initialize random number generator and logger
 
@@ -22,6 +23,9 @@ class RandomEPM(AbstractEPM):
         ----------
         rng : np.random.RandomState
         '''
+        
+        super().__init__(**kwargs)
+        
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.rng = rng
 

@@ -43,14 +43,14 @@ class CMDReader(object):
                               help="scenario file in AClib format")
 
         req_opts = parser.add_argument_group("Optional Options")
-        req_opts.add_argument("--seed", default=12345, type=int,
+        req_opts.add_argument("--seed", default=1, type=int,
                               help="random seed")
         req_opts.add_argument("--verbose_level", default=logging.INFO,
                               choices=["INFO", "DEBUG"],
-                              help="random seed")
-        req_opts.add_argument("--modus", default="SMAC",
+                              help="verbose level")
+        req_opts.add_argument("--mode", default="SMAC",
                               choices=["SMAC", "ROAR"],
-                              help=SUPPRESS)
+                              help="Configuration mode.")
         req_opts.add_argument("--warmstart_runhistory", default=None,
                               nargs="*",
                               help=SUPPRESS)  # list of runhistory dump files

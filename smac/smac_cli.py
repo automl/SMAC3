@@ -70,13 +70,13 @@ class SMACCLI(object):
                 trajectory = TrajLogger.read_traj_aclib_format(fn=traj_fn, cs=scen.cs)
                 initial_configs.append(trajectory[-1]["incumbent"])
 
-        if args_.modus == "SMAC":
+        if args_.mode == "SMAC":
             optimizer = SMAC(
                 scenario=scen,
                 rng=np.random.RandomState(args_.seed),
                 runhistory=rh,
                 initial_configurations=initial_configs)
-        elif args_.modus == "ROAR":
+        elif args_.mode == "ROAR":
             optimizer = ROAR(
                 scenario=scen,
                 rng=np.random.RandomState(args_.seed),
