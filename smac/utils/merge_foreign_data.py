@@ -32,7 +32,8 @@ def merge_foreign_data_from_file(scenario: Scenario,
 
         Returns
         -------
-            scenario, runhistory
+        scenario: Scenario
+        runhistory: Runhistory
     '''
 
     if not in_scenario_fn_list:
@@ -68,7 +69,8 @@ def merge_foreign_data(scenario: Scenario,
 
         Returns
         -------
-            scenario, runhistory
+        scenario: Scenario
+        runhistory: Runhistory
     '''
 
     # add further instance features

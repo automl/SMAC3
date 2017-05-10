@@ -21,7 +21,7 @@ class LocalSearch(object):
         Implementation of SMAC's local search
 
         Parameters:
-        ----------
+        -----------
 
         acquisition_function:  function
             The function which the local search tries to maximize
@@ -51,16 +51,15 @@ class LocalSearch(object):
         if either the max number of steps is reached or no neighbor
         with an higher improvement was found.
 
-        Parameters:
+        Parameters
         ----------
-
         start_point:  np.array(1, D):
             The point from where the local search starts
-        *args :
+        *args:
             Additional parameters that will be passed to the
             acquisition function
 
-        Returns:
+        Returns
         -------
 
         incumbent np.array(1, D):

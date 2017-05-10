@@ -180,12 +180,14 @@ class TrajLogger(object):
             -------
             trajectory: list
                 each entry in the list is a dictionary of the form
-                {"cpu_time": float,
-                 "total_cpu_time": None, # TODO
-                 "wallclock_time": float,
-                 "evaluations": int
-                 "cost": float,
-                 "incumbent": Configuration
+                {
+                "cpu_time": float,
+                "total_cpu_time": None, # TODO
+                "wallclock_time": float,
+                "evaluations": int
+                "cost": float,
+                "incumbent": Configuration
+                }
         """
 
         trajectory = []

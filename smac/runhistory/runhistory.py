@@ -204,9 +204,10 @@ class RunHistory(object):
         ----------
         config : Configuration from ConfigSpace
             parameter configuration
+
         Returns
-        ----------
-            list: tuples of instance, seed
+        -------
+        instance_seed_pairs : list<tuples of instance, seed>
         """
         config_id = self.config_ids.get(config)
         return self._configid_to_inst_seed.get(config_id, [])
@@ -226,7 +227,7 @@ class RunHistory(object):
         Check whether or not the RunHistory is empty.
 
         Returns
-        ----------
+        -------
             bool: True if runs have been added to the RunHistory,
                   False otherwise
         """
