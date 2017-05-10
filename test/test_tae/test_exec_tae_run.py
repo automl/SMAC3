@@ -91,13 +91,12 @@ class TaeTest(unittest.TestCase):
         def get_tae(obj):
             """ Create ExecuteTARun-object for testing. """
             scen = Scenario(scenario={'cs': ConfigurationSpace(), 'run_obj': obj,
-                'abort_on_first_run_crash': '0', 'cutoff_time': '10'}, cmd_args=None)
+                                      'cutoff_time': '10'}, cmd_args=None)
             stats = Stats(scen)
             stats.start_timing()
-            eta = ExecuteTARun(ta=lambda *args: None, stats=stats, run_obj=obj)
             # Add first run to not trigger FirstRunCrashedException
-            test_run.return_value = StatusType.SUCCESS, 1, 1, {}
-            eta.start(config={}, instance=1)
+            stats.ta_runs += 1
+            eta = ExecuteTARun(ta=lambda *args: None, stats=stats, run_obj=obj)
             return eta
 
         # TEST NAN
@@ -143,24 +142,17 @@ class TaeTest(unittest.TestCase):
         scen = Scenario(scenario={'cs': ConfigurationSpace()}, cmd_args=None)
         stats = Stats(scen)
         stats.start_timing()
+        stats.ta_runs += 1
+
         # Check quality
+        test_run.return_value = StatusType.CRASHED, np.nan, np.nan, {}
         eta = ExecuteTARun(ta=lambda *args: None, stats=stats,
                 run_obj='quality', cost_for_crash=100)
-        # Add first run to prevent FirstRunCrashedException
-        test_run.return_value = StatusType.SUCCESS, 1, 1, {}
-        eta.start(config={}, instance=1)
-
-        test_run.return_value = StatusType.CRASHED, np.nan, np.nan, {}
         self.assertEqual(100, eta.start(config={}, instance=1)[1])
 
         # Check runtime
         eta = ExecuteTARun(ta=lambda *args: None, stats=stats,
                 run_obj='runtime', cost_for_crash=10.7)
-        # Add first run to prevent FirstRunCrashedException
-        test_run.return_value = StatusType.SUCCESS, 1, 1, {}
-        eta.start(config={}, instance=1)
-
-        test_run.return_value = StatusType.CRASHED, np.nan, np.nan, {}
         self.assertEqual(10.7, eta.start(config={}, instance=1, cutoff=20)[1])
 
 if __name__ == "__main__":
