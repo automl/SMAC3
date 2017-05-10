@@ -153,7 +153,7 @@ class TaeTest(unittest.TestCase):
         # Check runtime
         eta = ExecuteTARun(ta=lambda *args: None, stats=stats,
                 run_obj='runtime', cost_for_crash=10.7)
-        self.assertEqual(10.7, eta.start(config={}, instance=1, cutoff=20)[1])
+        self.assertEqual(20.0, eta.start(config={}, instance=1, cutoff=20)[1])
 
 if __name__ == "__main__":
     unittest.main()
