@@ -156,7 +156,7 @@ class ExecuteTARun(object):
         # Catch NaN or inf.
         if (self.run_obj == 'runtime' and not np.isfinite(runtime) or
             self.run_obj == 'quality' and not np.isfinite(cost)):
-            self.logger.warning("Target Algorithm returned NaN or inf as {} "
+            self.logger.warning("Target Algorithm returned NaN or inf as {}. "
                                 "Algorithm run is treated as CRASHED, cost "
                                 "is set to {}. (Change value through "
                                 "\"cost_for_crash\"-option.)".format(self.run_obj,
