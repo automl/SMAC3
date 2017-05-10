@@ -257,10 +257,9 @@ class Scenario(object):
                           help="Maximum available memory the target-algorithm "
                                "can occupy before being cancelled.")
         self.add_argument(name='tuner-timeout',
-                          help="Maximum amount of CPU-time used for optimization. "
-                               "Default: inf., default=numpy.inf",
-                          dest='algo_runs_timelimit',
-                          callback=float)
+                          help="Maximum amount of CPU-time used for optimization."
+                               "Default: inf.", default=numpy.inf,
+                          dest='algo_runs_timelimit', callback=float)
         self.add_argument(name='wallclock_limit',
                           help="Maximum amount of wallclock-time used for "
                                "optimization. Default: inf.",
