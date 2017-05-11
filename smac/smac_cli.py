@@ -47,7 +47,7 @@ class SMACCLI(object):
         root_logger.setLevel(args_.verbose_level)
         logger_handler = logging.StreamHandler(
                 stream=sys.stdout)
-        if root_logger.level >= 20:
+        if root_logger.level >= logging.INFO:
             formatter = logging.Formatter(
                 "%(levelname)s:\t%(message)s")
         else:
