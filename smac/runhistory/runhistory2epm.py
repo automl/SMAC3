@@ -161,6 +161,8 @@ class AbstractRunHistory2EPM(object):
         Y: numpy.ndarray
             cost values
         '''
+        self.logger.debug("Transform Rh into X,y format")
+        
         assert isinstance(runhistory, RunHistory)
 
         # consider only successfully finished runs
