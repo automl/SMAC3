@@ -261,6 +261,10 @@ class Scenario(object):
                                "penalty imposed on timeouts (i.e. runtimes that "
                                "exceed the *cutoff-time*). Default: PAR10.",
                           default='par10')
+        self.add_argument(name='cost_for_crash', default=float(MAXINT),
+                          help="Defines the cost-value for crashed runs "
+                               "on scenarios with quality as run-obj.",
+                          callback=float)
         self.add_argument(name='cutoff_time',
                           help="Maximum runtime, after which the "
                                "target-algorithm is cancelled. **Required "
