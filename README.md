@@ -1,6 +1,6 @@
 # SMAC v3 Project
 
-Copyright (C) 2016  [ML4AAD Group](http://www.ml4aad.org/)
+Copyright (C) 2017  [ML4AAD Group](http://www.ml4aad.org/)
 
 __Attention__: This package is under heavy development and subject to change. 
 A stable release of SMAC (v2) in Java can be found [here](http://www.cs.ubc.ca/labs/beta/Projects/SMAC/).
@@ -38,11 +38,19 @@ we refer to
 SMAC v3 is written in python3 and continuously tested with python3.4 and python3.5. 
 Its [Random Forest](https://bitbucket.org/aadfreiburg/random_forest_run) is written in C++.
 
-# Installation:
+# Installation
+
+Besides the listed requirements (see `requirements.txt`), the random forest used in SMAC3 requires SWIG (>= 3.0).
+
+	apt-get install swig 
 
     cat requirements.txt | xargs -n 1 -L 1 pip install
     
     python setup.py install
+    
+If you use Anaconda as your Python environment, you have to install two packages before you can install SMAC:
+
+	conda install gcc swig
     
 # License
 

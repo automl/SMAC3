@@ -34,7 +34,6 @@ Its `Random Forest <https://bitbucket.org/aadfreiburg/random_forest_run>`_ is wr
 Contents:
 ---------
 .. toctree::
-   :maxdepth: 2
 
    installation
    quickstart

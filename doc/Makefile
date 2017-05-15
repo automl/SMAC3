@@ -192,7 +192,13 @@ pseudoxml:
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
 
 buildapi:
-	sphinx-apidoc -fMo apidoc/ ../smac/
+	sphinx-apidoc -feTMo apidoc/ ../smac/
+	rm apidoc/smac.rst
+	for f in apidoc/*;   \
+	do                   \
+	  sed -i '/Submodules/d' $$f; \
+	  sed -i '/----------/d' $$f; \
+	done;
 	@echo
 	@echo "Auto-generation of API documentation finished. " \
 	      "The generated files are in 'apidoc/'"

@@ -20,10 +20,10 @@ from smac.initial_design.random_configuration_design import RandomConfiguration
 from smac.initial_design.multi_config_initial_design import \
     MultiConfigInitialDesign
 from smac.intensification.intensification import Intensifier
-from smac.smbo.smbo import SMBO
-from smac.smbo.objective import average_cost
-from smac.smbo.acquisition import EI, AbstractAcquisitionFunction
-from smac.smbo.local_search import LocalSearch
+from smac.optimizer.smbo import SMBO
+from smac.optimizer.objective import average_cost
+from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
+from smac.optimizer.local_search import LocalSearch
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.base_epm import AbstractEPM
@@ -121,14 +121,18 @@ class SMAC(object):
             output_dir=scenario.output_dir, stats=self.stats)
 
         # initial EPM
-        types = get_types(scenario.cs, scenario.feature_array)
+        types, bounds = get_types(scenario.cs, scenario.feature_array)
         if model is None:
-            model = RandomForestWithInstances(types=types,
+            model = RandomForestWithInstances(types=types, bounds=bounds,
                                               instance_features=scenario.feature_array,
-                                              seed=rng.randint(MAXINT))
+                                              seed=rng.randint(MAXINT),
+                                              pca_components=scenario.PCA_DIM)
         # initial acquisition function
         if acquisition_function is None:
-            acquisition_function = EI(model=model)
+            if scenario.run_obj == "runtime":
+                acquisition_function = LogEI(model=model)
+            else:
+                acquisition_function = EI(model=model)
         # inject model if necessary
         if acquisition_function.model is None:
             acquisition_function.model = model
@@ -187,6 +191,8 @@ class SMAC(object):
                                       cutoff=scenario.cutoff,
                                       deterministic=scenario.deterministic,
                                       run_obj_time=scenario.run_obj == "runtime",
+                                      always_race_against=scenario.cs.get_default_configuration() \
+                                        if scenario.always_race_default else None,
                                       instance_specifics=scenario.instance_specific,
                                       minR=scenario.minR,
                                       maxR=scenario.maxR)
@@ -392,7 +398,7 @@ class SMAC(object):
         '''
             simple interface to obtain all data in runhistory
             in X, y format 
-            
+
             Uses smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()
 
             Returns

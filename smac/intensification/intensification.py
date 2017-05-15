@@ -8,12 +8,13 @@ from collections import OrderedDict
 
 import numpy as np
 
-from smac.smbo.objective import sum_cost
+from smac.optimizer.objective import sum_cost
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT, MAX_CUTOFF
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
-from smac.tae.execute_ta_run import StatusType, BudgetExhaustedException, CappedRunException
+from smac.tae.execute_ta_run import StatusType, BudgetExhaustedException, CappedRunException, ExecuteTARun
+from smac.utils.io.traj_logging import TrajLogger
 
 __author__ = "Katharina Eggensperger, Marius Lindauer"
 __copyright__ = "Copyright 2017, ML4AAD"
@@ -21,14 +22,19 @@ __license__ = "3-clause BSD"
 
 
 class Intensifier(object):
-
     '''
         takes challenger and incumbents and performs intensify
     '''
 
-    def __init__(self, tae_runner, stats, traj_logger, rng, instances,
-                 instance_specifics=None, cutoff=MAX_CUTOFF, deterministic=False,
-                 run_obj_time=True, run_limit=MAXINT, minR=1, maxR=2000):
+    def __init__(self, tae_runner: ExecuteTARun, stats: Stats,
+                 traj_logger: TrajLogger, rng: np.random.RandomState,
+                 instances: typing.List[str],
+                 instance_specifics: typing.Mapping[str, np.ndarray]=None,
+                 cutoff: int=MAX_CUTOFF, deterministic:bool=False,
+                 run_obj_time: bool=True,
+                 always_race_against: Configuration=None,
+                 run_limit: int=MAXINT,
+                 minR: int=1, maxR: int=2000):
         '''
         Constructor
 
@@ -36,14 +42,14 @@ class Intensifier(object):
         ----------
         tae_runner : tae.executre_ta_run_*.ExecuteTARun* Object
             target algorithm run executor
-        stats: Stats()
+        stats: Stats
             stats object
-        traj_logger: TrajLogger()
+        traj_logger: TrajLogger
             TrajLogger object to log all new incumbents
         rng : np.random.RandomState
-        instances : list
+        instances : typing.List[str]
             list of all instance ids
-        instance_specifics : dict
+        instance_specifics : typing.Mapping[str,np.ndarray]
             mapping from instance name to instance specific string
         cutoff : int
             runtime cutoff of TA runs
@@ -51,6 +57,9 @@ class Intensifier(object):
             whether the TA is deterministic or not
         run_obj_time: bool
             whether the run objective is runtime or not (if true, apply adaptive capping)
+        always_race_against: Configuration
+            if incumbent changes race this configuration always against new incumbent;
+            can sometimes prevent over-tuning
         run_limit : int
             Maximum number of target algorithm runs per call to intensify.
         maxR : int
@@ -60,6 +69,9 @@ class Intensifier(object):
             Minimum number of run per config (summed over all calls to
             intensify).
         '''
+        self.logger = logging.getLogger(
+            self.__module__ + "." + self.__class__.__name__)
+
         self.stats = stats
         self.traj_logger = traj_logger
         # general attributes
@@ -70,11 +82,12 @@ class Intensifier(object):
             self.instance_specifics = {}
         else:
             self.instance_specifics = instance_specifics
-        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.run_limit = run_limit
         self.maxR = maxR
         self.minR = minR
         self.rs = rng
+
+        self.always_race_against = always_race_against
 
         # scenario info
         self.cutoff = cutoff
@@ -152,6 +165,15 @@ class Intensifier(object):
                                                   incumbent=incumbent,
                                                   run_history=run_history,
                                                   aggregate_func=aggregate_func)
+                if self.always_race_against and \
+                        challenger == incumbent and \
+                        self.always_race_against != challenger:
+                    self.logger.debug("Race against constant configuration after incumbent change.")
+                    incumbent = self._race_challenger(challenger=self.always_race_against,
+                                                      incumbent=incumbent,
+                                                      run_history=run_history,
+                                                      aggregate_func=aggregate_func)
+
             except BudgetExhaustedException:
                 # We return incumbent, SMBO stops due to its own budget checks
                 inc_perf = run_history.get_cost(incumbent)
@@ -321,8 +343,9 @@ class Intensifier(object):
                         instance=instance,
                         seed=seed,
                         cutoff=cutoff,
-                        instance_specific=self.instance_specifics.get(instance, "0"),
-                        capped=(self.cutoff is not None) and (cutoff<self.cutoff))
+                        instance_specific=self.instance_specifics.get(
+                            instance, "0"),
+                        capped=(self.cutoff is not None) and (cutoff < self.cutoff))
                     self._num_run += 1
                 except CappedRunException:
                     return incumbent
@@ -446,14 +469,14 @@ class Intensifier(object):
                 chal_perf, inc_perf, n_samples))
             # Show changes in the configuration
             params = sorted([(param, incumbent[param], challenger[param]) for param in
-                    challenger.keys()])
+                             challenger.keys()])
             self.logger.info("Changes in incumbent:")
             for param in params:
                 if param[1] != param[2]:
                     self.logger.info("  %s : %r -> %r" % (param))
                 else:
                     self.logger.debug("  %s remains unchanged: %r" %
-                            (param[0], param[1]))
+                                      (param[0], param[1]))
             self.stats.inc_changed += 1
             self.traj_logger.add_entry(train_perf=chal_perf,
                                        incumbent_id=self.stats.inc_changed,

@@ -6,15 +6,8 @@ smac\.stats package
     :undoc-members:
     :show-inheritance:
 
-Submodules
-----------
 
-smac\.stats\.stats module
--------------------------
+.. toctree::
 
-.. automodule:: smac.stats.stats
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   smac.stats.stats
 

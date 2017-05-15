@@ -6,55 +6,13 @@ smac\.smbo package
     :undoc-members:
     :show-inheritance:
 
-Submodules
-----------
 
-smac\.smbo\.acquisition module
-------------------------------
+.. toctree::
 
-.. automodule:: smac.smbo.acquisition
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-smac\.smbo\.base\_solver module
--------------------------------
-
-.. automodule:: smac.smbo.base_solver
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-smac\.smbo\.local\_search module
---------------------------------
-
-.. automodule:: smac.smbo.local_search
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-smac\.smbo\.objective module
-----------------------------
-
-.. automodule:: smac.smbo.objective
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-smac\.smbo\.pSMAC module
-------------------------
-
-.. automodule:: smac.smbo.pSMAC
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-smac\.smbo\.smbo module
------------------------
-
-.. automodule:: smac.smbo.smbo
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   smac.smbo.acquisition
+   smac.smbo.base_solver
+   smac.smbo.local_search
+   smac.smbo.objective
+   smac.smbo.pSMAC
+   smac.smbo.smbo
 

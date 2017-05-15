@@ -6,15 +6,8 @@ smac\.configspace package
     :undoc-members:
     :show-inheritance:
 
-Submodules
-----------
 
-smac\.configspace\.util module
-------------------------------
+.. toctree::
 
-.. automodule:: smac.configspace.util
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   smac.configspace.util
 

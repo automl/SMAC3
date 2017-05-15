@@ -1,9 +1,23 @@
 API Documentation
 =================
 
-Information on specific functions, classes, and methods.
+.. automodule:: smac
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 .. toctree::
-   :titlesonly:
 
-   apidoc/modules
+    apidoc/smac.configspace
+    apidoc/smac.epm
+    apidoc/smac.facade
+    apidoc/smac.initial_design
+    apidoc/smac.intensification
+    apidoc/smac.runhistory
+    apidoc/smac.scenario
+    apidoc/smac.smbo
+    apidoc/smac.stats
+    apidoc/smac.tae
+    apidoc/smac.utils
+    apidoc/smac.smac_cli
+

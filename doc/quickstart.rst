@@ -9,7 +9,7 @@ To get started, we will walk you through a few examples.
 
 * First, we explain the basic usage of *SMAC*, using a `scenario`_ file to optimize the `branin`__-function as a toy example.
 * Secondly, we explain the usage of *SMAC* within Python how to define hyperparameters in the code by optimizing a `Support Vector Machine`__.
-* Thirdly, we show a real-world example, using an algorithm-wrapper to optimize the `Spear-SAT-solver`__.
+* Thirdly, we show a real-world example, using an algorithm-wrapper to optimize the `SPEAR-SAT-solver`__.
 
 __ branin-example_
 __ svm-example_
@@ -20,6 +20,8 @@ __ spear-example_
 Branin
 ~~~~~~
 First of, we'll demonstrate the usage of *SMAC* on the minimization of a standard 2-dimensional continuous test function (`branin <https://www.sfu.ca/~ssurjano/branin.html>`_).
+This example does not use instance features and aims to explain the most basic
+usage of *SMAC*.
 
 To run the example scenario, change into the root-directory of *SMAC* and type the following commands:
 
@@ -57,7 +59,7 @@ An algorithm call by *SMAC* will look like this:
 
         <algo> <instance> <instance specific> <runtime cutoff> <runlength> <seed> <algorithm parameters>
 
-The **paramfile** parameter tells *SMAC* which Parameter Configuration Space (PCS)-file to use. This file contains a list of the algorithm's parameters, their domains and default values:
+The **paramfile** parameter tells *SMAC* which Parameter Configuration Space (`PCS <>`_)-file to use. This file contains a list of the algorithm's parameters, their domains and default values:
 
     .. code-block:: bash
 
@@ -110,6 +112,7 @@ Using *SMAC* in Python: SVM
 To explain the use of *SMAC* within Python, let's look at a real-world example,
 optimizing a Support Vector Machine (SVM) on the widely known `IRIS-dataset
 <http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html>`_.
+This example is located in *examples/svm.py*.
 
 To use *SMAC* directly with Python, we first import the necessary modules
 

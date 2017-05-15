@@ -41,16 +41,17 @@ def svm_from_cfg(cfg):
     """
     # We translate boolean values:
     shrinking = True if cfg["shrinking"] == "true" else False
-    # If we use conditions, Configuration stores None-values for unused parameters.
-    # This is not accepted by the svm, so we set unused values to default.
-    degree = cfg["degree"] if cfg["degree"] else 3
-    coef0 = cfg["coef0"] if cfg["coef0"] else 0.0
+    # For deactivated parameters, the configuration stores None-values.
+    # This is not accepted by the SVM, so we set unused values to 0.
+    cfg = {k : (cfg[k] if cfg[k] else 0) for k in cfg}
+    #degree = cfg["degree"] if cfg["degree"] else 3
+    #coef0 = cfg["coef0"] if cfg["coef0"] else 0.0
     # And for gamma, we set it to a fixed value or to "auto"
     gamma = cfg["gamma_value"] if cfg["gamma"] == "value" else "auto"
 
     clf = svm.SVC(
         C=cfg["C"], kernel=cfg["kernel"],
-        degree=degree, gamma=gamma, coef0=coef0,
+        degree=cfg["degree"], gamma=cfg["gamma"], coef0=cfg["coef0"],
         shrinking=shrinking,
         random_state=42)
 

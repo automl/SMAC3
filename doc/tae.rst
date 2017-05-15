@@ -16,7 +16,7 @@ from the target algorithms return value directly.
 TAE-Commandline
 ~~~~~~~~~~~~~~~
 *smac.tae.execute_ta_run_old*. Used when calling *SMAC* via the commandline_, where it takes the algorithm call
-from the scenario_. It expects the target algorithm to print a string during
+from the algo-parameter of the scenario_. It expects the target algorithm to print a string during
 execution with the following format:
 
     .. code-block:: bash

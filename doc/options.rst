@@ -17,35 +17,19 @@ options:
 * Instance_- and feature_-files, that list the instances and features to
   optimize upon.
 
-.. _commandline:
-
-Commandline
-~~~~~~~~~~~
-*SMAC* is called via the command-line with the following arguments:
-.. code-block:: bash
-
-        python smac  - -scenario SCENARIO --seed INT --verbose_level LEVEL --modus MODUS
-
-Required:
-     * *scenario*: Path to the file that specifies the scenario_ for this *SMAC*-run.
-Optional:
-     * *seed*: The integer that the random-generator will be based upon. Default: 12345
-     * *verbose_level*: in [INFO, DEBUG], specifies the logging-verbosity. Default: INFO
-     * *modus*: in [SMAC, ROAR]. SMAC will use the bayeasian optimization with an intensification process, whereas ROAR stands for Random Online Adaptive Racing. Default: SMAC
-
 .. _scenario:
 
 Scenario-options
 ~~~~~~~~~~~~~~~~
-The Scenario-object can be constructed either by providing an actual
-Scenario-object (see `SVM <quickstart.html#using-smac-in-python-svm>`_-example), or by specifing the options in a
-scenario file.
+The scenario-object is used to configure *SMAC* and can be constructed either by providing an actual
+scenario-object (see `SVM-example <quickstart.html#using-smac-in-python-svm>`_), or by specifing the options in a
+scenario file (see `SPEAR-example <>`_).
 The format of the scenario file is one option per line:
 
 .. code-block:: bash
 
-        OPTION1 VALUE1
-        OPTION2 VALUE2
+        OPTION1 = VALUE1
+        OPTION2 = VALUE2
         ...
 
 For boolean options "1" or "true" both evaluate to True.
@@ -68,7 +52,7 @@ Optional:
         * *minR* is the minimum number of calls per configuration. Default: 1
         * *maxR* is the maximum number of calls per configuration. Default: 2000
         * *instance_file* specifies the file with the training-instances.
-        * *test-instance_file* specifies the file with the test-instances.
+        * *test_instance_file* specifies the file with the test-instances.
         * *feature_file* specifies the file with the instance-features
         * *output_dir* specifies the output-directory for all emerging files, such as logging and results. Default: "smac3-output_YEAR-MONTH-DAY_HOUR:MINUTE:SECOND"
         * *shared_model*:  Default: false

@@ -6,15 +6,8 @@ smac\.intensification package
     :undoc-members:
     :show-inheritance:
 
-Submodules
-----------
 
-smac\.intensification\.intensification module
----------------------------------------------
+.. toctree::
 
-.. automodule:: smac.intensification.intensification
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   smac.intensification.intensification
 

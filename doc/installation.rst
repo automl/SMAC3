@@ -5,7 +5,7 @@ Installation
 
 Installation from pypi
 ----------------------
-| To install SMAC3 from pypi, please use the following command on the command line:
+To install SMAC3 from pypi, please use the following command on the command line:
 
 .. code-block:: bash
 
@@ -15,7 +15,7 @@ Installation from pypi
 
 Manual Installation
 -------------------
-| To install SMAC3 from command line, please type the following commands on the command line
+To install SMAC3 from command line, please type the following commands on the command line
 
 .. code-block:: bash
 

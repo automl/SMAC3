@@ -6,15 +6,8 @@ smac\.scenario package
     :undoc-members:
     :show-inheritance:
 
-Submodules
-----------
 
-smac\.scenario\.scenario module
--------------------------------
+.. toctree::
 
-.. automodule:: smac.scenario.scenario
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   smac.scenario.scenario
 
