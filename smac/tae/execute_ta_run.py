@@ -153,6 +153,9 @@ class ExecuteTARun(object):
 
         if cutoff is not None:
             cutoff = int(math.ceil(cutoff))
+        if cutoff is None and self.run_obj == "runtime":
+            self.logger.error("For scenarios optimizing running time (run objective), "
+                             "a cutoff time is required, but not given to this call.")
 
         status, cost, runtime, additional_info = self.run(config=config,
                                                           instance=instance,
@@ -186,11 +189,12 @@ class ExecuteTARun(object):
                                     "in the trajectory-file.")
 
         if self.run_obj == "runtime":
-            if cutoff is not None and runtime > self.par_factor * cutoff:
+            if runtime > self.par_factor * cutoff:
                 self.logger.warn("Returned running time is larger "
-                                 "than 2 times the passed cutoff time. "
-                                 "Clamping to {} x cutoff.".format(self.par_factor))
+                                 "than {0} times the passed cutoff time. "
+                                 "Clamping to {0} x cutoff.".format(self.par_factor))
                 runtime = cutoff * self.par_factor
+                status = StatusType.TIMEOUT
             if status == StatusType.SUCCESS:
                 cost = runtime
             else:
