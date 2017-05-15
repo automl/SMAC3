@@ -10,8 +10,10 @@ import copy
 import typing
 
 from smac.utils.io.input_reader import InputReader
-from smac.configspace import pcs, pcs_new
 from smac.utils.io.output_writer import OutputWriter
+from smac.utils.constants import MAXINT
+from smac.configspace import pcs, pcs_new
+
 
 __author__ = "Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -239,6 +241,10 @@ class Scenario(object):
                           mutually_exclusive_group='cs')
         self.add_argument(name='run_obj', help=None, default='runtime')
         self.add_argument(name='overall_obj', help=None, default='par10')
+        self.add_argument(name='cost_for_crash', default=float(MAXINT),
+                          help="Defines the cost-value for crashed runs "
+                               "on scenarios with quality as run-obj.",
+                          callback=float)
         self.add_argument(name='cutoff_time', help=None, default=None,
                           dest='cutoff', callback=float)
         self.add_argument(name='memory_limit', help=None)
