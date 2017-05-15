@@ -29,7 +29,8 @@ class TaeOldTest(unittest.TestCase):
         '''
             running some simple algo in old style
         '''
-        scen = Scenario(scenario={'cs': ConfigurationSpace()}, cmd_args=None)
+        scen = Scenario(scenario={'cs': ConfigurationSpace(),
+                                  'output_dir': ''}, cmd_args=None)
         stats = Stats(scen)
 
         eta = ExecuteTARunOld(

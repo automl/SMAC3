@@ -8,7 +8,7 @@ from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
 from smac.tae.execute_ta_run import StatusType
 from smac.runhistory.runhistory import RunHistory
-from smac.smbo.objective import average_cost
+from smac.optimizer.objective import average_cost
 
 
 def get_config_space():

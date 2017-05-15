@@ -161,6 +161,8 @@ class AbstractRunHistory2EPM(object):
         Y: numpy.ndarray
             cost values
         '''
+        self.logger.debug("Transform Rh into X,y format")
+        
         assert isinstance(runhistory, RunHistory)
 
         # consider only successfully finished runs
@@ -394,7 +396,7 @@ class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
 
 
 class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
-
+    
     def _build_matrix(self, run_dict, runhistory, instances=None, par_factor=1):
         # First build nan-matrix of size #configs x #params+1
         n_rows = len(run_dict)
@@ -406,12 +408,12 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
         for row, (key, run) in enumerate(run_dict.items()):
             # Scaling is automatically done in configSpace
             conf = runhistory.ids_config[key.config_id]
-            conf = impute_inactive_values(conf)
+            conf_vector = convert_configurations_to_array([conf])[0]
             if self.n_feats:
                 feats = self.instance_features[key.instance_id]
-                X[row, :] = np.hstack((conf.get_array(), feats))
+                X[row, :] = np.hstack((conf_vector, feats))
             else:
-                X[row, :] = conf.get_array()
+                X[row, :] = conf_vector
             # run_array[row, -1] = instances[row]
             Y[row, 0] = run.cost
             Y[row, 1] = np.log(1 + run.time)

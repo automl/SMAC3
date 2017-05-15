@@ -9,9 +9,6 @@ import datetime
 import copy
 import typing
 
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import MinMaxScaler
-
 from smac.utils.io.input_reader import InputReader
 from smac.utils.io.output_writer import OutputWriter
 from smac.utils.constants import MAXINT
@@ -42,7 +39,7 @@ class Scenario(object):
     main class of SMAC
     '''
 
-    def __init__(self, scenario, cmd_args=None):
+    def __init__(self, scenario, cmd_args=None, run_id=1):
         """Construct scenario object from file or dictionary.
 
         Parameters
@@ -52,6 +49,8 @@ class Scenario(object):
             if dict, it will be directly to get all scenario related information
         cmd_args : dict
             command line arguments that were not processed by argparse
+        run_id: int
+            run ID will be used as suffix for output_dir
 
         """
         self.logger = logging.getLogger(
@@ -103,8 +102,16 @@ class Scenario(object):
             setattr(self, arg_name, arg_value)
 
         self._transform_arguments()
+        
+        if self.output_dir:
+            self.output_dir += "_run%d" %(run_id)
 
         self.out_writer.write_scenario_file(self)
+        
+        self.logger.debug("Scenario Options:")
+        for arg_name, arg_value in parsed_arguments.items():
+            if isinstance(arg_value,(int,str,float)):
+                self.logger.debug("%s = %s" %(arg_name,arg_value))
 
     def add_argument(self, name, help, callback=None, default=None,
                      dest=None, required=False, mutually_exclusive_group=None,
@@ -246,6 +253,10 @@ class Scenario(object):
                           callback=float)
         self.add_argument(name='wallclock_limit', help=None, default=numpy.inf,
                           callback=float)
+        self.add_argument(name='always_race_default', 
+                          help="Race new incumbents always against default configuration", 
+                          default=False,
+                          callback=_is_truthy, dest="always_race_default")
         self.add_argument(name='runcount_limit', help=None, default=numpy.inf,
                           callback=float, dest="ta_run_limit")
         self.add_argument(name='minR', help=None, default=1, callback=int,
@@ -261,7 +272,7 @@ class Scenario(object):
                           default="smac3-output_%s" % (
                               datetime.datetime.fromtimestamp(
                                   time.time()).strftime(
-                                  '%Y-%m-%d_%H:%M:%S')))
+                                  '%Y-%m-%d_%H:%M:%S_(%f)')))
         self.add_argument(name='input_psmac_dirs', help=None,
                           default=None)
         self.add_argument(name='shared_model', help=None, default='0',
@@ -342,19 +353,6 @@ class Scenario(object):
                 self.feature_array.append(self.feature_dict[inst_])
             self.feature_array = numpy.array(self.feature_array)
             self.n_features = self.feature_array.shape[1]
-            # reduce dimensionality of features of larger than PCA_DIM
-            if self.feature_array.shape[1] > self.PCA_DIM:
-                X = self.feature_array
-                # scale features
-                X = MinMaxScaler().fit_transform(X)
-                X = numpy.nan_to_num(X)  # if features with max == min
-                # PCA
-                pca = PCA(n_components=self.PCA_DIM)
-                self.feature_array = pca.fit_transform(X)
-                self.n_features = self.feature_array.shape[1]
-                # update feature dictionary
-                for feat, inst_ in zip(self.feature_array, self.train_insts):
-                    self.feature_dict[inst_] = feat
 
         # read pcs file
         if self.pcs_fn and os.path.isfile(self.pcs_fn):

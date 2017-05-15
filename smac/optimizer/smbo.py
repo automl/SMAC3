@@ -7,12 +7,12 @@ import typing
 import math
 
 
-from smac.smbo.acquisition import AbstractAcquisitionFunction
-from smac.smbo.base_solver import BaseSolver
+from smac.optimizer.acquisition import AbstractAcquisitionFunction
+from smac.optimizer.base_solver import BaseSolver
 from smac.epm.rf_with_instances import RandomForestWithInstances
-from smac.smbo.local_search import LocalSearch
+from smac.optimizer.local_search import LocalSearch
 from smac.intensification.intensification import Intensifier
-from smac.smbo import pSMAC
+from smac.optimizer import pSMAC
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.stats.stats import Stats
@@ -214,6 +214,12 @@ class SMBO(BaseSolver):
                 list(map(lambda x: x[1],
                          configs_previous_runs_sorted[:num_configs_local_search])))
 
+        # Having the configurations from random search, sorted by their
+        # acquisition function value is important for the first few iterations
+        # of SMAC. As long as the random forest predicts constant value, we
+        # want to use only random configurations. Having them at the begging of
+        # the list ensures this (even after adding the configurations by local
+        # search, and then sorting them)
         next_configs_by_acq_value = next_configs_by_random_search_sorted + \
             next_configs_by_local_search
         next_configs_by_acq_value.sort(reverse=True, key=lambda x: x[0])
@@ -222,13 +228,8 @@ class SMBO(BaseSolver):
             (str([[_[0], _[1].origin] for _ in next_configs_by_acq_value[:10]])))
         next_configs_by_acq_value = [_[1] for _ in next_configs_by_acq_value]
 
-        # Remove dummy acquisition function value
-        next_configs_by_random_search = [x[1] for x in
-                                         self._get_next_by_random_search(
-                                             num_points=num_configs_local_search + num_configurations_by_random_search_sorted)]
-
-        challengers = list(itertools.chain(*zip(next_configs_by_acq_value,
-                                                next_configs_by_random_search)))
+        challengers = ChallengerList(next_configs_by_acq_value,
+                                     self.config_space)
         return challengers
 
     def _get_next_by_random_search(self, num_points=1000, _sorted=False):
@@ -347,3 +348,43 @@ class SMBO(BaseSolver):
                 time_spent, (1-frac_intensify), time_left, frac_intensify))
         return time_left
 
+
+class ChallengerList(object):
+    """Helper class to interleave random configurations in a list of challengers.
+
+    Provides an iterator which returns a random configuration in each second
+    iteration. Reduces time necessary to generate a list of new challengers
+    as one does not need to sample several hundreds of random configurations
+    in each iteration which are never looked at.
+
+    Parameters
+    ----------
+    challengers : list
+        List of challengers (without interleaved random configurations)
+
+    configuration_space : ConfigurationSpace
+        ConfigurationSpace from which to sample new random configurations.
+    """
+
+    def __init__(self, challengers, configuration_space):
+        self.challengers = challengers
+        self.configuration_space = configuration_space
+        self._index = 0
+        self._next_is_random = False
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self._index == len(self.challengers) and not self._next_is_random:
+            raise StopIteration
+        elif self._next_is_random:
+            self._next_is_random = False
+            config = self.configuration_space.sample_configuration()
+            config.origin = 'Random Search'
+            return config
+        else:
+            self._next_is_random = True
+            config = self.challengers[self._index]
+            self._index += 1
+            return config
