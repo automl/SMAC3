@@ -10,8 +10,10 @@ import copy
 import typing
 
 from smac.utils.io.input_reader import InputReader
-from smac.configspace import pcs, pcs_new
 from smac.utils.io.output_writer import OutputWriter
+from smac.utils.constants import MAXINT
+from smac.configspace import pcs, pcs_new
+
 
 __author__ = "Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2016, ML4AAD"

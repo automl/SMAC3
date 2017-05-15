@@ -6,6 +6,7 @@ from enum import Enum
 import numpy as np
 
 from smac.configspace import Configuration
+from smac.utils.constants import MAXINT
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -38,9 +39,11 @@ class StatusType(Enum):
                 return getattr(globals()[name], member)
         return obj
 
+
 class BudgetExhaustedException(Exception):
     """ Exception indicating that time- or memory-budgets are exhausted. """
     pass
+
 
 class TAEAbortException(Exception):
     """ Exception indicating that the target algorithm suggests an ABORT of
@@ -48,10 +51,12 @@ class TAEAbortException(Exception):
     """
     pass
 
+
 class FirstRunCrashedException(TAEAbortException):
     """ Exception indicating that the first run crashed (depending on options
     this could trigger an ABORT of SMAC.) """
     pass
+
 
 class CappedRunException(Exception):
     """ Exception indicating that a run was capped with a cutoff smaller than the actual timeout """
@@ -71,7 +76,7 @@ class ExecuteTARun(object):
     """
 
     def __init__(self, ta, stats=None, runhistory=None, run_obj="runtime",
-                 par_factor=1):
+                 par_factor=1, cost_for_crash=float(MAXINT)):
         """
         Constructor
 
@@ -87,6 +92,9 @@ class ExecuteTARun(object):
                 run objective of SMAC
             par_factor: int
                 penalization factor
+            crash_cost : float
+                cost that is used in case of crashed runs (including runs
+                that returned NaN or inf)
         """
 
         self.ta = ta
@@ -95,16 +103,18 @@ class ExecuteTARun(object):
         self.run_obj = run_obj
 
         self.par_factor = par_factor
+        self.crash_cost = cost_for_crash
 
-        self.logger = logging.getLogger("smac.tae."+self.__class__.__name__)
+        self.logger = logging.getLogger(
+            self.__module__ + '.' + self.__class__.__name__)
         self._supports_memory_limit = False
 
-    def start(self, config:Configuration, 
-              instance:str,
-              cutoff:float=None,
-              seed:int=12345,
-              instance_specific:str="0",
-              capped:bool=False):
+    def start(self, config: Configuration,
+              instance: str,
+              cutoff: float=None,
+              seed: int=12345,
+              instance_specific: str="0",
+              capped: bool=False):
         """
             wrapper function for ExecuteTARun.run() to check configuration budget before the runs
             and to update stats after run
@@ -122,8 +132,8 @@ class ExecuteTARun(object):
                 instance_specific: str
                     instance specific information (e.g., domain file or solution)
                 capped: bool
-                    if true and status is StatusType.TIMEOUT, 
-                    uses StatusType.CAPPED 
+                    if true and status is StatusType.TIMEOUT,
+                    uses StatusType.CAPPED
 
             Returns
             -------
@@ -138,7 +148,14 @@ class ExecuteTARun(object):
         """
 
         if self.stats.is_budget_exhausted():
-            raise BudgetExhaustedException("Skip target algorithm run due to exhausted configuration budget")
+            raise BudgetExhaustedException(
+                "Skip target algorithm run due to exhausted configuration budget")
+
+        if cutoff is not None:
+            cutoff = int(math.ceil(cutoff))
+        if cutoff is None and self.run_obj == "runtime":
+            self.logger.error("For scenarios optimizing running time (run objective), "
+                             "a cutoff time is required, but not given to this call.")
 
         status, cost, runtime, additional_info = self.run(config=config,
                                                           instance=instance,
@@ -146,7 +163,22 @@ class ExecuteTARun(object):
                                                           seed=seed,
                                                           instance_specific=instance_specific)
 
-        if self.stats.ta_runs == 0 and status == StatusType.CRASHED:
+        # update SMAC stats
+        self.stats.ta_runs += 1
+        self.stats.ta_time_used += float(runtime)
+
+        # Catch NaN or inf.
+        if (self.run_obj == 'runtime' and not np.isfinite(runtime) or
+            self.run_obj == 'quality' and not np.isfinite(cost)):
+            self.logger.warning("Target Algorithm returned NaN or inf as {}. "
+                                "Algorithm run is treated as CRASHED, cost "
+                                "is set to {} for quality scenarios. "
+                                "(Change value through "
+                                "\"cost_for_crash\"-option.)".format(self.run_obj,
+                                                                     self.crash_cost))
+            status = StatusType.CRASHED
+
+        if self.stats.ta_runs == 1 and status == StatusType.CRASHED:
             raise FirstRunCrashedException("First run crashed, abort. (To "
                                            "prevent this, toggle the "
                                            "'abort_on_first_run_crash'"
@@ -156,17 +188,22 @@ class ExecuteTARun(object):
                                     "exit. The last incumbent can be found "
                                     "in the trajectory-file.")
 
-        # update SMAC stats
-        self.stats.ta_runs += 1
-        self.stats.ta_time_used += float(runtime)
-
         if self.run_obj == "runtime":
-            if status != StatusType.SUCCESS:
-                cost = cutoff * self.par_factor
-            else:
+            if runtime > self.par_factor * cutoff:
+                self.logger.warn("Returned running time is larger "
+                                 "than {0} times the passed cutoff time. "
+                                 "Clamping to {0} x cutoff.".format(self.par_factor))
+                runtime = cutoff * self.par_factor
+                status = StatusType.TIMEOUT
+            if status == StatusType.SUCCESS:
                 cost = runtime
+            else:
+                cost = cutoff * self.par_factor
             if status == StatusType.TIMEOUT and capped:
                 status = StatusType.CAPPED
+        else:
+            if status == StatusType.CRASHED:
+                cost = self.crash_cost
 
         self.logger.debug("Return: Status: %r, cost: %f, time: %f, additional: %s" % (
             status, cost, runtime, str(additional_info)))
@@ -176,7 +213,7 @@ class ExecuteTARun(object):
                                 cost=cost, time=runtime, status=status,
                                 instance_id=instance, seed=seed,
                                 additional_info=additional_info)
-        
+
         if status == StatusType.CAPPED:
             raise CappedRunException("")
 
