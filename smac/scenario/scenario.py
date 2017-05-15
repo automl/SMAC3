@@ -236,7 +236,7 @@ class Scenario(object):
         self.add_argument(name='overall_obj', help=None, default='par10')
         self.add_argument(name='cost_for_crash', default=float(MAXINT),
                           help="Defines the cost-value for crashed runs "
-                          "on scenarios with quality as run-obj.",
+                               "on scenarios with quality as run-obj.",
                           callback=float)
         self.add_argument(name='cutoff_time', help=None, default=None,
                           dest='cutoff', callback=float)

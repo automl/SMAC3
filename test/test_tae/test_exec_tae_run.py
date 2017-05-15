@@ -123,7 +123,7 @@ class TaeTest(unittest.TestCase):
         self.assertEqual(eta.start(config={}, cutoff=10, instance=1)[0], StatusType.SUCCESS)
         #                                      (obj = runtime, runtime = inf)
         test_run.return_value = StatusType.SUCCESS, 1, np.inf, {}
-        self.assertEqual(eta.start(config={}, cutoff=10, instance=1)[0], StatusType.CRASHED)
+        self.assertEqual(eta.start(config={}, cutoff=10, instance=1)[0], StatusType.TIMEOUT)
 
         eta = get_tae('quality')
         # Patch run-function for custom-return (obj = quality, cost = inf)
