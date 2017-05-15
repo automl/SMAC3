@@ -191,6 +191,8 @@ class SMAC(object):
                                       cutoff=scenario.cutoff,
                                       deterministic=scenario.deterministic,
                                       run_obj_time=scenario.run_obj == "runtime",
+                                      always_race_against=scenario.cs.get_default_configuration() \
+                                        if scenario.always_race_default else None,
                                       instance_specifics=scenario.instance_specific,
                                       minR=scenario.minR,
                                       maxR=scenario.maxR)
@@ -396,7 +398,7 @@ class SMAC(object):
         '''
             simple interface to obtain all data in runhistory
             in X, y format 
-            
+
             Uses smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()
 
             Returns

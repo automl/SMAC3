@@ -247,6 +247,10 @@ class Scenario(object):
                           callback=float)
         self.add_argument(name='wallclock_limit', help=None, default=numpy.inf,
                           callback=float)
+        self.add_argument(name='always_race_default', 
+                          help="Race new incumbents always against default configuration", 
+                          default=False,
+                          callback=_is_truthy, dest="always_race_default")
         self.add_argument(name='runcount_limit', help=None, default=numpy.inf,
                           callback=float, dest="ta_run_limit")
         self.add_argument(name='minR', help=None, default=1, callback=int,
