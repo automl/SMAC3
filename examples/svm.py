@@ -39,21 +39,17 @@ def svm_from_cfg(cfg):
     --------
     A crossvalidated mean score for the svm on the loaded data-set.
     """
-    # We translate boolean values:
-    shrinking = True if cfg["shrinking"] == "true" else False
     # For deactivated parameters, the configuration stores None-values.
-    # This is not accepted by the SVM, so we set unused values to 0.
-    cfg = {k : (cfg[k] if cfg[k] else 0) for k in cfg}
-    #degree = cfg["degree"] if cfg["degree"] else 3
-    #coef0 = cfg["coef0"] if cfg["coef0"] else 0.0
-    # And for gamma, we set it to a fixed value or to "auto"
-    gamma = cfg["gamma_value"] if cfg["gamma"] == "value" else "auto"
+    # This is not accepted by the SVM, so we remove them.
+    cfg = {k : cfg[k] for k in cfg if cfg[k]}
+    # We translate boolean values:
+    cfg["shrinking"] = True if cfg["shrinking"] == "true" else False
+    # And for gamma, we set it to a fixed value or to "auto" (if used)
+    if "gamma" in cfg:
+        cfg["gamma"] = cfg["gamma_value"] if cfg["gamma"] == "value" else "auto"
+        cfg.pop("gamma_value", None)  # Remove "gamma_value"
 
-    clf = svm.SVC(
-        C=cfg["C"], kernel=cfg["kernel"],
-        degree=cfg["degree"], gamma=cfg["gamma"], coef0=cfg["coef0"],
-        shrinking=shrinking,
-        random_state=42)
+    clf = svm.SVC(**cfg, random_state=42)
 
     scores = cross_val_score(clf, iris.data, iris.target, cv=5)
     return 1-np.mean(scores)  # Minimize!
@@ -63,7 +59,6 @@ logging.basicConfig(level=logging.INFO)  # logging.DEBUG for debug output
 
 # Build Configuration Space which defines all parameters and their ranges
 cs = ConfigurationSpace()
-use_conditionals = True
 
 # We define a few possible types of SVM-kernels and add them as "kernel" to our cs
 kernel = CategoricalHyperparameter("kernel", ["linear", "rbf", "poly", "sigmoid"], default="poly")
@@ -78,10 +73,9 @@ cs.add_hyperparameters([C, shrinking])
 degree = UniformIntegerHyperparameter("degree", 1, 5, default=3)     # Only used by kernel poly
 coef0 = UniformFloatHyperparameter("coef0", 0.0, 10.0, default=0.0)  # poly, sigmoid
 cs.add_hyperparameters([degree, coef0])
-if use_conditionals:
-    use_degree = InCondition(child=degree, parent=kernel, values=["poly"])
-    use_coef0 = InCondition(child=coef0, parent=kernel, values=["poly", "sigmoid"])
-    cs.add_conditions([use_degree, use_coef0])
+use_degree = InCondition(child=degree, parent=kernel, values=["poly"])
+use_coef0 = InCondition(child=coef0, parent=kernel, values=["poly", "sigmoid"])
+cs.add_conditions([use_degree, use_coef0])
 
 # This also works for parameters that are a mix of categorical and values from a range of numbers
 # For example, gamma can be either "auto" or a fixed float
@@ -91,9 +85,7 @@ cs.add_hyperparameters([gamma, gamma_value])
 # We only activate gamma_value if gamma is set to "value"
 cs.add_condition(InCondition(child=gamma_value, parent=gamma, values=["value"]))
 # And again we can restrict the use of gamma in general to the choice of the kernel
-if use_conditionals:
-    cs.add_condition(
-        InCondition(child=gamma, parent=kernel, values=["rbf", "poly", "sigmoid"]))
+cs.add_condition(InCondition(child=gamma, parent=kernel, values=["rbf", "poly", "sigmoid"]))
 
 
 # Scenario object
@@ -112,12 +104,11 @@ def_value = taf.run(cs.get_default_configuration())[1]
 print("Default Value: %.2f" % (def_value))
 
 # Optimize, using a SMAC-object
+print("Optimizing! Depending on your machine, this might take a few minutes.")
 smac = SMAC(scenario=scenario, rng=np.random.RandomState(42), tae_runner=taf)
 
-try:
-    incumbent = smac.optimize()
-finally:
-    incumbent = smac.solver.incumbent
+incumbent = smac.optimize()
 
 inc_value = taf.run(incumbent)[1]
+
 print("Optimized Value: %.2f" % (inc_value))

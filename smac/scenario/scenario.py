@@ -34,7 +34,7 @@ def _is_truthy(arg):
 class Scenario(object):
 
     '''
-    main class of SMAC
+    Scenario contains the configuration of the optimization process
     '''
 
     def __init__(self, scenario, cmd_args=None, run_id=1):

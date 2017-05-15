@@ -1,4 +1,6 @@
-.. _scenario: manual.html#scenario-options
+.. _scenario: options.html#scenario
+.. _PCS: options.html#paramcs
+.. _TAE: tae.html
 
 Quick Start
 -----------
@@ -59,7 +61,7 @@ An algorithm call by *SMAC* will look like this:
 
         <algo> <instance> <instance specific> <runtime cutoff> <runlength> <seed> <algorithm parameters>
 
-The **paramfile** parameter tells *SMAC* which Parameter Configuration Space (`PCS <>`_)-file to use. This file contains a list of the algorithm's parameters, their domains and default values:
+The **paramfile** parameter tells *SMAC* which Parameter Configuration Space (PCS_)-file to use. This file contains a list of the algorithm's parameters, their domains and default values:
 
     .. code-block:: bash
 
@@ -90,7 +92,7 @@ The **runcount_limit** specifies the maximum number of algorithm calls.
 
     .. code-block:: bash
 
-        INFO:intensifier:Updated estimated performance of incumbent on 122 runs: 0.5063
+        INFO:intensifier:Updated estimated error of incumbent on 122 runs: 0.5063
         DEBUG:root:Remaining budget: inf (wallclock), inf (ta costs), -6.000000 (target runs)
         INFO:Stats:##########################################################
         INFO:Stats:Statistics:
@@ -120,8 +122,6 @@ To use *SMAC* directly with Python, we first import the necessary modules
    :lines: 9-22 
    :lineno-match:
    
-.. _scikit-learn http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html
-
 We import the `SVM from Scikit-Learn <http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html>`_, 
 the ConfigurationSpace with different types of parameters and objects we need
 from *SMAC*.
@@ -137,14 +137,14 @@ Let's start by creating a ConfigSpace-object and adding the first hyperparameter
 the kernel. Conditionals to limit the search-space are optional.
 
 .. literalinclude:: ../examples/svm.py
-   :lines: 63-69
+   :lines: 60-65
    :lineno-match:
 
 We can add Integers, Floats or Categoricals to the ConfigSpace-object all at
 once, by passing them in a list. 
 
 .. literalinclude:: ../examples/svm.py
-   :lines: 71-74
+   :lines: 67-70
    :lineno-match:
 
 Not every kernel uses all the parameters. The sklearn-implementation of the SVM accepts all parameters we are optimizing, but ignores all those incompatible with the chosen kernel.
@@ -153,7 +153,7 @@ Deactivated parameters are not considered during optimization, limiting the sear
 This way human knowledge about the problem is introduced.
 
 .. literalinclude:: ../examples/svm.py
-   :lines: 76-83
+   :lines: 72-78
    :lineno-match:
 
 Conditions can be used for various reasons. The `gamma`-hyperparameter for
@@ -161,7 +161,7 @@ example can be set to "auto" or to a fixed float-value. We introduce a parameter
 that is only activated if `gamma` is not set to "auto".
 
 .. literalinclude:: ../examples/svm.py
-   :lines: 85-95
+   :lines: 80-88
    :lineno-match:
 
 Of course we also define a function to evaluate the configured SVM on the IRIS-dataset.
@@ -172,13 +172,13 @@ Others, such as *gamma*, need to be translated before the call to the SVM.
    :pyobject: svm_from_cfg
    :lineno-match:
 
-We register the function to a Target Algorithm Evaluator, which communicates
+We register the function to a Target Algorithm Evaluator (TAE_), which communicates
 between the function to be optimized and *SMAC* by calling the function with the
 desired configuration and interpreting the output (in this case, simply the
 score). We also call the function to get the default-value.
 
 .. literalinclude:: ../examples/svm.py
-   :lines: 105-111 
+   :lines: 98-104
    :lineno-match:
 
 We need a Scenario-object to configure the optimization-process.
@@ -190,7 +190,7 @@ The initialization of a scenario in the code uses the same keywords as a
 scenario-file, which we used in the branin example.
 
 .. literalinclude:: ../examples/svm.py
-   :lines: 98-103 
+   :lines: 91-96
    :lineno-match:
 
 Now we're ready to create a *SMAC*-instance, which handles the Bayesian
@@ -200,7 +200,7 @@ and evaluation of the function, SMAC needs as inputs the scenario object
 as well as the function evaluator.
 
 .. literalinclude:: ../examples/svm.py
-   :lines: 113-123
+   :lines: 106-
    :lineno-match:
 
 We start the optimization loop.
@@ -227,7 +227,8 @@ After successful execution of the optimization loop the Stats object outputs the
       kernel, Value: 'poly'
       shrinking, Value: 'false'
 
-We further query the target function at the incumbent, using the function evaluator so that as final output we can see performance value of the incumbent.
+We further query the target function at the incumbent, using the function evaluator
+so that as final output we can see the error value of the incumbent.
 
 .. code-block:: bash
 
@@ -245,77 +246,83 @@ In *SMACs* root-directory type:
     cd examples/spear_qcp && ls -l
 
 In this folder you see the following files and directories:
-    * **features.txt**:
 
-     The feature file contains the features for each instance in a csv-format.
+* **features.txt**:
 
-     +--------------------+--------------------+--------------------+-----+
-     |      instance      | name of feature 1  | name of feature 2  | ... |
-     +====================+====================+====================+=====+
-     | name of instance 1 | value of feature 1 | value of feature 2 | ... |
-     +--------------------+--------------------+--------------------+-----+
-     |         ...        |          ...       |          ...       | ... |
-     +--------------------+--------------------+--------------------+-----+
+    The `feature file <options.html#feature>`_ contains the features for each instance in a csv-format.
 
-    * **instances.txt**
-        The instance file contains the names of all instances one might want to consider during the optimization process.
+    +--------------------+--------------------+--------------------+-----+
+    |      instance      | name of feature 1  | name of feature 2  | ... |
+    +====================+====================+====================+=====+
+    | name of instance 1 | value of feature 1 | value of feature 2 | ... |
+    +--------------------+--------------------+--------------------+-----+
+    |         ...        |          ...       |          ...       | ... |
+    +--------------------+--------------------+--------------------+-----+
 
-    * **scenario.txt**
-        The scenario_ file contains all the necessary information about the configuration scenario at hand.
-        For this example the following options are used:
+* **instances.txt**
+    The `instance file <options.html#instance>`_ contains the names of all instances one might want to consider during the optimization process.
 
-        * *algo:*
+* **scenario.txt**
+    The scenario_ file contains all the necessary information about the configuration scenario at hand.
+    For this example the following options are used:
 
-            .. code-block:: bash
+    * *algo:*
 
-                python -u ./target_algorithm/scripts/SATCSSCWrapper.py --mem-limit 1024 --script ./target_algorithm/spear-python/spearCSSCWrapper.py
+        .. code-block:: bash
 
-            This specifies the wrapper that *SMAC* executes with a pre-specified syntax in order to evaluate the algorithm to be optimized.
-            This wrapper script takes an instantiation of the parameters as input, runs the algorithm with these parameters, and returns
-            the performance of the algorithm; since every algorithm has a different input and output format, this wrapper acts as an interface between the
-            algorithm and *SMAC*, which executes the wrapper through a command line call.
+            python -u ./target_algorithm/scripts/SATCSSCWrapper.py --mem-limit 1024 --script ./target_algorithm/spear-python/spearCSSCWrapper.py
 
-            An example call would look something like this:
+        This specifies the wrapper that *SMAC* executes with a pre-specified syntax in order to evaluate the algorithm to be optimized.
+        This wrapper script takes an instantiation of the parameters as input, runs the algorithm with these parameters, and returns
+        the error of the algorithm; since every algorithm has a different input and output format, this wrapper acts as an interface between the
+        algorithm and *SMAC*, which executes the wrapper through a command line call.
 
-            .. code-block:: bash
+        An example call would look something like this:
 
-                <algo> <instance> <instance_specifics> <running time cutoff> <run length> <seed> <algorithm parameters>
+        .. code-block:: bash
 
-            For *SMAC* to be able to interpret the results of the algorithm run, the wrapper returns the results of the algorithm run as follows:
-            :bash:`STATUS, runtime, runlength, quality, seed, instance-specifics`
+            <algo> <instance> <instance specifics> <runtime cutoff> <runlength> <seed> <algorithm parameters>
 
-        * *paramfile:*
+        For *SMAC* to be able to interpret the results of the algorithm run, the wrapper returns the results of the algorithm run as follows:
 
-            This parameter specifies which pcs-file to use and where it is located.
+        .. code-block:: bash
 
-            The pcs-file specifies the Parameter Configuration Space file, which lists the algorithm's parameters, their domains, and default values (one per line)
+            STATUS, runtime, runlength, quality, seed, instance-specifics
 
-            In this example we are dealing with 26 parameters of which 12 are categorical and 14 are continuous. Out of these 26
-            parameters, 9 parameters are conditionals (they are only active if their parent parameter takes on a certain value).
+    * *paramfile:*
 
-        * *execdir:* Specifies the directory in which the target algorithm will be run.
+        This parameter specifies which pcs-file to use and where it is located.
 
-        * *deterministic:* Specifies if the configuration scenario is deterministic.
+        The pcs-file specifies the Parameter Configuration Space file, which lists the algorithm's parameters, their domains, and default values (one per line)
 
-        * *run_obj:* This parameter tells *SMAC* what is to be optimized, i.e. runtime or (solution) quality.
+        In this example we are dealing with 26 parameters of which 12 are categorical and 14 are continuous. Out of these 26
+        parameters, 9 parameters are conditionals (they are only active if their parent parameter takes on a certain value).
 
-        * *overall_obj:* Specifies how to evaluate the performance values, e.g as mean or PARX.
+    * *execdir:* Specifies the directory in which the target algorithm will be run.
 
-        * *cutoff_time:* The target algorithms cutoff time.
+    * *deterministic:* Specifies if the configuration scenario is deterministic.
 
-        * *wallclock-limit:* This parameter is used to give the time budget for the configuration task in seconds.
+    * *run_obj:* This parameter tells *SMAC* what is to be optimized, i.e. runtime or (solution) quality.
 
-        * *instance_file:* See instances.txt above.
+    * *overall_obj:* Specifies how to evaluate the error values, e.g as mean or PARX.
 
-        * *feature_file:* See features.txt above.
+    * *cutoff_time:* The target algorithms cutoff time.
 
-    * **run.sh**
-        A shell script calling *SMAC* with the following command:
-        :bash:`python ../../scripts/smac --scenario scenario.txt --verbose DEBUG`
-        This runs *SMAC* with the scenario options specified in the scenario.txt file.
+    * *wallclock-limit:* This parameter is used to give the time budget for the configuration task in seconds.
 
-    * **target_algorithms** contains the wrapper and the executable for Spear.
-    * **instances** folder contains the instances on which *SMAC* will configure Spear.
+    * *instance_file:* See instances.txt above.
+
+    * *feature_file:* See features.txt above.
+
+* **run.sh**
+    A shell script calling *SMAC* with the following command:
+
+    ``python ../../scripts/smac --scenario scenario.txt --verbose DEBUG``
+
+    This runs *SMAC* with the scenario options specified in the scenario.txt file.
+
+* **target_algorithms** contains the wrapper and the executable for Spear.
+* **instances** folder contains the instances on which *SMAC* will configure Spear.
 
 To run the example type one of the two commands below into a terminal:
 

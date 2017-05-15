@@ -14,7 +14,6 @@ __version__ = "0.0.1"
 
 class BaseSolver(object):
     '''
-    classdocs
     '''
 
     def __init__(self, acquisition_func=None, model=None,
@@ -35,16 +34,25 @@ class BaseSolver(object):
     def init_last_iteration(self):
         """
         Loads the last iteration from a previously stored run
-        :return: the previous observations
+
+        Returns
+        -------
+
+        observations
+            the previous observations
         """
         raise("Not yet implemented")
 
     def from_iteration(self, save_dir, i):
         """
         Loads the data from a previous run
-        :param save_dir: directory for the data
-        :param i: index of iteration
-        :return:
+
+        Parameters
+        ----------
+        save_dir: string
+            directory for the data
+        i: int
+            index of iteration
         """
         raise("Not yet implemented")
 
@@ -73,14 +81,23 @@ class BaseSolver(object):
         """
         The main Bayesian optimization loop
 
-        :param num_iterations: number of iterations to perform
-        :param X: (optional) Initial observations. If a run
-                continues these observations will be overwritten by the load
-        :param Y: (optional) Initial observations. If a run
-                continues these observations will be overwritten by the load
-        :param overwrite: data present in save_dir will be deleted
-                    and overwritten, otherwise the run will be continued.
-        :return: the incumbent
+        Parameters
+        ----------
+        num_iterations: int
+            number of iterations to perform
+        X: observations
+            (optional) Initial observations. If a run
+            continues these observations will be overwritten by the load
+        Y: observations
+            (optional) Initial observations. If a run
+            continues these observations will be overwritten by the load
+        overwrite: bool
+            data present in save_dir will be deleted
+            and overwritten, otherwise the run will be continued.
+
+        Returns
+        -------
+        incumbent: Configuration
         """
         pass
 
@@ -88,15 +105,23 @@ class BaseSolver(object):
         """
         Chooses the next configuration by optimizing the acquisition function.
 
-        :param X: The point that have been where the objective function has been evaluated
-        :param Y: The function values of the evaluated points
-        :return: The next promising configuration
+        Parameters
+        ----------
+        X
+            The point that have been where the objective function has been evaluated
+        Y
+            The function values of the evaluated points
+
+        Returns
+        -------
+        configuration
+            The next promising configuration
         """
         pass
 
     def save_iteration(self, it, **kwargs):
         """
-            Saves an iteration.
+        Saves an iteration.
         """
 
         if self.csv_writer is None:

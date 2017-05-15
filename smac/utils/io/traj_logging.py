@@ -23,19 +23,17 @@ class TrajLogger(object):
     """
         writes trajectory logs files 
 
-        Attributes
+        Parameters
         ----------
-        logger : Logger oject
+        logger : Logger object
     """
 
     def __init__(self, output_dir, stats):
         """
-        Constructor 
-
         creates output directory if not exists already
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         output_dir: str
             directory for logging (or None to disable logging)
         stats: Stats()

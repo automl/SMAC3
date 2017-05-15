@@ -109,14 +109,13 @@ class Intensifier(object):
                   aggregate_func: typing.Callable,
                   time_bound: int=MAXINT):
         '''
-            running intensification to determine the incumbent configuration
+            running intensification to determine the incumbent configuration.
             Side effect: adds runs to run_history
 
             Implementation of Procedure 2 in Hutter et al. (2011).
 
             Parameters
             ----------
-
             challengers : typing.List[Configuration]
                 promising configurations
             incumbent : Configuration
@@ -124,7 +123,7 @@ class Intensifier(object):
             run_history : RunHistory
                 stores all runs we ran so far
             aggregate_func: typing.Callable
-                aggregate performance across instances
+                aggregate error across instances
             time_bound : int, optional (default=2 ** 31 - 1)
                 time in [sec] available to perform intensify
 
@@ -193,7 +192,7 @@ class Intensifier(object):
         # output estimated performance of incumbent
         inc_runs = run_history.get_runs_for_config(incumbent)
         inc_perf = aggregate_func(incumbent, run_history, inc_runs)
-        self.logger.info("Updated estimated performance of incumbent on %d runs: %.4f" % (
+        self.logger.info("Updated estimated error of incumbent on %d runs: %.4f" % (
             len(inc_runs), inc_perf))
 
         self.stats.update_average_configs_per_intensify(
@@ -329,7 +328,7 @@ class Intensifier(object):
                 if cutoff is not None and cutoff <= 0:  # no time to validate challenger
                     self.logger.debug(
                         "Stop challenger itensification due to adaptive capping.")
-                    # challenger performs worse than incumbent
+                    # challeerrorms worse than incumbent
                     return incumbent
 
                 if not first_run:

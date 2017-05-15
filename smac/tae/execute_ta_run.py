@@ -50,7 +50,7 @@ class TAEAbortException(Exception):
 
 class FirstRunCrashedException(TAEAbortException):
     """ Exception indicating that the first run crashed (depending on options
-    this could trigger an ABORT of SMAC. """
+    this could trigger an ABORT of SMAC.) """
     pass
 
 class CappedRunException(Exception):
@@ -64,7 +64,7 @@ class ExecuteTARun(object):
         executes a target algorithm run with a given configuration
         on a given instance and some resource limitations
 
-        Attributes
+        Parameters
         ----------
         ta : string
             the command line call to the target algorithm (wrapper)

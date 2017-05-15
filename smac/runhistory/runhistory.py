@@ -68,7 +68,7 @@ class RunHistory(object):
         it will update data if the same key values are used
         (config, instance_id, seed)
 
-        Attributes
+        Parameters
         ----------
             config : dict (or other type -- depending on config space module)
                 parameter configuration
@@ -135,8 +135,8 @@ class RunHistory(object):
             and also updates self.runs_per_config;
             uses self.aggregate_func
 
-            Arguments
-            --------
+            Parameters
+            ----------
             config: Configuration
                 configuration to update cost based on all runs in runhistory
         '''
@@ -151,8 +151,8 @@ class RunHistory(object):
             computes the cost of all configurations from scratch
             and overwrites self.cost_perf_config and self.runs_per_config accordingly;
 
-            Arguments
-            ---------
+            Parameters
+            ----------
             instances: typing.List[str]
                 list of instances; if given, cost is only computed wrt to this instance set
         '''
@@ -174,8 +174,8 @@ class RunHistory(object):
         '''
             incrementally updates the performance of a configuration by using a moving average;
 
-            Arguments
-            --------
+            Parameters
+            ----------
             config: Configuration
                 configuration to update cost based on all runs in runhistory
             cost: float
@@ -217,7 +217,7 @@ class RunHistory(object):
 
         Returns
         -------
-            list: parameter configurations
+            parameter configurations: list
 
         """
         return list(self.config_ids.keys())
@@ -228,8 +228,9 @@ class RunHistory(object):
 
         Returns
         -------
-            bool: True if runs have been added to the RunHistory,
-                  False otherwise
+            emptiness: bool
+                True if runs have been added to the RunHistory,
+                False otherwise
         """
         return len(self.data) == 0
 

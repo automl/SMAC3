@@ -1,29 +1,28 @@
-SMAC-options and file-formats
------------------------------
+Options and file formats
+------------------------
 In the optimization-process of *SMAC*, there are several ways to configure the
 options:
 
-*Mandatory*:
+Mandatory:
+    * `Commandline <basic_usage.html#commandline>`_-options, with which *SMAC* is called directly (not needed if
+      *SMAC* is used within Python).
+    * Scenario-options, that are specified via a Scenario-object. Either directly
+      in the Python-code or by using a scenario_-file.
+    * A Parameter Configuration Space (`PCS <options.html#paramcs>`_), that provides the legal ranges of
+      parameters to optimize, their types (e.g. int or float) and their default
+      values.
 
-* Commandline_-options, with which *SMAC* is called directly
-* Scenario_-options, that are specified via a Scenario-object. Either directly
-  in the Python-code or by using a scenario_-file.
-* Parameter Configuration Space (PCS_), that provides the legal ranges of
-  parameters to optimize, their types (e.g. int or float) and their default
-  values.
-
-*Optional*:
-
-* Instance_- and feature_-files, that list the instances and features to
-  optimize upon.
+Optional:
+    * Instance_- and feature_-files, that list the instances and features to
+      optimize upon.
 
 .. _scenario:
 
-Scenario-options
-~~~~~~~~~~~~~~~~
+Scenario
+~~~~~~~~
 The scenario-object is used to configure *SMAC* and can be constructed either by providing an actual
 scenario-object (see `SVM-example <quickstart.html#using-smac-in-python-svm>`_), or by specifing the options in a
-scenario file (see `SPEAR-example <>`_).
+scenario file (see `SPEAR example <quickstart.html#spear-example>`_).
 The format of the scenario file is one option per line:
 
 .. code-block:: bash
@@ -58,7 +57,7 @@ Optional:
         * *shared_model*:  Default: false
         * *initial_incumbent*: in [DEFAULT, RANDOM]. DEFAULT is the default from the PCS. Default: DEFAULT.
 
-.. _PCS:
+.. _paramcs:
 
 Parameter Configuration Space (PCS)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -87,7 +86,8 @@ can find several examples for PCS-files. Generally, the format is:
         {parameter_name_1=value_1, ..., parameter_name_N=value_N}
 
 .. note::
-        The PCS-format of *SMAC3* differs from that of the JAVA-based *SMAC2*.
+        The PCS-format of *SMAC3* differs from that of the JAVA-based *SMAC2* in
+        syntax and capacities of the forbidden clauses.
 
 .. _instance:
 .. _feature:

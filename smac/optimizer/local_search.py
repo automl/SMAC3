@@ -20,9 +20,8 @@ class LocalSearch(object):
         """
         Implementation of SMAC's local search
 
-        Parameters:
-        -----------
-
+        Parameters
+        ----------
         acquisition_function:  function
             The function which the local search tries to maximize
         config_space:  ConfigSpace
@@ -53,7 +52,7 @@ class LocalSearch(object):
 
         Parameters
         ----------
-        start_point:  np.array(1, D):
+        start_point:  np.array(1, D)
             The point from where the local search starts
         *args:
             Additional parameters that will be passed to the
@@ -61,10 +60,9 @@ class LocalSearch(object):
 
         Returns
         -------
-
-        incumbent np.array(1, D):
+        incumbent: np.array(1, D)
             The best found configuration
-        acq_val_incumbent np.array(1,1) :
+        acq_val_incumbent: np.array(1,1)
             The acquisition value of the incumbent
 
         """

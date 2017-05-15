@@ -335,6 +335,11 @@ class SMAC(object):
             ---------
             max_iters: int
                 maximal number of iterations
+
+            Returns
+            -------
+            incumbent: Configuration
+                optimized parameters
         '''
         incumbent = None
         try:
@@ -353,24 +358,24 @@ class SMAC(object):
 
     def get_tae_runner(self):
         '''
-            returns target algorithm evaluator (TAE) object
+            Returns target algorithm evaluator (TAE) object
             which can run the target algorithm given a
             configuration
 
             Returns
             -------
-            smac.tae.execute_ta_run.ExecuteTARun
+            TAE: smac.tae.execute_ta_run.ExecuteTARun
         '''
         return self.solver.intensifier.tae_runner
 
     def get_runhistory(self):
         '''
-            returns the runhistory 
-            (i.e., all evaluated configurations and the results)
+            Returns the runhistory
+            (i.e., all evaluated configurations and the results).
 
             Returns
             -------
-            smac.runhistory.runhistory.RunHistory
+            Runhistory: smac.runhistory.runhistory.RunHistory
         '''
         if not hasattr(self, 'runhistory'):
             raise ValueError('SMAC was not fitted yet. Call optimize() prior '
@@ -379,14 +384,14 @@ class SMAC(object):
 
     def get_trajectory(self):
         '''
-            returns the trajectory 
-            (i.e., all incumbent configurations over time)
+            Returns the trajectory
+            (i.e., all incumbent configurations over time).
 
             Returns
             -------
-            List of entries with the following fields: 
-            'train_perf', 'incumbent_id', 'incumbent',
-            'ta_runs', 'ta_time_used', 'wallclock_time'
+            Trajectory: List
+                ['train_perf', 'incumbent_id', 'incumbent',
+                'ta_runs', 'ta_time_used', 'wallclock_time']
         '''
 
         if not hasattr(self, 'trajectory'):
@@ -396,16 +401,17 @@ class SMAC(object):
 
     def get_X_y(self):
         '''
-            simple interface to obtain all data in runhistory
-            in X, y format 
+            Simple interface to obtain all data in runhistory
+            in X, y format.
 
-            Uses smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()
+            Uses
+            smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y().
 
             Returns
-            ------- 
+            -------
             X: numpy.ndarray
                 matrix of all configurations (+ instance features)
-            y numpy.ndarray
+            y: numpy.ndarray
                 vector of cost values; can include censored runs
             cen: numpy.ndarray
                 vector of bools indicating whether the y-value is censored

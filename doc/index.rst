@@ -12,6 +12,22 @@ hyperparameter optimization of various machine learning algorithms.
 The main core consists of Bayesian Optimization in combination with a simple racing mechanism on 
 the instances to efficiently decide which of two configuration performs better.
 
+
+Contents:
+---------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   installation
+   quickstart
+   manual
+   api
+   faq
+   contact
+   license
+
+
 .. note::
 
    For a detailed description of its main idea,
@@ -23,7 +39,7 @@ the instances to efficiently decide which of two configuration performs better.
 
 
 SMAC v3 is mainly written in Python 3.5.
-Its `Random Forest <https://bitbucket.org/aadfreiburg/random_forest_run>`_ is written in C++.
+Its `Random Forest <https://github.com/automl/random_forest_run>`_ is written in C++.
 
 .. note::
 
@@ -31,23 +47,10 @@ Its `Random Forest <https://bitbucket.org/aadfreiburg/random_forest_run>`_ is wr
     Please use SMAC v2 (Java) for comparisons against SMAC.
 
 
-Contents:
----------
-.. toctree::
-
-   installation
-   quickstart
-   manual
-   api
-   contact
-   license
-
-
-
-Indices and tables
-------------------
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. Indices and tables
+.. ------------------
+.. 
+.. * :ref:`genindex`
+.. * :ref:`modindex`
+.. * :ref:`search`
 

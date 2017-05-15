@@ -37,7 +37,7 @@ class AbstractAcquisitionFunction(object):
         """Update the acquisition functions values.
 
         This method will be called if the model is updated. E.g.
-        Entropy search uses it to update it's approximation of P(x=x_min),
+        entropy search uses it to update its approximation of P(x=x_min),
         EI uses it to update the current fmin.
 
         The default implementation takes all keyword arguments and sets the

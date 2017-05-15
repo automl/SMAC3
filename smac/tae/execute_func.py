@@ -42,13 +42,13 @@ class AbstractTAFunc(ExecuteTARun):
             instance_specific="0"):
 
         """
-            runs target algorithm <self.ta> with configuration <config>for at
-            most <cutoff> seconds allowing it to use at most <memory_limit>
+            runs target algorithm <self.ta> with configuration <config> for at
+            most <cutoff> seconds, allowing it to use at most <memory_limit>
             RAM.
 
             Whether the target algorithm is called with the <instance> and
             <seed> depends on the subclass implementing the actual call to
-            the target algorithm
+            the target algorithm.
 
             Parameters
             ----------
@@ -77,7 +77,7 @@ class AbstractTAFunc(ExecuteTARun):
                 additional_info: dict
                     all further additional run information
         """
-        
+
         # walltime for pynisher has to be a rounded up integer
         if cutoff is not None:
             cutoff = int(math.ceil(cutoff))

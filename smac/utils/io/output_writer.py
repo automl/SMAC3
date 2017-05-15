@@ -30,7 +30,7 @@ class OutputWriter(object):
 
         Returns
         -------
-            status: False
+            status: False or None
                 False indicates that writing process failed
         """
         if scenario.output_dir is None or scenario.output_dir == "":

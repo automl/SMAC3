@@ -157,8 +157,7 @@ class RandomForestWithInstances(AbstractEPM):
 
         Parameters
         ----------
-        X : np.ndarray of shape = [n_samples, n_features (config + instance
-        features)]
+        X : np.ndarray of shape = [n_samples, n_features (config + instance features)]
 
         Returns
         -------

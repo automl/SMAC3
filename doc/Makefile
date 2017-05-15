@@ -192,7 +192,7 @@ pseudoxml:
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
 
 buildapi:
-	sphinx-apidoc -feTMo apidoc/ ../smac/
+	sphinx-apidoc -fePTMo apidoc/ ../smac/
 	rm apidoc/smac.rst
 	for f in apidoc/*;   \
 	do                   \

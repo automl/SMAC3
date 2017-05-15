@@ -13,9 +13,9 @@ API Documentation
     apidoc/smac.facade
     apidoc/smac.initial_design
     apidoc/smac.intensification
+    apidoc/smac.optimizer
     apidoc/smac.runhistory
     apidoc/smac.scenario
-    apidoc/smac.smbo
     apidoc/smac.stats
     apidoc/smac.tae
     apidoc/smac.utils
