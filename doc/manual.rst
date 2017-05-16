@@ -11,12 +11,12 @@ bayesian optimization to configure the hyperparameters of an algorithm. Instance
 features can be used to optimize the algorithm on a certain set of instances.
 
 There are two ways to use *SMAC*:
-You can use the `commandline <basic_usage.html#commandline>`_ to optimize algorithms that are invoked via a bash-command,
+You can use the `command-line <basic_usage.html#commandline>`_ to optimize algorithms that are invoked via a bash-command,
 but you can also use *SMAC* `directly in Python <basic_usage.html#inpython>`_.
 
 We provide examples for the usage of *SMAC* in the `Quickstart <quickstart.html>`_-guide.
 
-*SMAC* is written in Python and hosted on `GitHub
+*SMAC* is written in Python 3.5 and hosted on `GitHub
 <https://github.com/automl/SMAC3/>`_.
 
 

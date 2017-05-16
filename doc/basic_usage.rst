@@ -35,14 +35,14 @@ The script to invoke *SMAC* is located in *scripts/smac*. Please see the
 
 .. code-block:: bash
 
-        python smac --scenario SCENARIO --seed INT --verbose_level LEVEL --modus MODUS
+        python smac --scenario SCENARIO --seed INT --verbose_level LEVEL --mode MODE
 
 Required:
      * *scenario*: Path to the file that specifies the `scenario <options.html#scenario>`_ for this *SMAC*-run.
 Optional:
      * *seed*: The integer that the random-generator will be based upon. **Default**: 12345
      * *verbose_level*: in [INFO, DEBUG], specifies the logging-verbosity. **Default**: INFO
-     * *modus*: in [SMAC, ROAR]. SMAC will use the bayeasian optimization with an intensification process, whereas ROAR stands for Random Online Adaptive Racing. **Default**: SMAC
+     * *mode*: in [SMAC, ROAR]. SMAC will use the bayeasian optimization with an intensification process, whereas ROAR stands for Random Online Adaptive Racing. **Default**: SMAC
 
 In the scenario file, there are two mandatory parameters: The **algo**-parameter
 defines how *SMAC* will call the target algorithm. Parameters will be appended to the call

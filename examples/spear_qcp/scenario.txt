@@ -5,6 +5,6 @@ deterministic = 0
 run_obj = runtime
 overall_obj = PAR10
 cutoff_time = 5
-wallclock-limit = 10
+wallclock-limit = 30
 instance_file = instances.txt
 feature_file = features.txt

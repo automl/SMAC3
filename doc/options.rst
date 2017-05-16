@@ -50,6 +50,7 @@ Optional:
         * *runcount_limit* is the maximum number of algorithm-calls during optimization. Default: inf.
         * *minR* is the minimum number of calls per configuration. Default: 1
         * *maxR* is the maximum number of calls per configuration. Default: 2000
+        * *always_race_default* indicates that new incumbents are always raced against default configuration. Default: false
         * *instance_file* specifies the file with the training-instances.
         * *test_instance_file* specifies the file with the test-instances.
         * *feature_file* specifies the file with the instance-features

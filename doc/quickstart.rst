@@ -11,7 +11,7 @@ To get started, we will walk you through a few examples.
 
 * First, we explain the basic usage of *SMAC*, using a `scenario`_ file to optimize the `branin`__-function as a toy example.
 * Secondly, we explain the usage of *SMAC* within Python how to define hyperparameters in the code by optimizing a `Support Vector Machine`__.
-* Thirdly, we show a real-world example, using an algorithm-wrapper to optimize the `SPEAR-SAT-solver`__.
+* Thirdly, we show a real-world example, using an algorithm-wrapper to optimize the `SPEAR SAT-solver`__.
 
 __ branin-example_
 __ svm-example_
@@ -22,7 +22,7 @@ __ spear-example_
 Branin
 ~~~~~~
 First of, we'll demonstrate the usage of *SMAC* on the minimization of a standard 2-dimensional continuous test function (`branin <https://www.sfu.ca/~ssurjano/branin.html>`_).
-This example does not use instance features and aims to explain the most basic
+This example aims to explain the most basic
 usage of *SMAC*.
 
 To run the example scenario, change into the root-directory of *SMAC* and type the following commands:
@@ -46,21 +46,21 @@ An algorithm call by *SMAC* will look like this:
 
     .. code-block:: bash
 
+        <algo> <instance> <instance specific> <cutoff time> <runlength> <seed> <algorithm parameters>
+        
+An exemplary call in our Branin example would be:
+
+    .. code-block:: bash
+
         python branin.py 0 0 999999999.0 0 1148756733 -x1 -1.1338595629 -x2 13.8770222718
 
     The first two parameters after the branin.py do not matter for this example since no instances are needed for the function optimization.
     For algorithm optimization, the first parameter holds the instance name on which the algorithm is evaluated and the second can provide extra information about the instance (rarely used).
 
-    The third parameter gives the runtime cutoff (maximal runtime) an algorithm is allowed to run and the fourth the runlength (maximal number of steps).
+    The third parameter gives the cutoff time (maximal running time) an algorithm is allowed to run and the fourth the runlength (maximal number of steps).
 
     The fifth parameter is the random seed which is followed by the algorithm/function parameters.
     
-    The general syntax of algorithm calls is the following
-
-    .. code-block:: bash
-
-        <algo> <instance> <instance specific> <runtime cutoff> <runlength> <seed> <algorithm parameters>
-
 The **paramfile** parameter tells *SMAC* which Parameter Configuration Space (PCS_)-file to use. This file contains a list of the algorithm's parameters, their domains and default values:
 
     .. code-block:: bash
@@ -70,17 +70,17 @@ The **paramfile** parameter tells *SMAC* which Parameter Configuration Space (PC
 
     x1 and x2 are both continuous parameters. x1 can take any real value in the range [-5, 10], x2 in the range [0, 15] and both have the default value 0.
 
-The **run_obj** parameter specifies what *SMAC* is supposed to optimize. For this example we are optimizing the solution quality.
+The **run_obj** parameter specifies what *SMAC* is supposed to be **minimized**. For this example we are optimizing the solution quality.
 For *SMAC* to be able to interpret the results of an algorithm run, a wrapper should return the results of the algorithm run as follows:
 
     .. code-block:: bash
 
-        Result for SMAC: <STATUS>, <runtime>, <runlength>, <quality>, <seed>, <instance-specifics>
+        Result for SMAC: <STATUS>, <running time>, <runlength>, <quality>, <seed>, <instance-specifics>
         Result for SMAC: SUCCESS, 0, 0, 48.948190, 1148756733
 
     | The second line is the result of the above listed algorithm call.
     | *STATUS:* can be either *SUCCESS*, *CRASHED*, *SAT*, *UNSAT*, *TIMEOUT*
-    | *runtime:* is the measured runtime for an algorithm call
+    | *running time:* is the measured running time for an algorithm call
     | *runlength:* is the number of steps needed to find a solution
     | *quality:* the solution quality
     | *seed:* the seed that was used with the algorithm call
@@ -114,7 +114,7 @@ Using *SMAC* in Python: SVM
 To explain the use of *SMAC* within Python, let's look at a real-world example,
 optimizing a Support Vector Machine (SVM) on the widely known `IRIS-dataset
 <http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html>`_.
-This example is located in *examples/svm.py*.
+This example is located in :code:`examples/svm.py`.
 
 To use *SMAC* directly with Python, we first import the necessary modules
 
@@ -134,7 +134,7 @@ quickly lead to overfitting, which is why we use cross-validation to evaluate
 the configuration.
 
 Let's start by creating a ConfigSpace-object and adding the first hyperparameter: the choice of
-the kernel. Conditionals to limit the search-space are optional.
+the kernel.
 
 .. literalinclude:: ../examples/svm.py
    :lines: 60-65
@@ -238,7 +238,7 @@ so that as final output we can see the error value of the incumbent.
 
 Spear-QCP
 ~~~~~~~~~
-For this example we use *SMAC* to optimize `Spear <http://www.domagoj-babic.com/index.php/ResearchProjects/Spear>`_ on a small subset of the QCP-dataset.
+For this example we use *SMAC* to optimize the SAT solver `Spear <http://www.domagoj-babic.com/index.php/ResearchProjects/Spear>`_ on a small subset of the QCP-dataset.
 In *SMACs* root-directory type:
 
 .. code-block:: bash
@@ -264,6 +264,9 @@ In this folder you see the following files and directories:
 
 * **scenario.txt**
     The scenario_ file contains all the necessary information about the configuration scenario at hand.
+    
+    .. literalinclude:: ../examples/spear_qcp/scenario.txt
+    
     For this example the following options are used:
 
     * *algo:*
@@ -281,13 +284,13 @@ In this folder you see the following files and directories:
 
         .. code-block:: bash
 
-            <algo> <instance> <instance specifics> <runtime cutoff> <runlength> <seed> <algorithm parameters>
+            <algo> <instance> <instance specifics> <cutoff time> <runlength> <seed> <algorithm parameters>
 
         For *SMAC* to be able to interpret the results of the algorithm run, the wrapper returns the results of the algorithm run as follows:
 
         .. code-block:: bash
 
-            STATUS, runtime, runlength, quality, seed, instance-specifics
+            STATUS, running time, runlength, quality, seed, instance-specifics
 
     * *paramfile:*
 
@@ -300,9 +303,9 @@ In this folder you see the following files and directories:
 
     * *execdir:* Specifies the directory in which the target algorithm will be run.
 
-    * *deterministic:* Specifies if the configuration scenario is deterministic.
+    * *deterministic:* Specifies if the target algorithm is deterministic.
 
-    * *run_obj:* This parameter tells *SMAC* what is to be optimized, i.e. runtime or (solution) quality.
+    * *run_obj:* This parameter tells *SMAC* what is to be optimized, i.e. running time or (solution) quality.
 
     * *overall_obj:* Specifies how to evaluate the error values, e.g as mean or PARX.
 
@@ -329,51 +332,46 @@ To run the example type one of the two commands below into a terminal:
 .. code-block:: bash
 
     bash run.sh
-    python ../../scripts/smac --scenario scenario.txt --verbose DEBUG
+    python ../../scripts/smac --scenario scenario.txt
 
 *SMAC* will run for a few seconds and generate a lot of logging output.
 After *SMAC* finished the configuration process you'll get some final statistics about the configuration process:
 
 .. code-block:: bash
 
-    DEBUG:root:Remaining budget: -11.897580 (wallclock), inf (ta costs), inf (target runs)
-    INFO:Stats:##########################################################
-    INFO:Stats:Statistics:
-    INFO:Stats:#Target algorithm runs: 28
-    INFO:Stats:Used wallclock time: 21.90 sec
-    INFO:Stats:Used target algorithm runtime: 15.72 sec
-    INFO:Stats:##########################################################
-    INFO:SMAC:Final Incumbent: Configuration:
-      sp-clause-activity-inc, Value: 0.956325431976
-      sp-clause-decay, Value: 1.77371504106
-      sp-clause-del-heur, Value: 2
-      sp-first-restart, Value: 52
-      sp-learned-clause-sort-heur, Value: 13
-      sp-learned-clauses-inc, Value: 1.12196861555
-      sp-learned-size-factor, Value: 0.760013050806
-      sp-max-res-lit-inc, Value: 0.909236510144
-      sp-max-res-runs, Value: 3
-      sp-orig-clause-sort-heur, Value: 1
-      sp-phase-dec-heur, Value: 6
-      sp-rand-phase-dec-freq, Value: 0.0001
-      sp-rand-phase-scaling, Value: 0.825118640774
-      sp-rand-var-dec-freq, Value: 0.05
-      sp-rand-var-dec-scaling, Value: 1.05290899107
-      sp-res-cutoff-cls, Value: 5
-      sp-res-cutoff-lits, Value: 1378
-      sp-res-order-heur, Value: 6
-      sp-resolution, Value: 1
-      sp-restart-inc, Value: 1.84809841772
-      sp-update-dec-queue, Value: 1
-      sp-use-pure-literal-rule, Value: 0
-      sp-var-activity-inc, Value: 1.00507435273
-      sp-var-dec-heur, Value: 4
-      sp-variable-decay, Value: 1.91690063007
+	INFO:	##########################################################
+	INFO:	Statistics:
+	INFO:	#Incumbent changed: 2
+	INFO:	#Target algorithm runs: 17 / inf
+	INFO:	Used wallclock time: 35.38 / 30.00 sec 
+	INFO:	Used target algorithm runtime: 20.10 / inf sec
+	INFO:	##########################################################
+	INFO:	Final Incumbent: Configuration:
+	  sp-clause-activity-inc, Value: 0.9846527087294622
+	  sp-clause-decay, Value: 1.1630090545101102
+	  sp-clause-del-heur, Value: '0'
+	  sp-first-restart, Value: 30
+	  sp-learned-clause-sort-heur, Value: '10'
+	  sp-learned-clauses-inc, Value: 1.2739749314202675
+	  sp-learned-size-factor, Value: 0.8355014264152971
+	  sp-orig-clause-sort-heur, Value: '1'
+	  sp-phase-dec-heur, Value: '0'
+	  sp-rand-phase-dec-freq, Value: '0.01'
+	  sp-rand-phase-scaling, Value: 0.3488055907688382
+	  sp-rand-var-dec-freq, Value: '0.05'
+	  sp-rand-var-dec-scaling, Value: 0.46427056372562864
+	  sp-resolution, Value: '0'
+	  sp-restart-inc, Value: 1.7510945705535836
+	  sp-update-dec-queue, Value: '1'
+	  sp-use-pure-literal-rule, Value: '0'
+	  sp-var-activity-inc, Value: 0.9000377944957962
+	  sp-var-dec-heur, Value: '14'
+	  sp-variable-decay, Value: 1.8292433459523076
 
 
-The first line shows why *SMAC* terminated. The wallclock time-budget is exhausted. The target algorithm runtime (ta cost) and target algorithm runs were not exhausted since the budget for these were not specified and thus set to the default, i.e., infinity.
 
-The statistics further show the used wallclock time, target algorithm runtime and the number of executed target algorithm runs.
+The statistics further show the used wallclock time, target algorithm running time and the number of executed target algorithm runs,
+and the corresponding budgets---here we exhausted the wallclock time budget.
 
 The directory in which you invoked *SMAC* now contains a new folder called **SMAC3-output_YYYY-MM-DD_HH:MM:SS**.
 The .json file contains the information about the target algorithms *SMAC* just executed. In this file you can see the *status* of the algorithm run, *misc*, the *instance* on which the algorithm was evaluated, which *seed* was used, how much *time* the algorithm needed and with which *configuration* the algorithm was run.
