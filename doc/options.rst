@@ -32,17 +32,19 @@ The format of the scenario file is one option per line:
         ...
 
 For boolean options "1" or "true" both evaluate to True.
+The following assumes that the scenario is created via a scenario-file. If it is
+generated within custom code, you might not need *algo* or *paramfile*.
 
 Required:
+        * *run_obj* in [runtime, quality]. Defines what metric to optimize. When optimizing runtime, *cutoff_time* is required as well.
+        * *cutoff_time* is the maximum runtime, after which the target-algorithm is cancelled. **Required if *run_obj* is runtime.**
         * *algo* specifies the target-algorithm call that *SMAC* will optimize. Interpreted as a bash-command.
         * *paramfile* specifies the path to the PCS-file
-        * *cutoff_time* is the maximum runtime, after which the target-algorithm is cancelled. **Required if *run_obj* is runtime.**
 
 Optional:
         * *abort_on_first_run_crash* in [true, false]. If true, *SMAC* will abort if the first run of the target algorithm crashes. Default: true.
         * *execdir* specifies the path to the execution-directory. Default: ".".
         * *deterministic* in [true, false]. If true, the optimization process will be repeatable. Default: false 
-        * *run_obj* in [runtime, quality]. Defines what metric to optimize. When optimizing runtime, *cutoff_time* is required as well. Default: runtime.
         * *overall_obj* is PARX, where X is an integer defining the penalty imposed on timeouts (i.e. runtimes that exceed the *cutoff-time*). Default: PAR10.
         * *memory_limit* is the maximum available memory the target-algorithm can occupy before being cancelled.
         * *tuner-timeout* is the maximum amount of CPU-time used for optimization. Default: inf.
