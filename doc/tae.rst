@@ -18,7 +18,7 @@ provide slightly different interfaces.
 
   .. code-block:: bash
 
-      <algo> <instance> <instance specific> <runtime cutoff> <runlength> <seed> <algorithm parameters>
+      <algo> <instance> <instance specific> <cutoff time> <runlength> <seed> <algorithm parameters>
       python algo.py 123 0 10 25 12345 -param1 value1 -param2 value2 [...]
 
   It expects the target algorithm to print a string during
@@ -26,14 +26,14 @@ provide slightly different interfaces.
 
   .. code-block:: bash
 
-      Result of this algorithm run: <STATUS>, <runtime>, <runlength>, <quality>, <seed>, <instance-specifics>
-      Result for SMAC: <STATUS>, <runtime>, <runlength>, <quality>, <seed>, <instance-specifics>
-      Result for ParamILS: <STATUS>, <runtime>, <runlength>, <quality>, <seed>, <instance-specifics>
+      Result of this algorithm run: <STATUS>, <running time>, <runlength>, <quality>, <seed>, <instance-specifics>
+      Result for SMAC: <STATUS>, <running time>, <runlength>, <quality>, <seed>, <instance-specifics>
+      Result for ParamILS: <STATUS>, <running time>, <runlength>, <quality>, <seed>, <instance-specifics>
 
   The examples branin_ or SPEAR_ reflect the usage.
   
   * **STATUS** can be one of [SAT, UNSAT, SUCCESS, TIMEOUT, MEMOUT, CRASHED, ABORT]. SAT and UNSAT are mainly supported for backcompatibility and are treated as SUCCESS. The difference between CRASHED and ABORT is that ABORT is called when all future calls are assumed to crash and will abort the whole optimization, whereas CRASHED only indicates a single failed run.
-  * **runtime** indicates the time that the execution took.
+  * **running time** indicates the time that the execution took.
   * **runlength** indicates the number of steps needed for execution.
   * **quality** is the solution quality.
   * **seed** is the seed used for the algorithm call.

@@ -1,16 +1,22 @@
 F.A.Q.
 ======
 
-.. rubric:: The examples won't work as expected.
+.. rubric:: SMAC cannot be imported.
 
-Try to adjust your execution directory, since examples like svm.py and rf.py are
-using *SMAC* within Python and have to be executed from the *SMAC*
-root-directory.
+Try to either run SMAC from SMAC's root directory
+or try to run the installation first.
+
+.. rubric:: pyrfr raises cryptic import errors.
+
+Ensure that the gcc used to compile the pyrfr is the same as used for linking during execution.
+This often happens with Anaconda -- see Installation for a solution.
 
 .. rubric:: My target algorithm is not accepted, when using the scenario-file.
 
 Make sure that your algorithm accepts commandline options as provided by *SMAC*.
 Refer to `commandline execution <basic_usage.html#commandline>`_ for details on how to wrap your algorithm.
+
+You can also run SMAC with :code:`--verbose DEBUG` to see how *SMAC* tried to call your algorithm.
 
 .. rubric:: I discovered a bug/have criticism or ideas on *SMAC*. Where should I report to?
 

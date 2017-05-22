@@ -54,7 +54,7 @@ def svm_from_cfg(cfg):
     scores = cross_val_score(clf, iris.data, iris.target, cv=5)
     return 1-np.mean(scores)  # Minimize!
 
-logger = logging.getLogger("SVMExample")
+#logger = logging.getLogger("SVMExample")
 logging.basicConfig(level=logging.INFO)  # logging.DEBUG for debug output
 
 # Build Configuration Space which defines all parameters and their ranges

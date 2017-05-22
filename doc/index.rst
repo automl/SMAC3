@@ -37,14 +37,25 @@ Contents:
       Sequential Model-Based Optimization for General Algorithm Configuration
       In: Proceedings of the conference on Learning and Intelligent OptimizatioN (LION 5)
 
-
-SMAC v3 is mainly written in Python 3.5.
-Its `Random Forest <https://github.com/automl/random_forest_run>`_ is written in C++.
-
+   The SMAC3 package is not meant to be a reference implementation for SMAC according the above cited LION paper.
+   Please use SMAC v2 (Java) for comparisons against SMAC.
+      
 .. note::
 
-    This version is not meant to be a reference implementation for SMAC according the above cited LION paper.
-    Please use SMAC v2 (Java) for comparisons against SMAC.
+   If you used SMAC in one of your research projects,
+   please cite us:
+
+      
+     | @misc{smac-2017, 
+     |    title={SMAC v3: Algorithm Configuration in Python}, 
+     |    author={Marius Lindauer and Katharina Eggensperger and Matthias Feurer and Stefan Falkner and Andre Biedenkapp and Frank Hutter},
+     |    year={2017}, 
+     |    publisher={GitHub}, 
+     |    howpublished={\\url{https://github.com/automl/SMAC3}} 
+     | }
+
+SMAC3 is mainly written in Python 3.5.
+Its `Random Forest <https://github.com/automl/random_forest_run>`_ is written in C++.
 
 
 .. Indices and tables
