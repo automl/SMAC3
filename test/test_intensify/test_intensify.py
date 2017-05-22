@@ -45,6 +45,7 @@ class TestIntensify(unittest.TestCase):
                                      values={'a': 100, 'b': 100})
 
         self.scen = Scenario({"cutoff_time": 2, 'cs': self.cs,
+                              "run_obj": 'runtime',
                               "output_dir": ''})
         self.stats = Stats(scenario=self.scen)
         self.stats.start_timing()

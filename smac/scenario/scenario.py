@@ -77,6 +77,10 @@ class Scenario(object):
         self._groups = defaultdict(set)
         self._add_arguments()
 
+        # Make cutoff mandatory if run_obj is runtime
+        if 'run_obj' in scenario and scenario['run_obj'] == 'runtime':
+            self._arguments['cutoff_time']['required'] = True
+
         # Parse arguments
         parsed_arguments = {}
         for key, value in self._arguments.items():
@@ -239,7 +243,8 @@ class Scenario(object):
                           help=None, callback=float)
         self.add_argument(name='paramfile', help=None, dest='pcs_fn',
                           mutually_exclusive_group='cs')
-        self.add_argument(name='run_obj', help=None, default='runtime')
+        self.add_argument(name='run_obj', help=None, default='runtime',
+                          required=True)
         self.add_argument(name='overall_obj', help=None, default='par10')
         self.add_argument(name='cost_for_crash', default=float(MAXINT),
                           help="Defines the cost-value for crashed runs "
