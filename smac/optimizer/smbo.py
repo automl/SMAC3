@@ -8,7 +8,6 @@ import math
 
 
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
-from smac.optimizer.base_solver import BaseSolver
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.optimizer.local_search import LocalSearch
 from smac.intensification.intensification import Intensifier
@@ -19,7 +18,6 @@ from smac.stats.stats import Stats
 from smac.initial_design.initial_design import InitialDesign
 from smac.scenario.scenario import Scenario
 from smac.configspace import Configuration, convert_configurations_to_array
-from smac.tae.execute_ta_run import TAEAbortException, BudgetExhaustedException
 from smac.tae.execute_ta_run import FirstRunCrashedException
 
 
@@ -28,7 +26,7 @@ __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class SMBO(BaseSolver):
+class SMBO(object):
 
     def __init__(self,
                  scenario: Scenario,

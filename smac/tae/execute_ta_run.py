@@ -30,7 +30,8 @@ class StatusType(Enum):
 
     def enum_hook(obj):
         """
-        hook function passed to json-deserializer as "object_hook"
+        Hook function passed to json-deserializer as "object_hook".
+        EnumEncoder in runhistory/runhistory.
         """
         if "__enum__" in obj:
             # object is marked as enum

@@ -25,6 +25,20 @@ RunValue = collections.namedtuple(
     'RunValue', ['cost', 'time', 'status', 'additional_info'])
 
 
+class EnumEncoder(json.JSONEncoder):
+    """
+    Custom encoder for enum-serialization
+    (implemented for StatusType from tae/execute_ta_run).
+    Using encoder implied using object_hook as defined in StatusType
+    to deserialize from json.
+    """
+
+    def default(self, obj):
+        if isinstance(obj, StatusType):
+            return {"__enum__": str(obj)}
+        return json.JSONEncoder.default(self, obj)
+
+
 class RunHistory(object):
 
     '''Container for target algorithm run information.
@@ -243,20 +257,6 @@ class RunHistory(object):
         fn : str
             file name
         '''
-
-        class EnumEncoder(json.JSONEncoder):
-            """
-            custom encoder for enum-serialization
-            (implemented for StatusType from tae/execute_ta_run)
-            locally defined because only ever needed here.
-            using encoder implied using object_hook defined in StatusType
-            to deserialize from json.
-            """
-
-            def default(self, obj):
-                if isinstance(obj, StatusType):
-                    return {"__enum__": str(obj)}
-                return json.JSONEncoder.default(self, obj)
 
         configs = {id_: conf.get_dictionary()
                    for id_, conf in self.ids_config.items()}
