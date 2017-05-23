@@ -10,7 +10,6 @@ smac\.optimizer package
 .. toctree::
 
    smac.optimizer.acquisition
-   smac.optimizer.base_solver
    smac.optimizer.local_search
    smac.optimizer.objective
    smac.optimizer.pSMAC

@@ -2,6 +2,7 @@ Installation
 ============
 
 .. _requirements:
+
 Requirements
 ------------
 The random forest used in SMAC depends on a c++11 compatible compiler
