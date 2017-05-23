@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>Manual &#8212; SMAC 0.5.0 documentation</title>
     
-    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootswatch-3.3.6/cosmo/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -40,7 +37,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
   
   <a href="https://github.com/automl/SMAC3"
      class="visible-desktop hidden-xs"><img
@@ -144,7 +141,7 @@
 <div class="line">If you have not installed <em>SMAC</em> yet take a look at the <a class="reference external" href="installation.html">installation instructions</a> and make sure that all the requirements are fulfilled.</div>
 <div class="line">In the examples folder, you can find examples that illustrate how to reads scenario files that allow you to automatically configure an algorithm, as well as examples that show how to directly use <em>SMAC</em> in Python.</div>
 </div>
-<p>We&#8217;ll demonstrate the usage of <em>SMAC</em> on the most basic scenario, the optimization of a continuous blackbox function. The first simple example is the minimization of a standard 2-dimensional continuous test function (<a class="reference external" href="https://www.sfu.ca/~ssurjano/branin.html">branin</a>).</p>
+<p>We’ll demonstrate the usage of <em>SMAC</em> on the most basic scenario, the optimization of a continuous blackbox function. The first simple example is the minimization of a standard 2-dimensional continuous test function (<a class="reference external" href="https://www.sfu.ca/~ssurjano/branin.html">branin</a>).</p>
 <p>To run the example scenario, change into the root-directory of <em>SMAC</em> and type the following commands:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> examples/branin
 python ../../scripts/smac --scenario branin_scenario.txt
@@ -170,7 +167,7 @@ python ../../scripts/smac --scenario branin_scenario.txt
 </pre></div>
 </div>
 </div></blockquote>
-<p>The <strong>paramfile</strong> parameter tells <em>SMAC</em> which Parameter Configuration File to use. This file contains a list of the algorithm&#8217;s parameters, their domains and default values as follows:</p>
+<p>The <strong>paramfile</strong> parameter tells <em>SMAC</em> which Parameter Configuration File to use. This file contains a list of the algorithm’s parameters, their domains and default values as follows:</p>
 <blockquote>
 <div><div class="highlight-bash"><div class="highlight"><pre><span></span>x1 <span class="o">[</span>-5,10<span class="o">]</span> <span class="o">[</span><span class="m">0</span><span class="o">]</span>
 x2 <span class="o">[</span><span class="m">0</span>,15<span class="o">]</span>  <span class="o">[</span><span class="m">0</span><span class="o">]</span>
@@ -245,7 +242,7 @@ INFO:SMAC:Final Incumbent: Configuration:
 </div>
 </div></blockquote>
 <div class="line-block">
-<div class="line">Thus the optimum is -16 and the optimal configuration is x_1 = 1, ..., x_16 = 1</div>
+<div class="line">Thus the optimum is -16 and the optimal configuration is x_1 = 1, …, x_16 = 1</div>
 <div class="line"><br /></div>
 <div class="line">To use <em>SMAC</em> directly with Python, we first have to import the necessary modules</div>
 </div>
@@ -312,14 +309,14 @@ INFO:SMAC:Final Incumbent: Configuration:
 <p>cs is the Configuration space Object.
 We declare each of the 16 parameters to be Categorical parameters
 that can take the values 0 or 1 and are set by default to 0.
-They are also given the names &#8216;1&#8217; to &#8216;16&#8217;.
+They are also given the names ‘1’ to ‘16’.
 Further we illustrate how to setup conditionals in this example.</p>
-<p>Parameter &#8216;i+1&#8217; is conditioned on parameter &#8216;i&#8217;
-and thus only activated if parameter &#8216;i&#8217; is set to 1.
-For example parameter &#8216;1&#8217; is only active once parameter &#8216;0&#8217; is set to 1.
+<p>Parameter ‘i+1’ is conditioned on parameter ‘i’
+and thus only activated if parameter ‘i’ is set to 1.
+For example parameter ‘1’ is only active once parameter ‘0’ is set to 1.
 Using conditionals in such a way restricts the search space quite a bit.
-This way <em>SMAC</em> won&#8217;t have to query regions in the search space that are non-improving,
-like &#8216;0100000000000000&#8217; or &#8216;0100000000000001&#8217;. Both return the same value as the default, i.e. 0.</p>
+This way <em>SMAC</em> won’t have to query regions in the search space that are non-improving,
+like ‘0100000000000000’ or ‘0100000000000001’. Both return the same value as the default, i.e. 0.</p>
 <p>After the configuration space was setup we can create a scenario object.</p>
 <blockquote>
 <div><div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>53
@@ -338,7 +335,7 @@ like &#8216;0100000000000000&#8217; or &#8216;0100000000000001&#8217;. Both retu
 </div></blockquote>
 <p>The Scenario object contains information about the optimization scenario, such as the runcount-limit or what metric to optimize.
 It uses the same keywords as a scenario files, we showed in the branin example.</p>
-<p>To evaluate the &#8220;leading ones&#8221; function, we register it with the TargetAlgorithmFunction evaluator.</p>
+<p>To evaluate the “leading ones” function, we register it with the TargetAlgorithmFunction evaluator.</p>
 <blockquote>
 <div><div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>60
 61
@@ -420,19 +417,19 @@ and querying of the function SMAC needs as inputs the scenario object as well as
 <tr class="row-odd"><th class="head">instance</th>
 <th class="head">name of feature 1</th>
 <th class="head">name of feature 2</th>
-<th class="head">...</th>
+<th class="head">…</th>
 </tr>
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>name of instance 1</td>
 <td>value of feature 1</td>
 <td>value of feature 2</td>
-<td>...</td>
+<td>…</td>
 </tr>
-<tr class="row-odd"><td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
+<tr class="row-odd"><td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
 </tr>
 </tbody>
 </table>
@@ -469,7 +466,7 @@ algorithm and <em>SMAC</em>, which executes the wrapper through a command line c
 <li><p class="first"><em>paramfile:</em></p>
 <blockquote>
 <div><p>This parameter specifies which pcs-file to use and where it is located.</p>
-<p>The pcs-file specifies the Parameter Configuration Space file, which lists the algorithm&#8217;s parameters, their domains, and default values (one per line)</p>
+<p>The pcs-file specifies the Parameter Configuration Space file, which lists the algorithm’s parameters, their domains, and default values (one per line)</p>
 <p>In this example we are dealing with 26 parameters of which 12 are categorical and 14 are continuous. Out of these 26
 parameters, 9 parameters are conditionals (they are only active if their parent parameter takes on a certain value).</p>
 </div></blockquote>
@@ -516,7 +513,7 @@ python ../../scripts/smac --scenario scenario.txt --verbose DEBUG
 </div>
 <div class="line-block">
 <div class="line"><em>SMAC</em> will run for a few seconds and generate a lot of logging output.</div>
-<div class="line">After <em>SMAC</em> finished the configuration process you&#8217;ll get some final statistics about the configuration process:</div>
+<div class="line">After <em>SMAC</em> finished the configuration process you’ll get some final statistics about the configuration process:</div>
 </div>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>DEBUG:root:Remaining budget: -11.897580 <span class="o">(</span>wallclock<span class="o">)</span>, inf <span class="o">(</span>ta costs<span class="o">)</span>, inf <span class="o">(</span>target runs<span class="o">)</span>
 INFO:Stats:##########################################################
@@ -583,7 +580,7 @@ INFO:SMAC:Final Incumbent: Configuration:
     </p>
     <p>
         &copy; Copyright 2015-2017, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.1.<br/>
     </p>
   </div>
 </footer>
