@@ -1,5 +1,6 @@
 import time
 import logging
+import json
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -12,7 +13,8 @@ __version__ = "0.0.1"
 class Stats(object):
 
     '''
-        all statistics collected during configuration run
+    All statistics collected during configuration run.
+    Written to output-directory to be restored
     '''
 
     def __init__(self, scenario):
@@ -28,18 +30,55 @@ class Stats(object):
         self._n_configs_per_intensify = 0
         self._n_calls_of_intensify = 0
         ## exponential moving average
-        self._ema_n_configs_per_intensifiy = 0
+        self._ema_n_configs_per_intensify = 0
         self._EMA_ALPHA = 0.2
 
         self._start_time = None
         self._logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
+    def save(self):
+        """
+        Save all relevant attributes to json-dictionary.
+        """
+        data = {'ta_runs': self.ta_runs,
+                'wallclock_time_used': self.wallclock_time_used,
+                'ta_time_used': self.ta_time_used,
+                'inc_changed': self.inc_changed,
+                '_n_configs_per_intensify': self._n_configs_per_intensify,
+                '_n_calls_of_intensify': self._n_calls_of_intensify,
+                '_ema_n_configs_per_intensify': self._ema_n_configs_per_intensify,
+                '_EMA_ALPHA': self._EMA_ALPHA}
+
+        with open(os.path.join(self.__scenario.output_dir, "stats.json", 'w')) as fh:
+            json.dump(data, fh)
+
+    def load(self, fn=None):
+        """
+        Load all attributes from dictionary in file into stats-object.
+
+        Parameters
+        ----------
+        fn: string or None
+            Path to file to load stats from. If no path is given, the path given
+            in the current scenario is used.
+        """
+        if not fn:
+            fn = os.path.join(self.__scenario.output_dir, "stats.json")
+        with open(fn, 'r') as fh:
+            data = json.load(fh)
+
+        # Set attributes
+        for key in data:
+            if hasattr(self, key):
+                setattr(self, key, data[key])
+
     def start_timing(self):
         '''
-            starts the timer (for the runtime configuration budget)
+            Starts the timer (for the runtime configuration budget).
+            Substracting wallclock time used so we can continue loaded Stats.
         '''
         if self.__scenario:
-            self._start_time = time.time()
+            self._start_time = time.time() - self.wallclock_time_used
         else:
             raise ValueError("Scenario is missing")
 
@@ -104,9 +143,9 @@ class Stats(object):
         self._n_configs_per_intensify += n_configs
 
         if self._n_calls_of_intensify == 1:
-            self._ema_n_configs_per_intensifiy = n_configs
+            self._ema_n_configs_per_intensify = n_configs
         else:
-            self._ema_n_configs_per_intensifiy = (1 - self._EMA_ALPHA) * self._ema_n_configs_per_intensifiy \
+            self._ema_n_configs_per_intensifiy = (1 - self._EMA_ALPHA) * self._ema_n_configs_per_intensify \
                                                         + self._EMA_ALPHA * n_configs
 
 
@@ -132,6 +171,6 @@ class Stats(object):
         self._logger.debug("Debug Statistics:")
         if self._n_calls_of_intensify > 0:
             self._logger.debug("Average Configurations per Intensify: %.2f" %(self._n_configs_per_intensify / self._n_calls_of_intensify))
-            self._logger.debug("Exponential Moving Average of Configurations per Intensify: %.2f" %(self._ema_n_configs_per_intensifiy))
+            self._logger.debug("Exponential Moving Average of Configurations per Intensify: %.2f" %(self._ema_n_configs_per_intensify))
 
         log_func("##########################################################")

@@ -40,7 +40,8 @@ class SMBO(object):
                  model: RandomForestWithInstances,
                  acq_optimizer: LocalSearch,
                  acquisition_func: AbstractAcquisitionFunction,
-                 rng: np.random.RandomState):
+                 rng: np.random.RandomState,
+                 incumbent: Configuration=None):
         '''
         Interface that contains the main Bayesian optimization loop
 
@@ -68,11 +69,13 @@ class SMBO(object):
             optimizer on acquisition function (right now, we support only a local search)
         acquisition_function : AcquisitionFunction
             Object that implements the AbstractAcquisitionFunction (i.e., infill criterion for acq_optimizer)
+        incumbent: Configuration
+            incumbent to be used from the start. ONLY used to restore states.
         rng: np.random.RandomState
             Random number generator
         '''
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
-        self.incumbent = None
+        self.incumbent = incumbent
 
         self.scenario = scenario
         self.config_space = scenario.cs
@@ -88,9 +91,14 @@ class SMBO(object):
         self.acquisition_func = acquisition_func
         self.rng = rng
 
-    def run(self):
+    def run(self, restore=None):
         '''
         Runs the Bayesian optimization loop
+
+        Parameters
+        ----------
+        restore: String or None
+            If string, path to folder with
 
         Returns
         ----------
@@ -98,11 +106,23 @@ class SMBO(object):
             The best found configuration
         '''
         self.stats.start_timing()
-        try:
-            self.incumbent = self.initial_design.run()
-        except FirstRunCrashedException as err:
-            if self.scenario.abort_on_first_run_crash:
-                raise
+        if self.stats.ta_runs == 0 and self.incumbent == None:
+            try:
+                self.incumbent = self.initial_design.run()
+            except FirstRunCrashedException as err:
+                if self.scenario.abort_on_first_run_crash:
+                    raise
+        elif self.stats.ta_runs != 0 and self.incumbent == None:
+            raise ValueError("According to stats there have been runs performed, "
+                             "but the optimizer cannot detect an incumbent. Did "
+                             "you set the incumbent (e.g. after restoring state)?")
+        elif self.stats.ta_runs == 0 and self.incumbent != None:
+            self.logger.warning("Optimizer skipped initial design run, because "
+                                "there is an incumbent, but there are no "
+                                "recorded runs in the Stats-object.")
+        else:
+            self.logger.debug("Skipping initial-design-run. Assuming state "
+                              "restoration...")
 
         # Main BO loop
         iteration = 1
@@ -197,9 +217,9 @@ class SMBO(object):
                 num_configurations_by_random_search_sorted, _sorted=True)
 
         if num_configurations_by_local_search is None:
-            if self.stats._ema_n_configs_per_intensifiy > 0:
+            if self.stats._ema_n_configs_per_intensify > 0:
                 num_configurations_by_local_search = min(
-                    10, math.ceil(0.5 * self.stats._ema_n_configs_per_intensifiy) + 1)
+                    10, math.ceil(0.5 * self.stats._ema_n_configs_per_intensify) + 1)
             else:
                 num_configurations_by_local_search = 10
 

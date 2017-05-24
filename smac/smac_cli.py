@@ -83,12 +83,32 @@ class SMACCLI(object):
                     fn=traj_fn, cs=scen.cs)
                 initial_configs.append(trajectory[-1]["incumbent"])
 
+        stats = None
+        incumbent = None
+        if args_.restore_state:
+            # Check for folder and files
+            rh_path = os.path.join(args_.restore_state, "runhistory.json")
+            stat_path = os.path.join(args_.restore_state, "stats.json")
+            traj_path = os.path.join(args_.restore_state, "traj_aclib2.json")
+            if not os.path.isdir(args_.restore_state) or \
+                    not os.exists(rh_path) or not os.exists(stats_path):
+               raise FileNotFoundError("Could not find folder from which to restore.")
+            # Load runhistory and stats
+            rh = RunHistory(aggregate_func=aggregate_func)
+            rh.load_json(rh_path, scen.cs)
+            stats = stats.load(stats_path)
+            trajectory = TrajLogger.read_traj_aclib_format(
+                fn=traj_path, cs=scen.cs)
+            incumbent = trajectory[-1]["incumbent"]
+
         if args_.mode == "SMAC":
             optimizer = SMAC(
                 scenario=scen,
                 rng=np.random.RandomState(args_.seed),
                 runhistory=rh,
-                initial_configurations=initial_configs)
+                initial_configurations=initial_configs,
+                stats=stats,
+                incumbent=incumbent)
         elif args_.mode == "ROAR":
             optimizer = ROAR(
                 scenario=scen,

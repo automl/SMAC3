@@ -53,6 +53,7 @@ class SMAC(object):
                  initial_design: InitialDesign=None,
                  initial_configurations: typing.List[Configuration]=None,
                  stats: Stats=None,
+                 restore_incumbent: Configuration=None,
                  rng: np.random.RandomState=None):
         '''
         Facade to use SMAC default mode
@@ -90,6 +91,8 @@ class SMAC(object):
             optional stats object
         rng: np.random.RandomState
             Random number generator
+        restore_incumbent: Configuration
+            incumbent used if restoring to previous state
         '''
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)

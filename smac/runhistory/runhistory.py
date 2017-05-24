@@ -271,7 +271,7 @@ class RunHistory(object):
     def load_json(self, fn, cs):
         """Load and runhistory in json representation from disk.
 
-        Overwrites current runthistory!
+        Overwrites current runhistory!
 
         Parameters
         ----------
