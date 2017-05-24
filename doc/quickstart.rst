@@ -5,13 +5,13 @@
 Quick Start
 -----------
 If you have not installed *SMAC* yet take a look at the `installation instructions <installation.html>`_ and make sure that all the requirements are fulfilled.
-Examples to illustrate the usage of *SMAC* - either by reading in a scenario-file, or by directly using *SMAC* in Python - are provided in the examples-folder.
+Examples to illustrate the usage of *SMAC* - either by reading in a scenario file, or by directly using *SMAC* in Python - are provided in the examples-folder.
 
 To get started, we will walk you through a few examples.
 
 * First, we explain the basic usage of *SMAC*, using a `scenario`_ file to optimize the `branin`__-function as a toy example.
-* Secondly, we explain the usage of *SMAC* within Python how to define hyperparameters in the code by optimizing a `Support Vector Machine`__.
-* Thirdly, we show a real-world example, using an algorithm-wrapper to optimize the `SPEAR SAT-solver`__.
+* Second, we explain the usage of *SMAC* within Python by optimizing a `Support Vector Machine`__.
+* Third, we show a real-world example, using an algorithm-wrapper to optimize the `SPEAR SAT-solver`__.
 
 __ branin-example_
 __ svm-example_
@@ -54,7 +54,7 @@ An exemplary call in our Branin example would be:
 
         python branin.py 0 0 999999999.0 0 1148756733 -x1 -1.1338595629 -x2 13.8770222718
 
-    The first two parameters after the branin.py do not matter for this example since no instances are needed for the function optimization.
+    The first two parameters after the ``branin.py`` do not matter for this example since no instances are needed for the function optimization.
     For algorithm optimization, the first parameter holds the instance name on which the algorithm is evaluated and the second can provide extra information about the instance (rarely used).
 
     The third parameter gives the cutoff time (maximal running time) an algorithm is allowed to run and the fourth the runlength (maximal number of steps).
@@ -70,7 +70,7 @@ The **paramfile** parameter tells *SMAC* which Parameter Configuration Space (PC
 
     x1 and x2 are both continuous parameters. x1 can take any real value in the range [-5, 10], x2 in the range [0, 15] and both have the default value 0.
 
-The **run_obj** parameter specifies what *SMAC* is supposed to be **minimized**. For this example we are optimizing the solution quality.
+The **run_obj** parameter specifies what *SMAC* is supposed to **minimize**. For this example we are optimizing the solution quality.
 For *SMAC* to be able to interpret the results of an algorithm run, a wrapper should return the results of the algorithm run as follows:
 
     .. code-block:: bash
@@ -113,13 +113,13 @@ Using *SMAC* in Python: SVM
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 To explain the use of *SMAC* within Python, let's look at a real-world example,
 optimizing a Support Vector Machine (SVM) on the widely known `IRIS-dataset
-<http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html>`_.
+<https://en.wikipedia.org/wiki/Iris_flower_data_set>`_.
 This example is located in :code:`examples/svm.py`.
 
 To use *SMAC* directly with Python, we first import the necessary modules
 
 .. literalinclude:: ../examples/svm.py
-   :lines: 9-22 
+   :lines: 9-22
    :lineno-match:
    
 We import the `SVM from Scikit-Learn <http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html>`_, 
@@ -175,13 +175,13 @@ Others, such as *gamma*, need to be translated before the call to the SVM.
 We register the function to a Target Algorithm Evaluator (TAE_), which communicates
 between the function to be optimized and *SMAC* by calling the function with the
 desired configuration and interpreting the output (in this case, simply the
-score). We also call the function to get the default-value.
+score). We also call the function to get the default value.
 
 .. literalinclude:: ../examples/svm.py
    :lines: 98-104
    :lineno-match:
 
-We need a Scenario-object to configure the optimization-process.
+We need a Scenario-object to configure the optimization process.
 We provide a `list of possible options`__ in the scenario.
 
 __ scenario_

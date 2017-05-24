@@ -30,8 +30,7 @@ Contents:
 
 .. note::
 
-   For a detailed description of its main idea,
-   we refer to
+   For a detailed description of its main idea, we refer to:
 
       Hutter, F. and Hoos, H. H. and Leyton-Brown, K.
       Sequential Model-Based Optimization for General Algorithm Configuration
@@ -48,14 +47,15 @@ Contents:
       
      | @misc{smac-2017, 
      |    title={SMAC v3: Algorithm Configuration in Python}, 
-     |    author={Marius Lindauer and Katharina Eggensperger and Matthias Feurer and Stefan Falkner and Andre Biedenkapp and Frank Hutter},
+     |    author={Marius Lindauer and Katharina Eggensperger and Matthias Feurer and Stefan Falkner and André Biedenkapp and Frank Hutter},
      |    year={2017}, 
      |    publisher={GitHub}, 
      |    howpublished={\\url{https://github.com/automl/SMAC3}} 
      | }
 
-SMAC3 is mainly written in Python 3.5.
-Its `Random Forest <https://github.com/automl/random_forest_run>`_ is written in C++.
+SMAC3 is mainly written in Python 3 and continuously tested with Python 3.4-3.6.
+Its `Random Forest <https://github.com/automl/random_forest_run>`_ is written in
+C++11.
 
 
 .. Indices and tables

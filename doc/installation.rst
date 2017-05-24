@@ -5,7 +5,7 @@ Installation
 
 Requirements
 ------------
-The random forest used in SMAC depends on a c++11 compatible compiler
+The random forest used in SMAC depends on a C++11 compatible compiler
 and on SWIG (>3.0).
 
 To install both requirements system-wide on a linux system with apt, 
@@ -31,8 +31,8 @@ To install SMAC3 from pypi, please use the following command on the command line
 
     pip install smac
     
-If you want to install it in the user-space (e.g., because of missing permissions), 
-please add the option :code:`--user` or create a virtualenv.
+If you want to install it in the user space (e.g., because of missing
+permissions), please add the option :code:`--user` or create a virtualenv.
 
 .. _manual_installation:
 
