@@ -78,7 +78,7 @@ class Scenario(object):
         self._add_arguments()
 
         # Make cutoff mandatory if run_obj is runtime
-        if 'run_obj' in scenario and scenario['run_obj'] == 'runtime':
+        if scenario['run_obj'] == 'runtime':
             self._arguments['cutoff_time']['required'] = True
 
         # Parse arguments
