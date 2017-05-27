@@ -20,21 +20,11 @@ __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class RunType(object):
-    '''
-       class to define numbers for status types.
-       Makes life easier in select_runs
-    '''
-    SUCCESS = 1
-    TIMEOUT = 2
-    CENSORED = 3
-
-
 class AbstractRunHistory2EPM(object):
     __metaclass__ = abc.ABCMeta
 
     '''
-        takes a runhistory object and preprocess data in order to train EPM
+    Takes a runhistory object and preprocess data in order to train an EPM.
     '''
 
     def __init__(self, scenario, num_params,
@@ -163,21 +153,23 @@ class AbstractRunHistory2EPM(object):
         Y: numpy.ndarray
             cost values
         '''
-        self.logger.debug("Transform Rh into X,y format")
+        self.logger.debug("Transform runhistory into X,y format")
 
         assert isinstance(runhistory, RunHistory)
 
         # consider only successfully finished runs
-        s_run_dict = self.__select_runs(rh_data=copy.deepcopy(runhistory.data),
-                                        select=RunType.SUCCESS)
+        s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
+                      if runhistory.data[run].status in self.success_states}
+
         # Store a list of instance IDs
         s_instance_id_list = [k.instance_id for k in s_run_dict.keys()]
         X, Y = self._build_matrix(run_dict=s_run_dict, runhistory=runhistory,
                                   instances=s_instance_id_list)
 
         # Also get TIMEOUT runs
-        t_run_dict = self.__select_runs(rh_data=copy.deepcopy(runhistory.data),
-                                        select=RunType.TIMEOUT)
+        t_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
+                      if runhistory.data[run].status == StatusType.TIMEOUT and
+                      runhistory.data[run].time >= self.cutoff_time}
         t_instance_id_list = [k.instance_id for k in s_run_dict.keys()]
 
         # use penalization (e.g. PAR10) for EPM training
@@ -191,8 +183,9 @@ class AbstractRunHistory2EPM(object):
 
         if self.impute_censored_data:
             # Get all censored runs
-            c_run_dict = self.__select_runs(rh_data=copy.deepcopy(runhistory.data),
-                                            select=RunType.CENSORED)
+            c_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
+                          if runhistory.data[run].status in self.impute_state and
+                          runhistory.data[run].time < self.cutoff_time}
             if len(c_run_dict) == 0:
                 self.logger.debug("No censored data found, skip imputation")
                 # If we do not impute, we also return TIMEOUT data
@@ -231,49 +224,6 @@ class AbstractRunHistory2EPM(object):
             Y = np.concatenate((Y, tY))
 
         return X, Y
-
-    def __select_runs(self, rh_data, select):
-        '''
-        select runs of a runhistory
-
-        Parameters
-        ----------
-        rh_data : runhistory
-            dict of ConfigSpace.config
-        select : RunType
-            one of "success", "timeout", "censored",
-            return only runs for this type
-
-        Returns
-        -------
-        runs: dict
-            dictionary in the form of RunHistory.data
-        '''
-        new_dict = dict()
-
-        if select == RunType.SUCCESS:
-            for run in rh_data.keys():
-                if rh_data[run].status in self.success_states:
-                    new_dict[run] = rh_data[run]
-        elif select == RunType.TIMEOUT:
-            for run in rh_data.keys():
-                if (rh_data[run].status == StatusType.TIMEOUT and
-                        rh_data[run].time >= self.cutoff_time):
-                    new_dict[run] = rh_data[run]
-        elif select == RunType.CENSORED:
-            for run in rh_data.keys():
-                if rh_data[run].status in self.impute_state \
-                        and rh_data[run].time < self.cutoff_time:
-                    new_dict[run] = rh_data[run]
-        else:
-            err_msg = "select must be in (%s), but is %s" % \
-                      (",".join(["%d" % t for t in
-                                 [RunType.SUCCESS, RunType.TIMEOUT,
-                                  RunType.CENSORED]]), select)
-            self.logger.critical(err_msg)
-            raise ValueError(err_msg)
-
-        return new_dict
 
     def get_X_y(self, runhistory: RunHistory):
         '''
