@@ -9,7 +9,7 @@ or try to run the installation first.
 .. rubric:: pyrfr raises cryptic import errors.
 
 Ensure that the gcc used to compile the pyrfr is the same as used for linking during execution.
-This often happens with Anaconda -- see Installation for a solution.
+This often happens with Anaconda -- see `Installation <installation.html>`_ for a solution.
 
 .. rubric:: My target algorithm is not accepted, when using the scenario-file.
 
@@ -20,7 +20,7 @@ You can also run SMAC with :code:`--verbose DEBUG` to see how *SMAC* tried to ca
 
 .. rubric:: I discovered a bug/have criticism or ideas on *SMAC*. Where should I report to?
 
-*SMAC* uses the GitHub issue-tracker to take care of bugs and questions. If you
+*SMAC* uses the `GitHub issue-tracker <https://github.com/automl/SMAC3/issues>`_ to take care of bugs and questions. If you
 experience problems with *SMAC*, try to provide a full error report with all the
 typical information (OS, version, console-output, minimum working example, ...).
 This makes it a lot easier to reproduce the error and locate the problem.

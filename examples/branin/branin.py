@@ -8,8 +8,6 @@ def main():
     tmp = branin((x, y))
     print('Result for SMAC: SUCCESS, -1, -1, %f, %s' % (tmp, seed))
 
-import numpy as np
-
 def branin(x):
     x1 = x[0]
     x2 = x[1]

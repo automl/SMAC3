@@ -30,7 +30,7 @@ provide slightly different interfaces.
       Result for SMAC: <STATUS>, <running time>, <runlength>, <quality>, <seed>, <instance-specifics>
       Result for ParamILS: <STATUS>, <running time>, <runlength>, <quality>, <seed>, <instance-specifics>
 
-  The examples branin_ or SPEAR_ reflect the usage.
+  The examples Branin_ or SPEAR_ reflect the usage.
   
   * **STATUS** can be one of [SAT, UNSAT, SUCCESS, TIMEOUT, MEMOUT, CRASHED, ABORT]. SAT and UNSAT are mainly supported for backcompatibility and are treated as SUCCESS. The difference between CRASHED and ABORT is that ABORT is called when all future calls are assumed to crash and will abort the whole optimization, whereas CRASHED only indicates a single failed run.
   * **running time** indicates the time that the execution took.

@@ -29,7 +29,7 @@ Commandline
 ~~~~~~~~~~~
 To use *SMAC* via the commandline, you need a `scenario-file <options.html#scenario>`_ and a `PCS-file <options.html#pcs>`_.
 The script to invoke *SMAC* is located in *scripts/smac*. Please see the
-`branin <quickstart.html#branin>`_-example to see how to use it.
+`Branin <quickstart.html#branin>`_-example to see how to use it.
 
 *SMAC* is called via the commandline with the following arguments:
 
@@ -57,7 +57,7 @@ Both will interpret paths *from the execution-directory*.
 
     Currently, running *SMAC* via the commandline will register the algorithm with a
     `Target Algorithm Evaluator (TAE) <tae.html#tae>`_, that requires the target algorithm to print
-    the results to the console in the following format (see `branin
+    the results to the console in the following format (see `Branin
     <quickstart.html#branin>`_):
     
     .. code-block:: bash

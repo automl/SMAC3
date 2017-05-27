@@ -9,7 +9,7 @@ Examples to illustrate the usage of *SMAC* - either by reading in a scenario fil
 
 To get started, we will walk you through a few examples.
 
-* First, we explain the basic usage of *SMAC*, using a `scenario`_ file to optimize the `branin`__-function as a toy example.
+* First, we explain the basic usage of *SMAC*, using a `scenario`_ file to optimize the `Branin`__-function as a toy example.
 * Second, we explain the usage of *SMAC* within Python by optimizing a `Support Vector Machine`__.
 * Third, we show a real-world example, using an algorithm-wrapper to optimize the `SPEAR SAT-solver`__.
 
@@ -21,7 +21,7 @@ __ spear-example_
 
 Branin
 ~~~~~~
-First of, we'll demonstrate the usage of *SMAC* on the minimization of a standard 2-dimensional continuous test function (`branin <https://www.sfu.ca/~ssurjano/branin.html>`_).
+First of, we'll demonstrate the usage of *SMAC* on the minimization of a standard 2-dimensional continuous test function (`Branin <https://www.sfu.ca/~ssurjano/branin.html>`_).
 This example aims to explain the most basic
 usage of *SMAC*.
 
@@ -172,22 +172,13 @@ Others, such as *gamma*, need to be translated before the call to the SVM.
    :pyobject: svm_from_cfg
    :lineno-match:
 
-We register the function to a Target Algorithm Evaluator (TAE_), which communicates
-between the function to be optimized and *SMAC* by calling the function with the
-desired configuration and interpreting the output (in this case, simply the
-score). We also call the function to get the default value.
-
-.. literalinclude:: ../examples/svm.py
-   :lines: 98-104
-   :lineno-match:
-
 We need a Scenario-object to configure the optimization process.
 We provide a `list of possible options`__ in the scenario.
 
 __ scenario_
 
 The initialization of a scenario in the code uses the same keywords as a
-scenario-file, which we used in the branin example.
+scenario-file, which we used in the Branin example.
 
 .. literalinclude:: ../examples/svm.py
    :lines: 91-96
@@ -200,7 +191,7 @@ and evaluation of the function, SMAC needs as inputs the scenario object
 as well as the function evaluator.
 
 .. literalinclude:: ../examples/svm.py
-   :lines: 106-
+   :lines: 103-
    :lineno-match:
 
 We start the optimization loop.
