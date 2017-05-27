@@ -188,7 +188,7 @@ Now we're ready to create a *SMAC*-instance, which handles the Bayesian
 Optimization-loop and calculates the incumbent. 
 To automatically handle the exploration of the search space 
 and evaluation of the function, SMAC needs as inputs the scenario object 
-as well as the function evaluator.
+as well as the function.
 
 .. literalinclude:: ../examples/svm.py
    :lines: 103-
