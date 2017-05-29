@@ -76,7 +76,7 @@ class RandomForestWithInstances(AbstractEPM):
         self.rf_opts.num_trees = num_trees
         self.rf_opts.seed = seed
         self.rf_opts.do_bootstrapping = do_bootstrapping
-        max_features = 0 if ratio_features >= 1.0 else \
+        max_features = 0 if ratio_features > 1.0 else \
             max(1, int(types.shape[0] * ratio_features))
         self.rf_opts.tree_opts.max_features = max_features
         self.rf_opts.tree_opts.min_samples_to_split = min_samples_split
