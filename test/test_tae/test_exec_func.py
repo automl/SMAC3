@@ -17,6 +17,7 @@ class TestExecuteFunc(unittest.TestCase):
     def setUp(self):
         self.cs = ConfigurationSpace()
         self.scenario = Scenario({'cs': self.cs,
+                                  'run_obj': 'quality',
                                   'output_dir': ''})
         self.stats = Stats(scenario=self.scenario)
 

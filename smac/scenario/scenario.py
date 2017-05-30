@@ -77,6 +77,10 @@ class Scenario(object):
         self._groups = defaultdict(set)
         self._add_arguments()
 
+        # Make cutoff mandatory if run_obj is runtime
+        if scenario['run_obj'] == 'runtime':
+            self._arguments['cutoff_time']['required'] = True
+
         # Parse arguments
         parsed_arguments = {}
         for key, value in self._arguments.items():
@@ -239,7 +243,8 @@ class Scenario(object):
                           help=None, callback=float)
         self.add_argument(name='paramfile', help=None, dest='pcs_fn',
                           mutually_exclusive_group='cs')
-        self.add_argument(name='run_obj', help=None, default='runtime')
+        self.add_argument(name='run_obj', help=None, default='runtime',
+                          required=True, choice=['runtime', 'quality'])
         self.add_argument(name='overall_obj', help=None, default='par10')
         self.add_argument(name='cost_for_crash', default=float(MAXINT),
                           help="Defines the cost-value for crashed runs "
@@ -253,8 +258,8 @@ class Scenario(object):
                           callback=float)
         self.add_argument(name='wallclock_limit', help=None, default=numpy.inf,
                           callback=float)
-        self.add_argument(name='always_race_default', 
-                          help="Race new incumbents always against default configuration", 
+        self.add_argument(name='always_race_default',
+                          help="Race new incumbents always against default configuration",
                           default=False,
                           callback=_is_truthy, dest="always_race_default")
         self.add_argument(name='runcount_limit', help=None, default=numpy.inf,

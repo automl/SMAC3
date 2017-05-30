@@ -47,9 +47,10 @@ class RunhistoryTest(unittest.TestCase):
         self.config3 = Configuration(self.cs,
                                      values={'a': 100, 'b': 100})
 
-        self.scen = Scenario({"cutoff_time": 20, 'cs': self.cs})
+        self.scen = Scenario({'run_obj': 'runtime', 'cutoff_time': 20,
+                              'cs': self.cs})
         self.types, self.bounds = get_types(self.cs, None)
-        self.scen = Scenario({"cutoff_time": 20, 'cs': self.cs,
+        self.scen = Scenario({'run_obj': 'runtime', 'cutoff_time': 20, 'cs': self.cs,
                               'output_dir': ''})
 
     def test_log_runtime_with_imputation(self):
@@ -284,8 +285,9 @@ class RunhistoryTest(unittest.TestCase):
         '''
             add some data to RH and check returned values in X,y format
         '''
-        
-        self.scen = Scenario({"cutoff_time": 20, 'cs': self.cs, 
+
+        self.scen = Scenario({'cutoff_time': 20, 'cs': self.cs,
+                              'run_obj': 'runtime', 
                               'instances': [['1'],['2']],
                               'features': {
                                   '1': [1,1],
