@@ -9,7 +9,7 @@ Examples to illustrate the usage of *SMAC* - either by reading in a scenario fil
 
 To get started, we will walk you through a few examples.
 
-* First, we explain the basic usage of *SMAC*, using a `scenario`_ file to optimize the `Branin`__-function as a toy example.
+* First, we explain the basic usage of *SMAC* by optimizing the `Branin`__-function as a toy example.
 * Second, we explain the usage of *SMAC* within Python by optimizing a `Support Vector Machine`__.
 * Third, we show a real-world example, using an algorithm-wrapper to optimize the `SPEAR SAT-solver`__.
 
@@ -22,9 +22,28 @@ __ spear-example_
 Branin
 ~~~~~~
 First of, we'll demonstrate the usage of *SMAC* on the minimization of a standard 2-dimensional continuous test function (`Branin <https://www.sfu.ca/~ssurjano/branin.html>`_).
-This example aims to explain the most basic
-usage of *SMAC*.
+This example aims to explain the basic usage of *SMAC*. This example is
+implemented in two ways.
 
+The easiest way to use *SMAC* is to use the `f_min SMAC wrapper
+<apidoc/smac.facade.func_facade.html#smac.facade.func_facade.fmin_smac>`_. It is
+implemented in `examples/branin/branin_fmin.py` and requires no extra files. We
+import the fmin-function and the Branin-function:
+
+.. literalinclude:: ../examples/branin/branin_fmin.py
+   :lines: 3-4 
+   :lineno-match:
+
+And run the f_min-function:
+
+.. literalinclude:: ../examples/branin/branin_fmin.py
+   :start-after: logging.basicConfig 
+   :lineno-match:
+
+This way, you can optimize a blackbox-function with minimal effort. However, to
+use the whole of *SMACs* capability, a scenario_ object should be used. There are a
+wrapper `branin_cmdline.py`, a scenario-file `branin_scenario.txt` and a
+PCS-file `branin_pcs.pcs` in the branin-folder.
 To run the example scenario, change into the root-directory of *SMAC* and type the following commands:
 
 .. code-block:: bash
@@ -32,14 +51,9 @@ To run the example scenario, change into the root-directory of *SMAC* and type t
     cd examples/branin
     python ../../scripts/smac --scenario branin_scenario.txt
 
-The python command runs *SMAC* with the specified scenario. The scenario_ file contains the following four lines:
+The python command runs *SMAC* with the specified scenario. The scenario file contains the following five lines:
 
-.. code-block:: bash
-
-    algo = python branin.py
-    paramfile = branin_pcs.pcs
-    run_obj = quality
-    runcount_limit = 500
+    .. literalinclude:: ../examples/branin/branin_scenario.txt
 
 The **algo** parameter specifies how *SMAC* can call the function or evaluate an algorithm that *SMAC* is optimizing.
 An algorithm call by *SMAC* will look like this:
@@ -63,10 +77,7 @@ An exemplary call in our Branin example would be:
     
 The **paramfile** parameter tells *SMAC* which Parameter Configuration Space (PCS_)-file to use. This file contains a list of the algorithm's parameters, their domains and default values:
 
-    .. code-block:: bash
-
-        x1 [-5,10] [0]
-        x2 [0,15]  [0]
+    .. literalinclude:: ../examples/branin/branin_pcs.pcs
 
     x1 and x2 are both continuous parameters. x1 can take any real value in the range [-5, 10], x2 in the range [0, 15] and both have the default value 0.
 
