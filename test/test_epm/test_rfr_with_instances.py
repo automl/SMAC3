@@ -148,7 +148,8 @@ class TestRFWithInstances(unittest.TestCase):
         # print(X.shape, y.shape)
         model = RandomForestWithInstances(types=np.array([0, 0, 0], dtype=np.uint),
                                           bounds=np.array([(0, np.nan), (0, np.nan), (0, np.nan)], dtype=object),
-                                          instance_features=None, seed=12345)
+                                          instance_features=None, seed=12345,
+                                          ratio_features=1.0)
         model.train(np.vstack((X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y)))
         # for idx, x in enumerate(X):
         #     print(model.rf.all_leaf_values(x))

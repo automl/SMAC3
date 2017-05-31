@@ -77,6 +77,10 @@ class Scenario(object):
         self._groups = defaultdict(set)
         self._add_arguments()
 
+        # Make cutoff mandatory if run_obj is runtime
+        if scenario['run_obj'] == 'runtime':
+            self._arguments['cutoff_time']['required'] = True
+
         # Parse arguments
         parsed_arguments = {}
         for key, value in self._arguments.items():
@@ -251,11 +255,11 @@ class Scenario(object):
                           help=None, callback=float)
         self.add_argument(name='paramfile', help="specifies the path to the PCS-file",
                           dest='pcs_fn', mutually_exclusive_group='cs')
-        self.add_argument(name='run_obj',
+        self.add_argument(name='run_obj', default='runtime',
                           help="Defines what metric to optimize. When "
                                "optimizing runtime, *cutoff_time* is "
                                "required as well. Default: runtime.",
-                          default='runtime')
+                          required=True, choice=['runtime', 'quality'])
         self.add_argument(name='overall_obj',
                           help="PARX, where X is an integer defining the "
                                "penalty imposed on timeouts (i.e. runtimes that "
@@ -281,6 +285,10 @@ class Scenario(object):
                           help="Maximum amount of wallclock-time used for "
                                "optimization. Default: inf.",
                           default=numpy.inf, callback=float)
+        self.add_argument(name='always_race_default',
+                          help="Race new incumbents always against default configuration",
+                          default=False,
+                          callback=_is_truthy, dest="always_race_default")
         self.add_argument(name='runcount_limit',
                           help="Maximum number of algorithm-calls during "
                                "optimization. Default: inf.",

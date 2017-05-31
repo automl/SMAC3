@@ -62,7 +62,7 @@ class RandomForestWithInstances(AbstractEPM):
                  min_samples_leaf=3,
                  max_depth=20,
                  eps_purity=1e-8,
-                 max_num_nodes=1000,
+                 max_num_nodes=2**20,
                  seed=42,
                  **kwargs):
 
@@ -76,14 +76,14 @@ class RandomForestWithInstances(AbstractEPM):
         self.rf_opts.num_trees = num_trees
         self.rf_opts.seed = seed
         self.rf_opts.do_bootstrapping = do_bootstrapping
-        max_features = 0 if ratio_features >= 1.0 else \
+        max_features = 0 if ratio_features > 1.0 else \
             max(1, int(types.shape[0] * ratio_features))
-        self.rf_opts.max_features = max_features
-        self.rf_opts.min_samples_to_split = min_samples_split
-        self.rf_opts.min_samples_in_leaf = min_samples_leaf
-        self.rf_opts.max_depth = max_depth
-        self.rf_opts.epsilon_purity = eps_purity
-        self.rf_opts.max_num_nodes = max_num_nodes
+        self.rf_opts.tree_opts.max_features = max_features
+        self.rf_opts.tree_opts.min_samples_to_split = min_samples_split
+        self.rf_opts.tree_opts.min_samples_in_leaf = min_samples_leaf
+        self.rf_opts.tree_opts.max_depth = max_depth
+        self.rf_opts.tree_opts.epsilon_purity = eps_purity
+        self.rf_opts.tree_opts.max_num_nodes = max_num_nodes
 
         self.n_points_per_tree = n_points_per_tree
         self.rf = None  # type: regression.binary_rss_forest

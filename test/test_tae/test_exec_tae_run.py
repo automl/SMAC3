@@ -41,7 +41,8 @@ class TaeTest(unittest.TestCase):
             testing exhausted budget
         '''
         # Set time-limit negative in scenario-options to trigger exception
-        scen = Scenario(scenario={'wallclock_limit': -1, 'cs': ConfigurationSpace(), 
+        scen = Scenario(scenario={'wallclock_limit': -1, 'cs': ConfigurationSpace(),
+                                  'run_obj': 'quality',
                                   'output_dir': ''}, cmd_args=None)
         stats = Stats(scen)
         stats.start_timing()
@@ -61,6 +62,7 @@ class TaeTest(unittest.TestCase):
         test_run.return_value = StatusType.ABORT, 12345.0, 1.2345, {}
 
         scen = Scenario(scenario={'cs': ConfigurationSpace(),
+                                  'run_obj': 'quality',
                                   'output_dir': ''}, cmd_args=None)
         stats = Stats(scen)
         stats.start_timing()
@@ -78,6 +80,7 @@ class TaeTest(unittest.TestCase):
         test_run.return_value = StatusType.CRASHED, 12345.0, 1.2345, {}
 
         scen = Scenario(scenario={'cs': ConfigurationSpace(),
+                                  'run_obj': 'quality',
                                   'output_dir': ''}, cmd_args=None)
         stats = Stats(scen)
         stats.start_timing()
@@ -142,7 +145,8 @@ class TaeTest(unittest.TestCase):
             test cost on crashed runs
         '''
         # Patch run-function for custom-return
-        scen = Scenario(scenario={'cs': ConfigurationSpace()}, cmd_args=None)
+        scen = Scenario(scenario={'cs': ConfigurationSpace(),
+                                  'run_obj': 'quality'}, cmd_args=None)
         stats = Stats(scen)
         stats.start_timing()
         stats.ta_runs += 1
