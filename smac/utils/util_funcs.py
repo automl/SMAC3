@@ -16,6 +16,11 @@ def get_types(config_space, instance_features=None):
             types[i] = n_cats
             bounds[i] = (int(n_cats), np.nan)
 
+        elif isinstance(param, (OrdinalHyperparameter)):
+            n_cats = len(param.sequence)
+            types[i] = n_cats
+            bounds[i] = (int(n_cats), np.nan)
+
         elif isinstance(param, Constant):
             # for constants we simply set types to 0
             # which makes it a numerical parameter
