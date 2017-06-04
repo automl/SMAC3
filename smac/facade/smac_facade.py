@@ -302,7 +302,8 @@ class SMAC(object):
                            model=model,
                            acq_optimizer=local_search,
                            acquisition_func=acquisition_function,
-                           rng=rng)
+                           rng=rng,
+                           restore_incumbent=restore_incumbent)
 
     def _get_rng(self, rng):
         '''
@@ -345,6 +346,7 @@ class SMAC(object):
         try:
             incumbent = self.solver.run()
         finally:
+            self.solver.stats.save()
             self.solver.stats.print_stats()
             self.logger.info("Final Incumbent: %s" % (self.solver.incumbent))
             self.runhistory = self.solver.runhistory

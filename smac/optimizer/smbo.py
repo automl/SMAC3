@@ -6,7 +6,6 @@ import time
 import typing
 import math
 
-
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.optimizer.local_search import LocalSearch
@@ -41,7 +40,7 @@ class SMBO(object):
                  acq_optimizer: LocalSearch,
                  acquisition_func: AbstractAcquisitionFunction,
                  rng: np.random.RandomState,
-                 incumbent: Configuration=None):
+                 restore_incumbent: Configuration=None):
         '''
         Interface that contains the main Bayesian optimization loop
 
@@ -69,13 +68,13 @@ class SMBO(object):
             optimizer on acquisition function (right now, we support only a local search)
         acquisition_function : AcquisitionFunction
             Object that implements the AbstractAcquisitionFunction (i.e., infill criterion for acq_optimizer)
-        incumbent: Configuration
+        restore_incumbent: Configuration
             incumbent to be used from the start. ONLY used to restore states.
         rng: np.random.RandomState
             Random number generator
         '''
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
-        self.incumbent = incumbent
+        self.incumbent = restore_incumbent
 
         self.scenario = scenario
         self.config_space = scenario.cs
@@ -91,14 +90,9 @@ class SMBO(object):
         self.acquisition_func = acquisition_func
         self.rng = rng
 
-    def run(self, restore=None):
+    def run(self):
         '''
         Runs the Bayesian optimization loop
-
-        Parameters
-        ----------
-        restore: String or None
-            If string, path to folder with
 
         Returns
         ----------
@@ -106,22 +100,24 @@ class SMBO(object):
             The best found configuration
         '''
         self.stats.start_timing()
-        if self.stats.ta_runs == 0 and self.incumbent == None:
+        # Initialization, depends on input
+        if self.stats.ta_runs == 0 and self.incumbent is None:
             try:
                 self.incumbent = self.initial_design.run()
             except FirstRunCrashedException as err:
                 if self.scenario.abort_on_first_run_crash:
                     raise
-        elif self.stats.ta_runs != 0 and self.incumbent == None:
+        elif self.stats.ta_runs > 0 and self.incumbent is None:
             raise ValueError("According to stats there have been runs performed, "
                              "but the optimizer cannot detect an incumbent. Did "
                              "you set the incumbent (e.g. after restoring state)?")
-        elif self.stats.ta_runs == 0 and self.incumbent != None:
-            self.logger.warning("Optimizer skipped initial design run, because "
-                                "there is an incumbent, but there are no "
-                                "recorded runs in the Stats-object.")
+        elif self.stats.ta_runs == 0 and self.incumbent is not None:
+            raise ValueError("An incumbent is specified, but there are no runs "
+                             "recorded in the Stats-object. If you're restoring "
+                             "a state, please provide the Stats-object.")
         else:
-            self.logger.debug("Skipping initial-design-run. Assuming state "
+            self.logger.debug("Detecting Stats-object and restore-incumbent. "
+                              "Skipping initial-design-run. Assuming state "
                               "restoration...")
 
         # Main BO loop

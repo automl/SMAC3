@@ -1,4 +1,5 @@
 import time
+import os
 import logging
 import json
 
@@ -49,7 +50,7 @@ class Stats(object):
                 '_ema_n_configs_per_intensify': self._ema_n_configs_per_intensify,
                 '_EMA_ALPHA': self._EMA_ALPHA}
 
-        with open(os.path.join(self.__scenario.output_dir, "stats.json", 'w')) as fh:
+        with open(os.path.join(self.__scenario.output_dir, "stats.json"), 'w') as fh:
             json.dump(data, fh)
 
     def load(self, fn=None):
@@ -71,6 +72,8 @@ class Stats(object):
         for key in data:
             if hasattr(self, key):
                 setattr(self, key, data[key])
+            else:
+                raise ValueError("Stats does not recognize {}".format(key))
 
     def start_timing(self):
         '''

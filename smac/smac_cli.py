@@ -2,12 +2,14 @@ import os
 import sys
 import logging
 import numpy as np
+import shutil
 
 from smac.utils.io.cmd_reader import CMDReader
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_facade import SMAC
 from smac.facade.roar_facade import ROAR
 from smac.runhistory.runhistory import RunHistory
+from smac.stats.stats import Stats
 from smac.optimizer.objective import average_cost
 from smac.utils.merge_foreign_data import merge_foreign_data_from_file
 from smac.utils.io.traj_logging import TrajLogger
@@ -88,18 +90,23 @@ class SMACCLI(object):
         if args_.restore_state:
             # Check for folder and files
             rh_path = os.path.join(args_.restore_state, "runhistory.json")
-            stat_path = os.path.join(args_.restore_state, "stats.json")
+            stats_path = os.path.join(args_.restore_state, "stats.json")
             traj_path = os.path.join(args_.restore_state, "traj_aclib2.json")
-            if not os.path.isdir(args_.restore_state) or \
-                    not os.exists(rh_path) or not os.exists(stats_path):
+            scen_path = os.path.join(args_.restore_state, "scenario.txt")
+            if not os.path.isdir(args_.restore_state):
                raise FileNotFoundError("Could not find folder from which to restore.")
             # Load runhistory and stats
-            rh = RunHistory(aggregate_func=aggregate_func)
+            rh = RunHistory(aggregate_func=None)
             rh.load_json(rh_path, scen.cs)
-            stats = stats.load(stats_path)
+            stats = Stats(scen)
+            stats.load(stats_path)
             trajectory = TrajLogger.read_traj_aclib_format(
                 fn=traj_path, cs=scen.cs)
             incumbent = trajectory[-1]["incumbent"]
+            # Copy traj if output_dir is different
+            if scen.output_dir != Scenario(scen_path).output_dir:
+                shutil.copy(traj_path, os.path.join(scen.output_dir,
+                    "traj_aclib2.json"))
 
         if args_.mode == "SMAC":
             optimizer = SMAC(
@@ -108,7 +115,7 @@ class SMACCLI(object):
                 runhistory=rh,
                 initial_configurations=initial_configs,
                 stats=stats,
-                incumbent=incumbent)
+                restore_incumbent=incumbent)
         elif args_.mode == "ROAR":
             optimizer = ROAR(
                 scenario=scen,
