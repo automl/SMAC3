@@ -18,7 +18,7 @@ class OutputWriter(object):
     def write_scenario_file(self, scenario):
         """
             Write scenario to a file (format is compatible with input_reader).
-            Will overwrite if file exists.
+            If output_dir exists, move everything to output_dir.OLD.
             If you have arguments that need special parsing when saving, specify so
             in the _parse_argument-function.
 
@@ -30,6 +30,7 @@ class OutputWriter(object):
             Sideeffects:
             ----------
                 - creates output-directory if it doesn't exist.
+                - if it does, move everything to output.OLD
 
             Returns:
             ----------
@@ -48,6 +49,15 @@ class OutputWriter(object):
             except OSError:
                 raise OSError("Could not make output directory: "
                               "{}.".format(scenario.output_dir))
+        else:
+            # Move old directory (without checking whether still used)
+            move_to = scenario.output_dir + ".OLD"
+            while os.path.exists(move_to):
+                move_to += ".OLD"
+            os.mkdir(move_to)
+            for fn in os.listdir(scenario.output_dir):
+                shutil.move(os.path.join(scenario.output_dir, fn),
+                            os.path.join(move_to, fn))
 
         # options_dest2name maps scenario._arguments from dest -> name
         options_dest2name = {(scenario._arguments[v]['dest'] if

@@ -8,7 +8,6 @@ import time
 import datetime
 import copy
 import typing
-import shutil
 
 from smac.utils.io.input_reader import InputReader
 from smac.utils.io.output_writer import OutputWriter
@@ -109,18 +108,6 @@ class Scenario(object):
 
         if self.output_dir:
             self.output_dir = os.path.join(self.output_dir, "run%d"%(run_id))
-            if os.path.exists(self.output_dir):
-                # Move old directory (without checking whether still used)
-                move_to = self.output_dir + ".OLD"
-                while os.path.exists(move_to):
-                    move_to += ".OLD"
-                os.mkdir(move_to)
-                for fn in os.listdir(self.output_dir):
-                    shutil.move(os.path.join(self.output_dir, fn),
-                                os.path.join(move_to, fn))
-            else:
-                os.makedirs(self.output_dir)
-
         self.out_writer.write_scenario_file(self)
 
         self.logger.debug("Scenario Options:")
