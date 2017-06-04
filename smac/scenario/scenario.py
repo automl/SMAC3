@@ -8,6 +8,7 @@ import time
 import datetime
 import copy
 import typing
+import shutil
 
 from smac.utils.io.input_reader import InputReader
 from smac.utils.io.output_writer import OutputWriter
@@ -50,8 +51,7 @@ class Scenario(object):
         cmd_args : dict
             command line arguments that were not processed by argparse
         run_id: int
-            run ID will be used as suffix for output_dir
-
+            run ID will be used as subfolder for output_dir
         """
         self.logger = logging.getLogger(
             self.__module__ + '.' + self.__class__.__name__)
@@ -106,12 +106,23 @@ class Scenario(object):
             setattr(self, arg_name, arg_value)
 
         self._transform_arguments()
-        
+
         if self.output_dir:
-            self.output_dir += "_run%d" %(run_id)
+            self.output_dir = os.path.join(self.output_dir, "run%d"%(run_id))
+            if os.path.exists(self.output_dir):
+                # Move old directory (without checking whether still used)
+                move_to = self.output_dir + ".OLD"
+                while os.path.exists(move_to):
+                    move_to += ".OLD"
+                os.mkdir(move_to)
+                for fn in os.listdir(self.output_dir):
+                    shutil.move(os.path.join(self.output_dir, fn),
+                                os.path.join(move_to, fn))
+            else:
+                os.makedirs(self.output_dir)
 
         self.out_writer.write_scenario_file(self)
-        
+
         self.logger.debug("Scenario Options:")
         for arg_name, arg_value in parsed_arguments.items():
             if isinstance(arg_value,(int,str,float)):

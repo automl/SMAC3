@@ -10,6 +10,7 @@ import logging
 import unittest
 import pickle
 import copy
+import shutil
 
 import numpy as np
 
@@ -71,6 +72,7 @@ class ScenarioTest(unittest.TestCase):
 
     def tearDown(self):
         os.chdir(self.current_dir)
+        shutil.rmtree(self.test_scenario_dict['output_dir'], ignore_errors=True)
 
     def test_Exception(self):
         with self.assertRaises(TypeError):
