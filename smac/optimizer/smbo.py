@@ -75,7 +75,7 @@ class SMBO(object):
         '''
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
-        self.incumbent = None
+        self.incumbent = restore_incumbent
 
         self.scenario = scenario
         self.config_space = scenario.cs

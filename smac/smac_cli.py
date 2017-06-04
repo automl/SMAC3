@@ -85,6 +85,7 @@ class SMACCLI(object):
                     fn=traj_fn, cs=scen.cs)
                 initial_configs.append(trajectory[-1]["incumbent"])
 
+        # Restore state
         stats = None
         incumbent = None
         if args_.restore_state:
