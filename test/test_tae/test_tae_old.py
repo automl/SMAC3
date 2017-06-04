@@ -30,6 +30,7 @@ class TaeOldTest(unittest.TestCase):
             running some simple algo in old style
         '''
         scen = Scenario(scenario={'cs': ConfigurationSpace(),
+                                  'run_obj': 'quality',
                                   'output_dir': ''}, cmd_args=None)
         stats = Stats(scen)
 

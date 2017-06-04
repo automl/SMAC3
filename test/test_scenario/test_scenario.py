@@ -296,7 +296,8 @@ class ScenarioTest(unittest.TestCase):
 
     def test_str_cast_instances(self):
         self.scen = Scenario({'cs': None,
-                              'instances': [[1], [2]]})
+                              'instances': [[1], [2]],
+                              'run_obj': 'quality'})
         self.assertIsInstance(self.scen.train_insts[0], str)
         self.assertIsInstance(self.scen.train_insts[1], str)
 

@@ -47,9 +47,10 @@ class RunhistoryTest(unittest.TestCase):
         self.config3 = Configuration(self.cs,
                                      values={'a': 100, 'b': 100})
 
-        self.scen = Scenario({"cutoff_time": 20, 'cs': self.cs})
+        self.scen = Scenario({'run_obj': 'runtime', 'cutoff_time': 20,
+                              'cs': self.cs})
         self.types, self.bounds = get_types(self.cs, None)
-        self.scen = Scenario({"cutoff_time": 20, 'cs': self.cs,
+        self.scen = Scenario({'run_obj': 'runtime', 'cutoff_time': 20, 'cs': self.cs,
                               'output_dir': ''})
 
     def test_log_runtime_with_imputation(self):
@@ -62,7 +63,8 @@ class RunhistoryTest(unittest.TestCase):
                                         self.scen.cutoff * self.scen.par_factor),
                                     model=RandomForestWithInstances(types=self.types, bounds=self.bounds,
                                                                     instance_features=None,
-                                                                    seed=12345)
+                                                                    seed=12345,
+                                                                    ratio_features=1.0)
                                     )
 
         rh2epm = runhistory2epm.RunHistory2EPM4LogCost(num_params=2,
@@ -99,12 +101,13 @@ class RunhistoryTest(unittest.TestCase):
                     additional_info={"start_time": 10})
 
         X, y = rh2epm.transform(self.rh)
-        print(y)
-        self.assertTrue(np.allclose(
-            X, np.array([[0.005, 0.995], [0.995, 0.005], [0.995, 0.995]]), atol=0.001))
+        np.testing.assert_array_almost_equal(X, np.array([[0.005, 0.995],
+                                                          [0.995, 0.005],
+                                                          [0.995, 0.995]]),
+                                             decimal=3)
         # both timeouts should be imputed to a PAR10
-        self.assertTrue(
-            np.allclose(y, np.array([[0.], [2.301], [2.301]]), atol=0.001))
+        np.testing.assert_array_almost_equal(y, np.array([[0.], [2.301], [2.301]]),
+                                             decimal=3)
 
     def test_log_cost_without_imputation(self):
         '''
@@ -153,11 +156,13 @@ class RunhistoryTest(unittest.TestCase):
         '''
 
         self.imputor = RFRImputator(rs=np.random.RandomState(seed=12345),
+
                                     cutoff=self.scen.cutoff,
                                     threshold=self.scen.cutoff * self.scen.par_factor,
                                     model=RandomForestWithInstances(types=self.types, bounds=self.bounds,
                                                                     instance_features=None,
-                                                                    seed=12345, n_points_per_tree=90)
+                                                                    seed=12345, n_points_per_tree=90,
+                                                                    ratio_features=1.0)
                                     )
 
         rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
@@ -194,11 +199,12 @@ class RunhistoryTest(unittest.TestCase):
                     additional_info={"start_time": 10})
 
         X, y = rh2epm.transform(self.rh)
-        print(y)
-        self.assertTrue(np.allclose(
-            X, np.array([[0.005, 0.995], [0.995, 0.005], [0.995, 0.995]]), atol=0.001))
-        self.assertTrue(
-            np.allclose(y, np.array([[1.], [16.422], [200.]]), atol=0.001))
+        np.testing.assert_array_almost_equal(X, np.array([[0.005, 0.995],
+                                                          [0.995, 0.005],
+                                                          [0.995, 0.995]]),
+                                             decimal=3)
+        np.testing.assert_array_almost_equal(y, np.array([[1.], [16.422], [200.]]),
+                                             decimal=3)
 
     def test_cost_without_imputation(self):
         '''
@@ -279,8 +285,9 @@ class RunhistoryTest(unittest.TestCase):
         '''
             add some data to RH and check returned values in X,y format
         '''
-        
-        self.scen = Scenario({"cutoff_time": 20, 'cs': self.cs, 
+
+        self.scen = Scenario({'cutoff_time': 20, 'cs': self.cs,
+                              'run_obj': 'runtime', 
                               'instances': [['1'],['2']],
                               'features': {
                                   '1': [1,1],
