@@ -55,9 +55,7 @@ class OutputWriter(object):
             while os.path.exists(move_to):
                 move_to += ".OLD"
             os.mkdir(move_to)
-            for fn in os.listdir(scenario.output_dir):
-                shutil.move(os.path.join(scenario.output_dir, fn),
-                            os.path.join(move_to, fn))
+            shutil.move(scenario.output_dir, move_to, fn)
 
         # options_dest2name maps scenario._arguments from dest -> name
         options_dest2name = {(scenario._arguments[v]['dest'] if
