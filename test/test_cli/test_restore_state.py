@@ -22,8 +22,8 @@ from smac.stats.stats import Stats
 class TestSMACCLI(unittest.TestCase):
 
     def setUp(self):
-        self.output_one = "test/test_files/test_restore_state_run1"  # From scenario_one.txt
-        self.output_two = "test/test_files/test_restored_state_run1" # From scenario_two.txt
+        self.output_one = "test/test_files/test_restore_state/run1"  # From scenario_one.txt
+        self.output_two = "test/test_files/test_restored_state/run1" # From scenario_two.txt
         self.smaccli = SMACCLI()
         self.scenario_one = "test/test_files/restore_scenario_one.txt"
         self.scenario_two = "test/test_files/restore_scenario_two.txt"
