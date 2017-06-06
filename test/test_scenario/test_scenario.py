@@ -10,6 +10,7 @@ import logging
 import unittest
 import pickle
 import copy
+import shutil
 
 import numpy as np
 
@@ -71,6 +72,7 @@ class ScenarioTest(unittest.TestCase):
 
     def tearDown(self):
         os.chdir(self.current_dir)
+        shutil.rmtree(self.test_scenario_dict['output_dir'], ignore_errors=True)
 
     def test_Exception(self):
         with self.assertRaises(TypeError):
@@ -248,6 +250,7 @@ class ScenarioTest(unittest.TestCase):
         # First check with file-paths defined
         self.test_scenario_dict['feature_file'] = 'test/test_files/scenario_test/features_multiple.txt'
         scenario = Scenario(self.test_scenario_dict)
+        scenario.write()
         path = os.path.join(scenario.output_dir, 'scenario.txt')
         scenario_reloaded = Scenario(path)
         check_scen_eq(scenario, scenario_reloaded)
@@ -268,11 +271,13 @@ class ScenarioTest(unittest.TestCase):
         patch_isdir.return_value = False
         patch_mkdirs.side_effect = OSError()
         with self.assertRaises(OSError) as cm:
-            Scenario(self.test_scenario_dict)
+            scen = Scenario(self.test_scenario_dict)
+            scen.write()
 
     def test_no_output_dir(self):
         self.test_scenario_dict['output_dir'] = ""
         scenario = Scenario(self.test_scenario_dict)
+        scenario.write()
         self.assertFalse(scenario.out_writer.write_scenario_file(scenario))
 
     def test_par_factor(self):
