@@ -108,12 +108,15 @@ class Scenario(object):
 
         if self.output_dir:
             self.output_dir = os.path.join(self.output_dir, "run%d"%(run_id))
-        self.out_writer.write_scenario_file(self)
 
         self.logger.debug("Scenario Options:")
         for arg_name, arg_value in parsed_arguments.items():
             if isinstance(arg_value,(int,str,float)):
                 self.logger.debug("%s = %s" %(arg_name,arg_value))
+
+    def write(self):
+        """ Write scenario to self.output_dir/scenario.txt. """
+        self.out_writer.write_scenario_file(self)
 
     def add_argument(self, name, help, callback=None, default=None,
                      dest=None, required=False, mutually_exclusive_group=None,
@@ -275,7 +278,7 @@ class Scenario(object):
                           default="smac3-output_%s" % (
                               datetime.datetime.fromtimestamp(
                                   time.time()).strftime(
-                                  '%Y-%m-%d_%H:%M:%S_(%f)')))
+                                  '%Y-%m-%d_%H:%M:%S_%f')))
         self.add_argument(name='input_psmac_dirs', help=None,
                           default=None)
         self.add_argument(name='shared_model', help=None, default='0',
