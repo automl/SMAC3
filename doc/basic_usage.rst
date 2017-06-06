@@ -70,9 +70,9 @@ Usage in Python
 ~~~~~~~~~~~~~~~
 The usage of *SMAC* from your Python-code is described in the `SVM-example
 <quickstart.html#svm-example>`_.
-Scenario and PCS are both build within the code. The target algorithm needs to
-be registered with a `Target Algorithm Evaluator (TAE) <tae.html#tae>`_, which communicates
-between *SMAC* and the target algorithm. To optimize a function, you can instantiate
+Scenario and configuration space are both build within the code. The target
+algorithm needs to be registered with a `Target Algorithm Evaluator (TAE) <tae.html#tae>`_,
+which communicates between *SMAC* and the target algorithm. To optimize a function, you can instantiate
 `ExecuteTAFuncDict <apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict>`_ or
 `ExecuteTAFuncArray <apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncArray>`_.
 In that case, the algorithm needs to return a cost, representing the quality of

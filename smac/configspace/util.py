@@ -16,6 +16,7 @@ def convert_configurations_to_array(configs: List[Configuration]) -> np.ndarray:
         List of configuration objects.
 
     Returns
+    -------
     np.ndarray
         Array with configuration hyperparameters. Inactive values are imputed
         with their default value.

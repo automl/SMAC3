@@ -11,16 +11,14 @@ __copyright__ = "Copyright 2017, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class AbstractAcquisitionFunction(object):
-    __metaclass__ = abc.ABCMeta
-    long_name = ""
+class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
 
     def __str__(self):
         return type(self).__name__ + " (" + self.long_name + ")"
 
     def __init__(self, model: AbstractEPM, **kwargs):
         """
-        A base class for acquisition functions.
+        Abstract base class for acquisition functions.
 
         Parameters
         ----------

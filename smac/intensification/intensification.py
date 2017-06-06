@@ -23,7 +23,8 @@ __license__ = "3-clause BSD"
 
 class Intensifier(object):
     '''
-        takes challenger and incumbents and performs intensify
+     Races challengers against an incumbent (a.k.a. SMAC's intensification
+     procedure).
     '''
 
     def __init__(self, tae_runner: ExecuteTARun, stats: Stats,

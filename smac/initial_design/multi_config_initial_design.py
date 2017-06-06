@@ -79,7 +79,7 @@ class MultiConfigInitialDesign(InitialDesign):
 
             Returns
             -------
-            incumbent: Configuration()
+            incumbent: Configuration
                 initial incumbent configuration
         '''
         configs = self.configs

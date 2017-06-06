@@ -37,8 +37,8 @@ generated within custom code, you might not need *algo* or *paramfile*.
 
 Required:
         * *run_obj* in [runtime, quality]. Defines what metric to optimize. When optimizing runtime, *cutoff_time* is required as well.
-        * *cutoff_time* is the maximum runtime, after which the target-algorithm is cancelled. **Required if *run_obj* is runtime.**
-        * *algo* specifies the target-algorithm call that *SMAC* will optimize. Interpreted as a bash-command.
+        * *cutoff_time* is the maximum runtime, after which the target algorithm is cancelled. **Required if *run_obj* is runtime.**
+        * *algo* specifies the target algorithm call that *SMAC* will optimize. Interpreted as a bash-command.
         * *paramfile* specifies the path to the PCS-file
 
 Optional:
@@ -46,7 +46,7 @@ Optional:
         * *execdir* specifies the path to the execution-directory. Default: ".".
         * *deterministic* in [true, false]. If true, the optimization process will be repeatable. Default: false 
         * *overall_obj* is PARX, where X is an integer defining the penalty imposed on timeouts (i.e. runtimes that exceed the *cutoff-time*). Default: PAR10.
-        * *memory_limit* is the maximum available memory the target-algorithm can occupy before being cancelled.
+        * *memory_limit* is the maximum available memory the target algorithm can occupy before being cancelled.
         * *tuner-timeout* is the maximum amount of CPU-time used for optimization. Default: inf.
         * *wallclock_limit* is the maximum amount of wallclock-time used for optimization. Default: inf.
         * *runcount_limit* is the maximum number of algorithm-calls during optimization. Default: inf.

@@ -17,7 +17,7 @@ __version__ = "0.0.1"
 class AbstractEPM(object):
     '''Abstract implementation of the EPM API
 
-        Note: The input dimensions of Y for training
+        Note: The input dimensionality of Y for training
         and the output dimensions of all predictions
         (also called n_objectives)
         depend on the concrete implementation of this

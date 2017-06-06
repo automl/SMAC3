@@ -241,7 +241,7 @@ class Scenario(object):
                           default=False,
                           callback=_is_truthy, dest="always_race_default")
         self.add_argument(name='algo',
-                          help="Specifies the target-algorithm call that *SMAC*"
+                          help="Specifies the target algorithm call that *SMAC*"
                                "will optimize. Interpreted as a bash-command.",
                           dest='ta', callback=shlex.split)
         self.add_argument(name='execdir', default='.',
@@ -271,11 +271,11 @@ class Scenario(object):
                           callback=float)
         self.add_argument(name='cutoff_time',
                           help="Maximum runtime, after which the "
-                               "target-algorithm is cancelled. **Required "
+                               "target algorithm is cancelled. **Required "
                                "if *run_obj* is runtime.**", default=None,
                           dest='cutoff', callback=float)
         self.add_argument(name='memory_limit',
-                          help="Maximum available memory the target-algorithm "
+                          help="Maximum available memory the target algorithm "
                                "can occupy before being cancelled.")
         self.add_argument(name='tuner-timeout',
                           help="Maximum amount of CPU-time used for optimization."
