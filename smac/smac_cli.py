@@ -89,6 +89,7 @@ class SMACCLI(object):
         stats = None
         incumbent = None
         if args_.restore_state:
+            root_logger.debug("Restoring state from %s...", args_.restore_state)
             # Check for folder and files
             rh_path = os.path.join(args_.restore_state, "runhistory.json")
             stats_path = os.path.join(args_.restore_state, "stats.json")
@@ -99,15 +100,19 @@ class SMACCLI(object):
             # Load runhistory and stats
             rh = RunHistory(aggregate_func=None)
             rh.load_json(rh_path, scen.cs)
+            root_logger.debug("Restored runhistory from %s", rh_path)
             stats = Stats(scen)
             stats.load(stats_path)
+            root_logger.debug("Restored stats from %s", stats_path)
             trajectory = TrajLogger.read_traj_aclib_format(
                 fn=traj_path, cs=scen.cs)
             incumbent = trajectory[-1]["incumbent"]
+            root_logger.debug("Restored incumbent %s from %s", incumbent, traj_path)
             # Copy traj if output_dir is different
             if scen.output_dir != Scenario(scen_path).output_dir:
-                shutil.copy(traj_path, os.path.join(scen.output_dir,
-                    "traj_aclib2.json"))
+                new_traj_path = os.path.join(scen.output_dir, "traj_aclib2.json")
+                shutil.copy(traj_path, new_traj_path)
+                root_logger.debug("Copied traj %s", rh_path)
 
         if args_.mode == "SMAC":
             optimizer = SMAC(
