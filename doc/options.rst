@@ -35,30 +35,9 @@ For boolean options "1" or "true" both evaluate to True.
 The following assumes that the scenario is created via a scenario-file. If it is
 generated within custom code, you might not need *algo* or *paramfile*.
 
-Required:
-        * *run_obj* in [runtime, quality]. Defines what metric to optimize. When optimizing runtime, *cutoff_time* is required as well.
-        * *cutoff_time* is the maximum runtime, after which the target algorithm is cancelled. **Required if *run_obj* is runtime.**
-        * *algo* specifies the target algorithm call that *SMAC* will optimize. Interpreted as a bash-command.
-        * *paramfile* specifies the path to the PCS-file
+Options:
 
-Optional:
-        * *abort_on_first_run_crash* in [true, false]. If true, *SMAC* will abort if the first run of the target algorithm crashes. Default: true.
-        * *execdir* specifies the path to the execution-directory. Default: ".".
-        * *deterministic* in [true, false]. If true, the optimization process will be repeatable. Default: false 
-        * *overall_obj* is PARX, where X is an integer defining the penalty imposed on timeouts (i.e. runtimes that exceed the *cutoff-time*). Default: PAR10.
-        * *memory_limit* is the maximum available memory the target algorithm can occupy before being cancelled.
-        * *tuner-timeout* is the maximum amount of CPU-time used for optimization. Default: inf.
-        * *wallclock_limit* is the maximum amount of wallclock-time used for optimization. Default: inf.
-        * *runcount_limit* is the maximum number of algorithm-calls during optimization. Default: inf.
-        * *minR* is the minimum number of calls per configuration. Default: 1
-        * *maxR* is the maximum number of calls per configuration. Default: 2000
-        * *always_race_default* indicates that new incumbents are always raced against default configuration. Default: false
-        * *instance_file* specifies the file with the training-instances.
-        * *test_instance_file* specifies the file with the test-instances.
-        * *feature_file* specifies the file with the instance-features
-        * *output_dir* specifies the output-directory for all emerging files, such as logging and results. Default: "smac3-output_YEAR-MONTH-DAY_HOUR:MINUTE:SECOND"
-        * *shared_model*:  Default: false
-        * *initial_incumbent*: in [DEFAULT, RANDOM]. DEFAULT is the default from the PCS. Default: DEFAULT.
+.. include:: scenario_options.rst
 
 .. _paramcs:
 

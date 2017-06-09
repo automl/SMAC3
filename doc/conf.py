@@ -20,6 +20,7 @@ import sphinx_rtd_theme
 
 sys.path.insert(0, '..')
 import smac
+from smac.scenario.scenario import Scenario
 
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -302,3 +303,6 @@ texinfo_documents = [
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
 
+# Create Scenario-object to update the list of options in the docs
+scenario = Scenario({'run_obj':'runtime', 'cutoff_time':1})
+scenario.write_options_to_doc()

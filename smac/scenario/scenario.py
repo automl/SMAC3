@@ -106,12 +106,12 @@ class Scenario(object):
             setattr(self, arg_name, arg_value)
 
         self._transform_arguments()
-        
+
         if self.output_dir:
             self.output_dir += "_run%d" %(run_id)
 
         self.out_writer.write_scenario_file(self)
-        
+
         self.logger.debug("Scenario Options:")
         for arg_name, arg_value in parsed_arguments.items():
             if isinstance(arg_value,(int,str,float)):
@@ -234,36 +234,36 @@ class Scenario(object):
         # Add allowed arguments
         self.add_argument(name='abort_on_first_run_crash',
                           help="If true, *SMAC* will abort if the first run of "
-                               "the target algorithm crashes. Default: true.",
-                          default='1', callback=_is_truthy)
-        self.add_argument(name='always_race_default', 
-                          help="Race new incumbents always against default configuration", 
-                          default=False,
+                               "the target algorithm crashes.",
+                          default=True, callback=_is_truthy)
+        self.add_argument(name='always_race_default', default=False,
+                          help="Race new incumbents always against default "
+                               "configuration.",
                           callback=_is_truthy, dest="always_race_default")
-        self.add_argument(name='algo',
-                          help="Specifies the target algorithm call that *SMAC*"
-                               "will optimize. Interpreted as a bash-command.",
-                          dest='ta', callback=shlex.split)
+        self.add_argument(name='algo', dest='ta', callback=shlex.split,
+                          help="Specifies the target algorithm call that *SMAC* "
+                               "will optimize. Interpreted as a bash-command.")
         self.add_argument(name='execdir', default='.',
-                          help="specifies the path to the execution-directory."
-                               "Default: \".\".")
-        self.add_argument(name='deterministic', default='0',
-                          help="If true, the optimization process will be"
-                               "repeatable. Default: false.",
-                          callback=_is_truthy)
+                          help="Specifies the path to the execution-directory.")
+        self.add_argument(name='deterministic', default=False,
+                          help="If true, the optimization process will be "
+                               "repeatable.", callback=_is_truthy)
         self.add_argument(name='intensification_percentage', default=0.5,
-                          help=None, callback=float)
-        self.add_argument(name='paramfile', help="specifies the path to the PCS-file",
+                          help="The fraction of time to be used on "
+                               "intensification (versus choice of next "
+                                "Configurations).", callback=float)
+        self.add_argument(name='paramfile', help="Specifies the path to the "
+                                                 "PCS-file.",
                           dest='pcs_fn', mutually_exclusive_group='cs')
-        self.add_argument(name='run_obj', default='runtime',
+        self.add_argument(name='run_obj',
                           help="Defines what metric to optimize. When "
                                "optimizing runtime, *cutoff_time* is "
-                               "required as well. Default: runtime.",
+                               "required as well.",
                           required=True, choice=['runtime', 'quality'])
         self.add_argument(name='overall_obj',
                           help="PARX, where X is an integer defining the "
                                "penalty imposed on timeouts (i.e. runtimes that "
-                               "exceed the *cutoff-time*). Default: PAR10.",
+                               "exceed the *cutoff-time*).",
                           default='par10')
         self.add_argument(name='cost_for_crash', default=float(MAXINT),
                           help="Defines the cost-value for crashed runs "
@@ -278,28 +278,24 @@ class Scenario(object):
                           help="Maximum available memory the target algorithm "
                                "can occupy before being cancelled.")
         self.add_argument(name='tuner-timeout',
-                          help="Maximum amount of CPU-time used for optimization."
-                               "Default: inf.", default=numpy.inf,
+                          help="Maximum amount of CPU-time used for optimization.",
+                          default=numpy.inf,
                           dest='algo_runs_timelimit', callback=float)
         self.add_argument(name='wallclock_limit',
-                          help="Maximum amount of wallclock-time used for "
-                               "optimization. Default: inf.",
+                          help="Maximum amount of wallclock-time used for optimization.",
                           default=numpy.inf, callback=float)
         self.add_argument(name='always_race_default',
-                          help="Race new incumbents always against default configuration",
+                          help="Race new incumbents always against default configuration.",
                           default=False,
                           callback=_is_truthy, dest="always_race_default")
         self.add_argument(name='runcount_limit',
-                          help="Maximum number of algorithm-calls during "
-                               "optimization. Default: inf.",
+                          help="Maximum number of algorithm-calls during optimization.",
                           default=numpy.inf, callback=float, dest="ta_run_limit")
         self.add_argument(name='minR',
-                          help="Minimum number of calls per configuration. "
-                               "Default: 1",
+                          help="Minimum number of calls per configuration.",
                           default=1, callback=int, dest='minR')
         self.add_argument(name='maxR',
-                          help="Maximum number of calls per configuration. "
-                               "Default: 2000",
+                          help="Maximum number of calls per configuration.",
                           default=2000, callback=int, dest='maxR')
         self.add_argument(name='instance_file',
                           help="Specifies the file with the training-instances.",
@@ -312,23 +308,23 @@ class Scenario(object):
                           dest='feature_fn')
         self.add_argument(name='output_dir',
                           help="Specifies the output-directory for all emerging "
-                               "files, such as logging and results. Default: "
-                               "\"smac3-output_YEAR-MONTH-DAY_HOUR:MINUTE:SECOND\"",
+                               "files, such as logging and results.",
                           default="smac3-output_%s" % (
                               datetime.datetime.fromtimestamp(
                                   time.time()).strftime(
                                   '%Y-%m-%d_%H:%M:%S_(%f)')))
-        self.add_argument(name='input_psmac_dirs', help=None,
-                          default=None)
-        self.add_argument(name='shared_model', help=None, default='0',
-                          callback=_is_truthy)
+        self.add_argument(name='input_psmac_dirs', default=None,
+                          help="For parallel SMAC, multiple output-directories "
+                               "are used.")
+        self.add_argument(name='shared_model',
+                          help="Whether to run SMAC in parallel mode.",
+                          default=False, callback=_is_truthy)
         self.add_argument(name='instances', default=[[None]], help=None,
                           dest='train_insts')
         self.add_argument(name='test_instances', default=[[None]], help=None,
                           dest='test_insts')
         self.add_argument(name='initial_incumbent', default="DEFAULT",
-                          help="In [DEFAULT, RANDOM]. DEFAULT is the default "
-                               "from the PCS. Default: DEFAULT.",
+                          help="DEFAULT is the default from the PCS.",
                           dest='initial_incumbent',
                           choice=['DEFAULT', 'RANDOM'])
         # instance name -> feature vector
@@ -451,3 +447,25 @@ class Scenario(object):
         if warn_:
             self.logger.warn("All instances were casted to str.")
         return l
+
+    def write_options_to_doc(self, path='scenario_options.rst'):
+        """
+        Writes the option-list to file for autogeneration in documentation.
+        The list is created in doc/conf.py and read in doc/options.rst.
+
+        Parameters
+        ----------
+        path: string
+            where to write to (possibly relativ to doc-folder)
+        """
+        exclude = ['cs', 'features', 'instances', 'test_instances']
+        with open(path, 'w') as fh:
+            for arg in sorted(self._arguments.keys()):
+                if arg in exclude:
+                    continue
+                fh.write("    * *{}*: {}".format(arg, self._arguments[arg]['help']))
+                if self._arguments[arg]['default']:
+                    fh.write(" Default: {}.".format(self._arguments[arg]['default']))
+                if self._arguments[arg]['choice']:
+                    fh.write(" Must be from: {}.".format(self._arguments[arg]['choice']))
+                fh.write("\n")
