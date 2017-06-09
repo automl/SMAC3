@@ -48,3 +48,5 @@ provide slightly different interfaces.
   result string; the error will be interpreted from the return value. Just be
   aware of the fact that *SMAC* is always minimizing as well as the function
   needs to be able to interpret the configuration correctly.
+  With this TAE, `Pynisher <https://github.com/sfalkner/pynisher>`_ is used to
+  enforce time- and memory-limits.
