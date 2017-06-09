@@ -13,13 +13,13 @@ please call:
 
 .. code-block:: bash
 
-    sudo apt-get install gcc swig
+    sudo apt-get install build-essentials swig
 
 If you use Anaconda, you have to install both inside of Anaconda to prevent broken links.
 
 .. code-block:: bash
 
-    conda install gcc swig
+    conda install build-essentials swig
 
 .. _installation_pypi:
 
