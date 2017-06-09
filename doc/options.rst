@@ -67,9 +67,6 @@ can find several examples for PCS-files. Generally, the format is:
         # Forbiddens:
         {parameter_name_1=value_1, ..., parameter_name_N=value_N}
 
-.. note::
-        The PCS-format of *SMAC3* differs from that of the JAVA-based *SMAC2* in
-        syntax and capacities of the forbidden clauses.
 
 .. _instance:
 .. _feature:
