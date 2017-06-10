@@ -391,7 +391,7 @@ class SMAC(object):
 
             Returns
             -------
-            Trajectory: List
+            Trajectory: NamedTuple (util.io.traj_logging.TrajEntry)
                 ['train_perf', 'incumbent_id', 'incumbent',
                 'ta_runs', 'ta_time_used', 'wallclock_time']
         '''
