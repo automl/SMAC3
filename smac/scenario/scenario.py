@@ -456,7 +456,7 @@ class Scenario(object):
         Parameters
         ----------
         path: string
-            where to write to (possibly relativ to doc-folder)
+            where to write to (relative to doc-folder since executed in conf.py)
         """
         exclude = ['cs', 'features', 'instances', 'test_instances']
         with open(path, 'w') as fh:

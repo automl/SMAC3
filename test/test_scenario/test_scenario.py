@@ -301,6 +301,14 @@ class ScenarioTest(unittest.TestCase):
         self.assertIsInstance(self.scen.train_insts[0], str)
         self.assertIsInstance(self.scen.train_insts[1], str)
 
+    def test_create_scenario_option_for_doc(self):
+        scen = Scenario({'cs': None,
+                              'instances': [[1], [2]],
+                              'run_obj': 'quality'})
+        path = 'test/test_files/test_scenario_options_to_doc.txt'
+        scen = scen.write_options_to_doc(path)
+        self.assertTrue(os.path.exists(path))
+
 
 if __name__ == "__main__":
     unittest.main()
