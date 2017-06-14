@@ -15,11 +15,12 @@ please call:
 
     sudo apt-get install build-essentials swig
 
-If you use Anaconda, you have to install both inside of Anaconda to prevent broken links.
+If you use Anaconda, you have to install both gcc and SWIG from Anaconda to
+prevent broken links:
 
 .. code-block:: bash
 
-    conda install build-essentials swig
+    conda install gcc swig
 
 .. _installation_pypi:
 
