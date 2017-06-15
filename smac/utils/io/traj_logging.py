@@ -23,19 +23,17 @@ class TrajLogger(object):
     """
         writes trajectory logs files 
 
-        Attributes
+        Parameters
         ----------
-        logger : Logger oject
+        logger : Logger object
     """
 
     def __init__(self, output_dir, stats):
         """
-        Constructor 
-
         creates output directory if not exists already
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         output_dir: str
             directory for logging (or None to disable logging)
         stats: Stats()
@@ -180,12 +178,14 @@ class TrajLogger(object):
             -------
             trajectory: list
                 each entry in the list is a dictionary of the form
-                {"cpu_time": float,
-                 "total_cpu_time": None, # TODO
-                 "wallclock_time": float,
-                 "evaluations": int
-                 "cost": float,
-                 "incumbent": Configuration
+                {
+                "cpu_time": float,
+                "total_cpu_time": None, # TODO
+                "wallclock_time": float,
+                "evaluations": int
+                "cost": float,
+                "incumbent": Configuration
+                }
         """
 
         trajectory = []

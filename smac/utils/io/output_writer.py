@@ -17,27 +17,25 @@ class OutputWriter(object):
 
     def write_scenario_file(self, scenario):
         """
-            Write scenario to a file (format is compatible with input_reader).
-            Will overwrite if file exists.
-            If you have arguments that need special parsing when saving, specify so
-            in the _parse_argument-function.
+        Write scenario to a file (format is compatible with input_reader).
+        Will overwrite if file exists.
+        If you have arguments that need special parsing when saving, specify so
+        in the _parse_argument-function.
+        Creates output-dir if necessesary.
 
-            Parameters:
-            ----------
-                scenario: Scenario
-                    scenario to be written to file
+        Parameters
+        ----------
+            scenario: Scenario
+                scenario to be written to file
 
-            Sideeffects:
-            ----------
-                - creates output-directory if it doesn't exist.
-
-            Returns:
-            ----------
-                False, if writing failed.
+        Returns
+        -------
+            status: False or None
+                False indicates that writing process failed
         """
         if scenario.output_dir is None or scenario.output_dir == "":
             scenario.logger.info("No output directory for scenario logging "
-                             "specified -- scenario will not be logged.")
+                                 "specified -- scenario will not be logged.")
             return False
         # Create output-dir if necessary
         if not os.path.isdir(scenario.output_dir):
@@ -70,7 +68,7 @@ class OutputWriter(object):
             saved to output_dir, if they exist.
 
             Parameters:
-            ----------
+            -----------
                 scenario: Scenario
                     scenario-file to be written
                 key: string
@@ -79,12 +77,12 @@ class OutputWriter(object):
                     corresponding attribute
 
             Returns:
-            ----------
+            --------
                 new value: string
                     the altered value, to be written to file
 
             Sideeffects:
-            ----------
+            ------------
               - copies files pcs_fn, train_inst_fn, test_inst_fn and feature_fn to
                 output if possible, creates the files from attributes otherwise
         """

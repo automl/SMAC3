@@ -15,12 +15,12 @@ __version__ = "0.0.1"
 
 
 class AbstractEPM(object):
-    '''Abstract implementation of the EPM API 
-        
-        Note: The input dimensions of Y for training
-        and the output dimensions of all predictions 
+    '''Abstract implementation of the EPM API
+
+        Note: The input dimensionality of Y for training
+        and the output dimensions of all predictions
         (also called n_objectives)
-        depends on the concrete implementation of this
+        depend on the concrete implementation of this
         abstract class.
     '''
 
@@ -29,7 +29,7 @@ class AbstractEPM(object):
                  pca_components: float=None):
         '''
         Constructor
-        
+
         Parameters
         ----------
         instance_features: np.ndarray (I, K)
@@ -71,7 +71,8 @@ class AbstractEPM(object):
 
         Returns
         -------
-        self
+        self : EPM
+            trained EPM
         '''
 
         self.n_params = X.shape[1] - self.n_feats
@@ -116,8 +117,8 @@ class AbstractEPM(object):
 
         Parameters
         ----------
-        X : np.ndarray of shape = [n_samples, n_features (config + instance
-        features)]
+        X : np.ndarray of shape = [n_samples, n_features (config + instance features)]
+            Training samples
 
         Returns
         -------
@@ -143,8 +144,7 @@ class AbstractEPM(object):
 
         Parameters
         ----------
-        X : np.ndarray of shape = [n_samples, n_features (config + instance
-        features)]
+        X : np.ndarray of shape = [n_samples, n_features (config + instance features)]
 
         Returns
         -------

@@ -12,7 +12,7 @@ __version__ = "0.0.1"
 class Stats(object):
 
     '''
-        all statistics collected during configuration run
+        All statistics collected during configuration run
     '''
 
     def __init__(self, scenario):
@@ -46,6 +46,7 @@ class Stats(object):
     def get_used_wallclock_time(self):
         '''
             returns used wallclock time
+
             Returns
             -------
             wallclock_time : int
@@ -85,6 +86,7 @@ class Stats(object):
 
             Returns
             -------
+            exhaustedness: boolean
                 true if one of the budgets is exhausted
         '''
         return  self.get_remaing_time_budget() < 0 or \
@@ -95,8 +97,8 @@ class Stats(object):
         '''
             updates statistics how many configurations on average per used in intensify
 
-            Arguments
-            ---------
+            Parameters
+            ----------
             n_configs: int
                 number of configurations in current intensify
         '''

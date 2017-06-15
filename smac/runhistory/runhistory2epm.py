@@ -33,6 +33,7 @@ class AbstractRunHistory2EPM(object):
                  rs=None):
         '''
         Constructor
+
         Parameters
         ----------
         scenario: Scenario Object
@@ -118,7 +119,7 @@ class AbstractRunHistory2EPM(object):
 
             Parameters
             ----------
-            run_dict: dict: RunKey -> RunValue
+            run_dict: dict(RunKey -> RunValue)
                 dictionary from RunHistory.RunKey to RunHistory.RunValue
             runhistory: RunHistory
                 runhistory object
@@ -129,7 +130,8 @@ class AbstractRunHistory2EPM(object):
 
             Returns
             -------
-            X: np.ndarray, Y:np.ndarray
+            X: np.ndarray
+            Y: np.ndarray
 
         '''
         raise NotImplementedError()
@@ -234,10 +236,10 @@ class AbstractRunHistory2EPM(object):
                 runhistory of all evaluated configurations x instances
 
             Returns
-            ------- 
+            -------
             X: numpy.ndarray
                 matrix of all configurations (+ instance features)
-            y numpy.ndarray
+            y: numpy.ndarray
                 vector of cost values; can include censored runs
             cen: numpy.ndarray
                 vector of bools indicating whether the y-value is censored
@@ -278,7 +280,8 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
 
             Returns
             -------
-            X: np.ndarray, Y:np.ndarray
+            X: np.ndarray
+            Y: np.ndarray
 
         '''
         # First build nan-matrix of size #configs x #params+1
@@ -318,7 +321,7 @@ class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
 
             Parameters
             ----------
-            run_dict: dict: RunKey -> RunValue
+            run_dict: dict(RunKey -> RunValue)
                 dictionary from RunHistory.RunKey to RunHistory.RunValue
             runhistory: RunHistory
                 runhistory object
@@ -329,7 +332,8 @@ class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
 
             Returns
             -------
-            X: np.ndarray, Y:np.ndarray
+            X: np.ndarray
+            Y: np.ndarray
 
         '''
         X, y = super()._build_matrix(run_dict=run_dict, runhistory=runhistory,
@@ -347,7 +351,7 @@ class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
 
 
 class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
-    
+
     def _build_matrix(self, run_dict, runhistory, instances=None, par_factor=1):
         # First build nan-matrix of size #configs x #params+1
         n_rows = len(run_dict)

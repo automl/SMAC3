@@ -21,12 +21,21 @@ class BaseImputor(object):
     @abstractmethod
     def impute(self, censored_x, censored_y, uncensored_x, uncensored_y):
         """
-        impute runs and returns imputed y values
+        impute censored runs and returns new y values
 
         Parameters
         ----------
-        censored_x : array
-        censored_y : list
-        uncensored_x : array
-        uncensored_y : list
+        censored_x : np.array [N, M]
+            feature array of all runs that are censored
+        censored_y : np.array [N, 1]
+            array of target values for all runs that are censored
+        uncensored_x : np.array [N, M]
+            feature array of all runs that are not censored
+        uncensored_y : np.array [N, 1]
+            array of target values for all runs that are not censored
+
+        Returns
+        ----------
+        imputed_y: np.array
+            same shape as censored_y [N, 1]
         """
