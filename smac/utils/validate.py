@@ -45,25 +45,20 @@ def validate(scenario, trajectory, rng, output, config_mode='def',
         path to runhistory to be saved
     config_mode: string
         what configurations to validate
-        from [def, inc, def+inc, time], time means eval at 2^0, 2^1, 2^2, ...
+        from [def, inc, def+inc, time, all], time means eval at 2^0, 2^1, 2^2, ...
     instances: string
         what instances to use for validation, from [train, test, train+test]
     tae: ExecuteTARun or None
-        target algorithm executor to be used (including its runhistory)
+        target algorithm executor to be used
     runhistory: RunHistory
-        runhistory to be used (will be injected in tae)
+        validation will attempt to reuse runs that are passed
     n_jobs: int
         number of parallel processes used by joblib
-
-    Returns
-    -------
-    performance: float
-        aggregated performance for configuration
     """
     # Add desired configs
     configs = []
     mode = config_mode.lower()
-    if mode not in ['def', 'inc', 'def+inc', 'time']:
+    if mode not in ['def', 'inc', 'def+inc', 'time', 'all']:
         raise ValueError("%s not a valid option for config_mode in validation."
                          %mode)
     if mode == "def" or mode == "def+inc":
@@ -71,17 +66,27 @@ def validate(scenario, trajectory, rng, output, config_mode='def',
     if mode == "inc" or mode == "def+inc":
         configs.append(trajectory[-1]["incumbent"])
     if mode == "time":
-        configs.append(trajectory[0]["incumbent"])
+        # add configs at evaluations 2^1, 2^2, 2^3, ...
+        configs.append(trajectory[0]["incumbent"])  # add first
         counter = 1
-        while counter < len(trajectory):
-            configs.append(trajectory[counter]["incumbent"])
-            counter *= 2
-        configs.append(trajectory[-1]["incumbent"])
+        for entry in trajectory:
+            if entry["evaluations"] > counter:
+                configs.append(entry["incumbent"])
+                counter *= 2
+        configs.append(trajectory[-1]["incumbent"])  # add last
+    if mode == "all":
+        configs = [entry["incumbent"] for entry in trajectory]
 
     # Create new Stats without limits
     inf_scen = Scenario({'run_obj':'quality'})
     inf_stats = Stats(inf_scen)
     inf_stats.start_timing()
+
+    # Load passed runhistory if its a string
+    if isinstance(runhistory, str):
+        fn = runhistory
+        runhistory = RunHistory(average_cost)
+        runhistory.load_json(runhistory, scenario.cs)
 
     # Create runhistory
     rh = RunHistory(average_cost)
@@ -92,6 +97,8 @@ def validate(scenario, trajectory, rng, output, config_mode='def',
     use_test = instances == 'test' or instances == 'train+test'
     runs = get_runs(configs, scenario, rng,
                     train=use_train, test=use_test, repetitions=repetitions)
+
+    #TODO skip runs that have already been evaluated in passed runhistory
 
     # Create TAE or inject stats
     if not tae:
@@ -125,10 +132,6 @@ def validate(scenario, trajectory, rng, output, config_mode='def',
                seed=runs[idx]['seed'],
                additional_info=result[3])
         idx += 1
-
-    # add runs from passed runhistory
-    if runhistory:
-        rh.update(runhistory)
 
     # Save runhistory
     rh.save_json(output)
