@@ -4,17 +4,6 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("PlotTraj")
 
-#######################################
-# Boiler plate to use SMAC from src code and not installed version
-import sys
-import inspect
-cmd_folder = os.path.realpath(os.path.abspath(
-    os.path.split(inspect.getfile(inspect.currentframe()))[0]))
-cmd_folder = os.path.realpath(os.path.join(cmd_folder, ".."))
-if cmd_folder not in sys.path:
-    sys.path.insert(0, cmd_folder)
-########################################
-
 import matplotlib.pyplot as plt
 
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
