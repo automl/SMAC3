@@ -10,3 +10,4 @@ typing
 pyrfr>=0.4.0
 sphinx
 sphinx_rtd_theme
+joblib

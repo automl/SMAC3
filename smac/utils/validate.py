@@ -1,11 +1,12 @@
+import os
+
 import numpy as np
 import logging
-
 from joblib import Parallel, delayed
 
 from smac.utils.constants import MAXINT
 from smac.scenario.scenario import Scenario
-from smac.runhistory.runhistory import RunHistory
+from smac.runhistory.runhistory import RunHistory, RunKey
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.stats.stats import Stats
 from smac.optimizer.objective import average_cost
@@ -24,168 +25,342 @@ def _unbound_tae_starter(tae, *args, **kwargs):
 
     Returns
     -------
-    tae_results
+    tae_results: tuple
+        return from tae.start
     """
     return tae.start(*args, **kwargs)
 
-def validate(scenario, trajectory, rng, output, config_mode='def',
-             instances='TEST', repetitions=1, tae=None, runhistory=None, n_jobs=1):
+class Validator(object):
     """
-    Validate config on instances and save result in runhistory.
-
-    Parameters
-    ----------
-    scenario: Scenario
-        scenario object for cutoff, instances and specifics
-    trajectory: Trajectory
-        trajectory to take incumbent(s) from
-    rng: np.random.RandomState
-        Random number generator
-    output: string
-        path to runhistory to be saved
-    config_mode: string
-        what configurations to validate
-        from [def, inc, def+inc, time, all], time means eval at 2^0, 2^1, 2^2, ...
-    instances: string
-        what instances to use for validation, from [train, test, train+test]
-    tae: ExecuteTARun or None
-        target algorithm executor to be used
-    runhistory: RunHistory
-        validation will attempt to reuse runs that are passed
-    n_jobs: int
-        number of parallel processes used by joblib
+    Validator for already run SMAC-scenarios, evaluates specified configurations
+    on specified instances.
     """
-    # Add desired configs
-    configs = []
-    mode = config_mode.lower()
-    if mode not in ['def', 'inc', 'def+inc', 'time', 'all']:
-        raise ValueError("%s not a valid option for config_mode in validation."
-                         %mode)
-    if mode == "def" or mode == "def+inc":
-        configs.append(scenario.cs.get_default_configuration())
-    if mode == "inc" or mode == "def+inc":
-        configs.append(trajectory[-1]["incumbent"])
-    if mode == "time":
-        # add configs at evaluations 2^1, 2^2, 2^3, ...
-        configs.append(trajectory[0]["incumbent"])  # add first
-        counter = 1
-        for entry in trajectory:
-            if entry["evaluations"] > counter:
-                configs.append(entry["incumbent"])
-                counter *= 2
-        configs.append(trajectory[-1]["incumbent"])  # add last
-    if mode == "all":
-        configs = [entry["incumbent"] for entry in trajectory]
 
-    # Create new Stats without limits
-    inf_scen = Scenario({'run_obj':'quality'})
-    inf_stats = Stats(inf_scen)
-    inf_stats.start_timing()
+    def __init__(self, scenario, trajectory, output, rng=None):
+        """
+        Construct Validator for given scenario and trajectory.
 
-    # Load passed runhistory if its a string
-    if isinstance(runhistory, str):
-        fn = runhistory
-        runhistory = RunHistory(average_cost)
-        runhistory.load_json(runhistory, scenario.cs)
+        Parameters
+        ----------
+        scenario: Scenario
+            scenario object for cutoff, instances and specifics
+        trajectory: Trajectory
+            trajectory to take incumbent(s) from
+        output: string
+            path to runhistory to be saved
+        rng: np.random.RandomState
+            Random number generator
+        """
+        self.logger = logging.getLogger(
+            self.__module__ + "." + self.__class__.__name__)
 
-    # Create runhistory
-    rh = RunHistory(average_cost)
+        self.scen = scenario
+        self.traj = trajectory
+        self.output = output
+        if rng:
+            self.rng = rng
+        else:
+            num_run = np.random.randint(MAXINT)
+            self.rng = np.random.RandomState(seed=num_run)
 
-    # Get all runs as list
-    instances = instances.lower()
-    use_train = instances == 'train' or instances == 'train+test'
-    use_test = instances == 'test' or instances == 'train+test'
-    runs = get_runs(configs, scenario, rng,
-                    train=use_train, test=use_test, repetitions=repetitions)
+        self.rh = RunHistory(average_cost)  # update this rh with validation-runs
 
-    #TODO skip runs that have already been evaluated in passed runhistory
+    def validate(self, config_mode='def', instance_mode='test', repetitions=1,
+                 n_jobs=1, runhistory=None):
+        """
+        Validate configs on instances and save result in runhistory.
 
-    # Create TAE or inject stats
-    if not tae:
-        tae = ExecuteTARunOld(ta=scenario.ta,
+        Parameters
+        ----------
+        config_mode: string
+            what configurations to validate
+            from [def, inc, def+inc, time, all], time means eval at 2^0, 2^1, 2^2, ...
+        instance_mode: string
+            what instances to use for validation, from [train, test, train+test]
+        repetitions: int
+            number of repetitions in nondeterministic algorithms
+        n_jobs: int
+            number of parallel processes used by joblib
+        runhistory: RunHistory or string or None
+            runhistory to take data from
+
+        Returns
+        -------
+        runhistory: RunHistory
+            runhistory with validated runs
+        """
+        # Reset runhistory
+        self.rh = RunHistory(average_cost)
+
+        # Get relevant configurations and instances
+        configs = self._get_configs(config_mode)
+        instances = self._get_instances(instance_mode)
+
+        # If runhistory is given as string, load into memory
+        if isinstance(runhistory, str):
+            fn = runhistory
+            runhistory = RunHistory(average_cost)
+            runhistory.load_json(fn, self.scen.cs)
+
+        # Get all runs needed as list
+        runs = self.get_runs(configs, instances, repetitions=repetitions,
+                             runhistory=runhistory)
+
+        # Create new Stats without limits
+        inf_scen = Scenario({'run_obj':'quality'})
+        inf_stats = Stats(inf_scen)
+        inf_stats.start_timing()
+
+        # Create TAE
+        tae = ExecuteTARunOld(ta=self.scen.ta,
                               stats=inf_stats,
-                              run_obj=scenario.run_obj,
-                              runhistory=rh,
-                              par_factor=scenario.par_factor,
-                              cost_for_crash=scenario.cost_for_crash)
-    else:
-        tae.stats = inf_stats
+                              run_obj=self.scen.run_obj,
+                              par_factor=self.scen.par_factor,
+                              cost_for_crash=self.scen.cost_for_crash)
 
-    # Runs with parallel
-    Parallel(n_jobs=n_jobs)(delayed(sum)([i, i]) for i in range(100))
-    run_results = Parallel(n_jobs=n_jobs, backend="threading")(
-        delayed(_unbound_tae_starter)(tae, run['config'],
-                                      run['inst'],
-                                      scenario.cutoff, run['seed'],
-                                      run['inst_specs'],
-                                      capped=False) for run in runs)
+        # Validate!
+        run_results = self._validate_parallel(tae, runs, n_jobs)
 
-    # tae returns (status, cost, runtime, additional_info)
-    # Add runs to RunHistory
-    idx = 0
-    for result in run_results:
-        rh.add(config=runs[idx]['config'],
-               cost=result[1],
-               time=result[2],
-               status=result[0],
-               instance_id=runs[idx]['inst'],
-               seed=runs[idx]['seed'],
-               additional_info=result[3])
-        idx += 1
+        # tae returns (status, cost, runtime, additional_info)
+        # Add runs to RunHistory
+        idx = 0
+        for result in run_results:
+            self.rh.add(config=runs[idx]['config'],
+                        cost=result[1],
+                        time=result[2],
+                        status=result[0],
+                        instance_id=runs[idx]['inst'],
+                        seed=runs[idx]['seed'],
+                        additional_info=result[3])
+            idx += 1
 
-    # Save runhistory
-    rh.save_json(output)
+        # Save runhistory
+        self.rh.save_json(os.path.join(self.output, "validation_rh.json"))
+        return self.rh
 
-def get_runs(configs, scenario, rng, train=False, test=True, repetitions=1):
-    """
-    Generate list of dicts with SMAC-TAE runs to be executed. This means
-    combinations of configs with all instances on a certain number of seeds.
+    def _validate_parallel(self, tae, runs, n_jobs):
+        """
+        Validate runs with joblibs Parallel-interface
 
-    Parameters
-    ----------
-    configs: list<Configuration>
-        configurations to be evaluated
-    scenario: Scenario
-        scenario object for cutoff, instances and specifics
-    rng: np.random.RandomState
-        Random number generator
-    train: bool
-        validate train-instances
-    test: bool
-        validate test-instances
-    repetitions: int
-        number of seeds per instance to be evaluated
+        Parameters
+        ----------
+        tae: ExecuteTARun
+            tae to be used for validation
+        runs: list<dict<string,string,string,string>>
+            list with dicts (config/inst/seed/inst_specs)
+        n_jobs: int
+            number of cpus to use for validation
 
-    Returns
-    -------
-    runs: list<dict<string,string,string,string>>
-        list with dicts (config/inst/seed/inst_specs)
-    """
-    if not train and not test:
-        raise ValueError("No instances specified for validation.")
+        Returns
+        -------
+        run_results: list<tuple(tae-returns)>
+            results as returned by tae
+        """
+        # Runs with parallel
+        run_results = Parallel(n_jobs=n_jobs, backend="threading")(
+            delayed(_unbound_tae_starter)(tae, run['config'],
+                                          run['inst'],
+                                          self.scen.cutoff, run['seed'],
+                                          run['inst_specs'],
+                                          capped=False) for run in runs)
+        return run_results
 
-    runs = []
+    def get_runs(self, configs, insts, repetitions=1, runhistory=None):
+        """
+        Generate list of dicts with SMAC-TAE runs to be executed. This means
+        combinations of configs with all instances on a certain number of seeds.
+        There are a number of different possible combinations:
+            deterministic? -> seeds/repetitions
+            instances?
 
-    # Get all instances
-    insts = dict()
-    if train:
-        insts.update(scenario.train_insts)
-    if test:
-        insts.update(scenario.test_insts)
+        Parameters
+        ----------
+        configs: list<Configuration>
+            configurations to be evaluated
+        insts: list<strings>
+            instances to be validated
+        repetitions: int
+            number of seeds per instance/config to be evaluated
+        runhistory: RunHistory or None
+            if given, try to reuse these results and save some runs
 
-    for i in sorted(insts.keys()):
-        for rep in range(repetitions):
-            seed = rng.randint(MAXINT)
-            # configs in inner loop -> same inst-seed-pairs for all configs
-            for config in configs:
-                runs.append({'config':config,
-                             'inst':i,
-                             'seed':seed,
-                             'inst_specs': insts[i]})
+        Returns
+        -------
+        runs: list<dict<string,string,string,string>>
+            list with dicts (config/inst/seed/inst_specs), that can be fed into tae
+        """
+        # If no instances are given, fix the instances to one "None" instance
+        if len(insts) == 0:
+            insts = {None : "0"}
+        # If algorithm is deterministic, fix repetitions to 1
+        if self.scen.deterministic:
+            self.logger.debug("Fixing repetitions to one, because algorithm is"
+                              " deterministic.")
+            repetitions = 1
 
-    logging.info("Collected %d runs from %d configurations on %d instances "
-                 "with %d repetitions.", len(runs), len(configs), len(insts),
-                 repetitions)
+        # Extract relevant information from given runhistory
+        inst_seed_config = self._process_runhistory(configs, insts, runhistory)
 
-    return runs
+        # Now create the actual run-list
+        runs = []
+        # Counter for imputed runs
+        imputed = 0
 
+        for i in sorted(insts.keys()):
+            for rep in range(repetitions):
+                configs_evaluated = []
+                if runhistory and i in inst_seed_config:
+                    # Choose seed based on most often evaluated inst-seed-pair
+                    seed, configs_evaluated = inst_seed_config[i].pop(0)
+                    # Delete i from dict if list is empty
+                    if len(inst_seed_config[i]) == 0:
+                        inst_seed_config.pop(i)
+                    # Add runs to runhistory
+                    for c in configs_evaluated:
+                        runkey = RunKey(runhistory.config_ids[c], i, seed)
+                        cost, time, status, additional_info = runhistory.data[runkey]
+                        self.rh.add(c, cost, time, status, instance_id=i,
+                                    seed=seed, additional_info=additional_info)
+                        imputed += 1
+                else:
+                    # If no runhistory or no entries for instance, get new seed
+                    seed = self.rng.randint(MAXINT)
+                    if self.scen.deterministic:
+                        seed = 0
+                # configs in inner loop -> same inst-seed-pairs for all configs
+                for config in [c for c in configs if not c in
+                               configs_evaluated]:
+                    runs.append({'config':config,
+                                 'inst':i,
+                                 'seed':seed,
+                                 'inst_specs': insts[i]})
+
+        self.logger.info("Collected %d runs from %d configurations on %d instances "
+                         "with %d repetitions.", len(runs), len(configs), len(insts),
+                         repetitions)
+        self.logger.info("Imputed %d runs from given runhistory.", imputed)
+
+        return runs
+
+    def _process_runhistory(self, configs, insts, runhistory):
+        """
+        Processes runhistory from self.get_runs by extracting already evaluated
+        (relevant) config-inst-seed tuples.
+
+        Parameters
+        ----------
+        configs: list(Configuration)
+            list of configs of interest
+        insts: list(str)
+            list of instances of interest
+        runhistory: RunHistory
+            runhistory to extract runs from
+
+        Returns
+        -------
+        inst_seed_config: dict<str : list(tuple(int, tuple(configs)))>
+            dictionary mapping instances to a list of tuples of already used
+            seeds and the configs that this inst-seed-pair has been evaluated
+            on, sorted by the number of configs
+        """
+        # We want to reuse seeds that have been used on most configurations
+        # To this end, we create a dictionary as {instances:{seed:[configs]}}
+        # Like this we can easily retrieve the most used instance-seed pairs to
+        # minimize the number of runs to be evaluated
+        inst_seed_config = {}
+        if runhistory:
+            relevant = dict()
+            for key in runhistory.data:
+                if (runhistory.ids_config[key.config_id] in configs
+                        and key.instance_id in insts):
+                    relevant[key] = runhistory.data[key]
+
+            # Change data-structure to {instances:[(seed1, (configs)), (seed2, (configs), ... ]}
+            # to make most used seed easily accessible, we sort after length of configs
+            for key in relevant:
+                inst, seed = key.instance_id, key.seed
+                config = runhistory.ids_config[key.config_id]
+                if inst in inst_seed_config:
+                    if seed in inst_seed_config[inst]:
+                        inst_seed_config[inst][seed].append(config)
+                    else:
+                        inst_seed_config[inst][seed] = [config]
+                else:
+                    inst_seed_config[inst] = {seed : [config]}
+
+            inst_seed_config = {i :
+                                sorted([(seed, tuple(inst_seed_config[i][seed]))
+                                        for seed in inst_seed_config[i]],
+                                       key=lambda x: len(x[1]))
+                                for i in inst_seed_config}
+        return inst_seed_config
+
+
+    def _get_configs(self, mode):
+        """
+        Return desired configs
+
+        Parameters
+        ----------
+        mode : string
+            from [def, inc, def+inc, time, all], time means eval at 2^0, 2^1, 2^2, ...
+
+        Returns
+        -------
+        configs: list<Configuration>
+            list with desired configurations
+        """
+        # Add desired configs
+        configs = []
+        mode = mode.lower()
+        if mode not in ['def', 'inc', 'def+inc', 'time', 'all']:
+            raise ValueError("%s not a valid option for config_mode in validation."
+                             %mode)
+        if mode == "def" or mode == "def+inc":
+            configs.append(self.scen.cs.get_default_configuration())
+        if mode == "inc" or mode == "def+inc":
+            configs.append(self.traj[-1]["incumbent"])
+        if mode == "time":
+            # add configs at evaluations 2^1, 2^2, 2^3, ...
+            counter = 1
+            for entry in self.traj[:-1]:
+                if (entry["evaluations"] >= counter and
+                        entry["incumbent"] not in configs):
+                    configs.append(entry["incumbent"])
+                    counter *= 2
+            configs.append(self.traj[-1]["incumbent"])  # add last
+        if mode == "all":
+            for entry in self.traj:
+                if not entry["incumbent"] in configs:
+                    configs.append(entry["incumbent"])
+        self.logger.debug("Gathered %d configurations for mode %s.",
+                len(configs), mode)
+        return configs
+
+    def _get_instances(self, mode):
+        """
+        Get desired instances
+
+        Parameters
+        ----------
+        mode: string
+            what instances to use for validation, from [train, test, train+test]
+
+        Returns
+        -------
+        instances: list<strings>
+            instances to be used
+        """
+        instance_mode = mode.lower()
+        if mode not in ['train', 'test', 'train+test']:
+            raise ValueError("%s not a valid option for instance_mode in validation."
+                             %mode)
+
+        instances = dict()
+        if ((instance_mode == 'train' or instance_mode == 'train+test') and not
+                self.scen.train_insts == [None]):
+            instances.update(self.scen.train_insts)
+        if ((instance_mode == 'test' or instance_mode == 'train+test') and not
+                self.scen.test_insts == [None]):
+            instances.update(self.scen.test_insts)
+        return instances
