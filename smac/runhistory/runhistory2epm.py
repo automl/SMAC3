@@ -223,6 +223,7 @@ class AbstractRunHistory2EPM(object):
             X = np.vstack((X, tX))
             Y = np.concatenate((Y, tY))
 
+        self.logger.debug("Converted %d observations" %(X.shape[0]))
         return X, Y
 
     def get_X_y(self, runhistory: RunHistory):
