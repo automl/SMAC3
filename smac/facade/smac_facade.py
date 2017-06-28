@@ -182,6 +182,9 @@ class SMAC(object):
         # inject runhistory if necessary
         if tae_runner.runhistory is None:
             tae_runner.runhistory = runhistory
+        # inject cost_for_crash
+        if tae_runner.crash_cost != scenario.cost_for_crash:
+            tae_runner.crash_cost = scenario.cost_for_crash
 
         # initialize intensification
         if intensifier is None:
