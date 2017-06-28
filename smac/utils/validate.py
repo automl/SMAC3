@@ -56,9 +56,14 @@ class Validator(object):
 
         self.scen = scenario
         self.traj = trajectory
-        self.output = output
-        if rng:
+        if output:
+            self.output = output
+        else:
+            self.output =  "validation_rh.json"
+        if isinstance(rng, np.random.RandomState):
             self.rng = rng
+        elif isinstance(rng, int):
+            self.rng = np.random.RandomState(seed=rng)
         else:
             num_run = np.random.randint(MAXINT)
             self.rng = np.random.RandomState(seed=num_run)
@@ -135,7 +140,7 @@ class Validator(object):
             idx += 1
 
         # Save runhistory
-        self.rh.save_json(os.path.join(self.output, "validation_rh.json"))
+        self.rh.save_json(self.output)
         return self.rh
 
     def _validate_parallel(self, tae, runs, n_jobs):
