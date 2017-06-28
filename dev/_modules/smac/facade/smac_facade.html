@@ -430,6 +430,9 @@
         <span class="c1"># inject runhistory if necessary</span>
         <span class="k">if</span> <span class="n">tae_runner</span><span class="o">.</span><span class="n">runhistory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">tae_runner</span><span class="o">.</span><span class="n">runhistory</span> <span class="o">=</span> <span class="n">runhistory</span>
+        <span class="c1"># inject cost_for_crash</span>
+        <span class="k">if</span> <span class="n">tae_runner</span><span class="o">.</span><span class="n">crash_cost</span> <span class="o">!=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cost_for_crash</span><span class="p">:</span>
+            <span class="n">tae_runner</span><span class="o">.</span><span class="n">crash_cost</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cost_for_crash</span>
 
         <span class="c1"># initialize intensification</span>
         <span class="k">if</span> <span class="n">intensifier</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
