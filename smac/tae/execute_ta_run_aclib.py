@@ -19,7 +19,7 @@ class ExecuteTARunAClib(ExecuteTARun):
         on a given instance and some resource limitations
         Uses the AClib 2.0 style
 
-        Attributes
+        Parameters
         ----------
         ta : string
             the command line call to the target algorithm (wrapper)
@@ -67,7 +67,7 @@ class ExecuteTARunAClib(ExecuteTARun):
         if cutoff is None:
             cutoff = 99999999999999
 
-        # TOOD: maybe replace fixed instance specific and cutoff_length (0) to
+        # TODO: maybe replace fixed instance specific and cutoff_length (0) to
         # other value
         cmd = []
         cmd.extend(self.ta)

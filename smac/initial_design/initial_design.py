@@ -48,12 +48,12 @@ class InitialDesign(object):
 
     def run(self):
         '''
-            as an initial design: it simply runs the default configuration on random pair of instance and random seed
+        Run the initial design
 
-            Returns
-            -------
-            incumbent: Configuration()
-                initial incumbent configuration
+        Returns
+        -------
+        incumbent: Configuration
+            initial incumbent configuration
         '''
 
         raise NotImplementedError

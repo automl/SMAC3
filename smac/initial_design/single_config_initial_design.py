@@ -49,13 +49,13 @@ class SingleConfigInitialDesign(InitialDesign):
 
     def run(self):
         '''
-            runs the initial design by calling the target algorithm
-            and adding new entries to the trajectory logger
+        Runs the initial design by calling the target algorithm
+        and adding new entries to the trajectory logger.
 
-            Returns
-            -------
-            incumbent: Configuration()
-                initial incumbent configuration
+        Returns
+        -------
+        incumbent: Configuration
+            initial incumbent configuration
         '''
 
         initial_incumbent = self._select_configuration()
@@ -89,12 +89,12 @@ class SingleConfigInitialDesign(InitialDesign):
 
     def _select_configuration(self):
         '''
-            selects a single configuration to run
+        selects a single configuration to run
 
-            Returns
-            -------
-            config: Configuration()
-                initial incumbent configuration
+        Returns
+        -------
+        config: Configuration
+            initial incumbent configuration
         '''
 
         raise NotImplementedError

@@ -82,7 +82,7 @@ class RunHistory(object):
         it will update data if the same key values are used
         (config, instance_id, seed)
 
-        Attributes
+        Parameters
         ----------
             config : dict (or other type -- depending on config space module)
                 parameter configuration
@@ -149,8 +149,8 @@ class RunHistory(object):
             and also updates self.runs_per_config;
             uses self.aggregate_func
 
-            Arguments
-            --------
+            Parameters
+            ----------
             config: Configuration
                 configuration to update cost based on all runs in runhistory
         '''
@@ -165,8 +165,8 @@ class RunHistory(object):
             computes the cost of all configurations from scratch
             and overwrites self.cost_perf_config and self.runs_per_config accordingly;
 
-            Arguments
-            ---------
+            Parameters
+            ----------
             instances: typing.List[str]
                 list of instances; if given, cost is only computed wrt to this instance set
         '''
@@ -188,8 +188,8 @@ class RunHistory(object):
         '''
             incrementally updates the performance of a configuration by using a moving average;
 
-            Arguments
-            --------
+            Parameters
+            ----------
             config: Configuration
                 configuration to update cost based on all runs in runhistory
             cost: float
@@ -218,9 +218,10 @@ class RunHistory(object):
         ----------
         config : Configuration from ConfigSpace
             parameter configuration
+
         Returns
-        ----------
-            list: tuples of instance, seed
+        -------
+        instance_seed_pairs : list<tuples of instance, seed>
         """
         config_id = self.config_ids.get(config)
         return self._configid_to_inst_seed.get(config_id, [])
@@ -230,7 +231,7 @@ class RunHistory(object):
 
         Returns
         -------
-            list: parameter configurations
+            parameter configurations: list
 
         """
         return list(self.config_ids.keys())
@@ -240,9 +241,10 @@ class RunHistory(object):
         Check whether or not the RunHistory is empty.
 
         Returns
-        ----------
-            bool: True if runs have been added to the RunHistory,
-                  False otherwise
+        -------
+            emptiness: bool
+                True if runs have been added to the RunHistory,
+                False otherwise
         """
         return len(self.data) == 0
 

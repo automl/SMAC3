@@ -57,8 +57,8 @@ def total_runtime(config, run_history, instance_seed_pairs=None):
         queried for all runs of the given configuration.
 
     Returns
-    ----------
-    float
+    -------
+    runtime: float
     """
     return np.sum(_runtime(config, run_history, instance_seed_pairs))
 
@@ -77,8 +77,9 @@ def _cost(config, run_history, instance_seed_pairs=None):
         queried for all runs of the given configuration.
 
     Returns
-    ----------
-    list
+    -------
+    Costs: list
+        array of all costs
     """
     try:
         id_ = run_history.config_ids[config]
@@ -112,7 +113,8 @@ def average_cost(config, run_history, instance_seed_pairs=None):
 
     Returns
     ----------
-    float
+    Cost: float
+        Average cost
     """
     return np.mean(_cost(config, run_history, instance_seed_pairs))
 
@@ -133,6 +135,7 @@ def sum_cost(config, run_history, instance_seed_pairs=None):
 
     Returns
     ----------
-    float
+    sum_cost: float
+        sum of costs of config
     """
     return np.sum(_cost(config, run_history, instance_seed_pairs))

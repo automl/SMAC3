@@ -18,7 +18,7 @@ class ExecuteTARunOld(ExecuteTARun):
         on a given instance and some resource limitations
         Uses the original SMAC/PILS format (SMAC < v2.10)
 
-        Attributes
+        Parameters
         ----------
         ta : string
             the command line call to the target algorithm (wrapper)
@@ -67,7 +67,7 @@ class ExecuteTARunOld(ExecuteTARun):
         if cutoff is None:
             cutoff = 99999999999999.
 
-        # TOOD: maybe replace fixed instance specific and cutoff_length (0) to
+        # TODO: maybe replace fixed instance specific and cutoff_length (0) to
         # other value
         cmd = []
         cmd.extend(self.ta)

@@ -124,9 +124,10 @@ class InputReader(object):
 
             Returns
             -------
-                list -- each element is a list where the first element is the
-                instance name followed by additional
-                information for the specific instance.
+                instances: list
+                    each element is a list where the first element is the
+                    instance name followed by additional
+                    information for the specific instance.
         """
         with open(fn, 'r') as fh:
             instance_names = fh.readlines()
@@ -143,9 +144,10 @@ class InputReader(object):
 
             Returns
             -------
-                tuple -- first entry is a list of the feature names,
-                second one is a dict with 'instance name' -
-                'numpy array containing the features' key-value pairs
+                features: tuple
+                    first entry is a list of the feature names,
+                    second one is a dict with 'instance name' -
+                    'numpy array containing the features' key-value pairs
         """
         instances = {}
         with open(fn, 'r') as fh:
@@ -166,7 +168,7 @@ class InputReader(object):
 
             Returns
             -------
-                Object of ConfigSpace
+                ConfigSpace: ConfigSpace
         """
         space = pcs.read(fn)
         return space

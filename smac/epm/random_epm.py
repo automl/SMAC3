@@ -12,7 +12,7 @@ __version__ = "0.0.1"
 
 
 class RandomEPM(AbstractEPM):
-    '''implement an epm, which returns only random values'''
+    '''EPM which returns random values on a call to ``fit``.'''
 
     def __init__(self, rng,
                  **kwargs):
