@@ -113,7 +113,7 @@ class TrajLogger(object):
 
         conf = []
         for p in incumbent:
-            if not incumbent[p] is None:
+            if not incumbent.get(p) is None:
                 conf.append("%s='%s'" % (p, repr(incumbent[p])))
 
         with open(self.old_traj_fn, "a") as fp:
@@ -147,7 +147,7 @@ class TrajLogger(object):
 
         conf = []
         for p in incumbent:
-            if not incumbent[p] is None:
+            if not incumbent.get(p) is None:
                 conf.append("%s='%s'" % (p, repr(incumbent[p])))
 
         traj_entry = {"cpu_time": ta_time_used,
