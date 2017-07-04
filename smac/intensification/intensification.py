@@ -108,7 +108,8 @@ class Intensifier(object):
                   incumbent: Configuration,
                   run_history: RunHistory,
                   aggregate_func: typing.Callable,
-                  time_bound: int=MAXINT):
+                  time_bound: int=MAXINT,
+                  log_traj:bool=True):
         '''
             running intensification to determine the incumbent configuration.
             Side effect: adds runs to run_history
@@ -127,6 +128,8 @@ class Intensifier(object):
                 aggregate error across instances
             time_bound : int, optional (default=2 ** 31 - 1)
                 time in [sec] available to perform intensify
+            log_traj: bool
+                whether to log changes of incumbents in trajectory
 
             Returns
             -------
@@ -164,7 +167,8 @@ class Intensifier(object):
                 incumbent = self._race_challenger(challenger=challenger,
                                                   incumbent=incumbent,
                                                   run_history=run_history,
-                                                  aggregate_func=aggregate_func)
+                                                  aggregate_func=aggregate_func,
+                                                  log_traj=log_traj)
                 if self.always_race_against and \
                         challenger == incumbent and \
                         self.always_race_against != challenger:
@@ -172,7 +176,8 @@ class Intensifier(object):
                     incumbent = self._race_challenger(challenger=self.always_race_against,
                                                       incumbent=incumbent,
                                                       run_history=run_history,
-                                                      aggregate_func=aggregate_func)
+                                                      aggregate_func=aggregate_func,
+                                                      log_traj=log_traj)
 
             except BudgetExhaustedException:
                 # We return incumbent, SMBO stops due to its own budget checks
@@ -272,7 +277,8 @@ class Intensifier(object):
                     break
 
     def _race_challenger(self, challenger: Configuration, incumbent: Configuration, run_history: RunHistory,
-                         aggregate_func: typing.Callable):
+                         aggregate_func: typing.Callable,
+                         log_traj:bool=True):
         '''
             aggressively race challenger against incumbent
 
@@ -286,6 +292,8 @@ class Intensifier(object):
                 stores all runs we ran so far
             aggregate_func: typing.Callable
                 aggregate performance across instances
+            log_traj: bool
+                whether to log changes of incumbents in trajectory
 
             Returns
             -------
@@ -352,7 +360,8 @@ class Intensifier(object):
 
             new_incumbent = self._compare_configs(
                 incumbent=incumbent, challenger=challenger, run_history=run_history,
-                aggregate_func=aggregate_func)
+                aggregate_func=aggregate_func,
+                log_traj=log_traj)
             if new_incumbent == incumbent:
                 break
             elif new_incumbent == challenger:
@@ -413,7 +422,8 @@ class Intensifier(object):
     def _compare_configs(self, incumbent: Configuration,
                          challenger: Configuration,
                          run_history: RunHistory,
-                         aggregate_func: typing.Callable):
+                         aggregate_func: typing.Callable,
+                         log_traj:bool=True):
         '''
             compare two configuration wrt the runhistory
             and return the one which performs better (or None if the decision is not safe)
@@ -435,6 +445,8 @@ class Intensifier(object):
                 stores all runs we ran so far
             aggregate_func: typing.Callable
                 aggregate performance across instances
+            log_traj: bool
+                whether to log changes of incumbents in trajectory
 
             Returns
             -------
@@ -460,10 +472,16 @@ class Intensifier(object):
 
         # Line 16
         if not set(inc_runs) - set(chall_runs):
+
+            # no plateau walks
+            if chal_perf >= inc_perf:
+                self.logger.debug("Incumbent (%.4f) is better than challenger (%.4f) on %d runs." % (
+                                    inc_perf, chal_perf, len(chall_runs)))
+                return incumbent 
+            
             # Challenger is as good as incumbent
             # and has at least the same runs as inc
             # -> change incumbent
-
             n_samples = len(chall_runs)
             self.logger.info("Challenger (%.4f) is better than incumbent (%.4f) on %d runs." % (
                 chal_perf, inc_perf, n_samples))
@@ -477,10 +495,12 @@ class Intensifier(object):
                 else:
                     self.logger.debug("  %s remains unchanged: %r" %
                                       (param[0], param[1]))
-            self.stats.inc_changed += 1
-            self.traj_logger.add_entry(train_perf=chal_perf,
-                                       incumbent_id=self.stats.inc_changed,
-                                       incumbent=challenger)
+            
+            if log_traj:
+                self.stats.inc_changed += 1
+                self.traj_logger.add_entry(train_perf=chal_perf,
+                                           incumbent_id=self.stats.inc_changed,
+                                           incumbent=challenger)
             return challenger
 
         return None  # undecided

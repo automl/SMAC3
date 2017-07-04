@@ -7,6 +7,7 @@ from smac.utils.io.cmd_reader import CMDReader
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_facade import SMAC
 from smac.facade.roar_facade import ROAR
+from smac.facade.epils_facade import EPILS
 from smac.runhistory.runhistory import RunHistory
 from smac.optimizer.objective import average_cost
 from smac.utils.merge_foreign_data import merge_foreign_data_from_file
@@ -91,6 +92,12 @@ class SMACCLI(object):
                 initial_configurations=initial_configs)
         elif args_.mode == "ROAR":
             optimizer = ROAR(
+                scenario=scen,
+                rng=np.random.RandomState(args_.seed),
+                runhistory=rh,
+                initial_configurations=initial_configs)
+        elif args_.mode == "EPILS":
+            optimizer = EPILS(
                 scenario=scen,
                 rng=np.random.RandomState(args_.seed),
                 runhistory=rh,
