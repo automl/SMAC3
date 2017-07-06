@@ -1,7 +1,7 @@
 import os
 import shutil
 
-from smac.configspace import pcs
+from smac.configspace import pcs_new as pcs
 
 
 class OutputWriter(object):

@@ -73,7 +73,7 @@ class ExecuteTARunOld(ExecuteTARun):
         cmd.extend(self.ta)
         cmd.extend([instance, instance_specific, str(cutoff), "0", str(seed)])
         for p in config:
-            if not config[p] is None:
+            if not config.get(p) is None:
                 cmd.extend(["-" + str(p), str(config[p])])
 
         self.logger.debug("Calling: %s" % (" ".join(cmd)))
