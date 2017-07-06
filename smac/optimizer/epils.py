@@ -143,7 +143,7 @@ class EPILS_Solver(object):
                 start_point = self.incumbent
             else:
                 # Restart?
-                if random.random() < self.restart_prob:
+                if self.rng.rand() < self.restart_prob:
                     self.logger.info("Restart Search")
                     start_point = self.scenario.cs.sample_configuration()
                 else:
@@ -215,9 +215,6 @@ class EPILS_Solver(object):
         self.intensifier.Adaptive_Capping_Slackfactor = self.fast_race_adaptive_capping_factor
         
         incumbent = start_point
-        # Compute the acquisition value of the incumbent
-        incumbent_array = convert_configurations_to_array([incumbent])
-        acq_val_incumbent = self.acquisition_func(incumbent_array)
 
         local_search_steps = 0
         neighbors_looked_at = 0

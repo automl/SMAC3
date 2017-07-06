@@ -106,7 +106,6 @@ class TestSMBO(unittest.TestCase):
         epils = EPILS(self.scenario, rng=rng).solver
         self.assertIsInstance(epils.num_run, int)
         self.assertIs(epils.rng, rng)
-        # ML: I don't understand the following line and it throws an error
         self.assertRaisesRegexp(TypeError,
                                 "Unknown type <(class|type) 'str'> for argument "
                                 'rng. Only accepts None, int or '
