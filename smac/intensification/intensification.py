@@ -475,11 +475,11 @@ class Intensifier(object):
 
             # no plateau walks
             if chal_perf >= inc_perf:
-                self.logger.debug("Incumbent (%.4f) is better than challenger (%.4f) on %d runs." % (
+                self.logger.debug("Incumbent (%.4f) is at least as good as the challenger (%.4f) on %d runs." % (
                                     inc_perf, chal_perf, len(chall_runs)))
                 return incumbent 
             
-            # Challenger is as good as incumbent
+            # Challenger is better than incumbent
             # and has at least the same runs as inc
             # -> change incumbent
             n_samples = len(chall_runs)
