@@ -280,7 +280,8 @@ class SMAC(object):
             elif scenario.run_obj == 'quality':
                 runhistory2epm = RunHistory2EPM4Cost(scenario=scenario, num_params=num_params,
                                                      success_states=[
-                                                         StatusType.SUCCESS, ],
+                                                         StatusType.SUCCESS, 
+                                                         StatusType.CRASHED],
                                                      impute_censored_data=False, impute_state=None)
 
             else:
