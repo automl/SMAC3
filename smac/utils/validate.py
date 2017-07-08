@@ -8,6 +8,7 @@ from smac.utils.constants import MAXINT
 from smac.scenario.scenario import Scenario
 from smac.runhistory.runhistory import RunHistory, RunKey
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
+from smac.tae.execute_ta_run import ExecuteTARun
 from smac.stats.stats import Stats
 from smac.optimizer.objective import average_cost
 
@@ -71,7 +72,8 @@ class Validator(object):
         self.rh = RunHistory(average_cost)  # update this rh with validation-runs
 
     def validate(self, config_mode:str='def', instance_mode:str='test',
-                 repetitions:int=1, n_jobs:int=1, runhistory:RunHistory=None):
+                 repetitions:int=1, n_jobs:int=1, runhistory:RunHistory=None,
+                 tae:ExecuteTARun=None):
         """
         Validate configs on instances and save result in runhistory.
 
@@ -88,6 +90,8 @@ class Validator(object):
             number of parallel processes used by joblib
         runhistory: RunHistory or string or None
             runhistory to take data from
+        tae: ExecuteTARun
+            tae to be used. if none, will initialize ExecuteTARunOld
 
         Returns
         -------
@@ -117,11 +121,15 @@ class Validator(object):
         inf_stats.start_timing()
 
         # Create TAE
-        tae = ExecuteTARunOld(ta=self.scen.ta,
-                              stats=inf_stats,
-                              run_obj=self.scen.run_obj,
-                              par_factor=self.scen.par_factor,
-                              cost_for_crash=self.scen.cost_for_crash)
+        if not tae:
+            tae = ExecuteTARunOld(ta=self.scen.ta,
+                                  stats=inf_stats,
+                                  run_obj=self.scen.run_obj,
+                                  par_factor=self.scen.par_factor,
+                                  cost_for_crash=self.scen.cost_for_crash)
+        else:
+            # Inject endless-stats
+            tae.stats = inf_stats
 
         # Validate!
         run_results = self._validate_parallel(tae, runs, n_jobs)
@@ -196,7 +204,7 @@ class Validator(object):
         """
         # If no instances are given, fix the instances to one "None" instance
         if len(insts) == 0:
-            insts = {None : "0"}
+            insts = [None]
         # If algorithm is deterministic, fix repetitions to 1
         if self.scen.deterministic:
             self.logger.debug("Fixing repetitions to one, because algorithm is"
@@ -211,7 +219,7 @@ class Validator(object):
         # Counter for imputed runs
         imputed = 0
 
-        for i in sorted(insts.keys()):
+        for i in sorted(insts):
             for rep in range(repetitions):
                 configs_evaluated = []
                 if runhistory and i in inst_seed_config:
@@ -235,10 +243,11 @@ class Validator(object):
                 # configs in inner loop -> same inst-seed-pairs for all configs
                 for config in [c for c in configs if not c in
                                configs_evaluated]:
+                    specs = self.scen.instance_specific[i] if i else ""
                     runs.append({'config':config,
                                  'inst':i,
                                  'seed':seed,
-                                 'inst_specs': insts[i]})
+                                 'inst_specs': specs})
 
         self.logger.info("Collected %d runs from %d configurations on %d instances "
                          "with %d repetitions.", len(runs), len(configs), len(insts),
@@ -354,7 +363,7 @@ class Validator(object):
 
         Returns
         -------
-        instances: dict<strings>
+        instances: list<strings>
             instances to be used
         """
         instance_mode = mode.lower()
@@ -362,11 +371,11 @@ class Validator(object):
             raise ValueError("%s not a valid option for instance_mode in validation."
                              %mode)
 
-        instances = dict()
+        instances = []
         if ((instance_mode == 'train' or instance_mode == 'train+test') and not
                 self.scen.train_insts == [None]):
-            instances.update(self.scen.train_insts)
+            instances.extend(self.scen.train_insts)
         if ((instance_mode == 'test' or instance_mode == 'train+test') and not
                 self.scen.test_insts == [None]):
-            instances.update(self.scen.test_insts)
+            instances.extend(self.scen.test_insts)
         return instances

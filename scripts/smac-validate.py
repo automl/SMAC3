@@ -10,9 +10,11 @@ cmd_folder = os.path.realpath(os.path.join(cmd_folder, ".."))
 if cmd_folder not in sys.path:
     sys.path.insert(0, cmd_folder)
 
-from smac.utils.validate import Validator
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
+from smac.tae.execute_ta_run_old import ExecuteTARunOld
+from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
+from smac.utils.validate import Validator
 from smac.utils.io.traj_logging import TrajLogger
 
 
@@ -46,6 +48,8 @@ if __name__ == "__main__":
                                "algorithms")
     req_opts.add_argument("--n_jobs", default=1, type=int,
                           help="number of cpu-cores to use")
+    req_opts.add_argument("--tae", default="old", type=str,
+                          help="what tae to use", choices=["aclib", "old"])
     req_opts.add_argument("--verbose_level", default=logging.INFO,
                           choices=["INFO", "DEBUG"],
                           help="verbose level")
@@ -64,8 +68,18 @@ if __name__ == "__main__":
     scenario = Scenario(args_.scenario)
     traj_logger = TrajLogger(None, Stats(scenario))
     trajectory = traj_logger.read_traj_aclib_format(args_.trajectory, scenario.cs)
+    if args_.tae == "old":
+        tae = ExecuteTARunOld(ta=scenario.ta,
+                              run_obj=scenario.run_obj,
+                              par_factor=scenario.par_factor,
+                              cost_for_crash=scenario.cost_for_crash)
+    if args_.tae == "aclib":
+        tae = ExecuteTARunAClib(ta=scenario.ta,
+                              run_obj=scenario.run_obj,
+                              par_factor=scenario.par_factor,
+                              cost_for_crash=scenario.cost_for_crash)
 
     validator = Validator(scenario, trajectory, args_.output,
                           args_.seed)
     validator.validate(args_.configs, args_.instances, args_.repetitions,
-                       args_.n_jobs, args_.runhistory)
+                       args_.n_jobs, args_.runhistory, tae)

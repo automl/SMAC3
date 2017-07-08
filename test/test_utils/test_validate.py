@@ -21,8 +21,10 @@ class ValidationTest(unittest.TestCase):
         self.scen = Scenario({'run_obj': 'quality', 'param_file':
                               'test/test_files/validation/test_validation_pcs.pcs',
                               'algo': 'python -u test/test_files/example_ta.py'})
-        self.train_insts = {'0': 'null', '1': 'one', '2': 'two'}
-        self.test_insts = {'3': 'three', '4': 'four', '5': 'five'}
+        self.train_insts = ['0', '1', '2']
+        self.test_insts = ['3', '4', '5']
+        self.scen.instance_specific = {'0': 'null', '1': 'one', '2': 'two',
+                                       '3': 'three', '4': 'four', '5': 'five'}
         self.output_rh = 'test/test_files/validation/test_validation_rh.json'
         self.trajectory = TrajLogger.read_traj_aclib_format(
             fn='test/test_files/validation/test_validation_traj.json', cs=self.scen.cs)
@@ -78,7 +80,7 @@ class ValidationTest(unittest.TestCase):
                     {'inst': '4', 'seed': 434285667,  'config': 'config1', 'inst_specs': 'four'},
                     {'inst': '5', 'seed': 613608295,  'config': 'config1', 'inst_specs': 'five'}]
         insts = self.train_insts
-        insts.update(self.test_insts)
+        insts.extend(self.test_insts)
         runs = validator.get_runs(['config1'], insts, repetitions=1)
         self.assertEqual(runs, expected)
 
