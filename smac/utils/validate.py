@@ -70,8 +70,8 @@ class Validator(object):
 
         self.rh = RunHistory(average_cost)  # update this rh with validation-runs
 
-    def validate(self, config_mode='def', instance_mode='test', repetitions=1,
-                 n_jobs=1, runhistory=None):
+    def validate(self, config_mode:str='def', instance_mode:str='test',
+                 repetitions:int=1, n_jobs:int=1, runhistory:RunHistory=None):
         """
         Validate configs on instances and save result in runhistory.
 
@@ -327,9 +327,10 @@ class Validator(object):
             configs.append(self.traj[-1]["incumbent"])
         if mode == "time":
             # add configs at evaluations 2^1, 2^2, 2^3, ...
-            counter = 1
+            configs.append(self.traj[0]["incumbent"])  # add first
+            counter = 2^(-4)
             for entry in self.traj[:-1]:
-                if (entry["evaluations"] >= counter and
+                if (entry["wallclock_time"] >= counter and
                         entry["incumbent"] not in configs):
                     configs.append(entry["incumbent"])
                     counter *= 2
@@ -353,7 +354,7 @@ class Validator(object):
 
         Returns
         -------
-        instances: list<strings>
+        instances: dict<strings>
             instances to be used
         """
         instance_mode = mode.lower()
