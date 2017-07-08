@@ -78,7 +78,7 @@ class ExecuteTARunAClib(ExecuteTARun):
                     ])
 
         for p in config:
-            if not config[p] is None:
+            if not config.get(p) is None:
                 cmd.extend(["-" + str(p), str(config[p])])
 
         self.logger.debug("Calling: %s" % (" ".join(cmd)))

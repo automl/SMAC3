@@ -223,6 +223,7 @@ class AbstractRunHistory2EPM(object):
             X = np.vstack((X, tX))
             Y = np.concatenate((Y, tY))
 
+        self.logger.debug("Converted %d observations" %(X.shape[0]))
         return X, Y
 
     def get_X_y(self, runhistory: RunHistory):
@@ -251,7 +252,7 @@ class AbstractRunHistory2EPM(object):
         params = self.scenario.cs.get_hyperparameters()
         for k, v in runhistory.data.items():
             config = runhistory.ids_config[k.config_id]
-            x = [config[p.name] for p in params]
+            x = [config.get(p.name) for p in params]
             features = feature_dict.get(k.instance_id)
             if features:
                 x.extend(features)
