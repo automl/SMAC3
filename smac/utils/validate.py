@@ -81,7 +81,8 @@ class Validator(object):
         ----------
         config_mode: string
             what configurations to validate
-            from [def, inc, def+inc, time, all], time means eval at 2^0, 2^1, 2^2, ...
+            from [def, inc, def+inc, time, all], time means evaluation at
+            timesteps 2^-4, 2^-3, 2^-2, 2^-1, 2^0, 2^1, ...
         instance_mode: string
             what instances to use for validation, from [train, test, train+test]
         repetitions: int
@@ -317,7 +318,8 @@ class Validator(object):
         Parameters
         ----------
         mode : string
-            from [def, inc, def+inc, time, all], time means eval at 2^0, 2^1, 2^2, ...
+            from [def, inc, def+inc, time, all], time means evaluation at
+            timesteps 2^-4, 2^-3, 2^-2, 2^-1, 2^0, 2^1, ...
 
         Returns
         -------
