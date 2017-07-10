@@ -117,7 +117,7 @@ class Validator(object):
                              runhistory=runhistory)
 
         # Create new Stats without limits
-        inf_scen = Scenario({'run_obj':'quality'})
+        inf_scen = Scenario({'run_obj':'quality', 'output_dir':None})
         inf_stats = Stats(inf_scen)
         inf_stats.start_timing()
 
