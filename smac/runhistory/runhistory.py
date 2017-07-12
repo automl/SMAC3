@@ -51,7 +51,10 @@ class RunHistory(object):
         function to aggregate perf across instances
     '''
 
-    def __init__(self, aggregate_func):
+    def __init__(self, 
+                 aggregate_func: typing.Callable,
+                 overwrite_existings: bool=False
+                 ):
 
         # By having the data in a deterministic order we can do useful tests
         # when we serialize the data and can assume it's still in the same
@@ -71,6 +74,7 @@ class RunHistory(object):
         self.runs_per_config = {}  # config_id -> number of runs
 
         self.aggregate_func = aggregate_func
+        self.overwrite_existings = overwrite_existings
 
     def add(self, config, cost, time,
             status, instance_id=None,
@@ -118,7 +122,7 @@ class RunHistory(object):
 
         # Each runkey is supposed to be used only once. Repeated tries to add
         # the same runkey will be ignored silently if not capped.
-        if self.data.get(k) is None:
+        if self.overwrite_existings or self.data.get(k) is None:
             self._add(k, v, status, external_data)
         elif status != StatusType.CAPPED and self.data[k].status == StatusType.CAPPED:
             # overwrite capped runs with uncapped runs
@@ -138,10 +142,14 @@ class RunHistory(object):
             is_k = InstSeedKey(k.instance_id, k.seed)
             self._configid_to_inst_seed[
                 k.config_id] = self._configid_to_inst_seed.get(k.config_id, [])
-            self._configid_to_inst_seed[k.config_id].append(is_k)
+            if is_k is not self._configid_to_inst_seed[k.config_id]:
+                self._configid_to_inst_seed[k.config_id].append(is_k)
 
-            # assumes an average across runs as cost function aggregation
-            self.incremental_update_cost(self.ids_config[k.config_id], v.cost)
+            if not self.overwrite_existings:
+                # assumes an average across runs as cost function aggregation
+                self.incremental_update_cost(self.ids_config[k.config_id], v.cost)
+            else:
+                self.update_cost(config=self.ids_config[k.config_id])
 
     def update_cost(self, config):
         '''
