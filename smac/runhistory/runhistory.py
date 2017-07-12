@@ -49,6 +49,10 @@ class RunHistory(object):
     ---------
     aggregate_func: callable
         function to aggregate perf across instances
+    overwrite_existing: bool
+        allows to overwrites old results if pairs of 
+        algorithm-instance-seed were measured  
+        multiple times
     '''
 
     def __init__(self, 
