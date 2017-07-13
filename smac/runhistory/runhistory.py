@@ -146,7 +146,7 @@ class RunHistory(object):
             is_k = InstSeedKey(k.instance_id, k.seed)
             self._configid_to_inst_seed[
                 k.config_id] = self._configid_to_inst_seed.get(k.config_id, [])
-            if is_k is not self._configid_to_inst_seed[k.config_id]:
+            if is_k not in self._configid_to_inst_seed[k.config_id]:
                 self._configid_to_inst_seed[k.config_id].append(is_k)
 
             if not self.overwrite_existings:
