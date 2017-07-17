@@ -5,3 +5,4 @@ smac\.epm\.base\_imputor module
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:

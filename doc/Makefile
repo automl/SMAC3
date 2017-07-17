@@ -199,6 +199,7 @@ buildapi:
 	do                   \
 	  sed -i '/Submodules/d' $$f; \
 	  sed -i '/----------/d' $$f; \
+	  sed -i 's/    :show-inheritance:/    :show-inheritance:\n    :inherited-members:/g' $$f; \
 	done;
 	@echo
 	@echo "Auto-generation of API documentation finished. " \

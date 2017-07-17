@@ -5,3 +5,4 @@ smac\.utils\.merge\_foreign\_data module
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:
