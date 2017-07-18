@@ -288,7 +288,7 @@ to deserialize from json.</p>
 
 <dl class="class">
 <dt id="smac.runhistory.runhistory.RunHistory">
-<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory.</code><code class="descname">RunHistory</code><span class="sig-paren">(</span><em>aggregate_func</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory.</code><code class="descname">RunHistory</code><span class="sig-paren">(</span><em>aggregate_func: typing.Callable</em>, <em>overwrite_existing_runs: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Container for target algorithm run information.</p>
 <p>Guaranteed to be picklable.</p>
@@ -296,7 +296,13 @@ to deserialize from json.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>aggregate_func</strong> (<em>callable</em>) – function to aggregate perf across instances</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>aggregate_func</strong> (<em>callable</em>) – function to aggregate perf across instances</li>
+<li><strong>overwrite_existing_runs</strong> (<em>bool</em>) – allows to overwrites old results if pairs of
+algorithm-instance-seed were measured
+multiple times</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>

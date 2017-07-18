@@ -297,9 +297,16 @@
 <span class="sd">    ---------</span>
 <span class="sd">    aggregate_func: callable</span>
 <span class="sd">        function to aggregate perf across instances</span>
+<span class="sd">    overwrite_existing_runs: bool</span>
+<span class="sd">        allows to overwrites old results if pairs of </span>
+<span class="sd">        algorithm-instance-seed were measured  </span>
+<span class="sd">        multiple times</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aggregate_func</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">aggregate_func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
+                 <span class="n">overwrite_existing_runs</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span>
+                 <span class="p">):</span>
 
         <span class="c1"># By having the data in a deterministic order we can do useful tests</span>
         <span class="c1"># when we serialize the data and can assume it&#39;s still in the same</span>
@@ -319,6 +326,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">runs_per_config</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># config_id -&gt; number of runs</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">aggregate_func</span> <span class="o">=</span> <span class="n">aggregate_func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_existing_runs</span> <span class="o">=</span> <span class="n">overwrite_existing_runs</span>
 
 <div class="viewcode-block" id="RunHistory.add"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span>
             <span class="n">status</span><span class="p">,</span> <span class="n">instance_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -366,7 +374,7 @@
 
         <span class="c1"># Each runkey is supposed to be used only once. Repeated tries to add</span>
         <span class="c1"># the same runkey will be ignored silently if not capped.</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_existing_runs</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">external_data</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">status</span> <span class="o">!=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span><span class="p">:</span>
             <span class="c1"># overwrite capped runs with uncapped runs</span>
@@ -386,10 +394,14 @@
             <span class="n">is_k</span> <span class="o">=</span> <span class="n">InstSeedKey</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">instance_id</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_configid_to_inst_seed</span><span class="p">[</span>
                 <span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configid_to_inst_seed</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">,</span> <span class="p">[])</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_configid_to_inst_seed</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">is_k</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">is_k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configid_to_inst_seed</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_configid_to_inst_seed</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">is_k</span><span class="p">)</span>
 
-            <span class="c1"># assumes an average across runs as cost function aggregation</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">incremental_update_cost</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">],</span> <span class="n">v</span><span class="o">.</span><span class="n">cost</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_existing_runs</span><span class="p">:</span>
+                <span class="c1"># assumes an average across runs as cost function aggregation</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">incremental_update_cost</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">],</span> <span class="n">v</span><span class="o">.</span><span class="n">cost</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update_cost</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">])</span>
 
 <div class="viewcode-block" id="RunHistory.update_cost"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.update_cost">[docs]</a>    <span class="k">def</span> <span class="nf">update_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
