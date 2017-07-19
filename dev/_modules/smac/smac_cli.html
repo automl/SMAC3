@@ -255,6 +255,7 @@
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.facade.smac_facade</span> <span class="k">import</span> <span class="n">SMAC</span>
 <span class="kn">from</span> <span class="nn">smac.facade.roar_facade</span> <span class="k">import</span> <span class="n">ROAR</span>
+<span class="kn">from</span> <span class="nn">smac.facade.epils_facade</span> <span class="k">import</span> <span class="n">EPILS</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="k">import</span> <span class="n">average_cost</span>
 <span class="kn">from</span> <span class="nn">smac.utils.merge_foreign_data</span> <span class="k">import</span> <span class="n">merge_foreign_data_from_file</span>
@@ -339,6 +340,12 @@
                 <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configs</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;ROAR&quot;</span><span class="p">:</span>
             <span class="n">optimizer</span> <span class="o">=</span> <span class="n">ROAR</span><span class="p">(</span>
+                <span class="n">scenario</span><span class="o">=</span><span class="n">scen</span><span class="p">,</span>
+                <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
+                <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>
+                <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;EPILS&quot;</span><span class="p">:</span>
+            <span class="n">optimizer</span> <span class="o">=</span> <span class="n">EPILS</span><span class="p">(</span>
                 <span class="n">scenario</span><span class="o">=</span><span class="n">scen</span><span class="p">,</span>
                 <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
                 <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>

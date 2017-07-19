@@ -261,7 +261,7 @@
 procedure).</p>
 <dl class="method">
 <dt id="smac.intensification.intensification.Intensifier.intensify">
-<code class="descname">intensify</code><span class="sig-paren">(</span><em>challengers: typing.List[ConfigSpace.configuration_space.Configuration], incumbent: ConfigSpace.configuration_space.Configuration, run_history: smac.runhistory.runhistory.RunHistory, aggregate_func: typing.Callable, time_bound: int = 2147483647</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier.intensify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier.intensify" title="Permalink to this definition">¶</a></dt>
+<code class="descname">intensify</code><span class="sig-paren">(</span><em>challengers: typing.List[ConfigSpace.configuration_space.Configuration], incumbent: ConfigSpace.configuration_space.Configuration, run_history: smac.runhistory.runhistory.RunHistory, aggregate_func: typing.Callable, time_bound: int = 2147483647, log_traj: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier.intensify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier.intensify" title="Permalink to this definition">¶</a></dt>
 <dd><p>running intensification to determine the incumbent configuration.
 Side effect: adds runs to run_history</p>
 <p>Implementation of Procedure 2 in Hutter et al. (2011).</p>
@@ -275,6 +275,7 @@ Side effect: adds runs to run_history</p>
 <li><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – stores all runs we ran so far</li>
 <li><strong>aggregate_func</strong> (<em>typing.Callable</em>) – aggregate error across instances</li>
 <li><strong>time_bound</strong> (<em>int</em><em>, </em><em>optional</em><em> (</em><em>default=2 ** 31 - 1</em><em>)</em>) – time in [sec] available to perform intensify</li>
+<li><strong>log_traj</strong> (<em>bool</em>) – whether to log changes of incumbents in trajectory</li>
 </ul>
 </td>
 </tr>

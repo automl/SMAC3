@@ -356,7 +356,8 @@
                   <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
                   <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
                   <span class="n">aggregate_func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
-                  <span class="n">time_bound</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="n">MAXINT</span><span class="p">):</span>
+                  <span class="n">time_bound</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="n">MAXINT</span><span class="p">,</span>
+                  <span class="n">log_traj</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">            running intensification to determine the incumbent configuration.</span>
 <span class="sd">            Side effect: adds runs to run_history</span>
@@ -375,6 +376,8 @@
 <span class="sd">                aggregate error across instances</span>
 <span class="sd">            time_bound : int, optional (default=2 ** 31 - 1)</span>
 <span class="sd">                time in [sec] available to perform intensify</span>
+<span class="sd">            log_traj: bool</span>
+<span class="sd">                whether to log changes of incumbents in trajectory</span>
 
 <span class="sd">            Returns</span>
 <span class="sd">            -------</span>
@@ -412,7 +415,8 @@
                 <span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_race_challenger</span><span class="p">(</span><span class="n">challenger</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
                                                   <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
                                                   <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
-                                                  <span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">)</span>
+                                                  <span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">,</span>
+                                                  <span class="n">log_traj</span><span class="o">=</span><span class="n">log_traj</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">always_race_against</span> <span class="ow">and</span> \
                         <span class="n">challenger</span> <span class="o">==</span> <span class="n">incumbent</span> <span class="ow">and</span> \
                         <span class="bp">self</span><span class="o">.</span><span class="n">always_race_against</span> <span class="o">!=</span> <span class="n">challenger</span><span class="p">:</span>
@@ -420,7 +424,8 @@
                     <span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_race_challenger</span><span class="p">(</span><span class="n">challenger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">always_race_against</span><span class="p">,</span>
                                                       <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
                                                       <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
-                                                      <span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">)</span>
+                                                      <span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">,</span>
+                                                      <span class="n">log_traj</span><span class="o">=</span><span class="n">log_traj</span><span class="p">)</span>
 
             <span class="k">except</span> <span class="n">BudgetExhaustedException</span><span class="p">:</span>
                 <span class="c1"># We return incumbent, SMBO stops due to its own budget checks</span>
@@ -520,7 +525,8 @@
                     <span class="k">break</span>
 
     <span class="k">def</span> <span class="nf">_race_challenger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">challenger</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
-                         <span class="n">aggregate_func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">):</span>
+                         <span class="n">aggregate_func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
+                         <span class="n">log_traj</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">            aggressively race challenger against incumbent</span>
 
@@ -534,6 +540,8 @@
 <span class="sd">                stores all runs we ran so far</span>
 <span class="sd">            aggregate_func: typing.Callable</span>
 <span class="sd">                aggregate performance across instances</span>
+<span class="sd">            log_traj: bool</span>
+<span class="sd">                whether to log changes of incumbents in trajectory</span>
 
 <span class="sd">            Returns</span>
 <span class="sd">            -------</span>
@@ -600,7 +608,8 @@
 
             <span class="n">new_incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compare_configs</span><span class="p">(</span>
                 <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">challenger</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span> <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
-                <span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">)</span>
+                <span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">,</span>
+                <span class="n">log_traj</span><span class="o">=</span><span class="n">log_traj</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">new_incumbent</span> <span class="o">==</span> <span class="n">incumbent</span><span class="p">:</span>
                 <span class="k">break</span>
             <span class="k">elif</span> <span class="n">new_incumbent</span> <span class="o">==</span> <span class="n">challenger</span><span class="p">:</span>
@@ -661,7 +670,8 @@
     <span class="k">def</span> <span class="nf">_compare_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
                          <span class="n">challenger</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
                          <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
-                         <span class="n">aggregate_func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">):</span>
+                         <span class="n">aggregate_func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
+                         <span class="n">log_traj</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">            compare two configuration wrt the runhistory</span>
 <span class="sd">            and return the one which performs better (or None if the decision is not safe)</span>
@@ -683,6 +693,8 @@
 <span class="sd">                stores all runs we ran so far</span>
 <span class="sd">            aggregate_func: typing.Callable</span>
 <span class="sd">                aggregate performance across instances</span>
+<span class="sd">            log_traj: bool</span>
+<span class="sd">                whether to log changes of incumbents in trajectory</span>
 
 <span class="sd">            Returns</span>
 <span class="sd">            -------</span>
@@ -708,10 +720,16 @@
 
         <span class="c1"># Line 16</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="n">inc_runs</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">chall_runs</span><span class="p">):</span>
-            <span class="c1"># Challenger is as good as incumbent</span>
+
+            <span class="c1"># no plateau walks</span>
+            <span class="k">if</span> <span class="n">chal_perf</span> <span class="o">&gt;=</span> <span class="n">inc_perf</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Incumbent (</span><span class="si">%.4f</span><span class="s2">) is at least as good as the challenger (</span><span class="si">%.4f</span><span class="s2">) on </span><span class="si">%d</span><span class="s2"> runs.&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                                    <span class="n">inc_perf</span><span class="p">,</span> <span class="n">chal_perf</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">chall_runs</span><span class="p">)))</span>
+                <span class="k">return</span> <span class="n">incumbent</span> 
+            
+            <span class="c1"># Challenger is better than incumbent</span>
             <span class="c1"># and has at least the same runs as inc</span>
             <span class="c1"># -&gt; change incumbent</span>
-
             <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">chall_runs</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Challenger (</span><span class="si">%.4f</span><span class="s2">) is better than incumbent (</span><span class="si">%.4f</span><span class="s2">) on </span><span class="si">%d</span><span class="s2"> runs.&quot;</span> <span class="o">%</span> <span class="p">(</span>
                 <span class="n">chal_perf</span><span class="p">,</span> <span class="n">inc_perf</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">))</span>
@@ -725,10 +743,12 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;  </span><span class="si">%s</span><span class="s2"> remains unchanged: </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span>
                                       <span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">param</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">traj_logger</span><span class="o">.</span><span class="n">add_entry</span><span class="p">(</span><span class="n">train_perf</span><span class="o">=</span><span class="n">chal_perf</span><span class="p">,</span>
-                                       <span class="n">incumbent_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span><span class="p">,</span>
-                                       <span class="n">incumbent</span><span class="o">=</span><span class="n">challenger</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">log_traj</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">traj_logger</span><span class="o">.</span><span class="n">add_entry</span><span class="p">(</span><span class="n">train_perf</span><span class="o">=</span><span class="n">chal_perf</span><span class="p">,</span>
+                                           <span class="n">incumbent_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span><span class="p">,</span>
+                                           <span class="n">incumbent</span><span class="o">=</span><span class="n">challenger</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">challenger</span>
 
         <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># undecided</span></div>
