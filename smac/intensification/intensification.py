@@ -103,6 +103,9 @@ class Intensifier(object):
 
         self._num_run = 0
         self._chall_indx = 0
+        
+        self._min_time = 10**-5
+        self._min_chall = 2
 
     def intensify(self, challengers: typing.List[Configuration],
                   incumbent: Configuration,
@@ -141,8 +144,8 @@ class Intensifier(object):
 
         self.start_time = time.time()
 
-        if time_bound < 0.01:
-            raise ValueError("time_bound must be >= 0.01")
+        if time_bound < self._min_time:
+            raise ValueError("time_bound must be >= %f" %(self._min_time))
 
         self._num_run = 0
         self._chall_indx = 0
@@ -185,11 +188,11 @@ class Intensifier(object):
                 self.logger.debug("Budget exhausted; Return incumbent")
                 return incumbent, inc_perf
 
-            if self._chall_indx > 1 and self._num_run > self.run_limit:
+            if self._chall_indx >= self._min_chall and self._num_run > self.run_limit:
                 self.logger.debug(
                     "Maximum #runs for intensification reached")
                 break
-            elif self._chall_indx > 1 and time.time() - self.start_time - time_bound >= 0:
+            elif self._chall_indx >= self._min_chall and time.time() - self.start_time - time_bound >= 0:
                 self.logger.debug("Timelimit for intensification reached ("
                                   "used: %f sec, available: %f sec)" % (
                                       time.time() - self.start_time, time_bound))
