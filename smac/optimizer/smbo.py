@@ -131,7 +131,7 @@ class SMBO(object):
                 incumbent=self.incumbent,
                 run_history=self.runhistory,
                 aggregate_func=self.aggregate_func,
-                time_bound=max(0.01, time_left))
+                time_bound=max(self.intensifier._min_time, time_left))
 
             if self.scenario.shared_model:
                 pSMAC.write(run_history=self.runhistory,
