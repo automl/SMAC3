@@ -1,4 +1,3 @@
-import sys
 import typing
 import numpy as np
 
@@ -12,11 +11,7 @@ from smac.tae.execute_ta_run import ExecuteTARun
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
 from smac.scenario.scenario import Scenario
-from smac.tae.execute_ta_run import StatusType
 from smac.runhistory.runhistory import RunHistory
-from smac.utils import constants
-
-
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -24,6 +19,9 @@ __license__ = "3-clause BSD"
 
 
 class MultiConfigInitialDesign(InitialDesign):
+    """ Base class for initial design strategies that evaluates multiple
+    configurations
+    """
 
     def __init__(self,
                  tae_runner: ExecuteTARun,
@@ -37,6 +35,7 @@ class MultiConfigInitialDesign(InitialDesign):
                  aggregate_func: typing.Callable
                  ):
         """
+        Constructor
 
         Arguments
         ---------
@@ -62,7 +61,6 @@ class MultiConfigInitialDesign(InitialDesign):
         aggregate_func: typing:Callable
             Function to aggregate performance of a configuration across 
             instances.
-
         """
         super().__init__(tae_runner=tae_runner,
                          scenario=scenario,
@@ -82,7 +80,7 @@ class MultiConfigInitialDesign(InitialDesign):
             Returns
             -------
             incumbent: Configuration
-                initial incumbent configuration
+                Initial incumbent configuration
         """
         configs = self.configs
 
@@ -108,6 +106,7 @@ class MultiConfigInitialDesign(InitialDesign):
                                              stats=self.stats,
                                              traj_logger=self.traj_logger,
                                              rng=self.rng)
+
             def get_config():
                 return configs[0]
             scid._select_configuration = get_config

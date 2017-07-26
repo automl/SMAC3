@@ -6,7 +6,6 @@ from smac.tae.execute_ta_run import ExecuteTARun
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
 from smac.scenario.scenario import Scenario
-from smac.runhistory.runhistory import RunHistory
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -14,6 +13,9 @@ __license__ = "3-clause BSD"
 
 
 class InitialDesign(object):
+    """ Base class for initial designs, i.e. the configurations that are run
+    before optimization starts
+    """
 
     def __init__(self,
                  tae_runner: ExecuteTARun,
@@ -23,6 +25,8 @@ class InitialDesign(object):
                  rng: np.random.RandomState
                  ):
         """
+        Constructor
+
         Arguments
         ---------
         tae_runner: ExecuteTARun
