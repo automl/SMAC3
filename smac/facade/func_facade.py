@@ -24,7 +24,7 @@ def fmin_smac(func: callable,
               rng: np.random.RandomState=None):
     """Minimize a function func using the SMAC algorithm.
 
-    This method is a convenience wrapper for the SMAC class.
+    This function is a convenience wrapper for the SMAC class.
 
     Parameters
     ----------

@@ -5,3 +5,4 @@ smac\.utils\.io\.input\_reader module
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:

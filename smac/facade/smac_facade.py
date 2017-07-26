@@ -59,28 +59,32 @@ class SMAC(object):
 
         Parameters
         ----------
-        scenario: smac.scenario.scenario.Scenario
+        scenario: ~smac.scenario.scenario.Scenario
             Scenario object
-        tae_runner: ExecuteTARun or callable
-            Callable or implementation of :class:`ExecuteTaRun`. In case a
-            callable is passed it will be wrapped by tae.ExecuteTaFunc().
-            If not set, tae_runner will be initialized with
-            the tae.ExecuteTARunOld()
+        tae_runner: ~smac.tae.execute_ta_run.ExecuteTARun or callable
+            Callable or implementation of 
+            :class:`~smac.tae.execute_ta_run.ExecuteTARun`. In case a
+            callable is passed it will be wrapped by 
+            :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.
+            If not set, it will be initialized with the 
+            :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.
         runhistory: RunHistory
             runhistory to store all algorithm runs
         intensifier: Intensifier
             intensification object to issue a racing to decide the current
             incumbent
-        acquisition_function : AcquisitionFunction
-            Object that implements the AbstractAcquisitionFunction. Will use
-            EI if not set.
+        acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction
+            Object that implements the :class:`~smac.optimizer.acquisition.AbstractAcquisitionFunction`. 
+            Will use :class:`~smac.optimizer.acquisition.EI` if not set.
         model : AbstractEPM
             Model that implements train() and predict(). Will use a
-            RandomForest if not set.
-        runhistory2epm : RunHistory2EMP
+            :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` if not set.
+        runhistory2epm : ~smac.runhistory.runhistory2epm.RunHistory2EMP
             Object that implements the AbstractRunHistory2EPM. If None,
-            will use RunHistory2EPM4Cost if objective is cost or
-            RunHistory2EPM4LogCost if objective is runtime.
+            will use :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4Cost`
+            if objective is cost or 
+            :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost`
+            if objective is runtime.
         initial_design: InitialDesign
             initial sampling design
         initial_configurations: typing.List[Configuration]
@@ -395,9 +399,7 @@ class SMAC(object):
 
             Returns
             -------
-            Trajectory: NamedTuple (util.io.traj_logging.TrajEntry)
-                ['train_perf', 'incumbent_id', 'incumbent',
-                'ta_runs', 'ta_time_used', 'wallclock_time']
+            Trajectory : List of :class:`~smac.utils.io.traj_logging.TrajEntry`
         '''
 
         if not hasattr(self, 'trajectory'):
@@ -408,10 +410,10 @@ class SMAC(object):
     def get_X_y(self):
         '''
             Simple interface to obtain all data in runhistory
-            in X, y format.
+            in ``X, y`` format.
 
             Uses
-            smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y().
+            :meth:`smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()`.
 
             Returns
             -------

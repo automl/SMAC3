@@ -5,3 +5,4 @@ smac\.utils\.constants module
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:

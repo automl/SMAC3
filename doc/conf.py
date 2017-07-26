@@ -303,6 +303,9 @@ texinfo_documents = [
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
 
+# Show init as well as moduledoc
+autoclass_content = 'both'
+
 # Create Scenario-object to update the list of options in the docs
-scenario = Scenario({'run_obj':'runtime', 'cutoff_time':1})
+scenario = Scenario({'run_obj':'runtime', 'cutoff_time':1, 'output_dir':''})
 scenario.write_options_to_doc()

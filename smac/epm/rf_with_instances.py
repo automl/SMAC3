@@ -24,13 +24,13 @@ class RandomForestWithInstances(AbstractEPM):
     Parameters
     ----------
     types: np.ndarray (D)
-        Specifies the number of categorical values of an input dimension. Where
-        the i-th entry corresponds to the i-th input dimension. Let say we have
-        2 dimension where the first dimension consists of 3 different
+        Specifies the number of categorical values of an input dimension where
+        the i-th entry corresponds to the i-th input dimension. Let's say we 
+        have 2 dimension where the first dimension consists of 3 different
         categorical choices and the second dimension is continuous than we
         have to pass np.array([2, 0]). Note that we count starting from 0.
     bounds: np.ndarray (D, 2)
-        Specifies the bounds for continuous features
+        Specifies the bounds for continuous features.
     num_trees: int
         The number of trees in the random forest.
     do_bootstrapping: bool

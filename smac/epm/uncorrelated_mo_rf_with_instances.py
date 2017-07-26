@@ -16,13 +16,17 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
         Parameters
         ----------
         target_names : list
-            List of str, each entry is the name of one target dimension.
+            List of str, each entry is the name of one target dimension. Length
+            of the list will be ``n_objectives``.
+
+        bounds : np.ndarray
+            See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
 
         types : np.ndarray
-            See RandomForestWithInstances documentation
+            See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
 
         kwargs
-            See RandomForestWithInstances documentation
+            See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
 
         """
         super().__init__(**kwargs)

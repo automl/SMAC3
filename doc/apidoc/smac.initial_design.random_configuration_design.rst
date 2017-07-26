@@ -5,3 +5,4 @@ smac\.initial\_design\.random\_configuration\_design module
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:

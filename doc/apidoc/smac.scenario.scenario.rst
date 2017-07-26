@@ -5,3 +5,4 @@ smac\.scenario\.scenario module
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:

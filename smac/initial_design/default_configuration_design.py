@@ -22,23 +22,22 @@ class DefaultConfiguration(SingleConfigInitialDesign):
                  traj_logger: TrajLogger,
                  rng: np.random.RandomState
                  ):
-        '''
-        Constructor
-
+        """
         Arguments
         ---------
         tae_runner: ExecuteTARun
-            target algorithm execution object
+            Target algorithm execution object.
         scenario: Scenario
-            scenario with all meta information (including configuration space)
+            Scenario with all meta information (including configuration space).
         stats: Stats
-            statistics of experiments; needed in case initial design already
-            exhaust the budget
+            Statistics of experiments; needed in case initial design already 
+            exhausts the budget.
         traj_logger: TrajLogger
-            trajectory logging to add new incumbents found by the initial design
+            Trajectory logging to add new incumbents found by the initial 
+            design.
         rng: np.random.RandomState
-            random state
-        '''
+            Random state
+        """
         super().__init__(tae_runner=tae_runner,
                          scenario=scenario,
                          stats=stats,
@@ -46,13 +45,13 @@ class DefaultConfiguration(SingleConfigInitialDesign):
                          rng=rng)
 
     def _select_configuration(self):
-        '''
-            selects a single configuration to run
+        """
+            Selects the default configuration.
 
             Returns
             -------
-            config: Configuration()
-                initial incumbent configuration
-        '''
+            config: Configuration
+                Initial incumbent configuration.
+        """
 
         return self.scenario.cs.get_default_configuration()
