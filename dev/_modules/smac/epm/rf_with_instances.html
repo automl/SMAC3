@@ -322,7 +322,6 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">rf_opts</span> <span class="o">=</span> <span class="n">regression</span><span class="o">.</span><span class="n">forest_opts</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rf_opts</span><span class="o">.</span><span class="n">num_trees</span> <span class="o">=</span> <span class="n">num_trees</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rf_opts</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rf_opts</span><span class="o">.</span><span class="n">do_bootstrapping</span> <span class="o">=</span> <span class="n">do_bootstrapping</span>
         <span class="n">max_features</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">ratio_features</span> <span class="o">&gt;</span> <span class="mf">1.0</span> <span class="k">else</span> \
             <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">ratio_features</span><span class="p">))</span>
