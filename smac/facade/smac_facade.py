@@ -39,6 +39,7 @@ __license__ = "3-clause BSD"
 
 
 class SMAC(object):
+    """Facade to use SMAC default mode"""
 
     def __init__(self,
                  scenario: Scenario,
@@ -54,8 +55,9 @@ class SMAC(object):
                  initial_configurations: typing.List[Configuration]=None,
                  stats: Stats=None,
                  rng: np.random.RandomState=None):
-        '''
-        Facade to use SMAC default mode
+        """
+
+        Constructor
 
         Parameters
         ----------
@@ -94,7 +96,7 @@ class SMAC(object):
             optional stats object
         rng: np.random.RandomState
             Random number generator
-        '''
+        """
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
@@ -309,19 +311,22 @@ class SMAC(object):
                            acquisition_func=acquisition_function,
                            rng=rng)
 
-    def _get_rng(self, rng):
-        '''
-            initial random number generator
+    @staticmethod
+    def _get_rng(rng):
+        """Initialize random number generator
 
-            Arguments
-            ---------
+        If rng is None, initialize a new generator
+        If rng is Int, create RandomState from that
+        If rng is RandomState, return it
+
+            Parameters
+            ----------
             rng: np.random.RandomState|int|None
 
             Returns
             -------
             int, np.random.RandomState
-        '''
-
+        """
         # initialize random number generator
         if rng is None:
             num_run = np.random.randint(1234567980)
@@ -338,19 +343,13 @@ class SMAC(object):
         return num_run, rng
 
     def optimize(self):
-        '''
-            optimize the algorithm provided in scenario (given in constructor)
+        """
+        Optimizes the algorithm provided in scenario (given in constructor)
 
-            Arguments
-            ---------
-            max_iters: int
-                maximal number of iterations
-
-            Returns
-            -------
-            incumbent: Configuration
-                optimized parameters
-        '''
+        Returns
+        ----------
+        incumbent
+        """
         incumbent = None
         try:
             incumbent = self.solver.run()
@@ -367,7 +366,7 @@ class SMAC(object):
         return incumbent
 
     def get_tae_runner(self):
-        '''
+        """
             Returns target algorithm evaluator (TAE) object
             which can run the target algorithm given a
             configuration
@@ -375,32 +374,32 @@ class SMAC(object):
             Returns
             -------
             TAE: smac.tae.execute_ta_run.ExecuteTARun
-        '''
+        """
         return self.solver.intensifier.tae_runner
 
     def get_runhistory(self):
-        '''
+        """
             Returns the runhistory
             (i.e., all evaluated configurations and the results).
 
             Returns
             -------
             Runhistory: smac.runhistory.runhistory.RunHistory
-        '''
+        """
         if not hasattr(self, 'runhistory'):
             raise ValueError('SMAC was not fitted yet. Call optimize() prior '
                              'to accessing the runhistory.')
         return self.runhistory
 
     def get_trajectory(self):
-        '''
+        """
             Returns the trajectory
             (i.e., all incumbent configurations over time).
 
             Returns
             -------
             Trajectory : List of :class:`~smac.utils.io.traj_logging.TrajEntry`
-        '''
+        """
 
         if not hasattr(self, 'trajectory'):
             raise ValueError('SMAC was not fitted yet. Call optimize() prior '
@@ -408,7 +407,7 @@ class SMAC(object):
         return self.trajectory
 
     def get_X_y(self):
-        '''
+        """
             Simple interface to obtain all data in runhistory
             in ``X, y`` format.
 
@@ -423,5 +422,5 @@ class SMAC(object):
                 vector of cost values; can include censored runs
             cen: numpy.ndarray
                 vector of bools indicating whether the y-value is censored
-        '''
+        """
         return self.solver.rh2EPM.get_X_y(self.runhistory)

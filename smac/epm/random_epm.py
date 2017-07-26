@@ -16,6 +16,8 @@ class RandomEPM(AbstractEPM):
 
     def __init__(self, rng: np.random.RandomState, **kwargs):
         """
+        Constructor
+
         Parameters
         ----------
         rng : np.random.RandomState
