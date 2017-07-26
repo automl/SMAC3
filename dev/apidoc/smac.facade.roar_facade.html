@@ -257,6 +257,123 @@
 <dt id="smac.facade.roar_facade.ROAR">
 <em class="property">class </em><code class="descclassname">smac.facade.roar_facade.</code><code class="descname">ROAR</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>tae_runner: smac.tae.execute_ta_run.ExecuteTARun = None</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory = None</em>, <em>intensifier: smac.intensification.intensification.Intensifier = None</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign = None</em>, <em>initial_configurations: typing.List[ConfigSpace.configuration_space.Configuration] = None</em>, <em>stats: smac.stats.stats.Stats = None</em>, <em>rng: mtrand.RandomState = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/roar_facade.html#ROAR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.roar_facade.ROAR" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC" title="smac.facade.smac_facade.SMAC"><code class="xref py py-class docutils literal"><span class="pre">smac.facade.smac_facade.SMAC</span></code></a></p>
+<p>Facade to use ROAR mode</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>smac.scenario.scenario.Scenario</em></a>) – Scenario object</li>
+<li><strong>tae_runner</strong> (<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><em>smac.tae.execute_ta_run.ExecuteTARun</em></a><em> or </em><em>callable</em>) – Callable or implementation of
+<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><code class="xref py py-class docutils literal"><span class="pre">ExecuteTARun</span></code></a>. In case a
+callable is passed it will be wrapped by
+<a class="reference internal" href="smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict" title="smac.tae.execute_func.ExecuteTAFuncDict"><code class="xref py py-class docutils literal"><span class="pre">ExecuteTAFuncDict</span></code></a>.
+If not set, it will be initialized with the
+<a class="reference internal" href="smac.tae.execute_ta_run_old.html#smac.tae.execute_ta_run_old.ExecuteTARunOld" title="smac.tae.execute_ta_run_old.ExecuteTARunOld"><code class="xref py py-class docutils literal"><span class="pre">ExecuteTARunOld</span></code></a>.</li>
+<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – Runhistory to store all algorithm runs</li>
+<li><strong>intensifier</strong> (<a class="reference internal" href="smac.intensification.intensification.html#smac.intensification.intensification.Intensifier" title="smac.intensification.intensification.Intensifier"><em>Intensifier</em></a>) – intensification object to issue a racing to decide the current incumbent</li>
+<li><strong>initial_design</strong> (<a class="reference internal" href="smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign" title="smac.initial_design.initial_design.InitialDesign"><em>InitialDesign</em></a>) – initial sampling design</li>
+<li><strong>initial_configurations</strong> (<em>typing.List</em><em>[</em><em>Configuration</em><em>]</em>) – list of initial configurations for initial design –
+cannot be used together with initial_design</li>
+<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – optional stats object</li>
+<li><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="smac.facade.roar_facade.ROAR.get_X_y">
+<code class="descname">get_X_y</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.roar_facade.ROAR.get_X_y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple interface to obtain all data in runhistory
+in <code class="docutils literal"><span class="pre">X,</span> <span class="pre">y</span></code> format.</p>
+<p>Uses
+<a class="reference internal" href="smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y" title="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y"><code class="xref py py-meth docutils literal"><span class="pre">smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>X</strong> (<em>numpy.ndarray</em>) – matrix of all configurations (+ instance features)</li>
+<li><strong>y</strong> (<em>numpy.ndarray</em>) – vector of cost values; can include censored runs</li>
+<li><strong>cen</strong> (<em>numpy.ndarray</em>) – vector of bools indicating whether the y-value is censored</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.facade.roar_facade.ROAR.get_runhistory">
+<code class="descname">get_runhistory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.roar_facade.ROAR.get_runhistory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the runhistory
+(i.e., all evaluated configurations and the results).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>Runhistory</strong></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.facade.roar_facade.ROAR.get_tae_runner">
+<code class="descname">get_tae_runner</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.roar_facade.ROAR.get_tae_runner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns target algorithm evaluator (TAE) object
+which can run the target algorithm given a
+configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>TAE</strong></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun">smac.tae.execute_ta_run.ExecuteTARun</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.facade.roar_facade.ROAR.get_trajectory">
+<code class="descname">get_trajectory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.roar_facade.ROAR.get_trajectory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the trajectory
+(i.e., all incumbent configurations over time).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>Trajectory</strong></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">List of <a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajEntry" title="smac.utils.io.traj_logging.TrajEntry"><code class="xref py py-class docutils literal"><span class="pre">TrajEntry</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.facade.roar_facade.ROAR.optimize">
+<code class="descname">optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.roar_facade.ROAR.optimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>optimize the algorithm provided in scenario (given in constructor)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>max_iters</strong> (<em>int</em>) – maximal number of iterations</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>incumbent</strong> – optimized parameters</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Configuration</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 </div>

@@ -5,3 +5,4 @@ smac\.optimizer\.local\_search module
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:

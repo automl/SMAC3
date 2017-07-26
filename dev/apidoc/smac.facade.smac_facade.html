@@ -257,13 +257,48 @@
 <dt id="smac.facade.smac_facade.SMAC">
 <em class="property">class </em><code class="descclassname">smac.facade.smac_facade.</code><code class="descname">SMAC</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>tae_runner=None</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory = None</em>, <em>intensifier: smac.intensification.intensification.Intensifier = None</em>, <em>acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction = None</em>, <em>model: smac.epm.base_epm.AbstractEPM = None</em>, <em>runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM = None</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign = None</em>, <em>initial_configurations: typing.List[ConfigSpace.configuration_space.Configuration] = None</em>, <em>stats: smac.stats.stats.Stats = None</em>, <em>rng: mtrand.RandomState = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_facade.html#SMAC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_facade.SMAC" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Facade to use SMAC default mode</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – Scenario object</li>
+<li><strong>tae_runner</strong> (<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><em>ExecuteTARun</em></a><em> or </em><em>callable</em>) – Callable or implementation of
+<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><code class="xref py py-class docutils literal"><span class="pre">ExecuteTARun</span></code></a>. In case a
+callable is passed it will be wrapped by
+<a class="reference internal" href="smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict" title="smac.tae.execute_func.ExecuteTAFuncDict"><code class="xref py py-class docutils literal"><span class="pre">ExecuteTAFuncDict</span></code></a>.
+If not set, it will be initialized with the
+<a class="reference internal" href="smac.tae.execute_ta_run_old.html#smac.tae.execute_ta_run_old.ExecuteTARunOld" title="smac.tae.execute_ta_run_old.ExecuteTARunOld"><code class="xref py py-class docutils literal"><span class="pre">ExecuteTARunOld</span></code></a>.</li>
+<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory to store all algorithm runs</li>
+<li><strong>intensifier</strong> (<a class="reference internal" href="smac.intensification.intensification.html#smac.intensification.intensification.Intensifier" title="smac.intensification.intensification.Intensifier"><em>Intensifier</em></a>) – intensification object to issue a racing to decide the current
+incumbent</li>
+<li><strong>acquisition_function</strong> (<a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – Object that implements the <a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal"><span class="pre">AbstractAcquisitionFunction</span></code></a>.
+Will use <a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.EI" title="smac.optimizer.acquisition.EI"><code class="xref py py-class docutils literal"><span class="pre">EI</span></code></a> if not set.</li>
+<li><strong>model</strong> (<a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><em>AbstractEPM</em></a>) – Model that implements train() and predict(). Will use a
+<a class="reference internal" href="smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances" title="smac.epm.rf_with_instances.RandomForestWithInstances"><code class="xref py py-class docutils literal"><span class="pre">RandomForestWithInstances</span></code></a> if not set.</li>
+<li><strong>runhistory2epm</strong> (<em>RunHistory2EMP</em>) – Object that implements the AbstractRunHistory2EPM. If None,
+will use <a class="reference internal" href="smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost" title="smac.runhistory.runhistory2epm.RunHistory2EPM4Cost"><code class="xref py py-class docutils literal"><span class="pre">RunHistory2EPM4Cost</span></code></a>
+if objective is cost or
+<a class="reference internal" href="smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost" title="smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost"><code class="xref py py-class docutils literal"><span class="pre">RunHistory2EPM4LogCost</span></code></a>
+if objective is runtime.</li>
+<li><strong>initial_design</strong> (<a class="reference internal" href="smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign" title="smac.initial_design.initial_design.InitialDesign"><em>InitialDesign</em></a>) – initial sampling design</li>
+<li><strong>initial_configurations</strong> (<em>typing.List</em><em>[</em><em>Configuration</em><em>]</em>) – list of initial configurations for initial design –
+cannot be used together with initial_design</li>
+<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – optional stats object</li>
+<li><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="smac.facade.smac_facade.SMAC.get_X_y">
 <code class="descname">get_X_y</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_facade.html#SMAC.get_X_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_facade.SMAC.get_X_y" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simple interface to obtain all data in runhistory
-in X, y format.</p>
+in <code class="docutils literal"><span class="pre">X,</span> <span class="pre">y</span></code> format.</p>
 <p>Uses
-smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y().</p>
+<a class="reference internal" href="smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y" title="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y"><code class="xref py py-meth docutils literal"><span class="pre">smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -323,10 +358,9 @@ configuration</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>Trajectory</strong> – [‘train_perf’, ‘incumbent_id’, ‘incumbent’,
-‘ta_runs’, ‘ta_time_used’, ‘wallclock_time’]</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>Trajectory</strong></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">NamedTuple (util.io.traj_logging.TrajEntry)</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">List of <a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajEntry" title="smac.utils.io.traj_logging.TrajEntry"><code class="xref py py-class docutils literal"><span class="pre">TrajEntry</span></code></a></td>
 </tr>
 </tbody>
 </table>

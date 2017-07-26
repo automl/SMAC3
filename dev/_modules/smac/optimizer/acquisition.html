@@ -351,10 +351,9 @@
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes for a given x the expected improvement as</span>
 <span class="sd">        acquisition value.</span>
-<span class="sd">        :math:`EI(X) :=</span>
-<span class="sd">            \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) -</span>
-<span class="sd">                f_{t+1}(\mathbf{X}) - \xi\right] \} ]`, with</span>
-<span class="sd">        :math:`f(X^+)` as the incumbent.</span>
+
+<span class="sd">        :math:`EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]`,</span>
+<span class="sd">        with :math:`f(X^+)` as the incumbent.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -422,10 +421,7 @@
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes for a given x the expected improvement as</span>
 <span class="sd">        acquisition value.</span>
-<span class="sd">        :math:`EI(X) :=</span>
-<span class="sd">            \frac{\mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) -</span>
-<span class="sd">                  f_{t+1}(\mathbf{X}) - \xi\right] \} ]}</span>
-<span class="sd">                  {np.log10(r(x))}`,</span>
+<span class="sd">        :math:`EI(X) := \frac{\mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]} {np.log10(r(x))}`,</span>
 <span class="sd">        with :math:`f(X^+)` as the incumbent and :math:`r(x)` as runtime.</span>
 
 <span class="sd">        Parameters</span>
@@ -433,7 +429,7 @@
 <span class="sd">        model : AbstractEPM</span>
 <span class="sd">            A model that implements at least</span>
 <span class="sd">                 - predict_marginalized_over_instances(X) returning a tuples of</span>
-<span class="sd">                 predicted cost and running time</span>
+<span class="sd">                   predicted cost and running time</span>
 <span class="sd">        par : float, default=0.0</span>
 <span class="sd">            Controls the balance between exploration and exploitation of the</span>
 <span class="sd">            acquisition function.</span>

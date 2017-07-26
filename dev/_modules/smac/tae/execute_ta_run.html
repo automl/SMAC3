@@ -264,7 +264,7 @@
 <span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.0.1&quot;</span>
 
 
-<div class="viewcode-block" id="StatusType"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType">[docs]</a><span class="k">class</span> <span class="nc">StatusType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="StatusType"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_func.StatusType">[docs]</a><span class="k">class</span> <span class="nc">StatusType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        class to define numbers for status types</span>
@@ -276,7 +276,7 @@
     <span class="n">MEMOUT</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="n">CAPPED</span> <span class="o">=</span> <span class="mi">6</span>
 
-<div class="viewcode-block" id="StatusType.enum_hook"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType.enum_hook">[docs]</a>    <span class="k">def</span> <span class="nf">enum_hook</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">enum_hook</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Hook function passed to json-deserializer as &quot;object_hook&quot;.</span>
 <span class="sd">        EnumEncoder in runhistory/runhistory.</span>
@@ -286,33 +286,33 @@
             <span class="n">name</span><span class="p">,</span> <span class="n">member</span> <span class="o">=</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;__enum__&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;StatusType&quot;</span><span class="p">:</span>
                 <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">globals</span><span class="p">()[</span><span class="n">name</span><span class="p">],</span> <span class="n">member</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">obj</span></div></div>
+        <span class="k">return</span> <span class="n">obj</span></div>
 
 
-<div class="viewcode-block" id="BudgetExhaustedException"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.BudgetExhaustedException">[docs]</a><span class="k">class</span> <span class="nc">BudgetExhaustedException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="BudgetExhaustedException"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_func.BudgetExhaustedException">[docs]</a><span class="k">class</span> <span class="nc">BudgetExhaustedException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Exception indicating that time- or memory-budgets are exhausted. &quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="TAEAbortException"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.TAEAbortException">[docs]</a><span class="k">class</span> <span class="nc">TAEAbortException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="TAEAbortException"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_func.TAEAbortException">[docs]</a><span class="k">class</span> <span class="nc">TAEAbortException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Exception indicating that the target algorithm suggests an ABORT of</span>
 <span class="sd">    SMAC, usually because it assumes that all further runs will surely fail.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="FirstRunCrashedException"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.FirstRunCrashedException">[docs]</a><span class="k">class</span> <span class="nc">FirstRunCrashedException</span><span class="p">(</span><span class="n">TAEAbortException</span><span class="p">):</span>
+<div class="viewcode-block" id="FirstRunCrashedException"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_func.FirstRunCrashedException">[docs]</a><span class="k">class</span> <span class="nc">FirstRunCrashedException</span><span class="p">(</span><span class="n">TAEAbortException</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Exception indicating that the first run crashed (depending on options</span>
 <span class="sd">    this could trigger an ABORT of SMAC.) &quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="CappedRunException"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.CappedRunException">[docs]</a><span class="k">class</span> <span class="nc">CappedRunException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="CappedRunException"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_func.CappedRunException">[docs]</a><span class="k">class</span> <span class="nc">CappedRunException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Exception indicating that a run was capped with a cutoff smaller than the actual timeout &quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="ExecuteTARun"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun">[docs]</a><span class="k">class</span> <span class="nc">ExecuteTARun</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="ExecuteTARun"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_func.ExecuteTARun">[docs]</a><span class="k">class</span> <span class="nc">ExecuteTARun</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        executes a target algorithm run with a given configuration</span>
@@ -358,7 +358,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_supports_memory_limit</span> <span class="o">=</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="ExecuteTARun.start"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+<div class="viewcode-block" id="ExecuteTARun.start"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_func.ExecuteTARun.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
               <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
               <span class="n">cutoff</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
               <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">12345</span><span class="p">,</span>
@@ -468,7 +468,7 @@
 
         <span class="k">return</span> <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">additional_info</span></div>
 
-<div class="viewcode-block" id="ExecuteTARun.run"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span>
+<div class="viewcode-block" id="ExecuteTARun.run"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_func.ExecuteTARun.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span>
             <span class="n">cutoff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">seed</span><span class="o">=</span><span class="mi">12345</span><span class="p">,</span>
             <span class="n">instance_specific</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">):</span>

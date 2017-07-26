@@ -264,13 +264,17 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        target_names : list</span>
-<span class="sd">            List of str, each entry is the name of one target dimension.</span>
+<span class="sd">            List of str, each entry is the name of one target dimension. Length</span>
+<span class="sd">            of the list will be ``n_objectives``.</span>
+
+<span class="sd">        bounds : np.ndarray</span>
+<span class="sd">            See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.</span>
 
 <span class="sd">        types : np.ndarray</span>
-<span class="sd">            See RandomForestWithInstances documentation</span>
+<span class="sd">            See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.</span>
 
 <span class="sd">        kwargs</span>
-<span class="sd">            See RandomForestWithInstances documentation</span>
+<span class="sd">            See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>

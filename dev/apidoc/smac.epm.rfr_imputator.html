@@ -257,21 +257,44 @@
 <dt id="smac.epm.rfr_imputator.RFRImputator">
 <em class="property">class </em><code class="descclassname">smac.epm.rfr_imputator.</code><code class="descname">RFRImputator</code><span class="sig-paren">(</span><em>rs</em>, <em>cutoff</em>, <em>threshold</em>, <em>model</em>, <em>change_threshold=0.01</em>, <em>max_iter=2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/rfr_imputator.html#RFRImputator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.epm.base_imputor.html#smac.epm.base_imputor.BaseImputor" title="smac.epm.base_imputor.BaseImputor"><code class="xref py py-class docutils literal"><span class="pre">smac.epm.base_imputor.BaseImputor</span></code></a></p>
-<p>Uses an rfr to do imputation</p>
-<dl class="method">
-<dt id="smac.epm.rfr_imputator.RFRImputator.impute">
-<code class="descname">impute</code><span class="sig-paren">(</span><em>censored_X</em>, <em>censored_y</em>, <em>uncensored_X</em>, <em>uncensored_y</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/rfr_imputator.html#RFRImputator.impute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator.impute" title="Permalink to this definition">¶</a></dt>
-<dd><p>impute runs and returns imputed y values</p>
+<p>Imputor using pyrfr’s Random Forest regressor.</p>
+<p>initialize imputator module</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>censored_X</strong> (<em>array</em>) – X matrix of censored data</li>
-<li><strong>censored_y</strong> (<em>array</em>) – y matrix of censored data</li>
-<li><strong>uncensored_X</strong> (<em>array</em>) – X matrix of uncensored data</li>
-<li><strong>uncensored_y</strong> (<em>array</em>) – y matrix of uncensored data</li>
+<li><strong>rs</strong> (<em>random state generator</em>) – </li>
+<li><strong>cutoff</strong> (<em>float</em>) – Cutoff value used for this scenario.</li>
+<li><strong>threshold</strong> (<em>float</em>) – Highest possible values (e.g. cutoff * par).</li>
+<li><strong>model</strong> – epm model (i.e. RandomForestWithInstances)</li>
+<li><strong>change_threshold</strong> (<em>float</em>) – Stop imputation if change is less than this.</li>
+<li><strong>max_iter</strong> (<em>int</em>) – Maximum number of iteration.</li>
 </ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="smac.epm.rfr_imputator.RFRImputator.impute">
+<code class="descname">impute</code><span class="sig-paren">(</span><em>censored_X: numpy.ndarray</em>, <em>censored_y: numpy.ndarray</em>, <em>uncensored_X: numpy.ndarray</em>, <em>uncensored_y: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/rfr_imputator.html#RFRImputator.impute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator.impute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Imputes censored runs and returns new y values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>censored_X</strong> (<em>np.ndarray</em><em> [</em><em>N</em><em>, </em><em>M</em><em>]</em>) – Feature array of all censored runs.</li>
+<li><strong>censored_y</strong> (<em>np.ndarray</em><em> [</em><em>N</em><em>, </em><em>1</em><em>]</em>) – Target values for all runs censored runs.</li>
+<li><strong>uncensored_X</strong> (<em>np.ndarray</em><em> [</em><em>N</em><em>, </em><em>M</em><em>]</em>) – Feature array of all non-censored runs.</li>
+<li><strong>uncensored_y</strong> (<em>np.ndarray</em><em> [</em><em>N</em><em>, </em><em>1</em><em>]</em>) – Target values for all non-censored runs.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>imputed_y</strong> – Same shape as censored_y [N, 1]</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">np.ndarray</p>
 </td>
 </tr>
 </tbody>

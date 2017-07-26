@@ -257,10 +257,33 @@
 <dt id="smac.initial_design.multi_config_initial_design.MultiConfigInitialDesign">
 <em class="property">class </em><code class="descclassname">smac.initial_design.multi_config_initial_design.</code><code class="descname">MultiConfigInitialDesign</code><span class="sig-paren">(</span><em>tae_runner: smac.tae.execute_ta_run.ExecuteTARun, scenario: smac.scenario.scenario.Scenario, stats: smac.stats.stats.Stats, traj_logger: smac.utils.io.traj_logging.TrajLogger, runhistory: smac.runhistory.runhistory.RunHistory, rng: mtrand.RandomState, configs: typing.List[ConfigSpace.configuration_space.Configuration], intensifier: smac.intensification.intensification.Intensifier, aggregate_func: typing.Callable</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/initial_design/multi_config_initial_design.html#MultiConfigInitialDesign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.multi_config_initial_design.MultiConfigInitialDesign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign" title="smac.initial_design.initial_design.InitialDesign"><code class="xref py py-class docutils literal"><span class="pre">smac.initial_design.initial_design.InitialDesign</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>tae_runner</strong> (<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><em>ExecuteTARun</em></a>) – Target algorithm execution object.</li>
+<li><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – Scenario with all meta information (including configuration space).</li>
+<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – Statistics of experiments; needed in case initial design already
+exhausts the budget.</li>
+<li><strong>traj_logger</strong> (<a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger"><em>TrajLogger</em></a>) – Trajectory logging to add new incumbents found by the initial
+design.</li>
+<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – Runhistory with all target algorithm runs.</li>
+<li><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</li>
+<li><strong>configs</strong> (<em>typing.List</em><em>[</em><em>Configuration</em><em>]</em>) – List of initial configurations.</li>
+<li><strong>intensifier</strong> (<a class="reference internal" href="smac.intensification.intensification.html#smac.intensification.intensification.Intensifier" title="smac.intensification.intensification.Intensifier"><em>Intensifier</em></a>) – Intensification object to issue a racing to decide the current
+incumbent.</li>
+<li><strong>aggregate_func</strong> (<em>typing:Callable</em>) – Function to aggregate performance of a configuration across
+instances.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="smac.initial_design.multi_config_initial_design.MultiConfigInitialDesign.run">
 <code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.Configuration<a class="reference internal" href="../_modules/smac/initial_design/multi_config_initial_design.html#MultiConfigInitialDesign.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.multi_config_initial_design.MultiConfigInitialDesign.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>runs the initial design given the configurations from self.get_configs</p>
+<dd><p>Run the initial design.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

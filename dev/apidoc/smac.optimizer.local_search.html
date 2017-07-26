@@ -257,6 +257,22 @@
 <dt id="smac.optimizer.local_search.LocalSearch">
 <em class="property">class </em><code class="descclassname">smac.optimizer.local_search.</code><code class="descname">LocalSearch</code><span class="sig-paren">(</span><em>acquisition_function</em>, <em>config_space</em>, <em>epsilon=1e-05</em>, <em>max_iterations=None</em>, <em>rng=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/local_search.html#LocalSearch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.local_search.LocalSearch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Implementation of SMAC’s local search</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>acquisition_function</strong> (<em>function</em>) – The function which the local search tries to maximize</li>
+<li><strong>config_space</strong> (<em>ConfigSpace</em>) – Parameter configuration space</li>
+<li><strong>epsilon</strong> (<em>float</em>) – In order to perform a local move one of the incumbent’s neighbors
+needs at least an improvement higher than epsilon</li>
+<li><strong>max_iterations</strong> (<em>int</em>) – Maximum number of iterations that the local search will perform</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="smac.optimizer.local_search.LocalSearch.maximize">
 <code class="descname">maximize</code><span class="sig-paren">(</span><em>start_point</em>, <em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/local_search.html#LocalSearch.maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.local_search.LocalSearch.maximize" title="Permalink to this definition">¶</a></dt>

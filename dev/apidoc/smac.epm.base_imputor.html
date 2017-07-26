@@ -257,27 +257,27 @@
 <dt id="smac.epm.base_imputor.BaseImputor">
 <em class="property">class </em><code class="descclassname">smac.epm.base_imputor.</code><code class="descname">BaseImputor</code><a class="reference internal" href="../_modules/smac/epm/base_imputor.html#BaseImputor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_imputor.BaseImputor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>abstract Imputor class</p>
+<p>Abstract Imputor class</p>
 <dl class="method">
 <dt id="smac.epm.base_imputor.BaseImputor.impute">
-<code class="descname">impute</code><span class="sig-paren">(</span><em>censored_x</em>, <em>censored_y</em>, <em>uncensored_x</em>, <em>uncensored_y</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_imputor.html#BaseImputor.impute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_imputor.BaseImputor.impute" title="Permalink to this definition">¶</a></dt>
-<dd><p>impute censored runs and returns new y values</p>
+<code class="descname">impute</code><span class="sig-paren">(</span><em>censored_X: numpy.ndarray</em>, <em>censored_y: numpy.ndarray</em>, <em>uncensored_X: numpy.ndarray</em>, <em>uncensored_y: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_imputor.html#BaseImputor.impute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_imputor.BaseImputor.impute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Imputes censored runs and returns new y values.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>censored_x</strong> (<em>np.array</em><em> [</em><em>N</em><em>, </em><em>M</em><em>]</em>) – feature array of all runs that are censored</li>
-<li><strong>censored_y</strong> (<em>np.array</em><em> [</em><em>N</em><em>, </em><em>1</em><em>]</em>) – array of target values for all runs that are censored</li>
-<li><strong>uncensored_x</strong> (<em>np.array</em><em> [</em><em>N</em><em>, </em><em>M</em><em>]</em>) – feature array of all runs that are not censored</li>
-<li><strong>uncensored_y</strong> (<em>np.array</em><em> [</em><em>N</em><em>, </em><em>1</em><em>]</em>) – array of target values for all runs that are not censored</li>
+<li><strong>censored_X</strong> (<em>np.ndarray</em><em> [</em><em>N</em><em>, </em><em>M</em><em>]</em>) – Feature array of all censored runs.</li>
+<li><strong>censored_y</strong> (<em>np.ndarray</em><em> [</em><em>N</em><em>, </em><em>1</em><em>]</em>) – Target values for all runs censored runs.</li>
+<li><strong>uncensored_X</strong> (<em>np.ndarray</em><em> [</em><em>N</em><em>, </em><em>M</em><em>]</em>) – Feature array of all non-censored runs.</li>
+<li><strong>uncensored_y</strong> (<em>np.ndarray</em><em> [</em><em>N</em><em>, </em><em>1</em><em>]</em>) – Target values for all non-censored runs.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>imputed_y</strong> – same shape as censored_y [N, 1]</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>imputed_y</strong> – Same shape as censored_y [N, 1]</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">np.array</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">np.ndarray</p>
 </td>
 </tr>
 </tbody>

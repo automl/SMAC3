@@ -297,6 +297,39 @@ value is provided no limit will be enforced.</li>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="smac.tae.execute_func.AbstractTAFunc.start">
+<code class="descname">start</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em>, <em>instance: str</em>, <em>cutoff: float = None</em>, <em>seed: int = 12345</em>, <em>instance_specific: str = '0'</em>, <em>capped: bool = False</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>wrapper function for ExecuteTARun.run() to check configuration budget before the runs
+and to update stats after run</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>config</strong> (<em>Configuration</em>) – mainly a dictionary param -&gt; value</li>
+<li><strong>instance</strong> (<em>string</em>) – problem instance</li>
+<li><strong>cutoff</strong> (<em>float</em>) – runtime cutoff</li>
+<li><strong>seed</strong> (<em>int</em>) – random seed</li>
+<li><strong>instance_specific</strong> (<em>str</em>) – instance specific information (e.g., domain file or solution)</li>
+<li><strong>capped</strong> (<em>bool</em>) – if true and status is StatusType.TIMEOUT,
+uses StatusType.CAPPED</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>status</strong> (<em>enum of StatusType (int)</em>) – {SUCCESS, TIMEOUT, CRASHED, ABORT}</li>
+<li><strong>cost</strong> (<em>float</em>) – cost/regret/quality (float) (None, if not returned by TA)</li>
+<li><strong>runtime</strong> (<em>float</em>) – runtime (None if not returned by TA)</li>
+<li><strong>additional_info</strong> (<em>dict</em>) – all further additional run information</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -332,6 +365,77 @@ the target algorithm.</p>
 </tr>
 </tbody>
 </table>
+<dl class="method">
+<dt id="smac.tae.execute_func.ExecuteTAFuncArray.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>config</em>, <em>instance=None</em>, <em>cutoff=None</em>, <em>seed=12345</em>, <em>instance_specific='0'</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncArray.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>runs target algorithm &lt;self.ta&gt; with configuration &lt;config&gt; for at
+most &lt;cutoff&gt; seconds, allowing it to use at most &lt;memory_limit&gt;
+RAM.</p>
+<p>Whether the target algorithm is called with the &lt;instance&gt; and
+&lt;seed&gt; depends on the subclass implementing the actual call to
+the target algorithm.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>config</strong> (<em>dictionary</em><em> (or </em><em>similar</em><em>)</em>) – dictionary param -&gt; value</li>
+<li><strong>instance</strong> (<em>str</em>) – problem instance</li>
+<li><strong>cutoff</strong> (<em>int</em><em>, </em><em>optional</em>) – Wallclock time limit of the target algorithm. If no value is
+provided no limit will be enforced.</li>
+<li><strong>memory_limit</strong> (<em>int</em><em>, </em><em>optional</em>) – Memory limit in MB enforced on the target algorithm If no
+value is provided no limit will be enforced.</li>
+<li><strong>seed</strong> (<em>int</em>) – random seed</li>
+<li><strong>instance_specific</strong> (<em>str</em>) – instance specific information (e.g., domain file or solution)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>status</strong> (<em>enum of StatusType (int)</em>) – {SUCCESS, TIMEOUT, CRASHED, ABORT}</li>
+<li><strong>cost</strong> (<em>float</em>) – cost/regret/quality/runtime (float) (None, if not returned by TA)</li>
+<li><strong>runtime</strong> (<em>float</em>) – runtime (None if not returned by TA)</li>
+<li><strong>additional_info</strong> (<em>dict</em>) – all further additional run information</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.tae.execute_func.ExecuteTAFuncArray.start">
+<code class="descname">start</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em>, <em>instance: str</em>, <em>cutoff: float = None</em>, <em>seed: int = 12345</em>, <em>instance_specific: str = '0'</em>, <em>capped: bool = False</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncArray.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>wrapper function for ExecuteTARun.run() to check configuration budget before the runs
+and to update stats after run</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>config</strong> (<em>Configuration</em>) – mainly a dictionary param -&gt; value</li>
+<li><strong>instance</strong> (<em>string</em>) – problem instance</li>
+<li><strong>cutoff</strong> (<em>float</em>) – runtime cutoff</li>
+<li><strong>seed</strong> (<em>int</em>) – random seed</li>
+<li><strong>instance_specific</strong> (<em>str</em>) – instance specific information (e.g., domain file or solution)</li>
+<li><strong>capped</strong> (<em>bool</em>) – if true and status is StatusType.TIMEOUT,
+uses StatusType.CAPPED</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>status</strong> (<em>enum of StatusType (int)</em>) – {SUCCESS, TIMEOUT, CRASHED, ABORT}</li>
+<li><strong>cost</strong> (<em>float</em>) – cost/regret/quality (float) (None, if not returned by TA)</li>
+<li><strong>runtime</strong> (<em>float</em>) – runtime (None if not returned by TA)</li>
+<li><strong>additional_info</strong> (<em>dict</em>) – all further additional run information</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -367,6 +471,77 @@ the target algorithm.</p>
 </tr>
 </tbody>
 </table>
+<dl class="method">
+<dt id="smac.tae.execute_func.ExecuteTAFuncDict.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>config</em>, <em>instance=None</em>, <em>cutoff=None</em>, <em>seed=12345</em>, <em>instance_specific='0'</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncDict.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>runs target algorithm &lt;self.ta&gt; with configuration &lt;config&gt; for at
+most &lt;cutoff&gt; seconds, allowing it to use at most &lt;memory_limit&gt;
+RAM.</p>
+<p>Whether the target algorithm is called with the &lt;instance&gt; and
+&lt;seed&gt; depends on the subclass implementing the actual call to
+the target algorithm.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>config</strong> (<em>dictionary</em><em> (or </em><em>similar</em><em>)</em>) – dictionary param -&gt; value</li>
+<li><strong>instance</strong> (<em>str</em>) – problem instance</li>
+<li><strong>cutoff</strong> (<em>int</em><em>, </em><em>optional</em>) – Wallclock time limit of the target algorithm. If no value is
+provided no limit will be enforced.</li>
+<li><strong>memory_limit</strong> (<em>int</em><em>, </em><em>optional</em>) – Memory limit in MB enforced on the target algorithm If no
+value is provided no limit will be enforced.</li>
+<li><strong>seed</strong> (<em>int</em>) – random seed</li>
+<li><strong>instance_specific</strong> (<em>str</em>) – instance specific information (e.g., domain file or solution)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>status</strong> (<em>enum of StatusType (int)</em>) – {SUCCESS, TIMEOUT, CRASHED, ABORT}</li>
+<li><strong>cost</strong> (<em>float</em>) – cost/regret/quality/runtime (float) (None, if not returned by TA)</li>
+<li><strong>runtime</strong> (<em>float</em>) – runtime (None if not returned by TA)</li>
+<li><strong>additional_info</strong> (<em>dict</em>) – all further additional run information</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.tae.execute_func.ExecuteTAFuncDict.start">
+<code class="descname">start</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em>, <em>instance: str</em>, <em>cutoff: float = None</em>, <em>seed: int = 12345</em>, <em>instance_specific: str = '0'</em>, <em>capped: bool = False</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncDict.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>wrapper function for ExecuteTARun.run() to check configuration budget before the runs
+and to update stats after run</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>config</strong> (<em>Configuration</em>) – mainly a dictionary param -&gt; value</li>
+<li><strong>instance</strong> (<em>string</em>) – problem instance</li>
+<li><strong>cutoff</strong> (<em>float</em>) – runtime cutoff</li>
+<li><strong>seed</strong> (<em>int</em>) – random seed</li>
+<li><strong>instance_specific</strong> (<em>str</em>) – instance specific information (e.g., domain file or solution)</li>
+<li><strong>capped</strong> (<em>bool</em>) – if true and status is StatusType.TIMEOUT,
+uses StatusType.CAPPED</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>status</strong> (<em>enum of StatusType (int)</em>) – {SUCCESS, TIMEOUT, CRASHED, ABORT}</li>
+<li><strong>cost</strong> (<em>float</em>) – cost/regret/quality (float) (None, if not returned by TA)</li>
+<li><strong>runtime</strong> (<em>float</em>) – runtime (None if not returned by TA)</li>
+<li><strong>additional_info</strong> (<em>dict</em>) – all further additional run information</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 </div>

@@ -5,3 +5,4 @@ smac\.runhistory\.runhistory2epm module
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:

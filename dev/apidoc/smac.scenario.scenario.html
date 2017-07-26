@@ -258,6 +258,21 @@
 <em class="property">class </em><code class="descclassname">smac.scenario.scenario.</code><code class="descname">Scenario</code><span class="sig-paren">(</span><em>scenario</em>, <em>cmd_args=None</em>, <em>run_id=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/scenario/scenario.html#Scenario"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.scenario.scenario.Scenario" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Scenario contains the configuration of the optimization process</p>
+<p>Construct scenario object from file or dictionary.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>scenario</strong> (<em>str</em><em> or </em><em>dict</em>) – if str, it will be interpreted as to a path a scenario file
+if dict, it will be directly to get all scenario related information</li>
+<li><strong>cmd_args</strong> (<em>dict</em>) – command line arguments that were not processed by argparse</li>
+<li><strong>run_id</strong> (<em>int</em>) – run ID will be used as suffix for output_dir</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="smac.scenario.scenario.Scenario.add_argument">
 <code class="descname">add_argument</code><span class="sig-paren">(</span><em>name</em>, <em>help</em>, <em>callback=None</em>, <em>default=None</em>, <em>dest=None</em>, <em>required=False</em>, <em>mutually_exclusive_group=None</em>, <em>choice=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/scenario/scenario.html#Scenario.add_argument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.scenario.scenario.Scenario.add_argument" title="Permalink to this definition">¶</a></dt>

@@ -263,19 +263,19 @@
 
 
 <div class="viewcode-block" id="AbstractEPM"><a class="viewcode-back" href="../../../apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM">[docs]</a><span class="k">class</span> <span class="nc">AbstractEPM</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Abstract implementation of the EPM API</span>
+    <span class="sd">&quot;&quot;&quot;Abstract implementation of the EPM API.</span>
 
 <span class="sd">        Note: The input dimensionality of Y for training</span>
 <span class="sd">        and the output dimensions of all predictions</span>
-<span class="sd">        (also called n_objectives)</span>
-<span class="sd">        depend on the concrete implementation of this</span>
+<span class="sd">        (also called ``n_objectives``)</span>
+<span class="sd">        depends on the concrete implementation of this</span>
 <span class="sd">        abstract class.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">instance_features</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">pca_components</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
 
 <span class="sd">        Parameters</span>
@@ -284,10 +284,10 @@
 <span class="sd">            Contains the K dimensional instance features</span>
 <span class="sd">            of the I different instances</span>
 <span class="sd">        pca_components: float</span>
-<span class="sd">            if set to a float, use PCA to reduce dimensionality of instance features</span>
-<span class="sd">            also requires to set n_feats (&gt; pca_dims)</span>
+<span class="sd">            If set to a float, use PCA to reduce dimensionality of instance </span>
+<span class="sd">            features. Requires to set n_feats (&gt; pca_dims).</span>
 
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">instance_features</span> <span class="o">=</span> <span class="n">instance_features</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pca_components</span> <span class="o">=</span> <span class="n">pca_components</span>
         <span class="k">if</span> <span class="n">instance_features</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -306,8 +306,8 @@
         <span class="c1"># Never use a lower variance than this</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">var_threshold</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="o">-</span><span class="mi">5</span>
 
-<div class="viewcode-block" id="AbstractEPM.train"><a class="viewcode-back" href="../../../apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Trains the random forest on X and y.</span>
+<div class="viewcode-block" id="AbstractEPM.train"><a class="viewcode-back" href="../../../apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Trains the EPM on X and Y.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -319,9 +319,8 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        self : EPM</span>
-<span class="sd">            trained EPM</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        self : trained EPM</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">n_params</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_feats</span>
 
@@ -343,7 +342,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Trains the random forest on X and y.</span>
+        <span class="sd">&quot;&quot;&quot;Trains the random forest on X and y.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -356,11 +355,11 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        self</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
 <div class="viewcode-block" id="AbstractEPM.predict"><a class="viewcode-back" href="../../../apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Predict means and variances for given X.</span>
 
 <span class="sd">        Parameters</span>
@@ -374,7 +373,7 @@
 <span class="sd">            Predictive mean</span>
 <span class="sd">        vars : np.ndarray  of shape = [n_samples, n_objectives]</span>
 <span class="sd">            Predictive variance</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pca</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">X_feats</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">n_feats</span><span class="p">:]</span>
@@ -387,7 +386,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Predict means and variances for given X.</span>
 
 <span class="sd">        Parameters</span>
@@ -400,10 +399,10 @@
 <span class="sd">            Predictive mean</span>
 <span class="sd">        vars : np.ndarray  of shape = [n_samples, n_objectives]</span>
 <span class="sd">            Predictive variance</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
-<div class="viewcode-block" id="AbstractEPM.predict_marginalized_over_instances"><a class="viewcode-back" href="../../../apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.predict_marginalized_over_instances">[docs]</a>    <span class="k">def</span> <span class="nf">predict_marginalized_over_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractEPM.predict_marginalized_over_instances"><a class="viewcode-back" href="../../../apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.predict_marginalized_over_instances">[docs]</a>    <span class="k">def</span> <span class="nf">predict_marginalized_over_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Predict mean and variance marginalized over all instances.</span>
 
 <span class="sd">        Returns the predictive mean and variance marginalised over all</span>

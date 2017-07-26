@@ -286,7 +286,7 @@
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
-<div class="viewcode-block" id="SMAC"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC">[docs]</a><span class="k">class</span> <span class="nc">SMAC</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="SMAC"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC">[docs]</a><span class="k">class</span> <span class="nc">SMAC</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
@@ -307,28 +307,32 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        scenario: smac.scenario.scenario.Scenario</span>
+<span class="sd">        scenario: ~smac.scenario.scenario.Scenario</span>
 <span class="sd">            Scenario object</span>
-<span class="sd">        tae_runner: ExecuteTARun or callable</span>
-<span class="sd">            Callable or implementation of :class:`ExecuteTaRun`. In case a</span>
-<span class="sd">            callable is passed it will be wrapped by tae.ExecuteTaFunc().</span>
-<span class="sd">            If not set, tae_runner will be initialized with</span>
-<span class="sd">            the tae.ExecuteTARunOld()</span>
+<span class="sd">        tae_runner: ~smac.tae.execute_ta_run.ExecuteTARun or callable</span>
+<span class="sd">            Callable or implementation of </span>
+<span class="sd">            :class:`~smac.tae.execute_ta_run.ExecuteTARun`. In case a</span>
+<span class="sd">            callable is passed it will be wrapped by </span>
+<span class="sd">            :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.</span>
+<span class="sd">            If not set, it will be initialized with the </span>
+<span class="sd">            :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.</span>
 <span class="sd">        runhistory: RunHistory</span>
 <span class="sd">            runhistory to store all algorithm runs</span>
 <span class="sd">        intensifier: Intensifier</span>
 <span class="sd">            intensification object to issue a racing to decide the current</span>
 <span class="sd">            incumbent</span>
-<span class="sd">        acquisition_function : AcquisitionFunction</span>
-<span class="sd">            Object that implements the AbstractAcquisitionFunction. Will use</span>
-<span class="sd">            EI if not set.</span>
+<span class="sd">        acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction</span>
+<span class="sd">            Object that implements the :class:`~smac.optimizer.acquisition.AbstractAcquisitionFunction`. </span>
+<span class="sd">            Will use :class:`~smac.optimizer.acquisition.EI` if not set.</span>
 <span class="sd">        model : AbstractEPM</span>
 <span class="sd">            Model that implements train() and predict(). Will use a</span>
-<span class="sd">            RandomForest if not set.</span>
-<span class="sd">        runhistory2epm : RunHistory2EMP</span>
+<span class="sd">            :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` if not set.</span>
+<span class="sd">        runhistory2epm : ~smac.runhistory.runhistory2epm.RunHistory2EMP</span>
 <span class="sd">            Object that implements the AbstractRunHistory2EPM. If None,</span>
-<span class="sd">            will use RunHistory2EPM4Cost if objective is cost or</span>
-<span class="sd">            RunHistory2EPM4LogCost if objective is runtime.</span>
+<span class="sd">            will use :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4Cost`</span>
+<span class="sd">            if objective is cost or </span>
+<span class="sd">            :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost`</span>
+<span class="sd">            if objective is runtime.</span>
 <span class="sd">        initial_design: InitialDesign</span>
 <span class="sd">            initial sampling design</span>
 <span class="sd">        initial_configurations: typing.List[Configuration]</span>
@@ -581,7 +585,7 @@
                             <span class="s1">&#39;None, int or np.random.RandomState&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">rng</span><span class="p">)))</span>
         <span class="k">return</span> <span class="n">num_run</span><span class="p">,</span> <span class="n">rng</span>
 
-<div class="viewcode-block" id="SMAC.optimize"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SMAC.optimize"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">            optimize the algorithm provided in scenario (given in constructor)</span>
 
@@ -610,7 +614,7 @@
                                     <span class="s2">&quot;runhistory.json&quot;</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">incumbent</span></div>
 
-<div class="viewcode-block" id="SMAC.get_tae_runner"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC.get_tae_runner">[docs]</a>    <span class="k">def</span> <span class="nf">get_tae_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SMAC.get_tae_runner"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC.get_tae_runner">[docs]</a>    <span class="k">def</span> <span class="nf">get_tae_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">            Returns target algorithm evaluator (TAE) object</span>
 <span class="sd">            which can run the target algorithm given a</span>
@@ -622,7 +626,7 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">tae_runner</span></div>
 
-<div class="viewcode-block" id="SMAC.get_runhistory"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC.get_runhistory">[docs]</a>    <span class="k">def</span> <span class="nf">get_runhistory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SMAC.get_runhistory"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC.get_runhistory">[docs]</a>    <span class="k">def</span> <span class="nf">get_runhistory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">            Returns the runhistory</span>
 <span class="sd">            (i.e., all evaluated configurations and the results).</span>
@@ -636,16 +640,14 @@
                              <span class="s1">&#39;to accessing the runhistory.&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span></div>
 
-<div class="viewcode-block" id="SMAC.get_trajectory"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC.get_trajectory">[docs]</a>    <span class="k">def</span> <span class="nf">get_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SMAC.get_trajectory"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC.get_trajectory">[docs]</a>    <span class="k">def</span> <span class="nf">get_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">            Returns the trajectory</span>
 <span class="sd">            (i.e., all incumbent configurations over time).</span>
 
 <span class="sd">            Returns</span>
 <span class="sd">            -------</span>
-<span class="sd">            Trajectory: NamedTuple (util.io.traj_logging.TrajEntry)</span>
-<span class="sd">                [&#39;train_perf&#39;, &#39;incumbent_id&#39;, &#39;incumbent&#39;,</span>
-<span class="sd">                &#39;ta_runs&#39;, &#39;ta_time_used&#39;, &#39;wallclock_time&#39;]</span>
+<span class="sd">            Trajectory : List of :class:`~smac.utils.io.traj_logging.TrajEntry`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;trajectory&#39;</span><span class="p">):</span>
@@ -653,13 +655,13 @@
                              <span class="s1">&#39;to accessing the runhistory.&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span></div>
 
-<div class="viewcode-block" id="SMAC.get_X_y"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC.get_X_y">[docs]</a>    <span class="k">def</span> <span class="nf">get_X_y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SMAC.get_X_y"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC.get_X_y">[docs]</a>    <span class="k">def</span> <span class="nf">get_X_y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">            Simple interface to obtain all data in runhistory</span>
-<span class="sd">            in X, y format.</span>
+<span class="sd">            in ``X, y`` format.</span>
 
 <span class="sd">            Uses</span>
-<span class="sd">            smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y().</span>
+<span class="sd">            :meth:`smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()`.</span>
 
 <span class="sd">            Returns</span>
 <span class="sd">            -------</span>

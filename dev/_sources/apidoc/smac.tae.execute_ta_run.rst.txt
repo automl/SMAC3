@@ -5,3 +5,4 @@ smac\.tae\.execute\_ta\_run module
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:

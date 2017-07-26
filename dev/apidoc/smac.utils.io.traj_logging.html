@@ -259,6 +259,12 @@
 <dt id="smac.utils.io.traj_logging.TrajEntry">
 <em class="property">class </em><code class="descclassname">smac.utils.io.traj_logging.</code><code class="descname">TrajEntry</code><span class="sig-paren">(</span><em>train_perf</em>, <em>incumbent_id</em>, <em>incumbent</em>, <em>ta_runs</em>, <em>ta_time_used</em>, <em>wallclock_time</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<p>Create new instance of TrajEntry(train_perf, incumbent_id, incumbent, ta_runs, ta_time_used, wallclock_time)</p>
+<dl class="method">
+<dt id="smac.utils.io.traj_logging.TrajEntry.count">
+<code class="descname">count</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span> &#x2192; integer -- return number of occurrences of value<a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="smac.utils.io.traj_logging.TrajEntry.incumbent">
 <code class="descname">incumbent</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.incumbent" title="Permalink to this definition">¶</a></dt>
@@ -269,6 +275,12 @@
 <dt id="smac.utils.io.traj_logging.TrajEntry.incumbent_id">
 <code class="descname">incumbent_id</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.incumbent_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.utils.io.traj_logging.TrajEntry.index">
+<code class="descname">index</code><span class="sig-paren">(</span><em>value</em><span class="optional">[</span>, <em>start</em><span class="optional">[</span>, <em>stop</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; integer -- return first index of value.<a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises ValueError if the value is not present.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -307,6 +319,19 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>logger</strong> (<em>Logger object</em>) – </td>
+</tr>
+</tbody>
+</table>
+<p>creates output directory if not exists already</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>output_dir</strong> (<em>str</em>) – directory for logging (or None to disable logging)</li>
+<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a><em>(</em><em>)</em>) – Stats object</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>

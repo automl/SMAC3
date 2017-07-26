@@ -266,7 +266,7 @@
 
 <div class="viewcode-block" id="RFRImputator"><a class="viewcode-back" href="../../../apidoc/smac.epm.rfr_imputator.html#smac.epm.rfr_imputator.RFRImputator">[docs]</a><span class="k">class</span> <span class="nc">RFRImputator</span><span class="p">(</span><span class="n">smac</span><span class="o">.</span><span class="n">epm</span><span class="o">.</span><span class="n">base_imputor</span><span class="o">.</span><span class="n">BaseImputor</span><span class="p">):</span>
 
-    <span class="sd">&quot;&quot;&quot;Uses an rfr to do imputation&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Imputor using pyrfr&#39;s Random Forest regressor.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rs</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span>
                  <span class="n">model</span><span class="p">,</span>
@@ -279,15 +279,15 @@
 <span class="sd">        ----------</span>
 <span class="sd">        rs : random state generator</span>
 <span class="sd">        cutoff : float</span>
-<span class="sd">            cutoff value used for this scenario</span>
+<span class="sd">            Cutoff value used for this scenario.</span>
 <span class="sd">        threshold : float</span>
-<span class="sd">            highest possible values (e.g. cutoff * par)</span>
+<span class="sd">            Highest possible values (e.g. cutoff * par).</span>
 <span class="sd">        model:</span>
 <span class="sd">            epm model (i.e. RandomForestWithInstances)</span>
 <span class="sd">        change_threshold : float</span>
-<span class="sd">            stop imputation if change is less than this</span>
-<span class="sd">        max_iter : maximum number of iteration</span>
-<span class="sd">        -------</span>
+<span class="sd">            Stop imputation if change is less than this.</span>
+<span class="sd">        max_iter : int</span>
+<span class="sd">            Maximum number of iteration.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">super</span><span class="p">(</span><span class="n">RFRImputator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -303,20 +303,26 @@
         <span class="c1"># Never use a lower variance than this</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">var_threshold</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="o">-</span><span class="mi">2</span>
 
-<div class="viewcode-block" id="RFRImputator.impute"><a class="viewcode-back" href="../../../apidoc/smac.epm.rfr_imputator.html#smac.epm.rfr_imputator.RFRImputator.impute">[docs]</a>    <span class="k">def</span> <span class="nf">impute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">censored_X</span><span class="p">,</span> <span class="n">censored_y</span><span class="p">,</span> <span class="n">uncensored_X</span><span class="p">,</span> <span class="n">uncensored_y</span><span class="p">):</span>
+<div class="viewcode-block" id="RFRImputator.impute"><a class="viewcode-back" href="../../../apidoc/smac.epm.rfr_imputator.html#smac.epm.rfr_imputator.RFRImputator.impute">[docs]</a>    <span class="k">def</span> <span class="nf">impute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">censored_X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">censored_y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+               <span class="n">uncensored_X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">uncensored_y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        impute runs and returns imputed y values</span>
+<span class="sd">        Imputes censored runs and returns new y values.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        censored_X : array</span>
-<span class="sd">            X matrix of censored data</span>
-<span class="sd">        censored_y : array</span>
-<span class="sd">            y matrix of censored data</span>
-<span class="sd">        uncensored_X : array</span>
-<span class="sd">            X matrix of uncensored data</span>
-<span class="sd">        uncensored_y : array</span>
-<span class="sd">            y matrix of uncensored data</span>
+<span class="sd">        censored_X : np.ndarray [N, M]</span>
+<span class="sd">            Feature array of all censored runs.</span>
+<span class="sd">        censored_y : np.ndarray [N, 1]</span>
+<span class="sd">            Target values for all runs censored runs.</span>
+<span class="sd">        uncensored_X : np.ndarray [N, M]</span>
+<span class="sd">            Feature array of all non-censored runs.</span>
+<span class="sd">        uncensored_y : np.ndarray [N, 1]</span>
+<span class="sd">            Target values for all non-censored runs.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        imputed_y: np.ndarray</span>
+<span class="sd">            Same shape as censored_y [N, 1]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">censored_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Nothing to impute, return None&quot;</span><span class="p">)</span>

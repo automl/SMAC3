@@ -5,3 +5,4 @@ smac\.initial\_design\.initial\_design module
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:
