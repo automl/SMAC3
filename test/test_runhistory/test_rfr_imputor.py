@@ -135,7 +135,7 @@ class ImputorTest(unittest.TestCase):
             self.model = RandomForestWithInstances(types=types, bounds=bounds,
                                                    instance_features=None,
                                                    seed=1234567980)
-            imputor = rfr_imputator.RFRImputator(rs=rs,
+            imputor = rfr_imputator.RFRImputator(rng=rs,
                                                  cutoff=cutoff,
                                                  threshold=cutoff*10,
                                                  change_threshold=0.01,
@@ -155,7 +155,7 @@ class ImputorTest(unittest.TestCase):
 
     def testRealImputation(self):
         rs = numpy.random.RandomState(1)
-        imputor = rfr_imputator.RFRImputator(rs=rs,
+        imputor = rfr_imputator.RFRImputator(rng=rs,
                                              cutoff=self.scen.cutoff,
                                              threshold=self.scen.cutoff*10,
                                              change_threshold=0.01, max_iter=10,

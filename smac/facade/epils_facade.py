@@ -263,7 +263,7 @@ class EPILS(object):
                 threshold = np.log10(scenario.cutoff *
                                      scenario.par_factor)
 
-                imputor = RFRImputator(rs=rng,
+                imputor = RFRImputator(rng=rng,
                                        cutoff=cutoff,
                                        threshold=threshold,
                                        model=model,

@@ -17,7 +17,7 @@ __version__ = "0.0.1"
 
 class RandomForestWithInstances(AbstractEPM):
 
-    '''
+    """
     Interface to the random forest that takes instance features
     into account.
 
@@ -25,7 +25,7 @@ class RandomForestWithInstances(AbstractEPM):
     ----------
     types: np.ndarray (D)
         Specifies the number of categorical values of an input dimension where
-        the i-th entry corresponds to the i-th input dimension. Let's say we 
+        the i-th entry corresponds to the i-th input dimension. Let's say we
         have 2 dimension where the first dimension consists of 3 different
         categorical choices and the second dimension is continuous than we
         have to pass np.array([2, 0]). Note that we count starting from 0.
@@ -36,7 +36,8 @@ class RandomForestWithInstances(AbstractEPM):
     do_bootstrapping: bool
         Turns on / off bootstrapping in the random forest.
     n_points_per_tree: int
-        Number of points per tree. If <= 0 X.shape[0] will be used in _train(X, y) instead
+        Number of points per tree. If <= 0 X.shape[0] will be used
+        in _train(X, y) instead
     ratio_features: float
         The ratio of features that are considered for splitting.
     min_samples_split: int
@@ -46,24 +47,26 @@ class RandomForestWithInstances(AbstractEPM):
     max_depth: int
         The maximum depth of a single tree.
     eps_purity: float
-
+        The minimum difference between two target values to be considered
+        different
     max_num_nodes: int
-
+        The maxmimum total number of nodes in a tree
     seed: int
         The seed that is passed to the random_forest_run library.
-    '''
+    """
 
-    def __init__(self, types, bounds,
-                 num_trees=10,
-                 do_bootstrapping=True,
-                 n_points_per_tree=-1,
-                 ratio_features=5. / 6.,
-                 min_samples_split=3,
-                 min_samples_leaf=3,
-                 max_depth=20,
-                 eps_purity=1e-8,
-                 max_num_nodes=2**20,
-                 seed=42,
+    def __init__(self, types: np.ndarray,
+                 bounds: np.ndarray,
+                 num_trees: int=10,
+                 do_bootstrapping: bool=True,
+                 n_points_per_tree: int=-1,
+                 ratio_features: float=5. / 6.,
+                 min_samples_split: int=3,
+                 min_samples_leaf: int=3,
+                 max_depth: int=20,
+                 eps_purity: int=1e-8,
+                 max_num_nodes: int=2**20,
+                 seed: int=42,
                  **kwargs):
 
         super().__init__(**kwargs)
@@ -94,9 +97,10 @@ class RandomForestWithInstances(AbstractEPM):
                        min_samples_leaf, max_depth, eps_purity, seed]
         self.seed = seed
 
-        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
+        self.logger = logging.getLogger(self.__module__ + "." +
+                                        self.__class__.__name__)
 
-    def _train(self, X, y, **kwargs):
+    def _train(self, X: np.ndarray, y: np.ndarray, **kwargs):
         """Trains the random forest on X and y.
 
         Parameters
@@ -124,8 +128,9 @@ class RandomForestWithInstances(AbstractEPM):
         self.rf.fit(data, rng=self.rng)
         return self
 
-    def __init_data_container(self, X, y):
-        """Fills a pyrfr default data container, s.t. the forest knows categoricals and bounds for continous data
+    def __init_data_container(self, X: np.ndarray, y: np.ndarray):
+        """Fills a pyrfr default data container, s.t. the forest knows
+        categoricals and bounds for continous data
         
         Parameters
         ----------
@@ -152,12 +157,13 @@ class RandomForestWithInstances(AbstractEPM):
             data.add_data_point(row_X, row_y)
         return data
 
-    def _predict(self, X):
+    def _predict(self, X: np.ndarray):
         """Predict means and variances for given X.
 
         Parameters
         ----------
-        X : np.ndarray of shape = [n_samples, n_features (config + instance features)]
+        X : np.ndarray of shape = [n_samples,
+                                   n_features (config + instance features)]
 
         Returns
         -------

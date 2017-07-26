@@ -5,30 +5,32 @@ from smac.epm.rf_with_instances import RandomForestWithInstances
 
 
 class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
-    def __init__(self, target_names, bounds, types, **kwargs):
-        """Wrapper for the random forest to predict multiple targets.
 
-        Only the a list with the target names and the types array for the
-        underlying forest model are mandatory. All other hyperparameters to
-        the random forest can be passed via kwargs. Consult the documentation of
-        the random forest for the hyperparameters and their meanings.
+    """Wrapper for the random forest to predict multiple targets.
 
-        Parameters
-        ----------
-        target_names : list
-            List of str, each entry is the name of one target dimension. Length
-            of the list will be ``n_objectives``.
+    Only the a list with the target names and the types array for the
+    underlying forest model are mandatory. All other hyperparameters to
+    the random forest can be passed via kwargs. Consult the documentation of
+    the random forest for the hyperparameters and their meanings.
 
-        bounds : np.ndarray
-            See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
+    Parameters
+    ----------
+    target_names : list
+        List of str, each entry is the name of one target dimension. Length
+        of the list will be ``n_objectives``.
 
-        types : np.ndarray
-            See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
+    bounds : np.ndarray
+        See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
 
-        kwargs
-            See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
+    types : np.ndarray
+        See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
 
-        """
+    kwargs
+        See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
+    """
+
+    def __init__(self, target_names, bounds: np.ndarray, types: np.ndarray,
+                 **kwargs):
         super().__init__(**kwargs)
         
         self.target_names = target_names
@@ -37,7 +39,7 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
                            for i in range(self.num_targets)]
 
 
-    def _train(self, X, Y, **kwargs):
+    def _train(self, X: np.ndarray, Y: np.ndarray, **kwargs):
         """Trains the random forest on X and y.
 
         Parameters
@@ -57,7 +59,7 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
 
         return self
 
-    def _predict(self, X):
+    def _predict(self, X: np.ndarray):
         """Predict means and variances for given X.
 
         Parameters
@@ -80,7 +82,7 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
             var[:, i] = v.flatten()
         return mean, var
 
-    def predict_marginalized_over_instances(self, X):
+    def predict_marginalized_over_instances(self, X: np.ndarray):
         """Predict mean and variance marginalized over all instances.
 
         Returns the predictive mean and variance marginalised over all
