@@ -249,7 +249,7 @@ class EPILS_Solver(object):
                     run_history=self.runhistory,
                     aggregate_func=self.aggregate_func,
                     time_bound=0.01,
-                    log_traj=True)
+                    log_traj=False)
                 
                 # first improvement SLS
                 if incumbent != prev_incumbent:
