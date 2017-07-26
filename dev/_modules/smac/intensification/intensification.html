@@ -351,6 +351,9 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_num_run</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span> <span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_min_time</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**-</span><span class="mi">5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_min_chall</span> <span class="o">=</span> <span class="mi">2</span>
 
 <div class="viewcode-block" id="Intensifier.intensify"><a class="viewcode-back" href="../../../apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier.intensify">[docs]</a>    <span class="k">def</span> <span class="nf">intensify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">challengers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
                   <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
@@ -389,8 +392,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="n">time_bound</span> <span class="o">&lt;</span> <span class="mf">0.01</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;time_bound must be &gt;= 0.01&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">time_bound</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_time</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;time_bound must be &gt;= </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_min_time</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_num_run</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span> <span class="o">=</span> <span class="mi">0</span>
@@ -433,11 +436,11 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Budget exhausted; Return incumbent&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">incumbent</span><span class="p">,</span> <span class="n">inc_perf</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_run</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_limit</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_chall</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_run</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_limit</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                     <span class="s2">&quot;Maximum #runs for intensification reached&quot;</span><span class="p">)</span>
                 <span class="k">break</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">-</span> <span class="n">time_bound</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_chall</span> <span class="ow">and</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">-</span> <span class="n">time_bound</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Timelimit for intensification reached (&quot;</span>
                                   <span class="s2">&quot;used: </span><span class="si">%f</span><span class="s2"> sec, available: </span><span class="si">%f</span><span class="s2"> sec)&quot;</span> <span class="o">%</span> <span class="p">(</span>
                                       <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span><span class="p">,</span> <span class="n">time_bound</span><span class="p">))</span>
