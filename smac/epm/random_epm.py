@@ -14,7 +14,7 @@ __version__ = "0.0.1"
 class RandomEPM(AbstractEPM):
     """EPM which returns random values on a call to ``fit``."""
 
-    def __init__(self, rng, **kwargs):
+    def __init__(self, rng: np.random.RandomState, **kwargs):
         """
         Parameters
         ----------
