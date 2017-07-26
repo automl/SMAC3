@@ -6,7 +6,6 @@ from smac.tae.execute_ta_run import ExecuteTARun
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
 from smac.scenario.scenario import Scenario
-from smac.runhistory.runhistory import RunHistory
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -14,6 +13,7 @@ __license__ = "3-clause BSD"
 
 
 class RandomConfiguration(SingleConfigInitialDesign):
+    """ Initial design that evaluates a single random configuration"""
 
     def __init__(self,
                  tae_runner: ExecuteTARun,
@@ -51,7 +51,6 @@ class RandomConfiguration(SingleConfigInitialDesign):
             Returns
             -------
             config: Configuration()
-                initial incumbent configuration
+                Initial incumbent configuration
         """
-
         return self.scenario.cs.sample_configuration()
