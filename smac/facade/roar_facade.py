@@ -22,6 +22,7 @@ __license__ = "3-clause BSD"
 
 
 class ROAR(SMAC):
+    """Facade to use ROAR mode"""
 
     def __init__(self,
                  scenario: Scenario,
@@ -32,8 +33,8 @@ class ROAR(SMAC):
                  initial_configurations: typing.List[Configuration]=None,
                  stats: Stats=None,
                  rng: np.random.RandomState=None):
-        '''
-        Facade to use ROAR mode
+        """
+        Constructor
 
         Parameters
         ----------
@@ -59,7 +60,7 @@ class ROAR(SMAC):
             optional stats object
         rng: np.random.RandomState
             Random number generator
-        '''
+        """
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         # initial random number generator

@@ -39,6 +39,8 @@ __license__ = "3-clause BSD"
 
 
 class EPILS(object):
+    """Facade to use SMAC default mode"""
+
 
     def __init__(self,
                  scenario: Scenario,
@@ -54,8 +56,8 @@ class EPILS(object):
                  initial_configurations: typing.List[Configuration]=None,
                  stats: Stats=None,
                  rng: np.random.RandomState=None):
-        '''
-        Facade to use SMAC default mode
+        """
+        Constructor
 
         Parameters
         ----------
@@ -90,7 +92,7 @@ class EPILS(object):
             optional stats object
         rng: np.random.RandomState
             Random number generator
-        '''
+        """
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
@@ -123,10 +125,11 @@ class EPILS(object):
         # initial EPM
         types, bounds = get_types(scenario.cs, scenario.feature_array)
         if model is None:
-            model = RandomForestWithInstances(types=types, bounds=bounds,
-                                              instance_features=scenario.feature_array,
-                                              seed=rng.randint(MAXINT),
-                                              pca_components=scenario.PCA_DIM)
+            model = RandomForestWithInstances(
+                    types=types, bounds=bounds,
+                    instance_features=scenario.feature_array,
+                    seed=rng.randint(MAXINT),
+                    pca_components=scenario.PCA_DIM)
         # initial acquisition function
         if acquisition_function is None:
             if scenario.run_obj == "runtime":
@@ -304,18 +307,22 @@ class EPILS(object):
                                    acquisition_func=acquisition_function,
                                    rng=rng)
 
-    def _get_rng(self, rng):
-        '''
-            initial random number generator
+    @staticmethod
+    def _get_rng(rng):
+        """Initialize random number generator
 
-            Arguments
-            ---------
+        If rng is None, initialize a new generator
+        If rng is Int, create RandomState from that
+        If rng is RandomState, return it
+
+            Parameters
+            ----------
             rng: np.random.RandomState|int|None
 
             Returns
             -------
             int, np.random.RandomState
-        '''
+        """
 
         # initialize random number generator
         if rng is None:
@@ -333,14 +340,13 @@ class EPILS(object):
         return num_run, rng
 
     def optimize(self):
-        '''
-            optimize the algorithm provided in scenario (given in constructor)
+        """
+        Optimizes the algorithm provided in scenario (given in constructor)
 
-            Arguments
-            ---------
-            max_iters: int
-                maximal number of iterations
-        '''
+        Returns
+        ----------
+        incumbent
+        """
         incumbent = None
         try:
             incumbent = self.solver.run()
@@ -357,7 +363,7 @@ class EPILS(object):
         return incumbent
 
     def get_tae_runner(self):
-        '''
+        """
             returns target algorithm evaluator (TAE) object
             which can run the target algorithm given a
             configuration
@@ -365,25 +371,25 @@ class EPILS(object):
             Returns
             -------
             smac.tae.execute_ta_run.ExecuteTARun
-        '''
+        """
         return self.solver.intensifier.tae_runner
 
     def get_runhistory(self):
-        '''
+        """
             returns the runhistory 
             (i.e., all evaluated configurations and the results)
 
             Returns
             -------
             smac.runhistory.runhistory.RunHistory
-        '''
+        """
         if not hasattr(self, 'runhistory'):
             raise ValueError('SMAC was not fitted yet. Call optimize() prior '
                              'to accessing the runhistory.')
         return self.runhistory
 
     def get_trajectory(self):
-        '''
+        """
             returns the trajectory 
             (i.e., all incumbent configurations over time)
 
@@ -392,7 +398,7 @@ class EPILS(object):
             List of entries with the following fields: 
             'train_perf', 'incumbent_id', 'incumbent',
             'ta_runs', 'ta_time_used', 'wallclock_time'
-        '''
+        """
 
         if not hasattr(self, 'trajectory'):
             raise ValueError('SMAC was not fitted yet. Call optimize() prior '
@@ -400,7 +406,7 @@ class EPILS(object):
         return self.trajectory
 
     def get_X_y(self):
-        '''
+        """
             simple interface to obtain all data in runhistory
             in X, y format 
             
@@ -414,5 +420,5 @@ class EPILS(object):
                 vector of cost values; can include censored runs
             cen: numpy.ndarray
                 vector of bools indicating whether the y-value is censored
-        '''
+        """
         return self.solver.rh2EPM.get_X_y(self.runhistory)
