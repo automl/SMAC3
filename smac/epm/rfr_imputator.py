@@ -18,7 +18,7 @@ __version__ = "0.0.1"
 
 class RFRImputator(smac.epm.base_imputor.BaseImputor):
 
-    """Uses an rfr to do imputation"""
+    """Imputor using pyrfr's Random Forest regressor."""
 
     def __init__(self, rs, cutoff, threshold,
                  model,
@@ -31,15 +31,15 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         ----------
         rs : random state generator
         cutoff : float
-            cutoff value used for this scenario
+            Cutoff value used for this scenario.
         threshold : float
-            highest possible values (e.g. cutoff * par)
+            Highest possible values (e.g. cutoff * par).
         model:
             epm model (i.e. RandomForestWithInstances)
         change_threshold : float
-            stop imputation if change is less than this
-        max_iter : maximum number of iteration
-        -------
+            Stop imputation if change is less than this.
+        max_iter : int
+            Maximum number of iteration.
         """
 
         super(RFRImputator, self).__init__()
@@ -55,20 +55,26 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         # Never use a lower variance than this
         self.var_threshold = 10 ** -2
 
-    def impute(self, censored_X, censored_y, uncensored_X, uncensored_y):
+    def impute(self, censored_X: np.ndarray, censored_y: np.ndarray,
+               uncensored_X: np.ndarray, uncensored_y: np.ndarray):
         """
-        impute runs and returns imputed y values
+        Imputes censored runs and returns new y values.
 
         Parameters
         ----------
-        censored_X : array
-            X matrix of censored data
-        censored_y : array
-            y matrix of censored data
-        uncensored_X : array
-            X matrix of uncensored data
-        uncensored_y : array
-            y matrix of uncensored data
+        censored_X : np.ndarray [N, M]
+            Feature array of all censored runs.
+        censored_y : np.ndarray [N, 1]
+            Target values for all runs censored runs.
+        uncensored_X : np.ndarray [N, M]
+            Feature array of all non-censored runs.
+        uncensored_y : np.ndarray [N, 1]
+            Target values for all non-censored runs.
+
+        Returns
+        ----------
+        imputed_y: np.ndarray
+            Same shape as censored_y [N, 1]
         """
         if censored_X.shape[0] == 0:
             self.logger.critical("Nothing to impute, return None")

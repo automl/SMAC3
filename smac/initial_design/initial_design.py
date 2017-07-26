@@ -22,22 +22,22 @@ class InitialDesign(object):
                  traj_logger: TrajLogger,
                  rng: np.random.RandomState
                  ):
-        '''
-        Constructor
-
+        """
         Arguments
         ---------
         tae_runner: ExecuteTARun
-            target algorithm execution object
+            Target algorithm execution object.
         scenario: Scenario
-            scenario with all meta information (including configuration space)
+            Scenario with all meta information (including configuration space).
         stats: Stats
-            statistics of experiments; needed in case initial design already exhaust the budget
+            Statistics of experiments; needed in case initial design already 
+            exhausts the budget.
         traj_logger: TrajLogger
-            trajectory logging to add new incumbents found by the initial design
+            Trajectory logging to add new incumbents found by the initial 
+            design.
         rng: np.random.RandomState
-            random state
-        '''
+            Random state
+        """
 
         self.tae_runner = tae_runner
         self.scenario = scenario
@@ -47,13 +47,13 @@ class InitialDesign(object):
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
     def run(self):
-        '''
-        Run the initial design
+        """
+        Run the initial design.
 
         Returns
         -------
         incumbent: Configuration
-            initial incumbent configuration
-        '''
+            Initial incumbent configuration.
+        """
 
         raise NotImplementedError

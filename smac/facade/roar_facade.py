@@ -39,12 +39,15 @@ class ROAR(SMAC):
         ----------
         scenario: smac.scenario.scenario.Scenario
             Scenario object
-        tae_runner: ExecuteTARun or callable
-            Callable or implementation of :class:`ExecuteTaRun`. In case a
-            callable is passed it will be wrapped by tae.ExecuteTaFunc().
-            If not set, it will be initialized with the tae.ExecuteTARunOld()
+        tae_runner: smac.tae.execute_ta_run.ExecuteTARun or callable
+            Callable or implementation of 
+            :class:`~smac.tae.execute_ta_run.ExecuteTARun`. In case a
+            callable is passed it will be wrapped by 
+            :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.
+            If not set, it will be initialized with the 
+            :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.
         runhistory: RunHistory
-            runhistory to store all algorithm runs
+            Runhistory to store all algorithm runs
         intensifier: Intensifier
             intensification object to issue a racing to decide the current incumbent
         initial_design: InitialDesign

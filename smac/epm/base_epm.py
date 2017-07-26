@@ -15,19 +15,19 @@ __version__ = "0.0.1"
 
 
 class AbstractEPM(object):
-    '''Abstract implementation of the EPM API
+    """Abstract implementation of the EPM API.
 
         Note: The input dimensionality of Y for training
         and the output dimensions of all predictions
-        (also called n_objectives)
-        depend on the concrete implementation of this
+        (also called ``n_objectives``)
+        depends on the concrete implementation of this
         abstract class.
-    '''
+    """
 
     def __init__(self,
                  instance_features: np.ndarray=None,
                  pca_components: float=None):
-        '''
+        """
         Constructor
 
         Parameters
@@ -36,10 +36,10 @@ class AbstractEPM(object):
             Contains the K dimensional instance features
             of the I different instances
         pca_components: float
-            if set to a float, use PCA to reduce dimensionality of instance features
-            also requires to set n_feats (> pca_dims)
+            If set to a float, use PCA to reduce dimensionality of instance 
+            features. Requires to set n_feats (> pca_dims).
 
-        '''
+        """
         self.instance_features = instance_features
         self.pca_components = pca_components
         if instance_features is not None:
@@ -58,8 +58,8 @@ class AbstractEPM(object):
         # Never use a lower variance than this
         self.var_threshold = 10 ** -5
 
-    def train(self, X, Y, **kwargs):
-        '''Trains the random forest on X and y.
+    def train(self, X: np.ndarray, Y: np.ndarray, **kwargs):
+        """Trains the EPM on X and Y.
 
         Parameters
         ----------
@@ -71,9 +71,8 @@ class AbstractEPM(object):
 
         Returns
         -------
-        self : EPM
-            trained EPM
-        '''
+        self : trained EPM
+        """
 
         self.n_params = X.shape[1] - self.n_feats
 
@@ -95,7 +94,7 @@ class AbstractEPM(object):
         return self._train(X, Y)
 
     def _train(self, X: np.ndarray, Y: np.ndarray, **kwargs):
-        '''Trains the random forest on X and y.
+        """Trains the random forest on X and y.
 
         Parameters
         ----------
@@ -108,11 +107,11 @@ class AbstractEPM(object):
         Returns
         -------
         self
-        '''
+        """
         raise NotImplementedError
 
     def predict(self, X: np.ndarray):
-        '''
+        """
         Predict means and variances for given X.
 
         Parameters
@@ -126,7 +125,7 @@ class AbstractEPM(object):
             Predictive mean
         vars : np.ndarray  of shape = [n_samples, n_objectives]
             Predictive variance
-        '''
+        """
         if self.pca:
             try:
                 X_feats = X[:, -self.n_feats:]
@@ -139,7 +138,7 @@ class AbstractEPM(object):
         return self._predict(X)
 
     def _predict(self, X: np.ndarray):
-        '''
+        """
         Predict means and variances for given X.
 
         Parameters
@@ -152,10 +151,10 @@ class AbstractEPM(object):
             Predictive mean
         vars : np.ndarray  of shape = [n_samples, n_objectives]
             Predictive variance
-        '''
+        """
         raise NotImplementedError()
 
-    def predict_marginalized_over_instances(self, X):
+    def predict_marginalized_over_instances(self, X: np.ndarray):
         """Predict mean and variance marginalized over all instances.
 
         Returns the predictive mean and variance marginalised over all
