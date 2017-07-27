@@ -1,3 +1,8 @@
+'''
+Created on July 26, 2017
+
+@author: Jan N. van Rijn
+'''
 from collections import defaultdict
 from functools import partial
 
