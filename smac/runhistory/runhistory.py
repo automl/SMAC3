@@ -3,9 +3,9 @@ import json
 import numpy as np
 import typing
 
-from smac.configspace import Configuration
+from build.lib.smac.runhistory.runhistory import RunHistory
+from smac.configspace import Configuration, ConfigurationSpace
 from smac.tae.execute_ta_run import StatusType
-from smac.utils.constants import MAXINT
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -41,7 +41,7 @@ class EnumEncoder(json.JSONEncoder):
 
 class RunHistory(object):
 
-    '''Container for target algorithm run information.
+    """Container for target algorithm run information.
 
     Guaranteed to be picklable.
 
@@ -53,7 +53,7 @@ class RunHistory(object):
         allows to overwrites old results if pairs of 
         algorithm-instance-seed were measured  
         multiple times
-    '''
+    """
 
     def __init__(self, 
                  aggregate_func: typing.Callable,
@@ -80,39 +80,39 @@ class RunHistory(object):
         self.aggregate_func = aggregate_func
         self.overwrite_existing_runs = overwrite_existing_runs
 
-    def add(self, config, cost, time,
-            status, instance_id=None,
-            seed=None,
-            additional_info=None,
+    def add(self, config: Configuration, cost: float, time: float,
+            status: StatusType, instance_id: str=None,
+            seed: int=None,
+            additional_info: dict=None,
             external_data: bool=False):
-        '''
-        adds a data of a new target algorithm (TA) run;
+        """
+        Adds a data of a new target algorithm (TA) run;
         it will update data if the same key values are used
         (config, instance_id, seed)
 
         Parameters
         ----------
             config : dict (or other type -- depending on config space module)
-                parameter configuration
+                Parameter configuration
             cost: float
-                cost of TA run (will be minimized)
+                Cost of TA run (will be minimized)
             time: float
-                runtime of TA run
+                Runtime of TA run
             status: str
-                status in {SUCCESS, TIMEOUT, CRASHED, ABORT, MEMOUT}
+                Status in {SUCCESS, TIMEOUT, CRASHED, ABORT, MEMOUT}
             instance_id: str
-                str representing an instance (default: None)
+                String representing an instance (default: None)
             seed: int
-                random seed used by TA (default: None)
+                Random seed used by TA (default: None)
             additional_info: dict
-                additional run infos (could include further returned
+                Additional run infos (could include further returned
                 information from TA or fields such as start time and host_id)
             external_data: bool
-                if True, run will not be added to self._configid_to_inst_seed
+                If True, run will not be added to self._configid_to_inst_seed
                 and not available through get_runs_for_config();
                 essentially, intensification will not see this run,
                 but the EPM still gets it
-        '''
+        """
 
         config_id = self.config_ids.get(config)
         if config_id is None:
@@ -136,9 +136,9 @@ class RunHistory(object):
             self._add(k, v, status, external_data)
 
     def _add(self, k, v, status, external_data):
-        '''
+        """
             actual function to add new entry to data structures
-        '''
+        """
         self.data[k] = v
 
         if not external_data and status != StatusType.CAPPED:
@@ -155,17 +155,16 @@ class RunHistory(object):
             else:
                 self.update_cost(config=self.ids_config[k.config_id])
 
-    def update_cost(self, config):
-        '''
-            store the performance of a configuration across the instances in self.cost_perf_config
-            and also updates self.runs_per_config;
-            uses self.aggregate_func
+    def update_cost(self, config: Configuration):
+        """Store the performance of a configuration across the instances in
+         self.cost_perf_config and also updates self.runs_per_config;
+         uses self.aggregate_func
 
-            Parameters
-            ----------
-            config: Configuration
-                configuration to update cost based on all runs in runhistory
-        '''
+        Parameters
+        ----------
+        config: Configuration
+            configuration to update cost based on all runs in runhistory
+        """
         inst_seeds = set(self.get_runs_for_config(config))
         perf = self.aggregate_func(config, self, inst_seeds)
         config_id = self.config_ids[config]
@@ -173,15 +172,14 @@ class RunHistory(object):
         self.runs_per_config[config_id] = len(inst_seeds)
 
     def compute_all_costs(self, instances: typing.List[str]=None):
-        '''
-            computes the cost of all configurations from scratch
-            and overwrites self.cost_perf_config and self.runs_per_config accordingly;
+        """Computes the cost of all configurations from scratch and overwrites
+        self.cost_perf_config and self.runs_per_config accordingly;
 
-            Parameters
-            ----------
-            instances: typing.List[str]
-                list of instances; if given, cost is only computed wrt to this instance set
-        '''
+        Parameters
+        ----------
+        instances: typing.List[str]
+            list of instances; if given, cost is only computed wrt to this instance set
+        """
 
         self.cost_per_config = {}
         self.runs_per_config = {}
@@ -197,16 +195,16 @@ class RunHistory(object):
                 self.runs_per_config[config_id] = len(inst_seeds)
 
     def incremental_update_cost(self, config: Configuration, cost: float):
-        '''
-            incrementally updates the performance of a configuration by using a moving average;
+        """Incrementally updates the performance of a configuration by using a
+        moving average;
 
-            Parameters
-            ----------
-            config: Configuration
-                configuration to update cost based on all runs in runhistory
-            cost: float
-                cost of new run of config
-        '''
+        Parameters
+        ----------
+        config: Configuration
+            configuration to update cost based on all runs in runhistory
+        cost: float
+            cost of new run of config
+        """
 
         config_id = self.config_ids[config]
         n_runs = self.runs_per_config.get(config_id, 0)
@@ -215,21 +213,28 @@ class RunHistory(object):
             (old_cost * n_runs) + cost) / (n_runs + 1)
         self.runs_per_config[config_id] = n_runs + 1
 
-    def get_cost(self, config):
-        '''
-            returns empirical cost for a configuration;
-            uses  self.cost_per_config
-        '''
+    def get_cost(self, config: Configuration):
+        """Returns empirical cost for a configuration; uses  self.cost_per_config
+
+        Parameters
+        ----------
+        config: Configuration
+
+        Returns
+        -------
+        cost: float
+            Computed cost for configuration
+        """
         config_id = self.config_ids[config]
         return self.cost_per_config.get(config_id, np.nan)
 
-    def get_runs_for_config(self, config):
+    def get_runs_for_config(self, config: Configuration):
         """Return all runs (instance seed pairs) for a configuration.
 
         Parameters
         ----------
         config : Configuration from ConfigSpace
-            parameter configuration
+            Parameter configuration
 
         Returns
         -------
@@ -239,18 +244,16 @@ class RunHistory(object):
         return self._configid_to_inst_seed.get(config_id, [])
 
     def get_all_configs(self):
-        """ Return all configurations in this RunHistory object
+        """Return all configurations in this RunHistory object
 
         Returns
         -------
             parameter configurations: list
-
         """
         return list(self.config_ids.keys())
 
     def empty(self):
-        """
-        Check whether or not the RunHistory is empty.
+        """Check whether or not the RunHistory is empty.
 
         Returns
         -------
@@ -260,15 +263,14 @@ class RunHistory(object):
         """
         return len(self.data) == 0
 
-    def save_json(self, fn="runhistory.json"):
-        '''
-        saves runhistory on disk
+    def save_json(self, fn: str="runhistory.json"):
+        """Saves runhistory on disk
 
         Parameters
         ----------
         fn : str
             file name
-        '''
+        """
 
         configs = {id_: conf.get_dictionary()
                    for id_, conf in self.ids_config.items()}
@@ -282,10 +284,10 @@ class RunHistory(object):
             json.dump({"data": data,
                        "configs": configs}, fp, cls=EnumEncoder)
 
-    def load_json(self, fn, cs):
+    def load_json(self, fn: str, cs: ConfigurationSpace):
         """Load and runhistory in json representation from disk.
 
-        Overwrites current runthistory!
+        Overwrites current runhistory!
 
         Parameters
         ----------
@@ -314,29 +316,29 @@ class RunHistory(object):
                      seed=int(k[2]),
                      additional_info=v[3])
 
-    def update_from_json(self, fn, cs):
+    def update_from_json(self, fn: str, cs: ConfigurationSpace):
         """Update the current runhistory by adding new runs from a json file.
 
         Parameters
         ----------
         fn : str
-            file name to load from
+            File name to load from
         cs : ConfigSpace
-            instance of configuration space
+            Instance of configuration space
         """
         new_runhistory = RunHistory(self.aggregate_func)
         new_runhistory.load_json(fn, cs)
         self.update(runhistory=new_runhistory)
 
-    def update(self, runhistory, external_data: bool=False):
+    def update(self, runhistory: RunHistory, external_data: bool=False):
         """Update the current runhistory by adding new runs from a json file.
 
         Parameters
         ----------
         runhistory: RunHistory
-            runhistory with additional data to be added to self
+            Runhistory with additional data to be added to self
         external_data: bool
-            if True, run will not be added to self._configid_to_inst_seed
+            If True, run will not be added to self._configid_to_inst_seed
             and not available through get_runs_for_config()
         """
 
