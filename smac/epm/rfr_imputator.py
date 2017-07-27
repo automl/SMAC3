@@ -17,35 +17,32 @@ __version__ = "0.0.1"
 
 class RFRImputator(smac.epm.base_imputor.BaseImputor):
 
-    """Imputor using pyrfr's Random Forest regressor."""
+    """Imputor using pyrfr's Random Forest regressor.
+
+    *Note:* Sets var_threshold as the lower bound on the variance for the
+    predictions of the random forest
+
+    Parameters
+    ----------
+    rng : np.random.RandomState
+        Will be used to draw a seed (currently not used)
+    cutoff : float
+        Cutoff value for this scenario (upper runnning time limit)
+    threshold : float
+        Highest possible values (e.g. cutoff * parX).
+    model: AbstractEPM
+        Predictive model (i.e. RandomForestWithInstances), must inherit
+        from AbstractEPM
+    change_threshold : float
+        Stop imputation if change is less than this.
+    max_iter : int
+        Maximum number of imputation iterations.
+    """
 
     def __init__(self, rng: np.random.RandomState, cutoff: float,
                  threshold: float, model: AbstractEPM,
                  change_threshold: float=0.01,
                  max_iter: int=2):
-        """
-        Constructor
-
-        Note: Sets var_threshold as the lower bound on the variance for the
-        predictions of the random forest
-
-        Parameters
-        ----------
-        rng : np.random.RandomState
-            Will be used to draw a seed (currently not used)
-        cutoff : float
-            Cutoff value for this scenario (upper runnning time limit)
-        threshold : float
-            Highest possible values (e.g. cutoff * parX).
-        model: AbstractEPM
-            Predictive model (i.e. RandomForestWithInstances), must inherit
-            from AbstractEPM
-        change_threshold : float
-            Stop imputation if change is less than this.
-        max_iter : int
-            Maximum number of imputation iterations.
-        """
-
         super(RFRImputator, self).__init__()
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.max_iter = max_iter

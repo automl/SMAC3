@@ -97,8 +97,7 @@ class SMBO(object):
         self.rng = rng
 
     def run(self):
-        """
-        Runs the Bayesian optimization loop
+        """Runs the Bayesian optimization loop
 
         Returns
         ----------
@@ -320,7 +319,7 @@ class SMBO(object):
         return configs_acq
 
     def _sort_configs_by_acq_value(self, configs):
-        """ Sort the given configurations by acquisition value
+        """Sort the given configurations by acquisition value
 
         Parameters
         ----------
@@ -347,7 +346,7 @@ class SMBO(object):
         return [(acq_values[ind][0], configs[ind]) for ind in indices[::-1]]
 
     def _get_timebound_for_intensification(self, time_spent):
-        """ Calculate time left for intensify from the time spent on
+        """Calculate time left for intensify from the time spent on
         choosing challengers using the fraction of time intended for
         intensification (which is specified in
         scenario.intensification_percentage).

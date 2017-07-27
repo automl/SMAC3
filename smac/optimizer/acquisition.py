@@ -48,8 +48,7 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
             setattr(self, key, kwargs[key])
 
     def __call__(self, X: np.ndarray):
-        """
-        Computes the acquisition value for a given X
+        """Computes the acquisition value for a given X
 
         Parameters
         ----------
@@ -75,8 +74,7 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def _compute(self, X: np.ndarray):
-        """
-        Computes the acquisition value for a given point X. This function has
+        """Computes the acquisition value for a given point X. This function has
         to be overwritten in a derived class.
 
         Parameters
@@ -97,8 +95,7 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
 
 class EI(AbstractAcquisitionFunction):
 
-    r"""
-    Computes for a given x the expected improvement as
+    r"""Computes for a given x the expected improvement as
     acquisition value.
 
     :math:`EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]`,
@@ -125,8 +122,7 @@ class EI(AbstractAcquisitionFunction):
         self.eta = None
 
     def _compute(self, X: np.ndarray, **kwargs):
-        """
-        Computes the EI value and its derivatives.
+        """Computes the EI value and its derivatives.
 
         Parameters
         ----------
@@ -161,7 +157,8 @@ class EI(AbstractAcquisitionFunction):
 
         if (f < 0).any():
             raise ValueError(
-                "Expected Improvement is smaller than 0 for at least one sample.")
+                "Expected Improvement is smaller than 0 for at least one "
+                "sample.")
 
         return f
 
@@ -171,8 +168,7 @@ class EIPS(EI):
                  model: AbstractEPM,
                  par: float=0.0,
                  **kwargs):
-        r"""
-        Computes for a given x the expected improvement as
+        r"""Computes for a given x the expected improvement as
         acquisition value.
         :math:`EI(X) := \frac{\mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]} {np.log10(r(x))}`,
         with :math:`f(X^+)` as the incumbent and :math:`r(x)` as runtime.
@@ -191,8 +187,7 @@ class EIPS(EI):
         self.long_name = 'Expected Improvement per Second'
 
     def _compute(self, X: np.ndarray, **kwargs):
-        """
-        Computes the EIPS value.
+        """Computes the EIPS value.
 
         Parameters
         ----------
@@ -245,8 +240,7 @@ class LogEI(AbstractAcquisitionFunction):
                  model: AbstractEPM,
                  par: float=0.0,
                  **kwargs):
-        r"""
-        Computes for a given x the logarithm expected improvement as
+        r"""Computes for a given x the logarithm expected improvement as
         acquisition value.
 
         Parameters
@@ -264,8 +258,7 @@ class LogEI(AbstractAcquisitionFunction):
         self.eta = None
 
     def _compute(self, X: np.ndarray, **kwargs):
-        """
-        Computes the EI value and its derivatives.
+        """Computes the EI value and its derivatives.
 
         Parameters
         ----------

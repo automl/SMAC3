@@ -45,8 +45,7 @@ class LocalSearch(object):
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
     def maximize(self, start_point: Configuration, *args):
-        """
-        Starts a local search from the given startpoint and quits
+        """Starts a local search from the given startpoint and quits
         if either the max number of steps is reached or no neighbor
         with an higher improvement was found.
 

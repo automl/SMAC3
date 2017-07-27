@@ -27,6 +27,40 @@ __license__ = "3-clause BSD"
 
 class EPILS_Solver(object):
 
+    """Interface that contains the main Bayesian optimization loop
+
+    Parameters
+    ----------
+    scenario: smac.scenario.scenario.Scenario
+        Scenario object
+    stats: Stats
+        statistics object with configuration budgets
+    initial_design: InitialDesign
+        initial sampling design
+    runhistory: RunHistory
+        runhistory with all runs so far
+    runhistory2epm : AbstractRunHistory2EPM
+        Object that implements the AbstractRunHistory2EPM to convert runhistory data into EPM data
+    intensifier: Intensifier
+        intensification of new challengers against incumbent configuration (probably with some kind of racing on the instances)
+    aggregate_func: callable
+        how to aggregate the runs in the runhistory to get the performance of a configuration
+    num_run: int
+        id of this run (used for pSMAC)
+    model: RandomForestWithInstances
+        empirical performance model (right now, we support only RandomForestWithInstances)
+    acq_optimizer: LocalSearch
+        optimizer on acquisition function (right now, we support only a local search)
+    acquisition_function : AcquisitionFunction
+        Object that implements the AbstractAcquisitionFunction (i.e., infill criterion for acq_optimizer)
+    rng: np.random.RandomState
+        Random number generator
+    restart_prob: float
+        probability to perform restart
+    pertubation_steps: int
+        number of pertubation steps after each local search
+    """
+
     def __init__(self,
                  scenario: Scenario,
                  stats: Stats,
@@ -42,42 +76,6 @@ class EPILS_Solver(object):
                  rng: np.random.RandomState,
                  restart_prob: float=0.01,
                  pertubation_steps: int=3):
-        """
-        Constructor
-
-        Interface that contains the main Bayesian optimization loop
-
-        Parameters
-        ----------
-        scenario: smac.scenario.scenario.Scenario
-            Scenario object
-        stats: Stats
-            statistics object with configuration budgets
-        initial_design: InitialDesign
-            initial sampling design
-        runhistory: RunHistory
-            runhistory with all runs so far
-        runhistory2epm : AbstractRunHistory2EPM
-            Object that implements the AbstractRunHistory2EPM to convert runhistory data into EPM data
-        intensifier: Intensifier
-            intensification of new challengers against incumbent configuration (probably with some kind of racing on the instances)
-        aggregate_func: callable
-            how to aggregate the runs in the runhistory to get the performance of a configuration
-        num_run: int
-            id of this run (used for pSMAC)
-        model: RandomForestWithInstances
-            empirical performance model (right now, we support only RandomForestWithInstances)
-        acq_optimizer: LocalSearch
-            optimizer on acquisition function (right now, we support only a local search)
-        acquisition_function : AcquisitionFunction
-            Object that implements the AbstractAcquisitionFunction (i.e., infill criterion for acq_optimizer)
-        rng: np.random.RandomState
-            Random number generator
-        restart_prob: float
-            probability to perform restart
-        pertubation_steps: int
-            number of pertubation steps after each local search
-        """
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.incumbent = None
         self._local_inc = None
@@ -107,8 +105,7 @@ class EPILS_Solver(object):
         self.fast_race_adaptive_capping_factor = 1.2
         
     def run(self):
-        """
-        Runs the Bayesian optimization loop
+        """Runs the Bayesian optimization loop
 
         Returns
         ----------
@@ -193,8 +190,7 @@ class EPILS_Solver(object):
         return self.incumbent
     
     def local_search(self, start_point:Configuration):
-        """
-        Starts a local search from the given startpoint and quits
+        """Starts a local search from the given startpoint and quits
         if either the max number of steps is reached or no neighbor
         with an higher improvement was found.
 

@@ -3,7 +3,6 @@ import json
 import numpy as np
 import typing
 
-from build.lib.smac.runhistory.runhistory import RunHistory
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.tae.execute_ta_run import StatusType
 
@@ -26,8 +25,7 @@ RunValue = collections.namedtuple(
 
 
 class EnumEncoder(json.JSONEncoder):
-    """
-    Custom encoder for enum-serialization
+    """Custom encoder for enum-serialization
     (implemented for StatusType from tae/execute_ta_run).
     Using encoder implied using object_hook as defined in StatusType
     to deserialize from json.
@@ -45,8 +43,8 @@ class RunHistory(object):
 
     Guaranteed to be picklable.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     aggregate_func: callable
         function to aggregate perf across instances
     overwrite_existing_runs: bool
@@ -85,8 +83,7 @@ class RunHistory(object):
             seed: int=None,
             additional_info: dict=None,
             external_data: bool=False):
-        """
-        Adds a data of a new target algorithm (TA) run;
+        """Adds a data of a new target algorithm (TA) run;
         it will update data if the same key values are used
         (config, instance_id, seed)
 
@@ -136,8 +133,10 @@ class RunHistory(object):
             self._add(k, v, status, external_data)
 
     def _add(self, k, v, status, external_data):
-        """
-            actual function to add new entry to data structures
+        """Actual function to add new entry to data structures
+
+        TODO
+
         """
         self.data[k] = v
 
@@ -157,8 +156,8 @@ class RunHistory(object):
 
     def update_cost(self, config: Configuration):
         """Store the performance of a configuration across the instances in
-         self.cost_perf_config and also updates self.runs_per_config;
-         uses self.aggregate_func
+        self.cost_perf_config and also updates self.runs_per_config;
+        uses self.aggregate_func
 
         Parameters
         ----------
@@ -257,9 +256,9 @@ class RunHistory(object):
 
         Returns
         -------
-            emptiness: bool
-                True if runs have been added to the RunHistory,
-                False otherwise
+        emptiness: bool
+            True if runs have been added to the RunHistory,
+            False otherwise
         """
         return len(self.data) == 0
 

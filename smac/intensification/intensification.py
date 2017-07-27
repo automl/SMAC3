@@ -22,9 +22,40 @@ __license__ = "3-clause BSD"
 
 
 class Intensifier(object):
-    """
-     Races challengers against an incumbent (a.k.a. SMAC's intensification
-     procedure).
+    """Races challengers against an incumbent (a.k.a. SMAC's intensification
+    procedure).
+
+
+    Parameters
+    ----------
+    tae_runner : tae.executre_ta_run_*.ExecuteTARun* Object
+        target algorithm run executor
+    stats: Stats
+        stats object
+    traj_logger: TrajLogger
+        TrajLogger object to log all new incumbents
+    rng : np.random.RandomState
+    instances : typing.List[str]
+        list of all instance ids
+    instance_specifics : typing.Mapping[str,np.ndarray]
+        mapping from instance name to instance specific string
+    cutoff : int
+        runtime cutoff of TA runs
+    deterministic: bool
+        whether the TA is deterministic or not
+    run_obj_time: bool
+        whether the run objective is runtime or not (if true, apply adaptive capping)
+    always_race_against: Configuration
+        if incumbent changes race this configuration always against new incumbent;
+        can sometimes prevent over-tuning
+    run_limit : int
+        Maximum number of target algorithm runs per call to intensify.
+    maxR : int
+        Maximum number of runs per config (summed over all calls to
+        intensifiy).
+    minR : int
+        Minimum number of run per config (summed over all calls to
+        intensify).
     """
 
     def __init__(self, tae_runner: ExecuteTARun, stats: Stats,
@@ -36,40 +67,6 @@ class Intensifier(object):
                  always_race_against: Configuration=None,
                  run_limit: int=MAXINT,
                  minR: int=1, maxR: int=2000):
-        """
-        Constructor
-
-        Parameters
-        ----------
-        tae_runner : tae.executre_ta_run_*.ExecuteTARun* Object
-            target algorithm run executor
-        stats: Stats
-            stats object
-        traj_logger: TrajLogger
-            TrajLogger object to log all new incumbents
-        rng : np.random.RandomState
-        instances : typing.List[str]
-            list of all instance ids
-        instance_specifics : typing.Mapping[str,np.ndarray]
-            mapping from instance name to instance specific string
-        cutoff : int
-            runtime cutoff of TA runs
-        deterministic: bool
-            whether the TA is deterministic or not
-        run_obj_time: bool
-            whether the run objective is runtime or not (if true, apply adaptive capping)
-        always_race_against: Configuration
-            if incumbent changes race this configuration always against new incumbent;
-            can sometimes prevent over-tuning
-        run_limit : int
-            Maximum number of target algorithm runs per call to intensify.
-        maxR : int
-            Maximum number of runs per config (summed over all calls to
-            intensifiy).
-        minR : int
-            Minimum number of run per config (summed over all calls to
-            intensify).
-        """
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
@@ -113,33 +110,32 @@ class Intensifier(object):
                   aggregate_func: typing.Callable,
                   time_bound: int=MAXINT,
                   log_traj:bool=True):
-        """
-            running intensification to determine the incumbent configuration.
-            Side effect: adds runs to run_history
+        """Running intensification to determine the incumbent configuration.
+        *Side effect:* adds runs to run_history
 
-            Implementation of Procedure 2 in Hutter et al. (2011).
+        Implementation of Procedure 2 in Hutter et al. (2011).
 
-            Parameters
-            ----------
-            challengers : typing.List[Configuration]
-                promising configurations
-            incumbent : Configuration
-                best configuration so far
-            run_history : RunHistory
-                stores all runs we ran so far
-            aggregate_func: typing.Callable
-                aggregate error across instances
-            time_bound : int, optional (default=2 ** 31 - 1)
-                time in [sec] available to perform intensify
-            log_traj: bool
-                whether to log changes of incumbents in trajectory
+        Parameters
+        ----------
+        challengers : typing.List[Configuration]
+            promising configurations
+        incumbent : Configuration
+            best configuration so far
+        run_history : RunHistory
+            stores all runs we ran so far
+        aggregate_func: typing.Callable
+            aggregate error across instances
+        time_bound : int, optional (default=2 ** 31 - 1)
+            time in [sec] available to perform intensify
+        log_traj: bool
+            whether to log changes of incumbents in trajectory
 
-            Returns
-            -------
-            incumbent: Configuration()
-                current (maybe new) incumbent configuration
-            inc_perf: float
-                empirical performance of incumbent configuration
+        Returns
+        -------
+        incumbent: Configuration()
+            current (maybe new) incumbent configuration
+        inc_perf: float
+            empirical performance of incumbent configuration
         """
         self.start_time = time.time()
 
@@ -209,16 +205,16 @@ class Intensifier(object):
         return incumbent, inc_perf
 
     def _add_inc_run(self, incumbent: Configuration, run_history: RunHistory):
-        """
-            add new run for incumbent
-            Side effect: adds runs to <run_history>
+        """Add new run for incumbent
 
-            Parameters
-            ----------
-            incumbent : Configuration
-                best configuration so far
-            run_history : RunHistory
-                stores all runs we ran so far
+        *Side effect:* adds runs to <run_history>
+
+        Parameters
+        ----------
+        incumbent : Configuration
+            best configuration so far
+        run_history : RunHistory
+            stores all runs we ran so far
         """
         inc_runs = run_history.get_runs_for_config(incumbent)
 
@@ -282,8 +278,7 @@ class Intensifier(object):
                          run_history: RunHistory,
                          aggregate_func: typing.Callable,
                          log_traj:bool=True):
-        """
-        Aggressively race challenger against incumbent
+        """Aggressively race challenger against incumbent
 
         Parameters
         ----------
@@ -386,8 +381,7 @@ class Intensifier(object):
                       incumbent: Configuration,
                       run_history: RunHistory,
                       inc_sum_cost: float):
-        """
-        Adaptive capping:
+        """Adaptive capping:
         Compute cutoff based on time so far used for incumbent
         and reduce cutoff for next run of challenger accordingly
 

@@ -38,7 +38,6 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
         self.estimators = [RandomForestWithInstances(types, bounds, **kwargs)
                            for i in range(self.num_targets)]
 
-
     def _train(self, X: np.ndarray, Y: np.ndarray, **kwargs):
         """Trains the random forest on X and y.
 

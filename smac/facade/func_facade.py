@@ -21,8 +21,7 @@ def fmin_smac(func: callable,
               maxfun: int=-1,
               maxtime: int=-1,
               rng: np.random.RandomState=None):
-    """
-    Minimize a function func using the SMAC algorithm.
+    """ Minimize a function func using the SMAC algorithm.
     This function is a convenience wrapper for the SMAC class.
 
     Parameters

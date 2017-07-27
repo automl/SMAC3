@@ -8,10 +8,9 @@ from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, RunHistory2EPM4LogCost, RunHistory2EPM4Cost
+from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.intensification import Intensifier
-from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.epm.random_epm import RandomEPM
 from smac.facade.smac_facade import SMAC
 from smac.configspace import Configuration
@@ -22,7 +21,33 @@ __license__ = "3-clause BSD"
 
 
 class ROAR(SMAC):
-    """Facade to use ROAR mode"""
+    """Facade to use ROAR mode
+
+    Parameters
+    ----------
+    scenario: smac.scenario.scenario.Scenario
+        Scenario object
+    tae_runner: smac.tae.execute_ta_run.ExecuteTARun or callable
+        Callable or implementation of
+        :class:`~smac.tae.execute_ta_run.ExecuteTARun`. In case a
+        callable is passed it will be wrapped by
+        :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.
+        If not set, it will be initialized with the
+        :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.
+    runhistory: RunHistory
+        Runhistory to store all algorithm runs
+    intensifier: Intensifier
+        intensification object to issue a racing to decide the current incumbent
+    initial_design: InitialDesign
+        initial sampling design
+    initial_configurations: typing.List[Configuration]
+        list of initial configurations for initial design --
+        cannot be used together with initial_design
+    stats: Stats
+        optional stats object
+    rng: np.random.RandomState
+        Random number generator
+    """
 
     def __init__(self,
                  scenario: Scenario,
@@ -33,34 +58,6 @@ class ROAR(SMAC):
                  initial_configurations: typing.List[Configuration]=None,
                  stats: Stats=None,
                  rng: np.random.RandomState=None):
-        """
-        Constructor
-
-        Parameters
-        ----------
-        scenario: smac.scenario.scenario.Scenario
-            Scenario object
-        tae_runner: smac.tae.execute_ta_run.ExecuteTARun or callable
-            Callable or implementation of 
-            :class:`~smac.tae.execute_ta_run.ExecuteTARun`. In case a
-            callable is passed it will be wrapped by 
-            :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.
-            If not set, it will be initialized with the 
-            :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.
-        runhistory: RunHistory
-            Runhistory to store all algorithm runs
-        intensifier: Intensifier
-            intensification object to issue a racing to decide the current incumbent
-        initial_design: InitialDesign
-            initial sampling design
-        initial_configurations: typing.List[Configuration]
-            list of initial configurations for initial design --
-            cannot be used together with initial_design
-        stats: Stats
-            optional stats object
-        rng: np.random.RandomState
-            Random number generator
-        """
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         # initial random number generator

@@ -17,29 +17,25 @@ __version__ = "0.0.1"
 class AbstractEPM(object):
     """Abstract implementation of the EPM API.
 
-        Note: The input dimensionality of Y for training
-        and the output dimensions of all predictions
-        (also called ``n_objectives``)
-        depends on the concrete implementation of this
-        abstract class.
+    *Note:* The input dimensionality of Y for training
+    and the output dimensions of all predictions
+    (also called ``n_objectives``)
+    depends on the concrete implementation of this
+    abstract class.
+
+    Parameters
+    ----------
+    instance_features: np.ndarray (I, K)
+        Contains the K dimensional instance features
+        of the I different instances
+    pca_components: float
+        If set to a float, use PCA to reduce dimensionality of instance
+        features. Requires to set n_feats (> pca_dims).
     """
 
     def __init__(self,
                  instance_features: np.ndarray=None,
                  pca_components: float=None):
-        """
-        Constructor
-
-        Parameters
-        ----------
-        instance_features: np.ndarray (I, K)
-            Contains the K dimensional instance features
-            of the I different instances
-        pca_components: float
-            If set to a float, use PCA to reduce dimensionality of instance 
-            features. Requires to set n_feats (> pca_dims).
-
-        """
         self.instance_features = instance_features
         self.pca_components = pca_components
         if instance_features is not None:

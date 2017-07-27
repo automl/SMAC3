@@ -13,7 +13,23 @@ __license__ = "3-clause BSD"
 
 
 class RandomConfiguration(SingleConfigInitialDesign):
-    """ Initial design that evaluates a single random configuration"""
+    """ Initial design that evaluates a single random configuration
+
+    Arguments
+    ---------
+    tae_runner: ExecuteTARun
+        Target algorithm execution object.
+    scenario: Scenario
+        Scenario with all meta information (including configuration space).
+    stats: Stats
+        Statistics of experiments; needed in case initial design already
+        exhausts the budget.
+    traj_logger: TrajLogger
+        Trajectory logging to add new incumbents found by the initial
+        design.
+    rng: np.random.RandomState
+        Random state
+    """
 
     def __init__(self,
                  tae_runner: ExecuteTARun,
@@ -22,35 +38,18 @@ class RandomConfiguration(SingleConfigInitialDesign):
                  traj_logger: TrajLogger,
                  rng: np.random.RandomState
                  ):
-        """
-        Arguments
-        ---------
-        tae_runner: ExecuteTARun
-            Target algorithm execution object.
-        scenario: Scenario
-            Scenario with all meta information (including configuration space).
-        stats: Stats
-            Statistics of experiments; needed in case initial design already 
-            exhausts the budget.
-        traj_logger: TrajLogger
-            Trajectory logging to add new incumbents found by the initial 
-            design.
-        rng: np.random.RandomState
-            Random state
-        """
-        super().__init__(tae_runner=tae_runner,
+       super().__init__(tae_runner=tae_runner,
                          scenario=scenario,
                          stats=stats,
                          traj_logger=traj_logger,
                          rng=rng)
 
     def _select_configuration(self):
-        """
-            Select a random configuration.
+        """Select a random configuration.
 
-            Returns
-            -------
-            config: Configuration()
-                Initial incumbent configuration
+        Returns
+        -------
+        config: Configuration()
+            Initial incumbent configuration
         """
         return self.scenario.cs.sample_configuration()
