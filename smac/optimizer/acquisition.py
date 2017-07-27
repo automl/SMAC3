@@ -12,7 +12,13 @@ __license__ = "3-clause BSD"
 
 
 class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
-    """Abstract base class for acquisition function"""
+    """Abstract base class for acquisition function
+
+    Attributes
+    ----------
+    model
+    logger
+    """
 
     def __str__(self):
         return type(self).__name__ + " (" + self.long_name + ")"
@@ -24,8 +30,8 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
         ----------
         model : AbstractEPM
             Models the objective function.
-            self.model = model
         """
+        self.model = model
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
@@ -99,21 +105,23 @@ class EI(AbstractAcquisitionFunction):
 
     :math:`EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]`,
     with :math:`f(X^+)` as the incumbent.
-
-    Parameters
-    ----------
-    model : AbstractEPM
-        A model that implements at least
-             - predict_marginalized_over_instances(X)
-    par : float, default=0.0
-        Controls the balance between exploration and exploitation of the
-        acquisition function.
     """
 
     def __init__(self,
                  model: AbstractEPM,
                  par: float=0.0,
                  **kwargs):
+        """Constructor
+
+        Parameters
+        ----------
+        model : AbstractEPM
+            A model that implements at least
+                 - predict_marginalized_over_instances(X)
+        par : float, default=0.0
+            Controls the balance between exploration and exploitation of the
+            acquisition function.
+        """
 
         super(EI, self).__init__(model)
         self.long_name = 'Expected Improvement'
