@@ -108,8 +108,8 @@ class Intensifier(object):
                   incumbent: Configuration,
                   run_history: RunHistory,
                   aggregate_func: typing.Callable,
-                  time_bound: int=MAXINT,
-                  log_traj:bool=True):
+                  time_bound: float=float(MAXINT),
+                  log_traj: bool=True):
         """Running intensification to determine the incumbent configuration.
         *Side effect:* adds runs to run_history
 
@@ -125,7 +125,7 @@ class Intensifier(object):
             stores all runs we ran so far
         aggregate_func: typing.Callable
             aggregate error across instances
-        time_bound : int, optional (default=2 ** 31 - 1)
+        time_bound : float, optional (default=2 ** 31 - 1)
             time in [sec] available to perform intensify
         log_traj: bool
             whether to log changes of incumbents in trajectory
@@ -183,14 +183,15 @@ class Intensifier(object):
                 self.logger.debug("Budget exhausted; Return incumbent")
                 return incumbent, inc_perf
 
+            tm = time.time()
             if self._chall_indx >= self._min_chall and self._num_run > self.run_limit:
                 self.logger.debug(
                     "Maximum #runs for intensification reached")
                 break
-            elif self._chall_indx >= self._min_chall and time.time() - self.start_time - time_bound >= 0:
+            elif self._chall_indx > 1 and tm - self.start_time - time_bound >= 0:
                 self.logger.debug("Timelimit for intensification reached ("
                                   "used: %f sec, available: %f sec)" %
-                                  (time.time() - self.start_time, time_bound))
+                                  (tm - self.start_time, time_bound))
                 break
 
         # output estimated performance of incumbent
