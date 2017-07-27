@@ -1,8 +1,6 @@
-import itertools
 import logging
 import numpy as np
 import random
-import time
 import typing
 import math
 
@@ -17,8 +15,8 @@ from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.stats.stats import Stats
 from smac.initial_design.initial_design import InitialDesign
 from smac.scenario.scenario import Scenario
-from smac.configspace import Configuration, convert_configurations_to_array, get_one_exchange_neighbourhood
-from smac.tae.execute_ta_run import TAEAbortException, BudgetExhaustedException
+from smac.configspace import Configuration, convert_configurations_to_array, \
+    get_one_exchange_neighbourhood
 from smac.tae.execute_ta_run import FirstRunCrashedException
 
 
@@ -44,7 +42,9 @@ class EPILS_Solver(object):
                  rng: np.random.RandomState,
                  restart_prob: float=0.01,
                  pertubation_steps: int=3):
-        '''
+        """
+        Constructor
+
         Interface that contains the main Bayesian optimization loop
 
         Parameters
@@ -77,8 +77,7 @@ class EPILS_Solver(object):
             probability to perform restart
         pertubation_steps: int
             number of pertubation steps after each local search
-        
-        '''
+        """
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.incumbent = None
         self._local_inc = None
@@ -108,14 +107,14 @@ class EPILS_Solver(object):
         self.fast_race_adaptive_capping_factor = 1.2
         
     def run(self):
-        '''
+        """
         Runs the Bayesian optimization loop
 
         Returns
         ----------
         incumbent: np.array(1, H)
             The best found configuration
-        '''
+        """
         self.stats.start_timing()
         try:
             self.incumbent = self.initial_design.run()
@@ -137,7 +136,6 @@ class EPILS_Solver(object):
             X, Y = self.rh2EPM.transform(self.runhistory)
             self.model.train(X, Y)            
             self.acquisition_func.update(model=self.model, eta=self.runhistory.get_cost(self.incumbent))
-
 
             if iteration == 1:
                 start_point = self.incumbent
@@ -181,10 +179,11 @@ class EPILS_Solver(object):
                 
             iteration += 1
 
-            self.logger.debug("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
-                self.stats.get_remaing_time_budget(),
-                self.stats.get_remaining_ta_budget(),
-                self.stats.get_remaining_ta_runs()))
+            self.logger.debug("Remaining budget: %f (wallclock), "
+                              "%f (ta costs), %f (target runs)" %
+                              (self.stats.get_remaing_time_budget(),
+                               self.stats.get_remaining_ta_budget(),
+                               self.stats.get_remaining_ta_runs()))
 
             if self.stats.is_budget_exhausted():
                 break
@@ -257,7 +256,7 @@ class EPILS_Solver(object):
                     break
 
             if not changed_inc:
-                self.logger.info("Local search took %d steps and looked at %d configurations. "% 
+                self.logger.info("Local search took %d steps and looked at %d configurations." %
                                   (local_search_steps, neighbors_looked_at))
                 break
 

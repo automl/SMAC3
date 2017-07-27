@@ -13,7 +13,7 @@ RUNHISTORY_RE = r'runhistory\.json'
 
 
 def read(run_history: RunHistory, 
-         output_dirs: typing.Union[str,typing.List[str]],
+         output_dirs: typing.Union[str, typing.List[str]],
          configuration_space: ConfigurationSpace,
          logger: logging.Logger):
     """Update runhistory with run results from concurrent runs of pSMAC.
@@ -26,15 +26,14 @@ def read(run_history: RunHistory,
 
     output_dirs : typing.Union[str,typing.List[str]]
         List of SMAC output directories
-        or Linux path expression (str) which will be casted into a list with glob.glob(). 
-        This function will search the output directories
+        or Linux path expression (str) which will be casted into a list with
+        glob.glob(). This function will search the output directories
         for files matching the runhistory regular expression.
 
     configuration_space : ConfigSpace.ConfigurationSpace
         A ConfigurationSpace object to check if loaded configurations are valid.
 
     logger : logging.Logger
-
     """
     numruns_in_runhistory = len(run_history.data)
     initial_numruns_in_runhistory = numruns_in_runhistory
@@ -62,7 +61,7 @@ def read(run_history: RunHistory,
                  'runs.' % difference)
 
 
-def write(run_history:RunHistory, output_directory:str, num_run:int):
+def write(run_history: RunHistory, output_directory: str, num_run: int):
     """Write the runhistory to the output directory.
 
     Overwrites previously outputted runhistories.
@@ -76,9 +75,7 @@ def write(run_history:RunHistory, output_directory:str, num_run:int):
 
     run_run : int
         ID of the current SMAC run.
-
     """
-
     output_filename = os.path.join(output_directory, RUNHISTORY_FILEPATTERN)
 
     with tempfile.NamedTemporaryFile('wb', dir=output_directory,
