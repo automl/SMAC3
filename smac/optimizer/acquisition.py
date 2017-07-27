@@ -12,20 +12,19 @@ __license__ = "3-clause BSD"
 
 
 class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
+    """Abstract base class for acquisition function
+
+    Parameters
+    ----------
+    model : AbstractEPM
+        Models the objective function.
+    """
 
     def __str__(self):
         return type(self).__name__ + " (" + self.long_name + ")"
 
     def __init__(self, model: AbstractEPM, **kwargs):
-        """
-        Abstract base class for acquisition functions.
 
-        Parameters
-        ----------
-        model : AbstractEPM
-            Models the objective function.
-
-        """
         self.model = model
 
         self.logger = logging.getLogger(
@@ -45,13 +44,12 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
         ----------
         kwargs
         """
-
         for key in kwargs:
             setattr(self, key, kwargs[key])
 
     def __call__(self, X: np.ndarray):
         """
-        Computes the acquisition value for a given point X
+        Computes the acquisition value for a given X
 
         Parameters
         ----------
@@ -61,8 +59,11 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
             the number of points to evaluate at and D is the number of
             dimensions of one X.
 
+        Returns
+        -------
+        np.ndarray(N, 1)
+            acquisition values for X
         """
-
         if len(X.shape) == 1:
             X = X[np.newaxis, :]
 
@@ -96,26 +97,27 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
 
 class EI(AbstractAcquisitionFunction):
 
+    r"""
+    Computes for a given x the expected improvement as
+    acquisition value.
+
+    :math:`EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]`,
+    with :math:`f(X^+)` as the incumbent.
+
+    Parameters
+    ----------
+    model : AbstractEPM
+        A model that implements at least
+             - predict_marginalized_over_instances(X)
+    par : float, default=0.0
+        Controls the balance between exploration and exploitation of the
+        acquisition function.
+    """
+
     def __init__(self,
                  model: AbstractEPM,
                  par: float=0.0,
                  **kwargs):
-        r"""
-        Computes for a given x the expected improvement as
-        acquisition value.
-
-        :math:`EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]`,
-        with :math:`f(X^+)` as the incumbent.
-
-        Parameters
-        ----------
-        model : AbstractEPM
-            A model that implements at least
-                 - predict_marginalized_over_instances(X)
-        par : float, default=0.0
-            Controls the balance between exploration and exploitation of the
-            acquisition function.
-        """
 
         super(EI, self).__init__(model)
         self.long_name = 'Expected Improvement'
@@ -138,7 +140,6 @@ class EI(AbstractAcquisitionFunction):
         np.ndarray(N,1)
             Expected Improvement of X
         """
-
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
 
@@ -186,7 +187,6 @@ class EIPS(EI):
             Controls the balance between exploration and exploitation of the
             acquisition function.
         """
-
         super(EIPS, self).__init__(model, par=par)
         self.long_name = 'Expected Improvement per Second'
 
@@ -206,7 +206,6 @@ class EIPS(EI):
         np.ndarray(N,1)
             Expected Improvement per Second of X
         """
-
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
 
@@ -259,7 +258,6 @@ class LogEI(AbstractAcquisitionFunction):
             Controls the balance between exploration and exploitation of the
             acquisition function.
         """
-
         super(LogEI, self).__init__(model)
         self.long_name = 'Expected Improvement'
         self.par = par
@@ -281,7 +279,6 @@ class LogEI(AbstractAcquisitionFunction):
         np.ndarray(N,1)
             Expected Improvement of X
         """
-
         if self.eta is None:
             raise ValueError('No current best specified. Call update('
                              'eta=<int>) to inform the acquisition function '
