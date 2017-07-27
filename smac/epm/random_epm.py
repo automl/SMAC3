@@ -12,17 +12,14 @@ __version__ = "0.0.1"
 
 
 class RandomEPM(AbstractEPM):
-    """EPM which returns random values on a call to ``fit``."""
+    """EPM which returns random values on a call to ``fit``.
+
+    Parameters
+    ----------
+    rng : np.random.RandomState
+    """
 
     def __init__(self, rng: np.random.RandomState, **kwargs):
-        """
-        Constructor
-
-        Parameters
-        ----------
-        rng : np.random.RandomState
-        """
-        
         super().__init__(**kwargs)
         
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)

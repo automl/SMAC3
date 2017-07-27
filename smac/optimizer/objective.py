@@ -2,7 +2,6 @@ import numpy as np
 
 from smac.runhistory.runhistory import RunKey, RunHistory
 from smac.configspace import Configuration
-
 """Define overall objectives.
 
 Overall objectives are functions or callables that calculate the overall
