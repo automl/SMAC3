@@ -184,7 +184,11 @@ class Intensifier(object):
                 return incumbent, inc_perf
 
             tm = time.time()
+<<<<<<< HEAD
             if self._chall_indx >= self._min_chall and self._num_run > self.run_limit:
+=======
+            if self._chall_indx > 1 and self._num_run > self.run_limit:
+>>>>>>> 78ee08785b86a4d489b38afcfb7628d3b9991079
                 self.logger.debug(
                     "Maximum #runs for intensification reached")
                 break
