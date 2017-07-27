@@ -1,4 +1,3 @@
-import sys
 import logging
 import math
 from enum import Enum
@@ -7,7 +6,6 @@ import numpy as np
 
 from smac.configspace import Configuration
 from smac.utils.constants import MAXINT
-from smac.runhistory.runhistory import RunHistory
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -85,7 +83,7 @@ class ExecuteTARun(object):
             that returned NaN or inf)
     """
 
-    def __init__(self, ta, stats=None, runhistory: RunHistory=None,
+    def __init__(self, ta, stats=None, runhistory=None,
                  run_obj: str="runtime", par_factor: int=1,
                  cost_for_crash: float=float(MAXINT)):
         self.ta = ta

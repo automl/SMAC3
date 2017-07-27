@@ -5,7 +5,6 @@ import typing
 from ConfigSpace import ConfigurationSpace
 
 from smac.configspace import pcs_new as pcs
-from smac.scenario.scenario import Scenario
 
 
 class OutputWriter(object):
@@ -14,7 +13,7 @@ class OutputWriter(object):
     def __init__(self):
         pass
 
-    def write_scenario_file(self, scenario: Scenario):
+    def write_scenario_file(self, scenario):
         """Write scenario to a file (format is compatible with input_reader).
         Will overwrite if file exists. If you have arguments that need special
         parsing when saving, specify so in the _parse_argument-function.
@@ -57,7 +56,7 @@ class OutputWriter(object):
                 if new_value is not None:
                     fh.write("{} = {}\n".format(options_dest2name[key], new_value))
 
-    def _parse_argument(self, scenario: Scenario, key: str, value):
+    def _parse_argument(self, scenario, key: str, value):
         """Some values of the scenario-file need to be changed upon writing,
         such as the 'ta' (target algorithm), due to it's callback. Also,
         the configspace, features, train_inst- and test-inst-lists are saved
