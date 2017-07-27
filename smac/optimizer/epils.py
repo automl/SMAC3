@@ -29,36 +29,39 @@ class EPILS_Solver(object):
 
     """Interface that contains the main Bayesian optimization loop
 
-    Parameters
+    Attributes
     ----------
-    scenario: smac.scenario.scenario.Scenario
-        Scenario object
-    stats: Stats
-        statistics object with configuration budgets
-    initial_design: InitialDesign
-        initial sampling design
-    runhistory: RunHistory
-        runhistory with all runs so far
-    runhistory2epm : AbstractRunHistory2EPM
-        Object that implements the AbstractRunHistory2EPM to convert runhistory data into EPM data
-    intensifier: Intensifier
-        intensification of new challengers against incumbent configuration (probably with some kind of racing on the instances)
-    aggregate_func: callable
-        how to aggregate the runs in the runhistory to get the performance of a configuration
-    num_run: int
-        id of this run (used for pSMAC)
-    model: RandomForestWithInstances
-        empirical performance model (right now, we support only RandomForestWithInstances)
-    acq_optimizer: LocalSearch
-        optimizer on acquisition function (right now, we support only a local search)
-    acquisition_function : AcquisitionFunction
-        Object that implements the AbstractAcquisitionFunction (i.e., infill criterion for acq_optimizer)
-    rng: np.random.RandomState
-        Random number generator
-    restart_prob: float
-        probability to perform restart
-    pertubation_steps: int
-        number of pertubation steps after each local search
+    logger
+    incumbent
+
+    scenario
+    config_space
+    stats
+    initial_design
+    runhistory
+    rh2EPM
+    intensifier
+    aggregate_func
+    num_run
+    model
+    acq_optimizer
+    acquisition_func
+    rng
+
+    max_neighbors : int
+        set to max(5, int(math.sqrt(len(self.config_space.get_hyperparameters()))))
+    restart_prob
+    pertubation_steps
+
+    slow_race_minR : int
+        Set to 5
+    slow_race_adaptive_capping_factor : int
+        Set to 2
+
+    fast_race_minR : int
+        Set to 1
+    fast_race_adaptive_capping_factor : float
+        Set to 1.2
     """
 
     def __init__(self,
@@ -76,6 +79,40 @@ class EPILS_Solver(object):
                  rng: np.random.RandomState,
                  restart_prob: float=0.01,
                  pertubation_steps: int=3):
+        """Constructor
+
+        Parameters
+        ----------
+        scenario: smac.scenario.scenario.Scenario
+            Scenario object
+        stats: Stats
+            statistics object with configuration budgets
+        initial_design: InitialDesign
+            initial sampling design
+        runhistory: RunHistory
+            runhistory with all runs so far
+        runhistory2epm : AbstractRunHistory2EPM
+            Object that implements the AbstractRunHistory2EPM to convert runhistory data into EPM data
+        intensifier: Intensifier
+            intensification of new challengers against incumbent configuration (probably with some kind of racing on the instances)
+        aggregate_func: callable
+            how to aggregate the runs in the runhistory to get the performance of a configuration
+        num_run: int
+            id of this run (used for pSMAC)
+        model: RandomForestWithInstances
+            empirical performance model (right now, we support only RandomForestWithInstances)
+        acq_optimizer: LocalSearch
+            optimizer on acquisition function (right now, we support only a local search)
+        acquisition_function : AcquisitionFunction
+            Object that implements the AbstractAcquisitionFunction (i.e., infill criterion for acq_optimizer)
+        rng: np.random.RandomState
+            Random number generator
+        restart_prob: float
+            probability to perform restart
+        pertubation_steps: int
+            number of pertubation steps after each local search
+        """
+
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.incumbent = None
         self._local_inc = None

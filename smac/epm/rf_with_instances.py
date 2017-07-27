@@ -17,42 +17,23 @@ __version__ = "0.0.1"
 
 class RandomForestWithInstances(AbstractEPM):
 
-    """
-    Interface to the random forest that takes instance features
+    """Interface to the random forest that takes instance features
     into account.
 
-    Parameters
+    Attributes
     ----------
-    types: np.ndarray (D)
-        Specifies the number of categorical values of an input dimension where
-        the i-th entry corresponds to the i-th input dimension. Let's say we
-        have 2 dimension where the first dimension consists of 3 different
-        categorical choices and the second dimension is continuous than we
-        have to pass np.array([2, 0]). Note that we count starting from 0.
-    bounds: np.ndarray (D, 2)
-        Specifies the bounds for continuous features.
-    num_trees: int
-        The number of trees in the random forest.
-    do_bootstrapping: bool
-        Turns on / off bootstrapping in the random forest.
-    n_points_per_tree: int
-        Number of points per tree. If <= 0 X.shape[0] will be used
-        in _train(X, y) instead
-    ratio_features: float
-        The ratio of features that are considered for splitting.
-    min_samples_split: int
-        The minimum number of data points to perform a split.
-    min_samples_leaf: int
-        The minimum number of data points in a leaf.
-    max_depth: int
-        The maximum depth of a single tree.
-    eps_purity: float
-        The minimum difference between two target values to be considered
-        different
-    max_num_nodes: int
-        The maxmimum total number of nodes in a tree
-    seed: int
-        The seed that is passed to the random_forest_run library.
+    rf_opts :
+        Random forest hyperparameter
+    n_points_per_tree : int
+    rf : regression.binary_rss_forest
+        Only available after training
+    hypers: list
+        List of random forest hyperparameters
+    seed : int
+    types : list
+    bounds : list
+    rng : np.random.RandomState
+    logger : logging.logger
     """
 
     def __init__(self, types: np.ndarray,
@@ -68,7 +49,41 @@ class RandomForestWithInstances(AbstractEPM):
                  max_num_nodes: int=2**20,
                  seed: int=42,
                  **kwargs):
+        """Constructor
 
+        Parameters
+        ----------
+        types : np.ndarray (D)
+            Specifies the number of categorical values of an input dimension where
+            the i-th entry corresponds to the i-th input dimension. Let's say we
+            have 2 dimension where the first dimension consists of 3 different
+            categorical choices and the second dimension is continuous than we
+            have to pass np.array([2, 0]). Note that we count starting from 0.
+        bounds : np.ndarray (D, 2)
+            Specifies the bounds for continuous features.
+        num_trees : int
+            The number of trees in the random forest.
+        do_bootstrapping : bool
+            Turns on / off bootstrapping in the random forest.
+        n_points_per_tree : int
+            Number of points per tree. If <= 0 X.shape[0] will be used
+            in _train(X, y) instead
+        ratio_features : float
+            The ratio of features that are considered for splitting.
+        min_samples_split : int
+            The minimum number of data points to perform a split.
+        min_samples_leaf : int
+            The minimum number of data points in a leaf.
+        max_depth : int
+            The maximum depth of a single tree.
+        eps_purity : float
+            The minimum difference between two target values to be considered
+            different
+        max_num_nodes : int
+            The maxmimum total number of nodes in a tree
+        seed : int
+            The seed that is passed to the random_forest_run library.
+        """
         super().__init__(**kwargs)
 
         self.types = types
@@ -140,7 +155,7 @@ class RandomForestWithInstances(AbstractEPM):
 
         Returns
         -------
-        data: regression.default_data_container
+        data : regression.default_data_container
             The filled data container that pyrfr can interpret
         """
         # retrieve the types and the bounds from the ConfigSpace

@@ -16,19 +16,9 @@ class SingleConfigInitialDesign(InitialDesign):
     """ Base class for initial design strategies that evaluates multiple
     configurations
 
-    Parameters
-    ---------
-    tae_runner: ExecuteTARun
-        target algorithm execution object
-    scenario: Scenario
-        scenario with all meta information (including configuration space)
-    stats: Stats
-        statistics of experiments; needed in case initial design already
-        exhaust the budget
-    traj_logger: TrajLogger
-        trajectory logging to add new incumbents found by the initial design
-    rng: np.random.RandomState
-        random state
+    Attributes
+    ----------
+
     """
 
     def __init__(self,
@@ -38,6 +28,22 @@ class SingleConfigInitialDesign(InitialDesign):
                  traj_logger: TrajLogger,
                  rng: np.random.RandomState
                  ):
+        """Constructor
+
+        Parameters
+        ---------
+        tae_runner: ExecuteTARun
+            target algorithm execution object
+        scenario: Scenario
+            scenario with all meta information (including configuration space)
+        stats: Stats
+            statistics of experiments; needed in case initial design already
+            exhaust the budget
+        traj_logger: TrajLogger
+            trajectory logging to add new incumbents found by the initial design
+        rng: np.random.RandomState
+            random state
+        """
         super().__init__(tae_runner=tae_runner,
                          scenario=scenario,
                          stats=stats,

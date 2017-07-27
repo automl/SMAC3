@@ -16,7 +16,7 @@ class CMDReader(object):
 
     Attributes
     ----------
-    logger : Logger oject
+    logger : Logger
     """
 
     def __init__(self):

@@ -41,23 +41,40 @@ class RunHistory(object):
 
     """Container for target algorithm run information.
 
-    Guaranteed to be picklable.
+    **Note:** Guaranteed to be picklable.
 
-    Parameters
+    Attributes
     ----------
-    aggregate_func: callable
-        function to aggregate perf across instances
-    overwrite_existing_runs: bool
-        allows to overwrites old results if pairs of 
-        algorithm-instance-seed were measured  
-        multiple times
+    data : collections.OrderedDict()
+        TODO
+    config_ids : dict
+        Maps config -> id
+    ids_config : dict
+        Maps id -> config
+    cost_per_config : dict
+        Maps config_id -> cost
+    runs_per_config : dict
+        Maps config_id -> number of runs
+
+    aggregate_func
+    overwrite_existing_runs
     """
 
     def __init__(self, 
                  aggregate_func: typing.Callable,
                  overwrite_existing_runs: bool=False
                  ):
+        """Constructor
 
+        Parameters
+        ----------
+        aggregate_func: callable
+            function to aggregate perf across instances
+        overwrite_existing_runs: bool
+            allows to overwrites old results if pairs of
+            algorithm-instance-seed were measured
+            multiple times
+        """
         # By having the data in a deterministic order we can do useful tests
         # when we serialize the data and can assume it's still in the same
         # order as it was added.

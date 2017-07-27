@@ -12,21 +12,20 @@ __license__ = "3-clause BSD"
 
 
 class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
-    """Abstract base class for acquisition function
-
-    Parameters
-    ----------
-    model : AbstractEPM
-        Models the objective function.
-    """
+    """Abstract base class for acquisition function"""
 
     def __str__(self):
         return type(self).__name__ + " (" + self.long_name + ")"
 
     def __init__(self, model: AbstractEPM, **kwargs):
+        """Constructor
 
-        self.model = model
-
+        Parameters
+        ----------
+        model : AbstractEPM
+            Models the objective function.
+            self.model = model
+        """
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 

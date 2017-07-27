@@ -66,8 +66,26 @@ class ExecuteTARun(object):
     """Executes a target algorithm run with a given configuration on a given
     instance and some resource limitations
 
-    Parameters
+    Attributes
     ----------
+    ta
+    stats
+    runhistory
+    run_obj
+
+    par_factor
+    crash_cost
+
+    logger
+    """
+
+    def __init__(self, ta, stats=None, runhistory=None,
+                 run_obj: str="runtime", par_factor: int=1,
+                 cost_for_crash: float=float(MAXINT)):
+        """Constructor
+
+        Parameters
+        ----------
         ta : list
             target algorithm command line as list of arguments
         runhistory: RunHistory
@@ -81,11 +99,7 @@ class ExecuteTARun(object):
         crash_cost : float
             cost that is used in case of crashed runs (including runs
             that returned NaN or inf)
-    """
-
-    def __init__(self, ta, stats=None, runhistory=None,
-                 run_obj: str="runtime", par_factor: int=1,
-                 cost_for_crash: float=float(MAXINT)):
+        """
         self.ta = ta
         self.stats = stats
         self.runhistory = runhistory

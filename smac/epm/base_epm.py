@@ -1,5 +1,3 @@
-import logging
-
 import numpy as np
 
 from sklearn.decomposition import PCA
@@ -17,25 +15,48 @@ __version__ = "0.0.1"
 class AbstractEPM(object):
     """Abstract implementation of the EPM API.
 
-    *Note:* The input dimensionality of Y for training
-    and the output dimensions of all predictions
-    (also called ``n_objectives``)
-    depends on the concrete implementation of this
-    abstract class.
+    **Note:** The input dimensionality of Y for training and the output dimensions
+    of all predictions (also called ``n_objectives``) depends on the concrete
+    implementation of this abstract class.
 
-    Parameters
+    Attributes
     ----------
-    instance_features: np.ndarray (I, K)
+    instance_features : np.ndarray(I, K)
         Contains the K dimensional instance features
         of the I different instances
-    pca_components: float
-        If set to a float, use PCA to reduce dimensionality of instance
-        features. Requires to set n_feats (> pca_dims).
+    pca : sklearn.decomposition.PCA
+        Object to perform PCA
+    pca_components : float
+        Number of components to keep or None
+    n_feats : int
+        Number of instance features
+    n_params : int
+        Number of parameters in a configuration (only available after train has
+        been called)
+    scaler : sklearn.preprocessing.MinMaxScaler
+        Object to scale data to be withing [0, 1]
+    var_threshold : float
+        Lower bound vor variance. If estimated variance < var_threshold, the set
+        to var_threshold
+    types : list
+        If set, contains a list with feature types (cat,const) of input vector
     """
 
     def __init__(self,
                  instance_features: np.ndarray=None,
                  pca_components: float=None):
+        """Constructor
+
+        Parameters
+        ----------
+        instance_features : np.ndarray (I, K)
+            Contains the K dimensional instance features
+            of the I different instances
+        pca_components : float
+            Number of components to keep when using PCA to reduce
+            dimensionality of instance features. Requires to
+            set n_feats (> pca_dims).
+        """
         self.instance_features = instance_features
         self.pca_components = pca_components
         if instance_features is not None:
@@ -67,7 +88,7 @@ class AbstractEPM(object):
 
         Returns
         -------
-        self : trained EPM
+        self : AbstractEPM
         """
 
         self.n_params = X.shape[1] - self.n_feats
@@ -139,7 +160,8 @@ class AbstractEPM(object):
 
         Parameters
         ----------
-        X : np.ndarray of shape = [n_samples, n_features (config + instance features)]
+        X : np.ndarray
+            [n_samples, n_features (config + instance features)]
 
         Returns
         -------
@@ -158,7 +180,8 @@ class AbstractEPM(object):
 
         Parameters
         ----------
-        X : np.ndarray of shape = [n_samples, n_features (config)]
+        X : np.ndarray
+            [n_samples, n_features (config)]
 
         Returns
         -------

@@ -39,41 +39,14 @@ __license__ = "3-clause BSD"
 
 
 class EPILS(object):
-    """Facade to use SMAC default mode
+    """Facade to use EPILS mode
 
-    Parameters
+    Attributes
     ----------
-    scenario: smac.scenario.scenario.Scenario
-        Scenario object
-    tae_runner: ExecuteTARun or callable
-        Callable or implementation of :class:`ExecuteTaRun`. In case a
-        callable is passed it will be wrapped by tae.ExecuteTaFunc().
-        If not set, tae_runner will be initialized with
-        the tae.ExecuteTARunOld()
-    runhistory: RunHistory
-        runhistory to store all algorithm runs
-    intensifier: Intensifier
-        intensification object to issue a racing to decide the current
-        incumbent
-    acquisition_function : AcquisitionFunction
-        Object that implements the AbstractAcquisitionFunction. Will use
-        EI if not set.
-    model : AbstractEPM
-        Model that implements train() and predict(). Will use a
-        RandomForest if not set.
-    runhistory2epm : RunHistory2EMP
-        Object that implements the AbstractRunHistory2EPM. If None,
-        will use RunHistory2EPM4Cost if objective is cost or
-        RunHistory2EPM4LogCost if objective is runtime.
-    initial_design: InitialDesign
-        initial sampling design
-    initial_configurations: typing.List[Configuration]
-        list of initial configurations for initial design --
-        cannot be used together with initial_design
-    stats: Stats
-        optional stats object
-    rng: np.random.RandomState
-        Random number generator
+    logger
+    stats : Stats
+    solver : EPILS_Solver
+        Optimizer object, see :class:`~smac.optimizer.epils.EPILS_Solver`
     """
 
     def __init__(self,
@@ -90,6 +63,42 @@ class EPILS(object):
                  initial_configurations: typing.List[Configuration]=None,
                  stats: Stats=None,
                  rng: np.random.RandomState=None):
+        """Constructor
+
+        Parameters
+        ----------
+        scenario: smac.scenario.scenario.Scenario
+            Scenario object
+        tae_runner: ExecuteTARun or callable
+            Callable or implementation of :class:`ExecuteTaRun`. In case a
+            callable is passed it will be wrapped by tae.ExecuteTaFunc().
+            If not set, tae_runner will be initialized with
+            the tae.ExecuteTARunOld()
+        runhistory: RunHistory
+            runhistory to store all algorithm runs
+        intensifier: Intensifier
+            intensification object to issue a racing to decide the current
+            incumbent
+        acquisition_function : AcquisitionFunction
+            Object that implements the AbstractAcquisitionFunction. Will use
+            EI if not set.
+        model : AbstractEPM
+            Model that implements train() and predict(). Will use a
+            RandomForest if not set.
+        runhistory2epm : RunHistory2EMP
+            Object that implements the AbstractRunHistory2EPM. If None,
+            will use RunHistory2EPM4Cost if objective is cost or
+            RunHistory2EPM4LogCost if objective is runtime.
+        initial_design: InitialDesign
+            initial sampling design
+        initial_configurations: typing.List[Configuration]
+            list of initial configurations for initial design --
+            cannot be used together with initial_design
+        stats: Stats
+            optional stats object
+        rng: np.random.RandomState
+            Random number generator
+        """
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 

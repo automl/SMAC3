@@ -13,24 +13,32 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
     the random forest can be passed via kwargs. Consult the documentation of
     the random forest for the hyperparameters and their meanings.
 
-    Parameters
+    Attributes
     ----------
-    target_names : list
-        List of str, each entry is the name of one target dimension. Length
-        of the list will be ``n_objectives``.
-
-    bounds : np.ndarray
-        See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
-
-    types : np.ndarray
-        See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
-
-    kwargs
-        See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
+    target_names
+    num_targets
+    estimators
     """
 
     def __init__(self, target_names, bounds: np.ndarray, types: np.ndarray,
                  **kwargs):
+        """Constructor
+
+        Parameters
+        ----------
+        target_names : list
+            List of str, each entry is the name of one target dimension. Length
+            of the list will be ``n_objectives``.
+
+        bounds : np.ndarray
+            See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
+
+        types : np.ndarray
+            See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
+
+        kwargs
+            See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
+        """
         super().__init__(**kwargs)
         
         self.target_names = target_names

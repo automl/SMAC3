@@ -15,20 +15,9 @@ __license__ = "3-clause BSD"
 class DefaultConfiguration(SingleConfigInitialDesign):
     """ Initial design that evaluates default configuration
 
-    Parameters
+    Attributes
     ----------
-    tae_runner: ExecuteTARun
-        Target algorithm execution object.
-    scenario: Scenario
-        Scenario with all meta information (including configuration space).
-    stats: Stats
-        Statistics of experiments; needed in case initial design already
-        exhausts the budget.
-    traj_logger: TrajLogger
-        Trajectory logging to add new incumbents found by the initial
-        design.
-    rng: np.random.RandomState
-        Random state
+
     """
 
     def __init__(self,
@@ -38,6 +27,23 @@ class DefaultConfiguration(SingleConfigInitialDesign):
                  traj_logger: TrajLogger,
                  rng: np.random.RandomState
                  ):
+        """Constructor
+
+        Parameters
+        ----------
+        tae_runner: ExecuteTARun
+            Target algorithm execution object.
+        scenario: Scenario
+            Scenario with all meta information (including configuration space).
+        stats: Stats
+            Statistics of experiments; needed in case initial design already
+            exhausts the budget.
+        traj_logger: TrajLogger
+            Trajectory logging to add new incumbents found by the initial
+            design.
+        rng: np.random.RandomState
+            Random state
+        """
         super().__init__(tae_runner=tae_runner,
                          scenario=scenario,
                          stats=stats,

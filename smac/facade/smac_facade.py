@@ -41,43 +41,15 @@ __license__ = "3-clause BSD"
 class SMAC(object):
     """Facade to use SMAC default mode
 
-    Parameters
+    Attributes
     ----------
-    scenario: ~smac.scenario.scenario.Scenario
-        Scenario object
-    tae_runner: ~smac.tae.execute_ta_run.ExecuteTARun or callable
-        Callable or implementation of
-        :class:`~smac.tae.execute_ta_run.ExecuteTARun`. In case a
-        callable is passed it will be wrapped by
-        :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.
-        If not set, it will be initialized with the
-        :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.
-    runhistory: RunHistory
-        runhistory to store all algorithm runs
-    intensifier: Intensifier
-        intensification object to issue a racing to decide the current
-        incumbent
-    acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction
-        Object that implements the :class:`~smac.optimizer.acquisition.AbstractAcquisitionFunction`.
-        Will use :class:`~smac.optimizer.acquisition.EI` if not set.
-    model : AbstractEPM
-        Model that implements train() and predict(). Will use a
-        :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` if not set.
-    runhistory2epm : ~smac.runhistory.runhistory2epm.RunHistory2EMP
-        Object that implements the AbstractRunHistory2EPM. If None,
-        will use :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4Cost`
-        if objective is cost or
-        :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost`
-        if objective is runtime.
-    initial_design: InitialDesign
-        initial sampling design
-    initial_configurations: typing.List[Configuration]
-        list of initial configurations for initial design --
-        cannot be used together with initial_design
-    stats: Stats
-        optional stats object
-    rng: np.random.RandomState
-        Random number generator
+    logger
+    stats : Stats
+    solver : SMBO
+    runhistory : RunHistory
+        List with information about previous runs
+    trajectory : list
+        List of all incumbents
     """
 
     def __init__(self,
@@ -94,6 +66,47 @@ class SMAC(object):
                  initial_configurations: typing.List[Configuration]=None,
                  stats: Stats=None,
                  rng: np.random.RandomState=None):
+        """Constructor
+
+        Parameters
+        ----------
+        scenario : ~smac.scenario.scenario.Scenario
+            Scenario object
+        tae_runner : ~smac.tae.execute_ta_run.ExecuteTARun or callable
+            Callable or implementation of
+            :class:`~smac.tae.execute_ta_run.ExecuteTARun`. In case a
+            callable is passed it will be wrapped by
+            :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.
+            If not set, it will be initialized with the
+            :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.
+        runhistory : RunHistory
+            runhistory to store all algorithm runs
+        intensifier : Intensifier
+            intensification object to issue a racing to decide the current
+            incumbent
+        acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction
+            Object that implements the :class:`~smac.optimizer.acquisition.AbstractAcquisitionFunction`.
+            Will use :class:`~smac.optimizer.acquisition.EI` if not set.
+        model : AbstractEPM
+            Model that implements train() and predict(). Will use a
+            :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` if not set.
+        runhistory2epm : ~smac.runhistory.runhistory2epm.RunHistory2EMP
+            Object that implements the AbstractRunHistory2EPM. If None,
+            will use :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4Cost`
+            if objective is cost or
+            :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost`
+            if objective is runtime.
+        initial_design : InitialDesign
+            initial sampling design
+        initial_configurations : typing.List[Configuration]
+            list of initial configurations for initial design --
+            cannot be used together with initial_design
+        stats : Stats
+            optional stats object
+        rng : np.random.RandomState
+            Random number generator
+        """
+
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
@@ -316,13 +329,13 @@ class SMAC(object):
         If rng is Int, create RandomState from that
         If rng is RandomState, return it
 
-            Parameters
-            ----------
-            rng: np.random.RandomState|int|None
+        Parameters
+        ----------
+        rng: np.random.RandomState|int|None
 
-            Returns
-            -------
-            int, np.random.RandomState
+        Returns
+        -------
+        int, np.random.RandomState
         """
         # initialize random number generator
         if rng is None:

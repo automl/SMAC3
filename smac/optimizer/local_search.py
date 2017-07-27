@@ -17,21 +17,27 @@ class LocalSearch(object):
 
     """Implementation of SMAC's local search
 
-    Parameters
+    Attributes
     ----------
-    acquisition_function:  function
-        The function which the local search tries to maximize
-    config_space:  ConfigSpace
-        Parameter configuration space
-    epsilon: float
-        In order to perform a local move one of the incumbent's neighbors
-        needs at least an improvement higher than epsilon
-    max_iterations: int
-        Maximum number of iterations that the local search will perform
+
     """
 
     def __init__(self, acquisition_function, config_space,
                  epsilon=0.00001, max_iterations=None, rng=None):
+        """Constructor
+
+        Parameters
+        ----------
+        acquisition_function:  function
+            The function which the local search tries to maximize
+        config_space:  ConfigSpace
+            Parameter configuration space
+        epsilon: float
+            In order to perform a local move one of the incumbent's neighbors
+            needs at least an improvement higher than epsilon
+        max_iterations: int
+            Maximum number of iterations that the local search will perform
+        """
         self.config_space = config_space
         self.acquisition_function = acquisition_function
         self.epsilon = epsilon

@@ -21,16 +21,27 @@ class TrajLogger(object):
 
     """Writes trajectory logs files and creates output directory if not exists already
 
-
-    Parameters
+    Attributes
     ----------
-    output_dir: str
-        directory for logging (or None to disable logging)
-    stats: Stats()
-        Stats object
+    stats
+    logger
+    output_dir
+    aclib_traj_fn
+    old_traj_fn
+    trajectory
     """
 
+
     def __init__(self, output_dir, stats):
+        """Constructor
+
+        Parameters
+        ----------
+        output_dir: str
+            directory for logging (or None to disable logging)
+        stats: Stats()
+            Stats object
+        """
         self.stats = stats
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 

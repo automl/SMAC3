@@ -25,23 +25,21 @@ class AbstractRunHistory2EPM(object):
 
     """Abstract class for preprocessing data in order to train an EPM.
 
-    Parameters
+    Attributes
     ----------
-    scenario: Scenario Object
-        Algorithm Configuration Scenario
-    num_params : int
-        number of parameters in config space
-    success_states: list, optional
-        list of states considered as successful (such as StatusType.SUCCESS)
-    impute_censored_data: bool, optional
-        should we impute data?
-    imputor: epm.base_imputor Instance
-        Object to impute censored data
-    impute_state: list, optional
-        list of states that mark censored data (such as StatusType.TIMEOUT)
-        in combination with runtime < cutoff_time
-    rng : numpy.random.RandomState
-        only used for reshuffling data after imputation
+    logger
+    scenario
+    rng
+    num_params
+
+    success_states
+    impute_censored_data
+    impute_state
+    cutoff_time
+    imputor
+    instance_features
+    n_feats
+    num_params
     """
 
     def __init__(self, scenario: Scenario, num_params: int,
@@ -50,12 +48,35 @@ class AbstractRunHistory2EPM(object):
                  impute_state: typing.List[StatusType]=None,
                  imputor: BaseImputor=None,
                  rng: np.random.RandomState=None):
+        """Constructor
+
+        Parameters
+        ----------
+        scenario: Scenario Object
+            Algorithm Configuration Scenario
+        num_params : int
+            number of parameters in config space
+        success_states: list, optional
+            List of states considered as successful (such as StatusType.SUCCESS)
+            If None, set to [StatusType.SUCCESS, ]
+        impute_censored_data: bool, optional
+            Should we impute data?
+        imputor: epm.base_imputor Instance
+            Object to impute censored data
+        impute_state: list, optional
+            List of states that mark censored data (such as StatusType.TIMEOUT)
+            in combination with runtime < cutoff_time
+            If None, set to [StatusType.CAPPED, ]
+        rng : numpy.random.RandomState
+            only used for reshuffling data after imputation
+        """
+
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
         # General arguments
         self.scenario = scenario
-        self.rs = rng
+        self.rng = rng
         self.num_params = num_params
 
         # Configuration
@@ -67,20 +88,13 @@ class AbstractRunHistory2EPM(object):
 
         # Fill with some default values
         if rng is None:
-            self.rs = np.random.RandomState()
+            self.rng = np.random.RandomState()
 
         if self.impute_state is None:
             self.impute_state = [StatusType.CAPPED, ]
 
         if self.success_states is None:
             self.success_states = [StatusType.SUCCESS, ]
-
-        self.config = OrderedDict({
-            'success_states': success_states,
-            'impute_censored_data': impute_censored_data,
-            'cutoff_time': scenario.cutoff,
-            'impute_state': impute_state,
-        })
 
         self.instance_features = scenario.feature_dict
         self.n_feats = scenario.n_features

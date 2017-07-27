@@ -22,30 +22,13 @@ class MultiConfigInitialDesign(InitialDesign):
     """ Base class for initial design strategies that evaluates multiple
     configurations
 
-    Parameters
-    ---------
-    tae_runner: ExecuteTARun
-        Target algorithm execution object.
-    scenario: Scenario
-        Scenario with all meta information (including configuration space).
-    stats: Stats
-        Statistics of experiments; needed in case initial design already
-        exhausts the budget.
-    traj_logger: TrajLogger
-        Trajectory logging to add new incumbents found by the initial
-        design.
-    runhistory: RunHistory
-        Runhistory with all target algorithm runs.
-    rng: np.random.RandomState
-        Random state
-    configs: typing.List[Configuration]
-        List of initial configurations.
-    intensifier: Intensifier
-        Intensification object to issue a racing to decide the current
-        incumbent.
-    aggregate_func: typing:Callable
-        Function to aggregate performance of a configuration across
-        instances.
+    Attributes
+    ----------
+    configs : typing.List[Configuration]
+        List of configurations to be evaluated
+    intensifier
+    runhistory
+    aggregate_func
     """
 
     def __init__(self,
@@ -59,6 +42,33 @@ class MultiConfigInitialDesign(InitialDesign):
                  intensifier: Intensifier,
                  aggregate_func: typing.Callable
                  ):
+        """Constructor
+
+        Parameters
+        ---------
+        tae_runner: ExecuteTARun
+            Target algorithm execution object.
+        scenario: Scenario
+            Scenario with all meta information (including configuration space).
+        stats: Stats
+            Statistics of experiments; needed in case initial design already
+            exhausts the budget.
+        traj_logger: TrajLogger
+            Trajectory logging to add new incumbents found by the initial
+            design.
+        runhistory: RunHistory
+            Runhistory with all target algorithm runs.
+        rng: np.random.RandomState
+            Random state
+        configs: typing.List[Configuration]
+            List of initial configurations.
+        intensifier: Intensifier
+            Intensification object to issue a racing to decide the current
+            incumbent.
+        aggregate_func: typing:Callable
+            Function to aggregate performance of a configuration across
+            instances.
+        """
         super().__init__(tae_runner=tae_runner,
                          scenario=scenario,
                          stats=stats,

@@ -39,18 +39,23 @@ class Scenario(object):
     Scenario contains the configuration of the optimization process and
     constructs a scenario object from a file or dictionary.
 
-    Parameters
-    ----------
-    scenario : str or dict
-        If str, it will be interpreted as to a path a scenario file
-        If dict, it will be directly to get all scenario related information
-    cmd_args : dict
-        Command line arguments that were not processed by argparse
-    run_id: int
-        Run ID will be used as suffix for output_dir
+    All arguments set in the Scenario are set as attributes.
+
     """
 
     def __init__(self, scenario, cmd_args: dict=None, run_id: int=1):
+        """Constructor
+
+        Parameters
+        ----------
+        scenario : str or dict
+            If str, it will be interpreted as to a path a scenario file
+            If dict, it will be directly to get all scenario related information
+        cmd_args : dict
+            Command line arguments that were not processed by argparse
+        run_id: int
+            Run ID will be used as suffix for output_dir
+        """
         self.logger = logging.getLogger(
             self.__module__ + '.' + self.__class__.__name__)
         self.PCA_DIM = 7

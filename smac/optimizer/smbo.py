@@ -30,38 +30,23 @@ class SMBO(object):
 
     """Interface that contains the main Bayesian optimization loop
 
-    Parameters
+    Attributes
     ----------
-    scenario: smac.scenario.scenario.Scenario
-        Scenario object
-    stats: Stats
-        statistics object with configuration budgets
-    initial_design: InitialDesign
-        initial sampling design
-    runhistory: RunHistory
-        runhistory with all runs so far
-    runhistory2epm : AbstractRunHistory2EPM
-        Object that implements the AbstractRunHistory2EPM to convert runhistory
-        data into EPM data
-    intensifier: Intensifier
-        intensification of new challengers against incumbent configuration
-        (probably with some kind of racing on the instances)
-    aggregate_func: callable
-        how to aggregate the runs in the runhistory to get the performance of a
-         configuration
-    num_run: int
-        id of this run (used for pSMAC)
-    model: RandomForestWithInstances
-        empirical performance model (right now, we support only
-        RandomForestWithInstances)
-    acq_optimizer: LocalSearch
-        optimizer on acquisition function (right now, we support only a local
-        search)
-    acquisition_function : AcquisitionFunction
-        Object that implements the AbstractAcquisitionFunction (i.e., infill
-        criterion for acq_optimizer)
-    rng: np.random.RandomState
-        Random number generator
+    logger
+    incumbent
+    scenario
+    config_space
+    stats
+    initial_design
+    runhistory
+    rh2EPM
+    intensifier
+    aggregate_func
+    num_run
+    model
+    acq_optimizer
+    acquisition_func
+    rng
     """
 
     def __init__(self,
@@ -77,6 +62,41 @@ class SMBO(object):
                  acq_optimizer: LocalSearch,
                  acquisition_func: AbstractAcquisitionFunction,
                  rng: np.random.RandomState):
+        """Constructor
+
+        Parameters
+        ----------
+        scenario: smac.scenario.scenario.Scenario
+            Scenario object
+        stats: Stats
+            statistics object with configuration budgets
+        initial_design: InitialDesign
+            initial sampling design
+        runhistory: RunHistory
+            runhistory with all runs so far
+        runhistory2epm : AbstractRunHistory2EPM
+            Object that implements the AbstractRunHistory2EPM to convert runhistory
+            data into EPM data
+        intensifier: Intensifier
+            intensification of new challengers against incumbent configuration
+            (probably with some kind of racing on the instances)
+        aggregate_func: callable
+            how to aggregate the runs in the runhistory to get the performance of a
+             configuration
+        num_run: int
+            id of this run (used for pSMAC)
+        model: RandomForestWithInstances
+            empirical performance model (right now, we support only
+            RandomForestWithInstances)
+        acq_optimizer: LocalSearch
+            optimizer on acquisition function (right now, we support only a local
+            search)
+        acquisition_function : AcquisitionFunction
+            Object that implements the AbstractAcquisitionFunction (i.e., infill
+            criterion for acq_optimizer)
+        rng: np.random.RandomState
+            Random number generator
+        """
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
