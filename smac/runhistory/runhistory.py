@@ -329,7 +329,7 @@ class RunHistory(object):
         new_runhistory.load_json(fn, cs)
         self.update(runhistory=new_runhistory)
 
-    def update(self, runhistory: RunHistory, external_data: bool=False):
+    def update(self, runhistory, external_data: bool=False):
         """Update the current runhistory by adding new runs from a json file.
 
         Parameters
