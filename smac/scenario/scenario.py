@@ -35,24 +35,22 @@ def _is_truthy(arg):
 
 class Scenario(object):
 
-    '''
-    Scenario contains the configuration of the optimization process
-    '''
+    """
+    Scenario contains the configuration of the optimization process and
+    constructs a scenario object from a file or dictionary.
 
-    def __init__(self, scenario, cmd_args=None, run_id=1):
-        """Construct scenario object from file or dictionary.
+    Parameters
+    ----------
+    scenario : str or dict
+        If str, it will be interpreted as to a path a scenario file
+        If dict, it will be directly to get all scenario related information
+    cmd_args : dict
+        Command line arguments that were not processed by argparse
+    run_id: int
+        Run ID will be used as suffix for output_dir
+    """
 
-        Parameters
-        ----------
-        scenario : str or dict
-            if str, it will be interpreted as to a path a scenario file
-            if dict, it will be directly to get all scenario related information
-        cmd_args : dict
-            command line arguments that were not processed by argparse
-        run_id: int
-            run ID will be used as suffix for output_dir
-
-        """
+    def __init__(self, scenario, cmd_args: dict=None, run_id: int=1):
         self.logger = logging.getLogger(
             self.__module__ + '.' + self.__class__.__name__)
         self.PCA_DIM = 7
@@ -117,8 +115,9 @@ class Scenario(object):
             if isinstance(arg_value,(int,str,float)):
                 self.logger.debug("%s = %s" %(arg_name,arg_value))
 
-    def add_argument(self, name, help, callback=None, default=None,
-                     dest=None, required=False, mutually_exclusive_group=None,
+    def add_argument(self, name: str, help: str, callback=None, default=None,
+                     dest: str=None, required: bool=False,
+                     mutually_exclusive_group: str=None,
                      choice=None):
         """Add argument to the scenario object.
 
@@ -144,6 +143,8 @@ class Scenario(object):
             given. Is used for example to ensure that either a configuration
             space object or a parameter file is passed to the scenario. Can not
             be used together with ``required``.
+        choice: list/set/tuple
+            List of possible string for this argument
         """
         if not isinstance(required, bool):
             raise TypeError("Argument 'required' must be of type 'bool'.")
@@ -163,8 +164,9 @@ class Scenario(object):
         if mutually_exclusive_group:
             self._groups[mutually_exclusive_group].add(name)
 
-    def _parse_argument(self, name, scenario, help, callback=None, default=None,
-                        dest=None, required=False, choice=None):
+    def _parse_argument(self, name: str, scenario: dict, help: str,
+                        callback=None, default=None,
+                        dest: str=None, required: bool=False, choice=None):
         """Search the scenario dict for a single allowed argument and parse it.
 
         Side effect: the argument is removed from the scenario dict if found.
@@ -231,6 +233,7 @@ class Scenario(object):
         return dest, value
 
     def _add_arguments(self):
+        """TODO"""
         # Add allowed arguments
         self.add_argument(name='abort_on_first_run_crash',
                           help="If true, *SMAC* will abort if the first run of "
@@ -334,6 +337,7 @@ class Scenario(object):
         self.add_argument(name='cs', help=None, mutually_exclusive_group='cs')
 
     def _transform_arguments(self):
+        """TODO"""
         self.n_features = len(self.feature_dict)
         self.feature_array = None
 
@@ -449,14 +453,13 @@ class Scenario(object):
         return l
 
     def write_options_to_doc(self, path='scenario_options.rst'):
-        """
-        Writes the option-list to file for autogeneration in documentation.
+        """Writes the option-list to file for autogeneration in documentation.
         The list is created in doc/conf.py and read in doc/options.rst.
 
         Parameters
         ----------
         path: string
-            where to write to (relative to doc-folder since executed in conf.py)
+            Where to write to (relative to doc-folder since executed in conf.py)
         """
         exclude = ['cs', 'features', 'instances', 'test_instances']
         with open(path, 'w') as fh:
