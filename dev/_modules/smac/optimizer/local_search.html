@@ -251,7 +251,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">get_one_exchange_neighbourhood</span><span class="p">,</span> \
-    <span class="n">convert_configurations_to_array</span>
+    <span class="n">convert_configurations_to_array</span><span class="p">,</span> <span class="n">Configuration</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Aaron Klein, Marius Lindauer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
@@ -263,10 +263,16 @@
 
 <div class="viewcode-block" id="LocalSearch"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.local_search.html#smac.optimizer.local_search.LocalSearch">[docs]</a><span class="k">class</span> <span class="nc">LocalSearch</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
+    <span class="sd">&quot;&quot;&quot;Implementation of SMAC&#39;s local search</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acquisition_function</span><span class="p">,</span> <span class="n">config_space</span><span class="p">,</span>
                  <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.00001</span><span class="p">,</span> <span class="n">max_iterations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Implementation of SMAC&#39;s local search</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -292,9 +298,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
-<div class="viewcode-block" id="LocalSearch.maximize"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.local_search.html#smac.optimizer.local_search.LocalSearch.maximize">[docs]</a>    <span class="k">def</span> <span class="nf">maximize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_point</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Starts a local search from the given startpoint and quits</span>
+<div class="viewcode-block" id="LocalSearch.maximize"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.local_search.html#smac.optimizer.local_search.LocalSearch.maximize">[docs]</a>    <span class="k">def</span> <span class="nf">maximize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_point</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Starts a local search from the given startpoint and quits</span>
 <span class="sd">        if either the max number of steps is reached or no neighbor</span>
 <span class="sd">        with an higher improvement was found.</span>
 
@@ -356,12 +361,15 @@
                     <span class="n">changed_inc</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="k">break</span>
 
-            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">changed_inc</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iterations</span> <span class="o">!=</span> <span class="kc">None</span>
-                                     <span class="ow">and</span> <span class="n">local_search_steps</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span> <span class="n">max_iterations</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Local search took </span><span class="si">%d</span><span class="s2"> steps and looked at </span><span class="si">%d</span><span class="s2"> configurations. &quot;</span>
-                                  <span class="s2">&quot;Computing the acquisition value for one &quot;</span>
-                                  <span class="s2">&quot;configuration took </span><span class="si">%f</span><span class="s2"> seconds on average.&quot;</span><span class="p">,</span>
-                                  <span class="n">local_search_steps</span><span class="p">,</span> <span class="n">neighbors_looked_at</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">time_n</span><span class="p">))</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">changed_inc</span><span class="p">)</span> <span class="ow">or</span> \
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iterations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+                     <span class="n">local_search_steps</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iterations</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Local search took </span><span class="si">%d</span><span class="s2"> steps and looked at </span><span class="si">%d</span><span class="s2"> &quot;</span>
+                                  <span class="s2">&quot;configurations. Computing the acquisition &quot;</span>
+                                  <span class="s2">&quot;value for one configuration took </span><span class="si">%f</span><span class="s2"> seconds&quot;</span>
+                                  <span class="s2">&quot; on average.&quot;</span><span class="p">,</span>
+                                  <span class="n">local_search_steps</span><span class="p">,</span> <span class="n">neighbors_looked_at</span><span class="p">,</span>
+                                  <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">time_n</span><span class="p">))</span>
                 <span class="k">break</span>
 
         <span class="k">return</span> <span class="n">incumbent</span><span class="p">,</span> <span class="n">acq_val_incumbent</span></div></div>

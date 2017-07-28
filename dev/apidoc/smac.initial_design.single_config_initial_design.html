@@ -257,6 +257,8 @@
 <dt id="smac.initial_design.single_config_initial_design.SingleConfigInitialDesign">
 <em class="property">class </em><code class="descclassname">smac.initial_design.single_config_initial_design.</code><code class="descname">SingleConfigInitialDesign</code><span class="sig-paren">(</span><em>tae_runner: smac.tae.execute_ta_run.ExecuteTARun</em>, <em>scenario: smac.scenario.scenario.Scenario</em>, <em>stats: smac.stats.stats.Stats</em>, <em>traj_logger: smac.utils.io.traj_logging.TrajLogger</em>, <em>rng: mtrand.RandomState</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/initial_design/single_config_initial_design.html#SingleConfigInitialDesign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.single_config_initial_design.SingleConfigInitialDesign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign" title="smac.initial_design.initial_design.InitialDesign"><code class="xref py py-class docutils literal"><span class="pre">smac.initial_design.initial_design.InitialDesign</span></code></a></p>
+<p>Base class for initial design strategies that evaluates multiple
+configurations</p>
 <p>Constructor</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -265,7 +267,8 @@
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>tae_runner</strong> (<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><em>ExecuteTARun</em></a>) – target algorithm execution object</li>
 <li><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – scenario with all meta information (including configuration space)</li>
-<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – statistics of experiments; needed in case initial design already exhaust the budget</li>
+<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – statistics of experiments; needed in case initial design already
+exhaust the budget</li>
 <li><strong>traj_logger</strong> (<a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger"><em>TrajLogger</em></a>) – trajectory logging to add new incumbents found by the initial design</li>
 <li><strong>rng</strong> (<em>np.random.RandomState</em>) – random state</li>
 </ul>
@@ -282,7 +285,7 @@ and adding new entries to the trajectory logger.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>incumbent</strong> – initial incumbent configuration</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>incumbent</strong> – Initial incumbent configuration</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Configuration</td>
 </tr>

@@ -254,7 +254,6 @@
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="k">import</span> <span class="n">Stats</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="k">import</span> <span class="n">TrajLogger</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
-<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2016, ML4AAD&quot;</span>
@@ -262,6 +261,12 @@
 
 
 <div class="viewcode-block" id="DefaultConfiguration"><a class="viewcode-back" href="../../../apidoc/smac.initial_design.default_configuration_design.html#smac.initial_design.default_configuration_design.DefaultConfiguration">[docs]</a><span class="k">class</span> <span class="nc">DefaultConfiguration</span><span class="p">(</span><span class="n">SingleConfigInitialDesign</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Initial design that evaluates default configuration</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">tae_runner</span><span class="p">:</span> <span class="n">ExecuteTARun</span><span class="p">,</span>
@@ -270,18 +275,19 @@
                  <span class="n">traj_logger</span><span class="p">:</span> <span class="n">TrajLogger</span><span class="p">,</span>
                  <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span>
                  <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Arguments</span>
-<span class="sd">        ---------</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 <span class="sd">        tae_runner: ExecuteTARun</span>
 <span class="sd">            Target algorithm execution object.</span>
 <span class="sd">        scenario: Scenario</span>
 <span class="sd">            Scenario with all meta information (including configuration space).</span>
 <span class="sd">        stats: Stats</span>
-<span class="sd">            Statistics of experiments; needed in case initial design already </span>
+<span class="sd">            Statistics of experiments; needed in case initial design already</span>
 <span class="sd">            exhausts the budget.</span>
 <span class="sd">        traj_logger: TrajLogger</span>
-<span class="sd">            Trajectory logging to add new incumbents found by the initial </span>
+<span class="sd">            Trajectory logging to add new incumbents found by the initial</span>
 <span class="sd">            design.</span>
 <span class="sd">        rng: np.random.RandomState</span>
 <span class="sd">            Random state</span>
@@ -293,15 +299,13 @@
                          <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_select_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Selects the default configuration.</span>
+        <span class="sd">&quot;&quot;&quot;Selects the default configuration.</span>
 
-<span class="sd">            Returns</span>
-<span class="sd">            -------</span>
-<span class="sd">            config: Configuration</span>
-<span class="sd">                Initial incumbent configuration.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        config: Configuration</span>
+<span class="sd">            Initial incumbent configuration.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">()</span></div>
 </pre></div>
 

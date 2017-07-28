@@ -255,7 +255,7 @@
 <span id="smac-runhistory-runhistory2epm-module"></span><h1>smac.runhistory.runhistory2epm module<a class="headerlink" href="#module-smac.runhistory.runhistory2epm" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM">
-<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory2epm.</code><code class="descname">AbstractRunHistory2EPM</code><span class="sig-paren">(</span><em>scenario</em>, <em>num_params</em>, <em>success_states=None</em>, <em>impute_censored_data=False</em>, <em>impute_state=None</em>, <em>imputor=None</em>, <em>rs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory2epm.</code><code class="descname">AbstractRunHistory2EPM</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>num_params: int</em>, <em>success_states: typing.List[smac.tae.execute_ta_run.StatusType] = None</em>, <em>impute_censored_data: bool = False</em>, <em>impute_state: typing.List[smac.tae.execute_ta_run.StatusType] = None</em>, <em>imputor: smac.epm.base_imputor.BaseImputor = None</em>, <em>rng: mtrand.RandomState = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Constructor</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -265,12 +265,14 @@
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>scenario</strong> (<em>Scenario Object</em>) – Algorithm Configuration Scenario</li>
 <li><strong>num_params</strong> (<em>int</em>) – number of parameters in config space</li>
-<li><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – list of states considered as successful (such as StatusType.SUCCESS)</li>
-<li><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – should we impute data?</li>
+<li><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states considered as successful (such as StatusType.SUCCESS)
+If None, set to [StatusType.SUCCESS, ]</li>
+<li><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – Should we impute data?</li>
 <li><strong>imputor</strong> (<em>epm.base_imputor Instance</em>) – Object to impute censored data</li>
-<li><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – list of states that mark censored data (such as StatusType.TIMEOUT)
-in combination with runtime &lt; cutoff_time</li>
-<li><strong>rs</strong> (<em>numpy.random.RandomState</em>) – only used for reshuffling data after imputation</li>
+<li><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states that mark censored data (such as StatusType.TIMEOUT)
+in combination with runtime &lt; cutoff_time
+If None, set to [StatusType.CAPPED, ]</li>
+<li><strong>rng</strong> (<em>numpy.random.RandomState</em>) – only used for reshuffling data after imputation</li>
 </ul>
 </td>
 </tr>
@@ -279,8 +281,7 @@ in combination with runtime &lt; cutoff_time</li>
 <dl class="method">
 <dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y">
 <code class="descname">get_X_y</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM.get_X_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y" title="Permalink to this definition">¶</a></dt>
-<dd><p>simple interface to obtain all data in runhistory
-in X, y format</p>
+<dd><p>Simple interface to obtain all data in runhistory in X, y format</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -300,14 +301,14 @@ in X, y format</p>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.transform">
-<code class="descname">transform</code><span class="sig-paren">(</span><em>runhistory</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.transform" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns vector representation of runhistory;
-if imputation is disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</p>
+<code class="descname">transform</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns vector representation of runhistory; if imputation is
+disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – runhistory of all evaluated configurations x instances</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – Runhistory containing all evaluated configurations/instances</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
 <li><strong>X</strong> (<em>numpy.ndarray</em>) – configuration vector x instance features</li>
@@ -323,8 +324,9 @@ if imputation is disabled, censored (TIMEOUT with time &lt; cutoff) will be skip
 
 <dl class="class">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4Cost">
-<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory2epm.</code><code class="descname">RunHistory2EPM4Cost</code><span class="sig-paren">(</span><em>scenario</em>, <em>num_params</em>, <em>success_states=None</em>, <em>impute_censored_data=False</em>, <em>impute_state=None</em>, <em>imputor=None</em>, <em>rs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4Cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory2epm.</code><code class="descname">RunHistory2EPM4Cost</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>num_params: int</em>, <em>success_states: typing.List[smac.tae.execute_ta_run.StatusType] = None</em>, <em>impute_censored_data: bool = False</em>, <em>impute_state: typing.List[smac.tae.execute_ta_run.StatusType] = None</em>, <em>imputor: smac.epm.base_imputor.BaseImputor = None</em>, <em>rng: mtrand.RandomState = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4Cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM" title="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM"><code class="xref py py-class docutils literal"><span class="pre">smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</span></code></a></p>
+<p>TODO</p>
 <p>Constructor</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -333,12 +335,14 @@ if imputation is disabled, censored (TIMEOUT with time &lt; cutoff) will be skip
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>scenario</strong> (<em>Scenario Object</em>) – Algorithm Configuration Scenario</li>
 <li><strong>num_params</strong> (<em>int</em>) – number of parameters in config space</li>
-<li><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – list of states considered as successful (such as StatusType.SUCCESS)</li>
-<li><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – should we impute data?</li>
+<li><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states considered as successful (such as StatusType.SUCCESS)
+If None, set to [StatusType.SUCCESS, ]</li>
+<li><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – Should we impute data?</li>
 <li><strong>imputor</strong> (<em>epm.base_imputor Instance</em>) – Object to impute censored data</li>
-<li><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – list of states that mark censored data (such as StatusType.TIMEOUT)
-in combination with runtime &lt; cutoff_time</li>
-<li><strong>rs</strong> (<em>numpy.random.RandomState</em>) – only used for reshuffling data after imputation</li>
+<li><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states that mark censored data (such as StatusType.TIMEOUT)
+in combination with runtime &lt; cutoff_time
+If None, set to [StatusType.CAPPED, ]</li>
+<li><strong>rng</strong> (<em>numpy.random.RandomState</em>) – only used for reshuffling data after imputation</li>
 </ul>
 </td>
 </tr>
@@ -347,8 +351,7 @@ in combination with runtime &lt; cutoff_time</li>
 <dl class="method">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4Cost.get_X_y">
 <code class="descname">get_X_y</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost.get_X_y" title="Permalink to this definition">¶</a></dt>
-<dd><p>simple interface to obtain all data in runhistory
-in X, y format</p>
+<dd><p>Simple interface to obtain all data in runhistory in X, y format</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -368,14 +371,14 @@ in X, y format</p>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4Cost.transform">
-<code class="descname">transform</code><span class="sig-paren">(</span><em>runhistory</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost.transform" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns vector representation of runhistory;
-if imputation is disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</p>
+<code class="descname">transform</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns vector representation of runhistory; if imputation is
+disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – runhistory of all evaluated configurations x instances</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – Runhistory containing all evaluated configurations/instances</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
 <li><strong>X</strong> (<em>numpy.ndarray</em>) – configuration vector x instance features</li>
@@ -391,8 +394,9 @@ if imputation is disabled, censored (TIMEOUT with time &lt; cutoff) will be skip
 
 <dl class="class">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS">
-<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory2epm.</code><code class="descname">RunHistory2EPM4EIPS</code><span class="sig-paren">(</span><em>scenario</em>, <em>num_params</em>, <em>success_states=None</em>, <em>impute_censored_data=False</em>, <em>impute_state=None</em>, <em>imputor=None</em>, <em>rs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4EIPS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory2epm.</code><code class="descname">RunHistory2EPM4EIPS</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>num_params: int</em>, <em>success_states: typing.List[smac.tae.execute_ta_run.StatusType] = None</em>, <em>impute_censored_data: bool = False</em>, <em>impute_state: typing.List[smac.tae.execute_ta_run.StatusType] = None</em>, <em>imputor: smac.epm.base_imputor.BaseImputor = None</em>, <em>rng: mtrand.RandomState = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4EIPS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM" title="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM"><code class="xref py py-class docutils literal"><span class="pre">smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</span></code></a></p>
+<p>TODO</p>
 <p>Constructor</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -401,12 +405,14 @@ if imputation is disabled, censored (TIMEOUT with time &lt; cutoff) will be skip
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>scenario</strong> (<em>Scenario Object</em>) – Algorithm Configuration Scenario</li>
 <li><strong>num_params</strong> (<em>int</em>) – number of parameters in config space</li>
-<li><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – list of states considered as successful (such as StatusType.SUCCESS)</li>
-<li><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – should we impute data?</li>
+<li><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states considered as successful (such as StatusType.SUCCESS)
+If None, set to [StatusType.SUCCESS, ]</li>
+<li><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – Should we impute data?</li>
 <li><strong>imputor</strong> (<em>epm.base_imputor Instance</em>) – Object to impute censored data</li>
-<li><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – list of states that mark censored data (such as StatusType.TIMEOUT)
-in combination with runtime &lt; cutoff_time</li>
-<li><strong>rs</strong> (<em>numpy.random.RandomState</em>) – only used for reshuffling data after imputation</li>
+<li><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states that mark censored data (such as StatusType.TIMEOUT)
+in combination with runtime &lt; cutoff_time
+If None, set to [StatusType.CAPPED, ]</li>
+<li><strong>rng</strong> (<em>numpy.random.RandomState</em>) – only used for reshuffling data after imputation</li>
 </ul>
 </td>
 </tr>
@@ -415,8 +421,7 @@ in combination with runtime &lt; cutoff_time</li>
 <dl class="method">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS.get_X_y">
 <code class="descname">get_X_y</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS.get_X_y" title="Permalink to this definition">¶</a></dt>
-<dd><p>simple interface to obtain all data in runhistory
-in X, y format</p>
+<dd><p>Simple interface to obtain all data in runhistory in X, y format</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -436,14 +441,14 @@ in X, y format</p>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS.transform">
-<code class="descname">transform</code><span class="sig-paren">(</span><em>runhistory</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS.transform" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns vector representation of runhistory;
-if imputation is disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</p>
+<code class="descname">transform</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns vector representation of runhistory; if imputation is
+disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – runhistory of all evaluated configurations x instances</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – Runhistory containing all evaluated configurations/instances</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
 <li><strong>X</strong> (<em>numpy.ndarray</em>) – configuration vector x instance features</li>
@@ -459,8 +464,9 @@ if imputation is disabled, censored (TIMEOUT with time &lt; cutoff) will be skip
 
 <dl class="class">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost">
-<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory2epm.</code><code class="descname">RunHistory2EPM4LogCost</code><span class="sig-paren">(</span><em>scenario</em>, <em>num_params</em>, <em>success_states=None</em>, <em>impute_censored_data=False</em>, <em>impute_state=None</em>, <em>imputor=None</em>, <em>rs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4LogCost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory2epm.</code><code class="descname">RunHistory2EPM4LogCost</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>num_params: int</em>, <em>success_states: typing.List[smac.tae.execute_ta_run.StatusType] = None</em>, <em>impute_censored_data: bool = False</em>, <em>impute_state: typing.List[smac.tae.execute_ta_run.StatusType] = None</em>, <em>imputor: smac.epm.base_imputor.BaseImputor = None</em>, <em>rng: mtrand.RandomState = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4LogCost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost" title="smac.runhistory.runhistory2epm.RunHistory2EPM4Cost"><code class="xref py py-class docutils literal"><span class="pre">smac.runhistory.runhistory2epm.RunHistory2EPM4Cost</span></code></a></p>
+<p>TODO</p>
 <p>Constructor</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -469,12 +475,14 @@ if imputation is disabled, censored (TIMEOUT with time &lt; cutoff) will be skip
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>scenario</strong> (<em>Scenario Object</em>) – Algorithm Configuration Scenario</li>
 <li><strong>num_params</strong> (<em>int</em>) – number of parameters in config space</li>
-<li><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – list of states considered as successful (such as StatusType.SUCCESS)</li>
-<li><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – should we impute data?</li>
+<li><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states considered as successful (such as StatusType.SUCCESS)
+If None, set to [StatusType.SUCCESS, ]</li>
+<li><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – Should we impute data?</li>
 <li><strong>imputor</strong> (<em>epm.base_imputor Instance</em>) – Object to impute censored data</li>
-<li><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – list of states that mark censored data (such as StatusType.TIMEOUT)
-in combination with runtime &lt; cutoff_time</li>
-<li><strong>rs</strong> (<em>numpy.random.RandomState</em>) – only used for reshuffling data after imputation</li>
+<li><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states that mark censored data (such as StatusType.TIMEOUT)
+in combination with runtime &lt; cutoff_time
+If None, set to [StatusType.CAPPED, ]</li>
+<li><strong>rng</strong> (<em>numpy.random.RandomState</em>) – only used for reshuffling data after imputation</li>
 </ul>
 </td>
 </tr>
@@ -483,8 +491,7 @@ in combination with runtime &lt; cutoff_time</li>
 <dl class="method">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost.get_X_y">
 <code class="descname">get_X_y</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost.get_X_y" title="Permalink to this definition">¶</a></dt>
-<dd><p>simple interface to obtain all data in runhistory
-in X, y format</p>
+<dd><p>Simple interface to obtain all data in runhistory in X, y format</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -504,14 +511,14 @@ in X, y format</p>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost.transform">
-<code class="descname">transform</code><span class="sig-paren">(</span><em>runhistory</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost.transform" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns vector representation of runhistory;
-if imputation is disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</p>
+<code class="descname">transform</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns vector representation of runhistory; if imputation is
+disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – runhistory of all evaluated configurations x instances</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – Runhistory containing all evaluated configurations/instances</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
 <li><strong>X</strong> (<em>numpy.ndarray</em>) – configuration vector x instance features</li>

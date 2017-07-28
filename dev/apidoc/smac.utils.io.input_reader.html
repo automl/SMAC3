@@ -259,22 +259,21 @@
 <dt id="smac.utils.io.input_reader.InputReader">
 <em class="property">class </em><code class="descclassname">smac.utils.io.input_reader.</code><code class="descname">InputReader</code><a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>reading all input files for SMAC (scenario file, instance files, …)</p>
+<p>Reading all input files for SMAC (scenario file, instance files, …)</p>
 <dl class="docutils">
-<dt>Note: most of this code was taken from the pysmac repository.</dt>
+<dt>Note: Most of this code was taken from the pysmac repository.</dt>
 <dd>We copy it here because we don’t want smac3 to depend
 on an earlier version!</dd>
 </dl>
-<p>Constructor</p>
 <dl class="method">
 <dt id="smac.utils.io.input_reader.InputReader.read_instance_features_file">
-<code class="descname">read_instance_features_file</code><span class="sig-paren">(</span><em>fn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_instance_features_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_instance_features_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>encapsulates read_instances_file of pysmac</p>
+<code class="descname">read_instance_features_file</code><span class="sig-paren">(</span><em>fn: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_instance_features_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_instance_features_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encapsulates read_instances_file of pysmac</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fn</strong> (<em>string</em>) – file name of instance feature file</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fn</strong> (<em>string</em>) – File name of instance feature file</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>features</strong> – first entry is a list of the feature names,
 second one is a dict with ‘instance name’ -
@@ -288,15 +287,15 @@ second one is a dict with ‘instance name’ -
 
 <dl class="method">
 <dt id="smac.utils.io.input_reader.InputReader.read_instance_file">
-<code class="descname">read_instance_file</code><span class="sig-paren">(</span><em>fn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_instance_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_instance_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>encapsulates read_instances_file of pysmac</p>
+<code class="descname">read_instance_file</code><span class="sig-paren">(</span><em>fn: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_instance_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_instance_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encapsulates read_instances_file of pysmac</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fn</strong> (<em>string</em>) – file name of instance file</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fn</strong> (<em>string</em>) – File name of instance file</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>instances</strong> – each element is a list where the first element is the
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>instances</strong> – Each element is a list where the first element is the
 instance name followed by additional
 information for the specific instance.</td>
 </tr>
@@ -308,13 +307,13 @@ information for the specific instance.</td>
 
 <dl class="method">
 <dt id="smac.utils.io.input_reader.InputReader.read_pcs_file">
-<code class="descname">read_pcs_file</code><span class="sig-paren">(</span><em>fn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_pcs_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_pcs_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>encapsulates generating configuration space object</p>
+<code class="descname">read_pcs_file</code><span class="sig-paren">(</span><em>fn: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_pcs_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_pcs_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encapsulates generating configuration space object</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fn</strong> (<em>string</em>) – file name of pcs file</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fn</strong> (<em>string</em>) – File name of pcs file</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>ConfigSpace</strong></td>
 </tr>
@@ -326,15 +325,17 @@ information for the specific instance.</td>
 
 <dl class="method">
 <dt id="smac.utils.io.input_reader.InputReader.read_scenario_file">
-<code class="descname">read_scenario_file</code><span class="sig-paren">(</span><em>fn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_scenario_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_scenario_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>encapsulates read_scenario_file of pysmac</p>
+<code class="descname">read_scenario_file</code><span class="sig-paren">(</span><em>fn: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_scenario_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_scenario_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encapsulates read_scenario_file of pysmac</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>dict</strong> – (key, value) pairs are (variable name, variable value)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fn</strong> (<em>string</em>) – File name of scenario file</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dictionary</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>dict</strong> – (key, value) pairs are (variable name, variable value)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dictionary</td>
 </tr>
 </tbody>
 </table>

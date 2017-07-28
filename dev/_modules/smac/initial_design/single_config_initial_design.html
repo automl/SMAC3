@@ -246,17 +246,13 @@
            <div itemprop="articleBody">
             
   <h1>Source code for smac.initial_design.single_config_initial_design</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">sys</span>
-
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">smac.initial_design.initial_design</span> <span class="k">import</span> <span class="n">InitialDesign</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">ExecuteTARun</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="k">import</span> <span class="n">Stats</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="k">import</span> <span class="n">TrajLogger</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">StatusType</span>
-<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
 <span class="kn">from</span> <span class="nn">smac.utils</span> <span class="k">import</span> <span class="n">constants</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer, Katharina Eggensperger&quot;</span>
@@ -265,6 +261,13 @@
 
 
 <div class="viewcode-block" id="SingleConfigInitialDesign"><a class="viewcode-back" href="../../../apidoc/smac.initial_design.single_config_initial_design.html#smac.initial_design.default_configuration_design.SingleConfigInitialDesign">[docs]</a><span class="k">class</span> <span class="nc">SingleConfigInitialDesign</span><span class="p">(</span><span class="n">InitialDesign</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Base class for initial design strategies that evaluates multiple</span>
+<span class="sd">    configurations</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">tae_runner</span><span class="p">:</span> <span class="n">ExecuteTARun</span><span class="p">,</span>
@@ -273,22 +276,22 @@
                  <span class="n">traj_logger</span><span class="p">:</span> <span class="n">TrajLogger</span><span class="p">,</span>
                  <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span>
                  <span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Constructor</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
 
-<span class="sd">        Arguments</span>
+<span class="sd">        Parameters</span>
 <span class="sd">        ---------</span>
 <span class="sd">        tae_runner: ExecuteTARun</span>
 <span class="sd">            target algorithm execution object</span>
 <span class="sd">        scenario: Scenario</span>
 <span class="sd">            scenario with all meta information (including configuration space)</span>
 <span class="sd">        stats: Stats</span>
-<span class="sd">            statistics of experiments; needed in case initial design already exhaust the budget</span>
+<span class="sd">            statistics of experiments; needed in case initial design already</span>
+<span class="sd">            exhaust the budget</span>
 <span class="sd">        traj_logger: TrajLogger</span>
 <span class="sd">            trajectory logging to add new incumbents found by the initial design</span>
 <span class="sd">        rng: np.random.RandomState</span>
 <span class="sd">            random state</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">tae_runner</span><span class="o">=</span><span class="n">tae_runner</span><span class="p">,</span>
                          <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
                          <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
@@ -296,16 +299,14 @@
                          <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SingleConfigInitialDesign.run"><a class="viewcode-back" href="../../../apidoc/smac.initial_design.single_config_initial_design.html#smac.initial_design.default_configuration_design.SingleConfigInitialDesign.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Runs the initial design by calling the target algorithm</span>
+        <span class="sd">&quot;&quot;&quot;Runs the initial design by calling the target algorithm</span>
 <span class="sd">        and adding new entries to the trajectory logger.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        incumbent: Configuration</span>
-<span class="sd">            initial incumbent configuration</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-
+<span class="sd">            Initial incumbent configuration</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">initial_incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_select_configuration</span><span class="p">()</span>
 
         <span class="c1"># add this incumbent right away to have an entry to time point 0</span>
@@ -325,7 +326,8 @@
             <span class="n">instance</span><span class="o">=</span><span class="n">rand_inst</span><span class="p">,</span>
             <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">cutoff</span><span class="p">,</span>
             <span class="n">seed</span><span class="o">=</span><span class="n">initial_seed</span><span class="p">,</span>
-            <span class="n">instance_specific</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">instance_specific</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">rand_inst</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">))</span>
+            <span class="n">instance_specific</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">instance_specific</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">rand_inst</span><span class="p">,</span>
+                                                                  <span class="s2">&quot;0&quot;</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># first incumbent</span>
 
@@ -336,15 +338,13 @@
         <span class="k">return</span> <span class="n">initial_incumbent</span></div>
 
     <span class="k">def</span> <span class="nf">_select_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        selects a single configuration to run</span>
+        <span class="sd">&quot;&quot;&quot;Selects a single configuration to run</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        config: Configuration</span>
 <span class="sd">            initial incumbent configuration</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 </pre></div>
 

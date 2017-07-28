@@ -246,9 +246,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for smac.epm.base_epm</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
-
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="k">import</span> <span class="n">PCA</span>
 <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">MinMaxScaler</span>
@@ -265,28 +263,47 @@
 <div class="viewcode-block" id="AbstractEPM"><a class="viewcode-back" href="../../../apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM">[docs]</a><span class="k">class</span> <span class="nc">AbstractEPM</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Abstract implementation of the EPM API.</span>
 
-<span class="sd">        Note: The input dimensionality of Y for training</span>
-<span class="sd">        and the output dimensions of all predictions</span>
-<span class="sd">        (also called ``n_objectives``)</span>
-<span class="sd">        depends on the concrete implementation of this</span>
-<span class="sd">        abstract class.</span>
+<span class="sd">    **Note:** The input dimensionality of Y for training and the output dimensions</span>
+<span class="sd">    of all predictions (also called ``n_objectives``) depends on the concrete</span>
+<span class="sd">    implementation of this abstract class.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    instance_features : np.ndarray(I, K)</span>
+<span class="sd">        Contains the K dimensional instance features</span>
+<span class="sd">        of the I different instances</span>
+<span class="sd">    pca : sklearn.decomposition.PCA</span>
+<span class="sd">        Object to perform PCA</span>
+<span class="sd">    pca_components : float</span>
+<span class="sd">        Number of components to keep or None</span>
+<span class="sd">    n_feats : int</span>
+<span class="sd">        Number of instance features</span>
+<span class="sd">    n_params : int</span>
+<span class="sd">        Number of parameters in a configuration (only available after train has</span>
+<span class="sd">        been called)</span>
+<span class="sd">    scaler : sklearn.preprocessing.MinMaxScaler</span>
+<span class="sd">        Object to scale data to be withing [0, 1]</span>
+<span class="sd">    var_threshold : float</span>
+<span class="sd">        Lower bound vor variance. If estimated variance &lt; var_threshold, the set</span>
+<span class="sd">        to var_threshold</span>
+<span class="sd">    types : list</span>
+<span class="sd">        If set, contains a list with feature types (cat,const) of input vector</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">instance_features</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">pca_components</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Constructor</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        instance_features: np.ndarray (I, K)</span>
+<span class="sd">        instance_features : np.ndarray (I, K)</span>
 <span class="sd">            Contains the K dimensional instance features</span>
 <span class="sd">            of the I different instances</span>
-<span class="sd">        pca_components: float</span>
-<span class="sd">            If set to a float, use PCA to reduce dimensionality of instance </span>
-<span class="sd">            features. Requires to set n_feats (&gt; pca_dims).</span>
-
+<span class="sd">        pca_components : float</span>
+<span class="sd">            Number of components to keep when using PCA to reduce</span>
+<span class="sd">            dimensionality of instance features. Requires to</span>
+<span class="sd">            set n_feats (&gt; pca_dims).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">instance_features</span> <span class="o">=</span> <span class="n">instance_features</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pca_components</span> <span class="o">=</span> <span class="n">pca_components</span>
@@ -319,7 +336,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        self : trained EPM</span>
+<span class="sd">        self : AbstractEPM</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">n_params</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_feats</span>
@@ -391,7 +408,8 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : np.ndarray of shape = [n_samples, n_features (config + instance features)]</span>
+<span class="sd">        X : np.ndarray</span>
+<span class="sd">            [n_samples, n_features (config + instance features)]</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -410,7 +428,8 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : np.ndarray of shape = [n_samples, n_features (config)]</span>
+<span class="sd">        X : np.ndarray</span>
+<span class="sd">            [n_samples, n_features (config)]</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>

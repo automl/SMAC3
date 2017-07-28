@@ -255,24 +255,11 @@
 <span id="smac-tae-execute-ta-run-old-module"></span><h1>smac.tae.execute_ta_run_old module<a class="headerlink" href="#module-smac.tae.execute_ta_run_old" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.tae.execute_ta_run_old.ExecuteTARunOld">
-<em class="property">class </em><code class="descclassname">smac.tae.execute_ta_run_old.</code><code class="descname">ExecuteTARunOld</code><span class="sig-paren">(</span><em>ta</em>, <em>stats=None</em>, <em>runhistory=None</em>, <em>run_obj='runtime'</em>, <em>par_factor=1</em>, <em>cost_for_crash=2147483647.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run_old.html#ExecuteTARunOld"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run_old.ExecuteTARunOld" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.tae.execute_ta_run_old.</code><code class="descname">ExecuteTARunOld</code><span class="sig-paren">(</span><em>ta</em>, <em>stats=None</em>, <em>runhistory=None</em>, <em>run_obj: str = 'runtime'</em>, <em>par_factor: int = 1</em>, <em>cost_for_crash: float = 2147483647.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run_old.html#ExecuteTARunOld"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run_old.ExecuteTARunOld" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><code class="xref py py-class docutils literal"><span class="pre">smac.tae.execute_ta_run.ExecuteTARun</span></code></a></p>
-<p>executes a target algorithm run with a given configuration
-on a given instance and some resource limitations
-Uses the original SMAC/PILS format (SMAC &lt; v2.10)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ta</strong> (<em>string</em>) – the command line call to the target algorithm (wrapper)</li>
-<li><strong>run_obj</strong> (<em>str</em>) – run objective (runtime or quality)</li>
-<li><strong>par_factor</strong> (<em>int</em>) – penalized average runtime factor</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
+<p>Executes a target algorithm run with a given configuration on a given
+instance and some resource limitations. Uses the original SMAC/PILS format
+(SMAC &lt; v2.10)</p>
 <p>Constructor</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -294,19 +281,19 @@ that returned NaN or inf)</li>
 <dl class="method">
 <dt id="smac.tae.execute_ta_run_old.ExecuteTARunOld.run">
 <code class="descname">run</code><span class="sig-paren">(</span><em>config</em>, <em>instance=None</em>, <em>cutoff=None</em>, <em>seed=12345</em>, <em>instance_specific='0'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run_old.html#ExecuteTARunOld.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run_old.ExecuteTARunOld.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>runs target algorithm &lt;self.ta&gt; with configuration &lt;config&gt; on
-instance &lt;instance&gt; with instance specifics &lt;specifics&gt;
-for at most &lt;cutoff&gt; seconds and random seed &lt;seed&gt;</p>
+<dd><p>Runs target algorithm &lt;self.ta&gt; with configuration &lt;config&gt; on
+instance &lt;instance&gt; with instance specifics &lt;specifics&gt; for at most
+&lt;cutoff&gt; seconds and random seed &lt;seed&gt;</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>config</strong> (<em>dictionary</em><em> (or </em><em>similar</em><em>)</em>) – dictionary param -&gt; value</li>
-<li><strong>instance</strong> (<em>string</em>) – problem instance</li>
-<li><strong>cutoff</strong> (<em>double</em>) – runtime cutoff</li>
-<li><strong>seed</strong> (<em>int</em>) – random seed</li>
-<li><strong>instance_specific</strong> (<em>str</em>) – instance specific information (e.g., domain file or solution)</li>
+<li><strong>config</strong> (<em>dictionary</em><em> (or </em><em>similar</em><em>)</em>) – Dictionary param -&gt; value</li>
+<li><strong>instance</strong> (<em>string</em>) – Problem instance</li>
+<li><strong>cutoff</strong> (<em>double</em>) – Runtime cutoff</li>
+<li><strong>seed</strong> (<em>int</em>) – Random seed</li>
+<li><strong>instance_specific</strong> (<em>str</em>) – Instance specific information (e.g., domain file or solution)</li>
 </ul>
 </td>
 </tr>
@@ -326,19 +313,19 @@ for at most &lt;cutoff&gt; seconds and random seed &lt;seed&gt;</p>
 <dl class="method">
 <dt id="smac.tae.execute_ta_run_old.ExecuteTARunOld.start">
 <code class="descname">start</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em>, <em>instance: str</em>, <em>cutoff: float = None</em>, <em>seed: int = 12345</em>, <em>instance_specific: str = '0'</em>, <em>capped: bool = False</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.tae.execute_ta_run_old.ExecuteTARunOld.start" title="Permalink to this definition">¶</a></dt>
-<dd><p>wrapper function for ExecuteTARun.run() to check configuration budget before the runs
-and to update stats after run</p>
+<dd><p>Wrapper function for ExecuteTARun.run() to check configuration
+budget before the runs and to update stats after run</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>config</strong> (<em>Configuration</em>) – mainly a dictionary param -&gt; value</li>
-<li><strong>instance</strong> (<em>string</em>) – problem instance</li>
-<li><strong>cutoff</strong> (<em>float</em>) – runtime cutoff</li>
-<li><strong>seed</strong> (<em>int</em>) – random seed</li>
-<li><strong>instance_specific</strong> (<em>str</em>) – instance specific information (e.g., domain file or solution)</li>
-<li><strong>capped</strong> (<em>bool</em>) – if true and status is StatusType.TIMEOUT,
+<li><strong>config</strong> (<em>Configuration</em>) – Mainly a dictionary param -&gt; value</li>
+<li><strong>instance</strong> (<em>string</em>) – Problem instance</li>
+<li><strong>cutoff</strong> (<em>float</em>) – Runtime cutoff</li>
+<li><strong>seed</strong> (<em>int</em>) – Random seed</li>
+<li><strong>instance_specific</strong> (<em>str</em>) – Instance specific information (e.g., domain file or solution)</li>
+<li><strong>capped</strong> (<em>bool</em>) – If true and status is StatusType.TIMEOUT,
 uses StatusType.CAPPED</li>
 </ul>
 </td>

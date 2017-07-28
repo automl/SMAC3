@@ -263,9 +263,9 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>config</strong> (<em>Configuration</em>) – configuration to calculate objective for</li>
+<li><strong>config</strong> (<em>Configuration</em>) – Configuration to calculate objective for</li>
 <li><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – RunHistory object from which the objective value is computed.</li>
-<li><strong>instance_seed_pairs</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – list of tuples of instance-seeds pairs. If None, the run_history is
+<li><strong>instance_seed_pairs</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – List of tuples of instance-seeds pairs. If None, the run_history is
 queried for all runs of the given configuration.</li>
 </ul>
 </td>
@@ -282,7 +282,7 @@ queried for all runs of the given configuration.</li>
 
 <dl class="function">
 <dt id="smac.optimizer.objective.sum_cost">
-<code class="descclassname">smac.optimizer.objective.</code><code class="descname">sum_cost</code><span class="sig-paren">(</span><em>config</em>, <em>run_history</em>, <em>instance_seed_pairs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/objective.html#sum_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.objective.sum_cost" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">smac.optimizer.objective.</code><code class="descname">sum_cost</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em>, <em>run_history: smac.runhistory.runhistory.RunHistory</em>, <em>instance_seed_pairs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/objective.html#sum_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.objective.sum_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the sum of costs of a configuration.</p>
 <p>This is the sum of costs of all instance-seed pairs.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -290,14 +290,14 @@ queried for all runs of the given configuration.</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>config</strong> (<em>Configuration</em>) – configuration to calculate objective for</li>
+<li><strong>config</strong> (<em>Configuration</em>) – Configuration to calculate objective for</li>
 <li><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – RunHistory object from which the objective value is computed.</li>
-<li><strong>instance_seed_pairs</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – list of tuples of instance-seeds pairs. If None, the run_history is
+<li><strong>instance_seed_pairs</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – List of tuples of instance-seeds pairs. If None, the run_history is
 queried for all runs of the given configuration.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>sum_cost</strong> – sum of costs of config</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>sum_cost</strong> – Sum of costs of config</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
@@ -309,7 +309,7 @@ queried for all runs of the given configuration.</li>
 
 <dl class="function">
 <dt id="smac.optimizer.objective.total_runtime">
-<code class="descclassname">smac.optimizer.objective.</code><code class="descname">total_runtime</code><span class="sig-paren">(</span><em>config</em>, <em>run_history</em>, <em>instance_seed_pairs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/objective.html#total_runtime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.objective.total_runtime" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">smac.optimizer.objective.</code><code class="descname">total_runtime</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em>, <em>run_history: smac.runhistory.runhistory.RunHistory</em>, <em>instance_seed_pairs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/objective.html#total_runtime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.objective.total_runtime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the total cost of a configuration.</p>
 <p>This is the sum of costs of all instance-seed pairs.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -317,14 +317,14 @@ queried for all runs of the given configuration.</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>config</strong> (<em>Configuration</em>) – configuration to calculate objective for</li>
+<li><strong>config</strong> (<em>Configuration</em>) – Configuration to calculate objective for</li>
 <li><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – RunHistory object from which the objective value is computed.</li>
-<li><strong>instance_seed_pairs</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – list of tuples of instance-seeds pairs. If None, the run_history is
+<li><strong>instance_seed_pairs</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – List of tuples of instance-seeds pairs. If None, the run_history is
 queried for all runs of the given configuration.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>runtime</strong></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>Runtime</strong> – Sum of all costs</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>

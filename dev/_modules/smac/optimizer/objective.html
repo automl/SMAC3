@@ -248,16 +248,16 @@
   <h1>Source code for smac.optimizer.objective</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="k">import</span> <span class="n">MAXINT</span>
-<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunKey</span>
-
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunKey</span><span class="p">,</span> <span class="n">RunHistory</span>
+<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">Configuration</span>
 <span class="sd">&quot;&quot;&quot;Define overall objectives.</span>
 
 <span class="sd">Overall objectives are functions or callables that calculate the overall</span>
 <span class="sd">objective of a configuration on the instances and seeds it already ran on.&quot;&quot;&quot;</span>
 
 
-<span class="k">def</span> <span class="nf">_runtime</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">run_history</span><span class="p">,</span> <span class="n">instance_seed_pairs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_runtime</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
+             <span class="n">instance_seed_pairs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return array of all runtimes for the given config for further calculations.</span>
 
 <span class="sd">    Parameters</span>
@@ -289,7 +289,8 @@
     <span class="k">return</span> <span class="n">runtimes</span>
 
 
-<div class="viewcode-block" id="total_runtime"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.objective.html#smac.optimizer.objective.total_runtime">[docs]</a><span class="k">def</span> <span class="nf">total_runtime</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">run_history</span><span class="p">,</span> <span class="n">instance_seed_pairs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="total_runtime"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.objective.html#smac.optimizer.objective.total_runtime">[docs]</a><span class="k">def</span> <span class="nf">total_runtime</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
+                  <span class="n">instance_seed_pairs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return the total cost of a configuration.</span>
 
 <span class="sd">    This is the sum of costs of all instance-seed pairs.</span>
@@ -297,37 +298,39 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    config : Configuration</span>
-<span class="sd">        configuration to calculate objective for</span>
+<span class="sd">        Configuration to calculate objective for</span>
 <span class="sd">    run_history : RunHistory</span>
 <span class="sd">        RunHistory object from which the objective value is computed.</span>
 <span class="sd">    instance_seed_pairs : list, optional (default=None)</span>
-<span class="sd">        list of tuples of instance-seeds pairs. If None, the run_history is</span>
+<span class="sd">        List of tuples of instance-seeds pairs. If None, the run_history is</span>
 <span class="sd">        queried for all runs of the given configuration.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    runtime: float</span>
+<span class="sd">    Runtime: float</span>
+<span class="sd">        Sum of all costs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">_runtime</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">run_history</span><span class="p">,</span> <span class="n">instance_seed_pairs</span><span class="p">))</span></div>
 
 
-<span class="k">def</span> <span class="nf">_cost</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">run_history</span><span class="p">,</span> <span class="n">instance_seed_pairs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_cost</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
+          <span class="n">instance_seed_pairs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return array of all costs for the given config for further calculations.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    config : Configuration</span>
-<span class="sd">        configuration to calculate objective for</span>
+<span class="sd">        Configuration to calculate objective for</span>
 <span class="sd">    run_history : RunHistory</span>
 <span class="sd">        RunHistory object from which the objective value is computed.</span>
 <span class="sd">    instance_seed_pairs : list, optional (default=None)</span>
-<span class="sd">        list of tuples of instance-seeds pairs. If None, the run_history is</span>
+<span class="sd">        List of tuples of instance-seeds pairs. If None, the run_history is</span>
 <span class="sd">        queried for all runs of the given configuration.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    Costs: list</span>
-<span class="sd">        array of all costs</span>
+<span class="sd">        Array of all costs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">id_</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">config_ids</span><span class="p">[</span><span class="n">config</span><span class="p">]</span>
@@ -352,11 +355,11 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    config : Configuration</span>
-<span class="sd">        configuration to calculate objective for</span>
+<span class="sd">        Configuration to calculate objective for</span>
 <span class="sd">    run_history : RunHistory</span>
 <span class="sd">        RunHistory object from which the objective value is computed.</span>
 <span class="sd">    instance_seed_pairs : list, optional (default=None)</span>
-<span class="sd">        list of tuples of instance-seeds pairs. If None, the run_history is</span>
+<span class="sd">        List of tuples of instance-seeds pairs. If None, the run_history is</span>
 <span class="sd">        queried for all runs of the given configuration.</span>
 
 <span class="sd">    Returns</span>
@@ -366,7 +369,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">_cost</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">run_history</span><span class="p">,</span> <span class="n">instance_seed_pairs</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="sum_cost"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.objective.html#smac.optimizer.objective.sum_cost">[docs]</a><span class="k">def</span> <span class="nf">sum_cost</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">run_history</span><span class="p">,</span> <span class="n">instance_seed_pairs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="sum_cost"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.objective.html#smac.optimizer.objective.sum_cost">[docs]</a><span class="k">def</span> <span class="nf">sum_cost</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
+             <span class="n">instance_seed_pairs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return the sum of costs of a configuration.</span>
 
 <span class="sd">    This is the sum of costs of all instance-seed pairs.</span>
@@ -374,17 +379,17 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    config : Configuration</span>
-<span class="sd">        configuration to calculate objective for</span>
+<span class="sd">        Configuration to calculate objective for</span>
 <span class="sd">    run_history : RunHistory</span>
 <span class="sd">        RunHistory object from which the objective value is computed.</span>
 <span class="sd">    instance_seed_pairs : list, optional (default=None)</span>
-<span class="sd">        list of tuples of instance-seeds pairs. If None, the run_history is</span>
+<span class="sd">        List of tuples of instance-seeds pairs. If None, the run_history is</span>
 <span class="sd">        queried for all runs of the given configuration.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    ----------</span>
 <span class="sd">    sum_cost: float</span>
-<span class="sd">        sum of costs of config</span>
+<span class="sd">        Sum of costs of config</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">_cost</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">run_history</span><span class="p">,</span> <span class="n">instance_seed_pairs</span><span class="p">))</span></div>
 </pre></div>

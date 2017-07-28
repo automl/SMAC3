@@ -249,32 +249,28 @@
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="k">import</span> <span class="n">ConfigurationSpace</span>
+
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">pcs_new</span> <span class="k">as</span> <span class="n">pcs</span>
 
 
 <div class="viewcode-block" id="OutputWriter"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.output_writer.html#smac.utils.io.output_writer.OutputWriter">[docs]</a><span class="k">class</span> <span class="nc">OutputWriter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Writing scenario to file.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Writing scenario to file.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Constructor</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>
 
 <div class="viewcode-block" id="OutputWriter.write_scenario_file"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.output_writer.html#smac.utils.io.output_writer.OutputWriter.write_scenario_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_scenario_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scenario</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Write scenario to a file (format is compatible with input_reader).</span>
-<span class="sd">        Will overwrite if file exists.</span>
-<span class="sd">        If you have arguments that need special parsing when saving, specify so</span>
-<span class="sd">        in the _parse_argument-function.</span>
+        <span class="sd">&quot;&quot;&quot;Write scenario to a file (format is compatible with input_reader).</span>
+<span class="sd">        Will overwrite if file exists. If you have arguments that need special</span>
+<span class="sd">        parsing when saving, specify so in the _parse_argument-function.</span>
 <span class="sd">        Creates output-dir if necessesary.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">            scenario: Scenario</span>
-<span class="sd">                scenario to be written to file</span>
+<span class="sd">                Scenario to be written to file</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -308,33 +304,33 @@
                 <span class="k">if</span> <span class="n">new_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> = </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">options_dest2name</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">new_value</span><span class="p">))</span></div>
 
-    <span class="k">def</span> <span class="nf">_parse_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Some values of the scenario-file need to be changed upon writing, such</span>
-<span class="sd">            as the &#39;ta&#39; (target algorithm), due to it&#39;s callback.</span>
-<span class="sd">            Also the configspace, features, train_inst- and test-inst-lists are</span>
-<span class="sd">            saved to output_dir, if they exist.</span>
+    <span class="k">def</span> <span class="nf">_parse_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Some values of the scenario-file need to be changed upon writing,</span>
+<span class="sd">        such as the &#39;ta&#39; (target algorithm), due to it&#39;s callback. Also,</span>
+<span class="sd">        the configspace, features, train_inst- and test-inst-lists are saved</span>
+<span class="sd">        to output_dir, if they exist.</span>
 
-<span class="sd">            Parameters:</span>
-<span class="sd">            -----------</span>
-<span class="sd">                scenario: Scenario</span>
-<span class="sd">                    scenario-file to be written</span>
-<span class="sd">                key: string</span>
-<span class="sd">                    name of the attribute in scenario-file</span>
-<span class="sd">                value: Any</span>
-<span class="sd">                    corresponding attribute</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">            scenario: Scenario</span>
+<span class="sd">                Scenario-file to be written</span>
+<span class="sd">            key: string</span>
+<span class="sd">                Name of the attribute in scenario-file</span>
+<span class="sd">            value: Any</span>
+<span class="sd">                Corresponding attribute</span>
 
-<span class="sd">            Returns:</span>
-<span class="sd">            --------</span>
-<span class="sd">                new value: string</span>
-<span class="sd">                    the altered value, to be written to file</span>
+<span class="sd">        Returns:</span>
+<span class="sd">        --------</span>
+<span class="sd">            new value: string</span>
+<span class="sd">                The altered value, to be written to file</span>
 
-<span class="sd">            Sideeffects:</span>
-<span class="sd">            ------------</span>
-<span class="sd">              - copies files pcs_fn, train_inst_fn, test_inst_fn and feature_fn to</span>
-<span class="sd">                output if possible, creates the files from attributes otherwise</span>
+<span class="sd">        Sideeffects:</span>
+<span class="sd">        ------------</span>
+<span class="sd">          - copies files pcs_fn, train_inst_fn, test_inst_fn and feature_fn to</span>
+<span class="sd">            output if possible, creates the files from attributes otherwise</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;pcs_fn&#39;</span><span class="p">,</span> <span class="s1">&#39;train_inst_fn&#39;</span><span class="p">,</span> <span class="s1">&#39;test_inst_fn&#39;</span><span class="p">,</span> <span class="s1">&#39;feature_fn&#39;</span><span class="p">,</span> <span class="s1">&#39;output_dir&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;pcs_fn&#39;</span><span class="p">,</span> <span class="s1">&#39;train_inst_fn&#39;</span><span class="p">,</span> <span class="s1">&#39;test_inst_fn&#39;</span><span class="p">,</span> <span class="s1">&#39;feature_fn&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;output_dir&#39;</span><span class="p">]:</span>
             <span class="c1"># Copy if file exists, else write to new file</span>
             <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
                 <span class="k">try</span><span class="p">:</span>
@@ -352,7 +348,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">write_inst_file</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">test_insts</span><span class="p">,</span> <span class="n">new_path</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;feature_fn&#39;</span> <span class="ow">and</span> <span class="n">scenario</span><span class="o">.</span><span class="n">feature_dict</span> <span class="o">!=</span> <span class="p">{}:</span>
                 <span class="n">new_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="s1">&#39;features.txt&#39;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">write_inst_features_file</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">n_features</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">feature_dict</span><span class="p">,</span> <span class="n">new_path</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">write_inst_features_file</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">n_features</span><span class="p">,</span>
+                                              <span class="n">scenario</span><span class="o">.</span><span class="n">feature_dict</span><span class="p">,</span> <span class="n">new_path</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>
             <span class="c1"># New value -&gt; new path</span>
@@ -366,32 +363,30 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">value</span>
 
-<div class="viewcode-block" id="OutputWriter.write_inst_file"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.output_writer.html#smac.utils.io.output_writer.OutputWriter.write_inst_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_inst_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">insts</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Writes instance-list to file.</span>
+<div class="viewcode-block" id="OutputWriter.write_inst_file"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.output_writer.html#smac.utils.io.output_writer.OutputWriter.write_inst_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_inst_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">insts</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Writes instance-list to file.</span>
 
-<span class="sd">            Parameters</span>
-<span class="sd">            ----------</span>
-<span class="sd">                insts: list&lt;string&gt;</span>
-<span class="sd">                     instance list to be written</span>
-<span class="sd">                fn: string</span>
-<span class="sd">                     output path</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            insts: list&lt;string&gt;</span>
+<span class="sd">                 Instance list to be written</span>
+<span class="sd">            fn: string</span>
+<span class="sd">                 Output path</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
             <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">insts</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="OutputWriter.write_inst_features_file"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.output_writer.html#smac.utils.io.output_writer.OutputWriter.write_inst_features_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_inst_features_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_features</span><span class="p">,</span> <span class="n">feat_dict</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Writes features to file.</span>
+<div class="viewcode-block" id="OutputWriter.write_inst_features_file"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.output_writer.html#smac.utils.io.output_writer.OutputWriter.write_inst_features_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_inst_features_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_features</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">feat_dict</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Writes features to file.</span>
 
-<span class="sd">            Parameters</span>
-<span class="sd">            ----------</span>
-<span class="sd">                n_features: int</span>
-<span class="sd">                     number of features</span>
-<span class="sd">                feat_dict: dict</span>
-<span class="sd">                     features to be written</span>
-<span class="sd">                fn: string</span>
-<span class="sd">                     file name of instance feature file</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            n_features: int</span>
+<span class="sd">                 Number of features</span>
+<span class="sd">            feat_dict: dict</span>
+<span class="sd">                 Features to be written</span>
+<span class="sd">            fn: string</span>
+<span class="sd">                 File name of instance feature file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">header</span> <span class="o">=</span> <span class="s2">&quot;Instance, &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
             <span class="p">[</span><span class="s2">&quot;feature&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_features</span><span class="p">)])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -400,16 +395,15 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
             <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">header</span> <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">body</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="OutputWriter.write_pcs_file"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.output_writer.html#smac.utils.io.output_writer.OutputWriter.write_pcs_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_pcs_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Writing ConfigSpace to file.</span>
+<div class="viewcode-block" id="OutputWriter.write_pcs_file"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.output_writer.html#smac.utils.io.output_writer.OutputWriter.write_pcs_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_pcs_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cs</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Writing ConfigSpace to file.</span>
 
-<span class="sd">            Parameters</span>
-<span class="sd">            ----------</span>
-<span class="sd">                cs: ConfigurationSpace</span>
-<span class="sd">                     config-space to be written</span>
-<span class="sd">                fn: string</span>
-<span class="sd">                     output-file-path</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            cs: ConfigurationSpace</span>
+<span class="sd">                 Config-space to be written</span>
+<span class="sd">            fn: string</span>
+<span class="sd">                 Output-file-path</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
             <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pcs</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cs</span><span class="p">))</span></div></div>

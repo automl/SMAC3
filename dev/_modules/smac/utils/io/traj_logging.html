@@ -246,11 +246,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for smac.utils.io.traj_logging</h1><div class="highlight"><pre>
-<span></span><span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
-<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2016, ML4AAD&quot;</span>
-<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
-
-<span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">json</span>
@@ -260,6 +256,9 @@
 <span class="kn">from</span> <span class="nn">ConfigSpace.configuration_space</span> <span class="k">import</span> <span class="n">ConfigurationSpace</span><span class="p">,</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace.hyperparameters</span> <span class="k">import</span> <span class="n">FloatHyperparameter</span><span class="p">,</span> <span class="n">IntegerHyperparameter</span>
 
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2016, ML4AAD&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 <span class="n">TrajEntry</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span>
     <span class="s1">&#39;TrajEntry&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;train_perf&#39;</span><span class="p">,</span> <span class="s1">&#39;incumbent_id&#39;</span><span class="p">,</span> <span class="s1">&#39;incumbent&#39;</span><span class="p">,</span>
@@ -268,17 +267,21 @@
 
 <div class="viewcode-block" id="TrajLogger"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger">[docs]</a><span class="k">class</span> <span class="nc">TrajLogger</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        writes trajectory logs files </span>
+    <span class="sd">&quot;&quot;&quot;Writes trajectory logs files and creates output directory if not exists already</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        logger : Logger object</span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    stats</span>
+<span class="sd">    logger</span>
+<span class="sd">    output_dir</span>
+<span class="sd">    aclib_traj_fn</span>
+<span class="sd">    old_traj_fn</span>
+<span class="sd">    trajectory</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">stats</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        creates output directory if not exists already</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -304,30 +307,32 @@
                         <span class="s2">&quot;Could not make output directory: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">output_dir</span><span class="p">))</span>
                     <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 
-
             <span class="bp">self</span><span class="o">.</span><span class="n">old_traj_fn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;traj_old.csv&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">old_traj_fn</span><span class="p">):</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">old_traj_fn</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
                     <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
-                        <span class="s1">&#39;&quot;CPU Time Used&quot;,&quot;Estimated Training Performance&quot;,&quot;Wallclock Time&quot;,&quot;Incumbent ID&quot;,&quot;Automatic Configurator (CPU) Time&quot;,&quot;Configuration...&quot;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="s1">&#39;&quot;CPU Time Used&quot;,&quot;Estimated Training Performance&quot;,&#39;</span>
+                        <span class="s1">&#39;&quot;Wallclock Time&quot;,&quot;Incumbent ID&quot;,&#39;</span>
+                        <span class="s1">&#39;&quot;Automatic Configurator (CPU) Time&quot;,&#39;</span>
+                        <span class="s1">&#39;&quot;Configuration...&quot;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">aclib_traj_fn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;traj_aclib2.json&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span> <span class="o">=</span> <span class="p">[]</span>
 
-<div class="viewcode-block" id="TrajLogger.add_entry"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger.add_entry">[docs]</a>    <span class="k">def</span> <span class="nf">add_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_perf</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            adds entries to trajectory files (several formats) with using the</span>
-<span class="sd">            same timestamps for each entry</span>
+<div class="viewcode-block" id="TrajLogger.add_entry"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger.add_entry">[docs]</a>    <span class="k">def</span> <span class="nf">add_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_perf</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                  <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds entries to trajectory files (several formats) with using the</span>
+<span class="sd">        same timestamps for each entry</span>
 
-<span class="sd">            Parameters</span>
-<span class="sd">            ----------</span>
-<span class="sd">            train_perf: float</span>
-<span class="sd">                estimated performance on training (sub)set </span>
-<span class="sd">            incumbent_id: int</span>
-<span class="sd">                id of incumbent</span>
-<span class="sd">            incumbent: Configuration()</span>
-<span class="sd">                current incumbent configuration</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        train_perf: float</span>
+<span class="sd">            estimated performance on training (sub)set</span>
+<span class="sd">        incumbent_id: int</span>
+<span class="sd">            id of incumbent</span>
+<span class="sd">        incumbent: Configuration()</span>
+<span class="sd">            current incumbent configuration</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ta_runs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_runs</span>
         <span class="n">ta_time_used</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_time_used</span>
@@ -340,23 +345,23 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_add_in_aclib_format</span><span class="p">(</span><span class="n">train_perf</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">,</span>
                                       <span class="n">ta_time_used</span><span class="p">,</span> <span class="n">wallclock_time</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_add_in_old_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_perf</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">,</span>
-                           <span class="n">ta_time_used</span><span class="p">,</span> <span class="n">wallclock_time</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            adds entries to old SMAC2-like trajectory file</span>
+    <span class="k">def</span> <span class="nf">_add_in_old_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_perf</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                           <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">ta_time_used</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                           <span class="n">wallclock_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds entries to old SMAC2-like trajectory file</span>
 
-<span class="sd">            Parameters</span>
-<span class="sd">            ----------</span>
-<span class="sd">            train_perf: float</span>
-<span class="sd">                estimated performance on training (sub)set </span>
-<span class="sd">            incumbent_id: int</span>
-<span class="sd">                id of incumbent</span>
-<span class="sd">            incumbent: Configuration()</span>
-<span class="sd">                current incumbent configuration</span>
-<span class="sd">            ta_time_used: float</span>
-<span class="sd">                CPU time used by the target algorithm</span>
-<span class="sd">            wallclock_time: float</span>
-<span class="sd">                wallclock time used so far</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        train_perf: float</span>
+<span class="sd">            Estimated performance on training (sub)set</span>
+<span class="sd">        incumbent_id: int</span>
+<span class="sd">            Id of incumbent</span>
+<span class="sd">        incumbent: Configuration()</span>
+<span class="sd">            Current incumbent configuration</span>
+<span class="sd">        ta_time_used: float</span>
+<span class="sd">            CPU time used by the target algorithm</span>
+<span class="sd">        wallclock_time: float</span>
+<span class="sd">            Wallclock time used so far</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">conf</span> <span class="o">=</span> <span class="p">[]</span>
@@ -374,23 +379,23 @@
                 <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
             <span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">_add_in_aclib_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_perf</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">,</span>
-                             <span class="n">ta_time_used</span><span class="p">,</span> <span class="n">wallclock_time</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            adds entries to AClib2-like trajectory file</span>
+    <span class="k">def</span> <span class="nf">_add_in_aclib_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_perf</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                             <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">ta_time_used</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                             <span class="n">wallclock_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds entries to AClib2-like trajectory file</span>
 
-<span class="sd">            Parameters</span>
-<span class="sd">            ----------</span>
-<span class="sd">            train_perf: float</span>
-<span class="sd">                estimated performance on training (sub)set </span>
-<span class="sd">            incumbent_id: int</span>
-<span class="sd">                id of incumbent</span>
-<span class="sd">            incumbent: Configuration()</span>
-<span class="sd">                current incumbent configuration</span>
-<span class="sd">            ta_time_used: float</span>
-<span class="sd">                CPU time used by the target algorithm</span>
-<span class="sd">            wallclock_time: float</span>
-<span class="sd">                wallclock time used so far</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        train_perf: float</span>
+<span class="sd">            Estimated performance on training (sub)set</span>
+<span class="sd">        incumbent_id: int</span>
+<span class="sd">            Id of incumbent</span>
+<span class="sd">        incumbent: Configuration()</span>
+<span class="sd">            Current incumbent configuration</span>
+<span class="sd">        ta_time_used: float</span>
+<span class="sd">            CPU time used by the target algorithm</span>
+<span class="sd">        wallclock_time: float</span>
+<span class="sd">            Wallclock time used so far</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">conf</span> <span class="o">=</span> <span class="p">[]</span>
@@ -412,28 +417,27 @@
 
 <div class="viewcode-block" id="TrajLogger.read_traj_aclib_format"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger.read_traj_aclib_format">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_traj_aclib_format</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cs</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            reads trajectory from file</span>
+        <span class="sd">&quot;&quot;&quot;Reads trajectory from file</span>
 
-<span class="sd">            Parameters</span>
-<span class="sd">            ----------</span>
-<span class="sd">            fn: str</span>
-<span class="sd">                filename with saved runhistory in self._add_in_aclib_format format</span>
-<span class="sd">            cs: ConfigurationSpace</span>
-<span class="sd">                Configuration Space to translate dict object into Confiuration object</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fn: str</span>
+<span class="sd">            Filename with saved runhistory in self._add_in_aclib_format format</span>
+<span class="sd">        cs: ConfigurationSpace</span>
+<span class="sd">            Configuration Space to translate dict object into Confiuration object</span>
 
-<span class="sd">            Returns</span>
-<span class="sd">            -------</span>
-<span class="sd">            trajectory: list</span>
-<span class="sd">                each entry in the list is a dictionary of the form</span>
-<span class="sd">                {</span>
-<span class="sd">                &quot;cpu_time&quot;: float,</span>
-<span class="sd">                &quot;total_cpu_time&quot;: None, # TODO</span>
-<span class="sd">                &quot;wallclock_time&quot;: float,</span>
-<span class="sd">                &quot;evaluations&quot;: int</span>
-<span class="sd">                &quot;cost&quot;: float,</span>
-<span class="sd">                &quot;incumbent&quot;: Configuration</span>
-<span class="sd">                }</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        trajectory: list</span>
+<span class="sd">            Each entry in the list is a dictionary of the form</span>
+<span class="sd">            {</span>
+<span class="sd">            &quot;cpu_time&quot;: float,</span>
+<span class="sd">            &quot;total_cpu_time&quot;: None, # TODO</span>
+<span class="sd">            &quot;wallclock_time&quot;: float,</span>
+<span class="sd">            &quot;evaluations&quot;: int</span>
+<span class="sd">            &quot;cost&quot;: float,</span>
+<span class="sd">            &quot;incumbent&quot;: Configuration</span>
+<span class="sd">            }</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">trajectory</span> <span class="o">=</span> <span class="p">[]</span>
@@ -448,17 +452,16 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_convert_dict_to_config</span><span class="p">(</span><span class="n">config_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">cs</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">            since we save a configurations in a dictionary str-&gt;str</span>
-<span class="sd">            we have to try to figure out the type (int, float, str) of each parameter value</span>
+        <span class="sd">&quot;&quot;&quot;Since we save a configurations in a dictionary str-&gt;str we have to</span>
+<span class="sd">        try to figure out the type (int, float, str) of each parameter value</span>
 
-<span class="sd">            Parameters</span>
-<span class="sd">            ----------</span>
-<span class="sd">            config_list: typing.List[str]</span>
-<span class="sd">                configuration as a list of &quot;str=&#39;str&#39;&quot;</span>
-<span class="sd">            cs: ConfigurationSpace</span>
-<span class="sd">                Configuration Space to translate dict object into Confiuration object</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config_list: typing.List[str]</span>
+<span class="sd">            Configuration as a list of &quot;str=&#39;str&#39;&quot;</span>
+<span class="sd">        cs: ConfigurationSpace</span>
+<span class="sd">            Configuration Space to translate dict object into Confiuration object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config_dict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">config_list</span><span class="p">:</span>
             <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>

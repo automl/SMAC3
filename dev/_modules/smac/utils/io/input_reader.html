@@ -246,41 +246,41 @@
            <div itemprop="articleBody">
             
   <h1>Source code for smac.utils.io.input_reader</h1><div class="highlight"><pre>
-<span></span><span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">pcs</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 <span class="n">__maintainer__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
 <span class="n">__email__</span> <span class="o">=</span> <span class="s2">&quot;lindauer@cs.uni-freiburg.de&quot;</span>
 <span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.0.1&quot;</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">pcs</span>
-
 
 <div class="viewcode-block" id="InputReader"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.input_reader.html#smac.utils.io.input_reader.InputReader">[docs]</a><span class="k">class</span> <span class="nc">InputReader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        reading all input files for SMAC (scenario file, instance files, ...)</span>
+    <span class="sd">&quot;&quot;&quot;Reading all input files for SMAC (scenario file, instance files, ...)</span>
 
-<span class="sd">        Note: most of this code was taken from the pysmac repository.</span>
-<span class="sd">              We copy it here because we don&#39;t want smac3 to depend</span>
-<span class="sd">              on an earlier version!</span>
+<span class="sd">    Note: Most of this code was taken from the pysmac repository.</span>
+<span class="sd">          We copy it here because we don&#39;t want smac3 to depend</span>
+<span class="sd">          on an earlier version!</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Constructor</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>
 
-<div class="viewcode-block" id="InputReader.read_scenario_file"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.input_reader.html#smac.utils.io.input_reader.InputReader.read_scenario_file">[docs]</a>    <span class="k">def</span> <span class="nf">read_scenario_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            encapsulates read_scenario_file of pysmac</span>
+<div class="viewcode-block" id="InputReader.read_scenario_file"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.input_reader.html#smac.utils.io.input_reader.InputReader.read_scenario_file">[docs]</a>    <span class="k">def</span> <span class="nf">read_scenario_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Encapsulates read_scenario_file of pysmac</span>
 
-<span class="sd">            Returns</span>
-<span class="sd">            -------</span>
-<span class="sd">            dict : dictionary</span>
-<span class="sd">                (key, value) pairs are (variable name, variable value)</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            fn: string</span>
+<span class="sd">                 File name of scenario file</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict : dictionary</span>
+<span class="sd">            (key, value) pairs are (variable name, variable value)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># translate the difference option names to a canonical name</span>
         <span class="c1"># kept for backwards-compatibility</span>
@@ -361,41 +361,39 @@
                     <span class="n">scenario_option_names</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
         <span class="k">return</span><span class="p">(</span><span class="n">scenario_dict</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="InputReader.read_instance_file"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.input_reader.html#smac.utils.io.input_reader.InputReader.read_instance_file">[docs]</a>    <span class="k">def</span> <span class="nf">read_instance_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            encapsulates read_instances_file of pysmac</span>
+<div class="viewcode-block" id="InputReader.read_instance_file"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.input_reader.html#smac.utils.io.input_reader.InputReader.read_instance_file">[docs]</a>    <span class="k">def</span> <span class="nf">read_instance_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Encapsulates read_instances_file of pysmac</span>
 
-<span class="sd">            Parameters</span>
-<span class="sd">            ----------</span>
-<span class="sd">                fn: string</span>
-<span class="sd">                     file name of instance file</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            fn: string</span>
+<span class="sd">                 File name of instance file</span>
 
-<span class="sd">            Returns</span>
-<span class="sd">            -------</span>
-<span class="sd">                instances: list</span>
-<span class="sd">                    each element is a list where the first element is the</span>
-<span class="sd">                    instance name followed by additional</span>
-<span class="sd">                    information for the specific instance.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            instances: list</span>
+<span class="sd">                Each element is a list where the first element is the</span>
+<span class="sd">                instance name followed by additional</span>
+<span class="sd">                information for the specific instance.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
             <span class="n">instance_names</span> <span class="o">=</span> <span class="n">fh</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
         <span class="k">return</span><span class="p">([</span><span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">instance_names</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="InputReader.read_instance_features_file"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.input_reader.html#smac.utils.io.input_reader.InputReader.read_instance_features_file">[docs]</a>    <span class="k">def</span> <span class="nf">read_instance_features_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            encapsulates read_instances_file of pysmac</span>
+<div class="viewcode-block" id="InputReader.read_instance_features_file"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.input_reader.html#smac.utils.io.input_reader.InputReader.read_instance_features_file">[docs]</a>    <span class="k">def</span> <span class="nf">read_instance_features_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Encapsulates read_instances_file of pysmac</span>
 
-<span class="sd">            Parameters</span>
-<span class="sd">            ----------</span>
-<span class="sd">                fn: string</span>
-<span class="sd">                     file name of instance feature file</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            fn: string</span>
+<span class="sd">                File name of instance feature file</span>
 
-<span class="sd">            Returns</span>
-<span class="sd">            -------</span>
-<span class="sd">                features: tuple</span>
-<span class="sd">                    first entry is a list of the feature names,</span>
-<span class="sd">                    second one is a dict with &#39;instance name&#39; -</span>
-<span class="sd">                    &#39;numpy array containing the features&#39; key-value pairs</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            features: tuple</span>
+<span class="sd">                first entry is a list of the feature names,</span>
+<span class="sd">                second one is a dict with &#39;instance name&#39; -</span>
+<span class="sd">                &#39;numpy array containing the features&#39; key-value pairs</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">instances</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
@@ -403,20 +401,19 @@
             <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
                 <span class="n">tmp</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
                 <span class="n">instances</span><span class="p">[</span><span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
-        <span class="k">return</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">instances</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">instances</span></div>
 
-<div class="viewcode-block" id="InputReader.read_pcs_file"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.input_reader.html#smac.utils.io.input_reader.InputReader.read_pcs_file">[docs]</a>    <span class="k">def</span> <span class="nf">read_pcs_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            encapsulates generating configuration space object</span>
+<div class="viewcode-block" id="InputReader.read_pcs_file"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.input_reader.html#smac.utils.io.input_reader.InputReader.read_pcs_file">[docs]</a>    <span class="k">def</span> <span class="nf">read_pcs_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Encapsulates generating configuration space object</span>
 
-<span class="sd">            Parameters</span>
-<span class="sd">            ----------</span>
-<span class="sd">                fn: string</span>
-<span class="sd">                     file name of pcs file</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            fn: string</span>
+<span class="sd">                 File name of pcs file</span>
 
-<span class="sd">            Returns</span>
-<span class="sd">            -------</span>
-<span class="sd">                ConfigSpace: ConfigSpace</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            ConfigSpace: ConfigSpace</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">space</span> <span class="o">=</span> <span class="n">pcs</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">space</span></div></div>

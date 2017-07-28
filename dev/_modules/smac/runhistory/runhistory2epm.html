@@ -247,7 +247,6 @@
             
   <h1>Source code for smac.runhistory.runhistory2epm</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">abc</span>
-<span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">typing</span>
@@ -257,8 +256,9 @@
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">StatusType</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">RunKey</span><span class="p">,</span> <span class="n">RunValue</span>
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">convert_configurations_to_array</span>
-<span class="kn">import</span> <span class="nn">smac.epm.base_imputor</span>
+<span class="kn">from</span> <span class="nn">smac.epm.base_imputor</span> <span class="k">import</span> <span class="n">BaseImputor</span>
 <span class="kn">from</span> <span class="nn">smac.utils</span> <span class="k">import</span> <span class="n">constants</span>
+<span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Katharina Eggensperger&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
@@ -271,16 +271,32 @@
 <div class="viewcode-block" id="AbstractRunHistory2EPM"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM">[docs]</a><span class="k">class</span> <span class="nc">AbstractRunHistory2EPM</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span>
 
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Takes a runhistory object and preprocess data in order to train an EPM.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;Abstract class for preprocessing data in order to train an EPM.</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">num_params</span><span class="p">,</span>
-                 <span class="n">success_states</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">impute_censored_data</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">impute_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">imputor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">rs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Constructor</span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    logger</span>
+<span class="sd">    scenario</span>
+<span class="sd">    rng</span>
+<span class="sd">    num_params</span>
+
+<span class="sd">    success_states</span>
+<span class="sd">    impute_censored_data</span>
+<span class="sd">    impute_state</span>
+<span class="sd">    cutoff_time</span>
+<span class="sd">    imputor</span>
+<span class="sd">    instance_features</span>
+<span class="sd">    n_feats</span>
+<span class="sd">    num_params</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span> <span class="n">num_params</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">success_states</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">StatusType</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">impute_censored_data</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">impute_state</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">StatusType</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">imputor</span><span class="p">:</span> <span class="n">BaseImputor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -289,23 +305,26 @@
 <span class="sd">        num_params : int</span>
 <span class="sd">            number of parameters in config space</span>
 <span class="sd">        success_states: list, optional</span>
-<span class="sd">            list of states considered as successful (such as StatusType.SUCCESS)</span>
+<span class="sd">            List of states considered as successful (such as StatusType.SUCCESS)</span>
+<span class="sd">            If None, set to [StatusType.SUCCESS, ]</span>
 <span class="sd">        impute_censored_data: bool, optional</span>
-<span class="sd">            should we impute data?</span>
+<span class="sd">            Should we impute data?</span>
 <span class="sd">        imputor: epm.base_imputor Instance</span>
 <span class="sd">            Object to impute censored data</span>
 <span class="sd">        impute_state: list, optional</span>
-<span class="sd">            list of states that mark censored data (such as StatusType.TIMEOUT)</span>
+<span class="sd">            List of states that mark censored data (such as StatusType.TIMEOUT)</span>
 <span class="sd">            in combination with runtime &lt; cutoff_time</span>
-<span class="sd">        rs : numpy.random.RandomState</span>
+<span class="sd">            If None, set to [StatusType.CAPPED, ]</span>
+<span class="sd">        rng : numpy.random.RandomState</span>
 <span class="sd">            only used for reshuffling data after imputation</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
         <span class="c1"># General arguments</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span> <span class="o">=</span> <span class="n">scenario</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rs</span> <span class="o">=</span> <span class="n">rs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">rng</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_params</span> <span class="o">=</span> <span class="n">num_params</span>
 
         <span class="c1"># Configuration</span>
@@ -316,21 +335,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">imputor</span> <span class="o">=</span> <span class="n">imputor</span>
 
         <span class="c1"># Fill with some default values</span>
-        <span class="k">if</span> <span class="n">rs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">rs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">impute_state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">impute_state</span> <span class="o">=</span> <span class="p">[</span><span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span><span class="p">,</span> <span class="p">]</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">success_states</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">success_states</span> <span class="o">=</span> <span class="p">[</span><span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span> <span class="p">]</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">({</span>
-            <span class="s1">&#39;success_states&#39;</span><span class="p">:</span> <span class="n">success_states</span><span class="p">,</span>
-            <span class="s1">&#39;impute_censored_data&#39;</span><span class="p">:</span> <span class="n">impute_censored_data</span><span class="p">,</span>
-            <span class="s1">&#39;cutoff_time&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cutoff</span><span class="p">,</span>
-            <span class="s1">&#39;impute_state&#39;</span><span class="p">:</span> <span class="n">impute_state</span><span class="p">,</span>
-        <span class="p">})</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">instance_features</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">feature_dict</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_feats</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">n_features</span>
@@ -352,7 +364,7 @@
                                  <span class="s2">&quot;I don&#39;t know how. Imputor is None&quot;</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;impute_censored data, but no imputor given&quot;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">impute_censored_data</span> <span class="ow">and</span> <span class="ow">not</span> \
-                <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">imputor</span><span class="p">,</span> <span class="n">smac</span><span class="o">.</span><span class="n">epm</span><span class="o">.</span><span class="n">base_imputor</span><span class="o">.</span><span class="n">BaseImputor</span><span class="p">):</span>
+                <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">imputor</span><span class="p">,</span> <span class="n">BaseImputor</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Given imputor is not an instance of &quot;</span>
                              <span class="s2">&quot;smac.epm.base_imputor.BaseImputor, but </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span>
                              <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">imputor</span><span class="p">))</span>
@@ -362,37 +374,34 @@
                       <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
                       <span class="n">instances</span><span class="p">:</span> <span class="nb">list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                       <span class="n">par_factor</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">            builds x,y matrixes from selected runs from runhistory</span>
+        <span class="sd">&quot;&quot;&quot;Builds x,y matrixes from selected runs from runhistory</span>
 
-<span class="sd">            Parameters</span>
-<span class="sd">            ----------</span>
-<span class="sd">            run_dict: dict(RunKey -&gt; RunValue)</span>
-<span class="sd">                dictionary from RunHistory.RunKey to RunHistory.RunValue</span>
-<span class="sd">            runhistory: RunHistory</span>
-<span class="sd">                runhistory object</span>
-<span class="sd">            instances: list</span>
-<span class="sd">                list of instances</span>
-<span class="sd">            par_factor: int</span>
-<span class="sd">                penalization factor for censored runtime data</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        run_dict: dict(RunKey -&gt; RunValue)</span>
+<span class="sd">            dictionary from RunHistory.RunKey to RunHistory.RunValue</span>
+<span class="sd">        runhistory: RunHistory</span>
+<span class="sd">            runhistory object</span>
+<span class="sd">        instances: list</span>
+<span class="sd">            list of instances</span>
+<span class="sd">        par_factor: int</span>
+<span class="sd">            penalization factor for censored runtime data</span>
 
-<span class="sd">            Returns</span>
-<span class="sd">            -------</span>
-<span class="sd">            X: np.ndarray</span>
-<span class="sd">            Y: np.ndarray</span>
-
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        X: np.ndarray</span>
+<span class="sd">        Y: np.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
-<div class="viewcode-block" id="AbstractRunHistory2EPM.transform"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        returns vector representation of runhistory;</span>
-<span class="sd">        if imputation is disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</span>
+<div class="viewcode-block" id="AbstractRunHistory2EPM.transform"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns vector representation of runhistory; if imputation is</span>
+<span class="sd">        disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        runhistory : smac.runhistory.runhistory.RunHistory</span>
-<span class="sd">            runhistory of all evaluated configurations x instances</span>
+<span class="sd">            Runhistory containing all evaluated configurations/instances</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -400,7 +409,7 @@
 <span class="sd">            configuration vector x instance features</span>
 <span class="sd">        Y: numpy.ndarray</span>
 <span class="sd">            cost values</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Transform runhistory into X,y format&quot;</span><span class="p">)</span>
 
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">runhistory</span><span class="p">,</span> <span class="n">RunHistory</span><span class="p">)</span>
@@ -422,7 +431,8 @@
 
         <span class="c1"># use penalization (e.g. PAR10) for EPM training</span>
         <span class="n">tX</span><span class="p">,</span> <span class="n">tY</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_matrix</span><span class="p">(</span><span class="n">run_dict</span><span class="o">=</span><span class="n">t_run_dict</span><span class="p">,</span> <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
-                                    <span class="n">instances</span><span class="o">=</span><span class="n">t_instance_id_list</span><span class="p">,</span> <span class="n">par_factor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">par_factor</span><span class="p">)</span>
+                                    <span class="n">instances</span><span class="o">=</span><span class="n">t_instance_id_list</span><span class="p">,</span>
+                                    <span class="n">par_factor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">par_factor</span><span class="p">)</span>
 
         <span class="c1"># if we don&#39;t have successful runs,</span>
         <span class="c1"># we have to return all timeout runs</span>
@@ -451,8 +461,10 @@
                                                   <span class="n">par_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
                 <span class="c1"># Also impute TIMEOUTS</span>
-                <span class="n">tX</span><span class="p">,</span> <span class="n">tY</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_matrix</span><span class="p">(</span><span class="n">run_dict</span><span class="o">=</span><span class="n">t_run_dict</span><span class="p">,</span> <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
-                                            <span class="n">instances</span><span class="o">=</span><span class="n">t_instance_id_list</span><span class="p">,</span> <span class="n">par_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">tX</span><span class="p">,</span> <span class="n">tY</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_matrix</span><span class="p">(</span><span class="n">run_dict</span><span class="o">=</span><span class="n">t_run_dict</span><span class="p">,</span>
+                                            <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
+                                            <span class="n">instances</span><span class="o">=</span><span class="n">t_instance_id_list</span><span class="p">,</span>
+                                            <span class="n">par_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
                 <span class="n">cen_X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">cen_X</span><span class="p">,</span> <span class="n">tX</span><span class="p">))</span>
                 <span class="n">cen_Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">cen_Y</span><span class="p">,</span> <span class="n">tY</span><span class="p">))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2"> TIMOUTS, </span><span class="si">%d</span><span class="s2"> censored, </span><span class="si">%d</span><span class="s2"> regular&quot;</span> <span class="o">%</span>
@@ -471,28 +483,26 @@
             <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">X</span><span class="p">,</span> <span class="n">tX</span><span class="p">))</span>
             <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">Y</span><span class="p">,</span> <span class="n">tY</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Converted </span><span class="si">%d</span><span class="s2"> observations&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Converted </span><span class="si">%d</span><span class="s2"> observations&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
         <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span></div>
 
 <div class="viewcode-block" id="AbstractRunHistory2EPM.get_X_y"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y">[docs]</a>    <span class="k">def</span> <span class="nf">get_X_y</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">            simple interface to obtain all data in runhistory</span>
-<span class="sd">            in X, y format</span>
+        <span class="sd">&quot;&quot;&quot;Simple interface to obtain all data in runhistory in X, y format</span>
 
-<span class="sd">            Parameters</span>
-<span class="sd">            ----------</span>
-<span class="sd">            runhistory : smac.runhistory.runhistory.RunHistory</span>
-<span class="sd">                runhistory of all evaluated configurations x instances</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        runhistory : smac.runhistory.runhistory.RunHistory</span>
+<span class="sd">            runhistory of all evaluated configurations x instances</span>
 
-<span class="sd">            Returns</span>
-<span class="sd">            -------</span>
-<span class="sd">            X: numpy.ndarray</span>
-<span class="sd">                matrix of all configurations (+ instance features)</span>
-<span class="sd">            y: numpy.ndarray</span>
-<span class="sd">                vector of cost values; can include censored runs</span>
-<span class="sd">            cen: numpy.ndarray</span>
-<span class="sd">                vector of bools indicating whether the y-value is censored</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        X: numpy.ndarray</span>
+<span class="sd">            matrix of all configurations (+ instance features)</span>
+<span class="sd">        y: numpy.ndarray</span>
+<span class="sd">            vector of cost values; can include censored runs</span>
+<span class="sd">        cen: numpy.ndarray</span>
+<span class="sd">            vector of bools indicating whether the y-value is censored</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">X</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">cen</span> <span class="o">=</span> <span class="p">[]</span>
@@ -511,28 +521,30 @@
 
 
 <div class="viewcode-block" id="RunHistory2EPM4Cost"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost">[docs]</a><span class="k">class</span> <span class="nc">RunHistory2EPM4Cost</span><span class="p">(</span><span class="n">AbstractRunHistory2EPM</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;TODO&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_build_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_dict</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">,</span> <span class="n">instances</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">par_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">            builds X,y matrixes from selected runs from runhistory</span>
+    <span class="k">def</span> <span class="nf">_build_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_dict</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="n">RunKey</span><span class="p">,</span> <span class="n">RunValue</span><span class="p">],</span>
+                      <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">par_factor</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;Builds X,y matrixes from selected runs from runhistory</span>
 
-<span class="sd">            Parameters</span>
-<span class="sd">            ----------</span>
-<span class="sd">            run_dict: dict: RunKey -&gt; RunValue</span>
-<span class="sd">                dictionary from RunHistory.RunKey to RunHistory.RunValue</span>
-<span class="sd">            runhistory: RunHistory</span>
-<span class="sd">                runhistory object</span>
-<span class="sd">            instances: list</span>
-<span class="sd">                list of instances</span>
-<span class="sd">            par_factor: int</span>
-<span class="sd">                penalization factor for censored runtime data</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        run_dict: dict: RunKey -&gt; RunValue</span>
+<span class="sd">            dictionary from RunHistory.RunKey to RunHistory.RunValue</span>
+<span class="sd">        runhistory: RunHistory</span>
+<span class="sd">            runhistory object</span>
+<span class="sd">        instances: list</span>
+<span class="sd">            list of instances</span>
+<span class="sd">        par_factor: int</span>
+<span class="sd">            penalization factor for censored runtime data</span>
 
-<span class="sd">            Returns</span>
-<span class="sd">            -------</span>
-<span class="sd">            X: np.ndarray</span>
-<span class="sd">            Y: np.ndarray</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        X: np.ndarray</span>
+<span class="sd">        Y: np.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-<span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># First build nan-matrix of size #configs x #params+1</span>
         <span class="n">n_rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">run_dict</span><span class="p">)</span>
         <span class="n">n_cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_params</span>
@@ -562,46 +574,52 @@
 
 
 <div class="viewcode-block" id="RunHistory2EPM4LogCost"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost">[docs]</a><span class="k">class</span> <span class="nc">RunHistory2EPM4LogCost</span><span class="p">(</span><span class="n">RunHistory2EPM4Cost</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;TODO&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_build_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_dict</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">,</span> <span class="n">instances</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">par_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">            builds X,y matrixes from selected runs from runhistory;</span>
-<span class="sd">            transforms y by using log</span>
+    <span class="k">def</span> <span class="nf">_build_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_dict</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="n">RunKey</span><span class="p">,</span> <span class="n">RunValue</span><span class="p">],</span>
+                      <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">par_factor</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Builds X,y matrices from selected runs from runhistory; transforms</span>
+<span class="sd">         y by using log</span>
 
-<span class="sd">            Parameters</span>
-<span class="sd">            ----------</span>
-<span class="sd">            run_dict: dict(RunKey -&gt; RunValue)</span>
-<span class="sd">                dictionary from RunHistory.RunKey to RunHistory.RunValue</span>
-<span class="sd">            runhistory: RunHistory</span>
-<span class="sd">                runhistory object</span>
-<span class="sd">            instances: list</span>
-<span class="sd">                list of instances</span>
-<span class="sd">            par_factor: int</span>
-<span class="sd">                penalization factor for censored runtime data</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        run_dict: dict(RunKey -&gt; RunValue)</span>
+<span class="sd">            Dictionary from RunHistory.RunKey to RunHistory.RunValue</span>
+<span class="sd">        runhistory: RunHistory</span>
+<span class="sd">            Runhistory object</span>
+<span class="sd">        instances: list</span>
+<span class="sd">            List of instances</span>
+<span class="sd">        par_factor: int</span>
+<span class="sd">            Penalization factor for censored runtime data</span>
 
-<span class="sd">            Returns</span>
-<span class="sd">            -------</span>
-<span class="sd">            X: np.ndarray</span>
-<span class="sd">            Y: np.ndarray</span>
-
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        X: np.ndarray</span>
+<span class="sd">        Y: np.ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_build_matrix</span><span class="p">(</span><span class="n">run_dict</span><span class="o">=</span><span class="n">run_dict</span><span class="p">,</span> <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
                                      <span class="n">instances</span><span class="o">=</span><span class="n">instances</span><span class="p">,</span> <span class="n">par_factor</span><span class="o">=</span><span class="n">par_factor</span><span class="p">)</span>
 
         <span class="c1"># ensure that minimal value is larger than 0</span>
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="s2">&quot;Got cost of smaller/equal to 0. Replace by </span><span class="si">%f</span><span class="s2"> since we use log cost.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">MINIMAL_COST_FOR_LOG</span><span class="p">))</span>
-            <span class="n">y</span><span class="p">[</span><span class="n">y</span> <span class="o">&lt;</span>
-                <span class="n">constants</span><span class="o">.</span><span class="n">MINIMAL_COST_FOR_LOG</span><span class="p">]</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">MINIMAL_COST_FOR_LOG</span>
+                <span class="s2">&quot;Got cost of smaller/equal to 0. Replace by </span><span class="si">%f</span><span class="s2"> since we use&quot;</span>
+                <span class="s2">&quot; log cost.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">MINIMAL_COST_FOR_LOG</span><span class="p">))</span>
+            <span class="n">y</span><span class="p">[</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">constants</span><span class="o">.</span><span class="n">MINIMAL_COST_FOR_LOG</span><span class="p">]</span> <span class="o">=</span>\
+                <span class="n">constants</span><span class="o">.</span><span class="n">MINIMAL_COST_FOR_LOG</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span></div>
 
 
 <div class="viewcode-block" id="RunHistory2EPM4EIPS"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS">[docs]</a><span class="k">class</span> <span class="nc">RunHistory2EPM4EIPS</span><span class="p">(</span><span class="n">AbstractRunHistory2EPM</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;TODO&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_build_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_dict</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">,</span> <span class="n">instances</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">par_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_build_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_dict</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="n">RunKey</span><span class="p">,</span> <span class="n">RunValue</span><span class="p">],</span>
+                      <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">par_factor</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;TODO&quot;&quot;&quot;</span>
         <span class="c1"># First build nan-matrix of size #configs x #params+1</span>
         <span class="n">n_rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">run_dict</span><span class="p">)</span>
         <span class="n">n_cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_params</span>

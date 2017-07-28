@@ -252,9 +252,8 @@
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">truncnorm</span>
 
 <span class="kn">import</span> <span class="nn">smac.epm.base_imputor</span>
+<span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="k">import</span> <span class="n">AbstractEPM</span>
 
-<span class="kn">from</span> <span class="nn">ConfigSpace.hyperparameters</span> <span class="k">import</span> <span class="n">UniformIntegerHyperparameter</span><span class="p">,</span> \
-    <span class="n">CategoricalHyperparameter</span><span class="p">,</span> <span class="n">UniformFloatHyperparameter</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Katharina Eggensperger&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
@@ -266,37 +265,54 @@
 
 <div class="viewcode-block" id="RFRImputator"><a class="viewcode-back" href="../../../apidoc/smac.epm.rfr_imputator.html#smac.epm.rfr_imputator.RFRImputator">[docs]</a><span class="k">class</span> <span class="nc">RFRImputator</span><span class="p">(</span><span class="n">smac</span><span class="o">.</span><span class="n">epm</span><span class="o">.</span><span class="n">base_imputor</span><span class="o">.</span><span class="n">BaseImputor</span><span class="p">):</span>
 
-    <span class="sd">&quot;&quot;&quot;Imputor using pyrfr&#39;s Random Forest regressor.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Imputor using pyrfr&#39;s Random Forest regressor.</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rs</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span>
-                 <span class="n">model</span><span class="p">,</span>
-                 <span class="n">change_threshold</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
-                 <span class="n">max_iter</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        initialize imputator module</span>
+<span class="sd">    **Note:** Sets var_threshold as the lower bound on the variance for the</span>
+<span class="sd">    predictions of the random forest</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    logger : logging.Logger</span>
+<span class="sd">    max_iter : int</span>
+<span class="sd">    change_threshold : float</span>
+<span class="sd">    cutoff : float</span>
+<span class="sd">    threshold : float</span>
+<span class="sd">    seed : int</span>
+<span class="sd">        Created by drawing random int from rng</span>
+<span class="sd">    model : AbstractEPM</span>
+<span class="sd">        Predictive model (i.e. RandomForestWithInstances)</span>
+<span class="sd">    var_threshold: float</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                 <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AbstractEPM</span><span class="p">,</span>
+                 <span class="n">change_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+                 <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        rs : random state generator</span>
+<span class="sd">        rng : np.random.RandomState</span>
+<span class="sd">            Will be used to draw a seed (currently not used)</span>
 <span class="sd">        cutoff : float</span>
-<span class="sd">            Cutoff value used for this scenario.</span>
+<span class="sd">            Cutoff value for this scenario (upper runnning time limit)</span>
 <span class="sd">        threshold : float</span>
-<span class="sd">            Highest possible values (e.g. cutoff * par).</span>
-<span class="sd">        model:</span>
-<span class="sd">            epm model (i.e. RandomForestWithInstances)</span>
+<span class="sd">            Highest possible values (e.g. cutoff * parX).</span>
+<span class="sd">        model : AbstractEPM</span>
+<span class="sd">            Predictive model (i.e. RandomForestWithInstances)</span>
 <span class="sd">        change_threshold : float</span>
 <span class="sd">            Stop imputation if change is less than this.</span>
 <span class="sd">        max_iter : int</span>
-<span class="sd">            Maximum number of iteration.</span>
+<span class="sd">            Maximum number of imputation iterations.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="nb">super</span><span class="p">(</span><span class="n">RFRImputator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">change_threshold</span> <span class="o">=</span> <span class="n">change_threshold</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span> <span class="o">=</span> <span class="n">cutoff</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">threshold</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">random_integers</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random_integers</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
 
@@ -321,7 +337,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        ----------</span>
-<span class="sd">        imputed_y: np.ndarray</span>
+<span class="sd">        imputed_y : np.ndarray</span>
 <span class="sd">            Same shape as censored_y [N, 1]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">censored_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>

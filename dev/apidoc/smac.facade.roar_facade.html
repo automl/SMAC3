@@ -258,6 +258,16 @@
 <em class="property">class </em><code class="descclassname">smac.facade.roar_facade.</code><code class="descname">ROAR</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>tae_runner: smac.tae.execute_ta_run.ExecuteTARun = None</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory = None</em>, <em>intensifier: smac.intensification.intensification.Intensifier = None</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign = None</em>, <em>initial_configurations: typing.List[ConfigSpace.configuration_space.Configuration] = None</em>, <em>stats: smac.stats.stats.Stats = None</em>, <em>rng: mtrand.RandomState = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/roar_facade.html#ROAR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.roar_facade.ROAR" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC" title="smac.facade.smac_facade.SMAC"><code class="xref py py-class docutils literal"><span class="pre">smac.facade.smac_facade.SMAC</span></code></a></p>
 <p>Facade to use ROAR mode</p>
+<dl class="attribute">
+<dt id="smac.facade.roar_facade.ROAR.logger">
+<code class="descname">logger</code><a class="headerlink" href="#smac.facade.roar_facade.ROAR.logger" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC" title="smac.facade.smac_facade.SMAC"><code class="xref py py-class docutils literal"><span class="pre">SMAC</span></code></a></p>
+</div>
+<p>Constructor</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -285,8 +295,7 @@ cannot be used together with initial_design</li>
 <dl class="method">
 <dt id="smac.facade.roar_facade.ROAR.get_X_y">
 <code class="descname">get_X_y</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.roar_facade.ROAR.get_X_y" title="Permalink to this definition">¶</a></dt>
-<dd><p>Simple interface to obtain all data in runhistory
-in <code class="docutils literal"><span class="pre">X,</span> <span class="pre">y</span></code> format.</p>
+<dd><p>Simple interface to obtain all data in runhistory in <code class="docutils literal"><span class="pre">X,</span> <span class="pre">y</span></code> format.</p>
 <p>Uses
 <a class="reference internal" href="smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y" title="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y"><code class="xref py py-meth docutils literal"><span class="pre">smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -307,8 +316,10 @@ in <code class="docutils literal"><span class="pre">X,</span> <span class="pre">
 <dl class="method">
 <dt id="smac.facade.roar_facade.ROAR.get_runhistory">
 <code class="descname">get_runhistory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.roar_facade.ROAR.get_runhistory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the runhistory
-(i.e., all evaluated configurations and the results).</p>
+<dd><dl class="docutils">
+<dt>Returns the runhistory (i.e., all evaluated configurations and</dt>
+<dd>the results).</dd>
+</dl>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -324,9 +335,8 @@ in <code class="docutils literal"><span class="pre">X,</span> <span class="pre">
 <dl class="method">
 <dt id="smac.facade.roar_facade.ROAR.get_tae_runner">
 <code class="descname">get_tae_runner</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.roar_facade.ROAR.get_tae_runner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns target algorithm evaluator (TAE) object
-which can run the target algorithm given a
-configuration</p>
+<dd><p>Returns target algorithm evaluator (TAE) object which can run the
+target algorithm given a configuration</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -342,8 +352,8 @@ configuration</p>
 <dl class="method">
 <dt id="smac.facade.roar_facade.ROAR.get_trajectory">
 <code class="descname">get_trajectory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.roar_facade.ROAR.get_trajectory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the trajectory
-(i.e., all incumbent configurations over time).</p>
+<dd><p>Returns the trajectory (i.e., all incumbent configurations over
+time).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -359,16 +369,14 @@ configuration</p>
 <dl class="method">
 <dt id="smac.facade.roar_facade.ROAR.optimize">
 <code class="descname">optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.roar_facade.ROAR.optimize" title="Permalink to this definition">¶</a></dt>
-<dd><p>optimize the algorithm provided in scenario (given in constructor)</p>
+<dd><p>Optimizes the algorithm provided in scenario (given in constructor)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>max_iters</strong> (<em>int</em>) – maximal number of iterations</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>incumbent</strong> – Best found configuration</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>incumbent</strong> – optimized parameters</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Configuration</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Configuration</td>
 </tr>
 </tbody>
 </table>

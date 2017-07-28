@@ -365,7 +365,48 @@ representation as available.</p>
 <em class="property">class </em><code class="descclassname">smac.runhistory.runhistory.</code><code class="descname">RunHistory</code><span class="sig-paren">(</span><em>aggregate_func: typing.Callable</em>, <em>overwrite_existing_runs: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Container for target algorithm run information.</p>
-<p>Guaranteed to be picklable.</p>
+<p><strong>Note:</strong> Guaranteed to be picklable.</p>
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.RunHistory.data">
+<code class="descname">data</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.data" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>collections.OrderedDict()</em> – TODO</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.RunHistory.config_ids">
+<code class="descname">config_ids</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.config_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – Maps config -&gt; id</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.RunHistory.ids_config">
+<code class="descname">ids_config</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.ids_config" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – Maps id -&gt; config</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.RunHistory.cost_per_config">
+<code class="descname">cost_per_config</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.cost_per_config" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – Maps config_id -&gt; cost</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.RunHistory.runs_per_config">
+<code class="descname">runs_per_config</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.runs_per_config" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – Maps config_id -&gt; number of runs</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.RunHistory.aggregate_func">
+<code class="descname">aggregate_func</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.aggregate_func" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.RunHistory.overwrite_existing_runs">
+<code class="descname">overwrite_existing_runs</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.overwrite_existing_runs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Constructor</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -382,8 +423,8 @@ multiple times</li>
 </table>
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.add">
-<code class="descname">add</code><span class="sig-paren">(</span><em>config</em>, <em>cost</em>, <em>time</em>, <em>status</em>, <em>instance_id=None</em>, <em>seed=None</em>, <em>additional_info=None</em>, <em>external_data: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.add" title="Permalink to this definition">¶</a></dt>
-<dd><p>adds a data of a new target algorithm (TA) run;
+<code class="descname">add</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em>, <em>cost: float</em>, <em>time: float</em>, <em>status: smac.tae.execute_ta_run.StatusType</em>, <em>instance_id: str = None</em>, <em>seed: int = None</em>, <em>additional_info: dict = None</em>, <em>external_data: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a data of a new target algorithm (TA) run;
 it will update data if the same key values are used
 (config, instance_id, seed)</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -391,15 +432,15 @@ it will update data if the same key values are used
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>config</strong> (<em>dict</em><em> (or </em><em>other type -- depending on config space module</em><em>)</em>) – parameter configuration</li>
-<li><strong>cost</strong> (<em>float</em>) – cost of TA run (will be minimized)</li>
-<li><strong>time</strong> (<em>float</em>) – runtime of TA run</li>
-<li><strong>status</strong> (<em>str</em>) – status in {SUCCESS, TIMEOUT, CRASHED, ABORT, MEMOUT}</li>
-<li><strong>instance_id</strong> (<em>str</em>) – str representing an instance (default: None)</li>
-<li><strong>seed</strong> (<em>int</em>) – random seed used by TA (default: None)</li>
-<li><strong>additional_info</strong> (<em>dict</em>) – additional run infos (could include further returned
+<li><strong>config</strong> (<em>dict</em><em> (or </em><em>other type -- depending on config space module</em><em>)</em>) – Parameter configuration</li>
+<li><strong>cost</strong> (<em>float</em>) – Cost of TA run (will be minimized)</li>
+<li><strong>time</strong> (<em>float</em>) – Runtime of TA run</li>
+<li><strong>status</strong> (<em>str</em>) – Status in {SUCCESS, TIMEOUT, CRASHED, ABORT, MEMOUT}</li>
+<li><strong>instance_id</strong> (<em>str</em>) – String representing an instance (default: None)</li>
+<li><strong>seed</strong> (<em>int</em>) – Random seed used by TA (default: None)</li>
+<li><strong>additional_info</strong> (<em>dict</em>) – Additional run infos (could include further returned
 information from TA or fields such as start time and host_id)</li>
-<li><strong>external_data</strong> (<em>bool</em>) – if True, run will not be added to self._configid_to_inst_seed
+<li><strong>external_data</strong> (<em>bool</em>) – If True, run will not be added to self._configid_to_inst_seed
 and not available through get_runs_for_config();
 essentially, intensification will not see this run,
 but the EPM still gets it</li>
@@ -413,8 +454,8 @@ but the EPM still gets it</li>
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.compute_all_costs">
 <code class="descname">compute_all_costs</code><span class="sig-paren">(</span><em>instances: typing.List[str] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.compute_all_costs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.compute_all_costs" title="Permalink to this definition">¶</a></dt>
-<dd><p>computes the cost of all configurations from scratch
-and overwrites self.cost_perf_config and self.runs_per_config accordingly;</p>
+<dd><p>Computes the cost of all configurations from scratch and overwrites
+self.cost_perf_config and self.runs_per_config accordingly;</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -460,20 +501,31 @@ False otherwise</td>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.get_cost">
-<code class="descname">get_cost</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_cost" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns empirical cost for a configuration;
-uses  self.cost_per_config</p>
+<code class="descname">get_cost</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_cost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns empirical cost for a configuration; uses  self.cost_per_config</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<em>Configuration</em>) – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>cost</strong> – Computed cost for configuration</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.get_runs_for_config">
-<code class="descname">get_runs_for_config</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_runs_for_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_runs_for_config" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_runs_for_config</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_runs_for_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_runs_for_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all runs (instance seed pairs) for a configuration.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<em>Configuration from ConfigSpace</em>) – parameter configuration</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<em>Configuration from ConfigSpace</em>) – Parameter configuration</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>instance_seed_pairs</strong></td>
 </tr>
@@ -486,7 +538,8 @@ uses  self.cost_per_config</p>
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.incremental_update_cost">
 <code class="descname">incremental_update_cost</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em>, <em>cost: float</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.incremental_update_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.incremental_update_cost" title="Permalink to this definition">¶</a></dt>
-<dd><p>incrementally updates the performance of a configuration by using a moving average;</p>
+<dd><p>Incrementally updates the performance of a configuration by using a
+moving average;</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -503,9 +556,9 @@ uses  self.cost_per_config</p>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.load_json">
-<code class="descname">load_json</code><span class="sig-paren">(</span><em>fn</em>, <em>cs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.load_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.load_json" title="Permalink to this definition">¶</a></dt>
+<code class="descname">load_json</code><span class="sig-paren">(</span><em>fn: str</em>, <em>cs: ConfigSpace.configuration_space.ConfigurationSpace</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.load_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.load_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load and runhistory in json representation from disk.</p>
-<p>Overwrites current runthistory!</p>
+<p>Overwrites current runhistory!</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -522,8 +575,8 @@ uses  self.cost_per_config</p>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.save_json">
-<code class="descname">save_json</code><span class="sig-paren">(</span><em>fn='runhistory.json'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.save_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.save_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>saves runhistory on disk</p>
+<code class="descname">save_json</code><span class="sig-paren">(</span><em>fn: str = 'runhistory.json'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.save_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.save_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves runhistory on disk</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -543,8 +596,8 @@ uses  self.cost_per_config</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>runhistory</strong> (<a class="reference internal" href="#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory with additional data to be added to self</li>
-<li><strong>external_data</strong> (<em>bool</em>) – if True, run will not be added to self._configid_to_inst_seed
+<li><strong>runhistory</strong> (<a class="reference internal" href="#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – Runhistory with additional data to be added to self</li>
+<li><strong>external_data</strong> (<em>bool</em>) – If True, run will not be added to self._configid_to_inst_seed
 and not available through get_runs_for_config()</li>
 </ul>
 </td>
@@ -555,9 +608,9 @@ and not available through get_runs_for_config()</li>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.update_cost">
-<code class="descname">update_cost</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.update_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update_cost" title="Permalink to this definition">¶</a></dt>
-<dd><p>store the performance of a configuration across the instances in self.cost_perf_config
-and also updates self.runs_per_config;
+<code class="descname">update_cost</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.update_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update_cost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store the performance of a configuration across the instances in
+self.cost_perf_config and also updates self.runs_per_config;
 uses self.aggregate_func</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -571,15 +624,15 @@ uses self.aggregate_func</p>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.update_from_json">
-<code class="descname">update_from_json</code><span class="sig-paren">(</span><em>fn</em>, <em>cs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.update_from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update_from_json" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update_from_json</code><span class="sig-paren">(</span><em>fn: str</em>, <em>cs: ConfigSpace.configuration_space.ConfigurationSpace</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.update_from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update_from_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the current runhistory by adding new runs from a json file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>fn</strong> (<em>str</em>) – file name to load from</li>
-<li><strong>cs</strong> (<em>ConfigSpace</em>) – instance of configuration space</li>
+<li><strong>fn</strong> (<em>str</em>) – File name to load from</li>
+<li><strong>cs</strong> (<em>ConfigSpace</em>) – Instance of configuration space</li>
 </ul>
 </td>
 </tr>

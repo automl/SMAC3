@@ -258,6 +258,7 @@
 <em class="property">class </em><code class="descclassname">smac.optimizer.local_search.</code><code class="descname">LocalSearch</code><span class="sig-paren">(</span><em>acquisition_function</em>, <em>config_space</em>, <em>epsilon=1e-05</em>, <em>max_iterations=None</em>, <em>rng=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/local_search.html#LocalSearch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.local_search.LocalSearch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Implementation of SMAC’s local search</p>
+<p>Constructor</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -275,7 +276,7 @@ needs at least an improvement higher than epsilon</li>
 </table>
 <dl class="method">
 <dt id="smac.optimizer.local_search.LocalSearch.maximize">
-<code class="descname">maximize</code><span class="sig-paren">(</span><em>start_point</em>, <em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/local_search.html#LocalSearch.maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.local_search.LocalSearch.maximize" title="Permalink to this definition">¶</a></dt>
+<code class="descname">maximize</code><span class="sig-paren">(</span><em>start_point: ConfigSpace.configuration_space.Configuration</em>, <em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/local_search.html#LocalSearch.maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.local_search.LocalSearch.maximize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Starts a local search from the given startpoint and quits
 if either the max number of steps is reached or no neighbor
 with an higher improvement was found.</p>

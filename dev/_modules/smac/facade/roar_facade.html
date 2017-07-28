@@ -256,10 +256,9 @@
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="k">import</span> <span class="n">Stats</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
-<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="k">import</span> <span class="n">AbstractRunHistory2EPM</span><span class="p">,</span> <span class="n">RunHistory2EPM4LogCost</span><span class="p">,</span> <span class="n">RunHistory2EPM4Cost</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="k">import</span> <span class="n">RunHistory2EPM4Cost</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.initial_design</span> <span class="k">import</span> <span class="n">InitialDesign</span>
 <span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="k">import</span> <span class="n">Intensifier</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="k">import</span> <span class="n">AbstractAcquisitionFunction</span>
 <span class="kn">from</span> <span class="nn">smac.epm.random_epm</span> <span class="k">import</span> <span class="n">RandomEPM</span>
 <span class="kn">from</span> <span class="nn">smac.facade.smac_facade</span> <span class="k">import</span> <span class="n">SMAC</span>
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">Configuration</span>
@@ -270,6 +269,16 @@
 
 
 <div class="viewcode-block" id="ROAR"><a class="viewcode-back" href="../../../apidoc/smac.facade.roar_facade.html#smac.facade.roar_facade.ROAR">[docs]</a><span class="k">class</span> <span class="nc">ROAR</span><span class="p">(</span><span class="n">SMAC</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Facade to use ROAR mode</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    logger</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :class:`~smac.facade.smac_facade.SMAC`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
@@ -280,19 +289,18 @@
                  <span class="n">initial_configurations</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Facade to use ROAR mode</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        scenario: smac.scenario.scenario.Scenario</span>
 <span class="sd">            Scenario object</span>
 <span class="sd">        tae_runner: smac.tae.execute_ta_run.ExecuteTARun or callable</span>
-<span class="sd">            Callable or implementation of </span>
+<span class="sd">            Callable or implementation of</span>
 <span class="sd">            :class:`~smac.tae.execute_ta_run.ExecuteTARun`. In case a</span>
-<span class="sd">            callable is passed it will be wrapped by </span>
+<span class="sd">            callable is passed it will be wrapped by</span>
 <span class="sd">            :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.</span>
-<span class="sd">            If not set, it will be initialized with the </span>
+<span class="sd">            If not set, it will be initialized with the</span>
 <span class="sd">            :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.</span>
 <span class="sd">        runhistory: RunHistory</span>
 <span class="sd">            Runhistory to store all algorithm runs</span>
@@ -307,7 +315,7 @@
 <span class="sd">            optional stats object</span>
 <span class="sd">        rng: np.random.RandomState</span>
 <span class="sd">            Random number generator</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
         <span class="c1"># initial random number generator</span>

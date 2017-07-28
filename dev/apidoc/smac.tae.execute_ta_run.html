@@ -276,7 +276,8 @@ set self.__traceback__ to tb and return self.</p>
 <dt id="smac.tae.execute_ta_run.CappedRunException">
 <em class="property">exception </em><code class="descclassname">smac.tae.execute_ta_run.</code><code class="descname">CappedRunException</code><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#CappedRunException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.CappedRunException" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
-<p>Exception indicating that a run was capped with a cutoff smaller than the actual timeout</p>
+<p>Exception indicating that a run was capped with a cutoff smaller than
+the actual timeout</p>
 <dl class="attribute">
 <dt id="smac.tae.execute_ta_run.CappedRunException.args">
 <code class="descname">args</code><a class="headerlink" href="#smac.tae.execute_ta_run.CappedRunException.args" title="Permalink to this definition">¶</a></dt>
@@ -293,18 +294,45 @@ set self.__traceback__ to tb and return self.</p>
 
 <dl class="class">
 <dt id="smac.tae.execute_ta_run.ExecuteTARun">
-<em class="property">class </em><code class="descclassname">smac.tae.execute_ta_run.</code><code class="descname">ExecuteTARun</code><span class="sig-paren">(</span><em>ta</em>, <em>stats=None</em>, <em>runhistory=None</em>, <em>run_obj='runtime'</em>, <em>par_factor=1</em>, <em>cost_for_crash=2147483647.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#ExecuteTARun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.tae.execute_ta_run.</code><code class="descname">ExecuteTARun</code><span class="sig-paren">(</span><em>ta</em>, <em>stats=None</em>, <em>runhistory=None</em>, <em>run_obj: str = 'runtime'</em>, <em>par_factor: int = 1</em>, <em>cost_for_crash: float = 2147483647.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#ExecuteTARun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>executes a target algorithm run with a given configuration
-on a given instance and some resource limitations</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ta</strong> (<em>string</em>) – the command line call to the target algorithm (wrapper)</td>
-</tr>
-</tbody>
-</table>
+<p>Executes a target algorithm run with a given configuration on a given
+instance and some resource limitations</p>
+<dl class="attribute">
+<dt id="smac.tae.execute_ta_run.ExecuteTARun.ta">
+<code class="descname">ta</code><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.ta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.tae.execute_ta_run.ExecuteTARun.stats">
+<code class="descname">stats</code><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.stats" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.tae.execute_ta_run.ExecuteTARun.runhistory">
+<code class="descname">runhistory</code><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.runhistory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.tae.execute_ta_run.ExecuteTARun.run_obj">
+<code class="descname">run_obj</code><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.run_obj" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.tae.execute_ta_run.ExecuteTARun.par_factor">
+<code class="descname">par_factor</code><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.par_factor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.tae.execute_ta_run.ExecuteTARun.crash_cost">
+<code class="descname">crash_cost</code><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.crash_cost" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.tae.execute_ta_run.ExecuteTARun.logger">
+<code class="descname">logger</code><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.logger" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <p>Constructor</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -325,16 +353,16 @@ that returned NaN or inf)</li>
 </table>
 <dl class="method">
 <dt id="smac.tae.execute_ta_run.ExecuteTARun.run">
-<code class="descname">run</code><span class="sig-paren">(</span><em>config</em>, <em>instance</em>, <em>cutoff=None</em>, <em>seed=12345</em>, <em>instance_specific='0'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#ExecuteTARun.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>runs target algorithm &lt;self.ta&gt; with configuration &lt;config&gt; on
-instance &lt;instance&gt; with instance specifics &lt;specifics&gt;
-for at most &lt;cutoff&gt; seconds and random seed &lt;seed&gt;</p>
+<code class="descname">run</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em>, <em>instance: str</em>, <em>cutoff: int = None</em>, <em>seed: int = 12345</em>, <em>instance_specific: str = '0'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#ExecuteTARun.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs target algorithm &lt;self.ta&gt; with configuration &lt;config&gt; on
+instance &lt;instance&gt; with instance specifics &lt;specifics&gt; for at most
+&lt;cutoff&gt; seconds and random seed &lt;seed&gt;</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>config</strong> (<em>dictionary</em>) – dictionary param -&gt; value</li>
+<li><strong>config</strong> (<em>Configuration</em>) – dictionary param -&gt; value</li>
 <li><strong>instance</strong> (<em>string</em>) – problem instance</li>
 <li><strong>cutoff</strong> (<em>int</em><em>, </em><em>optional</em>) – Wallclock time limit of the target algorithm. If no value is
 provided no limit will be enforced.</li>
@@ -359,19 +387,19 @@ provided no limit will be enforced.</li>
 <dl class="method">
 <dt id="smac.tae.execute_ta_run.ExecuteTARun.start">
 <code class="descname">start</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em>, <em>instance: str</em>, <em>cutoff: float = None</em>, <em>seed: int = 12345</em>, <em>instance_specific: str = '0'</em>, <em>capped: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#ExecuteTARun.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.start" title="Permalink to this definition">¶</a></dt>
-<dd><p>wrapper function for ExecuteTARun.run() to check configuration budget before the runs
-and to update stats after run</p>
+<dd><p>Wrapper function for ExecuteTARun.run() to check configuration
+budget before the runs and to update stats after run</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>config</strong> (<em>Configuration</em>) – mainly a dictionary param -&gt; value</li>
-<li><strong>instance</strong> (<em>string</em>) – problem instance</li>
-<li><strong>cutoff</strong> (<em>float</em>) – runtime cutoff</li>
-<li><strong>seed</strong> (<em>int</em>) – random seed</li>
-<li><strong>instance_specific</strong> (<em>str</em>) – instance specific information (e.g., domain file or solution)</li>
-<li><strong>capped</strong> (<em>bool</em>) – if true and status is StatusType.TIMEOUT,
+<li><strong>config</strong> (<em>Configuration</em>) – Mainly a dictionary param -&gt; value</li>
+<li><strong>instance</strong> (<em>string</em>) – Problem instance</li>
+<li><strong>cutoff</strong> (<em>float</em>) – Runtime cutoff</li>
+<li><strong>seed</strong> (<em>int</em>) – Random seed</li>
+<li><strong>instance_specific</strong> (<em>str</em>) – Instance specific information (e.g., domain file or solution)</li>
+<li><strong>capped</strong> (<em>bool</em>) – If true and status is StatusType.TIMEOUT,
 uses StatusType.CAPPED</li>
 </ul>
 </td>
@@ -415,7 +443,7 @@ set self.__traceback__ to tb and return self.</p>
 <dt id="smac.tae.execute_ta_run.StatusType">
 <em class="property">class </em><code class="descclassname">smac.tae.execute_ta_run.</code><code class="descname">StatusType</code><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#StatusType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.StatusType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">enum.Enum</span></code></p>
-<p>class to define numbers for status types</p>
+<p>Class to define numbers for status types</p>
 <dl class="attribute">
 <dt id="smac.tae.execute_ta_run.StatusType.ABORT">
 <code class="descname">ABORT</code><em class="property"> = 4</em><a class="headerlink" href="#smac.tae.execute_ta_run.StatusType.ABORT" title="Permalink to this definition">¶</a></dt>

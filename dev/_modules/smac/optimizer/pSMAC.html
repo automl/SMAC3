@@ -261,7 +261,7 @@
 
 
 <div class="viewcode-block" id="read"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.pSMAC.html#smac.optimizer.pSMAC.read">[docs]</a><span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span> 
-         <span class="n">output_dirs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+         <span class="n">output_dirs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
          <span class="n">configuration_space</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
          <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Update runhistory with run results from concurrent runs of pSMAC.</span>
@@ -274,15 +274,14 @@
 
 <span class="sd">    output_dirs : typing.Union[str,typing.List[str]]</span>
 <span class="sd">        List of SMAC output directories</span>
-<span class="sd">        or Linux path expression (str) which will be casted into a list with glob.glob(). </span>
-<span class="sd">        This function will search the output directories</span>
+<span class="sd">        or Linux path expression (str) which will be casted into a list with</span>
+<span class="sd">        glob.glob(). This function will search the output directories</span>
 <span class="sd">        for files matching the runhistory regular expression.</span>
 
 <span class="sd">    configuration_space : ConfigSpace.ConfigurationSpace</span>
 <span class="sd">        A ConfigurationSpace object to check if loaded configurations are valid.</span>
 
 <span class="sd">    logger : logging.Logger</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">numruns_in_runhistory</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">run_history</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
     <span class="n">initial_numruns_in_runhistory</span> <span class="o">=</span> <span class="n">numruns_in_runhistory</span>
@@ -310,7 +309,7 @@
                  <span class="s1">&#39;runs.&#39;</span> <span class="o">%</span> <span class="n">difference</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="write"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.pSMAC.html#smac.optimizer.pSMAC.write">[docs]</a><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">run_history</span><span class="p">:</span><span class="n">RunHistory</span><span class="p">,</span> <span class="n">output_directory</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">num_run</span><span class="p">:</span><span class="nb">int</span><span class="p">):</span>
+<div class="viewcode-block" id="write"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.pSMAC.html#smac.optimizer.pSMAC.write">[docs]</a><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">output_directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">num_run</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Write the runhistory to the output directory.</span>
 
 <span class="sd">    Overwrites previously outputted runhistories.</span>
@@ -324,9 +323,7 @@
 
 <span class="sd">    run_run : int</span>
 <span class="sd">        ID of the current SMAC run.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">output_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_directory</span><span class="p">,</span> <span class="n">RUNHISTORY_FILEPATTERN</span><span class="p">)</span>
 
     <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="s1">&#39;wb&#39;</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="n">output_directory</span><span class="p">,</span>

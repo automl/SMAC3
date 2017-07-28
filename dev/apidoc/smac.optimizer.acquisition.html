@@ -257,7 +257,18 @@
 <dt id="smac.optimizer.acquisition.AbstractAcquisitionFunction">
 <em class="property">class </em><code class="descclassname">smac.optimizer.acquisition.</code><code class="descname">AbstractAcquisitionFunction</code><span class="sig-paren">(</span><em>model: smac.epm.base_epm.AbstractEPM</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#AbstractAcquisitionFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Abstract base class for acquisition functions.</p>
+<p>Abstract base class for acquisition function</p>
+<dl class="attribute">
+<dt id="smac.optimizer.acquisition.AbstractAcquisitionFunction.model">
+<code class="descname">model</code><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction.model" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.optimizer.acquisition.AbstractAcquisitionFunction.logger">
+<code class="descname">logger</code><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction.logger" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Constructor</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -295,6 +306,7 @@ respective attributes for the acquisition function object.</p>
 acquisition value.</p>
 <p><span class="math">\(EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]\)</span>,
 with <span class="math">\(f(X^+)\)</span> as the incumbent.</p>
+<p>Constructor</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

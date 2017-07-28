@@ -260,19 +260,18 @@
 <em class="property">class </em><code class="descclassname">smac.utils.io.output_writer.</code><code class="descname">OutputWriter</code><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Writing scenario to file.</p>
-<p>Constructor</p>
 <dl class="method">
 <dt id="smac.utils.io.output_writer.OutputWriter.write_inst_features_file">
-<code class="descname">write_inst_features_file</code><span class="sig-paren">(</span><em>n_features</em>, <em>feat_dict</em>, <em>fn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.write_inst_features_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.write_inst_features_file" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_inst_features_file</code><span class="sig-paren">(</span><em>n_features: int</em>, <em>feat_dict</em>, <em>fn: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.write_inst_features_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.write_inst_features_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes features to file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>n_features</strong> (<em>int</em>) – number of features</li>
-<li><strong>feat_dict</strong> (<em>dict</em>) – features to be written</li>
-<li><strong>fn</strong> (<em>string</em>) – file name of instance feature file</li>
+<li><strong>n_features</strong> (<em>int</em>) – Number of features</li>
+<li><strong>feat_dict</strong> (<em>dict</em>) – Features to be written</li>
+<li><strong>fn</strong> (<em>string</em>) – File name of instance feature file</li>
 </ul>
 </td>
 </tr>
@@ -282,15 +281,15 @@
 
 <dl class="method">
 <dt id="smac.utils.io.output_writer.OutputWriter.write_inst_file">
-<code class="descname">write_inst_file</code><span class="sig-paren">(</span><em>insts</em>, <em>fn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.write_inst_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.write_inst_file" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_inst_file</code><span class="sig-paren">(</span><em>insts: typing.List[str], fn: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.write_inst_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.write_inst_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes instance-list to file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>insts</strong> (<em>list&lt;string&gt;</em>) – instance list to be written</li>
-<li><strong>fn</strong> (<em>string</em>) – output path</li>
+<li><strong>insts</strong> (<em>list&lt;string&gt;</em>) – Instance list to be written</li>
+<li><strong>fn</strong> (<em>string</em>) – Output path</li>
 </ul>
 </td>
 </tr>
@@ -300,15 +299,15 @@
 
 <dl class="method">
 <dt id="smac.utils.io.output_writer.OutputWriter.write_pcs_file">
-<code class="descname">write_pcs_file</code><span class="sig-paren">(</span><em>cs</em>, <em>fn</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.write_pcs_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.write_pcs_file" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_pcs_file</code><span class="sig-paren">(</span><em>cs: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>fn: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.write_pcs_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.write_pcs_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writing ConfigSpace to file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>cs</strong> (<em>ConfigurationSpace</em>) – config-space to be written</li>
-<li><strong>fn</strong> (<em>string</em>) – output-file-path</li>
+<li><strong>cs</strong> (<em>ConfigurationSpace</em>) – Config-space to be written</li>
+<li><strong>fn</strong> (<em>string</em>) – Output-file-path</li>
 </ul>
 </td>
 </tr>
@@ -320,15 +319,14 @@
 <dt id="smac.utils.io.output_writer.OutputWriter.write_scenario_file">
 <code class="descname">write_scenario_file</code><span class="sig-paren">(</span><em>scenario</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.write_scenario_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.write_scenario_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write scenario to a file (format is compatible with input_reader).
-Will overwrite if file exists.
-If you have arguments that need special parsing when saving, specify so
-in the _parse_argument-function.
+Will overwrite if file exists. If you have arguments that need special
+parsing when saving, specify so in the _parse_argument-function.
 Creates output-dir if necessesary.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – scenario to be written to file</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – Scenario to be written to file</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>status</strong> – False indicates that writing process failed</td>
 </tr>
