@@ -19,7 +19,11 @@ __version__ = "0.0.2"
 class AbstractTAFunc(ExecuteTARun):
     """Baseclass to execute target algorithms which are python functions.
 
-    DO NOT USE DIRECTLY.
+    **Note:*** Do not use directly
+
+    Attributes
+    ----------
+    memory_limit
     """
 
     def __init__(self, ta, stats=None, runhistory=None, run_obj="quality",
@@ -28,6 +32,9 @@ class AbstractTAFunc(ExecuteTARun):
         super().__init__(ta=ta, stats=stats, runhistory=runhistory,
                          run_obj=run_obj, par_factor=par_factor,
                          cost_for_crash=cost_for_crash)
+        """
+        TODO
+        """
 
         signature = inspect.signature(ta).parameters
         self._accepts_seed = len(signature) > 1
@@ -37,49 +44,44 @@ class AbstractTAFunc(ExecuteTARun):
             memory_limit = int(math.ceil(memory_limit))
         self.memory_limit = memory_limit
 
-
     def run(self, config, instance=None,
             cutoff=None,
             seed=12345,
             instance_specific="0"):
+        """Runs target algorithm <self.ta> with configuration <config> for at
+        most <cutoff> seconds, allowing it to use at most <memory_limit> RAM.
 
+        Whether the target algorithm is called with the <instance> and
+        <seed> depends on the subclass implementing the actual call to
+        the target algorithm.
+
+        Parameters
+        ----------
+            config : dictionary (or similar)
+                Dictionary param -> value
+            instance : str
+                Problem instance
+            cutoff : int, optional
+                Wallclock time limit of the target algorithm. If no value is
+                provided no limit will be enforced.
+            memory_limit : int, optional
+                Memory limit in MB enforced on the target algorithm If no
+                value is provided no limit will be enforced.
+            seed : int
+                Random seed
+            instance_specific: str
+                Instance specific information (e.g., domain file or solution)
+        Returns
+        -------
+            status: enum of StatusType (int)
+                {SUCCESS, TIMEOUT, CRASHED, ABORT}
+            cost: float
+                cost/regret/quality/runtime (float) (None, if not returned by TA)
+            runtime: float
+                runtime (None if not returned by TA)
+            additional_info: dict
+                all further additional run information
         """
-            runs target algorithm <self.ta> with configuration <config> for at
-            most <cutoff> seconds, allowing it to use at most <memory_limit>
-            RAM.
-
-            Whether the target algorithm is called with the <instance> and
-            <seed> depends on the subclass implementing the actual call to
-            the target algorithm.
-
-            Parameters
-            ----------
-                config : dictionary (or similar)
-                    dictionary param -> value
-                instance : str
-                    problem instance
-                cutoff : int, optional
-                    Wallclock time limit of the target algorithm. If no value is
-                    provided no limit will be enforced.
-                memory_limit : int, optional
-                    Memory limit in MB enforced on the target algorithm If no
-                    value is provided no limit will be enforced.
-                seed : int
-                    random seed
-                instance_specific: str
-                    instance specific information (e.g., domain file or solution)
-            Returns
-            -------
-                status: enum of StatusType (int)
-                    {SUCCESS, TIMEOUT, CRASHED, ABORT}
-                cost: float
-                    cost/regret/quality/runtime (float) (None, if not returned by TA)
-                runtime: float
-                    runtime (None if not returned by TA)
-                additional_info: dict
-                    all further additional run information
-        """
-
         # walltime for pynisher has to be a rounded up integer
         if cutoff is not None:
             cutoff = int(math.ceil(cutoff))

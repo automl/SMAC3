@@ -1,4 +1,3 @@
-import sys
 import typing
 import numpy as np
 
@@ -12,11 +11,7 @@ from smac.tae.execute_ta_run import ExecuteTARun
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
 from smac.scenario.scenario import Scenario
-from smac.tae.execute_ta_run import StatusType
 from smac.runhistory.runhistory import RunHistory
-from smac.utils import constants
-
-
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -24,6 +19,17 @@ __license__ = "3-clause BSD"
 
 
 class MultiConfigInitialDesign(InitialDesign):
+    """ Base class for initial design strategies that evaluates multiple
+    configurations
+
+    Attributes
+    ----------
+    configs : typing.List[Configuration]
+        List of configurations to be evaluated
+    intensifier
+    runhistory
+    aggregate_func
+    """
 
     def __init__(self,
                  tae_runner: ExecuteTARun,
@@ -36,9 +42,9 @@ class MultiConfigInitialDesign(InitialDesign):
                  intensifier: Intensifier,
                  aggregate_func: typing.Callable
                  ):
-        """
+        """Constructor
 
-        Arguments
+        Parameters
         ---------
         tae_runner: ExecuteTARun
             Target algorithm execution object.
@@ -48,7 +54,7 @@ class MultiConfigInitialDesign(InitialDesign):
             Statistics of experiments; needed in case initial design already
             exhausts the budget.
         traj_logger: TrajLogger
-            Trajectory logging to add new incumbents found by the initial 
+            Trajectory logging to add new incumbents found by the initial
             design.
         runhistory: RunHistory
             Runhistory with all target algorithm runs.
@@ -60,9 +66,8 @@ class MultiConfigInitialDesign(InitialDesign):
             Intensification object to issue a racing to decide the current
             incumbent.
         aggregate_func: typing:Callable
-            Function to aggregate performance of a configuration across 
+            Function to aggregate performance of a configuration across
             instances.
-
         """
         super().__init__(tae_runner=tae_runner,
                          scenario=scenario,
@@ -76,13 +81,12 @@ class MultiConfigInitialDesign(InitialDesign):
         self.aggregate_func = aggregate_func
 
     def run(self) -> Configuration:
-        """
-            Run the initial design.
+        """Run the initial design.
 
-            Returns
-            -------
-            incumbent: Configuration
-                initial incumbent configuration
+        Returns
+        -------
+        incumbent: Configuration
+            Initial incumbent configuration
         """
         configs = self.configs
 
@@ -108,6 +112,7 @@ class MultiConfigInitialDesign(InitialDesign):
                                              stats=self.stats,
                                              traj_logger=self.traj_logger,
                                              rng=self.rng)
+
             def get_config():
                 return configs[0]
             scid._select_configuration = get_config

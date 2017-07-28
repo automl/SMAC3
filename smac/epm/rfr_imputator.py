@@ -4,9 +4,8 @@ import numpy as np
 from scipy.stats import truncnorm
 
 import smac.epm.base_imputor
+from smac.epm.base_epm import AbstractEPM
 
-from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, \
-    CategoricalHyperparameter, UniformFloatHyperparameter
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -18,37 +17,54 @@ __version__ = "0.0.1"
 
 class RFRImputator(smac.epm.base_imputor.BaseImputor):
 
-    """Imputor using pyrfr's Random Forest regressor."""
+    """Imputor using pyrfr's Random Forest regressor.
 
-    def __init__(self, rs, cutoff, threshold,
-                 model,
-                 change_threshold=0.01,
-                 max_iter=2):
-        """
-        initialize imputator module
+    **Note:** Sets var_threshold as the lower bound on the variance for the
+    predictions of the random forest
+
+    Attributes
+    ----------
+    logger : logging.Logger
+    max_iter : int
+    change_threshold : float
+    cutoff : float
+    threshold : float
+    seed : int
+        Created by drawing random int from rng
+    model : AbstractEPM
+        Predictive model (i.e. RandomForestWithInstances)
+    var_threshold: float
+
+    """
+
+    def __init__(self, rng: np.random.RandomState, cutoff: float,
+                 threshold: float, model: AbstractEPM,
+                 change_threshold: float=0.01,
+                 max_iter: int=2):
+        """Constructor
 
         Parameters
         ----------
-        rs : random state generator
+        rng : np.random.RandomState
+            Will be used to draw a seed (currently not used)
         cutoff : float
-            Cutoff value used for this scenario.
+            Cutoff value for this scenario (upper runnning time limit)
         threshold : float
-            Highest possible values (e.g. cutoff * par).
-        model:
-            epm model (i.e. RandomForestWithInstances)
+            Highest possible values (e.g. cutoff * parX).
+        model : AbstractEPM
+            Predictive model (i.e. RandomForestWithInstances)
         change_threshold : float
             Stop imputation if change is less than this.
         max_iter : int
-            Maximum number of iteration.
+            Maximum number of imputation iterations.
         """
-
         super(RFRImputator, self).__init__()
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.max_iter = max_iter
         self.change_threshold = change_threshold
         self.cutoff = cutoff
         self.threshold = threshold
-        self.seed = rs.random_integers(low=0, high=1000)
+        self.seed = rng.random_integers(low=0, high=1000)
 
         self.model = model
 
@@ -73,7 +89,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
 
         Returns
         ----------
-        imputed_y: np.ndarray
+        imputed_y : np.ndarray
             Same shape as censored_y [N, 1]
         """
         if censored_X.shape[0] == 0:

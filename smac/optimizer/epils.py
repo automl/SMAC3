@@ -1,8 +1,6 @@
-import itertools
 import logging
 import numpy as np
 import random
-import time
 import typing
 import math
 
@@ -17,8 +15,8 @@ from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.stats.stats import Stats
 from smac.initial_design.initial_design import InitialDesign
 from smac.scenario.scenario import Scenario
-from smac.configspace import Configuration, convert_configurations_to_array, get_one_exchange_neighbourhood
-from smac.tae.execute_ta_run import TAEAbortException, BudgetExhaustedException
+from smac.configspace import Configuration, convert_configurations_to_array, \
+    get_one_exchange_neighbourhood
 from smac.tae.execute_ta_run import FirstRunCrashedException
 
 
@@ -28,6 +26,43 @@ __license__ = "3-clause BSD"
 
 
 class EPILS_Solver(object):
+
+    """Interface that contains the main Bayesian optimization loop
+
+    Attributes
+    ----------
+    logger
+    incumbent
+
+    scenario
+    config_space
+    stats
+    initial_design
+    runhistory
+    rh2EPM
+    intensifier
+    aggregate_func
+    num_run
+    model
+    acq_optimizer
+    acquisition_func
+    rng
+
+    max_neighbors : int
+        set to max(5, int(math.sqrt(len(self.config_space.get_hyperparameters()))))
+    restart_prob
+    pertubation_steps
+
+    slow_race_minR : int
+        Set to 5
+    slow_race_adaptive_capping_factor : int
+        Set to 2
+
+    fast_race_minR : int
+        Set to 1
+    fast_race_adaptive_capping_factor : float
+        Set to 1.2
+    """
 
     def __init__(self,
                  scenario: Scenario,
@@ -44,8 +79,7 @@ class EPILS_Solver(object):
                  rng: np.random.RandomState,
                  restart_prob: float=0.01,
                  pertubation_steps: int=3):
-        '''
-        Interface that contains the main Bayesian optimization loop
+        """Constructor
 
         Parameters
         ----------
@@ -77,8 +111,8 @@ class EPILS_Solver(object):
             probability to perform restart
         pertubation_steps: int
             number of pertubation steps after each local search
-        
-        '''
+        """
+
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.incumbent = None
         self._local_inc = None
@@ -108,14 +142,13 @@ class EPILS_Solver(object):
         self.fast_race_adaptive_capping_factor = 1.2
         
     def run(self):
-        '''
-        Runs the Bayesian optimization loop
+        """Runs the Bayesian optimization loop
 
         Returns
         ----------
         incumbent: np.array(1, H)
             The best found configuration
-        '''
+        """
         self.stats.start_timing()
         try:
             self.incumbent = self.initial_design.run()
@@ -137,7 +170,6 @@ class EPILS_Solver(object):
             X, Y = self.rh2EPM.transform(self.runhistory)
             self.model.train(X, Y)            
             self.acquisition_func.update(model=self.model, eta=self.runhistory.get_cost(self.incumbent))
-
 
             if iteration == 1:
                 start_point = self.incumbent
@@ -181,10 +213,11 @@ class EPILS_Solver(object):
                 
             iteration += 1
 
-            self.logger.debug("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
-                self.stats.get_remaing_time_budget(),
-                self.stats.get_remaining_ta_budget(),
-                self.stats.get_remaining_ta_runs()))
+            self.logger.debug("Remaining budget: %f (wallclock), "
+                              "%f (ta costs), %f (target runs)" %
+                              (self.stats.get_remaing_time_budget(),
+                               self.stats.get_remaining_ta_budget(),
+                               self.stats.get_remaining_ta_runs()))
 
             if self.stats.is_budget_exhausted():
                 break
@@ -194,8 +227,7 @@ class EPILS_Solver(object):
         return self.incumbent
     
     def local_search(self, start_point:Configuration):
-        """
-        Starts a local search from the given startpoint and quits
+        """Starts a local search from the given startpoint and quits
         if either the max number of steps is reached or no neighbor
         with an higher improvement was found.
 
@@ -257,7 +289,7 @@ class EPILS_Solver(object):
                     break
 
             if not changed_inc:
-                self.logger.info("Local search took %d steps and looked at %d configurations. "% 
+                self.logger.info("Local search took %d steps and looked at %d configurations." %
                                   (local_search_steps, neighbors_looked_at))
                 break
 

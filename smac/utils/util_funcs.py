@@ -4,7 +4,9 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformFloatHyperparameter, UniformIntegerHyperparameter, Constant, \
     OrdinalHyperparameter
 
+
 def get_types(config_space, instance_features=None):
+    """TODO"""
     # Extract types vector for rf from config space and the bounds
     types = np.zeros(len(config_space.get_hyperparameters()),
                      dtype=np.uint)

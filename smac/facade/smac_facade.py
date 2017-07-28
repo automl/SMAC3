@@ -39,6 +39,18 @@ __license__ = "3-clause BSD"
 
 
 class SMAC(object):
+    """Facade to use SMAC default mode
+
+    Attributes
+    ----------
+    logger
+    stats : Stats
+    solver : SMBO
+    runhistory : RunHistory
+        List with information about previous runs
+    trajectory : list
+        List of all incumbents
+    """
 
     def __init__(self,
                  scenario: Scenario,
@@ -54,27 +66,26 @@ class SMAC(object):
                  initial_configurations: typing.List[Configuration]=None,
                  stats: Stats=None,
                  rng: np.random.RandomState=None):
-        '''
-        Facade to use SMAC default mode
+        """Constructor
 
         Parameters
         ----------
-        scenario: ~smac.scenario.scenario.Scenario
+        scenario : ~smac.scenario.scenario.Scenario
             Scenario object
-        tae_runner: ~smac.tae.execute_ta_run.ExecuteTARun or callable
-            Callable or implementation of 
+        tae_runner : ~smac.tae.execute_ta_run.ExecuteTARun or callable
+            Callable or implementation of
             :class:`~smac.tae.execute_ta_run.ExecuteTARun`. In case a
-            callable is passed it will be wrapped by 
+            callable is passed it will be wrapped by
             :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.
-            If not set, it will be initialized with the 
+            If not set, it will be initialized with the
             :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.
-        runhistory: RunHistory
+        runhistory : RunHistory
             runhistory to store all algorithm runs
-        intensifier: Intensifier
+        intensifier : Intensifier
             intensification object to issue a racing to decide the current
             incumbent
         acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction
-            Object that implements the :class:`~smac.optimizer.acquisition.AbstractAcquisitionFunction`. 
+            Object that implements the :class:`~smac.optimizer.acquisition.AbstractAcquisitionFunction`.
             Will use :class:`~smac.optimizer.acquisition.EI` if not set.
         model : AbstractEPM
             Model that implements train() and predict(). Will use a
@@ -82,19 +93,20 @@ class SMAC(object):
         runhistory2epm : ~smac.runhistory.runhistory2epm.RunHistory2EMP
             Object that implements the AbstractRunHistory2EPM. If None,
             will use :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4Cost`
-            if objective is cost or 
+            if objective is cost or
             :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost`
             if objective is runtime.
-        initial_design: InitialDesign
+        initial_design : InitialDesign
             initial sampling design
-        initial_configurations: typing.List[Configuration]
+        initial_configurations : typing.List[Configuration]
             list of initial configurations for initial design --
             cannot be used together with initial_design
-        stats: Stats
+        stats : Stats
             optional stats object
-        rng: np.random.RandomState
+        rng : np.random.RandomState
             Random number generator
-        '''
+        """
+
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
@@ -267,7 +279,7 @@ class SMAC(object):
                 threshold = np.log10(scenario.cutoff *
                                      scenario.par_factor)
 
-                imputor = RFRImputator(rs=rng,
+                imputor = RFRImputator(rng=rng,
                                        cutoff=cutoff,
                                        threshold=threshold,
                                        model=model,
@@ -309,19 +321,22 @@ class SMAC(object):
                            acquisition_func=acquisition_function,
                            rng=rng)
 
-    def _get_rng(self, rng):
-        '''
-            initial random number generator
+    @staticmethod
+    def _get_rng(rng):
+        """Initialize random number generator
 
-            Arguments
-            ---------
-            rng: np.random.RandomState|int|None
+        If rng is None, initialize a new generator
+        If rng is Int, create RandomState from that
+        If rng is RandomState, return it
 
-            Returns
-            -------
-            int, np.random.RandomState
-        '''
+        Parameters
+        ----------
+        rng: np.random.RandomState|int|None
 
+        Returns
+        -------
+        int, np.random.RandomState
+        """
         # initialize random number generator
         if rng is None:
             num_run = np.random.randint(1234567980)
@@ -338,19 +353,13 @@ class SMAC(object):
         return num_run, rng
 
     def optimize(self):
-        '''
-            optimize the algorithm provided in scenario (given in constructor)
+        """Optimizes the algorithm provided in scenario (given in constructor)
 
-            Arguments
-            ---------
-            max_iters: int
-                maximal number of iterations
-
-            Returns
-            -------
-            incumbent: Configuration
-                optimized parameters
-        '''
+        Returns
+        ----------
+        incumbent : Configuration
+            Best found configuration
+        """
         incumbent = None
         try:
             incumbent = self.solver.run()
@@ -367,40 +376,36 @@ class SMAC(object):
         return incumbent
 
     def get_tae_runner(self):
-        '''
-            Returns target algorithm evaluator (TAE) object
-            which can run the target algorithm given a
-            configuration
+        """Returns target algorithm evaluator (TAE) object which can run the
+        target algorithm given a configuration
 
-            Returns
-            -------
-            TAE: smac.tae.execute_ta_run.ExecuteTARun
-        '''
+        Returns
+        -------
+        TAE: smac.tae.execute_ta_run.ExecuteTARun
+        """
         return self.solver.intensifier.tae_runner
 
     def get_runhistory(self):
-        '''
-            Returns the runhistory
-            (i.e., all evaluated configurations and the results).
+        """Returns the runhistory (i.e., all evaluated configurations and
+         the results).
 
-            Returns
-            -------
-            Runhistory: smac.runhistory.runhistory.RunHistory
-        '''
+        Returns
+        -------
+        Runhistory: smac.runhistory.runhistory.RunHistory
+        """
         if not hasattr(self, 'runhistory'):
             raise ValueError('SMAC was not fitted yet. Call optimize() prior '
                              'to accessing the runhistory.')
         return self.runhistory
 
     def get_trajectory(self):
-        '''
-            Returns the trajectory
-            (i.e., all incumbent configurations over time).
+        """Returns the trajectory (i.e., all incumbent configurations over
+        time).
 
-            Returns
-            -------
-            Trajectory : List of :class:`~smac.utils.io.traj_logging.TrajEntry`
-        '''
+        Returns
+        -------
+        Trajectory : List of :class:`~smac.utils.io.traj_logging.TrajEntry`
+        """
 
         if not hasattr(self, 'trajectory'):
             raise ValueError('SMAC was not fitted yet. Call optimize() prior '
@@ -408,20 +413,18 @@ class SMAC(object):
         return self.trajectory
 
     def get_X_y(self):
-        '''
-            Simple interface to obtain all data in runhistory
-            in ``X, y`` format.
+        """Simple interface to obtain all data in runhistory in ``X, y`` format.
 
-            Uses
-            :meth:`smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()`.
+        Uses
+        :meth:`smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()`.
 
-            Returns
-            -------
-            X: numpy.ndarray
-                matrix of all configurations (+ instance features)
-            y: numpy.ndarray
-                vector of cost values; can include censored runs
-            cen: numpy.ndarray
-                vector of bools indicating whether the y-value is censored
-        '''
+        Returns
+        -------
+        X: numpy.ndarray
+            matrix of all configurations (+ instance features)
+        y: numpy.ndarray
+            vector of cost values; can include censored runs
+        cen: numpy.ndarray
+            vector of bools indicating whether the y-value is censored
+        """
         return self.solver.rh2EPM.get_X_y(self.runhistory)

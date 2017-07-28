@@ -6,7 +6,6 @@ from smac.tae.execute_ta_run import ExecuteTARun
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
 from smac.scenario.scenario import Scenario
-from smac.runhistory.runhistory import RunHistory
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -14,6 +13,12 @@ __license__ = "3-clause BSD"
 
 
 class RandomConfiguration(SingleConfigInitialDesign):
+    """ Initial design that evaluates a single random configuration
+
+    Arguments
+    ---------
+
+    """
 
     def __init__(self,
                  tae_runner: ExecuteTARun,
@@ -22,18 +27,19 @@ class RandomConfiguration(SingleConfigInitialDesign):
                  traj_logger: TrajLogger,
                  rng: np.random.RandomState
                  ):
-        """
-        Arguments
-        ---------
+        """Constructor
+
+        Parameters
+        ----------
         tae_runner: ExecuteTARun
             Target algorithm execution object.
         scenario: Scenario
             Scenario with all meta information (including configuration space).
         stats: Stats
-            Statistics of experiments; needed in case initial design already 
+            Statistics of experiments; needed in case initial design already
             exhausts the budget.
         traj_logger: TrajLogger
-            Trajectory logging to add new incumbents found by the initial 
+            Trajectory logging to add new incumbents found by the initial
             design.
         rng: np.random.RandomState
             Random state
@@ -45,13 +51,11 @@ class RandomConfiguration(SingleConfigInitialDesign):
                          rng=rng)
 
     def _select_configuration(self):
-        """
-            Select a random configuration.
+        """Select a random configuration.
 
-            Returns
-            -------
-            config: Configuration()
-                initial incumbent configuration
+        Returns
+        -------
+        config: Configuration()
+            Initial incumbent configuration
         """
-
         return self.scenario.cs.sample_configuration()

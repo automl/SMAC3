@@ -12,17 +12,23 @@ __version__ = "0.0.1"
 
 
 class RandomEPM(AbstractEPM):
-    """EPM which returns random values on a call to ``fit``."""
+    """EPM which returns random values on a call to ``fit``.
 
-    def __init__(self, rng, **kwargs):
-        """
+    Attributes
+    ----------
+    logger : logging.Logger
+    rng : np.random.RandomState
+    """
+
+    def __init__(self, rng: np.random.RandomState, **kwargs):
+        """Constructor
+
         Parameters
         ----------
-        rng : np.random.RandomState
+        rng: np.random.RandomState
         """
-        
         super().__init__(**kwargs)
-        
+
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.rng = rng
 
@@ -32,10 +38,10 @@ class RandomEPM(AbstractEPM):
 
         Parameters
         ----------
-        X: np.ndarray (N, D)
+        X : np.ndarray (N, D)
             Input data points. The dimensionality of X is (N, D),
             with N as the number of points and D is the number of features.
-        Y: np.ndarray (N, 1)
+        Y : np.ndarray (N, 1)
             The corresponding target values.
         """
 
