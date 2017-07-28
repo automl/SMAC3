@@ -52,6 +52,29 @@ class TestExecuteFunc(unittest.TestCase):
         self.assertEqual(rval[1], 4)
         self.assertGreaterEqual(rval[2], 0.0)
         self.assertEqual(rval[3], {'key': 12345, 'instance': 'test'})
+        
+    
+    def test_run_wo_pynisher(self):
+        target = lambda x: x**2
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, use_pynisher=False)
+        rval = taf.run(config=2)
+        self.assertFalse(taf._accepts_instance)
+        self.assertFalse(taf._accepts_seed)
+        self.assertEqual(rval[0], StatusType.SUCCESS)
+        self.assertEqual(rval[1], 4)
+        self.assertGreaterEqual(rval[2], 0.0)
+        self.assertEqual(rval[3], dict())
+
+        target = lambda x: None
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, use_pynisher=False)
+        rval = taf.run(config=2)
+        self.assertFalse(taf._accepts_instance)
+        self.assertFalse(taf._accepts_seed)
+        self.assertEqual(rval[0], StatusType.CRASHED)
+        self.assertEqual(rval[1], 2147483647.0)
+        self.assertGreaterEqual(rval[2], 0.0)
+        self.assertEqual(rval[3], dict())
+
 
     @unittest.mock.patch.object(Configuration, 'get_dictionary')
     def test_run_execute_func_for_fmin(self, mock):
@@ -79,7 +102,7 @@ class TestExecuteFunc(unittest.TestCase):
         print(platform, sys.platform)
         if platform == 'linux':
             self.assertEqual(rval[0], StatusType.MEMOUT)
-            self.assertEqual(rval[1], 1234567890)
+            self.assertEqual(rval[1], 2147483647.0)
             self.assertGreaterEqual(rval[2], 0.0)
             self.assertEqual(rval[3], dict())
         elif platform == 'osx':
@@ -96,7 +119,7 @@ class TestExecuteFunc(unittest.TestCase):
         taf = ExecuteTAFuncDict(ta=run_over_time, stats=self.stats)
         rval = taf.run(config=None, cutoff=1)
         self.assertEqual(rval[0], StatusType.TIMEOUT)
-        self.assertEqual(rval[1], 1234567890)
+        self.assertEqual(rval[1], 2147483647.0)
         self.assertGreaterEqual(rval[2], 0.0)
         self.assertEqual(rval[3], dict())
 
@@ -119,6 +142,6 @@ class TestExecuteFunc(unittest.TestCase):
         taf = ExecuteTAFuncDict(ta=function, stats=self.stats)
         rval = taf.run(config=None, cutoff=1)
         self.assertEqual(rval[0], StatusType.CRASHED)
-        self.assertEqual(rval[1], 1234567890)
+        self.assertEqual(rval[1], 2147483647.0)
         self.assertGreaterEqual(rval[2], 0.0)
         self.assertEqual(rval[3], dict())
