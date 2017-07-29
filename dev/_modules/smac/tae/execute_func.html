@@ -249,6 +249,7 @@
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">time</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pynisher</span>
@@ -272,16 +273,44 @@
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    memory_limit</span>
+<span class="sd">    use_pynisher</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ta</span><span class="p">,</span> <span class="n">stats</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">runhistory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">run_obj</span><span class="o">=</span><span class="s2">&quot;quality&quot;</span><span class="p">,</span>
-                 <span class="n">memory_limit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">par_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cost_for_crash</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">)):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ta</span><span class="p">,</span> <span class="n">stats</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">runhistory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">run_obj</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s2">&quot;quality&quot;</span><span class="p">,</span>
+                 <span class="n">memory_limit</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">par_factor</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> 
+                 <span class="n">cost_for_crash</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">),</span>
+                 <span class="n">use_pynisher</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">ta</span><span class="o">=</span><span class="n">ta</span><span class="p">,</span> <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span> <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
                          <span class="n">run_obj</span><span class="o">=</span><span class="n">run_obj</span><span class="p">,</span> <span class="n">par_factor</span><span class="o">=</span><span class="n">par_factor</span><span class="p">,</span>
                          <span class="n">cost_for_crash</span><span class="o">=</span><span class="n">cost_for_crash</span><span class="p">)</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        TODO</span>
+<span class="sd">        Abstract class for having a function as target algorithm</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ta : callable</span>
+<span class="sd">            Function (target algorithm) to be optimized.</span>
+<span class="sd">        stats: Stats()</span>
+<span class="sd">             stats object to collect statistics about runtime and so on</span>
+<span class="sd">        runhistory: RunHistory</span>
+<span class="sd">            runhistory to keep track of all runs; only used if set</span>
+<span class="sd">        run_obj: str</span>
+<span class="sd">            run objective of SMAC</span>
+<span class="sd">        memory_limit : int, optional</span>
+<span class="sd">            Memory limit (in MB) that will be applied to the target algorithm.</span>
+<span class="sd">        par_factor: int</span>
+<span class="sd">            penalization factor</span>
+<span class="sd">        cost_for_crash : float</span>
+<span class="sd">            cost that is used in case of crashed runs (including runs</span>
+<span class="sd">            that returned NaN or inf)</span>
+<span class="sd">        use_pynisher: bool</span>
+<span class="sd">            use pynisher to limit resources; </span>
+<span class="sd">            if disabled</span>
+<span class="sd">              * TA func can use as many resources </span>
+<span class="sd">              as it wants (time and memory) --- use with caution</span>
+<span class="sd">              * all runs will be returned as SUCCESS if returned value is not None</span>
+<span class="sd">            </span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">signature</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">ta</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
@@ -291,6 +320,8 @@
         <span class="k">if</span> <span class="n">memory_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">memory_limit</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">memory_limit</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">memory_limit</span> <span class="o">=</span> <span class="n">memory_limit</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_pynisher</span> <span class="o">=</span> <span class="n">use_pynisher</span>
 
 <div class="viewcode-block" id="AbstractTAFunc.run"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_func.html#smac.tae.execute_func.AbstractTAFunc.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">cutoff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -338,37 +369,52 @@
                      <span class="s1">&#39;wall_time_in_s&#39;</span><span class="p">:</span> <span class="n">cutoff</span><span class="p">,</span>
                      <span class="s1">&#39;mem_in_mb&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory_limit</span><span class="p">}</span>
 
-        <span class="n">obj</span> <span class="o">=</span> <span class="n">pynisher</span><span class="o">.</span><span class="n">enforce_limits</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">ta</span><span class="p">)</span>
-
         <span class="n">obj_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accepts_seed</span><span class="p">:</span>
             <span class="n">obj_kwargs</span><span class="p">[</span><span class="s1">&#39;seed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">seed</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accepts_instance</span><span class="p">:</span>
             <span class="n">obj_kwargs</span><span class="p">[</span><span class="s1">&#39;instance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">instance</span>
 
-        <span class="n">rval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_ta</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">obj_kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_pynisher</span><span class="p">:</span>
 
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rval</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="n">rval</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">additional_run_info</span> <span class="o">=</span> <span class="n">rval</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">pynisher</span><span class="o">.</span><span class="n">enforce_limits</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">ta</span><span class="p">)</span>
+    
+            <span class="n">rval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_ta</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">obj_kwargs</span><span class="p">)</span>
+    
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rval</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">rval</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">additional_run_info</span> <span class="o">=</span> <span class="n">rval</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">rval</span>
+                <span class="n">additional_run_info</span> <span class="o">=</span> <span class="p">{}</span>
+    
+            <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">exit_status</span> <span class="ow">is</span> <span class="n">pynisher</span><span class="o">.</span><span class="n">TimeoutException</span><span class="p">:</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">TIMEOUT</span>
+                <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crash_cost</span>
+            <span class="k">elif</span> <span class="n">obj</span><span class="o">.</span><span class="n">exit_status</span> <span class="ow">is</span> <span class="n">pynisher</span><span class="o">.</span><span class="n">MemorylimitException</span><span class="p">:</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">MEMOUT</span>
+                <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crash_cost</span>
+            <span class="k">elif</span> <span class="n">obj</span><span class="o">.</span><span class="n">exit_status</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span>
+                <span class="n">cost</span> <span class="o">=</span> <span class="n">result</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span>
+                <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crash_cost</span>
+        
+            <span class="n">runtime</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">wall_clock_time</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="n">rval</span>
+            <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ta</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">obj_kwargs</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span>
+                <span class="n">cost</span> <span class="o">=</span> <span class="n">result</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span>
+                <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crash_cost</span>
+            
+            <span class="n">runtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
             <span class="n">additional_run_info</span> <span class="o">=</span> <span class="p">{}</span>
-
-        <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">exit_status</span> <span class="ow">is</span> <span class="n">pynisher</span><span class="o">.</span><span class="n">TimeoutException</span><span class="p">:</span>
-            <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">TIMEOUT</span>
-            <span class="n">cost</span> <span class="o">=</span> <span class="mi">1234567890</span>
-        <span class="k">elif</span> <span class="n">obj</span><span class="o">.</span><span class="n">exit_status</span> <span class="ow">is</span> <span class="n">pynisher</span><span class="o">.</span><span class="n">MemorylimitException</span><span class="p">:</span>
-            <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">MEMOUT</span>
-            <span class="n">cost</span> <span class="o">=</span> <span class="mi">1234567890</span>
-        <span class="k">elif</span> <span class="n">obj</span><span class="o">.</span><span class="n">exit_status</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span>
-            <span class="n">cost</span> <span class="o">=</span> <span class="n">result</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span>
-            <span class="n">cost</span> <span class="o">=</span> <span class="mi">1234567890</span>  <span class="c1"># won&#39;t be used for the model</span>
-
-        <span class="n">runtime</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">wall_clock_time</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">additional_run_info</span></div>
 
