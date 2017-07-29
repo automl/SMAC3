@@ -1,6 +1,7 @@
 import logging
 import inspect
 import math
+import time
 
 import numpy as np
 import pynisher
@@ -24,16 +25,44 @@ class AbstractTAFunc(ExecuteTARun):
     Attributes
     ----------
     memory_limit
+    use_pynisher
     """
 
-    def __init__(self, ta, stats=None, runhistory=None, run_obj="quality",
-                 memory_limit=None, par_factor=1, cost_for_crash=float(MAXINT)):
+    def __init__(self, ta, stats=None, runhistory=None, run_obj:str="quality",
+                 memory_limit:int=None, par_factor:int=1, 
+                 cost_for_crash:float=float(MAXINT),
+                 use_pynisher:bool=True):
 
         super().__init__(ta=ta, stats=stats, runhistory=runhistory,
                          run_obj=run_obj, par_factor=par_factor,
                          cost_for_crash=cost_for_crash)
         """
-        TODO
+        Abstract class for having a function as target algorithm
+        
+        Parameters
+        ----------
+        ta : callable
+            Function (target algorithm) to be optimized.
+        stats: Stats()
+             stats object to collect statistics about runtime and so on
+        runhistory: RunHistory
+            runhistory to keep track of all runs; only used if set
+        run_obj: str
+            run objective of SMAC
+        memory_limit : int, optional
+            Memory limit (in MB) that will be applied to the target algorithm.
+        par_factor: int
+            penalization factor
+        cost_for_crash : float
+            cost that is used in case of crashed runs (including runs
+            that returned NaN or inf)
+        use_pynisher: bool
+            use pynisher to limit resources; 
+            if disabled
+              * TA func can use as many resources 
+              as it wants (time and memory) --- use with caution
+              * all runs will be returned as SUCCESS if returned value is not None
+            
         """
 
         signature = inspect.signature(ta).parameters
@@ -43,6 +72,8 @@ class AbstractTAFunc(ExecuteTARun):
         if memory_limit is not None:
             memory_limit = int(math.ceil(memory_limit))
         self.memory_limit = memory_limit
+        
+        self.use_pynisher = use_pynisher
 
     def run(self, config, instance=None,
             cutoff=None,
@@ -90,37 +121,52 @@ class AbstractTAFunc(ExecuteTARun):
                      'wall_time_in_s': cutoff,
                      'mem_in_mb': self.memory_limit}
 
-        obj = pynisher.enforce_limits(**arguments)(self.ta)
-
         obj_kwargs = {}
         if self._accepts_seed:
             obj_kwargs['seed'] = seed
         if self._accepts_instance:
             obj_kwargs['instance'] = instance
 
-        rval = self._call_ta(obj, config, **obj_kwargs)
+        if self.use_pynisher:
 
-        if isinstance(rval, tuple):
-            result = rval[0]
-            additional_run_info = rval[1]
+            obj = pynisher.enforce_limits(**arguments)(self.ta)
+    
+            rval = self._call_ta(obj, config, **obj_kwargs)
+    
+            if isinstance(rval, tuple):
+                result = rval[0]
+                additional_run_info = rval[1]
+            else:
+                result = rval
+                additional_run_info = {}
+    
+            if obj.exit_status is pynisher.TimeoutException:
+                status = StatusType.TIMEOUT
+                cost = self.crash_cost
+            elif obj.exit_status is pynisher.MemorylimitException:
+                status = StatusType.MEMOUT
+                cost = self.crash_cost
+            elif obj.exit_status == 0 and result is not None:
+                status = StatusType.SUCCESS
+                cost = result
+            else:
+                status = StatusType.CRASHED
+                cost = self.crash_cost
+        
+            runtime = float(obj.wall_clock_time)
         else:
-            result = rval
+            start_time = time.time()
+            result = self.ta(config, **obj_kwargs)
+            
+            if result is not None:
+                status = StatusType.SUCCESS
+                cost = result
+            else:
+                status = StatusType.CRASHED
+                cost = self.crash_cost
+            
+            runtime = time.time() - start_time
             additional_run_info = {}
-
-        if obj.exit_status is pynisher.TimeoutException:
-            status = StatusType.TIMEOUT
-            cost = 1234567890
-        elif obj.exit_status is pynisher.MemorylimitException:
-            status = StatusType.MEMOUT
-            cost = 1234567890
-        elif obj.exit_status == 0 and result is not None:
-            status = StatusType.SUCCESS
-            cost = result
-        else:
-            status = StatusType.CRASHED
-            cost = 1234567890  # won't be used for the model
-
-        runtime = float(obj.wall_clock_time)
 
         return status, cost, runtime, additional_run_info
 
