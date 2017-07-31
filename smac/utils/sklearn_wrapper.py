@@ -25,10 +25,93 @@ from smac.scenario.scenario import Scenario
 
 
 class ModelBasedOptimization(BaseSearchCV):
+    '''
+    Scikit-Learn wrapper for SMAC
+    '''
 
     def __init__(self, estimator, param_distributions, n_iter=10, scoring=None,
                  fit_params=None, iid=True, refit=True, cv=None, verbose=0,
                  random_state=None, error_score='raise', return_train_score=True):
+        """Scikit-learn wrapper for Sequential Model Based Optimization (SMAC). Is useful as
+        this allows to use the various scikitlearn interfaces, for example to OpenML.org
+
+        Works similar to the RandomizedSearchCV class. For detailed and up-to-date
+        parameter descriptions, please see:
+        http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html
+
+        Parameters
+        ---------
+        estimator : estimator object.
+            A object of that type is instantiated for each grid point.
+            This is assumed to implement the scikit-learn estimator interface.
+            Either estimator needs to provide a ``score`` function,
+            or ``scoring`` must be passed.
+
+        param_distributions : dict
+            Dictionary with parameters names (string) as keys and distributions
+            or lists of parameters to try. Distributions must provide a ``rvs``
+            method for sampling (such as those from scipy.stats.distributions).
+            If a list is given, it is sampled uniformly.
+
+        n_iter : int, default=10
+            Number of parameter settings that are sampled. n_iter trades
+            off runtime vs quality of the solution.
+
+        scoring : string, callable or None, default=None
+            A string (see model evaluation documentation) or
+            a scorer callable object / function with signature
+            ``scorer(estimator, X, y)``.
+            If ``None``, the ``score`` method of the estimator is used.
+
+        fit_params : ?
+            Undocumented function of Scikit-learn
+
+        iid : boolean, default=True
+            If True, the data is assumed to be identically distributed across
+            the folds, and the loss minimized is the total loss per sample,
+            and not the mean loss across the folds.
+
+        refit : bool
+            Undocumented function of Scikit-learn
+
+        cv : int, cross-validation generator or an iterable, optional
+            Determines the cross-validation splitting strategy.
+            Possible inputs for cv are:
+              - None, to use the default 3-fold cross validation,
+              - integer, to specify the number of folds in a `(Stratified)KFold`,
+              - An object to be used as a cross-validation generator.
+              - An iterable yielding train, test splits.
+
+            For integer/None inputs, if the estimator is a classifier and ``y`` is
+            either binary or multiclass, :class:`StratifiedKFold` is used. In all
+            other cases, :class:`KFold` is used.
+
+            Refer :ref:`User Guide <cross_validation>` for the various
+            cross-validation strategies that can be used here.
+
+        refit : boolean, default=True
+            Refit the best estimator with the entire dataset.
+            If "False", it is impossible to make predictions using
+            this RandomizedSearchCV instance after fitting.
+
+        verbose : integer
+            Controls the verbosity: the higher, the more messages.
+
+        random_state : RandomState
+            Pseudo random number generator state used for random uniform sampling
+            from lists of possible values instead of scipy.stats distributions.
+
+        error_score : 'raise' (default) or numeric
+            Value to assign to the score if an error occurs in estimator fitting.
+            If set to 'raise', the error is raised. If a numeric value is given,
+            FitFailedWarning is raised. This parameter does not affect the refit
+            step, which will always raise the error.
+
+        return_train_score : boolean, default=True
+            If ``'False'``, the ``cv_results_`` attribute will not include training
+            scores.
+            """
+
         # I guess SMAC doesn't like random state ints.. TODO: check
         if not isinstance(random_state, np.random.RandomState) and random_state is not None:
             raise ValueError('Random state should be None or numpy.random.RandomState')
@@ -45,6 +128,25 @@ class ModelBasedOptimization(BaseSearchCV):
               return_train_score=return_train_score)
 
     def fit(self, X, y=None, groups=None):
+        """Run fit with all sets of parameters.
+
+        Parameters
+        ----------
+
+        X : array-like, shape = [n_samples, n_features]
+            Training vector, where n_samples is the number of samples and
+            n_features is the number of features.
+
+        y : array-like, shape = [n_samples] or [n_samples, n_output], optional
+            Target relative to X for classification or regression;
+            None for unsupervised learning.
+
+        groups : array-like, with shape (n_samples,), optional
+            Group labels for the samples used while splitting the dataset into
+            train/test set.
+        """
+
+        # the following part is directly copied from Scikit-learns RandomizedSearchCV class
         estimator = self.estimator
         cv = check_cv(self.cv, y, classifier=is_classifier(estimator))
         self.scorer_ = check_scoring(self.estimator, scoring=self.scoring)
@@ -60,7 +162,7 @@ class ModelBasedOptimization(BaseSearchCV):
         self.config_space = self._param_distributions_to_config_space(self.param_distributions)
         scenario = Scenario({"run_obj": "quality", "runcount-limit": self.n_iter, "cs": self.config_space, "deterministic": "true", "memory_limit": 3072})
 
-        obj_function = partial(self.obj_function, base_estimator=base_estimator, cv_iter=cv_iter, X=X, y=y)
+        obj_function = partial(self._obj_function, base_estimator=base_estimator, cv_iter=cv_iter, X=X, y=y)
 
         smac = SMAC(scenario=scenario, rng=self.random_state, tae_runner=obj_function)
         smac.optimize()
@@ -86,10 +188,9 @@ class ModelBasedOptimization(BaseSearchCV):
         fit_time = out['fit_time']
         score_time = out['score_time']
         parameters = out['parameters']
-
-
         #################################### END DIFFERENCE WITH BASESEARCH_CV ####################################
 
+        # the following part is directly copied from Scikit-learns RandomizedSearchCV class
         candidate_params = parameters[::n_splits]
         n_candidates = len(candidate_params)
 
@@ -166,7 +267,7 @@ class ModelBasedOptimization(BaseSearchCV):
             self.best_estimator_ = best_estimator
         return self
 
-    def obj_function(self, configuration, seed, instance, base_estimator, cv_iter, X, y):
+    def _obj_function(self, configuration, seed, instance, base_estimator, cv_iter, X, y):
         results_per_fold = {'train_scores': [], 'test_scores': [], 'test_sample_counts': [], 'fit_time': [], 'score_time': []}
         for train, test in cv_iter:
             # fit and score returns a list, containing

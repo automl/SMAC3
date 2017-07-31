@@ -47,7 +47,7 @@ class SklearnWrapperTest(unittest.TestCase):
         mbo_wrapper = ModelBasedOptimization(classifier, self._config_space_to_param_grid(config_space),
                                              random_state=np.random.RandomState(random_seed), verbose=3, n_iter=n_iter)
         # make a partial for running SMAC under same conditions
-        obj_function = partial(mbo_wrapper.obj_function, base_estimator=classifier, cv_iter=list(StratifiedKFold(3).split(X, y)), X=X, y=y)
+        obj_function = partial(mbo_wrapper._obj_function, base_estimator=classifier, cv_iter=list(StratifiedKFold(3).split(X, y)), X=X, y=y)
         mbo_wrapper.fit(X, y)
 
         # Smoke test the score etc:
@@ -69,12 +69,16 @@ class SklearnWrapperTest(unittest.TestCase):
         smac_incumbent = smac.optimize()
         smac_inc_value = np.mean(np.array(smac.get_tae_runner().run(smac_incumbent, 1)[3]['test_scores']))
 
+        # note that multiple configurations could have led to the same
+        # SMAC always takes the most recently found # TODO: check assumption
+        # so we find the last idx in mbo results
+        mbo_idx = n_iter - 1 - np.argmax(mbo_wrapper.cv_results_['mean_test_score'][::-1])
 
+        self.assertAlmostEqual(mbo_wrapper.best_score_, smac_inc_value, 2) # apparently, scikit-learn search returns only 2 digits
         for param_name, param_value in smac_incumbent.get_dictionary().items():
             self.assertIn(param_name, mbo_params)
-            self.assertEqual(mbo_params[param_name], param_value, msg="param: %s" %param_name)
+            self.assertEqual(mbo_wrapper.cv_results_['param_%s'%param_name][mbo_idx], param_value, msg="param: %s" %param_name)
 
-        self.assertAlmostEqual(mbo_wrapper.best_score_, smac_inc_value, 2) #TODO: apparently, scikit-learn search returns only 2 digits
 
     def test_mbo_wrapper_dummy(self):
         iris = datasets.load_iris()
