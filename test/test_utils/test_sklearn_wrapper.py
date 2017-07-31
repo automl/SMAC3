@@ -5,83 +5,99 @@ Created on July 27, 2017
 '''
 import unittest
 
-import sys
-
 import numpy as np
 
-from sklearn.externals.six.moves import cStringIO as StringIO
-from sklearn.utils.testing import assert_equal
-from sklearn.utils.testing import assert_raises
-from sklearn.utils.testing import assert_true
-from sklearn.utils.testing import assert_array_equal
+from functools import partial
 
+from sklearn import datasets
+from sklearn.dummy import DummyClassifier
+from sklearn.model_selection._split import StratifiedKFold
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.utils.testing import assert_raises
+
+from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformIntegerHyperparameter
+
+from smac.configspace import ConfigurationSpace
+from smac.scenario.scenario import Scenario
+from smac.facade.smac_facade import SMAC
 from smac.utils.sklearn_wrapper import ModelBasedOptimization
 
-# Neither of the following two estimators inherit from BaseEstimator,
-# to test hyperparameter search on user-defined classifiers.
-class MockClassifier(object):
-    """Dummy classifier to test the parameter search algorithms"""
-    def __init__(self, foo_param=0):
-        self.foo_param = foo_param
 
-    def fit(self, X, Y):
-        assert_true(len(X) == len(Y))
-        self.classes_ = np.unique(Y)
-        return self
+class SklearnWrapperTest(unittest.TestCase):
 
-    def predict(self, T):
-        return T.shape[0]
+    @staticmethod
+    def _config_space_to_param_grid(config_space):
+        param_grid = {}
 
-    def transform(self, X):
-        return X + self.foo_param
+        for hyperparameter in config_space.get_hyperparameters():
+            if isinstance(hyperparameter, CategoricalHyperparameter):
+                param_grid[hyperparameter.name] = hyperparameter.choices
+            elif isinstance(hyperparameter, UniformIntegerHyperparameter):
+                if hyperparameter.log:
+                    raise ValueError('Parameter logscale unimplemented: %s' + str(hyperparameter.__class__.__name__))
+                param_grid[hyperparameter.name] = list(range(hyperparameter.lower, hyperparameter.upper+1))
+            else:
+                raise ValueError('Parameter type unimplemented: %s' + str(hyperparameter.__class__.__name__))
 
-    def inverse_transform(self, X):
-        return X - self.foo_param
+        return param_grid
 
-    predict_proba = predict
-    predict_log_proba = predict
-    decision_function = predict
-
-    def score(self, X=None, Y=None):
-        if self.foo_param > 1:
-            score = 1.
-        else:
-            score = 0.
-        return score
-
-    def get_params(self, deep=False):
-        return {'foo_param': self.foo_param}
-
-    def set_params(self, **params):
-        self.foo_param = params['foo_param']
-        return self
-
-
-class Sklearn_wrapper_test(unittest.TestCase):
-
-    def test_mbo(self):
-        X = np.array([[-1, -1], [-2, -1], [1, 1], [2, 1]])
-        y = np.array([1, 1, 2, 2])
-
-        # Test that the best estimator contains the right value for foo_param
-        clf = MockClassifier()
-        grid_search = ModelBasedOptimization(clf, {'foo_param': [1, 2, 3]}, verbose=3, n_iter=2)
-        # make sure it selects the smallest parameter in case of ties
-        old_stdout = sys.stdout
-        sys.stdout = StringIO()
-        grid_search.fit(X, y)
-        sys.stdout = old_stdout
-        assert_equal(grid_search.best_estimator_.foo_param, 2)
-
-        assert_array_equal(grid_search.cv_results_["param_foo_param"].data, [1, 2, 3])
+    def _compare_with_smac(self, X, y, classifier, config_space, random_seed, n_iter):
+        print("orig", config_space)
+        # important for testing: cv is None and y is classification
+        mbo_wrapper = ModelBasedOptimization(classifier, self._config_space_to_param_grid(config_space),
+                                             random_state=np.random.RandomState(random_seed), verbose=3, n_iter=n_iter)
+        # make a partial for running SMAC under same conditions
+        obj_function = partial(mbo_wrapper.obj_function, base_estimator=classifier, cv_iter=list(StratifiedKFold(3).split(X, y)), X=X, y=y)
+        mbo_wrapper.fit(X, y)
 
         # Smoke test the score etc:
-        grid_search.score(X, y)
-        grid_search.predict_proba(X)
-        grid_search.decision_function(X)
-        grid_search.transform(X)
+        mbo_wrapper.score(X, y)
+        mbo_wrapper.predict_proba(X)
 
         # Test exception handling on scoring
-        grid_search.scoring = 'sklearn'
-        assert_raises(ValueError, grid_search.fit, X, y)
+        mbo_wrapper.scoring = 'sklearn'
+        assert_raises(ValueError, mbo_wrapper.fit, X, y)
+
+        mbo_params = mbo_wrapper.best_estimator_.get_params()
+
+        # SMAC scenario oject
+        scenario = Scenario({"run_obj": "quality",  "runcount-limit": n_iter, "cs": config_space, "deterministic": "true", "memory_limit": 3072})
+
+        # To optimize, we pass the function to the SMAC-object
+        smac = SMAC(scenario=scenario, rng=np.random.RandomState(random_seed),
+                    tae_runner=obj_function)
+        smac_incumbent = smac.optimize()
+        smac_inc_value = np.mean(np.array(smac.get_tae_runner().run(smac_incumbent, 1)[3]['test_scores']))
+
+
+        for param_name, param_value in smac_incumbent.get_dictionary().items():
+            self.assertIn(param_name, mbo_params)
+            self.assertEqual(mbo_params[param_name], param_value, msg="param: %s" %param_name)
+
+        self.assertAlmostEqual(mbo_wrapper.best_score_, smac_inc_value, 2) #TODO: apparently, scikit-learn search returns only 2 digits
+
+    def test_mbo_wrapper_dummy(self):
+        iris = datasets.load_iris()
+        X = iris.data
+        y = iris.target
+        classifier = DummyClassifier()
+        cs = ConfigurationSpace()
+        cs.add_hyperparameter(UniformIntegerHyperparameter("random_state", 1, 50, default=1))
+
+        self._compare_with_smac(X, y, classifier, cs, random_seed=42, n_iter=5)
+
+    def test_mbo_wrapper_decision_tree(self):
+        iris = datasets.load_iris()
+        X = iris.data
+        y = iris.target
+
+        classifier = DecisionTreeClassifier()
+        cs = ConfigurationSpace()
+        cs.add_hyperparameter(UniformIntegerHyperparameter('max_leaf_nodes', 4, 128, default=4))
+        cs.add_hyperparameter(UniformIntegerHyperparameter('min_samples_leaf', 1, 128, default=1))
+        cs.add_hyperparameter(UniformIntegerHyperparameter('max_depth', 1, 128, default=1))
+        cs.add_hyperparameter(CategoricalHyperparameter('criterion', ['gini', 'entropy'], default='gini'))
+
+        self._compare_with_smac(X, y, classifier, cs, random_seed=42, n_iter=5)
+
 

@@ -8,7 +8,7 @@ from functools import partial
 
 import numpy as np
 
-from ConfigSpace.hyperparameters import CategoricalHyperparameter
+from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformIntegerHyperparameter, UniformFloatHyperparameter
 
 from sklearn.base import is_classifier, clone
 from sklearn.model_selection._split import check_cv
@@ -57,7 +57,6 @@ class ModelBasedOptimization(BaseSearchCV):
         cv_iter = list(cv.split(X, y, groups))
 
         #################################### START DIFFERENCE WITH BASESEARCH_CV ####################################
-
         self.config_space = self._param_distributions_to_config_space(self.param_distributions)
         scenario = Scenario({"run_obj": "quality", "runcount-limit": self.n_iter, "cs": self.config_space, "deterministic": "true", "memory_limit": 3072})
 
@@ -174,7 +173,7 @@ class ModelBasedOptimization(BaseSearchCV):
             # - train_scores, test_scores, test_sample_counts, fit_time, score_time, parameters (iff self.return_train_score)
             # - test_scores, test_sample_counts, fit_time, score_time, parameters (otherwise)
             results = _fit_and_score(clone(base_estimator), X, y, self.scorer_,
-                                     train, test, self.verbose, configuration,  # TODO check if right format
+                                     train, test, self.verbose, configuration.get_dictionary(),
                                      fit_params=self.fit_params,
                                      return_train_score=self.return_train_score,
                                      return_n_test_samples=True,
@@ -203,8 +202,19 @@ class ModelBasedOptimization(BaseSearchCV):
         cs = ConfigurationSpace()
 
         for param, distribution in param_distributions.items():
-            # TODO make it work with scipy distributions, integer parameters and float parameters
-            hyperparameter = CategoricalHyperparameter(param, distribution, default=distribution[0])
+            if not isinstance(distribution, list):
+                # TODO: extend to ranges
+                raise ValueError('Currently, only param_distributions of type list are allowed. ')
+            if all(isinstance(x, int) for x in distribution):
+                minimum = min(distribution)
+                maximum = max(distribution)
+                hyperparameter = UniformIntegerHyperparameter(param, minimum, maximum, minimum)
+            elif all(isinstance(x, float) for x in distribution):
+                minimum = min(distribution)
+                maximum = max(distribution)
+                hyperparameter = UniformFloatHyperparameter(param, minimum, maximum, minimum)
+            else:
+                hyperparameter = CategoricalHyperparameter(param, distribution, default=distribution[0])
             cs.add_hyperparameter(hyperparameter)
 
         return cs
