@@ -42,7 +42,6 @@ class SklearnWrapperTest(unittest.TestCase):
         return param_grid
 
     def _compare_with_smac(self, X, y, classifier, config_space, random_seed, n_iter):
-        print("orig", config_space)
         # important for testing: cv is None and y is classification
         mbo_wrapper = ModelBasedOptimization(classifier, self._config_space_to_param_grid(config_space),
                                              random_state=np.random.RandomState(random_seed), verbose=3, n_iter=n_iter)
