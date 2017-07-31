@@ -27,6 +27,9 @@ class SklearnWrapperTest(unittest.TestCase):
 
     @staticmethod
     def _config_space_to_param_grid(config_space):
+        ''' Converts config space into the scikit learn param grid format. Could be useful utility function, but
+        does not contain the right functionality yet.
+        '''
         param_grid = {}
 
         for hyperparameter in config_space.get_hyperparameters():
@@ -42,9 +45,14 @@ class SklearnWrapperTest(unittest.TestCase):
         return param_grid
 
     def _compare_with_smac(self, X, y, classifier, config_space, random_seed, n_iter):
+        """
+        Checks whether a vanilla SMAC run and the wrapped SMAC run yield the same:
+         - incumbent
+         - evaluation on the incumbent
+        """
         # important for testing: cv is None and y is classification
         mbo_wrapper = ModelBasedOptimization(classifier, self._config_space_to_param_grid(config_space),
-                                             random_state=np.random.RandomState(random_seed), verbose=3, n_iter=n_iter)
+                                             random_state=random_seed, verbose=3, n_iter=n_iter)
         # make a partial for running SMAC under same conditions
         obj_function = partial(mbo_wrapper._obj_function, base_estimator=classifier, cv_iter=list(StratifiedKFold(3).split(X, y)), X=X, y=y)
         mbo_wrapper.fit(X, y)
@@ -63,7 +71,7 @@ class SklearnWrapperTest(unittest.TestCase):
         scenario = Scenario({"run_obj": "quality",  "runcount-limit": n_iter, "cs": config_space, "deterministic": "true", "memory_limit": 3072})
 
         # To optimize, we pass the function to the SMAC-object
-        smac = SMAC(scenario=scenario, rng=np.random.RandomState(random_seed),
+        smac = SMAC(scenario=scenario, rng=random_seed,
                     tae_runner=obj_function)
         smac_incumbent = smac.optimize()
         smac_inc_value = np.mean(np.array(smac.get_tae_runner().run(smac_incumbent, 1)[3]['test_scores']))
@@ -77,7 +85,6 @@ class SklearnWrapperTest(unittest.TestCase):
         for param_name, param_value in smac_incumbent.get_dictionary().items():
             self.assertIn(param_name, mbo_params)
             self.assertEqual(mbo_wrapper.cv_results_['param_%s'%param_name][mbo_idx], param_value, msg="param: %s" %param_name)
-
 
     def test_mbo_wrapper_dummy(self):
         iris = datasets.load_iris()

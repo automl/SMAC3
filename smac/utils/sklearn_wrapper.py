@@ -25,19 +25,21 @@ from smac.scenario.scenario import Scenario
 
 
 class ModelBasedOptimization(BaseSearchCV):
-    '''
+    """
     Scikit-Learn wrapper for SMAC
-    '''
-
+    """
     def __init__(self, estimator, param_distributions, n_iter=10, scoring=None,
                  fit_params=None, iid=True, refit=True, cv=None, verbose=0,
                  random_state=None, error_score='raise', return_train_score=True):
         """Scikit-learn wrapper for Sequential Model Based Optimization (SMAC). Is useful as
-        this allows to use the various scikitlearn interfaces, for example to OpenML.org
+        this allows to use the various Scikit-learn interfaces, for example to OpenML.org
 
         Works similar to the RandomizedSearchCV class. For detailed and up-to-date
         parameter descriptions, please see:
         http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html
+
+        Main difference: requires dict of lists for param_distributions (whereas the base-class
+        is more liberal and also allows for scipy distributions).
 
         Parameters
         ---------
@@ -48,8 +50,8 @@ class ModelBasedOptimization(BaseSearchCV):
             or ``scoring`` must be passed.
 
         param_distributions : dict
-            Dictionary with parameters names (string) as keys and distributions
-            or lists of parameters to try. Distributions must provide a ``rvs``
+            Dictionary with parameters names (string) as keys and
+            lists of parameters to try. Distributions must provide a ``rvs``
             method for sampling (such as those from scipy.stats.distributions).
             If a list is given, it is sampled uniformly.
 
@@ -97,7 +99,7 @@ class ModelBasedOptimization(BaseSearchCV):
         verbose : integer
             Controls the verbosity: the higher, the more messages.
 
-        random_state : RandomState
+        random_state : int or RandomState
             Pseudo random number generator state used for random uniform sampling
             from lists of possible values instead of scipy.stats distributions.
 
@@ -112,9 +114,10 @@ class ModelBasedOptimization(BaseSearchCV):
             scores.
             """
 
-        # I guess SMAC doesn't like random state ints.. TODO: check
-        if not isinstance(random_state, np.random.RandomState) and random_state is not None:
-            raise ValueError('Random state should be None or numpy.random.RandomState')
+        # Current implementation does not like distributions yet.
+        for param, values in param_distributions.items():
+            if not isinstance(values, list):
+                raise ValueError('Not implemented: Wrapper does not work with distributions yet. Please use list. ')
 
         self.random_state = random_state
         self.param_distributions = param_distributions
