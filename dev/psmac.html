@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Search &mdash; SMAC 0.5.0 documentation</title>
+  <title>Parallel SMAC (pSMAC) &mdash; SMAC 0.5.0 documentation</title>
   
 
   
@@ -34,8 +34,11 @@
   
         <link rel="index" title="Index"
               href="genindex.html"/>
-        <link rel="search" title="Search" href="#"/>
-    <link rel="top" title="SMAC 0.5.0 documentation" href="index.html"/> 
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="SMAC 0.5.0 documentation" href="index.html"/>
+        <link rel="up" title="Manual" href="manual.html"/>
+        <link rel="next" title="API Documentation" href="api.html"/>
+        <link rel="prev" title="Target Algorithm Evaluator" href="tae.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -74,7 +77,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="#" method="get">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -91,14 +94,14 @@
               
             
             
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="manual.html">Manual</a><ul>
+<li class="toctree-l1 current"><a class="reference internal" href="manual.html">Manual</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="basic_usage.html">Basic Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="options.html">Options and file formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tae.html">Target Algorithm Evaluator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="psmac.html">Parallel SMAC (pSMAC)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Parallel SMAC (pSMAC)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a><ul>
@@ -226,10 +229,16 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Search</li>
+          <li><a href="manual.html">Manual</a> &raquo;</li>
+        
+      <li>Parallel SMAC (pSMAC)</li>
     
     
       <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/psmac.rst.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
     
@@ -241,19 +250,57 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <noscript>
-  <div id="fallback" class="admonition warning">
-    <p class="last">
-      Please activate JavaScript to enable the search
-      functionality.
-    </p>
-  </div>
-  </noscript>
+  <div class="section" id="parallel-smac-psmac">
+<h1>Parallel SMAC (pSMAC)<a class="headerlink" href="#parallel-smac-psmac" title="Permalink to this headline">¶</a></h1>
+<p><em>SMAC</em> also provides a parallel mode to use several parallel computational resources (such as CPU cores).
+This variant of SMAC is called <em>pSMAC</em> (parallel SMAC).
+The general idea is that all target algorithm run evaluations are shared between the individual <em>SMAC</em> runs
+such that all <em>SMAC</em> are better informed and can work together.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">To use <em>pSMAC</em>, please note that it communicates via the file space,
+i.e., all <em>pSMAC</em> runs write from time to time its runhistory (all target algorithm evaluations)
+to disk and read the runhistories of all <em>pSMAC</em> runs.
+So, a requirement for <em>pSMAC</em> is that it can write to a shared file space.</p>
+</div>
+<div class="section" id="commandline">
+<span id="psmaccommandline"></span><h2>Commandline<a class="headerlink" href="#commandline" title="Permalink to this headline">¶</a></h2>
+<p>To use <em>pSMAC</em> via the commandline interface,
+please specify the following two arguments:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>–shared_model True</strong>: this will activate the information sharing between the <em>pSMAC</em> runs</li>
+<li><strong>–input_psmac_dirs &lt;output_path&gt;</strong>: list of <em>pSMAC</em>’s output directories (you can use shell-extension with asterix-notation)</li>
+</ul>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><em>pSMAC</em> has no option to specify the number of parallel runs. You have to start as many <em>pSMAC</em> runs as you want to run.</p>
+</div>
+<p>On the command line an exemplary call could be:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python smac --scenario SCENARIO --seed INT --shared_model True --input_psmac_dirs smac3-output*
+</pre></div>
+</div>
+<p>We recommend that each <em>pSMAC</em> uses a different random <strong>seed</strong>.</p>
+<p>If you want to verify that all arguments are correct and <em>pSMAC</em> finds all file on the file space,
+please set the <strong>verbose</strong> level to <strong>DEBUG</strong> and grep in the following way</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python smac --verbose DEBUG <span class="o">[</span>...<span class="o">]</span> <span class="p">|</span> grep -E <span class="s2">&quot;Loaded [0-9]+ new runs&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="usage-in-python">
+<span id="psmacinpython"></span><h2>Usage in Python<a class="headerlink" href="#usage-in-python" title="Permalink to this headline">¶</a></h2>
+<p>The same arguments used on the commandline can also be passed to the <em>Scenario</em> constructor.
+See above for a detailed description.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">({</span><span class="o">...</span>
+                <span class="s2">&quot;shared_model&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+                <span class="s2">&quot;input_psmac_dirs&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">output_path</span><span class="o">&gt;</span>
+                <span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
 
-  
-  <div id="search-results">
-  
-  </div>
 
            </div>
            <div class="articleComments">
@@ -261,6 +308,15 @@
            </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="api.html" class="btn btn-neutral float-right" title="API Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tae.html" class="btn btn-neutral" title="Target Algorithm Evaluator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
@@ -300,7 +356,6 @@
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-      <script type="text/javascript" src="_static/searchtools.js"></script>
 
   
 
@@ -316,14 +371,7 @@
           SphinxRtdTheme.StickyNav.enable();
       });
   </script>
-  
-  <script type="text/javascript">
-    jQuery(function() { Search.loadIndex("searchindex.js"); });
-  </script>
-  
-  <script type="text/javascript" id="searchindexloader"></script>
    
-
 
 </body>
 </html>
