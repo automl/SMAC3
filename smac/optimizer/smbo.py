@@ -152,6 +152,7 @@ class SMBO(object):
         incumbent: np.array(1, H)
             The best found configuration
         """
+        self.start()
 
         # Main BO loop
         iteration = 1
