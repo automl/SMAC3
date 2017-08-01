@@ -1,8 +1,7 @@
-'''
-Created on July 27, 2017
-
-@author: Jan N. van Rijn
-'''
+"""
+author = "Jan N. van Rijn"
+license = "3-clause BSD"
+"""
 import unittest
 
 import numpy as np
@@ -27,9 +26,9 @@ class SklearnWrapperTest(unittest.TestCase):
 
     @staticmethod
     def _config_space_to_param_grid(config_space):
-        ''' Converts config space into the scikit learn param grid format. Could be useful utility function, but
+        """ Converts config space into the scikit learn param grid format. Could be useful utility function, but
         does not contain the right functionality yet.
-        '''
+        """
         param_grid = {}
 
         for hyperparameter in config_space.get_hyperparameters():
@@ -77,7 +76,7 @@ class SklearnWrapperTest(unittest.TestCase):
         smac_inc_value = np.mean(np.array(smac.get_tae_runner().run(smac_incumbent, 1)[3]['test_scores']))
 
         # note that multiple configurations could have led to the same
-        # SMAC always takes the most recently found # TODO: check assumption
+        # SMAC always takes the most recently found (in case of 1 instance problems)
         # so we find the last idx in mbo results
         mbo_idx = n_iter - 1 - np.argmax(mbo_wrapper.cv_results_['mean_test_score'][::-1])
 

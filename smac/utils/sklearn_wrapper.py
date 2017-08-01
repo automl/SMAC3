@@ -1,8 +1,7 @@
-'''
-Created on July 26, 2017
-
-@author: Jan N. van Rijn
-'''
+"""
+author = "Jan N. van Rijn"
+license = "3-clause BSD"
+"""
 from collections import defaultdict
 from functools import partial
 
@@ -117,7 +116,7 @@ class ModelBasedOptimization(BaseSearchCV):
         # Current implementation does not like distributions yet.
         for param, values in param_distributions.items():
             if not isinstance(values, list):
-                raise ValueError('Not implemented: Wrapper does not work with distributions yet. Please use list. ')
+                raise ValueError('Not implemented (yet): Wrapper does not work with distributions yet. Please use lists. ')
 
         self.random_state = random_state
         self.param_distributions = param_distributions
@@ -307,7 +306,6 @@ class ModelBasedOptimization(BaseSearchCV):
 
         for param, distribution in param_distributions.items():
             if not isinstance(distribution, list):
-                # TODO: extend to ranges
                 raise ValueError('Currently, only param_distributions of type list are allowed. ')
             if all(isinstance(x, int) for x in distribution):
                 minimum = min(distribution)
