@@ -114,5 +114,6 @@ print("Optimized Value: %.2f" % (inc_value))
 
 # We can also validate our results (though this makes a lot more sense with instances)
 smac.validate(config_mode='inc',      # We can choose which configurations to evaluate
-              repetitions=100,        # This argument will be ignored, unless you set "deterministic" in line 95 to "false"
+              #instance_mode='train+test',  # Defines what instances to validate
+              repetitions=100,        # Ignored, unless you set "deterministic" to "false" in line 95
               n_jobs=1)               # How many cores to use in parallel for optimization
