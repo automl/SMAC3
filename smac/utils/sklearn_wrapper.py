@@ -2,15 +2,18 @@
 author = "Jan N. van Rijn"
 license = "3-clause BSD"
 """
-from collections import defaultdict
-from functools import partial
 
 import numpy as np
 
+from collections import defaultdict
+from functools import partial
+from typing import Union, Callable, Dict, List
+
+from ConfigSpace import Configuration
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformIntegerHyperparameter, UniformFloatHyperparameter
 
-from sklearn.base import is_classifier, clone
-from sklearn.model_selection._split import check_cv
+from sklearn.base import is_classifier, clone, BaseEstimator
+from sklearn.model_selection._split import check_cv, BaseCrossValidator
 from sklearn.model_selection._search import BaseSearchCV
 from sklearn.model_selection._validation import _fit_and_score
 from sklearn.utils.fixes import rankdata
@@ -27,9 +30,11 @@ class ModelBasedOptimization(BaseSearchCV):
     """
     Scikit-Learn wrapper for SMAC
     """
-    def __init__(self, estimator, param_distributions, n_iter=10, scoring=None,
-                 fit_params=None, iid=True, refit=True, cv=None, verbose=0,
-                 random_state=None, error_score='raise', return_train_score=True):
+    def __init__(self, estimator: BaseEstimator, param_distributions: Dict[str, List], n_iter: int = 10,
+                 scoring: Union[str, Callable, None] = None, fit_params: Union[Dict, None] = None, iid: bool = True,
+                 refit: bool = True, cv: Union[BaseCrossValidator, int] = None, verbose: int = 0,
+                 random_state: Union[int, np.random.RandomState] = None, error_score: Union[str, int] = 'raise',
+                 return_train_score: bool = True):
         """Scikit-learn wrapper for Sequential Model Based Optimization (SMAC). Is useful as
         this allows to use the various Scikit-learn interfaces, for example to OpenML.org
 
@@ -64,7 +69,7 @@ class ModelBasedOptimization(BaseSearchCV):
             ``scorer(estimator, X, y)``.
             If ``None``, the ``score`` method of the estimator is used.
 
-        fit_params : ?
+        fit_params : dict, optional
             Undocumented function of Scikit-learn
 
         iid : boolean, default=True
@@ -129,7 +134,8 @@ class ModelBasedOptimization(BaseSearchCV):
               pre_dispatch=False, error_score=error_score,
               return_train_score=return_train_score)
 
-    def fit(self, X, y=None, groups=None):
+    def fit(self, X: Union[List[List], np.array], y: Union[List, np.array, None] = None,
+            groups: Union[List, np.array, None] = None):
         """Run fit with all sets of parameters.
 
         Parameters
@@ -269,7 +275,8 @@ class ModelBasedOptimization(BaseSearchCV):
             self.best_estimator_ = best_estimator
         return self
 
-    def _obj_function(self, configuration, seed, instance, base_estimator, cv_iter, X, y):
+    def _obj_function(self, configuration: Configuration, seed: int, instance: str, base_estimator: BaseEstimator,
+                      cv_iter, X: Union[List[List], np.array], y: Union[List, np.array]):
         results_per_fold = {'train_scores': [], 'test_scores': [], 'test_sample_counts': [], 'fit_time': [], 'score_time': []}
         for train, test in cv_iter:
             # fit and score returns a list, containing
@@ -301,7 +308,7 @@ class ModelBasedOptimization(BaseSearchCV):
         return -1 * score, results_per_fold
 
     @staticmethod
-    def _param_distributions_to_config_space(param_distributions):
+    def _param_distributions_to_config_space(param_distributions: Dict[str, List]):
         cs = ConfigurationSpace()
 
         for param, distribution in param_distributions.items():
