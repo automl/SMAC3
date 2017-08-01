@@ -20,7 +20,7 @@ from smac.initial_design.random_configuration_design import RandomConfiguration
 from smac.initial_design.multi_config_initial_design import \
     MultiConfigInitialDesign
 from smac.intensification.intensification import Intensifier
-from smac.optimizer.smbo import SMBO
+from smac.optimizer.epils import EPILS_Solver
 from smac.optimizer.objective import average_cost
 from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
 from smac.optimizer.local_search import LocalSearch
@@ -38,18 +38,15 @@ __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class SMAC(object):
-    """Facade to use SMAC default mode
+class EPILS(object):
+    """Facade to use EPILS mode
 
     Attributes
     ----------
     logger
     stats : Stats
-    solver : SMBO
-    runhistory : RunHistory
-        List with information about previous runs
-    trajectory : list
-        List of all incumbents
+    solver : EPILS_Solver
+        Optimizer object, see :class:`~smac.optimizer.epils.EPILS_Solver`
     """
 
     def __init__(self,
@@ -65,51 +62,43 @@ class SMAC(object):
                  initial_design: InitialDesign=None,
                  initial_configurations: typing.List[Configuration]=None,
                  stats: Stats=None,
-                 restore_incumbent: Configuration=None,
                  rng: np.random.RandomState=None):
         """Constructor
 
         Parameters
         ----------
-        scenario : ~smac.scenario.scenario.Scenario
+        scenario: smac.scenario.scenario.Scenario
             Scenario object
-        tae_runner : ~smac.tae.execute_ta_run.ExecuteTARun or callable
-            Callable or implementation of
-            :class:`~smac.tae.execute_ta_run.ExecuteTARun`. In case a
-            callable is passed it will be wrapped by
-            :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.
-            If not set, it will be initialized with the
-            :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.
-        runhistory : RunHistory
+        tae_runner: ExecuteTARun or callable
+            Callable or implementation of :class:`ExecuteTaRun`. In case a
+            callable is passed it will be wrapped by tae.ExecuteTaFunc().
+            If not set, tae_runner will be initialized with
+            the tae.ExecuteTARunOld()
+        runhistory: RunHistory
             runhistory to store all algorithm runs
-        intensifier : Intensifier
+        intensifier: Intensifier
             intensification object to issue a racing to decide the current
             incumbent
-        acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction
-            Object that implements the :class:`~smac.optimizer.acquisition.AbstractAcquisitionFunction`.
-            Will use :class:`~smac.optimizer.acquisition.EI` if not set.
+        acquisition_function : AcquisitionFunction
+            Object that implements the AbstractAcquisitionFunction. Will use
+            EI if not set.
         model : AbstractEPM
             Model that implements train() and predict(). Will use a
-            :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` if not set.
-        runhistory2epm : ~smac.runhistory.runhistory2epm.RunHistory2EMP
+            RandomForest if not set.
+        runhistory2epm : RunHistory2EMP
             Object that implements the AbstractRunHistory2EPM. If None,
-            will use :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4Cost`
-            if objective is cost or
-            :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost`
-            if objective is runtime.
-        initial_design : InitialDesign
+            will use RunHistory2EPM4Cost if objective is cost or
+            RunHistory2EPM4LogCost if objective is runtime.
+        initial_design: InitialDesign
             initial sampling design
-        initial_configurations : typing.List[Configuration]
+        initial_configurations: typing.List[Configuration]
             list of initial configurations for initial design --
             cannot be used together with initial_design
-        stats : Stats
+        stats: Stats
             optional stats object
-        rng : np.random.RandomState
+        rng: np.random.RandomState
             Random number generator
-        restore_incumbent: Configuration
-            incumbent used if restoring to previous state
         """
-
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
@@ -142,10 +131,11 @@ class SMAC(object):
         # initial EPM
         types, bounds = get_types(scenario.cs, scenario.feature_array)
         if model is None:
-            model = RandomForestWithInstances(types=types, bounds=bounds,
-                                              instance_features=scenario.feature_array,
-                                              seed=rng.randint(MAXINT),
-                                              pca_components=scenario.PCA_DIM)
+            model = RandomForestWithInstances(
+                    types=types, bounds=bounds,
+                    instance_features=scenario.feature_array,
+                    seed=rng.randint(MAXINT),
+                    pca_components=scenario.PCA_DIM)
         # initial acquisition function
         if acquisition_function is None:
             if scenario.run_obj == "runtime":
@@ -299,8 +289,7 @@ class SMAC(object):
             elif scenario.run_obj == 'quality':
                 runhistory2epm = RunHistory2EPM4Cost(scenario=scenario, num_params=num_params,
                                                      success_states=[
-                                                         StatusType.SUCCESS, 
-                                                         StatusType.CRASHED],
+                                                         StatusType.SUCCESS, ],
                                                      impute_censored_data=False, impute_state=None)
 
             else:
@@ -311,19 +300,18 @@ class SMAC(object):
         if runhistory2epm.scenario is None:
             runhistory2epm.scenario = scenario
 
-        self.solver = SMBO(scenario=scenario,
-                           stats=self.stats,
-                           initial_design=initial_design,
-                           runhistory=runhistory,
-                           runhistory2epm=runhistory2epm,
-                           intensifier=intensifier,
-                           aggregate_func=aggregate_func,
-                           num_run=num_run,
-                           model=model,
-                           acq_optimizer=local_search,
-                           acquisition_func=acquisition_function,
-                           rng=rng,
-                           restore_incumbent=restore_incumbent)
+        self.solver = EPILS_Solver(scenario=scenario,
+                                   stats=self.stats,
+                                   initial_design=initial_design,
+                                   runhistory=runhistory,
+                                   runhistory2epm=runhistory2epm,
+                                   intensifier=intensifier,
+                                   aggregate_func=aggregate_func,
+                                   num_run=num_run,
+                                   model=model,
+                                   acq_optimizer=local_search,
+                                   acquisition_func=acquisition_function,
+                                   rng=rng)
 
     @staticmethod
     def _get_rng(rng):
@@ -341,6 +329,7 @@ class SMAC(object):
         -------
         int, np.random.RandomState
         """
+
         # initialize random number generator
         if rng is None:
             num_run = np.random.randint(1234567980)
@@ -361,14 +350,12 @@ class SMAC(object):
 
         Returns
         ----------
-        incumbent : Configuration
-            Best found configuration
+        incumbent
         """
         incumbent = None
         try:
             incumbent = self.solver.run()
         finally:
-            self.solver.stats.save()
             self.solver.stats.print_stats()
             self.logger.info("Final Incumbent: %s" % (self.solver.incumbent))
             self.runhistory = self.solver.runhistory
@@ -386,17 +373,17 @@ class SMAC(object):
 
         Returns
         -------
-        TAE: smac.tae.execute_ta_run.ExecuteTARun
+        smac.tae.execute_ta_run.ExecuteTARun
         """
         return self.solver.intensifier.tae_runner
 
     def get_runhistory(self):
         """Returns the runhistory (i.e., all evaluated configurations and
-         the results).
+        the results)
 
         Returns
         -------
-        Runhistory: smac.runhistory.runhistory.RunHistory
+        smac.runhistory.runhistory.RunHistory
         """
         if not hasattr(self, 'runhistory'):
             raise ValueError('SMAC was not fitted yet. Call optimize() prior '
@@ -404,12 +391,13 @@ class SMAC(object):
         return self.runhistory
 
     def get_trajectory(self):
-        """Returns the trajectory (i.e., all incumbent configurations over
-        time).
+        """Returns the trajectory (i.e., all incumbent configurations over time)
 
         Returns
         -------
-        Trajectory : List of :class:`~smac.utils.io.traj_logging.TrajEntry`
+        List of entries with the following fields:
+        'train_perf', 'incumbent_id', 'incumbent',
+        'ta_runs', 'ta_time_used', 'wallclock_time'
         """
 
         if not hasattr(self, 'trajectory'):
@@ -418,16 +406,15 @@ class SMAC(object):
         return self.trajectory
 
     def get_X_y(self):
-        """Simple interface to obtain all data in runhistory in ``X, y`` format.
-
-        Uses
-        :meth:`smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()`.
+        """Simple interface to obtain all data in runhistory in X, y format
+            
+        Uses smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()
 
         Returns
         -------
         X: numpy.ndarray
             matrix of all configurations (+ instance features)
-        y: numpy.ndarray
+        y numpy.ndarray
             vector of cost values; can include censored runs
         cen: numpy.ndarray
             vector of bools indicating whether the y-value is censored

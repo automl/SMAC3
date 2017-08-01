@@ -5,3 +5,4 @@ smac\.utils\.test\_helpers module
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:

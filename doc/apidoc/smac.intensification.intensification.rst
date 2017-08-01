@@ -5,3 +5,4 @@ smac\.intensification\.intensification module
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:

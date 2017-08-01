@@ -13,19 +13,9 @@ __version__ = "0.0.1"
 
 class ExecuteTARunOld(ExecuteTARun):
 
-    """
-        executes a target algorithm run with a given configuration
-        on a given instance and some resource limitations
-        Uses the original SMAC/PILS format (SMAC < v2.10)
-
-        Parameters
-        ----------
-        ta : string
-            the command line call to the target algorithm (wrapper)
-        run_obj: str
-            run objective (runtime or quality)
-        par_factor: int
-            penalized average runtime factor
+    """Executes a target algorithm run with a given configuration on a given
+    instance and some resource limitations. Uses the original SMAC/PILS format
+    (SMAC < v2.10)
     """
 
     def run(self, config, instance=None,
@@ -33,33 +23,32 @@ class ExecuteTARunOld(ExecuteTARun):
             seed=12345,
             instance_specific="0"
             ):
-        """
-            runs target algorithm <self.ta> with configuration <config> on
-            instance <instance> with instance specifics <specifics>
-            for at most <cutoff> seconds and random seed <seed>
+        """Runs target algorithm <self.ta> with configuration <config> on
+        instance <instance> with instance specifics <specifics> for at most
+        <cutoff> seconds and random seed <seed>
 
-            Parameters
-            ----------
-                config : dictionary (or similar)
-                    dictionary param -> value
-                instance : string
-                    problem instance
-                cutoff : double
-                    runtime cutoff
-                seed : int
-                    random seed
-                instance_specific: str
-                    instance specific information (e.g., domain file or solution)
-            Returns
-            -------
-                status: enum of StatusType (int)
-                    {SUCCESS, TIMEOUT, CRASHED, ABORT}
-                cost: float
-                    cost/regret/quality/runtime (float) (None, if not returned by TA)
-                runtime: float
-                    runtime (None if not returned by TA)
-                additional_info: dict
-                    all further additional run information
+        Parameters
+        ----------
+            config : dictionary (or similar)
+                Dictionary param -> value
+            instance : string
+                Problem instance
+            cutoff : double
+                Runtime cutoff
+            seed : int
+                Random seed
+            instance_specific: str
+                Instance specific information (e.g., domain file or solution)
+        Returns
+        -------
+            status: enum of StatusType (int)
+                {SUCCESS, TIMEOUT, CRASHED, ABORT}
+            cost: float
+                cost/regret/quality/runtime (float) (None, if not returned by TA)
+            runtime: float
+                runtime (None if not returned by TA)
+            additional_info: dict
+                all further additional run information
         """
 
         if instance is None:
@@ -73,11 +62,12 @@ class ExecuteTARunOld(ExecuteTARun):
         cmd.extend(self.ta)
         cmd.extend([instance, instance_specific, str(cutoff), "0", str(seed)])
         for p in config:
-            if not config[p] is None:
+            if not config.get(p) is None:
                 cmd.extend(["-" + str(p), str(config[p])])
 
         self.logger.debug("Calling: %s" % (" ".join(cmd)))
-        p = Popen(cmd, shell=False, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+        p = Popen(cmd, shell=False, stdout=PIPE, stderr=PIPE,
+                  universal_newlines=True)
         stdout_, stderr_ = p.communicate()
 
         self.logger.debug("Stdout: %s" % (stdout_))
@@ -88,7 +78,9 @@ class ExecuteTARunOld(ExecuteTARun):
         runtime = 1234567890
         additional_info = {}
         for line in stdout_.split("\n"):
-            if line.startswith("Result of this algorithm run:") or line.startswith("Result for ParamILS") or line.startswith("Result for SMAC"):
+            if line.startswith("Result of this algorithm run:") or \
+                    line.startswith("Result for ParamILS") or \
+                    line.startswith("Result for SMAC"):
                 fields = line.split(":")[1].split(",")
                 fields = list(map(lambda x: x.strip(" "), fields))
                 if len(fields) == 5:

@@ -5,3 +5,4 @@ smac\.epm\.rf\_with\_instances module
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:

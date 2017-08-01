@@ -12,35 +12,38 @@ __version__ = "0.0.1"
 
 
 class RandomEPM(AbstractEPM):
-    '''EPM which returns random values on a call to ``fit``.'''
+    """EPM which returns random values on a call to ``fit``.
 
-    def __init__(self, rng,
-                 **kwargs):
-        '''
-        initialize random number generator and logger
+    Attributes
+    ----------
+    logger : logging.Logger
+    rng : np.random.RandomState
+    """
+
+    def __init__(self, rng: np.random.RandomState, **kwargs):
+        """Constructor
 
         Parameters
         ----------
-        rng : np.random.RandomState
-        '''
-        
+        rng: np.random.RandomState
+        """
         super().__init__(**kwargs)
-        
+
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.rng = rng
 
-    def _train(self, X, Y, **kwargs):
-        '''
+    def _train(self, X: np.ndarray, Y: np.ndarray, **kwargs):
+        """
         Pseudo training on X and Y.
 
         Parameters
         ----------
-        X: np.ndarray (N, D)
+        X : np.ndarray (N, D)
             Input data points. The dimensionality of X is (N, D),
             with N as the number of points and D is the number of features.
-        Y: np.ndarray (N, 1)
+        Y : np.ndarray (N, 1)
             The corresponding target values.
-        '''
+        """
 
         if not isinstance(X, np.ndarray):
             raise NotImplementedError("X has to be of type np.ndarray")
@@ -49,22 +52,21 @@ class RandomEPM(AbstractEPM):
 
         self.logger.debug("(Pseudo) Fit model to data")
 
-    def _predict(self, X):
-        '''
-        Predict values for configs
+    def _predict(self, X: np.ndarray):
+        """
+        Predict means and variances for given X.
 
         Parameters
         ----------
-        configs : list
-            list of configurations
-
-        instance_features : list
-            list of instance features
+        X : np.ndarray of shape = [n_samples, n_features (config + instance features)]
 
         Returns
         -------
-        predictions
-        '''
+        means : np.ndarray of shape = [n_samples, n_objectives]
+            Predictive mean
+        vars : np.ndarray  of shape = [n_samples, n_objectives]
+            Predictive variance
+        """
         if not isinstance(X, np.ndarray):
             raise NotImplementedError("X has to be of type np.ndarray")
         return self.rng.rand(len(X), 1), self.rng.rand(len(X), 1)

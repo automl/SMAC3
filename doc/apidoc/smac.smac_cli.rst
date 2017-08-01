@@ -5,3 +5,4 @@ smac\.smac\_cli module
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:

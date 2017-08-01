@@ -14,52 +14,40 @@ __version__ = "0.0.1"
 
 class ExecuteTARunAClib(ExecuteTARun):
 
-    """
-        executes a target algorithm run with a given configuration
-        on a given instance and some resource limitations
-        Uses the AClib 2.0 style
-
-        Parameters
-        ----------
-        ta : string
-            the command line call to the target algorithm (wrapper)
-        run_obj: str
-            run objective (runtime or quality)
-        par_factor: int
-            penalized average runtime factor
+    """Executes a target algorithm run with a given configuration on a given
+    instance and some resource limitations. Uses the AClib 2.0 style
     """
 
     def run(self, config, instance=None,
             cutoff=None,
             seed=12345,
             instance_specific="0"):
-        """
-            runs target algorithm <self.ta> with configuration <config> on
-            instance <instance> with instance specifics <specifics>
-            for at most <cutoff> seconds and random seed <seed>
+        """Runs target algorithm <self.ta> with configuration <config> on
+        instance <instance> with instance specifics <specifics> for at most
+        <cutoff> seconds and random seed <seed>
 
-            Parameters
-            ----------
-                config : dictionary (or similar)
-                    dictionary param -> value
-                instance : string
-                    problem instance
-                cutoff : double
-                    runtime cutoff
-                seed : int
-                    random seed
-                instance_specific: str
-                    instance specific information -- ignored here
-            Returns
-            -------
-                status: enum of StatusType (int)
-                    {SUCCESS, TIMEOUT, CRASHED, ABORT}
-                cost: float
-                    cost/regret/quality/runtime (float) (None, if not returned by TA)
-                runtime: float
-                    runtime (None if not returned by TA)
-                additional_info: dict
-                    all further additional run information
+        Parameters
+        ----------
+            config : dictionary (or similar)
+                Dictionary param -> value
+            instance : string
+                Problem instance
+            cutoff : double
+                Runtime cutoff
+            seed : int
+                Random seed
+            instance_specific: str
+                Instance specific information -- ignored here
+        Returns
+        -------
+            status: enum of StatusType (int)
+                {SUCCESS, TIMEOUT, CRASHED, ABORT}
+            cost: float
+                cost/regret/quality/runtime (float) (None, if not returned by TA)
+            runtime: float
+                runtime (None if not returned by TA)
+            additional_info: dict
+                all further additional run information
         """
 
         if instance is None:
@@ -78,7 +66,7 @@ class ExecuteTARunAClib(ExecuteTARun):
                     ])
 
         for p in config:
-            if not config[p] is None:
+            if not config.get(p) is None:
                 cmd.extend(["-" + str(p), str(config[p])])
 
         self.logger.debug("Calling: %s" % (" ".join(cmd)))
@@ -114,8 +102,8 @@ class ExecuteTARunAClib(ExecuteTARun):
             self.logger.warn("\n".join(stderr_.split("\n")[-5:]))
 
         if results.get("runtime") is None:
-            self.logger.warn(
-                "The target algorithm has not returned a runtime -- imputed by 0.")
+            self.logger.warn("The target algorithm has not returned a"
+                             " runtime -- imputed by 0.")
             # (TODO) Check 0
             results["runtime"] = 0
 

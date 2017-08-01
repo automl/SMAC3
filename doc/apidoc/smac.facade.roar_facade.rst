@@ -5,3 +5,4 @@ smac\.facade\.roar\_facade module
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:

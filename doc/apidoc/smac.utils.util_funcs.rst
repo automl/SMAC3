@@ -5,3 +5,4 @@ smac\.utils\.util\_funcs module
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:

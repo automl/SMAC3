@@ -1,5 +1,3 @@
-import sys
-
 import numpy as np
 
 from smac.initial_design.initial_design import InitialDesign
@@ -7,8 +5,6 @@ from smac.tae.execute_ta_run import ExecuteTARun
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
 from smac.scenario.scenario import Scenario
-from smac.tae.execute_ta_run import StatusType
-from smac.runhistory.runhistory import RunHistory
 from smac.utils import constants
 
 __author__ = "Marius Lindauer, Katharina Eggensperger"
@@ -17,6 +13,13 @@ __license__ = "3-clause BSD"
 
 
 class SingleConfigInitialDesign(InitialDesign):
+    """ Base class for initial design strategies that evaluates multiple
+    configurations
+
+    Attributes
+    ----------
+
+    """
 
     def __init__(self,
                  tae_runner: ExecuteTARun,
@@ -25,22 +28,22 @@ class SingleConfigInitialDesign(InitialDesign):
                  traj_logger: TrajLogger,
                  rng: np.random.RandomState
                  ):
-        '''
-        Constructor
+        """Constructor
 
-        Arguments
+        Parameters
         ---------
         tae_runner: ExecuteTARun
             target algorithm execution object
         scenario: Scenario
             scenario with all meta information (including configuration space)
         stats: Stats
-            statistics of experiments; needed in case initial design already exhaust the budget
+            statistics of experiments; needed in case initial design already
+            exhaust the budget
         traj_logger: TrajLogger
             trajectory logging to add new incumbents found by the initial design
         rng: np.random.RandomState
             random state
-        '''
+        """
         super().__init__(tae_runner=tae_runner,
                          scenario=scenario,
                          stats=stats,
@@ -48,16 +51,14 @@ class SingleConfigInitialDesign(InitialDesign):
                          rng=rng)
 
     def run(self):
-        '''
-        Runs the initial design by calling the target algorithm
+        """Runs the initial design by calling the target algorithm
         and adding new entries to the trajectory logger.
 
         Returns
         -------
         incumbent: Configuration
-            initial incumbent configuration
-        '''
-
+            Initial incumbent configuration
+        """
         initial_incumbent = self._select_configuration()
 
         # add this incumbent right away to have an entry to time point 0
@@ -77,7 +78,8 @@ class SingleConfigInitialDesign(InitialDesign):
             instance=rand_inst,
             cutoff=self.scenario.cutoff,
             seed=initial_seed,
-            instance_specific=self.scenario.instance_specific.get(rand_inst, "0"))
+            instance_specific=self.scenario.instance_specific.get(rand_inst,
+                                                                  "0"))
 
         self.stats.inc_changed += 1  # first incumbent
 
@@ -88,13 +90,11 @@ class SingleConfigInitialDesign(InitialDesign):
         return initial_incumbent
 
     def _select_configuration(self):
-        '''
-        selects a single configuration to run
+        """Selects a single configuration to run
 
         Returns
         -------
         config: Configuration
             initial incumbent configuration
-        '''
-
+        """
         raise NotImplementedError

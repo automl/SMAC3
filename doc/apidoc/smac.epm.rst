@@ -5,6 +5,7 @@ smac\.epm package
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:
 
 
 .. toctree::

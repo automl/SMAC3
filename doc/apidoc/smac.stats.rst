@@ -5,6 +5,7 @@ smac\.stats package
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:
 
 
 .. toctree::

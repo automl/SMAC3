@@ -5,3 +5,4 @@ smac\.utils\.io\.traj\_logging module
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:

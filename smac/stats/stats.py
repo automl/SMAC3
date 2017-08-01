@@ -3,6 +3,8 @@ import os
 import logging
 import json
 
+from smac.scenario.scenario import Scenario
+
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
@@ -13,13 +15,25 @@ __version__ = "0.0.1"
 
 class Stats(object):
 
-    '''
+    """
     All statistics collected during configuration run.
     Written to output-directory to be restored
-    '''
 
-    def __init__(self, scenario):
+    Attributes
+    ----------
+    ta_runs
+    wallclock_time_used
+    ta_time_used
+    inc_changed
+    """
 
+    def __init__(self, scenario: Scenario):
+        """Constructor
+
+        Parameters
+        ----------
+        scenario : Scenario
+        """
         self.__scenario = scenario
 
         self.ta_runs = 0
@@ -76,74 +90,69 @@ class Stats(object):
                 raise ValueError("Stats does not recognize {}".format(key))
 
     def start_timing(self):
-        '''
-            Starts the timer (for the runtime configuration budget).
-            Substracting wallclock time used so we can continue loaded Stats.
-        '''
+        """
+        Starts the timer (for the runtime configuration budget).
+        Substracting wallclock time used so we can continue loaded Stats.
+        """
         if self.__scenario:
             self._start_time = time.time() - self.wallclock_time_used
         else:
             raise ValueError("Scenario is missing")
 
     def get_used_wallclock_time(self):
-        '''
-            returns used wallclock time
+        """Returns used wallclock time
 
-            Returns
-            -------
-            wallclock_time : int
-                used wallclock time in sec
-        '''
+        Returns
+        -------
+        wallclock_time : int
+            used wallclock time in sec
+        """
 
         return time.time() - self._start_time
 
     def get_remaing_time_budget(self):
-        '''
-            subtracts the runtime configuration budget with the used wallclock time
-        '''
+        """Subtracts the runtime configuration budget with the used wallclock
+        time"""
         if self.__scenario:
             return self.__scenario.wallclock_limit - (time.time() - self._start_time)
         else:
             raise "Scenario is missing"
 
     def get_remaining_ta_runs(self):
-        '''
-           subtract the target algorithm runs in the scenario with the used ta runs
-        '''
+        """Subtract the target algorithm runs in the scenario with the used ta
+        runs"""
         if self.__scenario:
             return self.__scenario.ta_run_limit - self.ta_runs
         else:
             raise "Scenario is missing"
 
     def get_remaining_ta_budget(self):
-        '''
-            subtracts the ta running budget with the used time
-        '''
+        """Subtracts the ta running budget with the used time"""
         if self.__scenario:
             return self.__scenario.algo_runs_timelimit - self.ta_time_used
 
     def is_budget_exhausted(self):
-        '''
-            check whether the configuration budget for time budget, ta_budget and ta_runs is empty
+        """Check whether the configuration budget for time budget, ta_budget
+        and ta_runs is empty
 
-            Returns
-            -------
-            exhaustedness: boolean
-                true if one of the budgets is exhausted
-        '''
+        Returns
+        -------
+        exhaustedness: boolean
+            true if one of the budgets is exhausted
+        """
         return  self.get_remaing_time_budget() < 0 or \
                 self.get_remaining_ta_budget() < 0 or \
                 self.get_remaining_ta_runs() <= 0
 
     def update_average_configs_per_intensify(self, n_configs: int):
-        '''
-            updates statistics how many configurations on average per used in intensify
+        """Updates statistics how many configurations on average per used in
+        intensify
 
-            Parameters
-            ----------
-            n_configs: int
-                number of configurations in current intensify
-        '''
+        Parameters
+        ----------
+        n_configs: int
+            number of configurations in current intensify
+        """
         self._n_calls_of_intensify += 1
         self._n_configs_per_intensify += n_configs
 
@@ -153,16 +162,14 @@ class Stats(object):
             self._ema_n_configs_per_intensifiy = (1 - self._EMA_ALPHA) * self._ema_n_configs_per_intensify \
                                                         + self._EMA_ALPHA * n_configs
 
-
     def print_stats(self, debug_out:bool=False):
-        '''
-            prints all statistics
+        """Prints all statistics
 
-            Arguments
-            ---------
-            debug: bool
-                use logging.debug instead of logging.info if set to true
-        '''
+        Parameters
+        ---------
+        debug: bool
+            use logging.debug instead of logging.info if set to true
+        """
         log_func = self._logger.info
         if debug_out:
             log_func = self._logger.debug

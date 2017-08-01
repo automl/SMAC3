@@ -3,7 +3,7 @@ import time
 import numpy as np
 
 from smac.configspace import get_one_exchange_neighbourhood, \
-    convert_configurations_to_array
+    convert_configurations_to_array, Configuration
 
 __author__ = "Aaron Klein, Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -15,10 +15,16 @@ __version__ = "0.0.1"
 
 class LocalSearch(object):
 
+    """Implementation of SMAC's local search
+
+    Attributes
+    ----------
+
+    """
+
     def __init__(self, acquisition_function, config_space,
                  epsilon=0.00001, max_iterations=None, rng=None):
-        """
-        Implementation of SMAC's local search
+        """Constructor
 
         Parameters
         ----------
@@ -44,9 +50,8 @@ class LocalSearch(object):
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
-    def maximize(self, start_point, *args):
-        """
-        Starts a local search from the given startpoint and quits
+    def maximize(self, start_point: Configuration, *args):
+        """Starts a local search from the given startpoint and quits
         if either the max number of steps is reached or no neighbor
         with an higher improvement was found.
 
@@ -108,12 +113,15 @@ class LocalSearch(object):
                     changed_inc = True
                     break
 
-            if (not changed_inc) or (self.max_iterations != None
-                                     and local_search_steps == self. max_iterations):
-                self.logger.debug("Local search took %d steps and looked at %d configurations. "
-                                  "Computing the acquisition value for one "
-                                  "configuration took %f seconds on average.",
-                                  local_search_steps, neighbors_looked_at, np.mean(time_n))
+            if (not changed_inc) or \
+                    (self.max_iterations is not None and
+                     local_search_steps == self.max_iterations):
+                self.logger.debug("Local search took %d steps and looked at %d "
+                                  "configurations. Computing the acquisition "
+                                  "value for one configuration took %f seconds"
+                                  " on average.",
+                                  local_search_steps, neighbors_looked_at,
+                                  np.mean(time_n))
                 break
 
         return incumbent, acq_val_incumbent
