@@ -49,7 +49,7 @@ class DataOrigin(Enum):
       during intensify.
     * ``EXTERNAL_SAME_INSTANCES``: external data, which was gathered by running
        another program on the same instances as the current optimization run 
-       runs on (for example pSMAC). Itwill not be saved to disk, but used both 
+       runs on (for example pSMAC). It will not be saved to disk, but used both 
        for EPM building and during intensify.
     * ``EXTERNAL_DIFFERENT_INSTANCES``: external data, which was gathered on a
        different instance set as the one currently used, but due to having the 
@@ -118,7 +118,7 @@ class RunHistory(object):
 
         # Store whether a datapoint is "external", which means it was read from
         # a JSON file. Can be chosen to not be written to disk
-        self.external = {}  # RunKey -> bool
+        self.external = {}  # RunKey -> DataOrigin
 
         self.aggregate_func = aggregate_func
         self.overwrite_existing_runs = overwrite_existing_runs
@@ -174,7 +174,8 @@ class RunHistory(object):
             # overwrite if censored with a larger cutoff
             self._add(k, v, status, origin)
 
-    def _add(self, k, v, status, origin):
+    def _add(self, k: RunKey, v: RunValue, status: StatusType,
+             origin: DataOrigin):
         """Actual function to add new entry to data structures
 
         TODO
@@ -364,21 +365,25 @@ class RunHistory(object):
                      seed=int(k[2]),
                      additional_info=v[3])
 
-    def update_from_json(self, fn: str, cs: ConfigurationSpace):
+    def update_from_json(self, fn: str, cs: ConfigurationSpace,
+                         origin: DataOrigin=DataOrigin.EXTERNAL_SAME_INSTANCES):
         """Update the current runhistory by adding new runs from a json file.
 
         Parameters
         ----------
         fn : str
-            File name to load from
+            File name to load from.
         cs : ConfigSpace
-            Instance of configuration space
+            Instance of configuration space.
+        origin : DataOrigin
+            What to store as data origin.
         """
         new_runhistory = RunHistory(self.aggregate_func)
         new_runhistory.load_json(fn, cs)
-        self.update(runhistory=new_runhistory, origin=DataOrigin.EXTERNAL_SAME_INSTANCES)
+        self.update(runhistory=new_runhistory, origin=origin)
 
-    def update(self, runhistory, origin: DataOrigin=DataOrigin.EXTERNAL_SAME_INSTANCES):
+    def update(self, runhistory: 'RunHistory',
+               origin: DataOrigin=DataOrigin.EXTERNAL_SAME_INSTANCES):
         """Update the current runhistory by adding new runs from a json file.
 
         Parameters
