@@ -117,7 +117,8 @@ class Validator(object):
                              runhistory=runhistory)
 
         # Create new Stats without limits
-        inf_scen = Scenario({'run_obj':'quality', 'output_dir':None})
+        inf_scen = Scenario({'run_obj':self.scen.run_obj,
+                             'cutoff_time':self.scen.cutoff, 'output_dir':None})
         inf_stats = Stats(inf_scen)
         inf_stats.start_timing()
 
@@ -152,7 +153,7 @@ class Validator(object):
         self.rh.save_json(self.output)
         return self.rh
 
-    def _validate_parallel(self, tae, runs, n_jobs):
+    def _validate_parallel(self, tae, runs, n_jobs, backend="threading"):
         """
         Validate runs with joblibs Parallel-interface
 
@@ -161,9 +162,12 @@ class Validator(object):
         tae: ExecuteTARun
             tae to be used for validation
         runs: list<dict<string,string,string,string>>
-            list with dicts (config/inst/seed/inst_specs)
+            list with dicts
+            [{"config":CONFIG,"inst":INSTANCE,"seed":SEED,"inst_specs":INST_SPECIFICS}]
         n_jobs: int
             number of cpus to use for validation
+        backend: string
+            what backend to use for parallelization
 
         Returns
         -------
@@ -171,7 +175,7 @@ class Validator(object):
             results as returned by tae
         """
         # Runs with parallel
-        run_results = Parallel(n_jobs=n_jobs, backend="threading")(
+        run_results = Parallel(n_jobs=n_jobs, backend=backend)(
             delayed(_unbound_tae_starter)(tae, run['config'],
                                           run['inst'],
                                           self.scen.cutoff, run['seed'],
@@ -181,11 +185,8 @@ class Validator(object):
 
     def get_runs(self, configs, insts, repetitions=1, runhistory=None):
         """
-        Generate list of dicts with SMAC-TAE runs to be executed. This means
+        Generate list of SMAC-TAE runs to be executed. This means
         combinations of configs with all instances on a certain number of seeds.
-        There are a number of different possible combinations:
-            deterministic? -> seeds/repetitions
-            instances?
 
         Parameters
         ----------
@@ -201,7 +202,9 @@ class Validator(object):
         Returns
         -------
         runs: list<dict<string,string,string,string>>
-            list with dicts (config/inst/seed/inst_specs), that can be fed into tae
+            list with dicts
+            [{"config":CONFIG1,"inst":INSTANCE1,"seed":SEED1,"inst_specs":INST_SPECIFICS1},
+             {"config":CONFIG2,"inst":INSTANCE2,"seed":SEED2,"inst_specs":INST_SPECIFICS2}]
         """
         # If no instances are given, fix the instances to one "None" instance
         if len(insts) == 0:
@@ -217,8 +220,8 @@ class Validator(object):
 
         # Now create the actual run-list
         runs = []
-        # Counter for imputed runs
-        imputed = 0
+        # Counter for runs without the need of recalculation
+        runs_from_rh = 0
 
         for i in sorted(insts):
             for rep in range(repetitions):
@@ -235,7 +238,7 @@ class Validator(object):
                         cost, time, status, additional_info = runhistory.data[runkey]
                         self.rh.add(c, cost, time, status, instance_id=i,
                                     seed=seed, additional_info=additional_info)
-                        imputed += 1
+                        runs_from_rh += 1
                 else:
                     # If no runhistory or no entries for instance, get new seed
                     seed = self.rng.randint(MAXINT)
@@ -253,7 +256,7 @@ class Validator(object):
         self.logger.info("Collected %d runs from %d configurations on %d instances "
                          "with %d repetitions.", len(runs), len(configs), len(insts),
                          repetitions)
-        self.logger.info("Imputed %d runs from given runhistory.", imputed)
+        self.logger.info("Using %d runs from given runhistory.", runs_from_rh)
 
         return runs
 
