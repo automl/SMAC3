@@ -5,6 +5,7 @@ smac\.initial\_design package
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:
 
 
 .. toctree::

@@ -1,4 +1,3 @@
-import os
 import sys
 import logging
 import numpy as np
@@ -7,6 +6,7 @@ from smac.utils.io.cmd_reader import CMDReader
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_facade import SMAC
 from smac.facade.roar_facade import ROAR
+from smac.facade.epils_facade import EPILS
 from smac.runhistory.runhistory import RunHistory
 from smac.optimizer.objective import average_cost
 from smac.utils.merge_foreign_data import merge_foreign_data_from_file
@@ -23,21 +23,15 @@ __version__ = "0.0.1"
 
 class SMACCLI(object):
 
-    '''
-    main class of SMAC
-    '''
+    """Main class of SMAC"""
 
     def __init__(self):
-        '''
-            constructor
-        '''
+        """Constructor"""
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
     def main_cli(self):
-        '''
-            main function of SMAC for CLI interface
-        '''
+        """Main function of SMAC for CLI interface"""
         self.logger.info("SMAC call: %s" % (" ".join(sys.argv)))
 
         cmd_reader = CMDReader()
@@ -91,6 +85,12 @@ class SMACCLI(object):
                 initial_configurations=initial_configs)
         elif args_.mode == "ROAR":
             optimizer = ROAR(
+                scenario=scen,
+                rng=np.random.RandomState(args_.seed),
+                runhistory=rh,
+                initial_configurations=initial_configs)
+        elif args_.mode == "EPILS":
+            optimizer = EPILS(
                 scenario=scen,
                 rng=np.random.RandomState(args_.seed),
                 runhistory=rh,

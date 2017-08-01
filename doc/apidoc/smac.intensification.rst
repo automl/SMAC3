@@ -5,6 +5,7 @@ smac\.intensification package
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:
 
 
 .. toctree::

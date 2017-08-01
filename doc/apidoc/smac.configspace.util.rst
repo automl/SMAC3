@@ -5,3 +5,4 @@ smac\.configspace\.util module
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:

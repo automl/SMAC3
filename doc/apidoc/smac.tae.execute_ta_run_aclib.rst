@@ -5,3 +5,4 @@ smac\.tae\.execute\_ta\_run\_aclib module
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:

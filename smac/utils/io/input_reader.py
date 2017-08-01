@@ -1,3 +1,6 @@
+import numpy as np
+from smac.configspace import pcs
+
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"
@@ -5,34 +8,31 @@ __maintainer__ = "Marius Lindauer"
 __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
-import numpy as np
-from smac.configspace import pcs
-
 
 class InputReader(object):
 
-    """
-        reading all input files for SMAC (scenario file, instance files, ...)
+    """Reading all input files for SMAC (scenario file, instance files, ...)
 
-        Note: most of this code was taken from the pysmac repository.
-              We copy it here because we don't want smac3 to depend
-              on an earlier version!
+    Note: Most of this code was taken from the pysmac repository.
+          We copy it here because we don't want smac3 to depend
+          on an earlier version!
     """
 
     def __init__(self):
-        """
-        Constructor
-        """
         pass
 
-    def read_scenario_file(self, fn):
-        """
-            encapsulates read_scenario_file of pysmac
+    def read_scenario_file(self, fn: str):
+        """Encapsulates read_scenario_file of pysmac
 
-            Returns
-            -------
-            dict : dictionary
-                (key, value) pairs are (variable name, variable value)
+        Parameters
+        ----------
+            fn: string
+                 File name of scenario file
+
+        Returns
+        -------
+        dict : dictionary
+            (key, value) pairs are (variable name, variable value)
         """
         # translate the difference option names to a canonical name
         # kept for backwards-compatibility
@@ -113,41 +113,39 @@ class InputReader(object):
                     scenario_option_names.get(tmp[0], tmp[0])] = " ".join(tmp[1:])
         return(scenario_dict)
 
-    def read_instance_file(self, fn):
-        """
-            encapsulates read_instances_file of pysmac
+    def read_instance_file(self, fn: str):
+        """Encapsulates read_instances_file of pysmac
 
-            Parameters
-            ----------
-                fn: string
-                     file name of instance file
+        Parameters
+        ----------
+            fn: string
+                 File name of instance file
 
-            Returns
-            -------
-                instances: list
-                    each element is a list where the first element is the
-                    instance name followed by additional
-                    information for the specific instance.
+        Returns
+        -------
+            instances: list
+                Each element is a list where the first element is the
+                instance name followed by additional
+                information for the specific instance.
         """
         with open(fn, 'r') as fh:
             instance_names = fh.readlines()
         return([s.strip().split() for s in instance_names])
 
-    def read_instance_features_file(self, fn):
-        """
-            encapsulates read_instances_file of pysmac
+    def read_instance_features_file(self, fn: str):
+        """Encapsulates read_instances_file of pysmac
 
-            Parameters
-            ----------
-                fn: string
-                     file name of instance feature file
+        Parameters
+        ----------
+            fn: string
+                File name of instance feature file
 
-            Returns
-            -------
-                features: tuple
-                    first entry is a list of the feature names,
-                    second one is a dict with 'instance name' -
-                    'numpy array containing the features' key-value pairs
+        Returns
+        -------
+            features: tuple
+                first entry is a list of the feature names,
+                second one is a dict with 'instance name' -
+                'numpy array containing the features' key-value pairs
         """
         instances = {}
         with open(fn, 'r') as fh:
@@ -155,20 +153,19 @@ class InputReader(object):
             for line in lines[1:]:
                 tmp = line.strip().split(",")
                 instances[tmp[0]] = np.array(tmp[1:], dtype=np.double)
-        return(lines[0].split(",")[1:], instances)
+        return lines[0].split(",")[1:], instances
 
-    def read_pcs_file(self, fn):
-        """
-            encapsulates generating configuration space object
+    def read_pcs_file(self, fn: str):
+        """Encapsulates generating configuration space object
 
-            Parameters
-            ----------
-                fn: string
-                     file name of pcs file
+        Parameters
+        ----------
+            fn: string
+                 File name of pcs file
 
-            Returns
-            -------
-                ConfigSpace: ConfigSpace
+        Returns
+        -------
+            ConfigSpace: ConfigSpace
         """
         space = pcs.read(fn)
         return space

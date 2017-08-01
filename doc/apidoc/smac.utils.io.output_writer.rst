@@ -5,3 +5,4 @@ smac\.utils\.io\.output\_writer module
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:

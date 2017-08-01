@@ -5,3 +5,4 @@ smac\.epm\.random\_epm module
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:

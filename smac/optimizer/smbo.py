@@ -28,6 +28,27 @@ __license__ = "3-clause BSD"
 
 class SMBO(object):
 
+    """Interface that contains the main Bayesian optimization loop
+
+    Attributes
+    ----------
+    logger
+    incumbent
+    scenario
+    config_space
+    stats
+    initial_design
+    runhistory
+    rh2EPM
+    intensifier
+    aggregate_func
+    num_run
+    model
+    acq_optimizer
+    acquisition_func
+    rng
+    """
+
     def __init__(self,
                  scenario: Scenario,
                  stats: Stats,
@@ -41,8 +62,7 @@ class SMBO(object):
                  acq_optimizer: LocalSearch,
                  acquisition_func: AbstractAcquisitionFunction,
                  rng: np.random.RandomState):
-        '''
-        Interface that contains the main Bayesian optimization loop
+        """Constructor
 
         Parameters
         ----------
@@ -55,22 +75,29 @@ class SMBO(object):
         runhistory: RunHistory
             runhistory with all runs so far
         runhistory2epm : AbstractRunHistory2EPM
-            Object that implements the AbstractRunHistory2EPM to convert runhistory data into EPM data
+            Object that implements the AbstractRunHistory2EPM to convert runhistory
+            data into EPM data
         intensifier: Intensifier
-            intensification of new challengers against incumbent configuration (probably with some kind of racing on the instances)
+            intensification of new challengers against incumbent configuration
+            (probably with some kind of racing on the instances)
         aggregate_func: callable
-            how to aggregate the runs in the runhistory to get the performance of a configuration
+            how to aggregate the runs in the runhistory to get the performance of a
+             configuration
         num_run: int
             id of this run (used for pSMAC)
         model: RandomForestWithInstances
-            empirical performance model (right now, we support only RandomForestWithInstances)
+            empirical performance model (right now, we support only
+            RandomForestWithInstances)
         acq_optimizer: LocalSearch
-            optimizer on acquisition function (right now, we support only a local search)
+            optimizer on acquisition function (right now, we support only a local
+            search)
         acquisition_function : AcquisitionFunction
-            Object that implements the AbstractAcquisitionFunction (i.e., infill criterion for acq_optimizer)
+            Object that implements the AbstractAcquisitionFunction (i.e., infill
+            criterion for acq_optimizer)
         rng: np.random.RandomState
             Random number generator
-        '''
+        """
+
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
         self.incumbent = None
@@ -90,14 +117,13 @@ class SMBO(object):
         self.rng = rng
 
     def run(self):
-        '''
-        Runs the Bayesian optimization loop
+        """Runs the Bayesian optimization loop
 
         Returns
         ----------
         incumbent: np.array(1, H)
             The best found configuration
-        '''
+        """
         self.stats.start_timing()
         try:
             self.incumbent = self.initial_design.run()
@@ -131,7 +157,7 @@ class SMBO(object):
                 incumbent=self.incumbent,
                 run_history=self.runhistory,
                 aggregate_func=self.aggregate_func,
-                time_bound=max(0.01, time_left))
+                time_bound=max(self.intensifier._min_time, time_left))
 
             if self.scenario.shared_model:
                 pSMAC.write(run_history=self.runhistory,
@@ -152,10 +178,10 @@ class SMBO(object):
 
         return self.incumbent
 
-    def choose_next(self, X, Y,
+    def choose_next(self, X: np.ndarray, Y: np.ndarray,
                     num_configurations_by_random_search_sorted: int=1000,
                     num_configurations_by_local_search: int=None,
-                    incumbent_value:float=None):
+                    incumbent_value: float=None):
         """Choose next candidate solution with Bayesian optimization.
 
         Parameters
@@ -166,11 +192,13 @@ class SMBO(object):
         Y : (N, O) numpy array
             The function values for each configuration instance pair.
         num_configurations_by_random_search_sorted: int
-             number of configurations optimized by random search
+            Number of configurations optimized by random search
         num_configurations_by_local_search: int
-            number of configurations optimized with local search
-            if None, we use min(10, 1 + 0.5 x the number of configurations on exp average in intensify calls)
-        incumbent_value: cost value of incumbent configuration 
+            Number of configurations optimized with local search
+            if None, we use min(10, 1 + 0.5 x the number of configurations on
+            exp average in intensify calls)
+        incumbent_value: float
+            Cost value of incumbent configuration
             (required for acquisition function);
             if not given, it will be inferred from runhistory;
             if not given and runhistory is empty,
@@ -190,7 +218,8 @@ class SMBO(object):
 
         if incumbent_value is None:
             if self.runhistory.empty():
-                raise ValueError("runhistory is empty and the cost value of the incumbent is unknown.")
+                raise ValueError("Runhistory is empty and the cost value of "
+                                 "the incumbent is unknown.")
             incumbent_value = self.runhistory.get_cost(self.incumbent)
 
         self.acquisition_func.update(model=self.model, eta=incumbent_value)
@@ -202,8 +231,10 @@ class SMBO(object):
 
         if num_configurations_by_local_search is None:
             if self.stats._ema_n_configs_per_intensifiy > 0:
-                num_configurations_by_local_search = min(
-                    10, math.ceil(0.5 * self.stats._ema_n_configs_per_intensifiy) + 1)
+                num_configurations_by_local_search = \
+                    min(10, math.ceil(0.5 *
+                                      self.stats._ema_n_configs_per_intensifiy)
+                        + 1)
             else:
                 num_configurations_by_local_search = 10
 
@@ -215,8 +246,9 @@ class SMBO(object):
             configs_previous_runs = self.runhistory.get_all_configs()
             configs_previous_runs_sorted = self._sort_configs_by_acq_value(
                 configs_previous_runs)
-            num_configs_local_search = min(
-                len(configs_previous_runs_sorted), num_configurations_by_local_search)
+            num_configs_local_search = \
+                min(len(configs_previous_runs_sorted),
+                    num_configurations_by_local_search)
             init_sls_points = list(map(lambda x: x[1],
                                        configs_previous_runs_sorted[:num_configs_local_search]))
 
@@ -241,7 +273,8 @@ class SMBO(object):
                                      self.config_space)
         return challengers
 
-    def _get_next_by_random_search(self, num_points=1000, _sorted=False):
+    def _get_next_by_random_search(self, num_points: int=1000,
+                                   _sorted: bool=False):
         """Get candidate solutions via local search.
 
         Parameters
@@ -257,7 +290,6 @@ class SMBO(object):
         -------
         list : (acquisition value, Candidate solutions)
         """
-
         if num_points > 1:
             rand_configs = self.config_space.sample_configuration(
                 size=num_points)
@@ -272,7 +304,8 @@ class SMBO(object):
                 rand_configs[i].origin = 'Random Search'
             return [(0, rand_configs[i]) for i in range(len(rand_configs))]
 
-    def _get_next_by_local_search(self, init_points=typing.List[Configuration]):
+    def _get_next_by_local_search(self,
+                                  init_points=typing.List[Configuration]):
         """Get candidate solutions via local search.
 
         In case acquisition function values tie, these will be broken randomly.
@@ -293,7 +326,7 @@ class SMBO(object):
         for start_point in init_points:
             configuration, acq_val = self.acq_optimizer.maximize(start_point)
 
-            configuration.origin = 'Local Search'
+            configuration.origin = "Local Search"
             configs_acq.append((acq_val[0], configuration))
 
         # shuffle for random tie-break
@@ -306,7 +339,7 @@ class SMBO(object):
         return configs_acq
 
     def _sort_configs_by_acq_value(self, configs):
-        """ Sort the given configurations by acquisition value
+        """Sort the given configurations by acquisition value
 
         Parameters
         ----------
@@ -333,7 +366,7 @@ class SMBO(object):
         return [(acq_values[ind][0], configs[ind]) for ind in indices[::-1]]
 
     def _get_timebound_for_intensification(self, time_spent):
-        """ Calculate time left for intensify from the time spent on
+        """Calculate time left for intensify from the time spent on
         choosing challengers using the fraction of time intended for
         intensification (which is specified in
         scenario.intensification_percentage).
@@ -347,15 +380,16 @@ class SMBO(object):
         time_left : float
         """
         frac_intensify = self.scenario.intensification_percentage
-        if (frac_intensify <= 0 or frac_intensify >= 1):
+        if frac_intensify <= 0 or frac_intensify >= 1:
             raise ValueError("The value for intensification_percentage-"
-                             "option must lie in (0,1), instead: %.2f" % (frac_intensify))
+                             "option must lie in (0,1), instead: %.2f" %
+                             (frac_intensify))
         total_time = time_spent / (1 - frac_intensify)
         time_left = frac_intensify * total_time
         self.logger.debug("Total time: %.4f, time spent on choosing next "
                           "configurations: %.4f (%.2f), time left for "
-                          "intensification: %.4f (%.2f)" % (total_time,
-                                                            time_spent, (1 - frac_intensify), time_left, frac_intensify))
+                          "intensification: %.4f (%.2f)" %
+                          (total_time, time_spent, (1 - frac_intensify), time_left, frac_intensify))
         return time_left
 
 

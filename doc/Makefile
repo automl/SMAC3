@@ -47,6 +47,7 @@ help:
 	@echo "  linkcheck  to check all external links for integrity"
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 	@echo "  coverage   to run coverage check of the documentation (if enabled)"
+	@echo "  buildapi   to rebuild the api-documentation"
 
 clean:
 	rm -rf $(BUILDDIR)/*
@@ -198,6 +199,7 @@ buildapi:
 	do                   \
 	  sed -i '/Submodules/d' $$f; \
 	  sed -i '/----------/d' $$f; \
+	  sed -i 's/    :show-inheritance:/    :show-inheritance:\n    :inherited-members:/g' $$f; \
 	done;
 	@echo
 	@echo "Auto-generation of API documentation finished. " \

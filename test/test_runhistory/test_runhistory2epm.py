@@ -57,7 +57,7 @@ class RunhistoryTest(unittest.TestCase):
         '''
             adding some rundata to RunHistory2EPM4LogCost and impute censored data
         '''
-        self.imputor = RFRImputator(rs=np.random.RandomState(seed=12345),
+        self.imputor = RFRImputator(rng=np.random.RandomState(seed=12345),
                                     cutoff=np.log10(self.scen.cutoff),
                                     threshold=np.log10(
                                         self.scen.cutoff * self.scen.par_factor),
@@ -155,7 +155,7 @@ class RunhistoryTest(unittest.TestCase):
             adding some rundata to RunHistory2EPM4Cost and impute censored data
         '''
 
-        self.imputor = RFRImputator(rs=np.random.RandomState(seed=12345),
+        self.imputor = RFRImputator(rng=np.random.RandomState(seed=12345),
 
                                     cutoff=self.scen.cutoff,
                                     threshold=self.scen.cutoff * self.scen.par_factor,

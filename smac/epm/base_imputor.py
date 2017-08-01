@@ -1,5 +1,7 @@
-from abc import ABCMeta, abstractmethod
-import logging
+from abc import abstractmethod
+
+import numpy as np
+
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -10,32 +12,30 @@ __version__ = "0.0.1"
 
 
 class BaseImputor(object):
-    """abstract Imputor class"""
+    """Abstract implementation of the Imputation API."""
 
     def __init__(self):
-        """
-        initialize imputator module
-        """
         pass
 
     @abstractmethod
-    def impute(self, censored_x, censored_y, uncensored_x, uncensored_y):
+    def impute(self, censored_X: np.ndarray, censored_y: np.ndarray,
+               uncensored_X: np.ndarray, uncensored_y: np.ndarray):
         """
-        impute censored runs and returns new y values
+        Imputes censored runs and returns new y values.
 
         Parameters
         ----------
-        censored_x : np.array [N, M]
-            feature array of all runs that are censored
-        censored_y : np.array [N, 1]
-            array of target values for all runs that are censored
-        uncensored_x : np.array [N, M]
-            feature array of all runs that are not censored
-        uncensored_y : np.array [N, 1]
-            array of target values for all runs that are not censored
+        censored_X : np.ndarray [N, M]
+            Feature array of all censored runs.
+        censored_y : np.ndarray [N, 1]
+            Target values for all runs censored runs.
+        uncensored_X : np.ndarray [N, M]
+            Feature array of all non-censored runs.
+        uncensored_y : np.ndarray [N, 1]
+            Target values for all non-censored runs.
 
         Returns
         ----------
-        imputed_y: np.array
-            same shape as censored_y [N, 1]
+        imputed_y: np.ndarray
+            Same shape as censored_y [N, 1]
         """
