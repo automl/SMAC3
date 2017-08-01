@@ -102,9 +102,9 @@ class SklearnWrapperTest(unittest.TestCase):
 
         classifier = DecisionTreeClassifier()
         cs = ConfigurationSpace()
-        cs.add_hyperparameter(UniformIntegerHyperparameter('max_leaf_nodes', 4, 128, default=4))
+        cs.add_hyperparameter(UniformIntegerHyperparameter('max_leaf_nodes', 4, 32, default=4))
         cs.add_hyperparameter(UniformIntegerHyperparameter('min_samples_leaf', 1, 128, default=1))
-        cs.add_hyperparameter(UniformIntegerHyperparameter('max_depth', 1, 128, default=1))
+        cs.add_hyperparameter(UniformIntegerHyperparameter('max_depth', 1, 32, default=1))
         cs.add_hyperparameter(CategoricalHyperparameter('criterion', ['gini', 'entropy'], default='gini'))
 
         self._compare_with_smac(X, y, classifier, cs, random_seed=42, n_iter=5)
