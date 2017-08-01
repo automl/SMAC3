@@ -119,13 +119,9 @@ class SMBO(object):
         self.acquisition_func = acquisition_func
         self.rng = rng
 
-    def run(self):
-        """Runs the Bayesian optimization loop
-
-        Returns
-        ----------
-        incumbent: np.array(1, H)
-            The best found configuration
+    def start(self):
+        """Starts the Bayesian Optimization loop.
+        Detects whether we the optimization is restored from previous state.
         """
         self.stats.start_timing()
         # Initialization, depends on input
@@ -147,6 +143,15 @@ class SMBO(object):
             self.logger.debug("Detecting Stats-object and restore-incumbent. "
                               "Skipping initial-design-run. Assuming state "
                               "restoration...")
+
+    def run(self):
+        """Runs the Bayesian optimization loop
+
+        Returns
+        ----------
+        incumbent: np.array(1, H)
+            The best found configuration
+        """
 
         # Main BO loop
         iteration = 1
