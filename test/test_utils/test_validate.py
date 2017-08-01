@@ -105,6 +105,12 @@ class ValidationTest(unittest.TestCase):
         self.assertEqual(sum([len(rh.get_runs_for_config(c)) for c in
                               rh.get_all_configs()]), 27)
 
+        # Test with backend multiprocessing
+        rh = validator.validate(config_mode='def', instance_mode='test',
+                                repetitions=3, backend='multiprocessing')
+        self.assertEqual(len(rh.get_all_configs()), 1)
+        self.assertEqual(len(rh.get_runs_for_config(rh.get_all_configs()[0])), 9)
+
     def test_validate_no_insts(self):
         ''' no instances '''
         validator = Validator(self.scen, self.trajectory,

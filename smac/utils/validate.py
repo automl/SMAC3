@@ -72,7 +72,7 @@ class Validator(object):
         self.rh = RunHistory(average_cost)  # update this rh with validation-runs
 
     def validate(self, config_mode:str='def', instance_mode:str='test',
-                 repetitions:int=1, n_jobs:int=1, runhistory:RunHistory=None,
+                 repetitions:int=1, n_jobs:int=1, backend:str='threading', runhistory:RunHistory=None,
                  tae:ExecuteTARun=None):
         """
         Validate configs on instances and save result in runhistory.
@@ -99,6 +99,9 @@ class Validator(object):
         runhistory: RunHistory
             runhistory with validated runs
         """
+        self.logger.debug("Validating configs '%s' on instances '%s', repeating %d times"
+                          " with %d parallel runs on backend '%s'.",
+                          config_mode, instance_mode, repetitions, n_jobs, backend)
         # Reset runhistory
         self.rh = RunHistory(average_cost)
 
@@ -134,7 +137,7 @@ class Validator(object):
             tae.stats = inf_stats
 
         # Validate!
-        run_results = self._validate_parallel(tae, runs, n_jobs)
+        run_results = self._validate_parallel(tae, runs, n_jobs, backend)
 
         # tae returns (status, cost, runtime, additional_info)
         # Add runs to RunHistory
@@ -150,10 +153,11 @@ class Validator(object):
             idx += 1
 
         # Save runhistory
+        self.logger.info("Saving validation-results in %s", self.output)
         self.rh.save_json(self.output)
         return self.rh
 
-    def _validate_parallel(self, tae, runs, n_jobs, backend="threading"):
+    def _validate_parallel(self, tae, runs, n_jobs, backend):
         """
         Validate runs with joblibs Parallel-interface
 
