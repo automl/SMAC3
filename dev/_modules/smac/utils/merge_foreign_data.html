@@ -247,7 +247,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for smac.utils.merge_foreign_data</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
+<span></span><span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">DataOrigin</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">ConfigurationSpace</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="k">import</span> <span class="n">average_cost</span>
@@ -336,7 +336,7 @@
 
     <span class="c1"># extend runhistory</span>
     <span class="k">for</span> <span class="n">rh</span> <span class="ow">in</span> <span class="n">in_runhistory_list</span><span class="p">:</span>
-        <span class="n">runhistory</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">rh</span><span class="p">,</span> <span class="n">external_data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">runhistory</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">rh</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="n">DataOrigin</span><span class="o">.</span><span class="n">EXTERNAL_DIFFERENT_INSTANCES</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">feature_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">instance_id</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

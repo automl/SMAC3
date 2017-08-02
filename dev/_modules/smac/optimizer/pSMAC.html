@@ -310,28 +310,26 @@
                  <span class="s1">&#39;runs.&#39;</span> <span class="o">%</span> <span class="n">difference</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="write"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.pSMAC.html#smac.optimizer.pSMAC.write">[docs]</a><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">output_directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">num_run</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<div class="viewcode-block" id="write"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.pSMAC.html#smac.optimizer.pSMAC.write">[docs]</a><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">output_directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Write the runhistory to the output directory.</span>
 
 <span class="sd">    Overwrites previously outputted runhistories.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    run_history : smac.runhistory.RunHistory</span>
+<span class="sd">    run_history : ~smac.runhistory.runhistory.RunHistory</span>
 <span class="sd">        RunHistory object to be saved.</span>
 
 <span class="sd">    output_directory : str</span>
-
-<span class="sd">    run_run : int</span>
-<span class="sd">        ID of the current SMAC run.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">output_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_directory</span><span class="p">,</span> <span class="n">RUNHISTORY_FILEPATTERN</span><span class="p">)</span>
 
     <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="s1">&#39;wb&#39;</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="n">output_directory</span><span class="p">,</span>
                                      <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
         <span class="n">temporary_filename</span> <span class="o">=</span> <span class="n">fh</span><span class="o">.</span><span class="n">name</span>
 
-    <span class="n">run_history</span><span class="o">.</span><span class="n">save_json</span><span class="p">(</span><span class="n">temporary_filename</span><span class="p">)</span>
+    <span class="n">run_history</span><span class="o">.</span><span class="n">save_json</span><span class="p">(</span><span class="n">temporary_filename</span><span class="p">,</span> <span class="n">save_external</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">temporary_filename</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">)</span></div>
 </pre></div>
 

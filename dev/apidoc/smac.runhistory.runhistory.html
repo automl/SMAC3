@@ -255,6 +255,47 @@
   <div class="section" id="module-smac.runhistory.runhistory">
 <span id="smac-runhistory-runhistory-module"></span><h1>smac.runhistory.runhistory module<a class="headerlink" href="#module-smac.runhistory.runhistory" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
+<dt id="smac.runhistory.runhistory.DataOrigin">
+<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory.</code><code class="descname">DataOrigin</code><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#DataOrigin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.DataOrigin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">enum.Enum</span></code></p>
+<p>Definition of how data in the runhistory is used.</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">INTERNAL</span></code>: internal data which was gathered during the current
+optimization run. It will be saved to disk, used for building EPMs and
+during intensify.</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">EXTERNAL_SAME_INSTANCES</span></code>: external data, which was gathered by running</dt>
+<dd>another program on the same instances as the current optimization run
+runs on (for example pSMAC). It will not be saved to disk, but used both
+for EPM building and during intensify.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">EXTERNAL_DIFFERENT_INSTANCES</span></code>: external data, which was gathered on a</dt>
+<dd>different instance set as the one currently used, but due to having the
+same instance features can still provide useful information. Will not be
+saved to disk and only used for EPM building.</dd>
+</dl>
+</li>
+</ul>
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.DataOrigin.EXTERNAL_DIFFERENT_INSTANCES">
+<code class="descname">EXTERNAL_DIFFERENT_INSTANCES</code><em class="property"> = 3</em><a class="headerlink" href="#smac.runhistory.runhistory.DataOrigin.EXTERNAL_DIFFERENT_INSTANCES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.DataOrigin.EXTERNAL_SAME_INSTANCES">
+<code class="descname">EXTERNAL_SAME_INSTANCES</code><em class="property"> = 2</em><a class="headerlink" href="#smac.runhistory.runhistory.DataOrigin.EXTERNAL_SAME_INSTANCES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.DataOrigin.INTERNAL">
+<code class="descname">INTERNAL</code><em class="property"> = 1</em><a class="headerlink" href="#smac.runhistory.runhistory.DataOrigin.INTERNAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="smac.runhistory.runhistory.EnumEncoder">
 <em class="property">class </em><code class="descclassname">smac.runhistory.runhistory.</code><code class="descname">EnumEncoder</code><span class="sig-paren">(</span><em>*</em>, <em>skipkeys=False</em>, <em>ensure_ascii=True</em>, <em>check_circular=True</em>, <em>allow_nan=True</em>, <em>sort_keys=False</em>, <em>indent=None</em>, <em>separators=None</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#EnumEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.EnumEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">json.encoder.JSONEncoder</span></code></p>
@@ -424,7 +465,7 @@ multiple times</li>
 </table>
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.add">
-<code class="descname">add</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em>, <em>cost: float</em>, <em>time: float</em>, <em>status: smac.tae.execute_ta_run.StatusType</em>, <em>instance_id: str = None</em>, <em>seed: int = None</em>, <em>additional_info: dict = None</em>, <em>external_data: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.add" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em>, <em>cost: float</em>, <em>time: float</em>, <em>status: smac.tae.execute_ta_run.StatusType</em>, <em>instance_id: str = None</em>, <em>seed: int = None</em>, <em>additional_info: dict = None</em>, <em>origin: smac.runhistory.runhistory.DataOrigin = &lt;DataOrigin.INTERNAL: 1&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a data of a new target algorithm (TA) run;
 it will update data if the same key values are used
 (config, instance_id, seed)</p>
@@ -441,10 +482,7 @@ it will update data if the same key values are used
 <li><strong>seed</strong> (<em>int</em>) – Random seed used by TA (default: None)</li>
 <li><strong>additional_info</strong> (<em>dict</em>) – Additional run infos (could include further returned
 information from TA or fields such as start time and host_id)</li>
-<li><strong>external_data</strong> (<em>bool</em>) – If True, run will not be added to self._configid_to_inst_seed
-and not available through get_runs_for_config();
-essentially, intensification will not see this run,
-but the EPM still gets it</li>
+<li><strong>origin</strong> (<a class="reference internal" href="#smac.runhistory.runhistory.DataOrigin" title="smac.runhistory.runhistory.DataOrigin"><em>DataOrigin</em></a>) – Defines how data will be used.</li>
 </ul>
 </td>
 </tr>
@@ -576,13 +614,17 @@ moving average;</p>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.save_json">
-<code class="descname">save_json</code><span class="sig-paren">(</span><em>fn: str = 'runhistory.json'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.save_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.save_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Saves runhistory on disk</p>
+<code class="descname">save_json</code><span class="sig-paren">(</span><em>fn: str = 'runhistory.json'</em>, <em>save_external: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.save_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.save_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>saves runhistory on disk</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fn</strong> (<em>str</em>) – file name</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fn</strong> (<em>str</em>) – file name</li>
+<li><strong>save_external</strong> (<em>bool</em>) – Whether to save external data in the runhistory file.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -590,7 +632,7 @@ moving average;</p>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.update">
-<code class="descname">update</code><span class="sig-paren">(</span><em>runhistory</em>, <em>external_data: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>origin: smac.runhistory.runhistory.DataOrigin = &lt;DataOrigin.EXTERNAL_SAME_INSTANCES: 2&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the current runhistory by adding new runs from a json file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -598,8 +640,9 @@ moving average;</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>runhistory</strong> (<a class="reference internal" href="#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – Runhistory with additional data to be added to self</li>
-<li><strong>external_data</strong> (<em>bool</em>) – If True, run will not be added to self._configid_to_inst_seed
-and not available through get_runs_for_config()</li>
+<li><strong>origin</strong> (<a class="reference internal" href="#smac.runhistory.runhistory.DataOrigin" title="smac.runhistory.runhistory.DataOrigin"><em>DataOrigin</em></a>) – If set to <code class="docutils literal"><span class="pre">INTERNAL</span></code> or <code class="docutils literal"><span class="pre">EXTERNAL_FULL</span></code> the data will be
+added to the internal data structure self._configid_to_inst_seed
+and be available <code class="xref py py-meth docutils literal"><span class="pre">through</span> <span class="pre">get_runs_for_config()</span></code>.</li>
 </ul>
 </td>
 </tr>
@@ -625,15 +668,16 @@ uses self.aggregate_func</p>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.update_from_json">
-<code class="descname">update_from_json</code><span class="sig-paren">(</span><em>fn: str</em>, <em>cs: ConfigSpace.configuration_space.ConfigurationSpace</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.update_from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update_from_json" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update_from_json</code><span class="sig-paren">(</span><em>fn: str</em>, <em>cs: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>origin: smac.runhistory.runhistory.DataOrigin = &lt;DataOrigin.EXTERNAL_SAME_INSTANCES: 2&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.update_from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update_from_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the current runhistory by adding new runs from a json file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>fn</strong> (<em>str</em>) – File name to load from</li>
-<li><strong>cs</strong> (<em>ConfigSpace</em>) – Instance of configuration space</li>
+<li><strong>fn</strong> (<em>str</em>) – File name to load from.</li>
+<li><strong>cs</strong> (<em>ConfigSpace</em>) – Instance of configuration space.</li>
+<li><strong>origin</strong> (<a class="reference internal" href="#smac.runhistory.runhistory.DataOrigin" title="smac.runhistory.runhistory.DataOrigin"><em>DataOrigin</em></a>) – What to store as data origin.</li>
 </ul>
 </td>
 </tr>

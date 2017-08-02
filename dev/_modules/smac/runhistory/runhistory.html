@@ -248,12 +248,14 @@
             
   <h1>Source code for smac.runhistory.runhistory</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">Enum</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">ConfigurationSpace</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">StatusType</span>
+<span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="k">import</span> <span class="n">MAXINT</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
@@ -284,6 +286,28 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">StatusType</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;__enum__&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="p">)}</span>
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="o">.</span><span class="n">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="DataOrigin"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.DataOrigin">[docs]</a><span class="k">class</span> <span class="nc">DataOrigin</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Definition of how data in the runhistory is used.</span>
+<span class="sd">    </span>
+<span class="sd">    * ``INTERNAL``: internal data which was gathered during the current </span>
+<span class="sd">      optimization run. It will be saved to disk, used for building EPMs and </span>
+<span class="sd">      during intensify.</span>
+<span class="sd">    * ``EXTERNAL_SAME_INSTANCES``: external data, which was gathered by running</span>
+<span class="sd">       another program on the same instances as the current optimization run </span>
+<span class="sd">       runs on (for example pSMAC). It will not be saved to disk, but used both </span>
+<span class="sd">       for EPM building and during intensify.</span>
+<span class="sd">    * ``EXTERNAL_DIFFERENT_INSTANCES``: external data, which was gathered on a</span>
+<span class="sd">       different instance set as the one currently used, but due to having the </span>
+<span class="sd">       same instance features can still provide useful information. Will not be </span>
+<span class="sd">       saved to disk and only used for EPM building.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">INTERNAL</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">EXTERNAL_SAME_INSTANCES</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">EXTERNAL_DIFFERENT_INSTANCES</span> <span class="o">=</span> <span class="mi">3</span></div>
 
 
 <div class="viewcode-block" id="RunHistory"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory">[docs]</a><span class="k">class</span> <span class="nc">RunHistory</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -341,6 +365,10 @@
         <span class="c1"># runs_per_config is necessary for computing the moving average</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">runs_per_config</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># config_id -&gt; number of runs</span>
 
+        <span class="c1"># Store whether a datapoint is &quot;external&quot;, which means it was read from</span>
+        <span class="c1"># a JSON file. Can be chosen to not be written to disk</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">external</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># RunKey -&gt; DataOrigin</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">aggregate_func</span> <span class="o">=</span> <span class="n">aggregate_func</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_existing_runs</span> <span class="o">=</span> <span class="n">overwrite_existing_runs</span>
 
@@ -348,7 +376,7 @@
             <span class="n">status</span><span class="p">:</span> <span class="n">StatusType</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">additional_info</span><span class="p">:</span> <span class="nb">dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">external_data</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+            <span class="n">origin</span><span class="p">:</span> <span class="n">DataOrigin</span><span class="o">=</span><span class="n">DataOrigin</span><span class="o">.</span><span class="n">INTERNAL</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Adds a data of a new target algorithm (TA) run;</span>
 <span class="sd">        it will update data if the same key values are used</span>
 <span class="sd">        (config, instance_id, seed)</span>
@@ -370,11 +398,8 @@
 <span class="sd">            additional_info: dict</span>
 <span class="sd">                Additional run infos (could include further returned</span>
 <span class="sd">                information from TA or fields such as start time and host_id)</span>
-<span class="sd">            external_data: bool</span>
-<span class="sd">                If True, run will not be added to self._configid_to_inst_seed</span>
-<span class="sd">                and not available through get_runs_for_config();</span>
-<span class="sd">                essentially, intensification will not see this run,</span>
-<span class="sd">                but the EPM still gets it</span>
+<span class="sd">            origin: DataOrigin</span>
+<span class="sd">                Defines how data will be used.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">config_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_ids</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
@@ -390,23 +415,26 @@
         <span class="c1"># Each runkey is supposed to be used only once. Repeated tries to add</span>
         <span class="c1"># the same runkey will be ignored silently if not capped.</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_existing_runs</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">external_data</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">origin</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">status</span> <span class="o">!=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span><span class="p">:</span>
             <span class="c1"># overwrite capped runs with uncapped runs</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">external_data</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">origin</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span> <span class="ow">and</span> <span class="n">cost</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">cost</span><span class="p">:</span>
             <span class="c1"># overwrite if censored with a larger cutoff</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">external_data</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">origin</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">external_data</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="n">RunKey</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">RunValue</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="n">StatusType</span><span class="p">,</span>
+             <span class="n">origin</span><span class="p">:</span> <span class="n">DataOrigin</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Actual function to add new entry to data structures</span>
 
 <span class="sd">        TODO</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">external</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">origin</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">external_data</span> <span class="ow">and</span> <span class="n">status</span> <span class="o">!=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">origin</span> <span class="ow">in</span> <span class="p">(</span><span class="n">DataOrigin</span><span class="o">.</span><span class="n">INTERNAL</span><span class="p">,</span> <span class="n">DataOrigin</span><span class="o">.</span><span class="n">EXTERNAL_SAME_INSTANCES</span><span class="p">)</span> \
+                <span class="ow">and</span> <span class="n">status</span> <span class="o">!=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span><span class="p">:</span>
             <span class="c1"># also add to fast data structure</span>
             <span class="n">is_k</span> <span class="o">=</span> <span class="n">InstSeedKey</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">instance_id</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_configid_to_inst_seed</span><span class="p">[</span>
@@ -528,22 +556,27 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
 
-<div class="viewcode-block" id="RunHistory.save_json"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.save_json">[docs]</a>    <span class="k">def</span> <span class="nf">save_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">&quot;runhistory.json&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Saves runhistory on disk</span>
+<div class="viewcode-block" id="RunHistory.save_json"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.save_json">[docs]</a>    <span class="k">def</span> <span class="nf">save_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">&quot;runhistory.json&quot;</span><span class="p">,</span> <span class="n">save_external</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        saves runhistory on disk</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        fn : str</span>
 <span class="sd">            file name</span>
+<span class="sd">        save_external : bool</span>
+<span class="sd">            Whether to save external data in the runhistory file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">configs</span> <span class="o">=</span> <span class="p">{</span><span class="n">id_</span><span class="p">:</span> <span class="n">conf</span><span class="o">.</span><span class="n">get_dictionary</span><span class="p">()</span>
-                   <span class="k">for</span> <span class="n">id_</span><span class="p">,</span> <span class="n">conf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="p">[([</span><span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">),</span>
                   <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">instance_id</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">instance_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
                   <span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">seed</span><span class="p">)],</span> <span class="nb">list</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
-                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">save_external</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">external</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">DataOrigin</span><span class="o">.</span><span class="n">INTERNAL</span><span class="p">]</span>
+        <span class="n">config_ids_to_serialize</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">entry</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">data</span><span class="p">])</span>
+        <span class="n">configs</span> <span class="o">=</span> <span class="p">{</span><span class="n">id_</span><span class="p">:</span> <span class="n">conf</span><span class="o">.</span><span class="n">get_dictionary</span><span class="p">()</span>
+                   <span class="k">for</span> <span class="n">id_</span><span class="p">,</span> <span class="n">conf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                   <span class="k">if</span> <span class="n">id_</span> <span class="ow">in</span> <span class="n">config_ids_to_serialize</span><span class="p">}</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
             <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span>
@@ -581,30 +614,35 @@
                      <span class="n">seed</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
                      <span class="n">additional_info</span><span class="o">=</span><span class="n">v</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="RunHistory.update_from_json"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.update_from_json">[docs]</a>    <span class="k">def</span> <span class="nf">update_from_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cs</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">):</span>
+<div class="viewcode-block" id="RunHistory.update_from_json"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.update_from_json">[docs]</a>    <span class="k">def</span> <span class="nf">update_from_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cs</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
+                         <span class="n">origin</span><span class="p">:</span> <span class="n">DataOrigin</span><span class="o">=</span><span class="n">DataOrigin</span><span class="o">.</span><span class="n">EXTERNAL_SAME_INSTANCES</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update the current runhistory by adding new runs from a json file.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        fn : str</span>
-<span class="sd">            File name to load from</span>
+<span class="sd">            File name to load from.</span>
 <span class="sd">        cs : ConfigSpace</span>
-<span class="sd">            Instance of configuration space</span>
+<span class="sd">            Instance of configuration space.</span>
+<span class="sd">        origin : DataOrigin</span>
+<span class="sd">            What to store as data origin.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">new_runhistory</span> <span class="o">=</span> <span class="n">RunHistory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aggregate_func</span><span class="p">)</span>
         <span class="n">new_runhistory</span><span class="o">.</span><span class="n">load_json</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">cs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">runhistory</span><span class="o">=</span><span class="n">new_runhistory</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">runhistory</span><span class="o">=</span><span class="n">new_runhistory</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RunHistory.update"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">,</span> <span class="n">external_data</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="RunHistory.update"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">:</span> <span class="s1">&#39;RunHistory&#39;</span><span class="p">,</span>
+               <span class="n">origin</span><span class="p">:</span> <span class="n">DataOrigin</span><span class="o">=</span><span class="n">DataOrigin</span><span class="o">.</span><span class="n">EXTERNAL_SAME_INSTANCES</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update the current runhistory by adding new runs from a json file.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        runhistory: RunHistory</span>
 <span class="sd">            Runhistory with additional data to be added to self</span>
-<span class="sd">        external_data: bool</span>
-<span class="sd">            If True, run will not be added to self._configid_to_inst_seed</span>
-<span class="sd">            and not available through get_runs_for_config()</span>
+<span class="sd">        origin: DataOrigin</span>
+<span class="sd">            If set to ``INTERNAL`` or ``EXTERNAL_FULL`` the data will be </span>
+<span class="sd">            added to the internal data structure self._configid_to_inst_seed</span>
+<span class="sd">            and be available :meth:`through get_runs_for_config`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Configurations might be already known, but by a different ID. This</span>
@@ -618,7 +656,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">cost</span><span class="o">=</span><span class="n">cost</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span>
                      <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span> <span class="n">instance_id</span><span class="o">=</span><span class="n">instance_id</span><span class="p">,</span>
                      <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">additional_info</span><span class="o">=</span><span class="n">additional_info</span><span class="p">,</span>
-                     <span class="n">external_data</span><span class="o">=</span><span class="n">external_data</span><span class="p">)</span></div></div>
+                     <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>
