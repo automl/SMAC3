@@ -55,14 +55,11 @@ class Stats(object):
         """
         Save all relevant attributes to json-dictionary.
         """
-        data = {'ta_runs': self.ta_runs,
-                'wallclock_time_used': self.wallclock_time_used,
-                'ta_time_used': self.ta_time_used,
-                'inc_changed': self.inc_changed,
-                '_n_configs_per_intensify': self._n_configs_per_intensify,
-                '_n_calls_of_intensify': self._n_calls_of_intensify,
-                '_ema_n_configs_per_intensify': self._ema_n_configs_per_intensify,
-                '_EMA_ALPHA': self._EMA_ALPHA}
+        data = {}
+
+        for v in vars(self):
+            if not v in ['_Stats__scenario', '_logger', '_start_time']:
+                data[v] = getattr(self, v)
 
         with open(os.path.join(self.__scenario.output_dir, "stats.json"), 'w') as fh:
             json.dump(data, fh)
