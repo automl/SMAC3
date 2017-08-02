@@ -14,6 +14,7 @@ from smac.stats.stats import Stats
 from smac.optimizer.objective import average_cost
 from smac.utils.merge_foreign_data import merge_foreign_data_from_file
 from smac.utils.io.traj_logging import TrajLogger
+from smac.utils.io.input_reader import InputReader
 from smac.tae.execute_ta_run import TAEAbortException, FirstRunCrashedException
 
 __author__ = "Marius Lindauer"
@@ -131,8 +132,9 @@ class SMACCLI(object):
             fn=traj_path, cs=scen.cs)
         incumbent = trajectory[-1]["incumbent"]
         root_logger.debug("Restored incumbent %s from %s", incumbent, traj_path)
-        # Copy traj if output_dir is different
-        if scen.output_dir != Scenario(scen_path).output_dir:
+        # Copy traj if output_dir of specified scenario-file is different than
+        # the output_dir of the scenario-file in the folder from which to restore.
+        if scen.output_dir != InputReader().read_scenario_file(scen_path)['output_dir']:
             new_traj_path = os.path.join(scen.output_dir, "traj_aclib2.json")
             shutil.copy(traj_path, new_traj_path)
             root_logger.debug("Copied traj %s", rh_path)
