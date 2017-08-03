@@ -8,7 +8,8 @@
 * MAINT minimal required versions of configspace, pyrfr, sklearn increased
   (several issues fixed in new configspace version)
 * MAINT for quality scenarios, the user can specify the objective 
-  value for crashed runs
+  value for crashed runs 
+  (returned NaN and Inf are replaced by value for crashed runs)
 
 ## Minor changes
 
