@@ -1,0 +1,843 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>smac.runhistory.runhistory module &mdash; SMAC 0.6.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="SMAC 0.6.0 documentation" href="../index.html"/>
+        <link rel="up" title="smac.runhistory package" href="smac.runhistory.html"/>
+        <link rel="next" title="smac.runhistory.runhistory2epm module" href="smac.runhistory.runhistory2epm.html"/>
+        <link rel="prev" title="smac.runhistory package" href="smac.runhistory.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> SMAC
+          
+
+          
+            
+            <img src="../_static/SMAC3.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual.html">Manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basic_usage.html">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../options.html">Options and file formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tae.html">Target Algorithm Evaluator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../psmac.html">Parallel SMAC (pSMAC)</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="smac.configspace.html">smac.configspace package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.configspace.util.html">smac.configspace.util module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.epm.html">smac.epm package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_epm.html">smac.epm.base_epm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_imputor.html">smac.epm.base_imputor module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.facade.html">smac.facade package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_facade.html">smac.facade.smac_facade module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.initial_design.html">smac.initial_design package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.default_configuration_design.html">smac.initial_design.default_configuration_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.initial_design.html">smac.initial_design.initial_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.multi_config_initial_design.html">smac.initial_design.multi_config_initial_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.random_configuration_design.html">smac.initial_design.random_configuration_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.single_config_initial_design.html">smac.initial_design.single_config_initial_design module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.optimizer.html">smac.optimizer package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.local_search.html">smac.optimizer.local_search module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="smac.runhistory.html">smac.runhistory package</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">smac.runhistory.runhistory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.runhistory.runhistory2epm.html">smac.runhistory.runhistory2epm module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.scenario.html">smac.scenario package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.scenario.scenario.html">smac.scenario.scenario module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.stats.html">smac.stats package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.stats.stats.html">smac.stats.stats module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.tae.html">smac.tae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.utils.html">smac.utils package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.io.html">smac.utils.io package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.cmd_reader.html">smac.utils.io.cmd_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.input_reader.html">smac.utils.io.input_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.output_writer.html">smac.utils.io.output_writer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.traj_logging.html">smac.utils.io.traj_logging module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.constants.html">smac.utils.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.util_funcs.html">smac.utils.util_funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.smac_cli.html">smac.smac_cli module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SMAC</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../api.html">API Documentation</a> &raquo;</li>
+        
+          <li><a href="smac.runhistory.html">smac.runhistory package</a> &raquo;</li>
+        
+      <li>smac.runhistory.runhistory module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/apidoc/smac.runhistory.runhistory.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-smac.runhistory.runhistory">
+<span id="smac-runhistory-runhistory-module"></span><h1>smac.runhistory.runhistory module<a class="headerlink" href="#module-smac.runhistory.runhistory" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="smac.runhistory.runhistory.DataOrigin">
+<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory.</code><code class="descname">DataOrigin</code><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#DataOrigin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.DataOrigin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">enum.Enum</span></code></p>
+<p>Definition of how data in the runhistory is used.</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">INTERNAL</span></code>: internal data which was gathered during the current
+optimization run. It will be saved to disk, used for building EPMs and
+during intensify.</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">EXTERNAL_SAME_INSTANCES</span></code>: external data, which was gathered by running</dt>
+<dd>another program on the same instances as the current optimization run
+runs on (for example pSMAC). It will not be saved to disk, but used both
+for EPM building and during intensify.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">EXTERNAL_DIFFERENT_INSTANCES</span></code>: external data, which was gathered on a</dt>
+<dd>different instance set as the one currently used, but due to having the
+same instance features can still provide useful information. Will not be
+saved to disk and only used for EPM building.</dd>
+</dl>
+</li>
+</ul>
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.DataOrigin.EXTERNAL_DIFFERENT_INSTANCES">
+<code class="descname">EXTERNAL_DIFFERENT_INSTANCES</code><em class="property"> = 3</em><a class="headerlink" href="#smac.runhistory.runhistory.DataOrigin.EXTERNAL_DIFFERENT_INSTANCES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.DataOrigin.EXTERNAL_SAME_INSTANCES">
+<code class="descname">EXTERNAL_SAME_INSTANCES</code><em class="property"> = 2</em><a class="headerlink" href="#smac.runhistory.runhistory.DataOrigin.EXTERNAL_SAME_INSTANCES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.DataOrigin.INTERNAL">
+<code class="descname">INTERNAL</code><em class="property"> = 1</em><a class="headerlink" href="#smac.runhistory.runhistory.DataOrigin.INTERNAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="smac.runhistory.runhistory.EnumEncoder">
+<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory.</code><code class="descname">EnumEncoder</code><span class="sig-paren">(</span><em>*</em>, <em>skipkeys=False</em>, <em>ensure_ascii=True</em>, <em>check_circular=True</em>, <em>allow_nan=True</em>, <em>sort_keys=False</em>, <em>indent=None</em>, <em>separators=None</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#EnumEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.EnumEncoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">json.encoder.JSONEncoder</span></code></p>
+<p>Custom encoder for enum-serialization
+(implemented for StatusType from tae/execute_ta_run).
+Using encoder implied using object_hook as defined in StatusType
+to deserialize from json.</p>
+<p>Constructor for JSONEncoder, with sensible defaults.</p>
+<p>If skipkeys is false, then it is a TypeError to attempt
+encoding of keys that are not str, int, float or None.  If
+skipkeys is True, such items are simply skipped.</p>
+<p>If ensure_ascii is true, the output is guaranteed to be str
+objects with all incoming non-ASCII characters escaped.  If
+ensure_ascii is false, the output can contain non-ASCII characters.</p>
+<p>If check_circular is true, then lists, dicts, and custom encoded
+objects will be checked for circular references during encoding to
+prevent an infinite recursion (which would cause an OverflowError).
+Otherwise, no such check takes place.</p>
+<p>If allow_nan is true, then NaN, Infinity, and -Infinity will be
+encoded as such.  This behavior is not JSON specification compliant,
+but is consistent with most JavaScript based encoders and decoders.
+Otherwise, it will be a ValueError to encode such floats.</p>
+<p>If sort_keys is true, then the output of dictionaries will be
+sorted by key; this is useful for regression tests to ensure
+that JSON serializations can be compared on a day-to-day basis.</p>
+<p>If indent is a non-negative integer, then JSON array
+elements and object members will be pretty-printed with that
+indent level.  An indent level of 0 will only insert newlines.
+None is the most compact representation.</p>
+<p>If specified, separators should be an (item_separator, key_separator)
+tuple.  The default is (‘, ‘, ‘: ‘) if <em>indent</em> is <code class="docutils literal"><span class="pre">None</span></code> and
+(‘,’, ‘: ‘) otherwise.  To get the most compact JSON representation,
+you should specify (‘,’, ‘:’) to eliminate whitespace.</p>
+<p>If specified, default is a function that gets called for objects
+that can’t otherwise be serialized.  It should return a JSON encodable
+version of the object or raise a <code class="docutils literal"><span class="pre">TypeError</span></code>.</p>
+<dl class="method">
+<dt id="smac.runhistory.runhistory.EnumEncoder.default">
+<code class="descname">default</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#EnumEncoder.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.EnumEncoder.default" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory.EnumEncoder.encode">
+<code class="descname">encode</code><span class="sig-paren">(</span><em>o</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory.EnumEncoder.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a JSON string representation of a Python data structure.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">json.encoder</span> <span class="k">import</span> <span class="n">JSONEncoder</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">JSONEncoder</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">({</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="s2">&quot;baz&quot;</span><span class="p">]})</span>
+<span class="go">&#39;{&quot;foo&quot;: [&quot;bar&quot;, &quot;baz&quot;]}&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.EnumEncoder.item_separator">
+<code class="descname">item_separator</code><em class="property"> = ', '</em><a class="headerlink" href="#smac.runhistory.runhistory.EnumEncoder.item_separator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory.EnumEncoder.iterencode">
+<code class="descname">iterencode</code><span class="sig-paren">(</span><em>o</em>, <em>_one_shot=False</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory.EnumEncoder.iterencode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encode the given object and yield each string
+representation as available.</p>
+<p>For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">JSONEncoder</span><span class="p">()</span><span class="o">.</span><span class="n">iterencode</span><span class="p">(</span><span class="n">bigobject</span><span class="p">):</span>
+    <span class="n">mysocket</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.EnumEncoder.key_separator">
+<code class="descname">key_separator</code><em class="property"> = ': '</em><a class="headerlink" href="#smac.runhistory.runhistory.EnumEncoder.key_separator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="smac.runhistory.runhistory.InstSeedKey">
+<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory.</code><code class="descname">InstSeedKey</code><span class="sig-paren">(</span><em>instance</em>, <em>seed</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory.InstSeedKey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<p>Create new instance of InstSeedKey(instance, seed)</p>
+<dl class="method">
+<dt id="smac.runhistory.runhistory.InstSeedKey.count">
+<code class="descname">count</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span> &#x2192; integer -- return number of occurrences of value<a class="headerlink" href="#smac.runhistory.runhistory.InstSeedKey.count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory.InstSeedKey.index">
+<code class="descname">index</code><span class="sig-paren">(</span><em>value</em><span class="optional">[</span>, <em>start</em><span class="optional">[</span>, <em>stop</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; integer -- return first index of value.<a class="headerlink" href="#smac.runhistory.runhistory.InstSeedKey.index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises ValueError if the value is not present.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.InstSeedKey.instance">
+<code class="descname">instance</code><a class="headerlink" href="#smac.runhistory.runhistory.InstSeedKey.instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.InstSeedKey.seed">
+<code class="descname">seed</code><a class="headerlink" href="#smac.runhistory.runhistory.InstSeedKey.seed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="smac.runhistory.runhistory.RunHistory">
+<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory.</code><code class="descname">RunHistory</code><span class="sig-paren">(</span><em>aggregate_func: typing.Callable</em>, <em>overwrite_existing_runs: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Container for target algorithm run information.</p>
+<p><strong>Note:</strong> Guaranteed to be picklable.</p>
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.RunHistory.data">
+<code class="descname">data</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.data" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>collections.OrderedDict()</em> – TODO</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.RunHistory.config_ids">
+<code class="descname">config_ids</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.config_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – Maps config -&gt; id</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.RunHistory.ids_config">
+<code class="descname">ids_config</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.ids_config" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – Maps id -&gt; config</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.RunHistory.cost_per_config">
+<code class="descname">cost_per_config</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.cost_per_config" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – Maps config_id -&gt; cost</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.RunHistory.runs_per_config">
+<code class="descname">runs_per_config</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.runs_per_config" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> – Maps config_id -&gt; number of runs</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.RunHistory.aggregate_func">
+<code class="descname">aggregate_func</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.aggregate_func" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.RunHistory.overwrite_existing_runs">
+<code class="descname">overwrite_existing_runs</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.overwrite_existing_runs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Constructor</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>aggregate_func</strong> (<em>callable</em>) – function to aggregate perf across instances</li>
+<li><strong>overwrite_existing_runs</strong> (<em>bool</em>) – allows to overwrites old results if pairs of
+algorithm-instance-seed were measured
+multiple times</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="smac.runhistory.runhistory.RunHistory.add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em>, <em>cost: float</em>, <em>time: float</em>, <em>status: smac.tae.execute_ta_run.StatusType</em>, <em>instance_id: str = None</em>, <em>seed: int = None</em>, <em>additional_info: dict = None</em>, <em>origin: smac.runhistory.runhistory.DataOrigin = &lt;DataOrigin.INTERNAL: 1&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a data of a new target algorithm (TA) run;
+it will update data if the same key values are used
+(config, instance_id, seed)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>config</strong> (<em>dict</em><em> (or </em><em>other type -- depending on config space module</em><em>)</em>) – Parameter configuration</li>
+<li><strong>cost</strong> (<em>float</em>) – Cost of TA run (will be minimized)</li>
+<li><strong>time</strong> (<em>float</em>) – Runtime of TA run</li>
+<li><strong>status</strong> (<em>str</em>) – Status in {SUCCESS, TIMEOUT, CRASHED, ABORT, MEMOUT}</li>
+<li><strong>instance_id</strong> (<em>str</em>) – String representing an instance (default: None)</li>
+<li><strong>seed</strong> (<em>int</em>) – Random seed used by TA (default: None)</li>
+<li><strong>additional_info</strong> (<em>dict</em>) – Additional run infos (could include further returned
+information from TA or fields such as start time and host_id)</li>
+<li><strong>origin</strong> (<a class="reference internal" href="#smac.runhistory.runhistory.DataOrigin" title="smac.runhistory.runhistory.DataOrigin"><em>DataOrigin</em></a>) – Defines how data will be used.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory.RunHistory.compute_all_costs">
+<code class="descname">compute_all_costs</code><span class="sig-paren">(</span><em>instances: typing.List[str] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.compute_all_costs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.compute_all_costs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the cost of all configurations from scratch and overwrites
+self.cost_perf_config and self.runs_per_config accordingly;</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>instances</strong> (<em>typing.List</em><em>[</em><em>str</em><em>]</em>) – list of instances; if given, cost is only computed wrt to this instance set</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory.RunHistory.empty">
+<code class="descname">empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether or not the RunHistory is empty.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>emptiness</strong> – True if runs have been added to the RunHistory,
+False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory.RunHistory.get_all_configs">
+<code class="descname">get_all_configs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_all_configs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_all_configs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all configurations in this RunHistory object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>parameter configurations</strong></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory.RunHistory.get_cost">
+<code class="descname">get_cost</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_cost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns empirical cost for a configuration; uses  self.cost_per_config</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<em>Configuration</em>) – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>cost</strong> – Computed cost for configuration</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory.RunHistory.get_runs_for_config">
+<code class="descname">get_runs_for_config</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_runs_for_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_runs_for_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all runs (instance seed pairs) for a configuration.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<em>Configuration from ConfigSpace</em>) – Parameter configuration</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>instance_seed_pairs</strong></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list&lt;tuples of instance, seed&gt;</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory.RunHistory.incremental_update_cost">
+<code class="descname">incremental_update_cost</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em>, <em>cost: float</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.incremental_update_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.incremental_update_cost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Incrementally updates the performance of a configuration by using a
+moving average;</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>config</strong> (<em>Configuration</em>) – configuration to update cost based on all runs in runhistory</li>
+<li><strong>cost</strong> (<em>float</em>) – cost of new run of config</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory.RunHistory.load_json">
+<code class="descname">load_json</code><span class="sig-paren">(</span><em>fn: str</em>, <em>cs: ConfigSpace.configuration_space.ConfigurationSpace</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.load_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.load_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load and runhistory in json representation from disk.</p>
+<p>Overwrites current runhistory!</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fn</strong> (<em>str</em>) – file name to load from</li>
+<li><strong>cs</strong> (<em>ConfigSpace</em>) – instance of configuration space</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory.RunHistory.save_json">
+<code class="descname">save_json</code><span class="sig-paren">(</span><em>fn: str = 'runhistory.json'</em>, <em>save_external: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.save_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.save_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>saves runhistory on disk</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fn</strong> (<em>str</em>) – file name</li>
+<li><strong>save_external</strong> (<em>bool</em>) – Whether to save external data in the runhistory file.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory.RunHistory.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>origin: smac.runhistory.runhistory.DataOrigin = &lt;DataOrigin.EXTERNAL_SAME_INSTANCES: 2&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the current runhistory by adding new runs from a json file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>runhistory</strong> (<a class="reference internal" href="#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – Runhistory with additional data to be added to self</li>
+<li><strong>origin</strong> (<a class="reference internal" href="#smac.runhistory.runhistory.DataOrigin" title="smac.runhistory.runhistory.DataOrigin"><em>DataOrigin</em></a>) – If set to <code class="docutils literal"><span class="pre">INTERNAL</span></code> or <code class="docutils literal"><span class="pre">EXTERNAL_FULL</span></code> the data will be
+added to the internal data structure self._configid_to_inst_seed
+and be available <code class="xref py py-meth docutils literal"><span class="pre">through</span> <span class="pre">get_runs_for_config()</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory.RunHistory.update_cost">
+<code class="descname">update_cost</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.update_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update_cost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store the performance of a configuration across the instances in
+self.cost_perf_config and also updates self.runs_per_config;
+uses self.aggregate_func</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<em>Configuration</em>) – configuration to update cost based on all runs in runhistory</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory.RunHistory.update_from_json">
+<code class="descname">update_from_json</code><span class="sig-paren">(</span><em>fn: str</em>, <em>cs: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>origin: smac.runhistory.runhistory.DataOrigin = &lt;DataOrigin.EXTERNAL_SAME_INSTANCES: 2&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.update_from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update_from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the current runhistory by adding new runs from a json file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fn</strong> (<em>str</em>) – File name to load from.</li>
+<li><strong>cs</strong> (<em>ConfigSpace</em>) – Instance of configuration space.</li>
+<li><strong>origin</strong> (<a class="reference internal" href="#smac.runhistory.runhistory.DataOrigin" title="smac.runhistory.runhistory.DataOrigin"><em>DataOrigin</em></a>) – What to store as data origin.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="smac.runhistory.runhistory.RunKey">
+<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory.</code><code class="descname">RunKey</code><span class="sig-paren">(</span><em>config_id</em>, <em>instance_id</em>, <em>seed</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory.RunKey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<p>Create new instance of RunKey(config_id, instance_id, seed)</p>
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.RunKey.config_id">
+<code class="descname">config_id</code><a class="headerlink" href="#smac.runhistory.runhistory.RunKey.config_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory.RunKey.count">
+<code class="descname">count</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span> &#x2192; integer -- return number of occurrences of value<a class="headerlink" href="#smac.runhistory.runhistory.RunKey.count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory.RunKey.index">
+<code class="descname">index</code><span class="sig-paren">(</span><em>value</em><span class="optional">[</span>, <em>start</em><span class="optional">[</span>, <em>stop</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; integer -- return first index of value.<a class="headerlink" href="#smac.runhistory.runhistory.RunKey.index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises ValueError if the value is not present.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.RunKey.instance_id">
+<code class="descname">instance_id</code><a class="headerlink" href="#smac.runhistory.runhistory.RunKey.instance_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.RunKey.seed">
+<code class="descname">seed</code><a class="headerlink" href="#smac.runhistory.runhistory.RunKey.seed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="smac.runhistory.runhistory.RunValue">
+<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory.</code><code class="descname">RunValue</code><span class="sig-paren">(</span><em>cost</em>, <em>time</em>, <em>status</em>, <em>additional_info</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory.RunValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<p>Create new instance of RunValue(cost, time, status, additional_info)</p>
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.RunValue.additional_info">
+<code class="descname">additional_info</code><a class="headerlink" href="#smac.runhistory.runhistory.RunValue.additional_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.RunValue.cost">
+<code class="descname">cost</code><a class="headerlink" href="#smac.runhistory.runhistory.RunValue.cost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory.RunValue.count">
+<code class="descname">count</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span> &#x2192; integer -- return number of occurrences of value<a class="headerlink" href="#smac.runhistory.runhistory.RunValue.count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory.RunValue.index">
+<code class="descname">index</code><span class="sig-paren">(</span><em>value</em><span class="optional">[</span>, <em>start</em><span class="optional">[</span>, <em>stop</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; integer -- return first index of value.<a class="headerlink" href="#smac.runhistory.runhistory.RunValue.index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises ValueError if the value is not present.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.RunValue.status">
+<code class="descname">status</code><a class="headerlink" href="#smac.runhistory.runhistory.RunValue.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.runhistory.runhistory.RunValue.time">
+<code class="descname">time</code><a class="headerlink" href="#smac.runhistory.runhistory.RunValue.time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="smac.runhistory.runhistory2epm.html" class="btn btn-neutral float-right" title="smac.runhistory.runhistory2epm module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="smac.runhistory.html" class="btn btn-neutral" title="smac.runhistory package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015-2017, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.6.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

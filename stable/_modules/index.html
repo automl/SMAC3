@@ -1,0 +1,351 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Overview: module code &mdash; SMAC 0.6.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="SMAC 0.6.0 documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> SMAC
+          
+
+          
+            
+            <img src="../_static/SMAC3.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual.html">Manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basic_usage.html">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../options.html">Options and file formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tae.html">Target Algorithm Evaluator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../psmac.html">Parallel SMAC (pSMAC)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../apidoc/smac.configspace.html">smac.configspace package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.configspace.util.html">smac.configspace.util module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../apidoc/smac.epm.html">smac.epm package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.epm.base_epm.html">smac.epm.base_epm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.epm.base_imputor.html">smac.epm.base_imputor module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../apidoc/smac.facade.html">smac.facade package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.smac_facade.html">smac.facade.smac_facade module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../apidoc/smac.initial_design.html">smac.initial_design package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.initial_design.default_configuration_design.html">smac.initial_design.default_configuration_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.initial_design.initial_design.html">smac.initial_design.initial_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.initial_design.multi_config_initial_design.html">smac.initial_design.multi_config_initial_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.initial_design.random_configuration_design.html">smac.initial_design.random_configuration_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.initial_design.single_config_initial_design.html">smac.initial_design.single_config_initial_design module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../apidoc/smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.optimizer.local_search.html">smac.optimizer.local_search module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../apidoc/smac.runhistory.html">smac.runhistory package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.runhistory.runhistory.html">smac.runhistory.runhistory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.runhistory.runhistory2epm.html">smac.runhistory.runhistory2epm module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../apidoc/smac.scenario.html">smac.scenario package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.scenario.scenario.html">smac.scenario.scenario module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../apidoc/smac.stats.html">smac.stats package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.stats.stats.html">smac.stats.stats module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../apidoc/smac.tae.html">smac.tae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../apidoc/smac.utils.html">smac.utils package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.utils.io.html">smac.utils.io package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../apidoc/smac.utils.io.cmd_reader.html">smac.utils.io.cmd_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apidoc/smac.utils.io.input_reader.html">smac.utils.io.input_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apidoc/smac.utils.io.output_writer.html">smac.utils.io.output_writer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../apidoc/smac.utils.io.traj_logging.html">smac.utils.io.traj_logging module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.utils.constants.html">smac.utils.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.utils.util_funcs.html">smac.utils.util_funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../apidoc/smac.smac_cli.html">smac.smac_cli module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SMAC</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Overview: module code</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>All modules for which code is available</h1>
+<ul><li><a href="json/encoder.html">json.encoder</a></li>
+<li><a href="smac/configspace/util.html">smac.configspace.util</a></li>
+<li><a href="smac/epm/base_epm.html">smac.epm.base_epm</a></li>
+<li><a href="smac/epm/base_imputor.html">smac.epm.base_imputor</a></li>
+<li><a href="smac/epm/random_epm.html">smac.epm.random_epm</a></li>
+<li><a href="smac/epm/rf_with_instances.html">smac.epm.rf_with_instances</a></li>
+<li><a href="smac/epm/rfr_imputator.html">smac.epm.rfr_imputator</a></li>
+<li><a href="smac/epm/uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances</a></li>
+<li><a href="smac/facade/func_facade.html">smac.facade.func_facade</a></li>
+<li><a href="smac/facade/roar_facade.html">smac.facade.roar_facade</a></li>
+<li><a href="smac/facade/smac_facade.html">smac.facade.smac_facade</a></li>
+<li><a href="smac/initial_design/default_configuration_design.html">smac.initial_design.default_configuration_design</a></li>
+<li><a href="smac/initial_design/initial_design.html">smac.initial_design.initial_design</a></li>
+<li><a href="smac/initial_design/multi_config_initial_design.html">smac.initial_design.multi_config_initial_design</a></li>
+<li><a href="smac/initial_design/random_configuration_design.html">smac.initial_design.random_configuration_design</a></li>
+<li><a href="smac/initial_design/single_config_initial_design.html">smac.initial_design.single_config_initial_design</a></li>
+<li><a href="smac/intensification/intensification.html">smac.intensification.intensification</a></li>
+<li><a href="smac/optimizer/acquisition.html">smac.optimizer.acquisition</a></li>
+<li><a href="smac/optimizer/local_search.html">smac.optimizer.local_search</a></li>
+<li><a href="smac/optimizer/objective.html">smac.optimizer.objective</a></li>
+<li><a href="smac/optimizer/pSMAC.html">smac.optimizer.pSMAC</a></li>
+<li><a href="smac/optimizer/smbo.html">smac.optimizer.smbo</a></li>
+<li><a href="smac/runhistory/runhistory.html">smac.runhistory.runhistory</a></li>
+<li><a href="smac/runhistory/runhistory2epm.html">smac.runhistory.runhistory2epm</a></li>
+<li><a href="smac/scenario/scenario.html">smac.scenario.scenario</a></li>
+<li><a href="smac/smac_cli.html">smac.smac_cli</a></li>
+<li><a href="smac/stats/stats.html">smac.stats.stats</a></li>
+<li><a href="smac/tae/execute_func.html">smac.tae.execute_func</a></li>
+<li><a href="smac/tae/execute_ta_run.html">smac.tae.execute_ta_run</a></li>
+<li><a href="smac/tae/execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib</a></li>
+<li><a href="smac/tae/execute_ta_run_old.html">smac.tae.execute_ta_run_old</a></li>
+<li><a href="smac/utils/duplicate_filter_logging.html">smac.utils.duplicate_filter_logging</a></li>
+<li><a href="smac/utils/io/cmd_reader.html">smac.utils.io.cmd_reader</a></li>
+<li><a href="smac/utils/io/input_reader.html">smac.utils.io.input_reader</a></li>
+<li><a href="smac/utils/io/output_writer.html">smac.utils.io.output_writer</a></li>
+<li><a href="smac/utils/io/traj_logging.html">smac.utils.io.traj_logging</a></li>
+<li><a href="smac/utils/merge_foreign_data.html">smac.utils.merge_foreign_data</a></li>
+<li><a href="smac/utils/test_helpers.html">smac.utils.test_helpers</a></li>
+<li><a href="smac/utils/util_funcs.html">smac.utils.util_funcs</a></li>
+</ul>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015-2017, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.6.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

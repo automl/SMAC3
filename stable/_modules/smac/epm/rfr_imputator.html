@@ -1,0 +1,504 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>smac.epm.rfr_imputator &mdash; SMAC 0.6.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="SMAC 0.6.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> SMAC
+          
+
+          
+            
+            <img src="../../../_static/SMAC3.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../manual.html">Manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../basic_usage.html">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../options.html">Options and file formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tae.html">Target Algorithm Evaluator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../psmac.html">Parallel SMAC (pSMAC)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.configspace.html">smac.configspace package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.configspace.util.html">smac.configspace.util module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.epm.html">smac.epm package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.base_epm.html">smac.epm.base_epm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.base_imputor.html">smac.epm.base_imputor module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.facade.html">smac.facade package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_facade.html">smac.facade.smac_facade module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.initial_design.html">smac.initial_design package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.initial_design.default_configuration_design.html">smac.initial_design.default_configuration_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.initial_design.initial_design.html">smac.initial_design.initial_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.initial_design.multi_config_initial_design.html">smac.initial_design.multi_config_initial_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.initial_design.random_configuration_design.html">smac.initial_design.random_configuration_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.initial_design.single_config_initial_design.html">smac.initial_design.single_config_initial_design module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.local_search.html">smac.optimizer.local_search module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.runhistory.html">smac.runhistory package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.runhistory.runhistory.html">smac.runhistory.runhistory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.runhistory.runhistory2epm.html">smac.runhistory.runhistory2epm module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.scenario.html">smac.scenario package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.scenario.scenario.html">smac.scenario.scenario module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.stats.html">smac.stats package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.stats.stats.html">smac.stats.stats module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.tae.html">smac.tae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.utils.html">smac.utils package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.io.html">smac.utils.io package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.utils.io.cmd_reader.html">smac.utils.io.cmd_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.utils.io.input_reader.html">smac.utils.io.input_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.utils.io.output_writer.html">smac.utils.io.output_writer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.utils.io.traj_logging.html">smac.utils.io.traj_logging module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.constants.html">smac.utils.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.util_funcs.html">smac.utils.util_funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.smac_cli.html">smac.smac_cli module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../faq.html">F.A.Q.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SMAC</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>smac.epm.rfr_imputator</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for smac.epm.rfr_imputator</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">truncnorm</span>
+
+<span class="kn">import</span> <span class="nn">smac.epm.base_imputor</span>
+<span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="k">import</span> <span class="n">AbstractEPM</span>
+
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Katharina Eggensperger&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
+<span class="n">__maintainer__</span> <span class="o">=</span> <span class="s2">&quot;Katharina Eggensperger&quot;</span>
+<span class="n">__email__</span> <span class="o">=</span> <span class="s2">&quot;eggenspk@cs.uni-freiburg.de&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.0.1&quot;</span>
+
+
+<div class="viewcode-block" id="RFRImputator"><a class="viewcode-back" href="../../../apidoc/smac.epm.rfr_imputator.html#smac.epm.rfr_imputator.RFRImputator">[docs]</a><span class="k">class</span> <span class="nc">RFRImputator</span><span class="p">(</span><span class="n">smac</span><span class="o">.</span><span class="n">epm</span><span class="o">.</span><span class="n">base_imputor</span><span class="o">.</span><span class="n">BaseImputor</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Imputor using pyrfr&#39;s Random Forest regressor.</span>
+
+<span class="sd">    **Note:** Sets var_threshold as the lower bound on the variance for the</span>
+<span class="sd">    predictions of the random forest</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    logger : logging.Logger</span>
+<span class="sd">    max_iter : int</span>
+<span class="sd">    change_threshold : float</span>
+<span class="sd">    cutoff : float</span>
+<span class="sd">    threshold : float</span>
+<span class="sd">    seed : int</span>
+<span class="sd">        Created by drawing random int from rng</span>
+<span class="sd">    model : AbstractEPM</span>
+<span class="sd">        Predictive model (i.e. RandomForestWithInstances)</span>
+<span class="sd">    var_threshold: float</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                 <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AbstractEPM</span><span class="p">,</span>
+                 <span class="n">change_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+                 <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rng : np.random.RandomState</span>
+<span class="sd">            Will be used to draw a seed (currently not used)</span>
+<span class="sd">        cutoff : float</span>
+<span class="sd">            Cutoff value for this scenario (upper runnning time limit)</span>
+<span class="sd">        threshold : float</span>
+<span class="sd">            Highest possible values (e.g. cutoff * parX).</span>
+<span class="sd">        model : AbstractEPM</span>
+<span class="sd">            Predictive model (i.e. RandomForestWithInstances)</span>
+<span class="sd">        change_threshold : float</span>
+<span class="sd">            Stop imputation if change is less than this.</span>
+<span class="sd">        max_iter : int</span>
+<span class="sd">            Maximum number of imputation iterations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RFRImputator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">change_threshold</span> <span class="o">=</span> <span class="n">change_threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span> <span class="o">=</span> <span class="n">cutoff</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random_integers</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+
+        <span class="c1"># Never use a lower variance than this</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_threshold</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="o">-</span><span class="mi">2</span>
+
+<div class="viewcode-block" id="RFRImputator.impute"><a class="viewcode-back" href="../../../apidoc/smac.epm.rfr_imputator.html#smac.epm.rfr_imputator.RFRImputator.impute">[docs]</a>    <span class="k">def</span> <span class="nf">impute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">censored_X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">censored_y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+               <span class="n">uncensored_X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">uncensored_y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Imputes censored runs and returns new y values.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        censored_X : np.ndarray [N, M]</span>
+<span class="sd">            Feature array of all censored runs.</span>
+<span class="sd">        censored_y : np.ndarray [N, 1]</span>
+<span class="sd">            Target values for all runs censored runs.</span>
+<span class="sd">        uncensored_X : np.ndarray [N, M]</span>
+<span class="sd">            Feature array of all non-censored runs.</span>
+<span class="sd">        uncensored_y : np.ndarray [N, 1]</span>
+<span class="sd">            Target values for all non-censored runs.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        imputed_y : np.ndarray</span>
+<span class="sd">            Same shape as censored_y [N, 1]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">censored_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Nothing to impute, return None&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">censored_y</span> <span class="o">=</span> <span class="n">censored_y</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">uncensored_y</span> <span class="o">=</span> <span class="n">uncensored_y</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+        <span class="c1"># first learn model without censored data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">uncensored_X</span><span class="p">,</span> <span class="n">uncensored_y</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Going to impute </span><span class="si">%d</span><span class="s2"> y-values with </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span>
+                          <span class="p">(</span><span class="n">censored_X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)))</span>
+
+        <span class="n">imputed_y</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># define this, if imputation fails</span>
+
+        <span class="c1"># Define variables</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">it</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">change</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Iteration </span><span class="si">%d</span><span class="s2"> of </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">it</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">))</span>
+
+            <span class="c1"># predict censored y values</span>
+            <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">censored_X</span><span class="p">)</span>
+            <span class="n">y_var</span><span class="p">[</span><span class="n">y_var</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_threshold</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_threshold</span>
+            <span class="n">y_stdev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">y_var</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="n">y_mean</span> <span class="o">=</span> <span class="n">y_mean</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+
+            <span class="c1"># ignore the warnings of truncnorm.stats</span>
+            <span class="c1"># since we handle them appropriately</span>
+            <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+                    <span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;invalid value encountered in (subtract|true_divide).*&#39;</span><span class="p">)</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+                    <span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;divide by zero encountered in (true_divide|log).*&#39;</span><span class="p">)</span>
+                <span class="n">imputed_y</span> <span class="o">=</span> <span class="n">truncnorm</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="p">(</span><span class="n">censored_y</span> <span class="o">-</span> <span class="n">y_mean</span><span class="p">)</span> <span class="o">/</span> <span class="n">y_stdev</span><span class="p">,</span>
+                                            <span class="n">b</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">-</span> <span class="n">y_mean</span><span class="p">)</span> <span class="o">/</span>
+                                            <span class="n">y_stdev</span><span class="p">,</span>
+                                            <span class="n">loc</span><span class="o">=</span><span class="n">y_mean</span><span class="p">,</span>
+                                            <span class="n">scale</span><span class="o">=</span><span class="n">y_stdev</span><span class="p">,</span>
+                                            <span class="n">moments</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">)</span>
+
+            <span class="n">imputed_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">imputed_y</span><span class="p">)</span>
+
+            <span class="n">nans</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">imputed_y</span><span class="p">)</span>
+            <span class="n">n_nans</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">nans</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">n_nans</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># Replace all nans with maximum of predicted perf and censored value</span>
+                <span class="c1"># this happens if the prediction is far smaller than the</span>
+                <span class="c1"># censored data point</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Going to replace </span><span class="si">%d</span><span class="s2"> nan-value(s) with &quot;</span>
+                                  <span class="s2">&quot;max(captime, predicted mean)&quot;</span> <span class="o">%</span> <span class="n">n_nans</span><span class="p">)</span>
+                <span class="n">imputed_y</span><span class="p">[</span><span class="n">nans</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">censored_y</span><span class="p">[</span><span class="n">nans</span><span class="p">],</span> <span class="n">y_mean</span><span class="p">[</span><span class="n">nans</span><span class="p">]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">it</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># Calc mean difference between imputed values this and last</span>
+                <span class="c1"># iteration, assume imputed values are always concatenated</span>
+                <span class="c1"># after uncensored values</span>
+
+                <span class="n">change</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">imputed_y</span> <span class="o">-</span>
+                                     <span class="n">y</span><span class="p">[</span><span class="n">uncensored_y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:])</span> <span class="o">/</span>
+                                 <span class="n">y</span><span class="p">[</span><span class="n">uncensored_y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:])</span>
+
+            <span class="c1"># lower all values that are higher than threshold</span>
+            <span class="c1"># should probably never happen</span>
+            <span class="n">imputed_y</span><span class="p">[</span><span class="n">imputed_y</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Change: </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">change</span><span class="p">)</span>
+
+            <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">uncensored_X</span><span class="p">,</span> <span class="n">censored_X</span><span class="p">))</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">uncensored_y</span><span class="p">,</span> <span class="n">imputed_y</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">change</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">change_threshold</span> <span class="ow">or</span> <span class="n">it</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">break</span>
+
+            <span class="n">it</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">it</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Imputation used </span><span class="si">%d</span><span class="s2">/</span><span class="si">%d</span><span class="s2"> iterations, last_change=</span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span>
+                          <span class="p">(</span><span class="n">it</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="n">change</span><span class="p">))</span>
+
+        <span class="c1"># replace all y &gt; cutoff with PAR10 values (i.e., threshold)</span>
+        <span class="n">imputed_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">imputed_y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+        <span class="n">imputed_y</span><span class="p">[</span><span class="n">imputed_y</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">imputed_y</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Imputed values are not finite, </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span>
+                                 <span class="nb">str</span><span class="p">(</span><span class="n">imputed_y</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">imputed_y</span><span class="p">,</span> <span class="p">[</span><span class="n">imputed_y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">])</span></div></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015-2017, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.6.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

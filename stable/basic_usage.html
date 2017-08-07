@@ -1,0 +1,411 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Basic Usage &mdash; SMAC 0.6.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="SMAC 0.6.0 documentation" href="index.html"/>
+        <link rel="up" title="Manual" href="manual.html"/>
+        <link rel="next" title="Options and file formats" href="options.html"/>
+        <link rel="prev" title="Manual" href="manual.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SMAC
+          
+
+          
+            
+            <img src="_static/SMAC3.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="manual.html">Manual</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">Options and file formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tae.html">Target Algorithm Evaluator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="psmac.html">Parallel SMAC (pSMAC)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.configspace.html">smac.configspace package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.configspace.util.html">smac.configspace.util module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.epm.html">smac.epm package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.base_epm.html">smac.epm.base_epm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.base_imputor.html">smac.epm.base_imputor module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.facade.html">smac.facade package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_facade.html">smac.facade.smac_facade module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.initial_design.html">smac.initial_design package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.initial_design.default_configuration_design.html">smac.initial_design.default_configuration_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.initial_design.initial_design.html">smac.initial_design.initial_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.initial_design.multi_config_initial_design.html">smac.initial_design.multi_config_initial_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.initial_design.random_configuration_design.html">smac.initial_design.random_configuration_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.initial_design.single_config_initial_design.html">smac.initial_design.single_config_initial_design module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.local_search.html">smac.optimizer.local_search module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.runhistory.html">smac.runhistory package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.runhistory.runhistory.html">smac.runhistory.runhistory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.runhistory.runhistory2epm.html">smac.runhistory.runhistory2epm module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.scenario.html">smac.scenario package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.scenario.scenario.html">smac.scenario.scenario module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.stats.html">smac.stats package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.stats.stats.html">smac.stats.stats module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.tae.html">smac.tae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.utils.html">smac.utils package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.io.html">smac.utils.io package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.cmd_reader.html">smac.utils.io.cmd_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.input_reader.html">smac.utils.io.input_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.output_writer.html">smac.utils.io.output_writer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.traj_logging.html">smac.utils.io.traj_logging module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.constants.html">smac.utils.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.util_funcs.html">smac.utils.util_funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.smac_cli.html">smac.smac_cli module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">F.A.Q.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SMAC</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="manual.html">Manual</a> &raquo;</li>
+        
+      <li>Basic Usage</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/basic_usage.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="basic-usage">
+<h1>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h1>
+<p>There are two ways to use <em>SMAC</em>, either over the commandline or within your
+Python-code.</p>
+<p>Either way, you need to provide the <a class="reference external" href="tae.html#tae">target algorithm</a> you want to
+optimize and the <a class="reference external" href="options.html#pcs">configuration space</a>, which specifies the legal ranges and
+default values of the tunable parameters. In addition, you can configure the
+optimization process with the <a class="reference external" href="options.html#scenario">scenario</a>-options.</p>
+<p>The most important scenario-options are:</p>
+<ul class="simple">
+<li><strong>run_obj</strong>: Either quality or runtime, depending on what you want to
+optimize.</li>
+<li><strong>cutoff_time</strong>: This is the maximum time the target algorithm is allowed to
+run.</li>
+<li><strong>wallclock_limit</strong>, <strong>runcount_limit</strong> and <strong>tuner-timeout</strong>
+are used to control maximum wallclock-time, number of algorithm calls and
+cpu-time used for optimization respectively.</li>
+<li><strong>instance_file</strong>, <strong>test_instance_file</strong> and <strong>feature_file</strong> specify the
+paths to the instances and features (see <a class="reference external" href="options.html#instance">file-formats</a>)</li>
+</ul>
+<p>For a full list, see <a class="reference external" href="options.html#scenario">scenario-options</a>.</p>
+<div class="section" id="commandline">
+<span id="id1"></span><h2>Commandline<a class="headerlink" href="#commandline" title="Permalink to this headline">¶</a></h2>
+<p>To use <em>SMAC</em> via the commandline, you need a <a class="reference external" href="options.html#scenario">scenario-file</a> and a <a class="reference external" href="options.html#pcs">PCS-file</a>.
+The script to invoke <em>SMAC</em> is located in <em>scripts/smac</em>. Please see the
+<a class="reference external" href="quickstart.html#branin">Branin</a>-example to see how to use it.</p>
+<p><em>SMAC</em> is called via the commandline with the following arguments:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python smac --scenario SCENARIO --seed INT --verbose_level LEVEL --mode MODE
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>Required:</dt>
+<dd><ul class="first last simple">
+<li><em>scenario</em>: Path to the file that specifies the <a class="reference external" href="options.html#scenario">scenario</a> for this <em>SMAC</em>-run.</li>
+</ul>
+</dd>
+<dt>Optional:</dt>
+<dd><ul class="first last simple">
+<li><em>seed</em>: The integer that the random-generator will be based upon. <strong>Default</strong>: 12345</li>
+<li><em>verbose_level</em>: in [INFO, DEBUG], specifies the logging-verbosity. <strong>Default</strong>: INFO</li>
+<li><em>mode</em>: in [SMAC, ROAR]. SMAC will use the bayeasian optimization with an intensification process, whereas ROAR stands for Random Online Adaptive Racing. <strong>Default</strong>: SMAC</li>
+</ul>
+</dd>
+</dl>
+<p>In the scenario file, there are two mandatory parameters: The <strong>algo</strong>-parameter
+defines how <em>SMAC</em> will call the target algorithm. Parameters will be appended to the call
+with <code class="docutils literal"><span class="pre">-PARAMETER</span> <span class="pre">VALUE</span></code>, so make sure your algorithm will accept the parameters in this
+form. Read more in the section on <a class="reference external" href="tae.html#tae">target algorithms</a>.
+The <strong>paramfile</strong>-parameter defines the path to the <a class="reference external" href="options.html#pcs">PCS-file</a>,
+which describes the ranges and default values of the tunable parameters.
+Both will interpret paths <em>from the execution-directory</em>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Currently, running <em>SMAC</em> via the commandline will register the algorithm with a
+<a class="reference external" href="tae.html#tae">Target Algorithm Evaluator (TAE)</a>, that requires the target algorithm to print
+the results to the console in the following format (see <a class="reference external" href="quickstart.html#branin">Branin</a>):</p>
+<div class="last highlight-bash"><div class="highlight"><pre><span></span>Result <span class="k">for</span> SMAC: &lt;STATUS&gt;, &lt;runtime&gt;, &lt;runlength&gt;, &lt;quality&gt;, &lt;seed&gt;, &lt;instance-specifics&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="usage-in-python">
+<span id="inpython"></span><h2>Usage in Python<a class="headerlink" href="#usage-in-python" title="Permalink to this headline">¶</a></h2>
+<p>The usage of <em>SMAC</em> from your Python-code is described in the <a class="reference external" href="quickstart.html#svm-example">SVM-example</a>.
+Scenario and configuration space are both build within the code. The target
+algorithm needs to be registered with a <a class="reference external" href="tae.html#tae">Target Algorithm Evaluator (TAE)</a>,
+which communicates between <em>SMAC</em> and the target algorithm. To optimize a function, you can instantiate
+<a class="reference external" href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict">ExecuteTAFuncDict</a> or
+<a class="reference external" href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncArray">ExecuteTAFuncArray</a>.
+In that case, the algorithm needs to return a cost, representing the quality of
+the solution, while time- and memory-limits are measured and enforced by <a class="reference external" href="https://github.com/sfalkner/pynisher">Pynisher</a>, so no wrapper is needed for your
+algorithm here.</p>
+<ul class="simple">
+<li><a class="reference external" href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict">ExecuteTAFuncDict</a>:
+The target algorithm is called with a dict-like configuration and optionally
+with seed and instance, returning either the loss as a float or a tuple (loss,
+additional information).</li>
+<li><a class="reference external" href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncArray">ExecuteTAFuncArray</a>:
+The target algorithm is called with an array-like configuration and optionally
+with seed and instance, returning either the loss as a float or a tuple (loss,
+additional information).</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="options.html" class="btn btn-neutral float-right" title="Options and file formats" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="manual.html" class="btn btn-neutral" title="Manual" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015-2017, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.6.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
