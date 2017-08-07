@@ -1,3 +1,26 @@
+# 0.6
+
+## Major changes
+
+* MAINT documentation (nearly every part was improved and extended, 
+  including installation, examples, API) 
+* ADD EPILS as mode (modified version of ParamILS)
+* MAINT minimal required versions of configspace, pyrfr, sklearn increased
+  (several issues fixed in new configspace version)
+* MAINT for quality scenarios, the user can specify the objective 
+  value for crashed runs 
+  (returned NaN and Inf are replaced by value for crashed runs)
+
+## Minor changes
+
+* FIX issue #220, do not store external data in runhistory 
+* MAINT TAEFunc without pynisher possible
+* MAINT intensification: minimal number of required challengers parameterized
+* FIX saving duplicated (capped) runs
+* FIX handling of ordinal parameters
+* MAINT runobj is now mandatory
+* FIX arguments passed to pyrfr
+
 # 0.5
 
 ## Major changes

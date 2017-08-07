@@ -4,7 +4,13 @@ import sys
 import numpy as np
 import pyrfr.regression
 
+from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
+    UniformFloatHyperparameter, UniformIntegerHyperparameter, Constant, \
+    OrdinalHyperparameter
+
 from smac.epm.rf_with_instances import RandomForestWithInstances
+import smac
+from smac.utils.util_funcs import get_types
 
 if sys.version_info[0] == 2:
     import mock
@@ -148,7 +154,8 @@ class TestRFWithInstances(unittest.TestCase):
         # print(X.shape, y.shape)
         model = RandomForestWithInstances(types=np.array([0, 0, 0], dtype=np.uint),
                                           bounds=np.array([(0, np.nan), (0, np.nan), (0, np.nan)], dtype=object),
-                                          instance_features=None, seed=12345)
+                                          instance_features=None, seed=12345,
+                                          ratio_features=1.0)
         model.train(np.vstack((X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y)))
         # for idx, x in enumerate(X):
         #     print(model.rf.all_leaf_values(x))
@@ -159,3 +166,41 @@ class TestRFWithInstances(unittest.TestCase):
             # print(y_i, y_hat_i)
             self.assertAlmostEqual(y_i, y_hat_i, delta=0.1)
         # print()
+
+    def test_with_ordinal(self):
+        cs = smac.configspace.ConfigurationSpace()
+        a = cs.add_hyperparameter(CategoricalHyperparameter('a', [0, 1],
+                                                            default=0))
+        b = cs.add_hyperparameter(OrdinalHyperparameter('b', [0, 1],
+                                                        default=1))
+        b = cs.add_hyperparameter(UniformFloatHyperparameter('c', lower=0., upper=1.,
+                                                             default=1))
+        b = cs.add_hyperparameter(UniformIntegerHyperparameter('d', lower=0, upper=10,
+                                                               default=1))
+        cs.seed(1)
+
+        feat_array = np.array([0,0,0]).reshape(1, -1)
+        types, bounds = get_types(cs, feat_array)
+        model = RandomForestWithInstances(types=types, bounds=bounds,
+                                          instance_features=feat_array,
+                                          seed=1, ratio_features=1.0,
+                                          pca_components=9)
+        self.assertEqual(bounds[0][0], 2)
+        self.assertTrue(bounds[0][1] is np.nan)
+        self.assertEqual(bounds[1][0], 0)
+        self.assertEqual(bounds[1][1], 1)
+        self.assertEqual(bounds[2][0], 0.)
+        self.assertEqual(bounds[2][1], 1.)
+        self.assertEqual(bounds[3][0], 0.)
+        self.assertEqual(bounds[3][1], 1.)
+        X = np.array([
+            [0., 0., 0., 0., 0, 0, 0],
+            [0., 0., 1., 0., 0, 0, 0],
+            [0., 1., 0., 9., 0, 0, 0],
+            [0., 1., 1., 4., 0, 0, 0]], dtype=np.float64)
+        y = np.array([0, 1, 2, 3], dtype=np.float64)
+
+        model.train(np.vstack((X, X, X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y, y, y)))
+        mean, _ = model.predict(X)
+        for idx, m in enumerate(mean):
+            self.assertAlmostEqual(y[idx], m, 0.05)

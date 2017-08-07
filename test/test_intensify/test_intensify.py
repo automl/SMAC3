@@ -45,6 +45,7 @@ class TestIntensify(unittest.TestCase):
                                      values={'a': 100, 'b': 100})
 
         self.scen = Scenario({"cutoff_time": 2, 'cs': self.cs,
+                              "run_obj": 'runtime',
                               "output_dir": ''})
         self.stats = Stats(scenario=self.scen)
         self.stats.start_timing()
@@ -87,7 +88,7 @@ class TestIntensify(unittest.TestCase):
 
     def test_compare_configs_chall(self):
         '''
-            challenger is better but has not enough runs
+            challenger is better
         '''
         intensifier = Intensifier(
             tae_runner=None, stats=self.stats,
@@ -100,7 +101,7 @@ class TestIntensify(unittest.TestCase):
                     seed=None,
                     additional_info=None)
 
-        self.rh.add(config=self.config2, cost=1, time=1,
+        self.rh.add(config=self.config2, cost=0, time=1,
                     status=StatusType.SUCCESS, instance_id=1,
                     seed=None,
                     additional_info=None)
