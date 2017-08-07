@@ -446,7 +446,7 @@
         <span class="c1"># output estimated performance of incumbent</span>
         <span class="n">inc_runs</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
         <span class="n">inc_perf</span> <span class="o">=</span> <span class="n">aggregate_func</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">run_history</span><span class="p">,</span> <span class="n">inc_runs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Updated estimated error of incumbent on </span><span class="si">%d</span><span class="s2"> runs: </span><span class="si">%.4f</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Updated estimated cost of incumbent on </span><span class="si">%d</span><span class="s2"> runs: </span><span class="si">%.4f</span><span class="s2">&quot;</span>
                          <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inc_runs</span><span class="p">),</span> <span class="n">inc_perf</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">update_average_configs_per_intensify</span><span class="p">(</span>
