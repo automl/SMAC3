@@ -197,7 +197,7 @@ class Intensifier(object):
         # output estimated performance of incumbent
         inc_runs = run_history.get_runs_for_config(incumbent)
         inc_perf = aggregate_func(incumbent, run_history, inc_runs)
-        self.logger.info("Updated estimated error of incumbent on %d runs: %.4f"
+        self.logger.info("Updated estimated cost of incumbent on %d runs: %.4f"
                          % (len(inc_runs), inc_perf))
 
         self.stats.update_average_configs_per_intensify(
