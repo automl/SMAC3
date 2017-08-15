@@ -356,7 +356,8 @@ class RunHistory(object):
         self._n_id = len(self.config_ids)
 
         # important to use add method to use all data structure correctly
-        for k, v in all_data["data"]:
+        for k, v in all_data["data"]:     
+            #print(StatusType("StatusType.SUCCESS"))
             self.add(config=self.ids_config[int(k[0])],
                      cost=float(v[0]),
                      time=float(v[1]),

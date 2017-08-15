@@ -35,6 +35,7 @@ class SMACCLI(object):
         self.logger.info("SMAC call: %s" % (" ".join(sys.argv)))
 
         cmd_reader = CMDReader()
+        
         args_, misc_args = cmd_reader.read_cmd()
 
         root_logger = logging.getLogger()
@@ -76,13 +77,20 @@ class SMACCLI(object):
                 trajectory = TrajLogger.read_traj_aclib_format(
                     fn=traj_fn, cs=scen.cs)
                 initial_configs.append(trajectory[-1]["incumbent"])
+        
+        support_constraints = False
+        
+        if args_.support_constraints:
+            self.logger.debug("SMAC supports constraints.")
+            support_constraints = True
+            
 
         if args_.mode == "SMAC":
             optimizer = SMAC(
                 scenario=scen,
                 rng=np.random.RandomState(args_.seed),
                 runhistory=rh,
-                initial_configurations=initial_configs)
+                initial_configurations=initial_configs, support_constraints=support_constraints)
         elif args_.mode == "ROAR":
             optimizer = ROAR(
                 scenario=scen,

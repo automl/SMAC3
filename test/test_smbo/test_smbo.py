@@ -27,6 +27,7 @@ from smac.facade.smac_facade import SMAC
 from smac.optimizer.objective import average_cost
 from smac.initial_design.single_config_initial_design import SingleConfigInitialDesign
 from smac.intensification.intensification import Intensifier
+from smac.tae.execute_ta_run import StatusType
 
 if sys.version_info[0] == 2:
     import mock
@@ -112,6 +113,26 @@ class TestSMBO(unittest.TestCase):
         Y = self.branin(X)
         x = next(smbo.choose_next(X, Y)).get_array()
         assert x.shape == (2,)
+        
+    def test_choose_next_with_crash_model(self):
+        seed = 42
+        smbo = SMAC(self.scenario, rng=seed, support_constraints=True).solver
+        smbo.runhistory = RunHistory(aggregate_func=average_cost)
+        configurations =  self.scenario.cs.sample_configuration(size=6)
+        smbo.incumbent = configurations[0] 
+        smbo.runhistory.add(smbo.incumbent, 10, 10, 1)
+        
+        X = np.array([configuration.get_array() for configuration in configurations])
+       
+        Y_constraints = np.array([[StatusType.CONSTRAINT_VIOLATED.value],[StatusType.CONSTRAINT_VIOLATED.value],[StatusType.SUCCESS.value],
+                                   [StatusType.CONSTRAINT_VIOLATED.value],[StatusType.SUCCESS.value],[StatusType.CONSTRAINT_VIOLATED.value]])
+        Y = self.branin(X)
+        challengers = smbo.choose_next(X=X, Y=Y, X_constraints=X, 
+                    Y_constraints=Y_constraints, incumbent_value=0)
+        for challenger in challengers:
+            assert challenger.get_array().shape == (2,)
+            #assert a.shape == (2,)
+            #print(a)
         
     def test_choose_next_w_empty_rh(self):
         seed = 42

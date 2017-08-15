@@ -8,14 +8,80 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformFloatHyperparameter, UniformIntegerHyperparameter, Constant, \
     OrdinalHyperparameter
 
-from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.epm.rf_with_instances import RandomForestWithInstances, RandomForestClassifierWithInstances
+from smac.epm.rf_with_instances import RandomForestClassifierWithInstances
 import smac
 from smac.utils.util_funcs import get_types
+
 
 if sys.version_info[0] == 2:
     import mock
 else:
     from unittest import mock
+
+
+class TestRFClassifierWithInstances(unittest.TestCase):
+    def test_predict_marginalized_over_instances(self):
+        # 10 instances
+        rs = np.random.RandomState(1)
+        X = rs.rand(20, 10)
+        F = rs.rand(10, 5)
+
+        Y = rs.random_integers(low=0,high=1, size=(len(X) * len(F), 1))
+        X_ = rs.rand(len(X) * len(F), 15)
+
+        model = RandomForestClassifierWithInstances(instance_features=F)
+        model.train(X_, Y)
+        products_classprob_over_instances = model.predict_marginalized_over_instances(X)
+
+        # check that the probabilities are between 0 and 1
+        for prob in np.nditer(products_classprob_over_instances):
+            self.assertLessEqual(prob, 1)
+            self.assertGreaterEqual(prob, 0)
+        # check the shape
+        self.assertEqual(products_classprob_over_instances.shape, (20, 2))
+        # 1 or no instance
+        # We train and predict on the same set
+        X = np.array([
+            [0., 0., 0.],
+            [0., 0., 1.],
+            [0., 1., 0.],
+            [0., 1., 1.],
+            [1., 0., 0.],
+            [1., 0., 1.],
+            [1., 1., 0.],
+            [1., 1., 1.]], dtype=np.float64)
+        Y = np.array([
+            [0],
+            [0],
+            [1],
+            [0],
+            [1],
+            [0],
+            [1],
+            [1]], dtype=np.float64)
+        F = np.array([[42, 43, 44]])
+        X_ = np.array([
+            np.hstack(([0., 0., 0.], F[0])),
+            np.hstack(([0., 0., 1.], F[0])),
+            np.hstack(([0., 1., 0.], F[0])),
+            np.hstack(([0., 1., 1.], F[0])),
+          np.hstack(([1., 0., 0.], F[0])),
+          np.hstack(([1., 0., 1.], F[0])),
+          np.hstack(([1., 1., 0.], F[0])),
+          np.hstack(([1., 1., 1.], F[0]))], dtype=np.float64)
+        model = RandomForestClassifierWithInstances(instance_features=F)
+        model.train(X_, Y)
+        products_classprob_over_one_instance = model.predict_marginalized_over_instances(X)
+        model = RandomForestClassifierWithInstances(instance_features=None)
+        class_labels_over_one_instance = np.around(products_classprob_over_one_instance)
+        
+        np.testing.assert_equal(class_labels_over_one_instance[:,1], Y[:,0])
+
+        model.train(X, Y)
+        products_classprob_without_instances = model.predict_marginalized_over_instances(X)
+        class_labels_without_instances = np.around(products_classprob_without_instances)
+        np.testing.assert_equal(class_labels_over_one_instance, class_labels_without_instances)
 
 
 class TestRFWithInstances(unittest.TestCase):
@@ -35,6 +101,7 @@ class TestRFWithInstances(unittest.TestCase):
         self.assertRaisesRegexp(ValueError, "Rows in X should have 10 entries "
                                             "but have 5!",
                                 model.predict, X)
+
 
     def test_predict(self):
         rs = np.random.RandomState(1)

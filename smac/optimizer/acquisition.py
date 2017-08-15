@@ -96,7 +96,7 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
             Acquisition function values wrt X
         """
         raise NotImplementedError()
-
+    
 
 class EI(AbstractAcquisitionFunction):
 
@@ -155,7 +155,9 @@ class EI(AbstractAcquisitionFunction):
                              'about the current best value.')
 
         z = (self.eta - m - self.par) / s
+
         f = (self.eta - m - self.par) * norm.cdf(z) + s * norm.pdf(z)
+
         if np.any(s == 0.0):
             # if std is zero, we have observed x on all instances
             # using a RF, std should be never exactly 0.0
@@ -168,6 +170,45 @@ class EI(AbstractAcquisitionFunction):
                 "sample.")
 
         return f
+    
+class EI_WITH_CONSTRAINTS(EI):
+    def __init__(self, model: AbstractEPM, constraint_model: AbstractEPM, par: float=0.0, **kwargs):
+        super().__init__(model=model, par=par,**kwargs)
+        #self.ei = EI(model=constraint_model, par=par, **kwargs)
+        #self.ei_constraints = EI(model=constraint_model, par=par, **kwargs)
+        self.constraint_model = constraint_model
+    
+    def _compute(self, X: np.ndarray, **kwargs):
+        """Computes the EIPS value.
+ 
+        Parameters
+        ----------
+        X: np.ndarray(N, D), The input point where the acquisition function
+            should be evaluate. The dimensionality of X is (N, D), with N as
+            the number of points to evaluate at and D is the number of
+            dimensions of one X.
+ 
+        Returns
+        -------
+        np.ndarray(N,1)
+            Expected Improvement per Second of X
+        """
+        if len(X.shape) == 1:
+            X = X[:, np.newaxis]
+        ei_values = super()._compute(X=X, **kwargs)
+        #ei_values = self.ei._compute(X=X, **kwargs)
+    
+        #ei_values_constraints = self.ei_constraints._compute(X=X, **kwargs)
+        print("ei_values: " , ei_values)
+        class_probabilities = self.constraint_model.predict_marginalized_over_instances(X)
+        # since the StatusType.SUCCESS has the lowest value, namely 1, the success probability is always the first entry
+        # in the class_probabilities array.
+        ei_values_with_crashes = class_probabilities[:,0][:,np.newaxis] * ei_values
+        print("class_probabilites: " , class_probabilities)
+
+        #return ei_values_with_crashes
+        return ei_values_with_crashes
+
 
 
 class EIPS(EI):
@@ -237,6 +278,7 @@ class EIPS(EI):
         if (f < 0).any():
             raise ValueError("Expected Improvement per Second is smaller than "
                              "0 for at least one sample.")
+
 
         return f.reshape((-1, 1))
 

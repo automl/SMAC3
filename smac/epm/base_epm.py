@@ -59,7 +59,7 @@ class AbstractEPM(object):
         """
         self.instance_features = instance_features
         self.pca_components = pca_components
-        if instance_features is not None:
+        if instance_features is not None: 
             self.n_feats = instance_features.shape[1]
         else:
             self.n_feats = 0
@@ -90,8 +90,8 @@ class AbstractEPM(object):
         -------
         self : AbstractEPM
         """
-
         self.n_params = X.shape[1] - self.n_feats
+
 
         # reduce dimensionality of features of larger than PCA_DIM
         if self.pca and X.shape[0] > 1:
@@ -210,9 +210,11 @@ class AbstractEPM(object):
 
         mean = np.zeros(X.shape[0])
         var = np.zeros(X.shape[0])
+      
         for i, x in enumerate(X):
             X_ = np.hstack(
                 (np.tile(x, (n_instances, 1)), self.instance_features))
+
             means, vars = self.predict(X_)
             # use only mean of variance and not the variance of the mean here
             # since we don't want to reason about the instance hardness distribution

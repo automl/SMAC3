@@ -12,7 +12,7 @@ from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, \
-    RunHistory2EPM4LogCost, RunHistory2EPM4Cost
+    RunHistory2EPM4LogCost, RunHistory2EPM4Cost, RunHistory2EPM4Constraints
 from smac.initial_design.initial_design import InitialDesign
 from smac.initial_design.default_configuration_design import \
     DefaultConfiguration
@@ -22,7 +22,7 @@ from smac.initial_design.multi_config_initial_design import \
 from smac.intensification.intensification import Intensifier
 from smac.optimizer.smbo import SMBO
 from smac.optimizer.objective import average_cost
-from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
+from smac.optimizer.acquisition import EI, LogEI, EI_WITH_CONSTRAINTS, AbstractAcquisitionFunction
 from smac.optimizer.local_search import LocalSearch
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
@@ -31,6 +31,9 @@ from smac.utils.util_funcs import get_types
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.constants import MAXINT
 from smac.configspace import Configuration
+from pexpect.screen import constrain
+from smac.epm.rf_with_instances import RandomForestClassifierWithInstances
+from dask.array import learn
 
 
 __author__ = "Marius Lindauer"
@@ -65,7 +68,10 @@ class SMAC(object):
                  initial_design: InitialDesign=None,
                  initial_configurations: typing.List[Configuration]=None,
                  stats: Stats=None,
-                 rng: np.random.RandomState=None):
+                 rng: np.random.RandomState=None,
+                 constraint_model: AbstractEPM=None,
+                 support_constraints: bool=False, 
+                 runhistory2epm_constraints: AbstractRunHistory2EPM=None):
         """Constructor
 
         Parameters
@@ -90,6 +96,9 @@ class SMAC(object):
         model : AbstractEPM
             Model that implements train() and predict(). Will use a
             :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` if not set.
+        constraint_model : AbstractEPM
+            Model that implements train() and predict(). Will use a
+            :class:`~smac.epm.rf_with_instances.RandomForestClassifierWithInstances` if not set.
         runhistory2epm : ~smac.runhistory.runhistory2epm.RunHistory2EMP
             Object that implements the AbstractRunHistory2EPM. If None,
             will use :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4Cost`
@@ -105,6 +114,11 @@ class SMAC(object):
             optional stats object
         rng : np.random.RandomState
             Random number generator
+        support_constraints : bool
+            Defines if a constraint model is learned or not.
+        runhistory2epm_constraints : ~smac.runhistory.runhistory2epm.RunHistory2EMP
+            Object that implements the AbstractRunHistory2EPM. If None,
+            will use :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4Constraints`
         """
 
         self.logger = logging.getLogger(
@@ -143,10 +157,16 @@ class SMAC(object):
                                               instance_features=scenario.feature_array,
                                               seed=rng.randint(MAXINT),
                                               pca_components=scenario.PCA_DIM)
+        
+        if constraint_model is None and support_constraints:
+            constraint_model = RandomForestClassifierWithInstances(instance_features=scenario.feature_array)                                         
+
         # initial acquisition function
         if acquisition_function is None:
             if scenario.run_obj == "runtime":
                 acquisition_function = LogEI(model=model)
+            elif support_constraints:
+                acquisition_function = EI_WITH_CONSTRAINTS(model=model, constraint_model=constraint_model)
             else:
                 acquisition_function = EI(model=model)
         # inject model if necessary
@@ -267,6 +287,12 @@ class SMAC(object):
             initial_design.traj_logger = traj_logger
 
         # initial conversion of runhistory into EPM data
+        if runhistory2epm_constraints is None and support_constraints:
+            num_params = len(scenario.cs.get_hyperparameters())
+            runhistory2epm_constraints = RunHistory2EPM4Constraints(scenario=scenario, num_params=num_params,
+                                                                            impute_censored_data=False, 
+                                                                            impute_state=None)
+            
         if runhistory2epm is None:
 
             num_params = len(scenario.cs.get_hyperparameters())
@@ -299,6 +325,7 @@ class SMAC(object):
                                                          StatusType.SUCCESS, 
                                                          StatusType.CRASHED],
                                                      impute_censored_data=False, impute_state=None)
+                    
 
             else:
                 raise ValueError('Unknown run objective: %s. Should be either '
@@ -319,7 +346,8 @@ class SMAC(object):
                            model=model,
                            acq_optimizer=local_search,
                            acquisition_func=acquisition_function,
-                           rng=rng)
+                           rng=rng, constraint_model=constraint_model,
+                           runhistory2epm_constraints=runhistory2epm_constraints)
 
     @staticmethod
     def _get_rng(rng):

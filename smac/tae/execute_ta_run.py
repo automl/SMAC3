@@ -24,6 +24,7 @@ class StatusType(Enum):
     ABORT = 4
     MEMOUT = 5
     CAPPED = 6
+    CONSTRAINT_VIOLATED = 7
 
     def enum_hook(obj):
         """Hook function passed to json-deserializer as "object_hook".

@@ -5,6 +5,7 @@ from pyrfr import regression
 
 from smac.configspace import CategoricalHyperparameter
 from smac.epm.base_epm import AbstractEPM
+from sklearn.ensemble import RandomForestClassifier
 
 
 __author__ = "Aaron Klein"
@@ -13,6 +14,54 @@ __license__ = "3-clause BSD"
 __maintainer__ = "Aaron Klein"
 __email__ = "kleinaa@cs.uni-freiburg.de"
 __version__ = "0.0.1"
+
+
+class RandomForestClassifierWithInstances(AbstractEPM):
+    
+    def __init__(self,**kwargs):
+        super().__init__(**kwargs)
+        self.rf = RandomForestClassifier(n_estimators=25)
+        
+    def _train(self, X: np.ndarray, Y: np.ndarray, **kwargs):
+        self.rf.fit(X, Y.ravel())
+#         
+    def _predict(self, X: np.ndarray):
+        return self.rf.predict_proba(X)
+    
+    
+    def predict_marginalized_over_instances(self, X: np.ndarray):
+        """Predicts for each configuration of X the product of the class probabilities over all instances.
+        Parameters
+        ----------
+        X : np.ndarray
+            [n_samples, n_features (config)]
+
+        Returns
+        -------
+        products_of_class_probabilities : [n_samples, n_classes]
+            List of products of predicted class probabilities.
+        """
+        if self.instance_features is None or \
+                len(self.instance_features) == 0:
+            return self.predict(X)
+        else:
+            n_instances = len(self.instance_features)
+
+        if len(X.shape) != 2:
+            raise ValueError(
+                'Expected 2d array, got %dd array!' % len(X.shape))
+        
+        products_of_class_probabilities = np.zeros((X.shape[0],self.rf.n_classes_))
+      
+        for i, x in enumerate(X):
+            X_ = np.hstack(
+                (np.tile(x, (n_instances, 1)), self.instance_features))
+            classprob_of_x_for_all_instances = self.predict(X_)
+            # use only mean of variance and not the variance of the mean here
+            # since we don't want to reason about the instance hardness distribution
+            products_of_class_probabilities[i,:] = np.prod(a=classprob_of_x_for_all_instances, axis=0)
+        
+        return products_of_class_probabilities
 
 
 class RandomForestWithInstances(AbstractEPM):

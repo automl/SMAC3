@@ -15,9 +15,16 @@ The code below will be called by SMAC with parameters as cmd-line arguments and
 prints the results so SMAC can interpret them again.
 """
 
+
 if __name__ == '__main__':
     seed = sys.argv[5]
     x = float(sys.argv[7])
     y = float(sys.argv[9])
+    crash = float(sys.argv[11])
     tmp = branin((x, y))
-    print('Result for SMAC: SUCCESS, -1, -1, %f, %s' % (tmp, seed))
+    if crash == 0:
+        print('Result for SMAC: SUCCESS, -1, -1, %f, %s' % (tmp, seed))
+        create_crash = True
+    else:
+        print('Result for SMAC: CRASHED, -1, -1, %f, %s' % (tmp, seed))
+        create_crash = False

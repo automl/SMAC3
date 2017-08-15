@@ -76,6 +76,8 @@ class ScenarioTest(unittest.TestCase):
         with self.assertRaises(TypeError):
             s = Scenario(['a', 'b'])
 
+    
+
     def test_string_scenario(self):
         scenario = Scenario('test/test_files/scenario_test/scenario.txt')
 

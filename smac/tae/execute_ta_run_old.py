@@ -104,6 +104,8 @@ class ExecuteTARunOld(ExecuteTARun):
             status = StatusType.ABORT
         elif status in ["MEMOUT"]:
             status = StatusType.MEMOUT
+        elif status in ["CONSTRAINT_VIOLATED"]:
+            status = StatusType.CONSTRAINT_VIOLATED
 
         if status in [StatusType.CRASHED, StatusType.ABORT]:
             self.logger.warn(

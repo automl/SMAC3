@@ -108,6 +108,7 @@ class Scenario(object):
         for arg_name, arg_value in parsed_arguments.items():
             setattr(self, arg_name, arg_value)
 
+
         self._transform_arguments()
 
         if self.output_dir:

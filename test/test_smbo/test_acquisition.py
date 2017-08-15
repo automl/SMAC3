@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from smac.optimizer.acquisition import EI, LogEI
+from smac.optimizer.acquisition import EI, LogEI, EI_WITH_CONSTRAINTS
 
 
 class MockModel(object):
@@ -14,6 +14,74 @@ class MockModel(object):
                         self.num_targets).reshape((-1, 1)), \
                np.array([np.mean(X, axis=1).reshape((1, -1))] *
                         self.num_targets).reshape((-1, 1))
+                        
+class MockConstraintModel(object):
+
+    def predict_marginalized_over_instances(self, X):
+        rs = np.random.RandomState(1)
+        self.current_probs = rs.rand(X.shape[0], 2)
+        return self.current_probs
+        
+class TestEI_WITH_CONSTRAINTS(unittest.TestCase):
+    def setUp(self):
+        self.model = MockModel()
+        self.constraint_model = MockConstraintModel()
+        self.ei_with_constraints = EI_WITH_CONSTRAINTS(model=self.model, constraint_model=self.constraint_model)
+        self.ei = EI(self.model)
+    
+    def test_1xD(self):
+        X = np.array([[1.0, 1.0, 1.0]])
+        self.ei.update(model=self.model, eta=1.0)
+        acq_ei = self.ei(X)
+        
+        self.ei_with_constraints.update(model=self.model, constraint_model=self.constraint_model, eta=1.0)
+        acq_ei_with_constraints = self.ei_with_constraints(X)
+            
+        self.assertEqual(acq_ei_with_constraints.shape, (1, 1))
+        self.assertAlmostEqual(acq_ei_with_constraints[0][0], acq_ei[0][0] * self.constraint_model.current_probs[0][0])
+        
+    def test_NxD(self):
+        self.ei.update(model=self.model, eta=1.0)
+        X = np.array([[0.0, 0.0, 0.0],
+                      [0.1, 0.1, 0.1],
+                      [1.0, 1.0, 1.0]])
+        acq_ei = self.ei(X)
+        self.ei_with_constraints.update(model=self.model, constraint_model=self.constraint_model, eta=1.0)
+        acq_ei_with_constraints = self.ei_with_constraints(X)
+        self.assertEqual(acq_ei_with_constraints.shape, (3, 1))
+        self.assertAlmostEqual(acq_ei_with_constraints[0][0], 0.0)
+        self.assertAlmostEqual(acq_ei_with_constraints[1][0], acq_ei[1][0] * self.constraint_model.current_probs[1][0])
+        self.assertAlmostEqual(acq_ei_with_constraints[2][0],  acq_ei[2][0] * self.constraint_model.current_probs[2][0])
+        
+    def test_1x1(self):
+        self.ei.update(model=self.model, eta=1.0)
+        X = np.array([[1.0]])
+        acq_ei = self.ei(X)
+        self.ei_with_constraints.update(model=self.model, constraint_model=self.constraint_model, eta=1.0)
+        acq_ei_with_constraints = self.ei_with_constraints(X)
+        self.assertEqual(acq_ei_with_constraints.shape, (1, 1))
+        self.assertAlmostEqual(acq_ei_with_constraints[0][0], acq_ei[0][0]* self.constraint_model.current_probs[0][0])
+
+    def test_Nx1(self):
+        self.ei.update(model=self.model, eta=1.0)
+        X = np.array([[0.0001],
+                      [1.0],
+                      [2.0]])
+        acq_ei = self.ei(X)
+        self.ei_with_constraints.update(model=self.model, constraint_model=self.constraint_model, eta=1.0)
+        acq_ei_with_constraints = self.ei_with_constraints(X)
+        self.assertEqual(acq_ei_with_constraints.shape, (3, 1))
+        self.assertAlmostEqual(acq_ei_with_constraints[0][0], acq_ei[0][0]* self.constraint_model.current_probs[0][0])
+        self.assertAlmostEqual(acq_ei_with_constraints[1][0], acq_ei[1][0]* self.constraint_model.current_probs[1][0])
+        self.assertAlmostEqual(acq_ei_with_constraints[2][0], acq_ei[2][0]* self.constraint_model.current_probs[2][0])
+
+    def test_zero_variance(self):
+        self.ei.update(model=self.model, eta=1.0)
+        X = np.array([[0.0]])
+        acq_ei = self.ei(X)
+        self.ei_with_constraints.update(model=self.model, constraint_model=self.constraint_model, eta=1.0)
+        acq_ei_with_constraints = self.ei_with_constraints(X)
+        self.assertAlmostEqual(acq_ei_with_constraints[0][0], 0.0)
 
 
 class TestEI(unittest.TestCase):
