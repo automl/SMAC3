@@ -23,15 +23,18 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
     def __str__(self):
         return type(self).__name__ + " (" + self.long_name + ")"
 
-    def __init__(self, model: AbstractEPM, **kwargs):
+    def __init__(self, model: AbstractEPM, constraint_model: AbstractEPM=None, **kwargs):
         """Constructor
 
         Parameters
         ----------
         model : AbstractEPM
             Models the objective function.
+        constraint_model : AbstractEPM
+            Models the constraint function.
         """
         self.model = model
+        self.constraint_model = constraint_model
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 

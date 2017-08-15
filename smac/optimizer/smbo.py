@@ -61,7 +61,9 @@ class SMBO(object):
                  model: RandomForestWithInstances,
                  acq_optimizer: LocalSearch,
                  acquisition_func: AbstractAcquisitionFunction,
-                 rng: np.random.RandomState):
+                 rng: np.random.RandomState, 
+                 runhistory2epm_constraints: AbstractRunHistory2EPM=None,
+                 constraint_model: RandomForestWithInstances=None):
         """Constructor
 
         Parameters
@@ -77,6 +79,9 @@ class SMBO(object):
         runhistory2epm : AbstractRunHistory2EPM
             Object that implements the AbstractRunHistory2EPM to convert runhistory
             data into EPM data
+        runhistory2epm_constraints: AbstractRunHistory2EPM
+            Object that implements the AbstractRunHistory2EPM to convert runhistory
+            data into EPM constraint data
         intensifier: Intensifier
             intensification of new challengers against incumbent configuration
             (probably with some kind of racing on the instances)
@@ -107,11 +112,13 @@ class SMBO(object):
         self.stats = stats
         self.initial_design = initial_design
         self.runhistory = runhistory
+        self.rh2EPM_constraints = runhistory2epm_constraints
         self.rh2EPM = runhistory2epm
         self.intensifier = intensifier
         self.aggregate_func = aggregate_func
         self.num_run = num_run
         self.model = model
+        self.constraint_model = constraint_model
         self.acq_optimizer = acq_optimizer
         self.acquisition_func = acquisition_func
         self.rng = rng
@@ -141,11 +148,18 @@ class SMBO(object):
                            logger=self.logger)
 
             start_time = time.time()
+
             X, Y = self.rh2EPM.transform(self.runhistory)
+            
+            X_constraints, Y_constraints = None,None
+            
+            if (self.rh2EPM_constraints is not None):
+                X_constraints, Y_constraints = self.rh2EPM_constraints.transform(self.runhistory)
+           
 
             self.logger.debug("Search for next configuration")
             # get all found configurations sorted according to acq
-            challengers = self.choose_next(X, Y)
+            challengers = self.choose_next(X=X, Y=Y, X_constraints=X_constraints, Y_constraints=Y_constraints)
 
             time_spent = time.time() - start_time
             time_left = self._get_timebound_for_intensification(time_spent)
@@ -177,7 +191,7 @@ class SMBO(object):
 
         return self.incumbent
 
-    def choose_next(self, X: np.ndarray, Y: np.ndarray,
+    def choose_next(self, X: np.ndarray, Y: np.ndarray, X_constraints: np.ndarray=None, Y_constraints: np.ndarray=None, 
                     num_configurations_by_random_search_sorted: int=1000,
                     num_configurations_by_local_search: int=None,
                     incumbent_value: float=None):
@@ -190,6 +204,11 @@ class SMBO(object):
             instance features.
         Y : (N, O) numpy array
             The function values for each configuration instance pair.
+        X_constraints : (N, D) numpy array
+            Each row contains a configuration and one set of
+            instance features.
+        Y_constraints : (N, O) numpy array
+            The constraint values for each configuration instance pair.
         num_configurations_by_random_search_sorted: int
             Number of configurations optimized by random search
         num_configurations_by_local_search: int
@@ -214,6 +233,10 @@ class SMBO(object):
             return [x[1] for x in self._get_next_by_random_search(num_points=1)]
 
         self.model.train(X, Y)
+        if (X_constraints is not None and Y_constraints is not None):
+            print(X_constraints)
+            print(Y_constraints)
+            self.constraint_model.train(X_constraints, Y_constraints)
 
         if incumbent_value is None:
             if self.runhistory.empty():
@@ -221,7 +244,7 @@ class SMBO(object):
                                  "the incumbent is unknown.")
             incumbent_value = self.runhistory.get_cost(self.incumbent)
 
-        self.acquisition_func.update(model=self.model, eta=incumbent_value)
+        self.acquisition_func.update(model=self.model, constraint_model=self.constraint_model, eta=incumbent_value)
 
         # Get configurations sorted by EI
         next_configs_by_random_search_sorted = \

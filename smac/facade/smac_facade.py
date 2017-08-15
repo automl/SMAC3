@@ -31,6 +31,7 @@ from smac.utils.util_funcs import get_types
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.constants import MAXINT
 from smac.configspace import Configuration
+from pexpect.screen import constrain
 
 
 __author__ = "Marius Lindauer"
@@ -65,7 +66,9 @@ class SMAC(object):
                  initial_design: InitialDesign=None,
                  initial_configurations: typing.List[Configuration]=None,
                  stats: Stats=None,
-                 rng: np.random.RandomState=None):
+                 rng: np.random.RandomState=None,
+                 constraint_model: AbstractEPM=None,
+                 support_constraints: bool=False):
         """Constructor
 
         Parameters
@@ -90,6 +93,9 @@ class SMAC(object):
         model : AbstractEPM
             Model that implements train() and predict(). Will use a
             :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` if not set.
+        constraint_model : AbstractEPM
+            Model that implements train() and predict(). Will use a
+            :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` if not set.
         runhistory2epm : ~smac.runhistory.runhistory2epm.RunHistory2EMP
             Object that implements the AbstractRunHistory2EPM. If None,
             will use :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4Cost`
@@ -105,6 +111,8 @@ class SMAC(object):
             optional stats object
         rng : np.random.RandomState
             Random number generator
+        supportConstraints : bool
+            Defines if constraints are modeled by a RandomForestWithInstances.
         """
 
         self.logger = logging.getLogger(
@@ -143,6 +151,13 @@ class SMAC(object):
                                               instance_features=scenario.feature_array,
                                               seed=rng.randint(MAXINT),
                                               pca_components=scenario.PCA_DIM)
+        
+        if constraint_model is None and support_constraints:
+            constraint_model = RandomForestWithInstances(types=types, bounds=bounds,
+                                              instance_features=scenario.feature_array,
+                                              seed=rng.randint(MAXINT),
+                                              pca_components=scenario.PCA_DIM)
+
         # initial acquisition function
         if acquisition_function is None:
             if scenario.run_obj == "runtime":
@@ -319,7 +334,7 @@ class SMAC(object):
                            model=model,
                            acq_optimizer=local_search,
                            acquisition_func=acquisition_function,
-                           rng=rng)
+                           rng=rng, constraint_model=constraint_model)
 
     @staticmethod
     def _get_rng(rng):
