@@ -61,26 +61,24 @@ def read(run_history: RunHistory,
                  'runs.' % difference)
 
 
-def write(run_history: RunHistory, output_directory: str, num_run: int):
+def write(run_history: RunHistory, output_directory: str):
     """Write the runhistory to the output directory.
 
     Overwrites previously outputted runhistories.
 
     Parameters
     ----------
-    run_history : smac.runhistory.RunHistory
+    run_history : ~smac.runhistory.runhistory.RunHistory
         RunHistory object to be saved.
 
     output_directory : str
-
-    run_run : int
-        ID of the current SMAC run.
     """
+
     output_filename = os.path.join(output_directory, RUNHISTORY_FILEPATTERN)
 
     with tempfile.NamedTemporaryFile('wb', dir=output_directory,
                                      delete=False) as fh:
         temporary_filename = fh.name
 
-    run_history.save_json(temporary_filename)
+    run_history.save_json(temporary_filename, save_external=False)
     os.rename(temporary_filename, output_filename)

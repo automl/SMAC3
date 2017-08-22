@@ -1,4 +1,4 @@
-from smac.runhistory.runhistory import RunHistory
+from smac.runhistory.runhistory import RunHistory, DataOrigin
 from smac.scenario.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.optimizer.objective import average_cost
@@ -87,7 +87,7 @@ def merge_foreign_data(scenario: Scenario,
 
     # extend runhistory
     for rh in in_runhistory_list:
-        runhistory.update(rh, external_data=True)
+        runhistory.update(rh, origin=DataOrigin.EXTERNAL_DIFFERENT_INSTANCES)
 
     for date in runhistory.data:
         if scenario.feature_dict.get(date.instance_id) is None:
