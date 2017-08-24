@@ -24,6 +24,16 @@ from smac.utils.sklearn_wrapper import ModelBasedOptimization
 
 class SklearnWrapperTest(unittest.TestCase):
 
+    def setUp(self):
+        self.cs_tree = ConfigurationSpace()
+        self.cs_tree.add_hyperparameter(UniformIntegerHyperparameter('max_leaf_nodes', 4, 32, default=4))
+        self.cs_tree.add_hyperparameter(UniformIntegerHyperparameter('min_samples_leaf', 1, 128, default=1))
+        self.cs_tree.add_hyperparameter(UniformIntegerHyperparameter('max_depth', 1, 32, default=1))
+        self.cs_tree.add_hyperparameter(CategoricalHyperparameter('criterion', ['gini', 'entropy'], default='gini'))
+
+        self.cs_dummy = ConfigurationSpace()
+        self.cs_dummy.add_hyperparameter(UniformIntegerHyperparameter("random_state", 1, 50, default=1))
+
     @staticmethod
     def _config_space_to_param_grid(config_space):
         """ Converts config space into the scikit learn param grid format. Could be useful utility function, but
@@ -75,6 +85,7 @@ class SklearnWrapperTest(unittest.TestCase):
         smac_incumbent = smac.optimize()
         smac_inc_value = np.mean(np.array(smac.get_tae_runner().run(smac_incumbent, 1)[3]['test_scores']))
 
+        # === COMPARE INCUMBENTS ===
         # note that multiple configurations could have led to the same
         # SMAC always takes the most recently found (in case of 1 instance problems)
         # so we find all the maximized indices in mbo results
@@ -94,15 +105,19 @@ class SklearnWrapperTest(unittest.TestCase):
             foundEqual = True
         self.assertTrue(foundEqual)
 
+        # === COMPARE TRAJECTORIES ===
+        for index, runkey in enumerate(smac.get_runhistory().data.keys()):
+            smac_config = smac.get_runhistory().ids_config[runkey[0]].get_dictionary()
+            wrapper_config = mbo_wrapper.cv_results_['params'][index]
+            self.assertEqual(smac_config, wrapper_config)
+
     def test_mbo_wrapper_dummy(self):
         iris = datasets.load_iris()
         X = iris.data
         y = iris.target
         classifier = DummyClassifier()
-        cs = ConfigurationSpace()
-        cs.add_hyperparameter(UniformIntegerHyperparameter("random_state", 1, 50, default=1))
 
-        self._compare_with_smac(X, y, classifier, cs, random_seed=42, n_iter=5)
+        self._compare_with_smac(X, y, classifier, self.cs_dummy, random_seed=42, n_iter=5)
 
     def test_mbo_wrapper_decision_tree(self):
         iris = datasets.load_iris()
@@ -110,10 +125,18 @@ class SklearnWrapperTest(unittest.TestCase):
         y = iris.target
 
         classifier = DecisionTreeClassifier()
-        cs = ConfigurationSpace()
-        cs.add_hyperparameter(UniformIntegerHyperparameter('max_leaf_nodes', 4, 32, default=4))
-        cs.add_hyperparameter(UniformIntegerHyperparameter('min_samples_leaf', 1, 128, default=1))
-        cs.add_hyperparameter(UniformIntegerHyperparameter('max_depth', 1, 32, default=1))
-        cs.add_hyperparameter(CategoricalHyperparameter('criterion', ['gini', 'entropy'], default='gini'))
 
-        self._compare_with_smac(X, y, classifier, cs, random_seed=42, n_iter=5)
+        self._compare_with_smac(X, y, classifier, self.cs_tree, random_seed=42, n_iter=5)
+
+    def test_dummy_param_distributions_to_config_space(self):
+        param_dist = dict({'random_state': list(range(1, 50 + 1))})
+
+        self.assertEqual(ModelBasedOptimization._param_distributions_to_config_space(param_dist), self.cs_dummy)
+
+    def test_tree_param_distributions_to_config_space(self):
+        param_dist = dict({'max_leaf_nodes': list(range(4, 32 + 1)),
+                           'min_samples_leaf': list(range(1, 128 + 1)),
+                           'max_depth': list(range(1, 32 + 1)),
+                           'criterion': ['gini', 'entropy']})
+
+        self.assertEqual(ModelBasedOptimization._param_distributions_to_config_space(param_dist), self.cs_tree)
