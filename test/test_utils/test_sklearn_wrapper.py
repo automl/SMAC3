@@ -20,6 +20,7 @@ from smac.configspace import ConfigurationSpace
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_facade import SMAC
 from smac.utils.sklearn_wrapper import ModelBasedOptimization
+from sklearn.metrics.scorer import check_scoring
 
 
 class SklearnWrapperTest(unittest.TestCase):
@@ -127,6 +128,34 @@ class SklearnWrapperTest(unittest.TestCase):
         classifier = DecisionTreeClassifier()
 
         self._compare_with_smac(X, y, classifier, self.cs_tree, random_seed=42, n_iter=5)
+
+    def test_obj_function(self):
+        iris = datasets.load_iris()
+        X = iris.data
+        y = iris.target
+        cv = list(StratifiedKFold(3).split(X, y))
+        classifier = DecisionTreeClassifier()
+        random_state = 1
+        wrapper = ModelBasedOptimization(estimator=classifier,
+                                         param_distributions=self._config_space_to_param_grid(self.cs_tree),
+                                         n_iter=5,
+                                         random_state=random_state, verbose=3)
+        # spoof fit function
+        wrapper.scorer_ = check_scoring(wrapper.estimator, scoring=wrapper.scoring)
+
+        score, res_per_fold = wrapper._obj_function(configuration=self.cs_tree.sample_configuration(1),
+                                                    seed=random_state, instance=None, cv_iter=cv,
+                                                    base_estimator=classifier, X=X, y=y)
+
+        self.assertGreaterEqual(min(res_per_fold['score_time']), 0.0)
+        self.assertGreaterEqual(min(res_per_fold['test_scores']), 0.0)
+        self.assertGreaterEqual(min(res_per_fold['test_sample_counts']), 0.0)
+        self.assertGreaterEqual(min(res_per_fold['train_scores']), 0.0)
+        self.assertGreaterEqual(min(res_per_fold['fit_time']), 0.0)
+
+        self.assertLessEqual(max(res_per_fold['test_scores']), 1.0)
+        self.assertLessEqual(max(res_per_fold['test_sample_counts']), len(y))
+        self.assertLessEqual(max(res_per_fold['train_scores']), 1.0)
 
     def test_dummy_param_distributions_to_config_space(self):
         param_dist = dict({'random_state': list(range(1, 50 + 1))})
