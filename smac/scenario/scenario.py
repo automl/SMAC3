@@ -10,8 +10,10 @@ import copy
 import typing
 
 from smac.utils.io.input_reader import InputReader
-from smac.configspace import pcs, pcs_new
 from smac.utils.io.output_writer import OutputWriter
+from smac.utils.constants import MAXINT
+from smac.configspace import pcs, pcs_new
+
 
 __author__ = "Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -33,23 +35,26 @@ def _is_truthy(arg):
 
 class Scenario(object):
 
-    '''
-    main class of SMAC
-    '''
+    """
+    Scenario contains the configuration of the optimization process and
+    constructs a scenario object from a file or dictionary.
 
-    def __init__(self, scenario, cmd_args=None, run_id=1):
-        """Construct scenario object from file or dictionary.
+    All arguments set in the Scenario are set as attributes.
+
+    """
+
+    def __init__(self, scenario, cmd_args: dict=None, run_id: int=1):
+        """Constructor
 
         Parameters
         ----------
         scenario : str or dict
-            if str, it will be interpreted as to a path a scenario file
-            if dict, it will be directly to get all scenario related information
+            If str, it will be interpreted as to a path a scenario file
+            If dict, it will be directly to get all scenario related information
         cmd_args : dict
-            command line arguments that were not processed by argparse
+            Command line arguments that were not processed by argparse
         run_id: int
-            run ID will be used as suffix for output_dir
-
+            Run ID will be used as suffix for output_dir
         """
         self.logger = logging.getLogger(
             self.__module__ + '.' + self.__class__.__name__)
@@ -74,6 +79,10 @@ class Scenario(object):
         self._arguments = {}
         self._groups = defaultdict(set)
         self._add_arguments()
+
+        # Make cutoff mandatory if run_obj is runtime
+        if scenario['run_obj'] == 'runtime':
+            self._arguments['cutoff_time']['required'] = True
 
         # Parse arguments
         parsed_arguments = {}
@@ -100,19 +109,20 @@ class Scenario(object):
             setattr(self, arg_name, arg_value)
 
         self._transform_arguments()
-        
+
         if self.output_dir:
             self.output_dir += "_run%d" %(run_id)
 
         self.out_writer.write_scenario_file(self)
-        
+
         self.logger.debug("Scenario Options:")
         for arg_name, arg_value in parsed_arguments.items():
             if isinstance(arg_value,(int,str,float)):
                 self.logger.debug("%s = %s" %(arg_name,arg_value))
 
-    def add_argument(self, name, help, callback=None, default=None,
-                     dest=None, required=False, mutually_exclusive_group=None,
+    def add_argument(self, name: str, help: str, callback=None, default=None,
+                     dest: str=None, required: bool=False,
+                     mutually_exclusive_group: str=None,
                      choice=None):
         """Add argument to the scenario object.
 
@@ -138,6 +148,8 @@ class Scenario(object):
             given. Is used for example to ensure that either a configuration
             space object or a parameter file is passed to the scenario. Can not
             be used together with ``required``.
+        choice: list/set/tuple
+            List of possible string for this argument
         """
         if not isinstance(required, bool):
             raise TypeError("Argument 'required' must be of type 'bool'.")
@@ -157,8 +169,9 @@ class Scenario(object):
         if mutually_exclusive_group:
             self._groups[mutually_exclusive_group].add(name)
 
-    def _parse_argument(self, name, scenario, help, callback=None, default=None,
-                        dest=None, required=False, choice=None):
+    def _parse_argument(self, name: str, scenario: dict, help: str,
+                        callback=None, default=None,
+                        dest: str=None, required: bool=False, choice=None):
         """Search the scenario dict for a single allowed argument and parse it.
 
         Side effect: the argument is removed from the scenario dict if found.
@@ -225,54 +238,102 @@ class Scenario(object):
         return dest, value
 
     def _add_arguments(self):
+        """TODO"""
         # Add allowed arguments
-        self.add_argument(name='abort_on_first_run_crash', help=None,
-                          default='1', callback=_is_truthy)
-        self.add_argument(name='algo', help=None, dest='ta',
-                          callback=shlex.split)
-        self.add_argument(name='execdir', default='.', help=None)
-        self.add_argument(name='deterministic', default='0', help=None,
-                          callback=_is_truthy)
+        self.add_argument(name='abort_on_first_run_crash',
+                          help="If true, *SMAC* will abort if the first run of "
+                               "the target algorithm crashes.",
+                          default=True, callback=_is_truthy)
+        self.add_argument(name='always_race_default', default=False,
+                          help="Race new incumbents always against default "
+                               "configuration.",
+                          callback=_is_truthy, dest="always_race_default")
+        self.add_argument(name='algo', dest='ta', callback=shlex.split,
+                          help="Specifies the target algorithm call that *SMAC* "
+                               "will optimize. Interpreted as a bash-command.")
+        self.add_argument(name='execdir', default='.',
+                          help="Specifies the path to the execution-directory.")
+        self.add_argument(name='deterministic', default=False,
+                          help="If true, the optimization process will be "
+                               "repeatable.", callback=_is_truthy)
         self.add_argument(name='intensification_percentage', default=0.5,
-                          help=None, callback=float)
-        self.add_argument(name='paramfile', help=None, dest='pcs_fn',
-                          mutually_exclusive_group='cs')
-        self.add_argument(name='run_obj', help=None, default='runtime')
-        self.add_argument(name='overall_obj', help=None, default='par10')
-        self.add_argument(name='cutoff_time', help=None, default=None,
+                          help="The fraction of time to be used on "
+                               "intensification (versus choice of next "
+                                "Configurations).", callback=float)
+        self.add_argument(name='paramfile', help="Specifies the path to the "
+                                                 "PCS-file.",
+                          dest='pcs_fn', mutually_exclusive_group='cs')
+        self.add_argument(name='run_obj',
+                          help="Defines what metric to optimize. When "
+                               "optimizing runtime, *cutoff_time* is "
+                               "required as well.",
+                          required=True, choice=['runtime', 'quality'])
+        self.add_argument(name='overall_obj',
+                          help="PARX, where X is an integer defining the "
+                               "penalty imposed on timeouts (i.e. runtimes that "
+                               "exceed the *cutoff-time*).",
+                          default='par10')
+        self.add_argument(name='cost_for_crash', default=float(MAXINT),
+                          help="Defines the cost-value for crashed runs "
+                               "on scenarios with quality as run-obj.",
+                          callback=float)
+        self.add_argument(name='cutoff_time',
+                          help="Maximum runtime, after which the "
+                               "target algorithm is cancelled. **Required "
+                               "if *run_obj* is runtime.**", default=None,
                           dest='cutoff', callback=float)
-        self.add_argument(name='memory_limit', help=None)
-        self.add_argument(name='tuner-timeout', help=None, default=numpy.inf,
-                          dest='algo_runs_timelimit',
-                          callback=float)
-        self.add_argument(name='wallclock_limit', help=None, default=numpy.inf,
-                          callback=float)
-        self.add_argument(name='runcount_limit', help=None, default=numpy.inf,
-                          callback=float, dest="ta_run_limit")
-        self.add_argument(name='minR', help=None, default=1, callback=int,
-                          dest='minR')
-        self.add_argument(name='maxR', help=None, default=2000, callback=int,
-                          dest='maxR')
+        self.add_argument(name='memory_limit',
+                          help="Maximum available memory the target algorithm "
+                               "can occupy before being cancelled.")
+        self.add_argument(name='tuner-timeout',
+                          help="Maximum amount of CPU-time used for optimization.",
+                          default=numpy.inf,
+                          dest='algo_runs_timelimit', callback=float)
+        self.add_argument(name='wallclock_limit',
+                          help="Maximum amount of wallclock-time used for optimization.",
+                          default=numpy.inf, callback=float)
+        self.add_argument(name='always_race_default',
+                          help="Race new incumbents always against default configuration.",
+                          default=False,
+                          callback=_is_truthy, dest="always_race_default")
+        self.add_argument(name='runcount_limit',
+                          help="Maximum number of algorithm-calls during optimization.",
+                          default=numpy.inf, callback=float, dest="ta_run_limit")
+        self.add_argument(name='minR',
+                          help="Minimum number of calls per configuration.",
+                          default=1, callback=int, dest='minR')
+        self.add_argument(name='maxR',
+                          help="Maximum number of calls per configuration.",
+                          default=2000, callback=int, dest='maxR')
         self.add_argument(name='instance_file',
-                          help=None, dest='train_inst_fn')
-        self.add_argument(name='test_instance_file', help=None,
+                          help="Specifies the file with the training-instances.",
+                          dest='train_inst_fn')
+        self.add_argument(name='test_instance_file',
+                          help="Specifies the file with the test-instances.",
                           dest='test_inst_fn')
-        self.add_argument(name='feature_file', help=None, dest='feature_fn')
-        self.add_argument(name='output_dir', help=None,
+        self.add_argument(name='feature_file',
+                          help="Specifies the file with the instance-features.",
+                          dest='feature_fn')
+        self.add_argument(name='output_dir',
+                          help="Specifies the output-directory for all emerging "
+                               "files, such as logging and results.",
                           default="smac3-output_%s" % (
                               datetime.datetime.fromtimestamp(
                                   time.time()).strftime(
                                   '%Y-%m-%d_%H:%M:%S_(%f)')))
-        self.add_argument(name='input_psmac_dirs', help=None,
-                          default=None)
-        self.add_argument(name='shared_model', help=None, default='0',
-                          callback=_is_truthy)
+        self.add_argument(name='input_psmac_dirs', default=None,
+                          help="For parallel SMAC, multiple output-directories "
+                               "are used.")
+        self.add_argument(name='shared_model',
+                          help="Whether to run SMAC in parallel mode.",
+                          default=False, callback=_is_truthy)
         self.add_argument(name='instances', default=[[None]], help=None,
                           dest='train_insts')
         self.add_argument(name='test_instances', default=[[None]], help=None,
                           dest='test_insts')
         self.add_argument(name='initial_incumbent', default="DEFAULT",
-                          help=None, dest='initial_incumbent',
+                          help="DEFAULT is the default from the PCS.",
+                          dest='initial_incumbent',
                           choice=['DEFAULT', 'RANDOM'])
         # instance name -> feature vector
         self.add_argument(name='features', default={}, help=None,
@@ -281,6 +342,7 @@ class Scenario(object):
         self.add_argument(name='cs', help=None, mutually_exclusive_group='cs')
 
     def _transform_arguments(self):
+        """TODO"""
         self.n_features = len(self.feature_dict)
         self.feature_array = None
 
@@ -394,3 +456,24 @@ class Scenario(object):
         if warn_:
             self.logger.warn("All instances were casted to str.")
         return l
+
+    def write_options_to_doc(self, path='scenario_options.rst'):
+        """Writes the option-list to file for autogeneration in documentation.
+        The list is created in doc/conf.py and read in doc/options.rst.
+
+        Parameters
+        ----------
+        path: string
+            Where to write to (relative to doc-folder since executed in conf.py)
+        """
+        exclude = ['cs', 'features', 'instances', 'test_instances']
+        with open(path, 'w') as fh:
+            for arg in sorted(self._arguments.keys()):
+                if arg in exclude:
+                    continue
+                fh.write("    * *{}*: {}".format(arg, self._arguments[arg]['help']))
+                if self._arguments[arg]['default']:
+                    fh.write(" Default: {}.".format(self._arguments[arg]['default']))
+                if self._arguments[arg]['choice']:
+                    fh.write(" Must be from: {}.".format(self._arguments[arg]['choice']))
+                fh.write("\n")

@@ -5,7 +5,6 @@ import numpy as np
 from smac.facade.smac_facade import SMAC
 from smac.scenario.scenario import Scenario
 from smac.configspace import ConfigurationSpace
-from smac.optimizer.objective import average_cost
 from smac.runhistory.runhistory import RunKey
 from smac.tae.execute_func import ExecuteTAFuncArray
 
@@ -22,9 +21,8 @@ def fmin_smac(func: callable,
               maxfun: int=-1,
               maxtime: int=-1,
               rng: np.random.RandomState=None):
-    """Minimize a function func using the SMAC algorithm.
-
-    This method is a convenience wrapper for the SMAC class.
+    """ Minimize a function func using the SMAC algorithm.
+    This function is a convenience wrapper for the SMAC class.
 
     Parameters
     ----------
@@ -52,9 +50,6 @@ def fmin_smac(func: callable,
         SMAC objects which enables the user to get
         e.g., the trajectory and runhistory.
     """
-
-    aggregate_func = average_cost
-
     # create configuration space
     cs = ConfigurationSpace()
     for idx, (lower_bound, upper_bound) in enumerate(bounds):
@@ -68,8 +63,8 @@ def fmin_smac(func: callable,
     ta = ExecuteTAFuncArray(ta=func)
 
     # create scenario
-    scenario_dict = {"run_obj": "quality",  # we optimize quality
-                     "cs": cs,  # configuration space
+    scenario_dict = {"run_obj": "quality",
+                     "cs": cs,
                      "deterministic": "true",
                      "initial_incumbent": "DEFAULT"
                      }

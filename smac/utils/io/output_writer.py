@@ -1,43 +1,37 @@
 import os
 import shutil
 
-from smac.configspace import pcs
+import typing
+from ConfigSpace import ConfigurationSpace
+
+from smac.configspace import pcs_new as pcs
 
 
 class OutputWriter(object):
-    """
-        Writing scenario to file.
-    """
+    """Writing scenario to file."""
 
     def __init__(self):
-        """
-            Constructor
-        """
         pass
 
     def write_scenario_file(self, scenario):
-        """
-            Write scenario to a file (format is compatible with input_reader).
-            Will overwrite if file exists.
-            If you have arguments that need special parsing when saving, specify so
-            in the _parse_argument-function.
+        """Write scenario to a file (format is compatible with input_reader).
+        Will overwrite if file exists. If you have arguments that need special
+        parsing when saving, specify so in the _parse_argument-function.
+        Creates output-dir if necessesary.
 
-            Parameters:
-            ----------
-                scenario: Scenario
-                    scenario to be written to file
+        Parameters
+        ----------
+            scenario: Scenario
+                Scenario to be written to file
 
-            Sideeffects:
-            ----------
-                - creates output-directory if it doesn't exist.
-
-            Returns:
-            ----------
-                False, if writing failed.
+        Returns
+        -------
+            status: False or None
+                False indicates that writing process failed
         """
         if scenario.output_dir is None or scenario.output_dir == "":
             scenario.logger.info("No output directory for scenario logging "
-                             "specified -- scenario will not be logged.")
+                                 "specified -- scenario will not be logged.")
             return False
         # Create output-dir if necessary
         if not os.path.isdir(scenario.output_dir):
@@ -62,33 +56,33 @@ class OutputWriter(object):
                 if new_value is not None:
                     fh.write("{} = {}\n".format(options_dest2name[key], new_value))
 
-    def _parse_argument(self, scenario, key, value):
+    def _parse_argument(self, scenario, key: str, value):
+        """Some values of the scenario-file need to be changed upon writing,
+        such as the 'ta' (target algorithm), due to it's callback. Also,
+        the configspace, features, train_inst- and test-inst-lists are saved
+        to output_dir, if they exist.
+
+        Parameters:
+        -----------
+            scenario: Scenario
+                Scenario-file to be written
+            key: string
+                Name of the attribute in scenario-file
+            value: Any
+                Corresponding attribute
+
+        Returns:
+        --------
+            new value: string
+                The altered value, to be written to file
+
+        Sideeffects:
+        ------------
+          - copies files pcs_fn, train_inst_fn, test_inst_fn and feature_fn to
+            output if possible, creates the files from attributes otherwise
         """
-            Some values of the scenario-file need to be changed upon writing, such
-            as the 'ta' (target algorithm), due to it's callback.
-            Also the configspace, features, train_inst- and test-inst-lists are
-            saved to output_dir, if they exist.
-
-            Parameters:
-            ----------
-                scenario: Scenario
-                    scenario-file to be written
-                key: string
-                    name of the attribute in scenario-file
-                value: Any
-                    corresponding attribute
-
-            Returns:
-            ----------
-                new value: string
-                    the altered value, to be written to file
-
-            Sideeffects:
-            ----------
-              - copies files pcs_fn, train_inst_fn, test_inst_fn and feature_fn to
-                output if possible, creates the files from attributes otherwise
-        """
-        if key in ['pcs_fn', 'train_inst_fn', 'test_inst_fn', 'feature_fn', 'output_dir']:
+        if key in ['pcs_fn', 'train_inst_fn', 'test_inst_fn', 'feature_fn',
+                   'output_dir']:
             # Copy if file exists, else write to new file
             if value is not None and os.path.isfile(value):
                 try:
@@ -106,7 +100,8 @@ class OutputWriter(object):
                 self.write_inst_file(scenario.test_insts, new_path)
             elif key == 'feature_fn' and scenario.feature_dict != {}:
                 new_path = os.path.join(scenario.output_dir, 'features.txt')
-                self.write_inst_features_file(scenario.n_features, scenario.feature_dict, new_path)
+                self.write_inst_features_file(scenario.n_features,
+                                              scenario.feature_dict, new_path)
             else:
                 return None
             # New value -> new path
@@ -120,32 +115,30 @@ class OutputWriter(object):
         else:
             return value
 
-    def write_inst_file(self, insts, fn):
-        """
-            Writes instance-list to file.
+    def write_inst_file(self, insts: typing.List[str], fn: str):
+        """Writes instance-list to file.
 
-            Parameters
-            ----------
-                insts: list<string>
-                     instance list to be written
-                fn: string
-                     output path
+        Parameters
+        ----------
+            insts: list<string>
+                 Instance list to be written
+            fn: string
+                 Output path
         """
         with open(fn, 'w') as fh:
             fh.write("\n".join(insts))
 
-    def write_inst_features_file(self, n_features, feat_dict, fn):
-        """
-            Writes features to file.
+    def write_inst_features_file(self, n_features: int, feat_dict, fn: str):
+        """Writes features to file.
 
-            Parameters
-            ----------
-                n_features: int
-                     number of features
-                feat_dict: dict
-                     features to be written
-                fn: string
-                     file name of instance feature file
+        Parameters
+        ----------
+            n_features: int
+                 Number of features
+            feat_dict: dict
+                 Features to be written
+            fn: string
+                 File name of instance feature file
         """
         header = "Instance, " + ", ".join(
             ["feature"+str(i) for i in range(n_features)]) + "\n"
@@ -154,16 +147,15 @@ class OutputWriter(object):
         with open(fn, 'w') as fh:
             fh.write(header + "".join(body))
 
-    def write_pcs_file(self, cs, fn):
-        """
-            Writing ConfigSpace to file.
+    def write_pcs_file(self, cs: ConfigurationSpace, fn: str):
+        """Writing ConfigSpace to file.
 
-            Parameters
-            ----------
-                cs: ConfigurationSpace
-                     config-space to be written
-                fn: string
-                     output-file-path
+        Parameters
+        ----------
+            cs: ConfigurationSpace
+                 Config-space to be written
+            fn: string
+                 Output-file-path
         """
         with open(fn, 'w') as fh:
             fh.write(pcs.write(cs))

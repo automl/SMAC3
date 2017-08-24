@@ -112,6 +112,18 @@ class TestSMBO(unittest.TestCase):
         Y = self.branin(X)
         x = next(smbo.choose_next(X, Y)).get_array()
         assert x.shape == (2,)
+        
+    def test_choose_next_w_empty_rh(self):
+        seed = 42
+        smbo = SMAC(self.scenario, rng=seed).solver
+        smbo.runhistory = RunHistory(aggregate_func=average_cost)
+        X = self.scenario.cs.sample_configuration().get_array()[None, :]
+
+        Y = self.branin(X)
+        self.assertRaises(ValueError, smbo.choose_next, **{"X":X, "Y":Y})
+
+        x = next(smbo.choose_next(X, Y, incumbent_value=0.0)).get_array()        
+        assert x.shape == (2,)
 
     def test_choose_next_2(self):
         def side_effect(X):

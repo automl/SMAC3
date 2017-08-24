@@ -18,6 +18,7 @@ from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.optimizer.objective import average_cost
 from smac.utils.util_funcs import get_types
 
+
 def generate_config(cs, rs):
     i = rs.randint(-10, 10)
     f = rs.rand(1)[0]
@@ -94,9 +95,9 @@ class ImputorTest(unittest.TestCase):
         self.scen.cutoff = 40
 
         types, bounds = get_types(self.cs, None)
-        self.model = RandomForestWithInstances(types=types, bounds=bounds,
-                                       instance_features=None,
-                                       seed=1234567980)
+        self.model = RandomForestWithInstances(
+                types=types, bounds=bounds,
+                instance_features=None, seed=1234567980)
 
     def testRandomImputation(self):
         rs = numpy.random.RandomState(1)
@@ -135,7 +136,7 @@ class ImputorTest(unittest.TestCase):
             self.model = RandomForestWithInstances(types=types, bounds=bounds,
                                                    instance_features=None,
                                                    seed=1234567980)
-            imputor = rfr_imputator.RFRImputator(rs=rs,
+            imputor = rfr_imputator.RFRImputator(rng=rs,
                                                  cutoff=cutoff,
                                                  threshold=cutoff*10,
                                                  change_threshold=0.01,
@@ -155,7 +156,7 @@ class ImputorTest(unittest.TestCase):
 
     def testRealImputation(self):
         rs = numpy.random.RandomState(1)
-        imputor = rfr_imputator.RFRImputator(rs=rs,
+        imputor = rfr_imputator.RFRImputator(rng=rs,
                                              cutoff=self.scen.cutoff,
                                              threshold=self.scen.cutoff*10,
                                              change_threshold=0.01, max_iter=10,
@@ -165,5 +166,5 @@ class ImputorTest(unittest.TestCase):
             scenario=self.scen, num_params=3,
             success_states=[StatusType.SUCCESS, ],
             impute_censored_data=True, impute_state=[StatusType.TIMEOUT],
-            imputor=imputor, rs=rs)
+            imputor=imputor, rng=rs)
         print("%s" % str(r2e.transform(self.rh)[0]))

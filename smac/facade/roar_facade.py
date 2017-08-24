@@ -8,10 +8,9 @@ from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, RunHistory2EPM4LogCost, RunHistory2EPM4Cost
+from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.intensification import Intensifier
-from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.epm.random_epm import RandomEPM
 from smac.facade.smac_facade import SMAC
 from smac.configspace import Configuration
@@ -22,6 +21,16 @@ __license__ = "3-clause BSD"
 
 
 class ROAR(SMAC):
+    """Facade to use ROAR mode
+
+    Attributes
+    ----------
+    logger
+
+    See Also
+    --------
+    :class:`~smac.facade.smac_facade.SMAC`
+    """
 
     def __init__(self,
                  scenario: Scenario,
@@ -32,19 +41,21 @@ class ROAR(SMAC):
                  initial_configurations: typing.List[Configuration]=None,
                  stats: Stats=None,
                  rng: np.random.RandomState=None):
-        '''
-        Facade to use ROAR mode
+        """Constructor
 
         Parameters
         ----------
         scenario: smac.scenario.scenario.Scenario
             Scenario object
-        tae_runner: ExecuteTARun or callable
-            Callable or implementation of :class:`ExecuteTaRun`. In case a
-            callable is passed it will be wrapped by tae.ExecuteTaFunc().
-            If not set, it will be initialized with the tae.ExecuteTARunOld()
+        tae_runner: smac.tae.execute_ta_run.ExecuteTARun or callable
+            Callable or implementation of
+            :class:`~smac.tae.execute_ta_run.ExecuteTARun`. In case a
+            callable is passed it will be wrapped by
+            :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.
+            If not set, it will be initialized with the
+            :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.
         runhistory: RunHistory
-            runhistory to store all algorithm runs
+            Runhistory to store all algorithm runs
         intensifier: Intensifier
             intensification object to issue a racing to decide the current incumbent
         initial_design: InitialDesign
@@ -56,7 +67,7 @@ class ROAR(SMAC):
             optional stats object
         rng: np.random.RandomState
             Random number generator
-        '''
+        """
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         # initial random number generator

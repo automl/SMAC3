@@ -47,6 +47,7 @@ help:
 	@echo "  linkcheck  to check all external links for integrity"
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 	@echo "  coverage   to run coverage check of the documentation (if enabled)"
+	@echo "  buildapi   to rebuild the api-documentation"
 
 clean:
 	rm -rf $(BUILDDIR)/*
@@ -190,3 +191,16 @@ pseudoxml:
 	$(SPHINXBUILD) -b pseudoxml $(ALLSPHINXOPTS) $(BUILDDIR)/pseudoxml
 	@echo
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
+
+buildapi:
+	sphinx-apidoc -fePTMo apidoc/ ../smac/
+	rm apidoc/smac.rst
+	for f in apidoc/*;   \
+	do                   \
+	  sed -i '/Submodules/d' $$f; \
+	  sed -i '/----------/d' $$f; \
+	  sed -i 's/    :show-inheritance:/    :show-inheritance:\n    :inherited-members:/g' $$f; \
+	done;
+	@echo
+	@echo "Auto-generation of API documentation finished. " \
+	      "The generated files are in 'apidoc/'"
