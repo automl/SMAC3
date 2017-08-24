@@ -9,7 +9,7 @@ import six
 
 from collections import defaultdict
 from functools import partial
-from typing import Union, Callable, Dict, List
+from typing import Union, Dict, List
 
 from ConfigSpace import Configuration
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformIntegerHyperparameter, UniformFloatHyperparameter
@@ -20,7 +20,7 @@ from sklearn.base import is_classifier, clone, BaseEstimator
 from sklearn.metrics.scorer import _check_multimetric_scoring
 from sklearn.model_selection._split import check_cv, BaseCrossValidator
 from sklearn.model_selection._search import BaseSearchCV
-from sklearn.model_selection._validation import _fit_and_score, _aggregate_score_dicts
+from sklearn.model_selection._validation import _fit_and_score
 from sklearn.utils.fixes import MaskedArray
 from sklearn.utils.validation import indexable
 
@@ -126,7 +126,7 @@ class ModelBasedOptimization(BaseSearchCV):
         for param, values in param_distributions.items():
             if not isinstance(values, list):
                 raise ValueError('Not implemented (yet): Wrapper does not work with distributions yet. Please use lists. ')
-        # For now, this is not supported 
+        # For now, this is not supported
         scoring = None
 
         self.random_state = random_state

@@ -111,7 +111,7 @@ class SklearnWrapperTest(unittest.TestCase):
         for index, runkey in enumerate(smac.get_runhistory().data.keys()):
             smac_config = smac.get_runhistory().ids_config[runkey[0]].get_dictionary()
             wrapper_config = mbo_wrapper.cv_results_['params'][index]
-            self.assertEqual(smac_config, wrapper_config)
+            self.assertEqual(smac_config, wrapper_config, msg='Iteration Unequal: %d' %index)
 
     def test_mbo_wrapper_dummy(self):
         iris = datasets.load_iris()
