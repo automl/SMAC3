@@ -13,6 +13,7 @@ from sklearn.dummy import DummyClassifier
 from sklearn.model_selection._split import StratifiedKFold
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.utils.testing import assert_raises
+from sklearn.metrics.scorer import _check_multimetric_scoring
 
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformIntegerHyperparameter
 
@@ -141,7 +142,8 @@ class SklearnWrapperTest(unittest.TestCase):
                                          n_iter=5,
                                          random_state=random_state, verbose=3)
         # spoof fit function
-        wrapper.scorer_ = check_scoring(wrapper.estimator, scoring=wrapper.scoring)
+        scorers, self.multimetric_ = _check_multimetric_scoring(wrapper.estimator, scoring=wrapper.scoring)
+        wrapper.scorers = scorers
 
         score, res_per_fold = wrapper._obj_function(configuration=self.cs_tree.sample_configuration(1),
                                                     seed=random_state, instance=None, cv_iter=cv,

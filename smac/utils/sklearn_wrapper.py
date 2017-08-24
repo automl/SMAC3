@@ -4,6 +4,8 @@ license = "3-clause BSD"
 """
 
 import numpy as np
+import warnings
+import six
 
 from collections import defaultdict
 from functools import partial
@@ -12,14 +14,15 @@ from typing import Union, Callable, Dict, List
 from ConfigSpace import Configuration
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformIntegerHyperparameter, UniformFloatHyperparameter
 
+from scipy.stats import rankdata
+
 from sklearn.base import is_classifier, clone, BaseEstimator
+from sklearn.metrics.scorer import _check_multimetric_scoring
 from sklearn.model_selection._split import check_cv, BaseCrossValidator
 from sklearn.model_selection._search import BaseSearchCV
-from sklearn.model_selection._validation import _fit_and_score
-from sklearn.utils.fixes import rankdata
+from sklearn.model_selection._validation import _fit_and_score, _aggregate_score_dicts
 from sklearn.utils.fixes import MaskedArray
 from sklearn.utils.validation import indexable
-from sklearn.metrics.scorer import check_scoring
 
 from smac.configspace import ConfigurationSpace
 from smac.facade.smac_facade import SMAC
@@ -30,8 +33,10 @@ class ModelBasedOptimization(BaseSearchCV):
     """
     Scikit-Learn wrapper for SMAC
     """
+
     def __init__(self, estimator: BaseEstimator, param_distributions: Dict[str, List], n_iter: int = 200,
-                 scoring: Union[str, Callable, None] = None, fit_params: Union[Dict, None] = None, iid: bool = True,
+                 # scoring: Union[str, Callable, None] = None, NOT SUPPORTED FOR NOW
+                 fit_params: Union[Dict, None] = None, iid: bool = True,
                  refit: bool = True, cv: Union[BaseCrossValidator, int] = None, verbose: int = 0,
                  random_state: Union[int, np.random.RandomState] = None, error_score: Union[str, int] = 'raise',
                  return_train_score: bool = True):
@@ -121,6 +126,8 @@ class ModelBasedOptimization(BaseSearchCV):
         for param, values in param_distributions.items():
             if not isinstance(values, list):
                 raise ValueError('Not implemented (yet): Wrapper does not work with distributions yet. Please use lists. ')
+        # For now, this is not supported 
+        scoring = None
 
         self.random_state = random_state
         self.param_distributions = param_distributions
@@ -134,7 +141,7 @@ class ModelBasedOptimization(BaseSearchCV):
               return_train_score=return_train_score)
 
     def fit(self, X: Union[List[List], np.array], y: Union[List, np.array, None] = None,
-            groups: Union[List, np.array, None] = None):
+            groups: Union[List, np.array, None] = None, **fit_params):
         """Run fit with all sets of parameters.
 
         Parameters
@@ -151,22 +158,55 @@ class ModelBasedOptimization(BaseSearchCV):
         groups : array-like, with shape (n_samples,), optional
             Group labels for the samples used while splitting the dataset into
             train/test set.
+
+        **fit_params : dict of string -> object
+            Parameters passed to the ``fit`` method of the estimator
         """
 
         # the following part is directly copied from Scikit-learns RandomizedSearchCV class
+        if self.fit_params is not None:
+            warnings.warn('"fit_params" as a constructor argument was '
+                          'deprecated in version 0.19 and will be removed '
+                          'in version 0.21. Pass fit parameters to the '
+                          '"fit" method instead.', DeprecationWarning)
+            if fit_params:
+                warnings.warn('Ignoring fit_params passed as a constructor '
+                              'argument in favor of keyword arguments to '
+                              'the "fit" method.', RuntimeWarning)
+            else:
+                fit_params = self.fit_params
         estimator = self.estimator
         cv = check_cv(self.cv, y, classifier=is_classifier(estimator))
-        self.scorer_ = check_scoring(self.estimator, scoring=self.scoring)
+
+        scorers, self.multimetric_ = _check_multimetric_scoring(self.estimator, scoring=self.scoring)
+
+        if self.multimetric_:
+            if self.refit is not False and (
+                    not isinstance(self.refit, six.string_types) or
+                    # This will work for both dict / list (tuple)
+                    self.refit not in scorers):
+                raise ValueError("For multi-metric scoring, the parameter "
+                                 "refit must be set to a scorer key "
+                                 "to refit an estimator with the best "
+                                 "parameter setting on the whole data and "
+                                 "make the best_* attributes "
+                                 "available for that metric. If this is not "
+                                 "needed, refit should be set to False "
+                                 "explicitly. %r was passed." % self.refit)
+            else:
+                refit_metric = self.refit
+        else:
+            refit_metric = 'score'
 
         X, y, groups = indexable(X, y, groups)
         n_splits = cv.get_n_splits(X, y, groups)
 
         base_estimator = clone(self.estimator)
 
-        cv_iter = list(cv.split(X, y, groups))
-
         #################################### START DIFFERENCE WITH BASESEARCH_CV ####################################
+        cv_iter = list(cv.split(X, y, groups))
         self.config_space = self._param_distributions_to_config_space(self.param_distributions)
+        self.scorers = scorers
         scenario = Scenario({"run_obj": "quality", "runcount-limit": self.n_iter, "cs": self.config_space, "deterministic": "true", "memory_limit": 3072})
 
         obj_function = partial(self._obj_function, base_estimator=base_estimator, cv_iter=cv_iter, X=X, y=y)
@@ -186,29 +226,30 @@ class ModelBasedOptimization(BaseSearchCV):
             for _ in range(len(cv_iter)):
                 out['parameters'].append(configuration.get_dictionary())
 
-        train_scores = out['train_scores']
         # if one choose to see train score, "out" will contain train score info
         if self.return_train_score:
-            train_scores = out['train_scores']
-        test_scores = out['test_scores']
+            train_scores = {'score': out['train_scores']}
+        test_scores = {'score': out['test_scores']}
         test_sample_counts = out['test_sample_counts']
         fit_time = out['fit_time']
         score_time = out['score_time']
         parameters = out['parameters']
-        #################################### END DIFFERENCE WITH BASESEARCH_CV ####################################
 
-        # the following part is directly copied from Scikit-learns RandomizedSearchCV class
         candidate_params = parameters[::n_splits]
         n_candidates = len(candidate_params)
+        #################################### END DIFFERENCE WITH BASESEARCH_CV ####################################
 
         results = dict()
 
         def _store(key_name, array, weights=None, splits=False, rank=False):
             """A small helper to store the scores/times to the cv_results_"""
+            # When iterated first by splits, then by parameters
+            # We want `array` to have `n_candidates` rows and `n_splits` cols.
             array = np.array(array, dtype=np.float64).reshape(n_candidates,
                                                               n_splits)
             if splits:
                 for split_i in range(n_splits):
+                    # Uses closure to alter the results
                     results["split%d_%s"
                             % (split_i, key_name)] = array[:, split_i]
 
@@ -224,21 +265,8 @@ class ModelBasedOptimization(BaseSearchCV):
                 results["rank_%s" % key_name] = np.asarray(
                     rankdata(-array_means, method='min'), dtype=np.int32)
 
-        # Computed the (weighted) mean and std for test scores alone
-        # NOTE test_sample counts (weights) remain the same for all candidates
-        test_sample_counts = np.array(test_sample_counts[:n_splits],
-                                      dtype=np.int)
-
-        _store('test_score', test_scores, splits=True, rank=True,
-               weights=test_sample_counts if self.iid else None)
-        if self.return_train_score:
-            _store('train_score', train_scores, splits=True)
         _store('fit_time', fit_time)
         _store('score_time', score_time)
-
-        best_index = np.flatnonzero(results["rank_test_score"] == 1)[0]
-        best_parameters = candidate_params[best_index]
-
         # Use one MaskedArray and mask all the places where the param is not
         # applicable for that candidate. Use defaultdict as each candidate may
         # not contain all the params
@@ -254,24 +282,44 @@ class ModelBasedOptimization(BaseSearchCV):
                 param_results["param_%s" % name][cand_i] = value
 
         results.update(param_results)
-
         # Store a list of param dicts at the key 'params'
         results['params'] = candidate_params
 
-        self.cv_results_ = results
-        self.best_index_ = best_index
-        self.n_splits_ = n_splits
+        # NOTE test_sample counts (weights) remain the same for all candidates
+        test_sample_counts = np.array(test_sample_counts[:n_splits],
+                                      dtype=np.int)
+        for scorer_name in scorers.keys():
+            # Computed the (weighted) mean and std for test scores alone
+            _store('test_%s' % scorer_name, test_scores[scorer_name],
+                   splits=True, rank=True,
+                   weights=test_sample_counts if self.iid else None)
+            if self.return_train_score:
+                _store('train_%s' % scorer_name, train_scores[scorer_name],
+                       splits=True)
+
+        # For multi-metric evaluation, store the best_index_, best_params_ and
+        # best_score_ iff refit is one of the scorer names
+        # In single metric evaluation, refit_metric is "score"
+        if self.refit or not self.multimetric_:
+            self.best_index_ = results["rank_test_%s" % refit_metric].argmin()
+            self.best_params_ = candidate_params[self.best_index_]
+            self.best_score_ = results["mean_test_%s" % refit_metric][
+                self.best_index_]
 
         if self.refit:
-            # fit the best estimator using the entire dataset
-            # clone first to work around broken estimators
-            best_estimator = clone(base_estimator).set_params(
-                **best_parameters)
+            self.best_estimator_ = clone(base_estimator).set_params(
+                **self.best_params_)
             if y is not None:
-                best_estimator.fit(X, y, **self.fit_params)
+                self.best_estimator_.fit(X, y, **fit_params)
             else:
-                best_estimator.fit(X, **self.fit_params)
-            self.best_estimator_ = best_estimator
+                self.best_estimator_.fit(X, **fit_params)
+
+        # Store the only scorer not as a dict for single metric evaluation
+        self.scorer_ = scorers if self.multimetric_ else scorers['score']
+
+        self.cv_results_ = results
+        self.n_splits_ = n_splits
+
         return self
 
     def _obj_function(self, configuration: Configuration, seed: int, instance: str, base_estimator: BaseEstimator,
@@ -281,7 +329,7 @@ class ModelBasedOptimization(BaseSearchCV):
             # fit and score returns a list, containing
             # - train_scores, test_scores, test_sample_counts, fit_time, score_time, parameters (iff self.return_train_score)
             # - test_scores, test_sample_counts, fit_time, score_time, parameters (otherwise)
-            results = _fit_and_score(clone(base_estimator), X, y, self.scorer_,
+            results = _fit_and_score(clone(base_estimator), X, y, self.scorers,
                                      train, test, self.verbose, configuration.get_dictionary(),
                                      fit_params=self.fit_params,
                                      return_train_score=self.return_train_score,
@@ -290,13 +338,13 @@ class ModelBasedOptimization(BaseSearchCV):
                                      error_score=self.error_score)
 
             if self.return_train_score:
-                results_per_fold['train_scores'].append(results[0])
-                results_per_fold['test_scores'].append(results[1])
+                results_per_fold['train_scores'].append(results[0]['score'])
+                results_per_fold['test_scores'].append(results[1]['score'])
                 results_per_fold['test_sample_counts'].append(results[2])
                 results_per_fold['fit_time'].append(results[3])
                 results_per_fold['score_time'].append(results[4])
             else:
-                results_per_fold['test_scores'].append(results[0])
+                results_per_fold['test_scores'].append(results[0]['score'])
                 results_per_fold['test_sample_counts'].append(results[1])
                 results_per_fold['fit_time'].append(results[2])
                 results_per_fold['score_time'].append(results[3])
