@@ -77,13 +77,22 @@ class SklearnWrapperTest(unittest.TestCase):
 
         # note that multiple configurations could have led to the same
         # SMAC always takes the most recently found (in case of 1 instance problems)
-        # so we find the last idx in mbo results
-        mbo_idx = n_iter - 1 - np.argmax(mbo_wrapper.cv_results_['mean_test_score'][::-1])
+        # so we find all the maximized indices in mbo results
+        scores = mbo_wrapper.cv_results_['mean_test_score']
+        mbo_max_indices = [i for i, j in enumerate(scores) if j == max(scores)]
+
+        print(mbo_wrapper.best_score_)
+        print(smac_inc_value)
 
         self.assertAlmostEqual(mbo_wrapper.best_score_, smac_inc_value, 2) # apparently, scikit-learn search returns only 2 digits
-        for param_name, param_value in smac_incumbent.get_dictionary().items():
-            self.assertIn(param_name, mbo_params)
-            self.assertEqual(mbo_wrapper.cv_results_['param_%s'%param_name][mbo_idx], param_value, msg="param: %s" %param_name)
+        foundEqual = False
+        for mbo_idx in mbo_max_indices:
+            for param_name, param_value in smac_incumbent.get_dictionary().items():
+                self.assertIn(param_name, mbo_params)
+                if mbo_wrapper.cv_results_['param_%s'%param_name][mbo_idx] != param_value:
+                    break
+            foundEqual = True
+        self.assertTrue(foundEqual)
 
     def test_mbo_wrapper_dummy(self):
         iris = datasets.load_iris()
@@ -108,5 +117,3 @@ class SklearnWrapperTest(unittest.TestCase):
         cs.add_hyperparameter(CategoricalHyperparameter('criterion', ['gini', 'entropy'], default='gini'))
 
         self._compare_with_smac(X, y, classifier, cs, random_seed=42, n_iter=5)
-
-

@@ -30,13 +30,13 @@ class ModelBasedOptimization(BaseSearchCV):
     """
     Scikit-Learn wrapper for SMAC
     """
-    def __init__(self, estimator: BaseEstimator, param_distributions: Dict[str, List], n_iter: int = 10,
+    def __init__(self, estimator: BaseEstimator, param_distributions: Dict[str, List], n_iter: int = 200,
                  scoring: Union[str, Callable, None] = None, fit_params: Union[Dict, None] = None, iid: bool = True,
                  refit: bool = True, cv: Union[BaseCrossValidator, int] = None, verbose: int = 0,
                  random_state: Union[int, np.random.RandomState] = None, error_score: Union[str, int] = 'raise',
                  return_train_score: bool = True):
-        """Scikit-learn wrapper for Sequential Model Based Optimization (SMAC). Is useful as
-        this allows to use the various Scikit-learn interfaces, for example to OpenML.org
+        """Scikit-learn wrapper for Sequential Model Based Optimization (SMAC). This allows to use SMAC together
+        with various tools relying on the scikit-learn API, such as OpenML.org.
 
         Works similar to the RandomizedSearchCV class. For detailed and up-to-date
         parameter descriptions, please see:
@@ -48,10 +48,9 @@ class ModelBasedOptimization(BaseSearchCV):
         Parameters
         ---------
         estimator : estimator object.
-            A object of that type is instantiated for each grid point.
-            This is assumed to implement the scikit-learn estimator interface.
-            Either estimator needs to provide a ``score`` function,
-            or ``scoring`` must be passed.
+            A scikit-learn classifier. Should inherit from
+            sklearn.base.BaseEstimator. Either estimator needs
+            to provide a ``score`` function, or ``scoring`` must be passed.
 
         param_distributions : dict
             Dictionary with parameters names (string) as keys and
@@ -70,7 +69,7 @@ class ModelBasedOptimization(BaseSearchCV):
             If ``None``, the ``score`` method of the estimator is used.
 
         fit_params : dict, optional
-            Undocumented function of Scikit-learn
+            Deprecated feature of Scikit-learn
 
         iid : boolean, default=True
             If True, the data is assumed to be identically distributed across
@@ -78,7 +77,7 @@ class ModelBasedOptimization(BaseSearchCV):
             and not the mean loss across the folds.
 
         refit : bool
-            Undocumented function of Scikit-learn
+            Deprecated feature of Scikit-learn
 
         cv : int, cross-validation generator or an iterable, optional
             Determines the cross-validation splitting strategy.
