@@ -81,5 +81,9 @@ if __name__ == "__main__":
 
     validator = Validator(scenario, trajectory, args_.output,
                           args_.seed)
-    validator.validate(args_.configs, args_.instances, args_.repetitions,
-                       args_.n_jobs, args_.runhistory, tae)
+    validator.validate(config_mode=args_.configs,
+                       instance_mode=args_.instances,
+                       repetitions=args_.repetitions,
+                       n_jobs=args_.n_jobs,
+                       runhistory=args_.runhistory,
+                       tae=tae)
