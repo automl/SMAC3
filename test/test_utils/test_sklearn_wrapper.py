@@ -95,9 +95,6 @@ class SklearnWrapperTest(unittest.TestCase):
         scores = mbo_wrapper.cv_results_['mean_test_score']
         mbo_max_indices = [i for i, j in enumerate(scores) if j == max(scores)]
 
-        print(mbo_wrapper.best_score_)
-        print(smac_inc_value)
-
         self.assertAlmostEqual(mbo_wrapper.best_score_, smac_inc_value, 2) # apparently, scikit-learn search returns only 2 digits
         foundEqual = False
         for mbo_idx in mbo_max_indices:
@@ -108,11 +105,17 @@ class SklearnWrapperTest(unittest.TestCase):
             foundEqual = True
         self.assertTrue(foundEqual)
 
-        # === COMPARE TRAJECTORIES ===
+        # === COMPARE TRAJECTORIES AND INTERMEDIATE SCORES ===
         for index, runkey in enumerate(smac.get_runhistory().data.keys()):
+            # check configuration
             smac_config = smac.get_runhistory().ids_config[runkey[0]].get_dictionary()
             wrapper_config = mbo_wrapper.cv_results_['params'][index]
-            self.assertEqual(smac_config, wrapper_config, msg='Iteration Unequal: %d' %index)
+            self.assertEqual(smac_config, wrapper_config, msg='Configuration unequal at iteration: %d' %index)
+            # check score
+            smac_score = smac.get_runhistory().data[runkey].cost * -1
+            wrapper_score = mbo_wrapper.cv_results_['mean_test_score'][index]
+            self.assertEqual(smac_score, wrapper_score, msg='Score unequal at iteration: %d' %index)
+
 
     def test_mbo_wrapper_dummy(self):
         iris = datasets.load_iris()

@@ -351,7 +351,8 @@ class ModelBasedOptimization(BaseSearchCV):
                 if 'train_scores' in results_per_fold:
                     del results_per_fold['train_scores']
 
-        score = np.mean(np.array(results_per_fold['test_scores']))
+        score = np.average(np.array(results_per_fold['test_scores']),
+                           weights=np.array(results_per_fold['test_sample_counts']))
         return -1 * score, results_per_fold
 
     @staticmethod
