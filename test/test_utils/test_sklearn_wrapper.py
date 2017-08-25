@@ -61,11 +61,12 @@ class SklearnWrapperTest(unittest.TestCase):
          - incumbent
          - evaluation on the incumbent
         """
-        # important for testing: cv is None and y is classification
-        mbo_wrapper = ModelBasedOptimization(classifier, self._config_space_to_param_grid(config_space),
+        # important for testing: y is classification
+        cv_obj = StratifiedKFold(3, random_state=random_seed)
+        mbo_wrapper = ModelBasedOptimization(classifier, self._config_space_to_param_grid(config_space), cv=cv_obj,
                                              random_state=random_seed, verbose=3, n_iter=n_iter)
         # make a partial for running SMAC under same conditions
-        obj_function = partial(mbo_wrapper._obj_function, base_estimator=classifier, cv_iter=list(StratifiedKFold(3).split(X, y)), X=X, y=y)
+        obj_function = partial(mbo_wrapper._obj_function, base_estimator=classifier, cv_iter=list(cv_obj.split(X, y)), X=X, y=y)
         mbo_wrapper.fit(X, y)
 
         # Smoke test the score etc:
