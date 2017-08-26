@@ -219,7 +219,6 @@ class ModelBasedOptimization(BaseSearchCV):
                            "cs": self.config_space,
                            "deterministic": "true",
                            "memory_limit": 3072}
-        self.intensification_percentage = 0.99999
         if self.intensification_percentage is not None:
             scenario_params['intensification_percentage'] = self.intensification_percentage
 
