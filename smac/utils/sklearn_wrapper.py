@@ -39,7 +39,7 @@ class ModelBasedOptimization(BaseSearchCV):
                  fit_params: Union[Dict, None] = None, iid: bool = True,
                  refit: bool = True, cv: Union[BaseCrossValidator, int] = None, verbose: int = 0,
                  random_state: Union[int, np.random.RandomState] = None, error_score: Union[str, int] = 'raise',
-                 return_train_score: bool = True):
+                 return_train_score: bool = True, intensification_percentage: Union[float, None] = None):
         """Scikit-learn wrapper for Sequential Model Based Optimization (SMAC). This allows to use SMAC together
         with various tools relying on the scikit-learn API, such as OpenML.org.
 
@@ -120,6 +120,11 @@ class ModelBasedOptimization(BaseSearchCV):
         return_train_score : boolean, default=True
             If ``'False'``, the ``cv_results_`` attribute will not include training
             scores.
+
+        intensification_percentage : float, default=None
+            SMAC parameter, the fraction of time to be used on intensification
+            (versus choice of next Configurations). In case of None, the SMAC
+            default will be used.
             """
 
         # Current implementation does not like distributions yet.
@@ -132,6 +137,7 @@ class ModelBasedOptimization(BaseSearchCV):
         self.random_state = random_state
         self.param_distributions = param_distributions
         self.n_iter = n_iter
+        self.intensification_percentage = intensification_percentage
 
         # sets important hyperparameters of search module
         super(ModelBasedOptimization, self).__init__(
@@ -207,7 +213,17 @@ class ModelBasedOptimization(BaseSearchCV):
         cv_iter = list(cv.split(X, y, groups))
         self.config_space = self._param_distributions_to_config_space(self.param_distributions)
         self.scorers = scorers
-        scenario = Scenario({"run_obj": "quality", "runcount-limit": self.n_iter, "cs": self.config_space, "deterministic": "true", "memory_limit": 3072})
+
+        scenario_params = {"run_obj": "quality",
+                           "runcount-limit": self.n_iter,
+                           "cs": self.config_space,
+                           "deterministic": "true",
+                           "memory_limit": 3072}
+        self.intensification_percentage = 0.99999
+        if self.intensification_percentage is not None:
+            scenario_params['intensification_percentage'] = self.intensification_percentage
+
+        scenario = Scenario(scenario_params)
 
         obj_function = partial(self._obj_function, base_estimator=base_estimator, cv_iter=cv_iter, X=X, y=y)
 

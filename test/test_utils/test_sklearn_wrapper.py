@@ -63,8 +63,14 @@ class SklearnWrapperTest(unittest.TestCase):
         """
         # important for testing: y is classification
         cv_obj = StratifiedKFold(3, random_state=random_seed)
-        mbo_wrapper = ModelBasedOptimization(classifier, self._config_space_to_param_grid(config_space), cv=cv_obj,
-                                             random_state=random_seed, verbose=3, n_iter=n_iter)
+        intensification = 0.99999
+        mbo_wrapper = ModelBasedOptimization(classifier,
+                                             self._config_space_to_param_grid(config_space),
+                                             cv=cv_obj,
+                                             random_state=random_seed,
+                                             verbose=3,
+                                             n_iter=n_iter,
+                                             intensification_percentage=intensification)
         # make a partial for running SMAC under same conditions
         obj_function = partial(mbo_wrapper._obj_function, base_estimator=classifier, cv_iter=list(cv_obj.split(X, y)), X=X, y=y)
         mbo_wrapper.fit(X, y)
@@ -80,7 +86,12 @@ class SklearnWrapperTest(unittest.TestCase):
         mbo_params = mbo_wrapper.best_estimator_.get_params()
 
         # SMAC scenario oject
-        scenario = Scenario({"run_obj": "quality",  "runcount-limit": n_iter, "cs": config_space, "deterministic": "true", "memory_limit": 3072})
+        scenario = Scenario({"run_obj": "quality",
+                             "runcount-limit": n_iter,
+                             "cs": config_space,
+                             "deterministic": "true",
+                             "memory_limit": 3072,
+                             "intensification_percentage": intensification})
 
         # To optimize, we pass the function to the SMAC-object
         smac = SMAC(scenario=scenario, rng=random_seed,
