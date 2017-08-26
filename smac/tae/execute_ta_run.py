@@ -182,11 +182,6 @@ class ExecuteTARun(object):
                                                    self.crash_cost))
             status = StatusType.CRASHED
 
-        if self.stats.ta_runs == 1 and status == StatusType.CRASHED:
-            raise FirstRunCrashedException("First run crashed, abort. (To "
-                                           "prevent this, toggle the "
-                                           "'abort_on_first_run_crash'"
-                                           "-option!)")
         if status == StatusType.ABORT:
             raise TAEAbortException("Target algorithm status ABORT - SMAC will "
                                     "exit. The last incumbent can be found "
@@ -220,6 +215,12 @@ class ExecuteTARun(object):
 
         if status == StatusType.CAPPED:
             raise CappedRunException("")
+        
+        if self.stats.ta_runs == 1 and status == StatusType.CRASHED:
+            raise FirstRunCrashedException("First run crashed, abort. (To "
+                                           "prevent this, toggle the "
+                                           "'abort_on_first_run_crash'"
+                                           "-option!)")
 
         return status, cost, runtime, additional_info
 
