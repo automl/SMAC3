@@ -217,10 +217,13 @@ class ExecuteTARun(object):
             raise CappedRunException("")
         
         if self.stats.ta_runs == 1 and status == StatusType.CRASHED:
-            raise FirstRunCrashedException("First run crashed, abort. (To "
-                                           "prevent this, toggle the "
-                                           "'abort_on_first_run_crash'"
-                                           "-option!)")
+            raise FirstRunCrashedException("First run crashed, abort. "
+                                           "Please check your setup -- "
+                                           "we assume that your default"
+                                           "configuration does not crashes. "
+                                           "(To deactivate this exception," 
+                                           " use the SMAC scenario option "
+                                           "'abort_on_first_run_crash')")
 
         return status, cost, runtime, additional_info
 
