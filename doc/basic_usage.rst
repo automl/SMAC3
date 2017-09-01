@@ -58,9 +58,10 @@ Both will interpret paths *from the execution-directory*.
 To restore a previous *SMAC*-run, either because it was interrupted or because
 you want to extend its computation- or time-limits, use the
 ``--restore_state FOLDER``-option in the commandline. If you want to increase
-computation- or time-limits, change the scenario-file. Restarting a *SMAC*-run
-that quit due to budget-exhaustion will do nothing, because the budget is still
-exhausted.
+computation- or time-limits, change the scenario-file specified with the
+``--scenario SCENARIOFILE``-option (not the one in the folder to be restored).
+Restarting a *SMAC*-run that quit due to budget-exhaustion will do nothing,
+because the budget is still exhausted.
 **Changing any other options than *wallclock_limit*, *runcount_limit* or
 *tuner-timeout* in the scenario-file is NOT intended and will likely lead
 to unexpected behaviour!**
