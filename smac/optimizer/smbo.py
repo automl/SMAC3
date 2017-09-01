@@ -163,8 +163,7 @@ class SMBO(object):
 
             if self.scenario.shared_model:
                 pSMAC.write(run_history=self.runhistory,
-                            output_directory=self.scenario.output_dir,
-                            num_run=self.num_run)
+                            output_directory=self.scenario.output_dir)
 
             iteration += 1
 
