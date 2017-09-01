@@ -251,7 +251,7 @@ class Validator(object):
                 # configs in inner loop -> same inst-seed-pairs for all configs
                 for config in [c for c in configs if not c in
                                configs_evaluated]:
-                    specs = self.scen.instance_specific[i] if i else ""
+                    specs = self.scen.instance_specific[i] if i else "0"
                     runs.append({'config':config,
                                  'inst':i,
                                  'seed':seed,
@@ -379,6 +379,14 @@ class Validator(object):
         if mode not in ['train', 'test', 'train+test']:
             raise ValueError("%s not a valid option for instance_mode in validation."
                              %mode)
+
+        # Make sure if instances matter, than instances should be passed
+        if ((instance_mode == 'train' and self.scen.train_insts == [None]) or
+            (instance_mode == 'test' and self.scen.test_insts == [None])):
+            self.logger.warning("Instance mode is set to %s, but there are no"
+            "%s-instances specified in the scenario. Setting instance mode to"
+            "\"train+test\"!", instance_mode, instance_mode)
+            instance_mode = 'train+test'
 
         instances = []
         if ((instance_mode == 'train' or instance_mode == 'train+test') and not
