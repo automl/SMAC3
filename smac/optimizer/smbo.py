@@ -252,10 +252,10 @@ class SMBO(object):
                 num_configurations_by_random_search_sorted, _sorted=True)
 
         if num_configurations_by_local_search is None:
-            if self.stats._ema_n_configs_per_intensify > 0:
+            if self.stats._ema_n_configs_per_intensifiy > 0:
                 num_configurations_by_local_search = \
                     min(10, math.ceil(0.5 *
-                                      self.stats._ema_n_configs_per_intensify)
+                                      self.stats._ema_n_configs_per_intensifiy)
                         + 1)
             else:
                 num_configurations_by_local_search = 10
