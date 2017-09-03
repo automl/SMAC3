@@ -471,9 +471,11 @@ class Scenario(object):
             for arg in sorted(self._arguments.keys()):
                 if arg in exclude:
                     continue
-                fh.write("    * *{}*: {}".format(arg, self._arguments[arg]['help']))
+                fh.write(":{}: ".format(arg))
+                fh.write("{}".format(self._arguments[arg]['help']))
                 if self._arguments[arg]['default']:
                     fh.write(" Default: {}.".format(self._arguments[arg]['default']))
                 if self._arguments[arg]['choice']:
                     fh.write(" Must be from: {}.".format(self._arguments[arg]['choice']))
                 fh.write("\n")
+            fh.write("\n\n")
