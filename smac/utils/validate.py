@@ -153,6 +153,15 @@ class Validator(object):
             idx += 1
 
         # Save runhistory
+        if not self.output.endswith('.json'):
+            old = self.output
+            self.output = os.path.join(self.output, 'validated_runhistory.json')
+            self.logger.debug("Output is \"%s\", changing to \"%s\"!", old,
+                              self.output)
+        base = os.path.split(self.output)[0]
+        if not os.path.exists(base):
+            self.logger.debug("Folder (\"%s\") doesn't exist, creating.", base)
+            os.makedirs(base)
         self.logger.info("Saving validation-results in %s", self.output)
         self.rh.save_json(self.output)
         return self.rh
@@ -251,7 +260,7 @@ class Validator(object):
                 # configs in inner loop -> same inst-seed-pairs for all configs
                 for config in [c for c in configs if not c in
                                configs_evaluated]:
-                    specs = self.scen.instance_specific[i] if i else "0"
+                    specs = self.scen.instance_specific[i] if i and i in self.scen.instance_specific else "0"
                     runs.append({'config':config,
                                  'inst':i,
                                  'seed':seed,
@@ -383,7 +392,7 @@ class Validator(object):
         # Make sure if instances matter, than instances should be passed
         if ((instance_mode == 'train' and self.scen.train_insts == [None]) or
             (instance_mode == 'test' and self.scen.test_insts == [None])):
-            self.logger.warning("Instance mode is set to %s, but there are no"
+            self.logger.warning("Instance mode is set to %s, but there are no "
             "%s-instances specified in the scenario. Setting instance mode to"
             "\"train+test\"!", instance_mode, instance_mode)
             instance_mode = 'train+test'
