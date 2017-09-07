@@ -20,7 +20,7 @@ Optional:
 
 Scenario
 ~~~~~~~~
-The scenario-object is used to configure *SMAC* and can be constructed either by providing an actual
+The scenario-object (:class:`smac.scenario.scenario.Scenario`) is used to configure *SMAC* and can be constructed either by providing an actual
 scenario-object (see `SVM-example <quickstart.html#using-smac-in-python-svm>`_), or by specifing the options in a
 scenario file (see `SPEAR example <quickstart.html#spear-example>`_).
 The format of the scenario file is one option per line:

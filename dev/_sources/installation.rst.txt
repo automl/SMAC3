@@ -13,7 +13,7 @@ please call:
 
 .. code-block:: bash
 
-    sudo apt-get install build-essentials swig
+    sudo apt-get install build-essential swig
 
 If you use Anaconda, you have to install both gcc and SWIG from Anaconda to
 prevent broken links:

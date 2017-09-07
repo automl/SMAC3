@@ -245,35 +245,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <blockquote>
-<div><ul class="simple">
-<li><em>abort_on_first_run_crash</em>: If true, <em>SMAC</em> will abort if the first run of the target algorithm crashes. Default: True.</li>
-<li><em>algo</em>: Specifies the target algorithm call that <em>SMAC</em> will optimize. Interpreted as a bash-command.</li>
-<li><em>always_race_default</em>: Race new incumbents always against default configuration.</li>
-<li><em>cost_for_crash</em>: Defines the cost-value for crashed runs on scenarios with quality as run-obj. Default: 2147483647.0.</li>
-<li><em>cutoff_time</em>: Maximum runtime, after which the target algorithm is cancelled. <strong>Required if *run_obj* is runtime.</strong></li>
-<li><em>deterministic</em>: If true, the optimization process will be repeatable.</li>
-<li><em>execdir</em>: Specifies the path to the execution-directory. Default: ..</li>
-<li><em>feature_file</em>: Specifies the file with the instance-features.</li>
-<li><em>initial_incumbent</em>: DEFAULT is the default from the PCS. Default: DEFAULT. Must be from: [‘DEFAULT’, ‘RANDOM’].</li>
-<li><em>input_psmac_dirs</em>: For parallel SMAC, multiple output-directories are used.</li>
-<li><em>instance_file</em>: Specifies the file with the training-instances.</li>
-<li><em>intensification_percentage</em>: The fraction of time to be used on intensification (versus choice of next Configurations). Default: 0.5.</li>
-<li><em>maxR</em>: Maximum number of calls per configuration. Default: 2000.</li>
-<li><em>memory_limit</em>: Maximum available memory the target algorithm can occupy before being cancelled.</li>
-<li><em>minR</em>: Minimum number of calls per configuration. Default: 1.</li>
-<li><em>output_dir</em>: Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2017-09-06_13:56:58_(820889).</li>
-<li><em>overall_obj</em>: PARX, where X is an integer defining the penalty imposed on timeouts (i.e. runtimes that exceed the <em>cutoff-time</em>). Default: par10.</li>
-<li><em>paramfile</em>: Specifies the path to the PCS-file.</li>
-<li><em>run_obj</em>: Defines what metric to optimize. When optimizing runtime, <em>cutoff_time</em> is required as well. Must be from: [‘runtime’, ‘quality’].</li>
-<li><em>runcount_limit</em>: Maximum number of algorithm-calls during optimization. Default: inf.</li>
-<li><em>shared_model</em>: Whether to run SMAC in parallel mode.</li>
-<li><em>test_instance_file</em>: Specifies the file with the test-instances.</li>
-<li><em>tuner-timeout</em>: Maximum amount of CPU-time used for optimization. Default: inf.</li>
-<li><em>wallclock_limit</em>: Maximum amount of wallclock-time used for optimization. Default: inf.</li>
-</ul>
-</div></blockquote>
-
+  
 
            </div>
            <div class="articleComments">
