@@ -50,7 +50,7 @@ if __name__ == "__main__":
                           help="number of cpu-cores to use")
     req_opts.add_argument("--tae", default="old", type=str,
                           help="what tae to use", choices=["aclib", "old"])
-    req_opts.add_argument("--verbose_level", default=logging.INFO,
+    req_opts.add_argument("--verbose_level", default="INFO",
                           choices=["INFO", "DEBUG"],
                           help="verbose level")
 
@@ -65,7 +65,7 @@ if __name__ == "__main__":
     else:
         logging.basicConfig(level=logging.DEBUG)
 
-    scenario = Scenario(args_.scenario)
+    scenario = Scenario(args_.scenario, cmd_args={'output_dir': ""})
     traj_logger = TrajLogger(None, Stats(scenario))
     trajectory = traj_logger.read_traj_aclib_format(args_.trajectory, scenario.cs)
     if args_.tae == "old":

@@ -121,7 +121,7 @@ class Validator(object):
 
         # Create new Stats without limits
         inf_scen = Scenario({'run_obj':self.scen.run_obj,
-                             'cutoff_time':self.scen.cutoff, 'output_dir':None})
+                             'cutoff_time':self.scen.cutoff, 'output_dir':""})
         inf_stats = Stats(inf_scen)
         inf_stats.start_timing()
 
