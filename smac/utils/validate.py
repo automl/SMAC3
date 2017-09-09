@@ -57,10 +57,12 @@ class Validator(object):
 
         self.scen = scenario
         self.traj = trajectory
+
         if output:
             self.output = output
         else:
             self.output =  "validation_rh.json"
+
         if isinstance(rng, np.random.RandomState):
             self.rng = rng
         elif isinstance(rng, int):
@@ -89,10 +91,12 @@ class Validator(object):
             number of repetitions in nondeterministic algorithms
         n_jobs: int
             number of parallel processes used by joblib
+        backend: str
+            what backend joblib should use for parallel runs
         runhistory: RunHistory or string or None
-            runhistory to take data from
+            optional, RunHistory-object or path to runhistory-file to reuse runs
         tae: ExecuteTARun
-            tae to be used. if none, will initialize ExecuteTARunOld
+            tae to be used. if None, will initialize ExecuteTARunOld
 
         Returns
         -------
@@ -115,7 +119,7 @@ class Validator(object):
             runhistory = RunHistory(average_cost)
             runhistory.load_json(fn, self.scen.cs)
 
-        # Get all runs needed as list
+        # Get all runs to be evaluated as list
         runs = self.get_runs(configs, instances, repetitions=repetitions,
                              runhistory=runhistory)
 
@@ -238,11 +242,13 @@ class Validator(object):
 
         for i in sorted(insts):
             for rep in range(repetitions):
+                # First, find a seed and add all the data we can take from the
+                # given runhistory to "our" validation runhistory.
                 configs_evaluated = []
                 if runhistory and i in inst_seed_config:
                     # Choose seed based on most often evaluated inst-seed-pair
                     seed, configs_evaluated = inst_seed_config[i].pop(0)
-                    # Delete i from dict if list is empty
+                    # Delete inst if all seeds are used
                     if len(inst_seed_config[i]) == 0:
                         inst_seed_config.pop(i)
                     # Add runs to runhistory
@@ -257,19 +263,21 @@ class Validator(object):
                     seed = self.rng.randint(MAXINT)
                     if self.scen.deterministic:
                         seed = 0
-                # configs in inner loop -> same inst-seed-pairs for all configs
-                for config in [c for c in configs if not c in
-                               configs_evaluated]:
+                # We now have a seed and add all configs that are not already
+                # evaluated on that seed to the runs-list. This way, we
+                # guarantee the same inst-seed-pairs for all configs.
+                for config in [c for c in configs if not c in configs_evaluated]:
+                    # Only use specifics if specific exists, else use string "0"
                     specs = self.scen.instance_specific[i] if i and i in self.scen.instance_specific else "0"
                     runs.append({'config':config,
                                  'inst':i,
                                  'seed':seed,
                                  'inst_specs': specs})
 
-        self.logger.info("Collected %d runs from %d configurations on %d instances "
-                         "with %d repetitions.", len(runs), len(configs), len(insts),
-                         repetitions)
-        self.logger.info("Using %d runs from given runhistory.", runs_from_rh)
+        self.logger.info("Collected %d runs from %d configurations on %d "
+                         "instances with %d repetitions. Reusing %d runs from "
+                         "given runhistory.", len(runs), len(configs),
+                         len(insts), repetitions, runs_from_rh)
 
         return runs
 
