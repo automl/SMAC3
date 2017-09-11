@@ -194,3 +194,18 @@ class ValidationTest(unittest.TestCase):
                                        runhistory=old_rh)
         runs_wo_rh = validator.get_runs(configs, insts, repetitions=2)
         self.assertEqual(len(runs_w_rh), len(runs_wo_rh) - 4)
+
+    def test_validate_epm(self):
+        ''' test using epm to validate '''
+        self.scen.train_insts = self.train_insts
+        self.scen.test_insts = self.test_insts
+        validator = Validator(self.scen, self.trajectory,
+                              self.output_rh, self.rng)
+        # Add a few runs and check, if they are correctly processed
+        old_configs = [entry["incumbent"] for entry in self.trajectory]
+        old_rh = RunHistory(average_cost)
+        for config in old_configs[:int(len(old_configs)/2)]:
+            old_rh.add(config, 1, 1, StatusType.SUCCESS, instance_id='0',
+                       seed=127)
+
+        validator.validate_epm('all','train',1,old_rh)

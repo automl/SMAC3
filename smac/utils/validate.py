@@ -4,13 +4,16 @@ import numpy as np
 import logging
 from joblib import Parallel, delayed
 
-from smac.utils.constants import MAXINT
+from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.scenario.scenario import Scenario
-from smac.runhistory.runhistory import RunHistory, RunKey
+from smac.runhistory.runhistory import RunHistory, RunKey, StatusType
+from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.execute_ta_run import ExecuteTARun
 from smac.stats.stats import Stats
 from smac.optimizer.objective import average_cost
+from smac.utils.constants import MAXINT
+from smac.utils.util_funcs import get_types
 
 def _unbound_tae_starter(tae, *args, **kwargs):
     """
@@ -94,7 +97,7 @@ class Validator(object):
         backend: str
             what backend joblib should use for parallel runs
         runhistory: RunHistory or string or None
-            optional, RunHistory-object or path to runhistory-file to reuse runs
+            optional, RunHistory-object to reuse runs
         tae: ExecuteTARun
             tae to be used. if None, will initialize ExecuteTARunOld
 
@@ -112,12 +115,6 @@ class Validator(object):
         # Get relevant configurations and instances
         configs = self._get_configs(config_mode)
         instances = self._get_instances(instance_mode)
-
-        # If runhistory is given as string, load into memory
-        if isinstance(runhistory, str):
-            fn = runhistory
-            runhistory = RunHistory(average_cost)
-            runhistory.load_json(fn, self.scen.cs)
 
         # Get all runs to be evaluated as list
         runs = self.get_runs(configs, instances, repetitions=repetitions,
@@ -199,6 +196,61 @@ class Validator(object):
                                           run['inst_specs'],
                                           capped=False) for run in runs)
         return run_results
+
+    def validate_epm(self, config_mode, instance_mode, repetitions, runhistory):
+        """
+        Use EPM to predict costs/runtimes for unknown config/inst-pairs.
+        """
+        # Get relevant configurations and instances
+        configs = self._get_configs(config_mode)
+        instances = self._get_instances(instance_mode)
+
+        # Here we need a rh to train the model
+        # TODO: impute? how?
+        rh2epm = RunHistory2EPM4Cost(num_params=len(self.scen.cs.get_hyperparameters()),
+                                     scenario=self.scen, rng=self.rng)
+        X, y = rh2epm.transform(runhistory)
+        self.logger.debug(X)
+        self.logger.debug(y)
+        types, bounds = get_types(self.scen.cs, self.scen.feature_array)
+        model = RandomForestWithInstances(types=types,
+                                          bounds=bounds,
+                                          instance_features=self.scen.feature_array,
+                                          seed=12345, ratio_features=1.0)
+        model.train(X, y)
+
+        # Predict
+        runs = self.get_runs(configs, instances, repetitions, runhistory)
+        if self.scen.feature_array:
+            feature_array_size = len(self.scen.cs.get_hyperparameters()) + self.scen.feature_array.shape[1]
+        else:
+            feature_array_size = len(self.scen.cs.get_hyperparameters())
+        X_pred = np.empty((len(runs), feature_array_size))
+        self.logger.debug(X.shape)
+        self.logger.debug(X_pred.shape)
+        for idx, run in enumerate(runs):
+            if self.scen.feature_array:
+                X_pred[idx] = np.hstack([run['config'].get_array(), self.scen.feature_dict[run['inst']]])
+            else:
+                X_pred[idx] = run['config'].get_array()
+        self.logger.debug(X_pred)
+
+        y_pred = model.predict(X_pred)
+        self.logger.debug(y_pred)
+
+        # Add runs to runhistory
+        self.rh_epm = RunHistory(average_cost)
+        self.rh_epm.update(runhistory)
+        for run, pred in zip(runs, y_pred[0]):
+            self.logger.debug(pred.shape)
+            self.rh_epm.add(config=run['config'],
+                            cost=pred,
+                            time=pred,
+                            status=StatusType.SUCCESS,
+                            instance_id=run['inst'])
+
+        return self.rh_epm
+
 
     def get_runs(self, configs, insts, repetitions=1, runhistory=None):
         """

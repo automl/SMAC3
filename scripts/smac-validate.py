@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
+from argparse import ArgumentParser, RawTextHelpFormatter
 import logging
 import sys
 import os
@@ -10,6 +10,8 @@ cmd_folder = os.path.realpath(os.path.join(cmd_folder, ".."))
 if cmd_folder not in sys.path:
     sys.path.insert(0, cmd_folder)
 
+from smac.optimizer.objective import average_cost
+from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
@@ -21,7 +23,7 @@ from smac.utils.io.traj_logging import TrajLogger
 if __name__ == "__main__":
 
 
-    parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
+    parser = ArgumentParser(formatter_class=RawTextHelpFormatter)
     req_opts = parser.add_argument_group("Required Options")
     req_opts.add_argument("--scenario", required=True,
                           help="path to SMAC scenario")
@@ -33,15 +35,19 @@ if __name__ == "__main__":
     req_opts = parser.add_argument_group("Optional Options")
     req_opts.add_argument("--configs", default="def+inc", type=str,
                           choices=["def", "inc", "def+inc", "time", "all"],
-                          help="what configurations to evaluate: "
-                               "def: default, inc: incumbent, "
-                               "time: configs at timesteps 2^1, 2^2, 2^3, ..., "
-                               "all: all configurations in the trajectory")
+                          help="what configurations to evaluate:\n"
+                               "  def: default\n  inc: incumbent\n"
+                               "  time: configs at timesteps 2^1, 2^2, 2^3, ...\n"
+                               "  all: all configurations in the trajectory")
     req_opts.add_argument("--instances", default="test", type=str,
                           choices=["train", "test", "train+test"],
                           help="what instances to evaluate")
+    req_opts.add_argument("--use_epm", default=False,
+                          help="whether to use an EPM instead of evaluating "
+                               "all runs with the TAE")
     req_opts.add_argument("--runhistory", default=None, type=str,
-                          help="path to runhistory to impute runs from")
+                          help="path to runhistory to take runs from to either "
+                               "avoid recalculation or to train the epm")
     req_opts.add_argument("--seed", type=int, help="random seed")
     req_opts.add_argument("--repetitions", default=1, type=int,
                           help="number of repetitions for nondeterministic "
@@ -49,7 +55,7 @@ if __name__ == "__main__":
     req_opts.add_argument("--n_jobs", default=1, type=int,
                           help="number of cpu-cores to use")
     req_opts.add_argument("--tae", default="old", type=str,
-                          help="what tae to use", choices=["aclib", "old"])
+                          help="what tae to use (if not using epm)", choices=["aclib", "old"])
     req_opts.add_argument("--verbose_level", default="INFO",
                           choices=["INFO", "DEBUG"],
                           help="verbose level")
@@ -81,9 +87,20 @@ if __name__ == "__main__":
 
     validator = Validator(scenario, trajectory, args_.output,
                           args_.seed)
-    validator.validate(config_mode=args_.configs,
-                       instance_mode=args_.instances,
-                       repetitions=args_.repetitions,
-                       n_jobs=args_.n_jobs,
-                       runhistory=args_.runhistory,
-                       tae=tae)
+
+    # Load runhistory
+    runhistory = RunHistory(average_cost)
+    runhistory.load_json(args_.runhistory, scenario.cs)
+
+    if args_.use_epm:
+        validator.validate_epm(config_mode=args_.configs,
+                               instance_mode=args_.instances,
+                               repetitions=args_.repetitions,
+                               runhistory=runhistory)
+    else:
+        validator.validate(config_mode=args_.configs,
+                           instance_mode=args_.instances,
+                           repetitions=args_.repetitions,
+                           n_jobs=args_.n_jobs,
+                           runhistory=runhistory,
+                           tae=tae)
