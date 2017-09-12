@@ -9,7 +9,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.stats.stats import Stats
 from smac.optimizer.objective import average_cost
 from smac.utils.io.traj_logging import TrajLogger
-from smac.utils.validate import Validator
+from smac.utils.validate import Validator, Run
 
 class ValidationTest(unittest.TestCase):
 
@@ -45,40 +45,40 @@ class ValidationTest(unittest.TestCase):
         validator = Validator(self.scen, self.trajectory,
                               self.output_rh, self.rng)
         # Get multiple configs
-        expected = [{'inst_specs': 'three', 'seed': 1608637542, 'inst': '3', 'config': 'config1'},
-                    {'inst_specs': 'three', 'seed': 1608637542, 'inst': '3', 'config': 'config2'},
-                    {'inst_specs': 'three', 'seed': 1273642419, 'inst': '3', 'config': 'config1'},
-                    {'inst_specs': 'three', 'seed': 1273642419, 'inst': '3', 'config': 'config2'},
-                    {'inst_specs': 'four',  'seed': 1935803228, 'inst': '4', 'config': 'config1'},
-                    {'inst_specs': 'four',  'seed': 1935803228, 'inst': '4', 'config': 'config2'},
-                    {'inst_specs': 'four',  'seed': 787846414,  'inst': '4', 'config': 'config1'},
-                    {'inst_specs': 'four',  'seed': 787846414,  'inst': '4', 'config': 'config2'},
-                    {'inst_specs': 'five',  'seed': 996406378,  'inst': '5', 'config': 'config1'},
-                    {'inst_specs': 'five',  'seed': 996406378,  'inst': '5', 'config': 'config2'},
-                    {'inst_specs': 'five',  'seed': 1201263687, 'inst': '5', 'config': 'config1'},
-                    {'inst_specs': 'five',  'seed': 1201263687, 'inst': '5', 'config': 'config2'}]
+        expected = [Run(inst_specs='three', seed=1608637542, inst='3', config='config1'),
+                    Run(inst_specs='three', seed=1608637542, inst='3', config='config2'),
+                    Run(inst_specs='three', seed=1273642419, inst='3', config='config1'),
+                    Run(inst_specs='three', seed=1273642419, inst='3', config='config2'),
+                    Run(inst_specs='four',  seed=1935803228, inst='4', config='config1'),
+                    Run(inst_specs='four',  seed=1935803228, inst='4', config='config2'),
+                    Run(inst_specs='four',  seed=787846414,  inst='4', config='config1'),
+                    Run(inst_specs='four',  seed=787846414,  inst='4', config='config2'),
+                    Run(inst_specs='five',  seed=996406378,  inst='5', config='config1'),
+                    Run(inst_specs='five',  seed=996406378,  inst='5', config='config2'),
+                    Run(inst_specs='five',  seed=1201263687, inst='5', config='config1'),
+                    Run(inst_specs='five',  seed=1201263687, inst='5', config='config2')]
 
         runs = validator.get_runs(['config1', 'config2'], self.scen.test_insts, repetitions=2)
         self.assertEqual(runs, expected)
 
         # Only train
-        expected = [{'inst_specs': 'null', 'seed': 423734972,  'inst': '0', 'config': 'config1'},
-                    {'inst_specs': 'null', 'seed': 415968276,  'inst': '0', 'config': 'config1'},
-                    {'inst_specs': 'one',  'seed': 670094950,  'inst': '1', 'config': 'config1'},
-                    {'inst_specs': 'one',  'seed': 1914837113, 'inst': '1', 'config': 'config1'},
-                    {'inst_specs': 'two',  'seed': 669991378,  'inst': '2', 'config': 'config1'},
-                    {'inst_specs': 'two',  'seed': 429389014,  'inst': '2', 'config': 'config1'}]
+        expected = [Run(inst_specs='null', seed=423734972,  inst='0', config='config1'),
+                    Run(inst_specs='null', seed=415968276,  inst='0', config='config1'),
+                    Run(inst_specs='one',  seed=670094950,  inst='1', config='config1'),
+                    Run(inst_specs='one',  seed=1914837113, inst='1', config='config1'),
+                    Run(inst_specs='two',  seed=669991378,  inst='2', config='config1'),
+                    Run(inst_specs='two',  seed=429389014,  inst='2', config='config1')]
 
         runs = validator.get_runs(['config1'], self.scen.train_insts, repetitions=2)
         self.assertEqual(runs, expected)
 
         # Test and train
-        expected = [{'inst': '0', 'seed': 249467210,  'config': 'config1', 'inst_specs': 'null'},
-                    {'inst': '1', 'seed': 1972458954, 'config': 'config1', 'inst_specs': 'one'},
-                    {'inst': '2', 'seed': 1572714583, 'config': 'config1', 'inst_specs': 'two'},
-                    {'inst': '3', 'seed': 1433267572, 'config': 'config1', 'inst_specs': 'three'},
-                    {'inst': '4', 'seed': 434285667,  'config': 'config1', 'inst_specs': 'four'},
-                    {'inst': '5', 'seed': 613608295,  'config': 'config1', 'inst_specs': 'five'}]
+        expected = [Run(inst='0', seed=249467210,  config='config1', inst_specs='null' ),
+                    Run(inst='1', seed=1972458954, config='config1', inst_specs='one'  ),
+                    Run(inst='2', seed=1572714583, config='config1', inst_specs='two'  ),
+                    Run(inst='3', seed=1433267572, config='config1', inst_specs='three'),
+                    Run(inst='4', seed=434285667,  config='config1', inst_specs='four' ),
+                    Run(inst='5', seed=613608295,  config='config1', inst_specs='five' )]
         insts = self.train_insts
         insts.extend(self.test_insts)
         runs = validator.get_runs(['config1'], insts, repetitions=1)
@@ -199,6 +199,19 @@ class ValidationTest(unittest.TestCase):
         ''' test using epm to validate '''
         self.scen.train_insts = self.train_insts
         self.scen.test_insts = self.test_insts
+        feature_dict = {'0':np.array((1,2,3)),
+                        '1':np.array((1,2,3)),
+                        '2':np.array((1,2,3)),
+                        '3':np.array((1,2,3)),
+                        '4':np.array((1,2,3)),
+                        '5':np.array((1,2,3))}
+        self.scen.feature_dict = feature_dict
+        feature_array = []
+        for inst_ in self.train_insts:
+            feature_array.append(self.scen.feature_dict[inst_])
+        feature_array = np.array(feature_array)
+        self.scen.feature_array = feature_array
+        self.scen.n_features = self.scen.feature_array.shape[1]
         validator = Validator(self.scen, self.trajectory,
                               self.output_rh, self.rng)
         # Add a few runs and check, if they are correctly processed

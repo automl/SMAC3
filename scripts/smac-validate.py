@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from argparse import ArgumentParser, RawTextHelpFormatter
+from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter, SUPPRESS
 import logging
 import sys
 import os
@@ -14,16 +14,14 @@ from smac.optimizer.objective import average_cost
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
-from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
-from smac.utils.validate import Validator
+from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.utils.io.traj_logging import TrajLogger
+from smac.utils.validate import Validator
 
 
 if __name__ == "__main__":
-
-
-    parser = ArgumentParser(formatter_class=RawTextHelpFormatter)
+    parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
     req_opts = parser.add_argument_group("Required Options")
     req_opts.add_argument("--scenario", required=True,
                           help="path to SMAC scenario")
@@ -35,10 +33,10 @@ if __name__ == "__main__":
     req_opts = parser.add_argument_group("Optional Options")
     req_opts.add_argument("--configs", default="def+inc", type=str,
                           choices=["def", "inc", "def+inc", "time", "all"],
-                          help="what configurations to evaluate:\n"
-                               "  def: default\n  inc: incumbent\n"
-                               "  time: configs at timesteps 2^1, 2^2, 2^3, ...\n"
-                               "  all: all configurations in the trajectory")
+                          help="what configurations to evaluate. "
+                               "def=default; inc=incumbent; "
+                               "time=configs at timesteps 2^1, 2^2, 2^3, ...; "
+                               "all=all configurations in the trajectory")
     req_opts.add_argument("--instances", default="test", type=str,
                           choices=["train", "test", "train+test"],
                           help="what instances to evaluate")
@@ -53,7 +51,7 @@ if __name__ == "__main__":
                           help="number of repetitions for nondeterministic "
                                "algorithms")
     req_opts.add_argument("--n_jobs", default=1, type=int,
-                          help="number of cpu-cores to use")
+                          help="number of cpu-cores to use (-1 to use all)")
     req_opts.add_argument("--tae", default="old", type=str,
                           help="what tae to use (if not using epm)", choices=["aclib", "old"])
     req_opts.add_argument("--verbose_level", default="INFO",
@@ -81,9 +79,9 @@ if __name__ == "__main__":
                               cost_for_crash=scenario.cost_for_crash)
     if args_.tae == "aclib":
         tae = ExecuteTARunAClib(ta=scenario.ta,
-                              run_obj=scenario.run_obj,
-                              par_factor=scenario.par_factor,
-                              cost_for_crash=scenario.cost_for_crash)
+                                run_obj=scenario.run_obj,
+                                par_factor=scenario.par_factor,
+                                cost_for_crash=scenario.cost_for_crash)
 
     validator = Validator(scenario, trajectory, args_.output,
                           args_.seed)
