@@ -18,19 +18,25 @@ class ValidationTest(unittest.TestCase):
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.logger.setLevel(logging.DEBUG)
         self.rng = np.random.RandomState(seed=42)
-        self.scen = Scenario({'run_obj': 'quality', 'param_file':
-                              'test/test_files/validation/test_validation_pcs.pcs',
-                              'algo': 'python -u test/test_files/example_ta.py'})
+        self.scen_fn = 'test/test_files/validation/scenario.txt'
         self.train_insts = ['0', '1', '2']
         self.test_insts = ['3', '4', '5']
-        self.scen.instance_specific = {'0': 'null', '1': 'one', '2': 'two',
-                                       '3': 'three', '4': 'four', '5': 'five'}
-        self.output_rh = 'test/test_files/validation/test_validation_rh.json'
+        self.inst_specs = {'0': 'null', '1': 'one', '2': 'two',
+                           '3': 'three', '4': 'four', '5': 'five'}
+        self.feature_dict = {'0':np.array((1, 2, 3)),
+                             '1':np.array((1, 2, 3)),
+                             '2':np.array((1, 2, 3)),
+                             '3':np.array((1, 2, 3)),
+                             '4':np.array((1, 2, 3)),
+                             '5':np.array((1, 2, 3))}
+        self.output_rh = 'test/test_files/validation/'
+        scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
         self.trajectory = TrajLogger.read_traj_aclib_format(
-            fn='test/test_files/validation/test_validation_traj.json', cs=self.scen.cs)
+            fn='test/test_files/validation/test_validation_traj.json', cs=scen.cs)
 
     def test_get_configs(self):
-        validator = Validator(self.scen, self.trajectory,
+        scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
+        validator = Validator(scen, self.trajectory,
                               self.output_rh, self.rng)
         self.assertEqual(1, len(validator._get_configs("def")))
         self.assertEqual(1, len(validator._get_configs("inc")))
@@ -40,9 +46,13 @@ class ValidationTest(unittest.TestCase):
 
     def test_get_runs(self):
         ''' test if the runs are generated as expected '''
-        self.scen.train_insts = self.train_insts
-        self.scen.test_insts = self.test_insts
-        validator = Validator(self.scen, self.trajectory,
+        scen = Scenario(self.scen_fn,
+                        cmd_args={'run_obj':'quality',
+                                  'instances' : self.train_insts,
+                                  'test_instances': self.test_insts})
+        scen.instance_specific = self.inst_specs
+
+        validator = Validator(scen, self.trajectory,
                               self.output_rh, self.rng)
         # Get multiple configs
         expected = [Run(inst_specs='three', seed=1608637542, inst='3', config='config1'),
@@ -58,7 +68,7 @@ class ValidationTest(unittest.TestCase):
                     Run(inst_specs='five',  seed=1201263687, inst='5', config='config1'),
                     Run(inst_specs='five',  seed=1201263687, inst='5', config='config2')]
 
-        runs = validator.get_runs(['config1', 'config2'], self.scen.test_insts, repetitions=2)
+        runs = validator.get_runs(['config1', 'config2'], scen.test_insts, repetitions=2)
         self.assertEqual(runs, expected)
 
         # Only train
@@ -69,7 +79,7 @@ class ValidationTest(unittest.TestCase):
                     Run(inst_specs='two',  seed=669991378,  inst='2', config='config1'),
                     Run(inst_specs='two',  seed=429389014,  inst='2', config='config1')]
 
-        runs = validator.get_runs(['config1'], self.scen.train_insts, repetitions=2)
+        runs = validator.get_runs(['config1'], scen.train_insts, repetitions=2)
         self.assertEqual(runs, expected)
 
         # Test and train
@@ -86,9 +96,12 @@ class ValidationTest(unittest.TestCase):
 
     def test_validate(self):
         ''' test validation '''
-        self.scen.train_insts = self.train_insts
-        self.scen.test_insts = self.test_insts
-        validator = Validator(self.scen, self.trajectory,
+        scen = Scenario(self.scen_fn,
+                        cmd_args={'run_obj':'quality',
+                                  'instances' : self.train_insts,
+                                  'test_instances': self.test_insts})
+        scen.instance_specific = self.inst_specs
+        validator = Validator(scen, self.trajectory,
                               self.output_rh, self.rng)
         # Test basic usage
         rh = validator.validate(config_mode='def', instance_mode='test',
@@ -113,7 +126,9 @@ class ValidationTest(unittest.TestCase):
 
     def test_validate_no_insts(self):
         ''' no instances '''
-        validator = Validator(self.scen, self.trajectory,
+        scen = Scenario(self.scen_fn,
+                        cmd_args={'run_obj':'quality'})
+        validator = Validator(scen, self.trajectory,
                               self.output_rh, self.rng)
         rh = validator.validate(config_mode='def+inc',
                                 instance_mode='train', repetitions=3)
@@ -123,9 +138,12 @@ class ValidationTest(unittest.TestCase):
 
     def test_validate_deterministic(self):
         ''' deterministic ta '''
-        self.scen.deterministic = True
-        self.scen.train_insts = self.train_insts
-        validator = Validator(self.scen, self.trajectory,
+        scen = Scenario(self.scen_fn,
+                        cmd_args={'run_obj':'quality',
+                                  'instances' : self.train_insts,
+                                  'deterministic': True})
+        scen.instance_specific = self.inst_specs
+        validator = Validator(scen, self.trajectory,
                               self.output_rh, self.rng)
         rh = validator.validate(config_mode='def+inc',
                                 instance_mode='train', repetitions=3)
@@ -135,15 +153,20 @@ class ValidationTest(unittest.TestCase):
 
     def test_parallel(self):
         ''' test parallel '''
-        validator = Validator(self.scen, self.trajectory,
+        scen = Scenario(self.scen_fn,
+                        cmd_args={'run_obj':'quality'})
+        validator = Validator(scen, self.trajectory,
                               self.output_rh, self.rng)
         validator.validate(config_mode='all', instance_mode='train+test', n_jobs=-1)
 
     def test_passed_runhistory(self):
         ''' test if passed runhistory is in resulting runhistory '''
-        self.scen.train_insts = self.train_insts
-        self.scen.test_insts = self.test_insts
-        validator = Validator(self.scen, self.trajectory,
+        scen = Scenario(self.scen_fn,
+                        cmd_args={'run_obj':'quality',
+                                  'instances' : self.train_insts,
+                                  'test_instances': self.test_insts})
+        scen.instance_specific = self.inst_specs
+        validator = Validator(scen, self.trajectory,
                               self.output_rh, self.rng)
         # Add a few runs and check, if they are correctly processed
         old_configs = [entry["incumbent"] for entry in self.trajectory]
@@ -161,9 +184,12 @@ class ValidationTest(unittest.TestCase):
 
     def test_passed_runhistory_deterministic(self):
         ''' test if passed runhistory is in resulting runhistory '''
-        self.scen.deterministic = True
-        self.scen.train_insts = self.train_insts
-        validator = Validator(self.scen, self.trajectory,
+        scen = Scenario(self.scen_fn,
+                        cmd_args={'run_obj':'quality',
+                                  'instances' : self.train_insts,
+                                  'deterministic' : True})
+        scen.instance_specific = self.inst_specs
+        validator = Validator(scen, self.trajectory,
                               self.output_rh, self.rng)
         # Add a few runs and check, if they are correctly processed
         old_configs = [entry["incumbent"] for entry in self.trajectory]
@@ -180,7 +206,10 @@ class ValidationTest(unittest.TestCase):
 
     def test_passed_runhistory_no_insts(self):
         ''' test passed runhistory, without instances '''
-        validator = Validator(self.scen, self.trajectory,
+        scen = Scenario(self.scen_fn,
+                        cmd_args={'run_obj':'quality'})
+        scen.instance_specific = self.inst_specs
+        validator = Validator(scen, self.trajectory,
                               self.output_rh, self.rng)
         # Add a few runs and check, if they are correctly processed
         old_configs = [entry["incumbent"] for entry in self.trajectory]
@@ -197,22 +226,13 @@ class ValidationTest(unittest.TestCase):
 
     def test_validate_epm(self):
         ''' test using epm to validate '''
-        self.scen.train_insts = self.train_insts
-        self.scen.test_insts = self.test_insts
-        feature_dict = {'0':np.array((1,2,3)),
-                        '1':np.array((1,2,3)),
-                        '2':np.array((1,2,3)),
-                        '3':np.array((1,2,3)),
-                        '4':np.array((1,2,3)),
-                        '5':np.array((1,2,3))}
-        self.scen.feature_dict = feature_dict
-        feature_array = []
-        for inst_ in self.train_insts:
-            feature_array.append(self.scen.feature_dict[inst_])
-        feature_array = np.array(feature_array)
-        self.scen.feature_array = feature_array
-        self.scen.n_features = self.scen.feature_array.shape[1]
-        validator = Validator(self.scen, self.trajectory,
+        scen = Scenario(self.scen_fn,
+                        cmd_args={'run_obj':'quality',
+                                  'instances' : self.train_insts,
+                                  'test_instances': self.test_insts,
+                                  'features': self.feature_dict})
+        scen.instance_specific = self.inst_specs
+        validator = Validator(scen, self.trajectory,
                               self.output_rh, self.rng)
         # Add a few runs and check, if they are correctly processed
         old_configs = [entry["incumbent"] for entry in self.trajectory]
@@ -221,4 +241,4 @@ class ValidationTest(unittest.TestCase):
             old_rh.add(config, 1, 1, StatusType.SUCCESS, instance_id='0',
                        seed=127)
 
-        validator.validate_epm('all','train',1,old_rh)
+        validator.validate_epm('all', 'train', 1, old_rh)
