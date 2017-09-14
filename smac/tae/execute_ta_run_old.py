@@ -1,6 +1,7 @@
 import sys
 from subprocess import Popen, PIPE
 
+from smac.configspace import Configuration
 from smac.tae.execute_ta_run import StatusType, ExecuteTARun
 
 __author__ = "Marius Lindauer"
@@ -18,10 +19,11 @@ class ExecuteTARunOld(ExecuteTARun):
     (SMAC < v2.10)
     """
 
-    def run(self, config, instance=None,
-            cutoff=None,
-            seed=12345,
-            instance_specific="0"
+    def run(self, config:Configuration, 
+            instance:str=None,
+            cutoff:float=None,
+            seed:int=12345,
+            instance_specific:str="0"
             ):
         """Runs target algorithm <self.ta> with configuration <config> on
         instance <instance> with instance specifics <specifics> for at most
@@ -29,11 +31,11 @@ class ExecuteTARunOld(ExecuteTARun):
 
         Parameters
         ----------
-            config : dictionary (or similar)
+            config : Configuration
                 Dictionary param -> value
             instance : string
                 Problem instance
-            cutoff : double
+            cutoff : float
                 Runtime cutoff
             seed : int
                 Random seed
@@ -56,22 +58,10 @@ class ExecuteTARunOld(ExecuteTARun):
         if cutoff is None:
             cutoff = 99999999999999.
 
-        # TODO: maybe replace fixed instance specific and cutoff_length (0) to
-        # other value
-        cmd = []
-        cmd.extend(self.ta)
-        cmd.extend([instance, instance_specific, str(cutoff), "0", str(seed)])
-        for p in config:
-            if not config.get(p) is None:
-                cmd.extend(["-" + str(p), str(config[p])])
-
-        self.logger.debug("Calling: %s" % (" ".join(cmd)))
-        p = Popen(cmd, shell=False, stdout=PIPE, stderr=PIPE,
-                  universal_newlines=True)
-        stdout_, stderr_ = p.communicate()
-
-        self.logger.debug("Stdout: %s" % (stdout_))
-        self.logger.debug("Stderr: %s" % (stderr_))
+        stdout_, stderr_ = self._call_ta(config=config, 
+                              instance=instance, 
+                              instance_specific=instance_specific, 
+                              cutoff=cutoff, seed=seed)
 
         status = "CRASHED"
         quality = 1234567890
@@ -94,16 +84,18 @@ class ExecuteTARunOld(ExecuteTARun):
                 quality = float(quality)
                 seed = int(seed)
 
-        if status in ["SAT", "UNSAT", "SUCCESS"]:
+        if status.upper() in ["SAT", "UNSAT", "SUCCESS"]:
             status = StatusType.SUCCESS
-        elif status in ["TIMEOUT"]:
+        elif status.upper() in ["TIMEOUT"]:
             status = StatusType.TIMEOUT
-        elif status in ["CRASHED"]:
+        elif status.upper() in ["CRASHED"]:
             status = StatusType.CRASHED
-        elif status in ["ABORT"]:
+        elif status.upper() in ["ABORT"]:
             status = StatusType.ABORT
-        elif status in ["MEMOUT"]:
+        elif status.upper() in ["MEMOUT"]:
             status = StatusType.MEMOUT
+        else:
+            status = StatusType.CRASHED
 
         if status in [StatusType.CRASHED, StatusType.ABORT]:
             self.logger.warn(
@@ -117,3 +109,29 @@ class ExecuteTARunOld(ExecuteTARun):
             cost = quality
 
         return status, cost, float(runtime), additional_info
+    
+    def _call_ta(self, 
+                 config:Configuration,
+                 instance:str, 
+                 instance_specific:str, 
+                 cutoff:float,
+                 seed:int):
+
+        # TODO: maybe replace fixed instance specific and cutoff_length (0) to
+        # other value
+        cmd = []
+        cmd.extend(self.ta)
+        cmd.extend([instance, instance_specific, str(cutoff), "0", str(seed)])
+        for p in config:
+            if not config.get(p) is None:
+                cmd.extend(["-" + str(p), str(config[p])])
+
+        self.logger.debug("Calling: %s" % (" ".join(cmd)))
+        p = Popen(cmd, shell=False, stdout=PIPE, stderr=PIPE,
+                  universal_newlines=True)
+        stdout_, stderr_ = p.communicate()
+
+        self.logger.debug("Stdout: %s" % (stdout_))
+        self.logger.debug("Stderr: %s" % (stderr_))
+        
+        return stdout_, stderr_
