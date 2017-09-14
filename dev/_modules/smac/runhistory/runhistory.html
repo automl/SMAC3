@@ -633,14 +633,14 @@
 
 <div class="viewcode-block" id="RunHistory.update"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">:</span> <span class="s1">&#39;RunHistory&#39;</span><span class="p">,</span>
                <span class="n">origin</span><span class="p">:</span> <span class="n">DataOrigin</span><span class="o">=</span><span class="n">DataOrigin</span><span class="o">.</span><span class="n">EXTERNAL_SAME_INSTANCES</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Update the current runhistory by adding new runs from a json file.</span>
+        <span class="sd">&quot;&quot;&quot;Update the current runhistory by adding new runs from a RunHistory.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        runhistory: RunHistory</span>
 <span class="sd">            Runhistory with additional data to be added to self</span>
 <span class="sd">        origin: DataOrigin</span>
-<span class="sd">            If set to ``INTERNAL`` or ``EXTERNAL_FULL`` the data will be </span>
+<span class="sd">            If set to ``INTERNAL`` or ``EXTERNAL_FULL`` the data will be</span>
 <span class="sd">            added to the internal data structure self._configid_to_inst_seed</span>
 <span class="sd">            and be available :meth:`through get_runs_for_config`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

@@ -439,6 +439,36 @@ it will raise a ValueError</li>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="smac.optimizer.smbo.SMBO.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>config_mode='inc'</em>, <em>instance_mode='train+test'</em>, <em>repetitions=1</em>, <em>n_jobs=-1</em>, <em>backend='threading'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create validator-object and run validation, using
+scenario-information, runhistory from smbo and tae_runner from intensify</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>config_mode</strong> (<em>string</em>) – what configurations to validate
+from [def, inc, def+inc, time, all], time means evaluation at
+timesteps 2^-4, 2^-3, 2^-2, 2^-1, 2^0, 2^1, …</li>
+<li><strong>instance_mode</strong> (<em>string</em>) – what instances to use for validation, from [train, test, train+test]</li>
+<li><strong>repetitions</strong> (<em>int</em>) – number of repetitions in nondeterministic algorithms (in
+deterministic will be fixed to 1)</li>
+<li><strong>n_jobs</strong> (<em>int</em>) – number of parallel processes used by joblib</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>runhistory</strong> – runhistory containing all specified runs</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">RunHistory</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 </div>
