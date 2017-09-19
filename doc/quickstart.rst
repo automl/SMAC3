@@ -202,7 +202,7 @@ and evaluation of the function, SMAC needs as inputs the scenario object
 as well as the function.
 
 .. literalinclude:: ../examples/svm.py
-   :lines: 103-
+   :lines: 103-112
    :lineno-match:
 
 We start the optimization loop.
@@ -235,6 +235,13 @@ so that as final output we can see the error value of the incumbent.
 .. code-block:: bash
 
    Optimized Value: 0.02
+
+As a bonus, we can validate our results. This is more useful when optimizing on
+instances, but we include the code so it is easily applicable for any usecase.
+
+.. literalinclude:: ../examples/svm.py
+   :lines: 115-
+   :lineno-match:
 
 .. _spear-example:
 
