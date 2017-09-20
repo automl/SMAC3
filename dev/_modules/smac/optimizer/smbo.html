@@ -267,9 +267,11 @@
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="k">import</span> <span class="n">AbstractRunHistory2EPM</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="k">import</span> <span class="n">Stats</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
+<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">convert_configurations_to_array</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">FirstRunCrashedException</span>
 <span class="kn">from</span> <span class="nn">smac.utils.validate</span> <span class="k">import</span> <span class="n">Validator</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="k">import</span> <span class="n">TrajLogger</span>
+
 
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Aaron Klein, Marius Lindauer, Matthias Feurer&quot;</span>
@@ -376,11 +378,9 @@
 <span class="sd">            The best found configuration</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">start_timing</span><span class="p">()</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_design</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-        <span class="k">except</span> <span class="n">FirstRunCrashedException</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span><span class="p">:</span>
-                <span class="k">raise</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_design</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
 
         <span class="c1"># Main BO loop</span>
         <span class="n">iteration</span> <span class="o">=</span> <span class="mi">1</span>

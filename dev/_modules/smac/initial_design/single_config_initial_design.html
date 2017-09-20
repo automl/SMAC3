@@ -250,11 +250,12 @@
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">smac.initial_design.initial_design</span> <span class="k">import</span> <span class="n">InitialDesign</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">ExecuteTARun</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">ExecuteTARun</span><span class="p">,</span> <span class="n">StatusType</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="k">import</span> <span class="n">Stats</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="k">import</span> <span class="n">TrajLogger</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.utils</span> <span class="k">import</span> <span class="n">constants</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">FirstRunCrashedException</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer, Katharina Eggensperger&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2016, ML4AAD&quot;</span>
@@ -322,13 +323,25 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">initial_seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">MAXINT</span><span class="p">)</span>
 
-        <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">additional_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tae_runner</span><span class="o">.</span><span class="n">start</span><span class="p">(</span>
-            <span class="n">initial_incumbent</span><span class="p">,</span>
-            <span class="n">instance</span><span class="o">=</span><span class="n">rand_inst</span><span class="p">,</span>
-            <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">cutoff</span><span class="p">,</span>
-            <span class="n">seed</span><span class="o">=</span><span class="n">initial_seed</span><span class="p">,</span>
-            <span class="n">instance_specific</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">instance_specific</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">rand_inst</span><span class="p">,</span>
-                                                                  <span class="s2">&quot;0&quot;</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">additional_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tae_runner</span><span class="o">.</span><span class="n">start</span><span class="p">(</span>
+                <span class="n">initial_incumbent</span><span class="p">,</span>
+                <span class="n">instance</span><span class="o">=</span><span class="n">rand_inst</span><span class="p">,</span>
+                <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">cutoff</span><span class="p">,</span>
+                <span class="n">seed</span><span class="o">=</span><span class="n">initial_seed</span><span class="p">,</span>
+                <span class="n">instance_specific</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">instance_specific</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">rand_inst</span><span class="p">,</span>
+                                                                      <span class="s2">&quot;0&quot;</span><span class="p">))</span>
+        <span class="k">except</span> <span class="n">FirstRunCrashedException</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span><span class="p">:</span>
+                <span class="k">raise</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;quality&quot;</span><span class="p">:</span>
+                    <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">cost_for_crash</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">cutoff</span> <span class="o">*</span> <span class="n">scenario</span><span class="o">.</span><span class="n">par_factor</span>
+                <span class="n">runtime</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">additional_info</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># first incumbent</span>
 
