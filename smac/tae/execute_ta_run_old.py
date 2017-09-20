@@ -95,6 +95,9 @@ class ExecuteTARunOld(ExecuteTARun):
         elif status.upper() in ["MEMOUT"]:
             status = StatusType.MEMOUT
         else:
+            self.logger.warn("Could not parse output of target algorithm. Expected format: "
+                             "\"Result of this algorithm run: <status>,<runtime>,<quality>,<seed>\"; "
+                             "Treating as CRASHED run.")
             status = StatusType.CRASHED
 
         if status in [StatusType.CRASHED, StatusType.ABORT]:

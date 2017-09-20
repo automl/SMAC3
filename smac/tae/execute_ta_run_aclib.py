@@ -73,6 +73,9 @@ class ExecuteTARunAClib(ExecuteTARun):
         elif results["status"] in ["MEMOUT"]:
             status = StatusType.MEMOUT
         else:
+            self.logger.warn("Could not identify status; should be one of the following: "
+                             "SAT, UNSAT, SUCCESS, TIMEOUT, CRASHED, ABORT or MEMOUT; "
+                             "Treating as CRASHED run.")
             status = StatusType.CRASHED
 
         if status in [StatusType.CRASHED, StatusType.ABORT]:
