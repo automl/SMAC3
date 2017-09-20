@@ -2,6 +2,7 @@ import sys
 import json
 from subprocess import Popen, PIPE
 
+from smac.configspace import Configuration
 from smac.tae.execute_ta_run import StatusType, ExecuteTARun
 
 __author__ = "Marius Lindauer"
@@ -18,21 +19,22 @@ class ExecuteTARunAClib(ExecuteTARun):
     instance and some resource limitations. Uses the AClib 2.0 style
     """
 
-    def run(self, config, instance=None,
-            cutoff=None,
-            seed=12345,
-            instance_specific="0"):
+    def run(self, config: Configuration,
+            instance: str=None,
+            cutoff: float=None,
+            seed: int=12345,
+            instance_specific: str="0"):
         """Runs target algorithm <self.ta> with configuration <config> on
         instance <instance> with instance specifics <specifics> for at most
         <cutoff> seconds and random seed <seed>
 
         Parameters
         ----------
-            config : dictionary (or similar)
+            config : Configuration
                 Dictionary param -> value
-            instance : string
+            instance : str
                 Problem instance
-            cutoff : double
+            cutoff : float
                 Runtime cutoff
             seed : int
                 Random seed
@@ -55,34 +57,10 @@ class ExecuteTARunAClib(ExecuteTARun):
         if cutoff is None:
             cutoff = 99999999999999
 
-        # TODO: maybe replace fixed instance specific and cutoff_length (0) to
-        # other value
-        cmd = []
-        cmd.extend(self.ta)
-        cmd.extend(["--instance", instance,
-                    "--cutoff", str(cutoff),
-                    "--seed", str(seed),
-                    "--config"
-                    ])
-
-        for p in config:
-            if not config.get(p) is None:
-                cmd.extend(["-" + str(p), str(config[p])])
-
-        self.logger.debug("Calling: %s" % (" ".join(cmd)))
-        p = Popen(cmd, shell=False, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-        stdout_, stderr_ = p.communicate()
-
-        self.logger.debug("Stdout: %s" % (stdout_))
-        self.logger.debug("Stderr: %s" % (stderr_))
-
-        results = {"status": "CRASHED",
-                   "cost": 1234567890
-                   }
-        for line in stdout_.split("\n"):
-            if line.startswith("Result of this algorithm run:"):
-                fields = ":".join(line.split(":")[1:])
-                results = json.loads(fields)
+        results, stdout_, stderr_ = self._call_ta(config=config,
+                                instance=instance,
+                                instance_specific=instance_specific,
+                                cutoff=cutoff, seed=seed)
 
         if results["status"] in ["SAT", "UNSAT", "SUCCESS"]:
             status = StatusType.SUCCESS
@@ -94,6 +72,11 @@ class ExecuteTARunAClib(ExecuteTARun):
             status = StatusType.ABORT
         elif results["status"] in ["MEMOUT"]:
             status = StatusType.MEMOUT
+        else:
+            self.logger.warn("Could not identify status; should be one of the following: "
+                             "SAT, UNSAT, SUCCESS, TIMEOUT, CRASHED, ABORT or MEMOUT; "
+                             "Treating as CRASHED run.")
+            status = StatusType.CRASHED
 
         if status in [StatusType.CRASHED, StatusType.ABORT]:
             self.logger.warn(
@@ -132,3 +115,42 @@ class ExecuteTARunAClib(ExecuteTARun):
             pass
 
         return status, cost, runtime, results
+
+    def _call_ta(self,
+                 config: Configuration,
+                 instance: str,
+                 instance_specific: str,
+                 cutoff: float,
+                 seed: int):
+
+        # TODO: maybe replace fixed instance specific and cutoff_length (0) to
+        # other value
+        cmd = []
+        cmd.extend(self.ta)
+        cmd.extend(["--instance", instance,
+                    "--cutoff", str(cutoff),
+                    "--seed", str(seed),
+                    "--config"
+                    ])
+
+        for p in config:
+            if not config.get(p) is None:
+                cmd.extend(["-" + str(p), str(config[p])])
+
+        self.logger.debug("Calling: %s" % (" ".join(cmd)))
+        p = Popen(cmd, shell=False, stdout=PIPE,
+                  stderr=PIPE, universal_newlines=True)
+        stdout_, stderr_ = p.communicate()
+
+        self.logger.debug("Stdout: %s" % (stdout_))
+        self.logger.debug("Stderr: %s" % (stderr_))
+
+        results = {"status": "CRASHED",
+                   "cost": 1234567890
+                   }
+        for line in stdout_.split("\n"):
+            if line.startswith("Result of this algorithm run:"):
+                fields = ":".join(line.split(":")[1:])
+                results = json.loads(fields)
+
+        return results, stdout_, stderr_
