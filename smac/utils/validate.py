@@ -8,6 +8,7 @@ import logging
 import numpy as np
 
 from smac.configspace import Configuration
+from ConfigSpace.util import impute_inactive_values
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.optimizer.objective import average_cost
 from smac.runhistory.runhistory import RunHistory, RunKey, StatusType
@@ -68,10 +69,7 @@ class Validator(object):
         self.scen = scenario
         self.traj = trajectory
 
-        if output:
-            self.output = output
-        else:
-            self.output =  "validation_rh.json"
+        self.output = output
 
         if isinstance(rng, np.random.RandomState):
             self.rng = rng

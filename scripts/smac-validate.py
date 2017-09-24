@@ -87,8 +87,11 @@ if __name__ == "__main__":
                           args_.seed)
 
     # Load runhistory
-    runhistory = RunHistory(average_cost)
-    runhistory.load_json(args_.runhistory, scenario.cs)
+    if args_.runhistory:
+        runhistory = RunHistory(average_cost)
+        runhistory.load_json(args_.runhistory, scenario.cs)
+    else:
+        runhistory = None
 
     if args_.use_epm:
         validator.validate_epm(config_mode=args_.configs,
