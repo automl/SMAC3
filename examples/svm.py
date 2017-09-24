@@ -110,3 +110,10 @@ incumbent = smac.optimize()
 inc_value = svm_from_cfg(incumbent)
 
 print("Optimized Value: %.2f" % (inc_value))
+
+
+# We can also validate our results (though this makes a lot more sense with instances)
+smac.validate(config_mode='inc',      # We can choose which configurations to evaluate
+              #instance_mode='train+test',  # Defines what instances to validate
+              repetitions=100,        # Ignored, unless you set "deterministic" to "false" in line 95
+              n_jobs=1)               # How many cores to use in parallel for optimization

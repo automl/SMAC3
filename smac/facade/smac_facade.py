@@ -380,6 +380,35 @@ class SMAC(object):
                                     "runhistory.json"))
         return incumbent
 
+    def validate(self, config_mode='inc', instance_mode='train+test',
+                 repetitions=1, n_jobs=-1, backend='threading'):
+        """Create validator-object and run validation, using
+        scenario-information, runhistory from smbo and tae_runner from intensify
+
+        Parameters
+        ----------
+        config_mode: string
+            what configurations to validate
+            from [def, inc, def+inc, time, all], time means evaluation at
+            timesteps 2^-4, 2^-3, 2^-2, 2^-1, 2^0, 2^1, ...
+        instance_mode: string
+            what instances to use for validation, from [train, test, train+test]
+        repetitions: int
+            number of repetitions in nondeterministic algorithms (in
+            deterministic will be fixed to 1)
+        n_jobs: int
+            number of parallel processes used by joblib
+        backend: string
+            what backend to be used by joblib
+
+        Returns
+        -------
+        runhistory: RunHistory
+            runhistory containing all specified runs
+        """
+        return self.solver.validate(config_mode, instance_mode, repetitions,
+                                    n_jobs, backend)
+
     def get_tae_runner(self):
         """Returns target algorithm evaluator (TAE) object which can run the
         target algorithm given a configuration
