@@ -55,6 +55,9 @@ class Stats(object):
         """
         Save all relevant attributes to json-dictionary.
         """
+        # Set used_wallclock_time
+        self.wallclock_time_used = self.get_used_wallclock_time()
+
         data = {}
 
         for v in vars(self):
