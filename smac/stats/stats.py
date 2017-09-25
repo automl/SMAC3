@@ -64,7 +64,9 @@ class Stats(object):
             if not v in ['_Stats__scenario', '_logger', '_start_time']:
                 data[v] = getattr(self, v)
 
-        with open(os.path.join(self.__scenario.output_dir, "stats.json"), 'w') as fh:
+        path = os.path.join(self.__scenario.output_dir, "stats.json")
+        self._logger.debug("Saving stats to %s", path)
+        with open(path, 'w') as fh:
             json.dump(data, fh)
 
     def load(self, fn=None):

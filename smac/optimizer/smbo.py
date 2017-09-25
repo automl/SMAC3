@@ -145,9 +145,11 @@ class SMBO(object):
                              "recorded in the Stats-object. If you're restoring "
                              "a state, please provide the Stats-object.")
         else:
-            self.logger.debug("Detecting Stats-object and restore-incumbent. "
-                              "Skipping initial-design-run. Assuming state "
-                              "restoration...")
+            # Restoring state!
+            self.logger.info("State Restored! Starting optimization with "
+                             "incumbent %s", self.incumbent)
+            self.logger.info("State restored with following budget:")
+            self.stats.print_stats()
 
     def run(self):
         """Runs the Bayesian optimization loop
