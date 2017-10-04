@@ -13,15 +13,15 @@ from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.optimizer import pSMAC
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
+from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.optimizer.local_search import LocalSearch
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
-from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
-from smac.configspace import Configuration, convert_configurations_to_array
+from smac.stats.stats import Stats
 from smac.tae.execute_ta_run import FirstRunCrashedException
-from smac.utils.validate import Validator
 from smac.utils.io.traj_logging import TrajLogger
+from smac.utils.validate import Validator
 
 
 
@@ -65,8 +65,10 @@ class SMBO(object):
                  model: RandomForestWithInstances,
                  acq_optimizer: LocalSearch,
                  acquisition_func: AbstractAcquisitionFunction,
-                 rng: np.random.RandomState):
-        """Constructor
+                 rng: np.random.RandomState,
+                 restore_incumbent: Configuration=None):
+        """
+        Interface that contains the main Bayesian optimization loop
 
         Parameters
         ----------
@@ -98,13 +100,15 @@ class SMBO(object):
         acquisition_function : AcquisitionFunction
             Object that implements the AbstractAcquisitionFunction (i.e., infill
             criterion for acq_optimizer)
+        restore_incumbent: Configuration
+            incumbent to be used from the start. ONLY used to restore states.
         rng: np.random.RandomState
             Random number generator
         """
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
-        self.incumbent = None
+        self.incumbent = restore_incumbent
 
         self.scenario = scenario
         self.config_space = scenario.cs
@@ -120,6 +124,33 @@ class SMBO(object):
         self.acquisition_func = acquisition_func
         self.rng = rng
 
+    def start(self):
+        """Starts the Bayesian Optimization loop.
+        Detects whether we the optimization is restored from previous state.
+        """
+        self.stats.start_timing()
+        # Initialization, depends on input
+        if self.stats.ta_runs == 0 and self.incumbent is None:
+            try:
+                self.incumbent = self.initial_design.run()
+            except FirstRunCrashedException as err:
+                if self.scenario.abort_on_first_run_crash:
+                    raise
+        elif self.stats.ta_runs > 0 and self.incumbent is None:
+            raise ValueError("According to stats there have been runs performed, "
+                             "but the optimizer cannot detect an incumbent. Did "
+                             "you set the incumbent (e.g. after restoring state)?")
+        elif self.stats.ta_runs == 0 and self.incumbent is not None:
+            raise ValueError("An incumbent is specified, but there are no runs "
+                             "recorded in the Stats-object. If you're restoring "
+                             "a state, please provide the Stats-object.")
+        else:
+            # Restoring state!
+            self.logger.info("State Restored! Starting optimization with "
+                             "incumbent %s", self.incumbent)
+            self.logger.info("State restored with following budget:")
+            self.stats.print_stats()
+
     def run(self):
         """Runs the Bayesian optimization loop
 
@@ -128,10 +159,7 @@ class SMBO(object):
         incumbent: np.array(1, H)
             The best found configuration
         """
-        self.stats.start_timing()
-
-        self.incumbent = self.initial_design.run()
-
+        self.start()
 
         # Main BO loop
         iteration = 1

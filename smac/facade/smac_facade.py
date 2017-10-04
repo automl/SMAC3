@@ -65,6 +65,7 @@ class SMAC(object):
                  initial_design: InitialDesign=None,
                  initial_configurations: typing.List[Configuration]=None,
                  stats: Stats=None,
+                 restore_incumbent: Configuration=None,
                  rng: np.random.RandomState=None):
         """Constructor
 
@@ -105,6 +106,8 @@ class SMAC(object):
             optional stats object
         rng : np.random.RandomState
             Random number generator
+        restore_incumbent: Configuration
+            incumbent used if restoring to previous state
         """
 
         self.logger = logging.getLogger(
@@ -319,7 +322,8 @@ class SMAC(object):
                            model=model,
                            acq_optimizer=local_search,
                            acquisition_func=acquisition_function,
-                           rng=rng)
+                           rng=rng,
+                           restore_incumbent=restore_incumbent)
 
     @staticmethod
     def _get_rng(rng):
@@ -364,6 +368,7 @@ class SMAC(object):
         try:
             incumbent = self.solver.run()
         finally:
+            self.solver.stats.save()
             self.solver.stats.print_stats()
             self.logger.info("Final Incumbent: %s" % (self.solver.incumbent))
             self.runhistory = self.solver.runhistory

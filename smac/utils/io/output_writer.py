@@ -81,8 +81,7 @@ class OutputWriter(object):
           - copies files pcs_fn, train_inst_fn, test_inst_fn and feature_fn to
             output if possible, creates the files from attributes otherwise
         """
-        if key in ['pcs_fn', 'train_inst_fn', 'test_inst_fn', 'feature_fn',
-                   'output_dir']:
+        if key in ['pcs_fn', 'train_inst_fn', 'test_inst_fn', 'feature_fn']:
             # Copy if file exists, else write to new file
             if value is not None and os.path.isfile(value):
                 try:
