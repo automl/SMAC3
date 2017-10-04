@@ -291,6 +291,7 @@ The script to invoke <em>SMAC</em> is located in <em>scripts/smac</em>. Please s
 <li><em>seed</em>: The integer that the random-generator will be based upon. <strong>Default</strong>: 12345</li>
 <li><em>verbose_level</em>: in [INFO, DEBUG], specifies the logging-verbosity. <strong>Default</strong>: INFO</li>
 <li><em>mode</em>: in [SMAC, ROAR]. SMAC will use the bayeasian optimization with an intensification process, whereas ROAR stands for Random Online Adaptive Racing. <strong>Default</strong>: SMAC</li>
+<li><em>restore_state</em>: A string specifying the folder of the <em>SMAC</em>-run to be continued. <strong>Assuming exactly the same scenario, except for budget-options.</strong></li>
 </ul>
 </dd>
 </dl>
@@ -301,6 +302,16 @@ form. Read more in the section on <a class="reference external" href="tae.html#t
 The <strong>paramfile</strong>-parameter defines the path to the <a class="reference external" href="options.html#pcs">PCS-file</a>,
 which describes the ranges and default values of the tunable parameters.
 Both will interpret paths <em>from the execution-directory</em>.</p>
+<p id="restorestate">To restore a previous <em>SMAC</em>-run, either because it was interrupted or because
+you want to extend its computation- or time-limits, use the
+<code class="docutils literal"><span class="pre">--restore_state</span> <span class="pre">FOLDER</span></code>-option in the commandline. If you want to increase
+computation- or time-limits, change the scenario-file specified with the
+<code class="docutils literal"><span class="pre">--scenario</span> <span class="pre">SCENARIOFILE</span></code>-option (not the one in the folder to be restored).
+Restarting a <em>SMAC</em>-run that quit due to budget-exhaustion will do nothing,
+because the budget is still exhausted.
+<strong>Changing any other options than *wallclock_limit*, *runcount_limit* or
+*tuner-timeout* in the scenario-file is NOT intended and will likely lead
+to unexpected behaviour!</strong></p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p>Currently, running <em>SMAC</em> via the commandline will register the algorithm with a

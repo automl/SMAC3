@@ -330,8 +330,7 @@
 <span class="sd">          - copies files pcs_fn, train_inst_fn, test_inst_fn and feature_fn to</span>
 <span class="sd">            output if possible, creates the files from attributes otherwise</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;pcs_fn&#39;</span><span class="p">,</span> <span class="s1">&#39;train_inst_fn&#39;</span><span class="p">,</span> <span class="s1">&#39;test_inst_fn&#39;</span><span class="p">,</span> <span class="s1">&#39;feature_fn&#39;</span><span class="p">,</span>
-                   <span class="s1">&#39;output_dir&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;pcs_fn&#39;</span><span class="p">,</span> <span class="s1">&#39;train_inst_fn&#39;</span><span class="p">,</span> <span class="s1">&#39;test_inst_fn&#39;</span><span class="p">,</span> <span class="s1">&#39;feature_fn&#39;</span><span class="p">]:</span>
             <span class="c1"># Copy if file exists, else write to new file</span>
             <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
                 <span class="k">try</span><span class="p">:</span>

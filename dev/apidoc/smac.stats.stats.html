@@ -258,7 +258,8 @@
 <dt id="smac.stats.stats.Stats">
 <em class="property">class </em><code class="descclassname">smac.stats.stats.</code><code class="descname">Stats</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>All statistics collected during configuration run</p>
+<p>All statistics collected during configuration run.
+Written to output-directory to be restored</p>
 <dl class="attribute">
 <dt id="smac.stats.stats.Stats.ta_runs">
 <code class="descname">ta_runs</code><a class="headerlink" href="#smac.stats.stats.Stats.ta_runs" title="Permalink to this definition">¶</a></dt>
@@ -342,6 +343,21 @@ and ta_runs is empty</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="smac.stats.stats.Stats.load">
+<code class="descname">load</code><span class="sig-paren">(</span><em>fn=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load all attributes from dictionary in file into stats-object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fn</strong> (<em>string</em><em> or </em><em>None</em>) – Path to file to load stats from. If no path is given, the path given
+in the current scenario is used.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="smac.stats.stats.Stats.print_stats">
 <code class="descname">print_stats</code><span class="sig-paren">(</span><em>debug_out: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.print_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.print_stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints all statistics</p>
@@ -356,9 +372,16 @@ and ta_runs is empty</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="smac.stats.stats.Stats.save">
+<code class="descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save all relevant attributes to json-dictionary.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="smac.stats.stats.Stats.start_timing">
 <code class="descname">start_timing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.start_timing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.start_timing" title="Permalink to this definition">¶</a></dt>
-<dd><p>Starts the timer (for the runtime configuration budget)</p>
+<dd><p>Starts the timer (for the runtime configuration budget).
+Substracting wallclock time used so we can continue loaded Stats.</p>
 </dd></dl>
 
 <dl class="method">

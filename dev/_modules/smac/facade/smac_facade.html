@@ -314,6 +314,7 @@
                  <span class="n">initial_design</span><span class="p">:</span> <span class="n">InitialDesign</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">initial_configurations</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">restore_incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor</span>
 
@@ -354,6 +355,8 @@
 <span class="sd">            optional stats object</span>
 <span class="sd">        rng : np.random.RandomState</span>
 <span class="sd">            Random number generator</span>
+<span class="sd">        restore_incumbent: Configuration</span>
+<span class="sd">            incumbent used if restoring to previous state</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
@@ -568,7 +571,8 @@
                            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
                            <span class="n">acq_optimizer</span><span class="o">=</span><span class="n">local_search</span><span class="p">,</span>
                            <span class="n">acquisition_func</span><span class="o">=</span><span class="n">acquisition_function</span><span class="p">,</span>
-                           <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+                           <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
+                           <span class="n">restore_incumbent</span><span class="o">=</span><span class="n">restore_incumbent</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_rng</span><span class="p">(</span><span class="n">rng</span><span class="p">):</span>
@@ -613,6 +617,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
         <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">print_stats</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Final Incumbent: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">runhistory</span>

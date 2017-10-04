@@ -279,7 +279,7 @@ in each iteration which are never looked at.</p>
 
 <dl class="class">
 <dt id="smac.optimizer.smbo.SMBO">
-<em class="property">class </em><code class="descclassname">smac.optimizer.smbo.</code><code class="descname">SMBO</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>stats: smac.stats.stats.Stats</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</em>, <em>intensifier: smac.intensification.intensification.Intensifier</em>, <em>aggregate_func: &lt;built-in function callable&gt;</em>, <em>num_run: int</em>, <em>model: smac.epm.rf_with_instances.RandomForestWithInstances</em>, <em>acq_optimizer: smac.optimizer.local_search.LocalSearch</em>, <em>acquisition_func: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>rng: mtrand.RandomState</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.optimizer.smbo.</code><code class="descname">SMBO</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>stats: smac.stats.stats.Stats</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</em>, <em>intensifier: smac.intensification.intensification.Intensifier</em>, <em>aggregate_func: &lt;built-in function callable&gt;</em>, <em>num_run: int</em>, <em>model: smac.epm.rf_with_instances.RandomForestWithInstances</em>, <em>acq_optimizer: smac.optimizer.local_search.LocalSearch</em>, <em>acquisition_func: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>rng: mtrand.RandomState</em>, <em>restore_incumbent: ConfigSpace.configuration_space.Configuration = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Interface that contains the main Bayesian optimization loop</p>
 <dl class="attribute">
@@ -357,7 +357,7 @@ in each iteration which are never looked at.</p>
 <code class="descname">rng</code><a class="headerlink" href="#smac.optimizer.smbo.SMBO.rng" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p>Constructor</p>
+<p>Interface that contains the main Bayesian optimization loop</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -383,6 +383,7 @@ RandomForestWithInstances)</li>
 search)</li>
 <li><strong>acquisition_function</strong> (<em>AcquisitionFunction</em>) – Object that implements the AbstractAcquisitionFunction (i.e., infill
 criterion for acq_optimizer)</li>
+<li><strong>restore_incumbent</strong> (<em>Configuration</em>) – incumbent to be used from the start. ONLY used to restore states.</li>
 <li><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</li>
 </ul>
 </td>
@@ -437,6 +438,13 @@ it will raise a ValueError</li>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.optimizer.smbo.SMBO.start">
+<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts the Bayesian Optimization loop.
+Detects whether we the optimization is restored from previous state.</p>
 </dd></dl>
 
 <dl class="method">
