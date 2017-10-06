@@ -381,7 +381,7 @@ class SMAC(object):
         return incumbent
 
     def validate(self, config_mode='inc', instance_mode='train+test',
-                 repetitions=1, n_jobs=-1, backend='threading'):
+                 repetitions=1, use_epm=False, n_jobs=-1, backend='threading'):
         """Create validator-object and run validation, using
         scenario-information, runhistory from smbo and tae_runner from intensify
 
@@ -396,6 +396,8 @@ class SMAC(object):
         repetitions: int
             number of repetitions in nondeterministic algorithms (in
             deterministic will be fixed to 1)
+        use_epm: bool
+            whether to use an EPM instead of evaluating all runs with the TAE
         n_jobs: int
             number of parallel processes used by joblib
         backend: string
@@ -407,7 +409,7 @@ class SMAC(object):
             runhistory containing all specified runs
         """
         return self.solver.validate(config_mode, instance_mode, repetitions,
-                                    n_jobs, backend)
+                                    use_epm, n_jobs, backend)
 
     def get_tae_runner(self):
         """Returns target algorithm evaluator (TAE) object which can run the
