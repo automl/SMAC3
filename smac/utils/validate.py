@@ -237,7 +237,6 @@ class Validator(object):
             runhistory with predicted runs
         """
         # Train random forest and transform training data (from given rh)
-        # TODO: impute? how?
         rh2epm = RunHistory2EPM4Cost(num_params=len(self.scen.cs.get_hyperparameters()),
                                      scenario=self.scen, rng=self.rng)
         X, y = rh2epm.transform(runhistory)
