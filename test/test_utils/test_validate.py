@@ -1,3 +1,4 @@
+import sys
 import unittest
 import logging
 
@@ -5,11 +6,17 @@ import numpy as np
 
 from smac.scenario.scenario import Scenario
 from smac.tae.execute_ta_run import StatusType
+from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.runhistory.runhistory import RunHistory
 from smac.stats.stats import Stats
 from smac.optimizer.objective import average_cost
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator, Run
+
+if sys.version_info[0] == 2:
+    import mock
+else:
+    from unittest import mock
 
 class ValidationTest(unittest.TestCase):
 
@@ -34,6 +41,48 @@ class ValidationTest(unittest.TestCase):
         self.trajectory = TrajLogger.read_traj_aclib_format(
             fn='test/test_files/validation/test_validation_traj.json', cs=scen.cs)
 
+    def test_rng(self):
+        scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
+        validator = Validator(scen, self.trajectory,
+                              self.output_rh, 42)
+        validator = Validator(scen, self.trajectory,
+                              self.output_rh)
+
+    def test_no_output(self):
+        scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
+        validator = Validator(scen, self.trajectory, "")
+
+    def test_nonexisting_output(self):
+        scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
+        validator = Validator(scen, self.trajectory,
+                "test/test_files/validation/test/nonexisting/output")
+
+    def test_pass_tae(self):
+        scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
+        tae = ExecuteTARunOld(ta=scen.ta)
+        validator = Validator(scen, self.trajectory,
+                "test/test_files/validation/test/nonexisting/output")
+        with mock.patch.object(Validator, "_validate_parallel",
+                return_value=[(1,2,3,4)]):
+            validator.validate(tae=tae)
+
+    def test_no_rh_epm(self):
+        scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
+        scen.feature_array = None
+        validator = Validator(scen, self.trajectory, "")
+        self.assertRaises(ValueError, validator.validate_epm)
+
+    def test_no_feature_dict(self):
+        scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
+        scen.feature_array = None
+        validator = Validator(scen, self.trajectory,
+                "test/test_files/validation/test/nonexisting/output")
+        old_rh = RunHistory(average_cost)
+        for config in [e["incumbent"] for e in self.trajectory]:
+            old_rh.add(config, 1, 1, StatusType.SUCCESS, instance_id='0',
+                       seed=127)
+        validator.validate_epm(runhistory=old_rh)
+
     def test_get_configs(self):
         scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
         validator = Validator(scen, self.trajectory,
@@ -43,6 +92,8 @@ class ValidationTest(unittest.TestCase):
         self.assertEqual(2, len(validator._get_configs("def+inc")))
         self.assertEqual(9, len(validator._get_configs("time")))
         self.assertEqual(9, len(validator._get_configs("all")))
+        self.assertRaises(ValueError, validator._get_configs, "notanoption")
+        self.assertRaises(ValueError, validator._get_instances, "notanoption")
 
     def test_get_runs(self):
         ''' test if the runs are generated as expected '''
@@ -171,9 +222,11 @@ class ValidationTest(unittest.TestCase):
         # Add a few runs and check, if they are correctly processed
         old_configs = [entry["incumbent"] for entry in self.trajectory]
         old_rh = RunHistory(average_cost)
+        seeds = [127 for i in range(int(len(old_configs)/2))]
+        seeds[-1] = 126  # Test instance_seed-structure in validation
         for config in old_configs[:int(len(old_configs)/2)]:
             old_rh.add(config, 1, 1, StatusType.SUCCESS, instance_id='0',
-                       seed=127)
+                       seed=seeds[old_configs.index(config)])
 
         configs = validator._get_configs('all')
         insts = validator._get_instances('train')

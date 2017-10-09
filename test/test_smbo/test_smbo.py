@@ -357,11 +357,5 @@ class TestSMBO(unittest.TestCase):
                 self.assertTrue(epm_validation_mock.called)
 
 
-
-if __name__ == "__main__":
-    unittest.main()
-
-
-
 if __name__ == "__main__":
     unittest.main()

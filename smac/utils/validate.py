@@ -236,6 +236,8 @@ class Validator(object):
         runhistory: RunHistory
             runhistory with predicted runs
         """
+        if not isinstance(runhistory, RunHistory):
+            raise ValueError("No runhistory specified for validating with EPM!")
         # Train random forest and transform training data (from given rh)
         rh2epm = RunHistory2EPM4Cost(num_params=len(self.scen.cs.get_hyperparameters()),
                                      scenario=self.scen, rng=self.rng)
@@ -259,10 +261,10 @@ class Validator(object):
             feature_array_size = len(self.scen.cs.get_hyperparameters())
         X_pred = np.empty((len(runs), feature_array_size))
         for idx, run in enumerate(runs):
-            try:
+            if hasattr(self.scen, "feature_dict") and run.inst != None:
                 X_pred[idx] = np.hstack([run.config.get_array(),
                                          self.scen.feature_dict[run.inst]])
-            except AttributeError:
+            else:
                 X_pred[idx] = run.config.get_array()
         self.logger.debug("Predicting desired %d runs, data has shape %s and "
                           "NaNs are present: %s (if so, will be zeroed)",
