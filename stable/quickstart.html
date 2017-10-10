@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Quick Start &mdash; SMAC 0.6.0 documentation</title>
+  <title>Quick Start &mdash; SMAC 0.7.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="SMAC 0.6.0 documentation" href="index.html"/>
+    <link rel="top" title="SMAC 0.7.1 documentation" href="index.html"/>
         <link rel="next" title="Manual" href="manual.html"/>
         <link rel="prev" title="Installation" href="installation.html"/> 
 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.6.0
+                0.7.1
               </div>
             
           
@@ -603,6 +603,19 @@ so that as final output we can see the error value of the incumbent.</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>Optimized Value: <span class="m">0</span>.02
 </pre></div>
 </div>
+<p>As a bonus, we can validate our results. This is more useful when optimizing on
+instances, but we include the code so it is easily applicable for any usecase.</p>
+<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>115
+116
+117
+118
+119</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># We can also validate our results (though this makes a lot more sense with instances)</span>
+<span class="n">smac</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">config_mode</span><span class="o">=</span><span class="s1">&#39;inc&#39;</span><span class="p">,</span>      <span class="c1"># We can choose which configurations to evaluate</span>
+              <span class="c1">#instance_mode=&#39;train+test&#39;,  # Defines what instances to validate</span>
+              <span class="n">repetitions</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>        <span class="c1"># Ignored, unless you set &quot;deterministic&quot; to &quot;false&quot; in line 95</span>
+              <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>               <span class="c1"># How many cores to use in parallel for optimization</span>
+</pre></div>
+</td></tr></table></div>
 </div>
 <div class="section" id="spear-qcp">
 <span id="spear-example"></span><h2>Spear-QCP<a class="headerlink" href="#spear-qcp" title="Permalink to this headline">¶</a></h2>
@@ -817,7 +830,7 @@ In the folder <em>SMAC</em> generates a file for the runhistory, and two files f
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.6.0',
+            VERSION:'0.7.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

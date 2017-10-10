@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.runhistory.runhistory &mdash; SMAC 0.6.0 documentation</title>
+  <title>smac.runhistory.runhistory &mdash; SMAC 0.7.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="SMAC 0.6.0 documentation" href="../../../index.html"/>
+    <link rel="top" title="SMAC 0.7.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.6.0
+                0.7.1
               </div>
             
           
@@ -633,14 +633,14 @@
 
 <div class="viewcode-block" id="RunHistory.update"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">:</span> <span class="s1">&#39;RunHistory&#39;</span><span class="p">,</span>
                <span class="n">origin</span><span class="p">:</span> <span class="n">DataOrigin</span><span class="o">=</span><span class="n">DataOrigin</span><span class="o">.</span><span class="n">EXTERNAL_SAME_INSTANCES</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Update the current runhistory by adding new runs from a json file.</span>
+        <span class="sd">&quot;&quot;&quot;Update the current runhistory by adding new runs from a RunHistory.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        runhistory: RunHistory</span>
 <span class="sd">            Runhistory with additional data to be added to self</span>
 <span class="sd">        origin: DataOrigin</span>
-<span class="sd">            If set to ``INTERNAL`` or ``EXTERNAL_FULL`` the data will be </span>
+<span class="sd">            If set to ``INTERNAL`` or ``EXTERNAL_FULL`` the data will be</span>
 <span class="sd">            added to the internal data structure self._configid_to_inst_seed</span>
 <span class="sd">            and be available :meth:`through get_runs_for_config`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -693,7 +693,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'0.6.0',
+            VERSION:'0.7.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.facade.smac_facade module &mdash; SMAC 0.6.0 documentation</title>
+  <title>smac.facade.smac_facade module &mdash; SMAC 0.7.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="SMAC 0.6.0 documentation" href="../index.html"/>
+    <link rel="top" title="SMAC 0.7.1 documentation" href="../index.html"/>
         <link rel="up" title="smac.facade package" href="smac.facade.html"/>
         <link rel="next" title="smac.initial_design package" href="smac.initial_design.html"/>
         <link rel="prev" title="smac.facade.roar_facade module" href="smac.facade.roar_facade.html"/> 
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.6.0
+                0.7.1
               </div>
             
           
@@ -256,7 +256,7 @@
 <span id="smac-facade-smac-facade-module"></span><h1>smac.facade.smac_facade module<a class="headerlink" href="#module-smac.facade.smac_facade" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.facade.smac_facade.SMAC">
-<em class="property">class </em><code class="descclassname">smac.facade.smac_facade.</code><code class="descname">SMAC</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>tae_runner=None</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory = None</em>, <em>intensifier: smac.intensification.intensification.Intensifier = None</em>, <em>acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction = None</em>, <em>model: smac.epm.base_epm.AbstractEPM = None</em>, <em>runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM = None</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign = None</em>, <em>initial_configurations: typing.List[ConfigSpace.configuration_space.Configuration] = None</em>, <em>stats: smac.stats.stats.Stats = None</em>, <em>rng: mtrand.RandomState = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_facade.html#SMAC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_facade.SMAC" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.facade.smac_facade.</code><code class="descname">SMAC</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>tae_runner=None</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory = None</em>, <em>intensifier: smac.intensification.intensification.Intensifier = None</em>, <em>acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction = None</em>, <em>model: smac.epm.base_epm.AbstractEPM = None</em>, <em>runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM = None</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign = None</em>, <em>initial_configurations: typing.List[ConfigSpace.configuration_space.Configuration] = None</em>, <em>stats: smac.stats.stats.Stats = None</em>, <em>restore_incumbent: ConfigSpace.configuration_space.Configuration = None</em>, <em>rng: mtrand.RandomState = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_facade.html#SMAC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_facade.SMAC" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Facade to use SMAC default mode</p>
 <dl class="attribute">
@@ -318,6 +318,7 @@ if objective is runtime.</li>
 cannot be used together with initial_design</li>
 <li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – optional stats object</li>
 <li><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</li>
+<li><strong>restore_incumbent</strong> (<em>Configuration</em>) – incumbent used if restoring to previous state</li>
 </ul>
 </td>
 </tr>
@@ -413,6 +414,37 @@ time).</p>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="smac.facade.smac_facade.SMAC.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>config_mode='inc'</em>, <em>instance_mode='train+test'</em>, <em>repetitions=1</em>, <em>n_jobs=-1</em>, <em>backend='threading'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_facade.html#SMAC.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_facade.SMAC.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create validator-object and run validation, using
+scenario-information, runhistory from smbo and tae_runner from intensify</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>config_mode</strong> (<em>string</em>) – what configurations to validate
+from [def, inc, def+inc, time, all], time means evaluation at
+timesteps 2^-4, 2^-3, 2^-2, 2^-1, 2^0, 2^1, …</li>
+<li><strong>instance_mode</strong> (<em>string</em>) – what instances to use for validation, from [train, test, train+test]</li>
+<li><strong>repetitions</strong> (<em>int</em>) – number of repetitions in nondeterministic algorithms (in
+deterministic will be fixed to 1)</li>
+<li><strong>n_jobs</strong> (<em>int</em>) – number of parallel processes used by joblib</li>
+<li><strong>backend</strong> (<em>string</em>) – what backend to be used by joblib</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>runhistory</strong> – runhistory containing all specified runs</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">RunHistory</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -461,7 +493,7 @@ time).</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.6.0',
+            VERSION:'0.7.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

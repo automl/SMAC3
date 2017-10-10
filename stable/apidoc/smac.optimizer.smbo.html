@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.optimizer.smbo module &mdash; SMAC 0.6.0 documentation</title>
+  <title>smac.optimizer.smbo module &mdash; SMAC 0.7.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="SMAC 0.6.0 documentation" href="../index.html"/>
+    <link rel="top" title="SMAC 0.7.1 documentation" href="../index.html"/>
         <link rel="up" title="smac.optimizer package" href="smac.optimizer.html"/>
         <link rel="next" title="smac.runhistory package" href="smac.runhistory.html"/>
         <link rel="prev" title="smac.optimizer.pSMAC module" href="smac.optimizer.pSMAC.html"/> 
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.6.0
+                0.7.1
               </div>
             
           
@@ -279,7 +279,7 @@ in each iteration which are never looked at.</p>
 
 <dl class="class">
 <dt id="smac.optimizer.smbo.SMBO">
-<em class="property">class </em><code class="descclassname">smac.optimizer.smbo.</code><code class="descname">SMBO</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>stats: smac.stats.stats.Stats</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</em>, <em>intensifier: smac.intensification.intensification.Intensifier</em>, <em>aggregate_func: &lt;built-in function callable&gt;</em>, <em>num_run: int</em>, <em>model: smac.epm.rf_with_instances.RandomForestWithInstances</em>, <em>acq_optimizer: smac.optimizer.local_search.LocalSearch</em>, <em>acquisition_func: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>rng: mtrand.RandomState</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.optimizer.smbo.</code><code class="descname">SMBO</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>stats: smac.stats.stats.Stats</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</em>, <em>intensifier: smac.intensification.intensification.Intensifier</em>, <em>aggregate_func: &lt;built-in function callable&gt;</em>, <em>num_run: int</em>, <em>model: smac.epm.rf_with_instances.RandomForestWithInstances</em>, <em>acq_optimizer: smac.optimizer.local_search.LocalSearch</em>, <em>acquisition_func: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>rng: mtrand.RandomState</em>, <em>restore_incumbent: ConfigSpace.configuration_space.Configuration = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Interface that contains the main Bayesian optimization loop</p>
 <dl class="attribute">
@@ -357,7 +357,7 @@ in each iteration which are never looked at.</p>
 <code class="descname">rng</code><a class="headerlink" href="#smac.optimizer.smbo.SMBO.rng" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p>Constructor</p>
+<p>Interface that contains the main Bayesian optimization loop</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -383,6 +383,7 @@ RandomForestWithInstances)</li>
 search)</li>
 <li><strong>acquisition_function</strong> (<em>AcquisitionFunction</em>) – Object that implements the AbstractAcquisitionFunction (i.e., infill
 criterion for acq_optimizer)</li>
+<li><strong>restore_incumbent</strong> (<em>Configuration</em>) – incumbent to be used from the start. ONLY used to restore states.</li>
 <li><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</li>
 </ul>
 </td>
@@ -439,6 +440,43 @@ it will raise a ValueError</li>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="smac.optimizer.smbo.SMBO.start">
+<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts the Bayesian Optimization loop.
+Detects whether we the optimization is restored from previous state.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.optimizer.smbo.SMBO.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>config_mode='inc'</em>, <em>instance_mode='train+test'</em>, <em>repetitions=1</em>, <em>n_jobs=-1</em>, <em>backend='threading'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create validator-object and run validation, using
+scenario-information, runhistory from smbo and tae_runner from intensify</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>config_mode</strong> (<em>string</em>) – what configurations to validate
+from [def, inc, def+inc, time, all], time means evaluation at
+timesteps 2^-4, 2^-3, 2^-2, 2^-1, 2^0, 2^1, …</li>
+<li><strong>instance_mode</strong> (<em>string</em>) – what instances to use for validation, from [train, test, train+test]</li>
+<li><strong>repetitions</strong> (<em>int</em>) – number of repetitions in nondeterministic algorithms (in
+deterministic will be fixed to 1)</li>
+<li><strong>n_jobs</strong> (<em>int</em>) – number of parallel processes used by joblib</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>runhistory</strong> – runhistory containing all specified runs</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">RunHistory</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -487,7 +525,7 @@ it will raise a ValueError</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.6.0',
+            VERSION:'0.7.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

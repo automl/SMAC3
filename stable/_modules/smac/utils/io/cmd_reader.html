@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.utils.io.cmd_reader &mdash; SMAC 0.6.0 documentation</title>
+  <title>smac.utils.io.cmd_reader &mdash; SMAC 0.7.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../../search.html"/>
-    <link rel="top" title="SMAC 0.6.0 documentation" href="../../../../index.html"/>
+    <link rel="top" title="SMAC 0.7.1 documentation" href="../../../../index.html"/>
         <link rel="up" title="Module code" href="../../../index.html"/> 
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.6.0
+                0.7.1
               </div>
             
           
@@ -294,6 +294,8 @@
         <span class="n">req_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--mode&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;SMAC&quot;</span><span class="p">,</span>
                               <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SMAC&quot;</span><span class="p">,</span> <span class="s2">&quot;ROAR&quot;</span><span class="p">,</span> <span class="s2">&quot;EPILS&quot;</span><span class="p">],</span>
                               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Configuration mode.&quot;</span><span class="p">)</span>
+        <span class="n">req_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--restore_state&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to dir with SMAC-files.&quot;</span><span class="p">)</span>
         <span class="n">req_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--warmstart_runhistory&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                               <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
                               <span class="n">help</span><span class="o">=</span><span class="n">SUPPRESS</span><span class="p">)</span>  <span class="c1"># list of runhistory dump files</span>
@@ -301,7 +303,7 @@
         <span class="c1"># pcs and feature space has to be identical to --scenario_file</span>
         <span class="n">req_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--warmstart_scenario&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                               <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
-                              <span class="n">help</span><span class="o">=</span><span class="n">SUPPRESS</span><span class="p">)</span>  
+                              <span class="n">help</span><span class="o">=</span><span class="n">SUPPRESS</span><span class="p">)</span>
         <span class="n">req_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--warmstart_incumbent&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                               <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
                               <span class="n">help</span><span class="o">=</span><span class="n">SUPPRESS</span><span class="p">)</span><span class="c1"># list of trajectory dump files, </span>
@@ -369,7 +371,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../../',
-            VERSION:'0.6.0',
+            VERSION:'0.7.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

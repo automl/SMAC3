@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.tae.execute_ta_run_old module &mdash; SMAC 0.6.0 documentation</title>
+  <title>smac.tae.execute_ta_run_old module &mdash; SMAC 0.7.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="SMAC 0.6.0 documentation" href="../index.html"/>
+    <link rel="top" title="SMAC 0.7.1 documentation" href="../index.html"/>
         <link rel="up" title="smac.tae package" href="smac.tae.html"/>
         <link rel="next" title="smac.utils package" href="smac.utils.html"/>
         <link rel="prev" title="smac.tae.execute_ta_run_aclib module" href="smac.tae.execute_ta_run_aclib.html"/> 
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.6.0
+                0.7.1
               </div>
             
           
@@ -281,7 +281,7 @@ that returned NaN or inf)</li>
 </table>
 <dl class="method">
 <dt id="smac.tae.execute_ta_run_old.ExecuteTARunOld.run">
-<code class="descname">run</code><span class="sig-paren">(</span><em>config</em>, <em>instance=None</em>, <em>cutoff=None</em>, <em>seed=12345</em>, <em>instance_specific='0'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run_old.html#ExecuteTARunOld.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run_old.ExecuteTARunOld.run" title="Permalink to this definition">¶</a></dt>
+<code class="descname">run</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em>, <em>instance: str = None</em>, <em>cutoff: float = None</em>, <em>seed: int = 12345</em>, <em>instance_specific: str = '0'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run_old.html#ExecuteTARunOld.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run_old.ExecuteTARunOld.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs target algorithm &lt;self.ta&gt; with configuration &lt;config&gt; on
 instance &lt;instance&gt; with instance specifics &lt;specifics&gt; for at most
 &lt;cutoff&gt; seconds and random seed &lt;seed&gt;</p>
@@ -290,9 +290,9 @@ instance &lt;instance&gt; with instance specifics &lt;specifics&gt; for at most
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>config</strong> (<em>dictionary</em><em> (or </em><em>similar</em><em>)</em>) – Dictionary param -&gt; value</li>
+<li><strong>config</strong> (<em>Configuration</em>) – Dictionary param -&gt; value</li>
 <li><strong>instance</strong> (<em>string</em>) – Problem instance</li>
-<li><strong>cutoff</strong> (<em>double</em>) – Runtime cutoff</li>
+<li><strong>cutoff</strong> (<em>float</em>) – Runtime cutoff</li>
 <li><strong>seed</strong> (<em>int</em>) – Random seed</li>
 <li><strong>instance_specific</strong> (<em>str</em>) – Instance specific information (e.g., domain file or solution)</li>
 </ul>
@@ -392,7 +392,7 @@ uses StatusType.CAPPED</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.6.0',
+            VERSION:'0.7.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

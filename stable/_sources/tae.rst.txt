@@ -7,7 +7,7 @@ Target Algorithm Evaluator
 --------------------------
 
 *SMAC* evaluates the algorithm to be optimized by invoking it through a Target
-Algortihm Evaluator (TAE). There are different TAEs implemented in *SMAC* which
+Algorithm Evaluator (TAE). There are different TAEs implemented in *SMAC* which
 provide slightly different interfaces. You can see `SVM-example
 <quickstart.html#using-smac-in-python-svm>`_ for an example on the usage.
 
