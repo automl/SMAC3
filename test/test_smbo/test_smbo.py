@@ -8,25 +8,25 @@ import re
 import numpy as np
 from ConfigSpace import ConfigurationSpace, Configuration
 
-from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, \
-    RunHistory2EPM4LogCost, RunHistory2EPM4EIPS
-from smac.optimizer.smbo import SMBO
-from smac.scenario.scenario import Scenario
-from smac.optimizer.acquisition import EI, EIPS, LogEI
-from smac.optimizer.local_search import LocalSearch
-from smac.tae.execute_func import ExecuteTAFuncArray
-from smac.tae.execute_ta_run import TAEAbortException, FirstRunCrashedException
-from smac.stats.stats import Stats
-from smac.utils import test_helpers
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.uncorrelated_mo_rf_with_instances import \
     UncorrelatedMultiObjectiveRandomForestWithInstances
-from smac.utils.util_funcs import get_types
 from smac.facade.smac_facade import SMAC
-from smac.optimizer.objective import average_cost
 from smac.initial_design.single_config_initial_design import SingleConfigInitialDesign
 from smac.intensification.intensification import Intensifier
+from smac.optimizer.acquisition import EI, EIPS, LogEI
+from smac.optimizer.local_search import LocalSearch
+from smac.optimizer.objective import average_cost
+from smac.optimizer.smbo import SMBO
+from smac.runhistory.runhistory import RunHistory
+from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, \
+    RunHistory2EPM4LogCost, RunHistory2EPM4EIPS
+from smac.scenario.scenario import Scenario
+from smac.stats.stats import Stats
+from smac.tae.execute_func import ExecuteTAFuncArray
+from smac.tae.execute_ta_run import TAEAbortException, FirstRunCrashedException
+from smac.utils import test_helpers
+from smac.utils.util_funcs import get_types
 
 if sys.version_info[0] == 2:
     import mock

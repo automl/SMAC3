@@ -1,11 +1,12 @@
 import numpy as np
 
 from smac.initial_design.initial_design import InitialDesign
-from smac.tae.execute_ta_run import ExecuteTARun
+from smac.tae.execute_ta_run import ExecuteTARun, StatusType
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
 from smac.scenario.scenario import Scenario
 from smac.utils import constants
+from smac.tae.execute_ta_run import FirstRunCrashedException
 
 __author__ = "Marius Lindauer, Katharina Eggensperger"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -73,13 +74,25 @@ class SingleConfigInitialDesign(InitialDesign):
         else:
             initial_seed = self.rng.randint(0, constants.MAXINT)
 
-        status, cost, runtime, additional_info = self.tae_runner.start(
-            initial_incumbent,
-            instance=rand_inst,
-            cutoff=self.scenario.cutoff,
-            seed=initial_seed,
-            instance_specific=self.scenario.instance_specific.get(rand_inst,
-                                                                  "0"))
+        try:
+            status, cost, runtime, additional_info = self.tae_runner.start(
+                initial_incumbent,
+                instance=rand_inst,
+                cutoff=self.scenario.cutoff,
+                seed=initial_seed,
+                instance_specific=self.scenario.instance_specific.get(rand_inst,
+                                                                      "0"))
+        except FirstRunCrashedException as err:
+            if self.scenario.abort_on_first_run_crash:
+                raise
+            else:
+                status = StatusType.CRASHED
+                if self.scenario.run_obj == "quality":
+                    cost = self.scenario.cost_for_crash
+                else:
+                    cost = self.scenario.cutoff * scenario.par_factor
+                runtime = 0
+                additional_info = {}
 
         self.stats.inc_changed += 1  # first incumbent
 

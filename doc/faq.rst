@@ -18,6 +18,10 @@ Refer to `commandline execution <basic_usage.html#commandline>`_ for details on 
 
 You can also run SMAC with :code:`--verbose DEBUG` to see how *SMAC* tried to call your algorithm.
 
+.. rubric:: Can I restore SMAC from a previous state?
+
+Use the `restore-option <basic_usage.html#restorestate>`_.
+
 .. rubric:: I discovered a bug/have criticism or ideas on *SMAC*. Where should I report to?
 
 *SMAC* uses the `GitHub issue-tracker <https://github.com/automl/SMAC3/issues>`_ to take care of bugs and questions. If you

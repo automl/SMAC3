@@ -45,6 +45,8 @@ class CMDReader(object):
         req_opts.add_argument("--mode", default="SMAC",
                               choices=["SMAC", "ROAR", "EPILS"],
                               help="Configuration mode.")
+        req_opts.add_argument("--restore_state", default=None,
+                              help="Path to dir with SMAC-files.")
         req_opts.add_argument("--warmstart_runhistory", default=None,
                               nargs="*",
                               help=SUPPRESS)  # list of runhistory dump files
@@ -52,7 +54,7 @@ class CMDReader(object):
         # pcs and feature space has to be identical to --scenario_file
         req_opts.add_argument("--warmstart_scenario", default=None,
                               nargs="*",
-                              help=SUPPRESS)  
+                              help=SUPPRESS)
         req_opts.add_argument("--warmstart_incumbent", default=None,
                               nargs="*",
                               help=SUPPRESS)# list of trajectory dump files, 

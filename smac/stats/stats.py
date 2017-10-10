@@ -1,5 +1,8 @@
 import time
+import os
 import logging
+import json
+
 from smac.scenario.scenario import Scenario
 
 __author__ = "Marius Lindauer"
@@ -12,7 +15,9 @@ __version__ = "0.0.1"
 
 class Stats(object):
 
-    """All statistics collected during configuration run
+    """
+    All statistics collected during configuration run.
+    Written to output-directory to be restored
 
     Attributes
     ----------
@@ -46,10 +51,53 @@ class Stats(object):
         self._start_time = None
         self._logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
+    def save(self):
+        """
+        Save all relevant attributes to json-dictionary.
+        """
+        # Set used_wallclock_time
+        self.wallclock_time_used = self.get_used_wallclock_time()
+
+        data = {}
+
+        for v in vars(self):
+            if not v in ['_Stats__scenario', '_logger', '_start_time']:
+                data[v] = getattr(self, v)
+
+        path = os.path.join(self.__scenario.output_dir, "stats.json")
+        self._logger.debug("Saving stats to %s", path)
+        with open(path, 'w') as fh:
+            json.dump(data, fh)
+
+    def load(self, fn=None):
+        """
+        Load all attributes from dictionary in file into stats-object.
+
+        Parameters
+        ----------
+        fn: string or None
+            Path to file to load stats from. If no path is given, the path given
+            in the current scenario is used.
+        """
+        if not fn:
+            fn = os.path.join(self.__scenario.output_dir, "stats.json")
+        with open(fn, 'r') as fh:
+            data = json.load(fh)
+
+        # Set attributes
+        for key in data:
+            if hasattr(self, key):
+                setattr(self, key, data[key])
+            else:
+                raise ValueError("Stats does not recognize {}".format(key))
+
     def start_timing(self):
-        """Starts the timer (for the runtime configuration budget)"""
+        """
+        Starts the timer (for the runtime configuration budget).
+        Substracting wallclock time used so we can continue loaded Stats.
+        """
         if self.__scenario:
-            self._start_time = time.time()
+            self._start_time = time.time() - self.wallclock_time_used
         else:
             raise ValueError("Scenario is missing")
 

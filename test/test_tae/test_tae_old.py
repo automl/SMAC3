@@ -7,6 +7,8 @@ import os
 import unittest
 import shlex
 
+from unittest.mock import patch
+
 from smac.configspace import ConfigurationSpace
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.execute_ta_run import StatusType
@@ -64,6 +66,39 @@ class TaeOldTest(unittest.TestCase):
 
         print(status, cost, runtime, ar_info)
 
+    def test_status(self):
+        
+        scen = Scenario(scenario={'cs': ConfigurationSpace(),
+                                  'run_obj': 'quality',
+                                  'output_dir': ''}, cmd_args=None)
+        stats = Stats(scen)
+
+        eta = ExecuteTARunOld(
+            ta=shlex.split(""),
+            stats=stats)
+        
+        def test_success(**kwargs):
+            return "Result of this algorithm run: SUCCESS,1,1,1,12354", ""
+        
+        eta._call_ta = test_success
+        status, cost, runtime, ar_info = eta.run(config={},)
+        self.assertEqual(status, StatusType.SUCCESS)
+        
+        def test_success(**kwargs):
+            return "Result of this algorithm run: SUCESS,1,1,1,12354", ""
+        
+        eta._call_ta = test_success
+        status, cost, runtime, ar_info = eta.run(config={},)
+        self.assertEqual(status, StatusType.CRASHED)
+        
+        def test_success(**kwargs):
+            return "Result of this algorithm run: success,1,1,1,12354", ""
+        
+        eta._call_ta = test_success
+        status, cost, runtime, ar_info = eta.run(config={},)
+        self.assertEqual(status, StatusType.SUCCESS)
+        
+        
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,3 +1,10 @@
+# 0.7
+
+* FIX #193, restoring the scenario now possible
+* ADD #271 validation
+* FIX #311 abort on first crash
+* FIX #318, ExecuteTARunOld now always returns a StatusType
+
 # 0.6
 
 ## Major changes

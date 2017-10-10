@@ -65,6 +65,7 @@ class SMAC(object):
                  initial_design: InitialDesign=None,
                  initial_configurations: typing.List[Configuration]=None,
                  stats: Stats=None,
+                 restore_incumbent: Configuration=None,
                  rng: np.random.RandomState=None):
         """Constructor
 
@@ -105,6 +106,8 @@ class SMAC(object):
             optional stats object
         rng : np.random.RandomState
             Random number generator
+        restore_incumbent: Configuration
+            incumbent used if restoring to previous state
         """
 
         self.logger = logging.getLogger(
@@ -319,7 +322,8 @@ class SMAC(object):
                            model=model,
                            acq_optimizer=local_search,
                            acquisition_func=acquisition_function,
-                           rng=rng)
+                           rng=rng,
+                           restore_incumbent=restore_incumbent)
 
     @staticmethod
     def _get_rng(rng):
@@ -364,6 +368,7 @@ class SMAC(object):
         try:
             incumbent = self.solver.run()
         finally:
+            self.solver.stats.save()
             self.solver.stats.print_stats()
             self.logger.info("Final Incumbent: %s" % (self.solver.incumbent))
             self.runhistory = self.solver.runhistory
@@ -374,6 +379,35 @@ class SMAC(object):
                     fn=os.path.join(self.solver.scenario.output_dir,
                                     "runhistory.json"))
         return incumbent
+
+    def validate(self, config_mode='inc', instance_mode='train+test',
+                 repetitions=1, n_jobs=-1, backend='threading'):
+        """Create validator-object and run validation, using
+        scenario-information, runhistory from smbo and tae_runner from intensify
+
+        Parameters
+        ----------
+        config_mode: string
+            what configurations to validate
+            from [def, inc, def+inc, time, all], time means evaluation at
+            timesteps 2^-4, 2^-3, 2^-2, 2^-1, 2^0, 2^1, ...
+        instance_mode: string
+            what instances to use for validation, from [train, test, train+test]
+        repetitions: int
+            number of repetitions in nondeterministic algorithms (in
+            deterministic will be fixed to 1)
+        n_jobs: int
+            number of parallel processes used by joblib
+        backend: string
+            what backend to be used by joblib
+
+        Returns
+        -------
+        runhistory: RunHistory
+            runhistory containing all specified runs
+        """
+        return self.solver.validate(config_mode, instance_mode, repetitions,
+                                    n_jobs, backend)
 
     def get_tae_runner(self):
         """Returns target algorithm evaluator (TAE) object which can run the
