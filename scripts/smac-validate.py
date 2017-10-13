@@ -32,11 +32,15 @@ if __name__ == "__main__":
 
     req_opts = parser.add_argument_group("Optional Options")
     req_opts.add_argument("--configs", default="def+inc", type=str,
-                          choices=["def", "inc", "def+inc", "time", "all"],
+                          choices=["def", "inc", "def+inc", "wallclock_time",
+                                   "cpu_time", "all"],
                           help="what configurations to evaluate. "
                                "def=default; inc=incumbent; "
-                               "time=configs at timesteps 2^1, 2^2, 2^3, ...; "
-                               "all=all configurations in the trajectory")
+                               "all=all configurations in the trajectory; "
+                               "wallclock_time/cpu_time=evaluates at cpu- or "
+                               "wallclock-timesteps of: [max_time/2^0, "
+                               "max_time/2^1, max_time/2^3, ..., default] "
+                               "with max_time being the highest recorded time")
     req_opts.add_argument("--instances", default="test", type=str,
                           choices=["train", "test", "train+test"],
                           help="what instances to evaluate")

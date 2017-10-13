@@ -387,10 +387,12 @@ class SMAC(object):
 
         Parameters
         ----------
-        config_mode: string
-            what configurations to validate
-            from [def, inc, def+inc, time, all], time means evaluation at
-            timesteps 2^-4, 2^-3, 2^-2, 2^-1, 2^0, 2^1, ...
+        config_mode: str or list<Configuration>
+            string or directly a list of Configuration
+            str from [def, inc, def+inc, wallclock_time, cpu_time, all]
+                time evaluates at cpu- or wallclock-timesteps of:
+                [max_time/2^0, max_time/2^1, max_time/2^3, ..., default]
+                with max_time being the highest recorded time
         instance_mode: string
             what instances to use for validation, from [train, test, train+test]
         repetitions: int

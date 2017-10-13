@@ -109,10 +109,11 @@ class Validator(object):
         Parameters
         ----------
         config_mode: str or list<Configuration>
-            what configurations to validate
-            either from [def, inc, def+inc, time, all], time means evaluation at
-            timesteps 2^-4, 2^-3, 2^-2, 2^-1, 2^0, 2^1, ...
-            or directly a list of Configuration
+            string or directly a list of Configuration
+            str from [def, inc, def+inc, wallclock_time, cpu_time, all]
+                time evaluates at cpu- or wallclock-timesteps of:
+                [max_time/2^0, max_time/2^1, max_time/2^3, ..., default]
+                with max_time being the highest recorded time
         instance_mode: str or list<str>
             what instances to use for validation, either from
             [train, test, train+test] or directly a list of instances
@@ -219,10 +220,11 @@ class Validator(object):
         Parameters
         ----------
         config_mode: str or list<Configuration>
-            what configurations to validate
-            either from [def, inc, def+inc, time, all], time means evaluation at
-            timesteps 2^-4, 2^-3, 2^-2, 2^-1, 2^0, 2^1, ...
-            or directly a list of Configuration
+            string or directly a list of Configuration
+            str from [def, inc, def+inc, wallclock_time, cpu_time, all]
+                time evaluates at cpu- or wallclock-timesteps of:
+                [max_time/2^0, max_time/2^1, max_time/2^3, ..., default]
+                with max_time being the highest recorded time
         instance_mode: str or list<str>
             what instances to use for validation, either from
             [train, test, train+test] or directly a list of instances
@@ -301,10 +303,11 @@ class Validator(object):
         Parameters
         ----------
         configs: str or list<Configuration>
-            what configurations to validate
-            either from [def, inc, def+inc, time, all], time means evaluation at
-            timesteps 2^-4, 2^-3, 2^-2, 2^-1, 2^0, 2^1, ...
-            or directly a list of Configuration
+            string or directly a list of Configuration
+            str from [def, inc, def+inc, wallclock_time, cpu_time, all]
+                time evaluates at cpu- or wallclock-timesteps of:
+                [max_time/2^0, max_time/2^1, max_time/2^3, ..., default]
+                with max_time being the highest recorded time
         insts: str or list<str>
             what instances to use for validation, either from
             [train, test, train+test] or directly a list of instances
@@ -446,9 +449,11 @@ class Validator(object):
 
         Parameters
         ----------
-        mode : string
-            from [def, inc, def+inc, time, all], time means evaluation at
-            timesteps 2^-4, 2^-3, 2^-2, 2^-1, 2^0, 2^1, ...
+        mode: str
+            str from [def, inc, def+inc, wallclock_time, cpu_time, all]
+                time evaluates at cpu- or wallclock-timesteps of:
+                [max_time/2^0, max_time/2^1, max_time/2^3, ..., default]
+                with max_time being the highest recorded time
 
         Returns
         -------
@@ -458,20 +463,21 @@ class Validator(object):
         # Add desired configs
         configs = []
         mode = mode.lower()
-        if mode not in ['def', 'inc', 'def+inc', 'time', 'all']:
+        if mode not in ['def', 'inc', 'def+inc', 'wallclock_time', 'cpu_time',
+                        'all']:
             raise ValueError("%s not a valid option for config_mode in validation."
                              %mode)
         if mode == "def" or mode == "def+inc":
             configs.append(self.scen.cs.get_default_configuration())
         if mode == "inc" or mode == "def+inc":
             configs.append(self.traj[-1]["incumbent"])
-        if mode == "time":
+        if mode in ["wallclock_time", "cpu_time"]:
             # get highest time-entry and add entries from there
             # not using wallclock_limit in case it's inf
-            max_time = self.traj[-1]["wallclock_time"]
+            max_time = self.traj[-1][mode]
             counter = 2**0
             for entry in self.traj[::-1]:
-                if (entry["wallclock_time"] <= max_time/counter and
+                if (entry[mode] <= max_time/counter and
                         entry["incumbent"] not in configs):
                     configs.append(entry["incumbent"])
                     counter *= 2
