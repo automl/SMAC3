@@ -44,12 +44,15 @@ if __name__ == "__main__":
     req_opts.add_argument("--instances", default="test", type=str,
                           choices=["train", "test", "train+test"],
                           help="what instances to evaluate")
-    req_opts.add_argument("--use_epm", default=False,
-                          help="whether to use an EPM instead of evaluating "
-                               "all runs with the TAE")
-    req_opts.add_argument("--runhistory", default=None, type=str,
-                          help="path to runhistory to take runs from to either "
-                               "avoid recalculation or to train the epm")
+    req_opts.add_argument('--epm', dest='epm', action='store_true',
+                        help="Use EPM to validate")
+    req_opts.add_argument('--no-epm', dest='epm', action='store_false',
+                        help="Don't use EPM to validate")
+    req_opts.set_defaults(epm=False)
+    req_opts.add_argument("--runhistory", default=None, type=str, nargs='*',
+                          help="path to one or more runhistories to take runs "
+                               "from to either avoid recalculation or to train"
+                               " the epm")
     req_opts.add_argument("--seed", type=int, help="random seed")
     req_opts.add_argument("--repetitions", default=1, type=int,
                           help="number of repetitions for nondeterministic "
@@ -93,11 +96,12 @@ if __name__ == "__main__":
     # Load runhistory
     if args_.runhistory:
         runhistory = RunHistory(average_cost)
-        runhistory.load_json(args_.runhistory, scenario.cs)
+        for rh_path in args_.runhistory:
+            runhistory.update_from_json(rh_path, scenario.cs)
     else:
         runhistory = None
 
-    if args_.use_epm:
+    if args_.epm:
         validator.validate_epm(config_mode=args_.configs,
                                instance_mode=args_.instances,
                                repetitions=args_.repetitions,

@@ -7,8 +7,7 @@ import typing
 import logging
 import numpy as np
 
-from smac.configspace import Configuration
-from ConfigSpace.util import impute_inactive_values
+from smac.configspace import Configuration, convert_configurations_to_array
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.optimizer.objective import average_cost
 from smac.runhistory.runhistory import RunHistory, RunKey, StatusType
@@ -264,15 +263,13 @@ class Validator(object):
         X_pred = np.empty((len(runs), feature_array_size))
         for idx, run in enumerate(runs):
             if hasattr(self.scen, "feature_dict") and run.inst != None:
-                X_pred[idx] = np.hstack([run.config.get_array(),
+                X_pred[idx] = np.hstack([convert_configurations_to_array([run.config])[0],
                                          self.scen.feature_dict[run.inst]])
             else:
-                X_pred[idx] = run.config.get_array()
-        self.logger.debug("Predicting desired %d runs, data has shape %s and "
-                          "NaNs are present: %s (if so, will be zeroed)",
-                          len(runs), str(X_pred.shape), str(np.isnan(X_pred).any()))
+                X_pred[idx] = convert_configurations_to_array([run.config])[0]
+        self.logger.debug("Predicting desired %d runs, data has shape %s",
+                          len(runs), str(X_pred.shape))
 
-        X_pred = np.nan_to_num(X_pred)  # Otherwise segfault in rfr
         y_pred = model.predict(X_pred)
 
         # Add runs to runhistory

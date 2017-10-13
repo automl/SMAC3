@@ -13,10 +13,7 @@ from smac.optimizer.objective import average_cost
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator, Run
 
-if sys.version_info[0] == 2:
-    import mock
-else:
-    from unittest import mock
+from unittest import mock
 
 class ValidationTest(unittest.TestCase):
 
