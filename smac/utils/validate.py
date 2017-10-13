@@ -19,6 +19,12 @@ from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.utils.constants import MAXINT
 from smac.utils.util_funcs import get_types
 
+__author__ = "Joshua Marben"
+__copyright__ = "Copyright 2017, ML4AAD"
+__license__ = "3-clause BSD"
+__maintainer__ = "Joshua Marben"
+__email__ = "joshua.marben@neptun.uni-freiburg.de"
+
 def _unbound_tae_starter(tae, *args, **kwargs):
     """
     Unbound function to be used by joblibs Parallel, since directly passing the
