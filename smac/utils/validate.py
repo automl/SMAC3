@@ -466,15 +466,17 @@ class Validator(object):
         if mode == "inc" or mode == "def+inc":
             configs.append(self.traj[-1]["incumbent"])
         if mode == "time":
-            # add configs at evaluations 2^1, 2^2, 2^3, ...
-            configs.append(self.traj[0]["incumbent"])  # add first
-            counter = 2^(-4)
-            for entry in self.traj[:-1]:
-                if (entry["wallclock_time"] >= counter and
+            # get highest time-entry and add entries from there
+            # not using wallclock_limit in case it's inf
+            max_time = self.traj[-1]["wallclock_time"]
+            counter = 2**0
+            for entry in self.traj[::-1]:
+                if (entry["wallclock_time"] <= max_time/counter and
                         entry["incumbent"] not in configs):
                     configs.append(entry["incumbent"])
                     counter *= 2
-            configs.append(self.traj[-1]["incumbent"])  # add last
+            if not self.traj[0]["incumbent"] in configs:
+                configs.append(self.traj[0]["incumbent"])  # add first
         if mode == "all":
             for entry in self.traj:
                 if not entry["incumbent"] in configs:

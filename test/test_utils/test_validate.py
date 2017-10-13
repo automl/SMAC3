@@ -90,7 +90,7 @@ class ValidationTest(unittest.TestCase):
         self.assertEqual(1, len(validator._get_configs("def")))
         self.assertEqual(1, len(validator._get_configs("inc")))
         self.assertEqual(2, len(validator._get_configs("def+inc")))
-        self.assertEqual(9, len(validator._get_configs("time")))
+        self.assertEqual(7, len(validator._get_configs("time")))
         self.assertEqual(9, len(validator._get_configs("all")))
         self.assertRaises(ValueError, validator._get_configs, "notanoption")
         self.assertRaises(ValueError, validator._get_instances, "notanoption")
@@ -165,9 +165,9 @@ class ValidationTest(unittest.TestCase):
         self.assertEqual(len(rh.get_runs_for_config(rh.get_all_configs()[0])), 6)
 
         rh = validator.validate(config_mode='time', instance_mode='train')
-        self.assertEqual(len(rh.get_all_configs()), 9)
+        self.assertEqual(len(rh.get_all_configs()), 7)
         self.assertEqual(sum([len(rh.get_runs_for_config(c)) for c in
-                              rh.get_all_configs()]), 27)
+                              rh.get_all_configs()]), 21)
 
         # Test with backend multiprocessing
         rh = validator.validate(config_mode='def', instance_mode='test',
