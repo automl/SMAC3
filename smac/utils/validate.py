@@ -477,7 +477,14 @@ class Validator(object):
         if mode in ["wallclock_time", "cpu_time"]:
             # get highest time-entry and add entries from there
             # not using wallclock_limit in case it's inf
-            max_time = self.traj[-1][mode]
+            if (mode == "wallclock_time" and
+                np.isfinite(self.scen.wallclock_limit)):
+                max_time = self.scen.wallclock_limit
+            elif (mode == "cpu_time" and
+                  np.isfinite(self.scen.algo_runs_timelimit)):
+                max_time = self.scen.algo_runs_timelimit
+            else:
+                max_time = self.traj[-1][mode]
             counter = 2**0
             for entry in self.traj[::-1]:
                 if (entry[mode] <= max_time/counter and

@@ -90,6 +90,12 @@ class ValidationTest(unittest.TestCase):
         self.assertEqual(7, len(validator._get_configs("wallclock_time")))
         self.assertEqual(8, len(validator._get_configs("cpu_time")))
         self.assertEqual(10, len(validator._get_configs("all")))
+        # Using maxtime
+        validator.scen.wallclock_limit = 65
+        validator.scen.algo_runs_timelimit = 33
+        self.assertEqual(8, len(validator._get_configs("wallclock_time")))
+        self.assertEqual(9, len(validator._get_configs("cpu_time")))
+        # Exceptions
         self.assertRaises(ValueError, validator._get_configs, "notanoption")
         self.assertRaises(ValueError, validator._get_instances, "notanoption")
 
