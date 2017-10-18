@@ -17,21 +17,12 @@ __ branin-example_
 __ svm-example_
 __ spear-example_
 
-.. toctree::
-   :titlesonly:
-   :maxdepth: 1
-
-   branin-example
-   svm-example
-   spear-example
-
-
 .. _branin-example:
 
 Branin
 ------
 First of, we'll demonstrate the usage of *SMAC* on the minimization of a standard 2-dimensional continuous test function (`Branin <https://www.sfu.ca/~ssurjano/branin.html>`_).
-This example aims to explain the basic usage of *SMAC*. There are three ways to use *SMAC*:
+This example aims to explain the basic usage of *SMAC*. There are different ways to use *SMAC*:
 
 f_min-wrapper
 ~~~~~~~~~~~~~
@@ -62,7 +53,7 @@ To run the example scenario, change into the root-directory of *SMAC* and type t
 .. code-block:: bash
 
     cd examples/branin
-    python ../../scripts/smac --scenario branin_scenario.txt
+    python ../../scripts/smac --scenario scenario.txt
 
 The python command runs *SMAC* with the specified scenario. The scenario file contains the following lines:
 
@@ -125,7 +116,7 @@ Furthermore a folder containing *SMACs* trajectory and the runhistory will be cr
 .. _svm-example:
 
 Using *SMAC* in Python: SVM
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------
 To explain the use of *SMAC* within Python, let's look at a real-world example,
 optimizing a Support Vector Machine (SVM) on the widely known `IRIS-dataset
 <https://en.wikipedia.org/wiki/Iris_flower_data_set>`_.
@@ -250,7 +241,7 @@ instances, but we include the code so it is easily applicable for any usecase.
 .. _spear-example:
 
 Spear-QCP
-~~~~~~~~~
+---------
 For this example we use *SMAC* to optimize the SAT solver `Spear <http://www.domagoj-babic.com/index.php/ResearchProjects/Spear>`_ on a small subset of the QCP-dataset.
 In *SMACs* root-directory type:
 
