@@ -645,8 +645,9 @@
         <span class="c1"># read feature file</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_fn</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_fn</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">feature_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_reader</span><span class="o">.</span><span class="n">read_instance_features_file</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">feature_fn</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_reader</span><span class="o">.</span><span class="n">read_instance_features_file</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">feature_fn</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">feature_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_dict</span> <span class="o">=</span> <span class="n">features</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_dict</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">feature_array</span> <span class="o">=</span> <span class="p">[]</span>
