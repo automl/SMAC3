@@ -1,4 +1,8 @@
-# 0.7
+# 0.7.2
+
+* Introduce version upper bound on ConfigSpace dependency (<0.4)
+
+# 0.7.1
 
 * FIX #193, restoring the scenario now possible
 * ADD #271 validation
