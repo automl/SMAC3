@@ -309,6 +309,14 @@ class ScenarioTest(unittest.TestCase):
         scen = scen.write_options_to_doc(path)
         self.assertTrue(os.path.exists(path))
 
+    def test_features(self):
+        scenario = Scenario(self.test_scenario_dict,
+                            cmd_args={'feature_file':
+                                      'test/test_files/features_example.csv',
+                                      'instance_file':
+                                      'test/test_files/train_insts_example.txt'})
+        self.assertEquals(scenario.feature_names,
+                          ['feature1', 'feature2', 'feature3'])
 
 if __name__ == "__main__":
     unittest.main()
