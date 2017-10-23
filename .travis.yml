@@ -51,6 +51,7 @@ before_install:
 
 install:
   - pip install pep8 codecov
+  - pip install cython  # required by the ConfigSpace
   - cat requirements.txt | xargs -n 1 -L 1 pip install
   - python setup.py install
 
