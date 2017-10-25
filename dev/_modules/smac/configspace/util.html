@@ -274,16 +274,11 @@
                              <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
     <span class="n">configuration_space</span> <span class="o">=</span> <span class="n">configs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">configuration_space</span>
     <span class="k">for</span> <span class="n">hp</span> <span class="ow">in</span> <span class="n">configuration_space</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">():</span>
-        <span class="n">default</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">_inverse_transform</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">default</span><span class="p">)</span>
+        <span class="n">default</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">normalized_default_value</span>
         <span class="n">idx</span> <span class="o">=</span> <span class="n">configuration_space</span><span class="o">.</span><span class="n">get_idx_by_hyperparameter_name</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">nonfinite_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">configs_array</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">])</span>
+        <span class="n">configs_array</span><span class="p">[</span><span class="n">nonfinite_mask</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">default</span>
 
-        <span class="c1"># Create a mask which is True for all non-finite entries in column idx!</span>
-        <span class="n">column_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">configs_array</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">bool</span><span class="p">)</span>
-        <span class="n">column_mask</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">nonfinite_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">configs_array</span><span class="p">)</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">column_mask</span> <span class="o">&amp;</span> <span class="n">nonfinite_mask</span>
-
-        <span class="n">configs_array</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">default</span>
     <span class="k">return</span> <span class="n">configs_array</span></div>
 </pre></div>
 
