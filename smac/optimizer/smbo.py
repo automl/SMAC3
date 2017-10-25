@@ -303,21 +303,25 @@ class SMBO(object):
         return challengers
 
     def validate(self, config_mode='inc', instance_mode='train+test',
-                 repetitions=1, n_jobs=-1, backend='threading'):
+                 repetitions=1, use_epm=False, n_jobs=-1, backend='threading'):
         """Create validator-object and run validation, using
         scenario-information, runhistory from smbo and tae_runner from intensify
 
         Parameters
         ----------
-        config_mode: string
-            what configurations to validate
-            from [def, inc, def+inc, time, all], time means evaluation at
-            timesteps 2^-4, 2^-3, 2^-2, 2^-1, 2^0, 2^1, ...
+        config_mode: str or list<Configuration>
+            string or directly a list of Configuration
+            str from [def, inc, def+inc, wallclock_time, cpu_time, all]
+                time evaluates at cpu- or wallclock-timesteps of:
+                [max_time/2^0, max_time/2^1, max_time/2^3, ..., default]
+                with max_time being the highest recorded time
         instance_mode: string
             what instances to use for validation, from [train, test, train+test]
         repetitions: int
             number of repetitions in nondeterministic algorithms (in
             deterministic will be fixed to 1)
+        use_epm: bool
+            whether to use an EPM instead of evaluating all runs with the TAE
         n_jobs: int
             number of parallel processes used by joblib
 
@@ -331,9 +335,15 @@ class SMBO(object):
         new_rh_path = os.path.join(self.scenario.output_dir, "validated_runhistory.json")
 
         validator = Validator(self.scenario, trajectory, new_rh_path, self.rng)
-        new_rh = validator.validate(config_mode, instance_mode, repetitions, n_jobs,
-                                    backend, self.runhistory,
-                                    self.intensifier.tae_runner)
+        if use_epm:
+            new_rh = validator.validate_epm(config_mode=config_mode,
+                                            instance_mode=instance_mode,
+                                            repetitions=repetitions,
+                                            runhistory=self.runhistory)
+        else:
+            new_rh = validator.validate(config_mode, instance_mode, repetitions,
+                                        n_jobs, backend, self.runhistory,
+                                        self.intensifier.tae_runner)
         return new_rh
 
 

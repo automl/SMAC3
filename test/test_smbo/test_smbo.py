@@ -27,6 +27,8 @@ from smac.tae.execute_func import ExecuteTAFuncArray
 from smac.tae.execute_ta_run import TAEAbortException, FirstRunCrashedException
 from smac.utils import test_helpers
 from smac.utils.util_funcs import get_types
+from smac.utils.io.traj_logging import TrajLogger
+from smac.utils.validate import Validator
 
 if sys.version_info[0] == 2:
     import mock
@@ -337,6 +339,22 @@ class TestSMBO(unittest.TestCase):
         self.assertRaises(ValueError, smbo.run)
         smbo = get_smbo(1.2)
         self.assertRaises(ValueError, smbo.run)
+
+    def test_validation(self):
+        with mock.patch.object(TrajLogger, "read_traj_aclib_format",
+                return_value=None) as traj_mock:
+            self.scenario.output_dir = "test"
+            smbo = SMAC(self.scenario).solver
+            with mock.patch.object(Validator, "validate",
+                    return_value=None) as validation_mock:
+                smbo.validate(config_mode='inc', instance_mode='train+test',
+                              repetitions=1, use_epm=False, n_jobs=-1, backend='threading')
+                self.assertTrue(validation_mock.called)
+            with mock.patch.object(Validator, "validate_epm",
+                    return_value=None) as epm_validation_mock:
+                smbo.validate(config_mode='inc', instance_mode='train+test',
+                              repetitions=1, use_epm=True, n_jobs=-1, backend='threading')
+                self.assertTrue(epm_validation_mock.called)
 
 
 if __name__ == "__main__":
