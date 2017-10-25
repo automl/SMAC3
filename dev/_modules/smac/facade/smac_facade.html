@@ -630,21 +630,25 @@
         <span class="k">return</span> <span class="n">incumbent</span></div>
 
 <div class="viewcode-block" id="SMAC.validate"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_mode</span><span class="o">=</span><span class="s1">&#39;inc&#39;</span><span class="p">,</span> <span class="n">instance_mode</span><span class="o">=</span><span class="s1">&#39;train+test&#39;</span><span class="p">,</span>
-                 <span class="n">repetitions</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;threading&#39;</span><span class="p">):</span>
+                 <span class="n">repetitions</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_epm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;threading&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create validator-object and run validation, using</span>
 <span class="sd">        scenario-information, runhistory from smbo and tae_runner from intensify</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        config_mode: string</span>
-<span class="sd">            what configurations to validate</span>
-<span class="sd">            from [def, inc, def+inc, time, all], time means evaluation at</span>
-<span class="sd">            timesteps 2^-4, 2^-3, 2^-2, 2^-1, 2^0, 2^1, ...</span>
+<span class="sd">        config_mode: str or list&lt;Configuration&gt;</span>
+<span class="sd">            string or directly a list of Configuration</span>
+<span class="sd">            str from [def, inc, def+inc, wallclock_time, cpu_time, all]</span>
+<span class="sd">                time evaluates at cpu- or wallclock-timesteps of:</span>
+<span class="sd">                [max_time/2^0, max_time/2^1, max_time/2^3, ..., default]</span>
+<span class="sd">                with max_time being the highest recorded time</span>
 <span class="sd">        instance_mode: string</span>
 <span class="sd">            what instances to use for validation, from [train, test, train+test]</span>
 <span class="sd">        repetitions: int</span>
 <span class="sd">            number of repetitions in nondeterministic algorithms (in</span>
 <span class="sd">            deterministic will be fixed to 1)</span>
+<span class="sd">        use_epm: bool</span>
+<span class="sd">            whether to use an EPM instead of evaluating all runs with the TAE</span>
 <span class="sd">        n_jobs: int</span>
 <span class="sd">            number of parallel processes used by joblib</span>
 <span class="sd">        backend: string</span>
@@ -656,7 +660,7 @@
 <span class="sd">            runhistory containing all specified runs</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">config_mode</span><span class="p">,</span> <span class="n">instance_mode</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">,</span>
-                                    <span class="n">n_jobs</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span></div>
+                                    <span class="n">use_epm</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SMAC.get_tae_runner"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC.get_tae_runner">[docs]</a>    <span class="k">def</span> <span class="nf">get_tae_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns target algorithm evaluator (TAE) object which can run the</span>
