@@ -25,14 +25,9 @@ def convert_configurations_to_array(configs: List[Configuration]) -> np.ndarray:
                              dtype=np.float64)
     configuration_space = configs[0].configuration_space
     for hp in configuration_space.get_hyperparameters():
-        default = hp._inverse_transform(hp.default)
+        default = hp.normalized_default_value
         idx = configuration_space.get_idx_by_hyperparameter_name(hp.name)
+        nonfinite_mask = ~np.isfinite(configs_array[:, idx])
+        configs_array[nonfinite_mask, idx] = default
 
-        # Create a mask which is True for all non-finite entries in column idx!
-        column_mask = np.zeros(configs_array.shape, dtype=np.bool)
-        column_mask[:, idx] = True
-        nonfinite_mask = ~np.isfinite(configs_array)
-        mask = column_mask & nonfinite_mask
-
-        configs_array[mask] = default
     return configs_array

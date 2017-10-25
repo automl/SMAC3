@@ -170,13 +170,13 @@ class TestRFWithInstances(unittest.TestCase):
     def test_with_ordinal(self):
         cs = smac.configspace.ConfigurationSpace()
         a = cs.add_hyperparameter(CategoricalHyperparameter('a', [0, 1],
-                                                            default=0))
+                                                            default_value=0))
         b = cs.add_hyperparameter(OrdinalHyperparameter('b', [0, 1],
-                                                        default=1))
+                                                        default_value=1))
         b = cs.add_hyperparameter(UniformFloatHyperparameter('c', lower=0., upper=1.,
-                                                             default=1))
+                                                             default_value=1))
         b = cs.add_hyperparameter(UniformIntegerHyperparameter('d', lower=0, upper=10,
-                                                               default=1))
+                                                               default_value=1))
         cs.seed(1)
 
         feat_array = np.array([0,0,0]).reshape(1, -1)

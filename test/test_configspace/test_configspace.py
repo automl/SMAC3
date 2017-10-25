@@ -6,7 +6,7 @@ Created on Nov 19, 2015
 import os
 import unittest
 
-from ConfigSpace.io import pcs
+from ConfigSpace.read_and_write import pcs
 from ConfigSpace.hyperparameters import CategoricalHyperparameter
 from ConfigSpace.conditions import EqualsCondition
 import smac.configspace
@@ -33,9 +33,9 @@ class ConfigSpaceTest(unittest.TestCase):
     def test_impute_inactive_hyperparameters(self):
         cs = smac.configspace.ConfigurationSpace()
         a = cs.add_hyperparameter(CategoricalHyperparameter('a', [0, 1],
-                                                            default=0))
+                                                            default_value=0))
         b = cs.add_hyperparameter(CategoricalHyperparameter('b', [0, 1],
-                                                            default=1))
+                                                            default_value=1))
         cs.add_condition(EqualsCondition(b, a, 1))
         cs.seed(1)
         configs = cs.sample_configuration(size=100)
