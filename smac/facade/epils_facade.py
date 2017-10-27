@@ -23,7 +23,7 @@ from smac.intensification.intensification import Intensifier
 from smac.optimizer.epils import EPILS_Solver
 from smac.optimizer.objective import average_cost
 from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
-from smac.optimizer.local_search import LocalSearch
+from smac.optimizer.ei_optimization import LocalSearch
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.base_epm import AbstractEPM
