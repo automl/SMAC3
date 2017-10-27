@@ -252,6 +252,8 @@
 <span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="k">import</span> <span class="n">AbstractEPM</span>
 <span class="kn">from</span> <span class="nn">smac.epm.rf_with_instances</span> <span class="k">import</span> <span class="n">RandomForestWithInstances</span>
 
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+
 
 <div class="viewcode-block" id="UncorrelatedMultiObjectiveRandomForestWithInstances"><a class="viewcode-back" href="../../../apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances">[docs]</a><span class="k">class</span> <span class="nc">UncorrelatedMultiObjectiveRandomForestWithInstances</span><span class="p">(</span><span class="n">AbstractEPM</span><span class="p">):</span>
 
@@ -269,8 +271,14 @@
 <span class="sd">    estimators</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_names</span><span class="p">,</span> <span class="n">bounds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">types</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">target_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+            <span class="n">bounds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+            <span class="n">types</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+            <span class="n">rf_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor</span>
 
 <span class="sd">        Parameters</span>
@@ -289,10 +297,12 @@
 <span class="sd">            See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rf_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rf_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">target_names</span> <span class="o">=</span> <span class="n">target_names</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_targets</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_names</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">estimators</span> <span class="o">=</span> <span class="p">[</span><span class="n">RandomForestWithInstances</span><span class="p">(</span><span class="n">types</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimators</span> <span class="o">=</span> <span class="p">[</span><span class="n">RandomForestWithInstances</span><span class="p">(</span><span class="n">types</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="o">**</span><span class="n">rf_kwargs</span><span class="p">)</span>
                            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_targets</span><span class="p">)]</span>
 
     <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
