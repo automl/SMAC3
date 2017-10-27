@@ -162,7 +162,6 @@ class SMBO(object):
         self.start()
 
         # Main BO loop
-        iteration = 1
         while True:
             if self.scenario.shared_model:
                 pSMAC.read(run_history=self.runhistory,
@@ -193,8 +192,6 @@ class SMBO(object):
                 pSMAC.write(run_history=self.runhistory,
                             output_directory=self.scenario.output_dir)
 
-            iteration += 1
-
             logging.debug("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
                 self.stats.get_remaing_time_budget(),
                 self.stats.get_remaining_ta_budget(),
@@ -208,7 +205,7 @@ class SMBO(object):
         return self.incumbent
 
     def choose_next(self, X: np.ndarray, Y: np.ndarray,
-                    num_configurations_by_random_search_sorted: int=1000,
+                    num_configurations_by_random_search_sorted: int=5000,
                     num_configurations_by_local_search: int=None,
                     incumbent_value: float=None):
         """Choose next candidate solution with Bayesian optimization.
