@@ -411,7 +411,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 
         <span class="c1"># Main BO loop</span>
-        <span class="n">iteration</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">shared_model</span><span class="p">:</span>
                 <span class="n">pSMAC</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">run_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
@@ -442,8 +441,6 @@
                 <span class="n">pSMAC</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">run_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
                             <span class="n">output_directory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span><span class="p">)</span>
 
-            <span class="n">iteration</span> <span class="o">+=</span> <span class="mi">1</span>
-
             <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Remaining budget: </span><span class="si">%f</span><span class="s2"> (wallclock), </span><span class="si">%f</span><span class="s2"> (ta costs), </span><span class="si">%f</span><span class="s2"> (target runs)&quot;</span> <span class="o">%</span> <span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get_remaing_time_budget</span><span class="p">(),</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get_remaining_ta_budget</span><span class="p">(),</span>
@@ -457,7 +454,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span></div>
 
 <div class="viewcode-block" id="SMBO.choose_next"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.choose_next">[docs]</a>    <span class="k">def</span> <span class="nf">choose_next</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-                    <span class="n">num_configurations_by_random_search_sorted</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                    <span class="n">num_configurations_by_random_search_sorted</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
                     <span class="n">num_configurations_by_local_search</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">incumbent_value</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Choose next candidate solution with Bayesian optimization.</span>
