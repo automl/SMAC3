@@ -3,6 +3,8 @@ import numpy as np
 from smac.epm.base_epm import AbstractEPM
 from smac.epm.rf_with_instances import RandomForestWithInstances
 
+from typing import List, Dict, Any, Optional
+
 
 class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
 
@@ -20,8 +22,14 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
     estimators
     """
 
-    def __init__(self, target_names, bounds: np.ndarray, types: np.ndarray,
-                 **kwargs):
+    def __init__(
+            self,
+            target_names: List[str],
+            bounds: np.ndarray,
+            types: np.ndarray,
+            rf_kwargs: Optional[Dict[str, Any]]=None,
+            **kwargs
+    ):
         """Constructor
 
         Parameters
@@ -40,10 +48,12 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
             See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
         """
         super().__init__(**kwargs)
+        if rf_kwargs is None:
+            rf_kwargs = {}
         
         self.target_names = target_names
         self.num_targets = len(self.target_names)
-        self.estimators = [RandomForestWithInstances(types, bounds, **kwargs)
+        self.estimators = [RandomForestWithInstances(types, bounds, **rf_kwargs)
                            for i in range(self.num_targets)]
 
     def _train(self, X: np.ndarray, Y: np.ndarray, **kwargs):
