@@ -113,8 +113,6 @@ class SMAC(object):
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
-        scenario.write()
-
         aggregate_func = average_cost
 
         # initialize stats object

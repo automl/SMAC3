@@ -8,6 +8,7 @@ import time
 import datetime
 import copy
 import typing
+import shutil
 
 from smac.utils.io.input_reader import InputReader
 from smac.utils.io.output_writer import OutputWriter
@@ -44,7 +45,11 @@ class Scenario(object):
     """
 
     def __init__(self, scenario, cmd_args: dict=None, run_id: int=1):
-        """Constructor
+        """ Creates a scenario-object. The output_dir will be
+        "output_dir/run_id/" and if that exists already, the old folder and its
+        content will be moved (without any checks on whether it's still used by
+        another process) to "output_dir/run_id.OLD". If that exists, ".OLD"s
+        will be appended until possible.
 
         Parameters
         ----------
@@ -112,6 +117,13 @@ class Scenario(object):
 
         if self.output_dir:
             self.output_dir = os.path.join(self.output_dir, "run_%d"%(run_id))
+            if os.path.exists(self.output_dir):
+                move_to = self.output_dir + ".OLD"
+                while (os.path.exists(move_to)):
+                    move_to += ".OLD"
+                shutil.move(self.output_dir, move_to)
+
+        self.write()
 
         self.logger.debug("Scenario Options:")
         for arg_name, arg_value in parsed_arguments.items():
