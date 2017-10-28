@@ -122,6 +122,9 @@ class Scenario(object):
                 while (os.path.exists(move_to)):
                     move_to += ".OLD"
                 shutil.move(self.output_dir, move_to)
+                self.logger.warning("Output directory \"%s\" already exists! "
+                                    "Moving old folder to \"%s\".",
+                                    self.output_dir, move_to)
 
         self.write()
 
