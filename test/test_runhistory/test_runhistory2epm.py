@@ -203,8 +203,8 @@ class RunhistoryTest(unittest.TestCase):
                                                           [0.995, 0.005],
                                                           [0.995, 0.995]]),
                                              decimal=3)
-        np.testing.assert_array_almost_equal(y, np.array([[1.], [16.451], [200.]]),
-                                             decimal=3)
+        np.testing.assert_array_almost_equal(y, np.array([[1.], [16.4], [200.]]),
+                                             decimal=1)
 
     def test_cost_without_imputation(self):
         '''

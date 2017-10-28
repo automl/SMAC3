@@ -35,14 +35,14 @@ class TestLocalSearch(unittest.TestCase):
         self.test_files_dir = os.path.join(current_dir, '..', 'test_files')
         seed = np.random.randint(1, 100000)
         self.cs = ConfigurationSpace(seed=seed)
-        x1 = UniformFloatHyperparameter("x1", -5, 5, default=5)
+        x1 = UniformFloatHyperparameter("x1", -5, 5, default_value=5)
         self.cs.add_hyperparameter(x1)
-        x2 = UniformIntegerHyperparameter("x2", -5, 5, default=5)
+        x2 = UniformIntegerHyperparameter("x2", -5, 5, default_value=5)
         self.cs.add_hyperparameter(x2)
         x3 = CategoricalHyperparameter(
-            "x3", [5, 2, 0, 1, -1, -2, 4, -3, 3, -5, -4], default=5)
+            "x3", [5, 2, 0, 1, -1, -2, 4, -3, 3, -5, -4], default_value=5)
         self.cs.add_hyperparameter(x3)
-        x4 = UniformIntegerHyperparameter("x4", -5, 5, default=5)
+        x4 = UniformIntegerHyperparameter("x4", -5, 5, default_value=5)
         self.cs.add_hyperparameter(x4)
 
     def test_local_search(self):

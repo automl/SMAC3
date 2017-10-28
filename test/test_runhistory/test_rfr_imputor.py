@@ -67,11 +67,11 @@ class ImputorTest(unittest.TestCase):
         logging.basicConfig(level=logging.DEBUG)
         self.cs = ConfigurationSpace()
         self.cs.add_hyperparameter(CategoricalHyperparameter(
-                name="cat_a_b", choices=["a", "b"], default="a"))
+                name="cat_a_b", choices=["a", "b"], default_value="a"))
         self.cs.add_hyperparameter(UniformFloatHyperparameter(
-                name="float_0_1", lower=0, upper=1, default=0.5))
+                name="float_0_1", lower=0, upper=1, default_value=0.5))
         self.cs.add_hyperparameter(UniformIntegerHyperparameter(
-                name='integer_0_100', lower=-10, upper=10, default=0))
+                name='integer_0_100', lower=-10, upper=10, default_value=0))
 
         self.rh = runhistory.RunHistory(aggregate_func=average_cost)
         rs = numpy.random.RandomState(1)
@@ -124,7 +124,8 @@ class ImputorTest(unittest.TestCase):
             cs = ConfigurationSpace()
             for i in range(num_feat):
                 cs.add_hyperparameter(UniformFloatHyperparameter(
-                    name="a_%d" % i, lower=0, upper=1, default=0.5))
+                    name="a_%d" % i, lower=0, upper=1, default_value=0.5)
+                )
 
             types, bounds = get_types(cs, None)
             print(types)

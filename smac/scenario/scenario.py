@@ -396,8 +396,9 @@ class Scenario(object):
         # read feature file
         if self.feature_fn:
             if os.path.isfile(self.feature_fn):
-                self.feature_dict = self.in_reader.read_instance_features_file(
-                    self.feature_fn)[1]
+                features = self.in_reader.read_instance_features_file(
+                    self.feature_fn)
+                self.feature_names, self.feature_dict = features
 
         if self.feature_dict:
             self.feature_array = []

@@ -153,7 +153,7 @@ class InputReader(object):
             for line in lines[1:]:
                 tmp = line.strip().split(",")
                 instances[tmp[0]] = np.array(tmp[1:], dtype=np.double)
-        return lines[0].split(",")[1:], instances
+        return [f.strip() for f in lines[0].rstrip("\n").split(",")[1:]], instances
 
     def read_pcs_file(self, fn: str):
         """Encapsulates generating configuration space object
