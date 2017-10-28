@@ -113,8 +113,6 @@ class Scenario(object):
         if self.output_dir:
             self.output_dir += "_run%d" %(run_id)
 
-        self.out_writer.write_scenario_file(self)
-
         self.logger.debug("Scenario Options:")
         for arg_name, arg_value in parsed_arguments.items():
             if isinstance(arg_value,(int,str,float)):
