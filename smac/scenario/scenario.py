@@ -54,7 +54,7 @@ class Scenario(object):
         cmd_args : dict
             Command line arguments that were not processed by argparse
         run_id: int
-            Run ID will be used as suffix for output_dir
+            Run ID will be used as subfolder for output_dir
         """
         self.logger = logging.getLogger(
             self.__module__ + '.' + self.__class__.__name__)
@@ -111,7 +111,7 @@ class Scenario(object):
         self._transform_arguments()
 
         if self.output_dir:
-            self.output_dir += "_run%d" %(run_id)
+            self.output_dir = os.path.join(self.output_dir, "run_%d"%(run_id))
 
         self.logger.debug("Scenario Options:")
         for arg_name, arg_value in parsed_arguments.items():
@@ -318,7 +318,7 @@ class Scenario(object):
                           default="smac3-output_%s" % (
                               datetime.datetime.fromtimestamp(
                                   time.time()).strftime(
-                                  '%Y-%m-%d_%H:%M:%S_(%f)')))
+                                  '%Y-%m-%d_%H:%M:%S_%f')))
         self.add_argument(name='input_psmac_dirs', default=None,
                           help="For parallel SMAC, multiple output-directories "
                                "are used.")
@@ -455,6 +455,10 @@ class Scenario(object):
         if warn_:
             self.logger.warn("All instances were casted to str.")
         return l
+
+    def write(self):
+        """ Write scenario to self.output_dir/scenario.txt. """
+        self.out_writer.write_scenario_file(self)
 
     def write_options_to_doc(self, path='scenario_options.rst'):
         """Writes the option-list to file for autogeneration in documentation.
