@@ -26,8 +26,18 @@ def main():
     smac = SMAC(scenario=original_scenario)
     smac.optimize()
 
+    print("\n########## BUDGET EXHAUSTED! Restoring optimization: ##########\n")
+
     # Now the output is in the folder 'restore_me'
-    # We create a new scenario with an extended budget
+    #
+    # We could simply modify the scenario-object, stored in
+    # 'smac.solver.scenario' and start optimization again:
+
+    #smac.solver.scenario.ta_run_limit = 50
+    #smac.optimize()
+
+    # Or, to show the whole process of recovering a SMAC-run from the output
+    # directory, create a new scenario with an extended budget:
     new_scenario = Scenario(orig_scen_dict,
             cmd_args={'runcount_limit': 50,      # overwrite these args
                       'output_dir' : 'restored'})
