@@ -57,10 +57,26 @@ class SMACCLI(object):
         # remove default handler
         root_logger.removeHandler(root_logger.handlers[0])
 
+        # Create defaults
+        rh = None
+        initial_configs = None
+        stats = None
+        incumbent = None
+
+        # Restore state (needs to be before scenario-creation!)
+        if args_.restore_state:
+            root_logger.debug("Restoring state from %s...", args_.restore_state)
+            rh, stats, traj_list_aclib, traj_list_old = self.restore_state_before_scen(args_)
+
+        # Create scenario-object
         scen = Scenario(args_.scenario_file, misc_args,
                         run_id=args_.seed)
 
-        rh = None
+        # Restore state (continued, needs to be after scenario-creation!)
+        if args_.restore_state:
+            stats, incumbent = self.restore_state_after_scen(scen, stats,
+                                           traj_list_aclib, traj_list_old)
+
         if args_.warmstart_runhistory:
             aggregate_func = average_cost
             rh = RunHistory(aggregate_func=aggregate_func)
@@ -73,7 +89,6 @@ class SMACCLI(object):
                 cs=scen.cs,
                 aggregate_func=aggregate_func)
 
-        initial_configs = None
         if args_.warmstart_incumbent:
             initial_configs = [scen.cs.get_default_configuration()]
             for traj_fn in args_.warmstart_incumbent:
@@ -81,12 +96,6 @@ class SMACCLI(object):
                     fn=traj_fn, cs=scen.cs)
                 initial_configs.append(trajectory[-1]["incumbent"])
 
-        # Restore state
-        stats = None
-        incumbent = None
-        if args_.restore_state:
-            root_logger.debug("Restoring state from %s...", args_.restore_state)
-            rh, stats, incumbent = self.restore_state(args_, scen, root_logger)
 
         if args_.mode == "SMAC":
             optimizer = SMAC(
@@ -113,29 +122,50 @@ class SMACCLI(object):
         except (TAEAbortException, FirstRunCrashedException) as err:
             self.logger.error(err)
 
-    def restore_state(self, args_, scen, root_logger):
+    def restore_state_before_scen(self, args_):
+        """Read in files for state-restoration: runhistory, stats, trajectory.
+        """
+        # Construct dummy-scenario for object-creation (mainly cs is needed)
+        tmp_scen = InputReader().read_scenario_file(args_.scenario_file)
+        tmp_scen = Scenario(tmp_scen, cmd_args={'output_dir':''})
         # Check for folder and files
         rh_path = os.path.join(args_.restore_state, "runhistory.json")
         stats_path = os.path.join(args_.restore_state, "stats.json")
-        traj_path = os.path.join(args_.restore_state, "traj_aclib2.json")
+        traj_path_aclib = os.path.join(args_.restore_state, "traj_aclib2.json")
+        traj_path_old = os.path.join(args_.restore_state, "traj_old.csv")
         scen_path = os.path.join(args_.restore_state, "scenario.txt")
         if not os.path.isdir(args_.restore_state):
            raise FileNotFoundError("Could not find folder from which to restore.")
         # Load runhistory and stats
         rh = RunHistory(aggregate_func=None)
-        rh.load_json(rh_path, scen.cs)
-        root_logger.debug("Restored runhistory from %s", rh_path)
-        stats = Stats(scen)
+        rh.load_json(rh_path, tmp_scen.cs)
+        self.logger.debug("Restored runhistory from %s", rh_path)
+        stats = Stats(tmp_scen)  # Need to inject actual scenario later for output_dir!
         stats.load(stats_path)
-        root_logger.debug("Restored stats from %s", stats_path)
-        trajectory = TrajLogger.read_traj_aclib_format(
-            fn=traj_path, cs=scen.cs)
+        self.logger.debug("Restored stats from %s", stats_path)
+        with open(traj_path_aclib, 'r') as traj_fn:
+            traj_list_aclib = traj_fn.readlines()
+        with open(traj_path_old, 'r') as traj_fn:
+            traj_list_old = traj_fn.readlines()
+        return rh, stats, traj_list_aclib, traj_list_old
+
+    def restore_state_after_scen(self, scen, stats, traj_list_aclib,
+                                 traj_list_old):
+        """Finish processing files for state-restoration. The actual scenario
+        needs to be injected into stats, as well as the trajectory dealt with
+        (it is read in, but needs to be written to new output-folder after
+        scenario is constructed."""
+        stats.scenario = scen  # inject actual scen for output_dir
+        # write trajectory-list
+        traj_path_aclib = os.path.join(scen.output_dir, "traj_aclib2.json")
+        traj_path_old = os.path.join(scen.output_dir, "traj_old.csv")
+        with open(traj_path_aclib, 'w') as traj_fn:
+            traj_fn.writelines(traj_list_aclib)
+        with open(traj_path_old, 'w') as traj_fn:
+            traj_fn.writelines(traj_list_old)
+        # read trajectory to retrieve incumbent
+        trajectory = TrajLogger.read_traj_aclib_format(fn=traj_path_aclib, cs=scen.cs)
         incumbent = trajectory[-1]["incumbent"]
-        root_logger.debug("Restored incumbent %s from %s", incumbent, traj_path)
-        # Copy traj if output_dir of specified scenario-file is different than
-        # the output_dir of the scenario-file in the folder from which to restore.
-        if scen.output_dir != InputReader().read_scenario_file(scen_path)['output_dir']:
-            new_traj_path = os.path.join(scen.output_dir, "traj_aclib2.json")
-            shutil.copy(traj_path, new_traj_path)
-            root_logger.debug("Copied traj %s", rh_path)
-        return rh, stats, incumbent
+        self.logger.debug("Restored incumbent %s from %s", incumbent,
+                          traj_path_aclib)
+        return stats, incumbent

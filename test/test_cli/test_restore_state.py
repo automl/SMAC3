@@ -4,10 +4,7 @@ import shutil
 
 import numpy as np
 
-if sys.version_info[0] == 2:
-    import mock
-else:
-    from unittest import mock
+from unittest import mock
 
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
@@ -28,12 +25,14 @@ class TestSMACCLI(unittest.TestCase):
         self.scenario_one = "test/test_files/restore_scenario_one.txt"
         self.scenario_two = "test/test_files/restore_scenario_two.txt"
 
+    def tearDown(self):
+        shutil.rmtree(self.output_one, ignore_errors=True)
+        shutil.rmtree(self.output_two, ignore_errors=True)
+
     def test_run_and_restore(self):
         """
         Testing basic restore functionality.
         """
-        shutil.rmtree(self.output_one, ignore_errors=True)
-        shutil.rmtree(self.output_two, ignore_errors=True)
         # Run for 5 algo-calls
         testargs = ["python", "scripts/smac", "--scenario_file",
                     self.scenario_one, "--verbose", "DEBUG"]
@@ -73,3 +72,20 @@ class TestSMACCLI(unittest.TestCase):
         smac = SMAC(scen, restore_incumbent=incumbent,
                     rng=np.random.RandomState(42))
         self.assertRaises(ValueError, smac.optimize)
+
+    def test_same_dir(self):
+        """
+        Testing possible error using same dir for restore
+        """
+        # Run for 5 algo-calls
+        testargs = ["python", "scripts/smac", "--scenario_file",
+                    self.scenario_one, "--verbose", "DEBUG"]
+        with mock.patch.object(sys, 'argv', testargs):
+            self.smaccli.main_cli()
+        # Increase limit and run for 10 (so 5 more) by using restore_state
+        testargs = ["python", "scripts/smac", "--restore_state",
+                    self.output_one, "--scenario_file",
+                    self.scenario_one, "--verbose", "DEBUG"]
+        with mock.patch.object(sys, 'argv', testargs):
+            self.smaccli.main_cli()
+
