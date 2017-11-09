@@ -226,6 +226,10 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             )
         else:
             num_configurations_by_local_search = num_points
+        num_configurations_by_local_search = min(
+            stats.ta_runs,
+            num_configurations_by_local_search
+        )
         return num_configurations_by_local_search
 
     def _get_initial_points(self, num_configurations_by_local_search,
