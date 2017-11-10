@@ -11,7 +11,7 @@ smac\.optimizer package
 .. toctree::
 
    smac.optimizer.acquisition
-   smac.optimizer.local_search
+   smac.optimizer.ei_optimization
    smac.optimizer.objective
    smac.optimizer.pSMAC
    smac.optimizer.smbo
