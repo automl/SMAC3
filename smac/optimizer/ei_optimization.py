@@ -195,7 +195,8 @@ class LocalSearch(AcquisitionFunctionMaximizer):
         """
 
         num_configurations_by_local_search = self._calculate_num_points(
-            num_points, stats)
+            num_points, stats, runhistory
+        )
         init_points = self._get_initial_points(
             num_configurations_by_local_search, runhistory)
         configs_acq = []
@@ -216,7 +217,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
         return configs_acq
 
-    def _calculate_num_points(self, num_points, stats):
+    def _calculate_num_points(self, num_points, stats, runhistory):
         if stats._ema_n_configs_per_intensifiy > 0:
             num_configurations_by_local_search = (
                 min(
@@ -227,7 +228,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
         else:
             num_configurations_by_local_search = num_points
         num_configurations_by_local_search = min(
-            stats.ta_runs,
+            len(runhistory.data),
             num_configurations_by_local_search
         )
         return num_configurations_by_local_search
