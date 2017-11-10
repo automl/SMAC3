@@ -14,7 +14,7 @@ from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, \
 from smac.optimizer.epils import EPILS_Solver
 from smac.scenario.scenario import Scenario
 from smac.optimizer.acquisition import EI, EIPS, LogEI
-from smac.optimizer.local_search import LocalSearch
+from smac.optimizer.ei_optimization import LocalSearch
 from smac.tae.execute_func import ExecuteTAFuncArray
 from smac.tae.execute_ta_run import TAEAbortException, FirstRunCrashedException
 from smac.stats.stats import Stats

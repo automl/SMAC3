@@ -23,7 +23,8 @@ from smac.intensification.intensification import Intensifier
 from smac.optimizer.smbo import SMBO
 from smac.optimizer.objective import average_cost
 from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
-from smac.optimizer.local_search import LocalSearch
+from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
+    AcquisitionFunctionMaximizer
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.base_epm import AbstractEPM
@@ -54,19 +55,19 @@ class SMAC(object):
 
     def __init__(self,
                  scenario: Scenario,
-                 # TODO: once we drop python3.4 add type hint
-                 # typing.Union[ExecuteTARun, callable]
-                 tae_runner=None,
+                 tae_runner: typing.Union[ExecuteTARun, typing.Callable]=None,
                  runhistory: RunHistory=None,
                  intensifier: Intensifier=None,
                  acquisition_function: AbstractAcquisitionFunction=None,
+                 acquisition_function_optimizer: AcquisitionFunctionMaximizer=None,
                  model: AbstractEPM=None,
                  runhistory2epm: AbstractRunHistory2EPM=None,
                  initial_design: InitialDesign=None,
                  initial_configurations: typing.List[Configuration]=None,
                  stats: Stats=None,
                  restore_incumbent: Configuration=None,
-                 rng: np.random.RandomState=None):
+                 rng: np.random.RandomState=None,
+                 smbo_class: SMBO=None):
         """Constructor
 
         Parameters
@@ -88,6 +89,9 @@ class SMAC(object):
         acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction
             Object that implements the :class:`~smac.optimizer.acquisition.AbstractAcquisitionFunction`.
             Will use :class:`~smac.optimizer.acquisition.EI` if not set.
+        acquisition_function_optimizer : ~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
+            Object that implements the :class:`~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer`.
+            Will use :class:`smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch` if not set.
         model : AbstractEPM
             Model that implements train() and predict(). Will use a
             :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` if not set.
@@ -106,8 +110,11 @@ class SMAC(object):
             optional stats object
         rng : np.random.RandomState
             Random number generator
-        restore_incumbent: Configuration
+        restore_incumbent : Configuration
             incumbent used if restoring to previous state
+        smbo_class : ~smac.optimizer.smbo.SMBO
+            Class implementing the SMBO interface which will be used to
+            instantiate the optimizer class.
         """
 
         self.logger = logging.getLogger(
@@ -157,8 +164,19 @@ class SMAC(object):
             acquisition_function.model = model
 
         # initialize optimizer on acquisition function
-        local_search = LocalSearch(acquisition_function,
-                                   scenario.cs)
+        if acquisition_function_optimizer is None:
+            acquisition_function_optimizer = InterleavedLocalAndRandomSearch(
+                acquisition_function, scenario.cs
+            )
+        elif not isinstance(
+                acquisition_function_optimizer,
+                AcquisitionFunctionMaximizer,
+            ):
+            raise ValueError(
+                "Argument 'acquisition_function_optimizer' must be of type"
+                "'AcquisitionFunctionMaximizer', but is '%s'" %
+                type(acquisition_function_optimizer)
+            )
 
         # initialize tae_runner
         # First case, if tae_runner is None, the target algorithm is a call
@@ -311,19 +329,25 @@ class SMAC(object):
         if runhistory2epm.scenario is None:
             runhistory2epm.scenario = scenario
 
-        self.solver = SMBO(scenario=scenario,
-                           stats=self.stats,
-                           initial_design=initial_design,
-                           runhistory=runhistory,
-                           runhistory2epm=runhistory2epm,
-                           intensifier=intensifier,
-                           aggregate_func=aggregate_func,
-                           num_run=num_run,
-                           model=model,
-                           acq_optimizer=local_search,
-                           acquisition_func=acquisition_function,
-                           rng=rng,
-                           restore_incumbent=restore_incumbent)
+        smbo_args = {
+            'scenario': scenario,
+            'stats': self.stats,
+            'initial_design': initial_design,
+            'runhistory': runhistory,
+            'runhistory2epm': runhistory2epm,
+            'intensifier': intensifier,
+            'aggregate_func': aggregate_func,
+            'num_run': num_run,
+            'model': model,
+            'acq_optimizer': acquisition_function_optimizer,
+            'acquisition_func': acquisition_function,
+            'rng': rng,
+            'restore_incumbent': restore_incumbent
+        }
+        if smbo_class is None:
+            self.solver = SMBO(**smbo_args)
+        else:
+            self.solver = smbo_class(**smbo_args)
 
     @staticmethod
     def _get_rng(rng):

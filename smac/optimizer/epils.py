@@ -7,7 +7,7 @@ import math
 
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.optimizer import pSMAC
-from smac.optimizer.local_search import LocalSearch
+from smac.optimizer.ei_optimization import LocalSearch
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.intensification.intensification import Intensifier
 from smac.runhistory.runhistory import RunHistory
