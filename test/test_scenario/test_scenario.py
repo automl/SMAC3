@@ -327,20 +327,20 @@ class ScenarioTest(unittest.TestCase):
         self.assertTrue(os.path.isdir(scen1.output_dir))
 
         scen2 = Scenario(self.test_scenario_dict)
-        self.assertTrue(os.path.isdir(scen2.output_dir+'.OLD'))
+        self.assertTrue(os.path.isdir(scen2.output_dir + '.OLD'))
 
         scen3 = Scenario(self.test_scenario_dict)
-        self.assertTrue(os.path.isdir(scen3.output_dir+'.OLD.OLD'))
+        self.assertTrue(os.path.isdir(scen3.output_dir + '.OLD.OLD'))
 
         scen4 = Scenario(self.test_scenario_dict, run_id=2)
         self.assertEqual(scen4.output_dir, os.path.join(
                          self.test_scenario_dict['output_dir'], 'run_2'))
         self.assertTrue(os.path.isdir(scen4.output_dir))
-        self.assertFalse(os.path.isdir(scen4.output_dir+'.OLD.OLD.OLD'))
+        self.assertFalse(os.path.isdir(scen4.output_dir + '.OLD.OLD.OLD'))
 
         # clean up (at least whats not cleaned up by tearDown)
-        shutil.rmtree(scen1.output_dir+'.OLD.OLD')
-        shutil.rmtree(scen1.output_dir+'.OLD')
+        shutil.rmtree(scen1.output_dir + '.OLD.OLD')
+        shutil.rmtree(scen1.output_dir + '.OLD')
 
     def tearDown(self):
         shutil.rmtree(self.test_scenario_dict['output_dir'], ignore_errors=True)

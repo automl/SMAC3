@@ -116,7 +116,7 @@ class Scenario(object):
         self._transform_arguments()
 
         if self.output_dir:
-            self.output_dir = os.path.join(self.output_dir, "run_%d"%(run_id))
+            self.output_dir = os.path.join(self.output_dir, "run_%d" % (run_id))
             if os.path.exists(self.output_dir):
                 move_to = self.output_dir + ".OLD"
                 while (os.path.exists(move_to)):
