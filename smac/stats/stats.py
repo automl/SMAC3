@@ -55,6 +55,9 @@ class Stats(object):
         """
         Save all relevant attributes to json-dictionary.
         """
+        if not self.__scenario.output_dir:
+            self._logger.debug("No scenario.output_dir: not saving stats!")
+            return
         # Set used_wallclock_time
         self.wallclock_time_used = self.get_used_wallclock_time()
 

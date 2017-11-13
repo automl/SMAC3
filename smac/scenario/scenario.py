@@ -8,6 +8,7 @@ import time
 import datetime
 import copy
 import typing
+import shutil
 
 from smac.utils.io.input_reader import InputReader
 from smac.utils.io.output_writer import OutputWriter
@@ -44,7 +45,11 @@ class Scenario(object):
     """
 
     def __init__(self, scenario, cmd_args: dict=None, run_id: int=1):
-        """Constructor
+        """ Creates a scenario-object. The output_dir will be
+        "output_dir/run_id/" and if that exists already, the old folder and its
+        content will be moved (without any checks on whether it's still used by
+        another process) to "output_dir/run_id.OLD". If that exists, ".OLD"s
+        will be appended until possible.
 
         Parameters
         ----------
@@ -54,7 +59,7 @@ class Scenario(object):
         cmd_args : dict
             Command line arguments that were not processed by argparse
         run_id: int
-            Run ID will be used as suffix for output_dir
+            Run ID will be used as subfolder for output_dir
         """
         self.logger = logging.getLogger(
             self.__module__ + '.' + self.__class__.__name__)
@@ -111,9 +116,17 @@ class Scenario(object):
         self._transform_arguments()
 
         if self.output_dir:
-            self.output_dir += "_run%d" %(run_id)
+            self.output_dir = os.path.join(self.output_dir, "run_%d" % (run_id))
+            if os.path.exists(self.output_dir):
+                move_to = self.output_dir + ".OLD"
+                while (os.path.exists(move_to)):
+                    move_to += ".OLD"
+                shutil.move(self.output_dir, move_to)
+                self.logger.warning("Output directory \"%s\" already exists! "
+                                    "Moving old folder to \"%s\".",
+                                    self.output_dir, move_to)
 
-        self.out_writer.write_scenario_file(self)
+        self.write()
 
         self.logger.debug("Scenario Options:")
         for arg_name, arg_value in parsed_arguments.items():
@@ -320,7 +333,7 @@ class Scenario(object):
                           default="smac3-output_%s" % (
                               datetime.datetime.fromtimestamp(
                                   time.time()).strftime(
-                                  '%Y-%m-%d_%H:%M:%S_(%f)')))
+                                  '%Y-%m-%d_%H:%M:%S_%f')))
         self.add_argument(name='input_psmac_dirs', default=None,
                           help="For parallel SMAC, multiple output-directories "
                                "are used.")
@@ -457,6 +470,10 @@ class Scenario(object):
         if warn_:
             self.logger.warn("All instances were casted to str.")
         return l
+
+    def write(self):
+        """ Write scenario to self.output_dir/scenario.txt. """
+        self.out_writer.write_scenario_file(self)
 
     def write_options_to_doc(self, path='scenario_options.rst'):
         """Writes the option-list to file for autogeneration in documentation.
