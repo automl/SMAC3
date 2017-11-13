@@ -257,6 +257,7 @@
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
 
 <span class="kn">from</span> <span class="nn">smac.utils.io.input_reader</span> <span class="k">import</span> <span class="n">InputReader</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.output_writer</span> <span class="k">import</span> <span class="n">OutputWriter</span>
@@ -293,7 +294,11 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">cmd_args</span><span class="p">:</span> <span class="nb">dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+        <span class="sd">&quot;&quot;&quot; Creates a scenario-object. The output_dir will be</span>
+<span class="sd">        &quot;output_dir/run_id/&quot; and if that exists already, the old folder and its</span>
+<span class="sd">        content will be moved (without any checks on whether it&#39;s still used by</span>
+<span class="sd">        another process) to &quot;output_dir/run_id.OLD&quot;. If that exists, &quot;.OLD&quot;s</span>
+<span class="sd">        will be appended until possible.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -303,7 +308,7 @@
 <span class="sd">        cmd_args : dict</span>
 <span class="sd">            Command line arguments that were not processed by argparse</span>
 <span class="sd">        run_id: int</span>
-<span class="sd">            Run ID will be used as suffix for output_dir</span>
+<span class="sd">            Run ID will be used as subfolder for output_dir</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
@@ -360,9 +365,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_transform_arguments</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">+=</span> <span class="s2">&quot;_run</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;run_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">run_id</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">):</span>
+                <span class="n">move_to</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">+</span> <span class="s2">&quot;.OLD&quot;</span>
+                <span class="k">while</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">move_to</span><span class="p">)):</span>
+                    <span class="n">move_to</span> <span class="o">+=</span> <span class="s2">&quot;.OLD&quot;</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">move_to</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Output directory </span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s2"> already exists! &quot;</span>
+                                    <span class="s2">&quot;Moving old folder to </span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s2">.&quot;</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">move_to</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">out_writer</span><span class="o">.</span><span class="n">write_scenario_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Scenario Options:&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">arg_name</span><span class="p">,</span> <span class="n">arg_value</span> <span class="ow">in</span> <span class="n">parsed_arguments</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -569,7 +582,7 @@
                           <span class="n">default</span><span class="o">=</span><span class="s2">&quot;smac3-output_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
                               <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span>
                                   <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span>
-                                  <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">_%H:%M:%S_(</span><span class="si">%f</span><span class="s1">)&#39;</span><span class="p">)))</span>
+                                  <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">_%H:%M:%S_</span><span class="si">%f</span><span class="s1">&#39;</span><span class="p">)))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;input_psmac_dirs&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                           <span class="n">help</span><span class="o">=</span><span class="s2">&quot;For parallel SMAC, multiple output-directories &quot;</span>
                                <span class="s2">&quot;are used.&quot;</span><span class="p">)</span>
@@ -706,6 +719,10 @@
         <span class="k">if</span> <span class="n">warn_</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;All instances were casted to str.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">l</span>
+
+<div class="viewcode-block" id="Scenario.write"><a class="viewcode-back" href="../../../apidoc/smac.scenario.scenario.html#smac.scenario.scenario.Scenario.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Write scenario to self.output_dir/scenario.txt. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_writer</span><span class="o">.</span><span class="n">write_scenario_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Scenario.write_options_to_doc"><a class="viewcode-back" href="../../../apidoc/smac.scenario.scenario.html#smac.scenario.scenario.Scenario.write_options_to_doc">[docs]</a>    <span class="k">def</span> <span class="nf">write_options_to_doc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;scenario_options.rst&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Writes the option-list to file for autogeneration in documentation.</span>

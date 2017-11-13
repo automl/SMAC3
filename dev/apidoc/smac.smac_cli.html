@@ -265,9 +265,19 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="smac.smac_cli.SMACCLI.restore_state">
-<code class="descname">restore_state</code><span class="sig-paren">(</span><em>args_</em>, <em>scen</em>, <em>root_logger</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/smac_cli.html#SMACCLI.restore_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.smac_cli.SMACCLI.restore_state" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="smac.smac_cli.SMACCLI.restore_state_after_scen">
+<code class="descname">restore_state_after_scen</code><span class="sig-paren">(</span><em>scen</em>, <em>stats</em>, <em>traj_list_aclib</em>, <em>traj_list_old</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/smac_cli.html#SMACCLI.restore_state_after_scen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.smac_cli.SMACCLI.restore_state_after_scen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finish processing files for state-restoration. The actual scenario
+needs to be injected into stats, as well as the trajectory dealt with
+(it is read in, but needs to be written to new output-folder after
+scenario is constructed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.smac_cli.SMACCLI.restore_state_before_scen">
+<code class="descname">restore_state_before_scen</code><span class="sig-paren">(</span><em>args_</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/smac_cli.html#SMACCLI.restore_state_before_scen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.smac_cli.SMACCLI.restore_state_before_scen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read in files for state-restoration: runhistory, stats, trajectory.</p>
+</dd></dl>
 
 </dd></dl>
 

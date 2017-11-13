@@ -261,7 +261,11 @@
 <p>Scenario contains the configuration of the optimization process and
 constructs a scenario object from a file or dictionary.</p>
 <p>All arguments set in the Scenario are set as attributes.</p>
-<p>Constructor</p>
+<p>Creates a scenario-object. The output_dir will be
+“output_dir/run_id/” and if that exists already, the old folder and its
+content will be moved (without any checks on whether it’s still used by
+another process) to “output_dir/run_id.OLD”. If that exists, “.OLD”s
+will be appended until possible.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -270,7 +274,7 @@ constructs a scenario object from a file or dictionary.</p>
 <li><strong>scenario</strong> (<em>str</em><em> or </em><em>dict</em>) – If str, it will be interpreted as to a path a scenario file
 If dict, it will be directly to get all scenario related information</li>
 <li><strong>cmd_args</strong> (<em>dict</em>) – Command line arguments that were not processed by argparse</li>
-<li><strong>run_id</strong> (<em>int</em>) – Run ID will be used as suffix for output_dir</li>
+<li><strong>run_id</strong> (<em>int</em>) – Run ID will be used as subfolder for output_dir</li>
 </ul>
 </td>
 </tr>
@@ -304,6 +308,12 @@ be used together with <code class="docutils literal"><span class="pre">required<
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.scenario.scenario.Scenario.write">
+<code class="descname">write</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/scenario/scenario.html#Scenario.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.scenario.scenario.Scenario.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write scenario to self.output_dir/scenario.txt.</p>
 </dd></dl>
 
 <dl class="method">
