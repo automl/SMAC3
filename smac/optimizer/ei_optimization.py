@@ -120,8 +120,7 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
                 ordered by their acquisition function value
         """
 
-        config_array = convert_configurations_to_array(configs)
-        acq_values = self.acquisition_function(config_array)
+        acq_values = self.acquisition_function(configs)
 
         # From here
         # http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values
@@ -195,7 +194,8 @@ class LocalSearch(AcquisitionFunctionMaximizer):
         """
 
         num_configurations_by_local_search = self._calculate_num_points(
-            num_points, stats)
+            num_points, stats, runhistory
+        )
         init_points = self._get_initial_points(
             num_configurations_by_local_search, runhistory)
         configs_acq = []
@@ -216,7 +216,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
         return configs_acq
 
-    def _calculate_num_points(self, num_points, stats):
+    def _calculate_num_points(self, num_points, stats, runhistory):
         if stats._ema_n_configs_per_intensifiy > 0:
             num_configurations_by_local_search = (
                 min(
@@ -226,6 +226,10 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             )
         else:
             num_configurations_by_local_search = num_points
+        num_configurations_by_local_search = min(
+            len(runhistory.data),
+            num_configurations_by_local_search
+        )
         return num_configurations_by_local_search
 
     def _get_initial_points(self, num_configurations_by_local_search,
@@ -256,8 +260,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
         incumbent = start_point
         # Compute the acquisition value of the incumbent
-        incumbent_array = convert_configurations_to_array([incumbent])
-        acq_val_incumbent = self.acquisition_function(incumbent_array, *args)[0]
+        acq_val_incumbent = self.acquisition_function([incumbent], *args)[0]
 
         local_search_steps = 0
         neighbors_looked_at = 0
@@ -282,12 +285,8 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
             for neighbor in all_neighbors:
                 s_time = time.time()
-                neighbor_array_ = convert_configurations_to_array([neighbor])
-
-                acq_val = self.acquisition_function(neighbor_array_, *args)
-
+                acq_val = self.acquisition_function([neighbor], *args)
                 neighbors_looked_at += 1
-
                 time_n.append(time.time() - s_time)
 
                 if acq_val > acq_val_incumbent + self.epsilon:

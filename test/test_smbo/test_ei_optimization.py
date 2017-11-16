@@ -56,16 +56,10 @@ class TestLocalSearch(unittest.TestCase):
         x4 = UniformIntegerHyperparameter("x4", -5, 5, default_value=5)
         self.cs.add_hyperparameter(x4)
 
-    @unittest.mock.patch.object(LocalSearch, '_get_initial_points')
-    @unittest.mock.patch.object(LocalSearch, '_calculate_num_points')
-    def test_local_search(
-            self,
-            _calculate_num_points_patch,
-            _get_initial_points_patch,
-    ):
+    def test_local_search(self):
 
         def acquisition_function(point):
-
+            point = [p.get_array() for p in point]
             opt = np.array([1, 1, 1, 1])
             dist = [euclidean(point, opt)]
             return np.array([-np.min(dist)])
@@ -74,7 +68,7 @@ class TestLocalSearch(unittest.TestCase):
                         max_iterations=100000)
 
         start_point = self.cs.sample_configuration()
-        acq_val_start_point = acquisition_function(start_point.get_array())
+        acq_val_start_point = acquisition_function([start_point])
 
         acq_val_incumbent, _ = l._one_iter(start_point)
 
@@ -97,7 +91,7 @@ class TestLocalSearch(unittest.TestCase):
             config_space.seed(seed)
 
         def acquisition_function(point):
-            return np.array([np.count_nonzero(np.array(point))])
+            return np.array([np.count_nonzero(point[0].get_array())])
 
         start_point = config_space.get_default_configuration()
         _calculate_num_points_patch.return_value = 1
@@ -107,7 +101,6 @@ class TestLocalSearch(unittest.TestCase):
                         max_iterations=100000)
         acq_val_incumbent, incumbent = l._maximize(None, None, 10)[0]
 
-        self.assertEqual(acq_val_incumbent, len(start_point.get_array()))
         np.testing.assert_allclose(
             incumbent.get_array(),
             np.ones(len(config_space.get_hyperparameters()))
@@ -191,8 +184,8 @@ class TestRandomSearch(unittest.TestCase):
             self.assertEqual(rval[i][1].origin, 'Random Search (sorted)')
 
         # Check that config.get_array works as desired and imputation is used
-        #  in between
-        np.testing.assert_allclose(patch_ei.call_args[0][0],
+        #  in between, we therefore have to retrieve the value from the mock!
+        np.testing.assert_allclose([v.value for v in patch_ei.call_args[0][0]],
                                    np.array(values, dtype=float))
 
     @unittest.mock.patch.object(ConfigurationSpace, 'sample_configuration')
