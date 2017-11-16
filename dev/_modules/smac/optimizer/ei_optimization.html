@@ -369,8 +369,7 @@
 <span class="sd">                ordered by their acquisition function value</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">config_array</span> <span class="o">=</span> <span class="n">convert_configurations_to_array</span><span class="p">(</span><span class="n">configs</span><span class="p">)</span>
-        <span class="n">acq_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function</span><span class="p">(</span><span class="n">config_array</span><span class="p">)</span>
+        <span class="n">acq_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function</span><span class="p">(</span><span class="n">configs</span><span class="p">)</span>
 
         <span class="c1"># From here</span>
         <span class="c1"># http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values</span>
@@ -444,7 +443,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">num_configurations_by_local_search</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_num_points</span><span class="p">(</span>
-            <span class="n">num_points</span><span class="p">,</span> <span class="n">stats</span><span class="p">)</span>
+            <span class="n">num_points</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">runhistory</span>
+        <span class="p">)</span>
         <span class="n">init_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_initial_points</span><span class="p">(</span>
             <span class="n">num_configurations_by_local_search</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">)</span>
         <span class="n">configs_acq</span> <span class="o">=</span> <span class="p">[]</span>
@@ -465,7 +465,7 @@
 
         <span class="k">return</span> <span class="n">configs_acq</span>
 
-    <span class="k">def</span> <span class="nf">_calculate_num_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_points</span><span class="p">,</span> <span class="n">stats</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_calculate_num_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_points</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">stats</span><span class="o">.</span><span class="n">_ema_n_configs_per_intensifiy</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">num_configurations_by_local_search</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="nb">min</span><span class="p">(</span>
@@ -475,6 +475,10 @@
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">num_configurations_by_local_search</span> <span class="o">=</span> <span class="n">num_points</span>
+        <span class="n">num_configurations_by_local_search</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="p">),</span>
+            <span class="n">num_configurations_by_local_search</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">num_configurations_by_local_search</span>
 
     <span class="k">def</span> <span class="nf">_get_initial_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_configurations_by_local_search</span><span class="p">,</span>
@@ -505,8 +509,7 @@
 
         <span class="n">incumbent</span> <span class="o">=</span> <span class="n">start_point</span>
         <span class="c1"># Compute the acquisition value of the incumbent</span>
-        <span class="n">incumbent_array</span> <span class="o">=</span> <span class="n">convert_configurations_to_array</span><span class="p">([</span><span class="n">incumbent</span><span class="p">])</span>
-        <span class="n">acq_val_incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function</span><span class="p">(</span><span class="n">incumbent_array</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">acq_val_incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function</span><span class="p">([</span><span class="n">incumbent</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="n">local_search_steps</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">neighbors_looked_at</span> <span class="o">=</span> <span class="mi">0</span>
@@ -531,12 +534,8 @@
 
             <span class="k">for</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="n">all_neighbors</span><span class="p">:</span>
                 <span class="n">s_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-                <span class="n">neighbor_array_</span> <span class="o">=</span> <span class="n">convert_configurations_to_array</span><span class="p">([</span><span class="n">neighbor</span><span class="p">])</span>
-
-                <span class="n">acq_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function</span><span class="p">(</span><span class="n">neighbor_array_</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
-
+                <span class="n">acq_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function</span><span class="p">([</span><span class="n">neighbor</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
                 <span class="n">neighbors_looked_at</span> <span class="o">+=</span> <span class="mi">1</span>
-
                 <span class="n">time_n</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">s_time</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">acq_val</span> <span class="o">&gt;</span> <span class="n">acq_val_incumbent</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span><span class="p">:</span>
