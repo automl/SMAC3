@@ -264,8 +264,7 @@ class EPILS_Solver(object):
             all_neighbors = list(get_one_exchange_neighbourhood(
                 incumbent, seed=self.rng.seed()))
 
-            neighbors_array = convert_configurations_to_array(all_neighbors)
-            acq_val = self.acquisition_func(neighbors_array)
+            acq_val = self.acquisition_func(all_neighbors)
             
             sorted_neighbors = sorted(zip(all_neighbors, acq_val), key=lambda x: x[1], reverse=True)
             prev_incumbent = incumbent

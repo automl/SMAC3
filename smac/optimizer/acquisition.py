@@ -1,9 +1,13 @@
 # encoding=utf8
 import abc
 import logging
-from scipy.stats import norm
-import numpy as np
+from typing import List
 
+import numpy as np
+from scipy.stats import norm
+
+from smac.configspace import Configuration
+from smac.configspace.util import convert_configurations_to_array
 from smac.epm.base_epm import AbstractEPM
 
 __author__ = "Aaron Klein, Marius Lindauer"
@@ -52,22 +56,21 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
         for key in kwargs:
             setattr(self, key, kwargs[key])
 
-    def __call__(self, X: np.ndarray):
+    def __call__(self, configurations: List[Configuration]):
         """Computes the acquisition value for a given X
 
         Parameters
         ----------
-        X : np.ndarray
-            The input points where the acquisition function
-            should be evaluated. The dimensionality of X is (N, D), with N as
-            the number of points to evaluate at and D is the number of
-            dimensions of one X.
+        configurations : list
+            The configurations where the acquisition function
+            should be evaluated. 
 
         Returns
         -------
         np.ndarray(N, 1)
             acquisition values for X
         """
+        X = convert_configurations_to_array(configurations)
         if len(X.shape) == 1:
             X = X[np.newaxis, :]
 
