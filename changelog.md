@@ -1,6 +1,27 @@
 # 0.8
 
-* Upgrade to ConfigSpace (0.4.0), which is not backwards compatible.
+## Major changes
+
+* Upgrade to ConfigSpace (0.4.X), which is not backwards compatible. On the plus
+  side, the ConfigSpace is about 3-10 times faster, depending on the task.
+* FIX #240: improved output directory structure. If the user does not specify
+  an output directory a SMAC experiment will have the following structure:
+  `smac_/run_<run_id>/*.json`. The user can specify a output directory, e.g.
+  `./myExperiment` or `./myExperiment/` which results in
+  `./myExperiment/run_<run_id>/*.json`.
+
+## Interface changes
+
+* Generalize the interface of the acquisition functions interface to work with
+  ConfigSpaces's configuration objects instead of numpy arrays.
+* The acquisition function optimizer can now be passed to the SMBO object.
+* A custom SMBO class can now be passed to the SMAC builder object.
+
+## Minor fixes
+
+* #333 fixes an incompability with `uncorrelated_mo_rf_with_instances`.
+* #323 fixes #324 and #319, which both improve the functioning of the built-in
+  validation tools.
 
 # 0.7.2
 
