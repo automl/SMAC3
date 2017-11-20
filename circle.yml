@@ -29,7 +29,7 @@ dependencies:
     # Conda installation
     - wget http://repo.continuum.io/miniconda/Miniconda3-4.3.21-Linux-x86_64.sh -O ~/miniconda.sh
     - bash ~/miniconda.sh -b -p $HOME/miniconda
-    - conda create -n testenv --yes python=3.6 pip wheel nose gcc swig
+    - conda create -n testenv --yes python=3.6 pip wheel nose gxx_linux-64 gcc_linux-64 swig
 
   # The --user is needed to let sphinx see the source and the binaries
   # The pipefail is requested to propagate exit code
