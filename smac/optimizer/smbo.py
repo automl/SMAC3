@@ -193,7 +193,7 @@ class SMBO(object):
 
             if self.scenario.shared_model:
                 pSMAC.write(run_history=self.runhistory,
-                            output_directory=self.scenario.output_dir)
+                            output_directory=self.stats.output_dir)
 
             logging.debug("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
                 self.stats.get_remaing_time_budget(),
@@ -281,9 +281,9 @@ class SMBO(object):
         runhistory: RunHistory
             runhistory containing all specified runs
         """
-        traj_fn = os.path.join(self.scenario.output_dir, "traj_aclib2.json")
+        traj_fn = os.path.join(self.scenario.output_dir_for_this_run, "traj_aclib2.json")
         trajectory = TrajLogger.read_traj_aclib_format(fn=traj_fn, cs=self.scenario.cs)
-        new_rh_path = os.path.join(self.scenario.output_dir, "validated_runhistory.json")
+        new_rh_path = os.path.join(self.scenario.output_dir_for_this_run, "validated_runhistory.json")
 
         validator = Validator(self.scenario, trajectory, new_rh_path, self.rng)
         if use_epm:

@@ -208,7 +208,7 @@ class EPILS_Solver(object):
 
             if self.scenario.shared_model:
                 pSMAC.write(run_history=self.runhistory,
-                            output_directory=self.scenario.output_dir,
+                            output_directory=self.stats.output_dir,
                             num_run=self.num_run)
                 
             iteration += 1

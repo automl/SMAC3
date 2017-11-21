@@ -8,7 +8,6 @@ import time
 import datetime
 import copy
 import typing
-import shutil
 
 from smac.utils.io.input_reader import InputReader
 from smac.utils.io.output_writer import OutputWriter
@@ -44,7 +43,7 @@ class Scenario(object):
 
     """
 
-    def __init__(self, scenario, cmd_args: dict=None, run_id: int=1):
+    def __init__(self, scenario, cmd_args: dict=None):
         """ Creates a scenario-object. The output_dir will be
         "output_dir/run_id/" and if that exists already, the old folder and its
         content will be moved (without any checks on whether it's still used by
@@ -58,8 +57,6 @@ class Scenario(object):
             If dict, it will be directly to get all scenario related information
         cmd_args : dict
             Command line arguments that were not processed by argparse
-        run_id: int
-            Run ID will be used as subfolder for output_dir
         """
         self.logger = logging.getLogger(
             self.__module__ + '.' + self.__class__.__name__)
@@ -67,6 +64,8 @@ class Scenario(object):
 
         self.in_reader = InputReader()
         self.out_writer = OutputWriter()
+
+        self.output_dir_for_this_run = None
 
         if type(scenario) is str:
             scenario_fn = scenario
@@ -114,19 +113,6 @@ class Scenario(object):
             setattr(self, arg_name, arg_value)
 
         self._transform_arguments()
-
-        if self.output_dir:
-            self.output_dir = os.path.join(self.output_dir, "run_%d" % (run_id))
-            if os.path.exists(self.output_dir):
-                move_to = self.output_dir + ".OLD"
-                while (os.path.exists(move_to)):
-                    move_to += ".OLD"
-                shutil.move(self.output_dir, move_to)
-                self.logger.warning("Output directory \"%s\" already exists! "
-                                    "Moving old folder to \"%s\".",
-                                    self.output_dir, move_to)
-
-        self.write()
 
         self.logger.debug("Scenario Options:")
         for arg_name, arg_value in parsed_arguments.items():

@@ -40,7 +40,8 @@ class ROAR(SMAC):
                  initial_design: InitialDesign=None,
                  initial_configurations: typing.List[Configuration]=None,
                  stats: Stats=None,
-                 rng: np.random.RandomState=None):
+                 rng: np.random.RandomState=None,
+                 run_id: int=1):
         """Constructor
 
         Parameters
@@ -67,6 +68,8 @@ class ROAR(SMAC):
             optional stats object
         rng: np.random.RandomState
             Random number generator
+        run_id: int, (default: 1)
+            Run ID will be used as subfolder for output_dir.
         """
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
