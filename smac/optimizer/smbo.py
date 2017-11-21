@@ -193,7 +193,7 @@ class SMBO(object):
 
             if self.scenario.shared_model:
                 pSMAC.write(run_history=self.runhistory,
-                            output_directory=self.stats.output_dir)
+                            output_directory=self.scenario.output_dir_for_this_run)
 
             logging.debug("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
                 self.stats.get_remaing_time_budget(),
