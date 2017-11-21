@@ -33,6 +33,8 @@ class Stats(object):
         Parameters
         ----------
         scenario : Scenario
+
+        output_dir : str
         """
         self.__scenario = scenario
 
@@ -55,7 +57,7 @@ class Stats(object):
         """
         Save all relevant attributes to json-dictionary.
         """
-        if not self.__scenario.output_dir:
+        if not self.__scenario.output_dir_for_this_run:
             self._logger.debug("No scenario.output_dir: not saving stats!")
             return
         # Set used_wallclock_time
@@ -67,7 +69,9 @@ class Stats(object):
             if not v in ['_Stats__scenario', '_logger', '_start_time']:
                 data[v] = getattr(self, v)
 
-        path = os.path.join(self.__scenario.output_dir, "stats.json")
+        path = os.path.join(
+            self.__scenario.output_dir_for_this_run, "stats.json"
+        )
         self._logger.debug("Saving stats to %s", path)
         with open(path, 'w') as fh:
             json.dump(data, fh)
@@ -83,7 +87,9 @@ class Stats(object):
             in the current scenario is used.
         """
         if not fn:
-            fn = os.path.join(self.__scenario.output_dir, "stats.json")
+            fn = os.path.join(
+                self.__scenario.output_dir_for_this_run, "stats.json"
+            )
         with open(fn, 'r') as fh:
             data = json.load(fh)
 

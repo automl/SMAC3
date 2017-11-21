@@ -16,6 +16,7 @@ from smac.utils.merge_foreign_data import merge_foreign_data_from_file
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.io.input_reader import InputReader
 from smac.tae.execute_ta_run import TAEAbortException, FirstRunCrashedException
+from smac.utils.io.output_directory import create_output_directory
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -69,11 +70,14 @@ class SMACCLI(object):
             rh, stats, traj_list_aclib, traj_list_old = self.restore_state_before_scen(args_)
 
         # Create scenario-object
-        scen = Scenario(args_.scenario_file, misc_args,
-                        run_id=args_.seed)
+        scen = Scenario(args_.scenario_file, misc_args)
 
         # Restore state (continued, needs to be after scenario-creation!)
         if args_.restore_state:
+            scen.output_dir_for_this_run = create_output_directory(
+                scen, args_.seed, root_logger,
+            )
+            scen.write()
             stats, incumbent = self.restore_state_after_scen(scen, stats,
                                            traj_list_aclib, traj_list_old)
 
@@ -104,19 +108,22 @@ class SMACCLI(object):
                 runhistory=rh,
                 initial_configurations=initial_configs,
                 stats=stats,
-                restore_incumbent=incumbent)
+                restore_incumbent=incumbent,
+                run_id=args_.seed)
         elif args_.mode == "ROAR":
             optimizer = ROAR(
                 scenario=scen,
                 rng=np.random.RandomState(args_.seed),
                 runhistory=rh,
-                initial_configurations=initial_configs)
+                initial_configurations=initial_configs,
+                run_id=args_.seed)
         elif args_.mode == "EPILS":
             optimizer = EPILS(
                 scenario=scen,
                 rng=np.random.RandomState(args_.seed),
                 runhistory=rh,
-                initial_configurations=initial_configs)
+                initial_configurations=initial_configs,
+                run_id=args_.seed)
         try:
             optimizer.optimize()
         except (TAEAbortException, FirstRunCrashedException) as err:

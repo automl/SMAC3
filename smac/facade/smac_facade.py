@@ -1,5 +1,6 @@
 import logging
 import os
+import shutil
 import typing
 
 import numpy as np
@@ -31,6 +32,7 @@ from smac.epm.base_epm import AbstractEPM
 from smac.utils.util_funcs import get_types
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.constants import MAXINT
+from smac.utils.io.output_directory import create_output_directory
 from smac.configspace import Configuration
 
 
@@ -67,7 +69,8 @@ class SMAC(object):
                  stats: Stats=None,
                  restore_incumbent: Configuration=None,
                  rng: np.random.RandomState=None,
-                 smbo_class: SMBO=None):
+                 smbo_class: SMBO=None,
+                 run_id: int=1):
         """Constructor
 
         Parameters
@@ -115,12 +118,17 @@ class SMAC(object):
         smbo_class : ~smac.optimizer.smbo.SMBO
             Class implementing the SMBO interface which will be used to
             instantiate the optimizer class.
+        run_id: int, (default: 1)
+            Run ID will be used as subfolder for output_dir.
         """
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
         aggregate_func = average_cost
+
+        self.output_dir = create_output_directory(scenario, run_id)
+        scenario.write()
 
         # initialize stats object
         if stats:
@@ -143,8 +151,7 @@ class SMAC(object):
         scenario.cs.seed(rng.randint(MAXINT))
 
         # initial Trajectory Logger
-        traj_logger = TrajLogger(
-            output_dir=scenario.output_dir, stats=self.stats)
+        traj_logger = TrajLogger(output_dir=self.output_dir, stats=self.stats)
 
         # initial EPM
         types, bounds = get_types(scenario.cs, scenario.feature_array)
@@ -398,10 +405,10 @@ class SMAC(object):
             self.runhistory = self.solver.runhistory
             self.trajectory = self.solver.intensifier.traj_logger.trajectory
 
-            if self.solver.scenario.output_dir is not None:
+            if self.output_dir is not None:
                 self.solver.runhistory.save_json(
-                    fn=os.path.join(self.solver.scenario.output_dir,
-                                    "runhistory.json"))
+                    fn=os.path.join(self.output_dir, "runhistory.json")
+                )
         return incumbent
 
     def validate(self, config_mode='inc', instance_mode='train+test',

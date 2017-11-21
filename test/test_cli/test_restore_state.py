@@ -1,3 +1,4 @@
+import os
 import sys
 import unittest
 import shutil
@@ -19,6 +20,12 @@ from smac.stats.stats import Stats
 class TestSMACCLI(unittest.TestCase):
 
     def setUp(self):
+        base_directory = os.path.split(__file__)[0]
+        base_directory = os.path.abspath(
+            os.path.join(base_directory, '..', '..'))
+        self.current_dir = os.getcwd()
+        os.chdir(base_directory)
+
         self.output_one = "test/test_files/test_restore_state/run_1"  # From scenario_one.txt
         self.output_two = "test/test_files/test_restored_state/run_1" # From scenario_two.txt
         self.smaccli = SMACCLI()
@@ -28,6 +35,7 @@ class TestSMACCLI(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.output_one, ignore_errors=True)
         shutil.rmtree(self.output_two, ignore_errors=True)
+        os.chdir(self.current_dir)
 
     def test_run_and_restore(self):
         """
