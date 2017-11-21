@@ -265,6 +265,7 @@
 <span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="k">import</span> <span class="n">TrajLogger</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.input_reader</span> <span class="k">import</span> <span class="n">InputReader</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">TAEAbortException</span><span class="p">,</span> <span class="n">FirstRunCrashedException</span>
+<span class="kn">from</span> <span class="nn">smac.utils.io.output_directory</span> <span class="k">import</span> <span class="n">create_output_directory</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
@@ -318,11 +319,14 @@
             <span class="n">rh</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">traj_list_aclib</span><span class="p">,</span> <span class="n">traj_list_old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">restore_state_before_scen</span><span class="p">(</span><span class="n">args_</span><span class="p">)</span>
 
         <span class="c1"># Create scenario-object</span>
-        <span class="n">scen</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">scenario_file</span><span class="p">,</span> <span class="n">misc_args</span><span class="p">,</span>
-                        <span class="n">run_id</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+        <span class="n">scen</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">scenario_file</span><span class="p">,</span> <span class="n">misc_args</span><span class="p">)</span>
 
         <span class="c1"># Restore state (continued, needs to be after scenario-creation!)</span>
         <span class="k">if</span> <span class="n">args_</span><span class="o">.</span><span class="n">restore_state</span><span class="p">:</span>
+            <span class="n">scen</span><span class="o">.</span><span class="n">output_dir_for_this_run</span> <span class="o">=</span> <span class="n">create_output_directory</span><span class="p">(</span>
+                <span class="n">scen</span><span class="p">,</span> <span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span> <span class="n">root_logger</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">scen</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
             <span class="n">stats</span><span class="p">,</span> <span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">restore_state_after_scen</span><span class="p">(</span><span class="n">scen</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span>
                                            <span class="n">traj_list_aclib</span><span class="p">,</span> <span class="n">traj_list_old</span><span class="p">)</span>
 
@@ -353,19 +357,22 @@
                 <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>
                 <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configs</span><span class="p">,</span>
                 <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
-                <span class="n">restore_incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">)</span>
+                <span class="n">restore_incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
+                <span class="n">run_id</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;ROAR&quot;</span><span class="p">:</span>
             <span class="n">optimizer</span> <span class="o">=</span> <span class="n">ROAR</span><span class="p">(</span>
                 <span class="n">scenario</span><span class="o">=</span><span class="n">scen</span><span class="p">,</span>
                 <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
                 <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>
-                <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configs</span><span class="p">)</span>
+                <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configs</span><span class="p">,</span>
+                <span class="n">run_id</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;EPILS&quot;</span><span class="p">:</span>
             <span class="n">optimizer</span> <span class="o">=</span> <span class="n">EPILS</span><span class="p">(</span>
                 <span class="n">scenario</span><span class="o">=</span><span class="n">scen</span><span class="p">,</span>
                 <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
                 <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>
-                <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configs</span><span class="p">)</span>
+                <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configs</span><span class="p">,</span>
+                <span class="n">run_id</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">optimizer</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
         <span class="k">except</span> <span class="p">(</span><span class="n">TAEAbortException</span><span class="p">,</span> <span class="n">FirstRunCrashedException</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
