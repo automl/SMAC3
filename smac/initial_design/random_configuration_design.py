@@ -58,4 +58,6 @@ class RandomConfiguration(SingleConfigInitialDesign):
         config: Configuration()
             Initial incumbent configuration
         """
-        return self.scenario.cs.sample_configuration()
+        config = self.scenario.cs.sample_configuration()
+        config.origin = 'Random initial design.'
+        return config
