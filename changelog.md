@@ -16,6 +16,8 @@
   ConfigSpaces's configuration objects instead of numpy arrays.
 * The acquisition function optimizer can now be passed to the SMBO object.
 * A custom SMBO class can now be passed to the SMAC builder object.
+* `run_id` is no longer an argument to the Scenario object, making the interface
+  a bit cleaner.
 
 ## Minor fixes
 
