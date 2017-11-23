@@ -35,8 +35,8 @@ we refer to
     In: Proceedings of the conference on Learning and Intelligent OptimizatioN (LION 5)
 
 
-SMAC v3 is written in python3 and continuously tested with python3.4 and
-python3.5. Its [Random Forest](https://github.com/automl/random_forest_run)
+SMAC v3 is written in python3 and continuously tested with python3.5 and
+python3.6. Its [Random Forest](https://github.com/automl/random_forest_run)
 is written in C++.
 
 # Installation
