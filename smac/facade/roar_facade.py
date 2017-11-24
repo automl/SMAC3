@@ -91,13 +91,15 @@ class ROAR(SMAC):
 
         # use SMAC facade
         super().__init__(
-                         scenario=scenario,
-                         tae_runner=tae_runner,
-                         runhistory=runhistory,
-                         intensifier=intensifier,
-                         model=model,
-                         runhistory2epm=runhistory2epm,
-                         initial_design=initial_design,
-                         initial_configurations=initial_configurations,
-                         stats=stats,
-                         rng=rng)
+            scenario=scenario,
+            tae_runner=tae_runner,
+            runhistory=runhistory,
+            intensifier=intensifier,
+            model=model,
+            runhistory2epm=runhistory2epm,
+            initial_design=initial_design,
+            initial_configurations=initial_configurations,
+            stats=stats,
+            rng=rng,
+            run_id=run_id,
+        )
