@@ -58,4 +58,6 @@ class DefaultConfiguration(SingleConfigInitialDesign):
         config: Configuration
             Initial incumbent configuration.
         """
-        return self.scenario.cs.get_default_configuration()
+        config = self.scenario.cs.get_default_configuration()
+        config.origin = 'Default'
+        return config

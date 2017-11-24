@@ -89,6 +89,9 @@ class MultiConfigInitialDesign(InitialDesign):
             Initial incumbent configuration
         """
         configs = self.configs
+        for config in configs:
+            if config.origin is None:
+                config.origin = 'Initial design'
 
         self.traj_logger.add_entry(train_perf=2**31,
                                    incumbent_id=1,
