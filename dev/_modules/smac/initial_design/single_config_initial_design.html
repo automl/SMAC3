@@ -310,6 +310,8 @@
 <span class="sd">            Initial incumbent configuration</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">initial_incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_select_configuration</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">initial_incumbent</span><span class="o">.</span><span class="n">origin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">initial_incumbent</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;Initial design&#39;</span>
 
         <span class="c1"># add this incumbent right away to have an entry to time point 0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">traj_logger</span><span class="o">.</span><span class="n">add_entry</span><span class="p">(</span><span class="n">train_perf</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="mi">31</span><span class="p">,</span>
