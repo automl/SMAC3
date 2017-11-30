@@ -220,7 +220,7 @@ class Validator(object):
                      config_mode:Union[str, typing.List[Configuration]]='def',
                      instance_mode:Union[str, typing.List[str]]='test',
                      repetitions:int=1, runhistory:RunHistory=None,
-                     output="") -> RunHistory:
+                     output="", reuse_epm=True) -> RunHistory:
         """
         Use EPM to predict costs/runtimes for unknown config/inst-pairs.
 
@@ -244,15 +244,18 @@ class Validator(object):
             number of repetitions in nondeterministic algorithms
         runhistory: RunHistory
             optional, RunHistory-object to reuse runs
+        reuse_epm: bool
+            if true (and if self.epm), reuse epm to validate runs
 
         Returns
         -------
         runhistory: RunHistory
             runhistory with predicted runs
         """
-        if not isinstance(runhistory, RunHistory) and not self.epm:
+        if not isinstance(runhistory, RunHistory) and (self.epm == None or
+                                                       reuse_epm == False):
             raise ValueError("No runhistory specified for validating with EPM!")
-        elif isinstance(runhistory, RunHistory):
+        elif reuse_epm == False or self.epm == None:
             # Train random forest and transform training data (from given rh)
             rh2epm = RunHistory2EPM4Cost(num_params=len(self.scen.cs.get_hyperparameters()),
                                          scenario=self.scen, rng=self.rng)
@@ -381,7 +384,7 @@ class Validator(object):
                         runkey = RunKey(runhistory.config_ids[c], i, seed)
                         cost, time, status, additional_info = runhistory.data[runkey]
                         new_rh.add(c, cost, time, status, instance_id=i,
-                                       seed=seed, additional_info=additional_info)
+                                   seed=seed, additional_info=additional_info)
                         runs_from_rh += 1
                 else:
                     # If no runhistory or no entries for instance, get new seed

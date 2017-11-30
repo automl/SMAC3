@@ -68,7 +68,7 @@ class ValidationTest(unittest.TestCase):
 
     def test_epm_reuse_rf(self):
         """ if no runhistory is passed to epm, but there was a model trained
-        before, that model should be reused! """
+        before, that model should be reused! (if reuse_epm flag is set) """
         scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
         scen.feature_array = None
         validator = Validator(scen, self.trajectory)
@@ -78,6 +78,7 @@ class ValidationTest(unittest.TestCase):
                        seed=127)
         validator.validate_epm(runhistory=old_rh)
         validator.validate_epm(output="test/test_files/validation/test/nonexisting/output")
+        self.assertRaises(ValueError, validator.validate_epm, reuse_epm=False)
 
     def test_no_feature_dict(self):
         scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
