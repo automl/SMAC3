@@ -187,8 +187,22 @@ class TestSMACFacade(unittest.TestCase):
         self.assertTrue(os.path.isdir(smac4.output_dir))
         self.assertFalse(os.path.isdir(smac4.output_dir + '.OLD.OLD.OLD'))
 
+        scen_long = test_scenario_dict
+        scen_long['output_dir'] = "x"*65
+        scen_long = Scenario(scen_long)
+        smac5 = SMAC(scenario=scen_long, run_id=1)
+        self.assertTrue(os.path.isdir(smac5.output_dir))
+        smac6 = SMAC(scenario=scen_long, run_id=1)
+        self.assertTrue(os.path.isdir(smac6.output_dir + '.OLD'))
+        smac7 = SMAC(scenario=scen_long, run_id=1)
+        # For stop at length 70
+        self.assertFalse(os.path.isdir(smac7.output_dir + '.OLD.OLD'))
+
+
         # clean up (at least whats not cleaned up by tearDown)
         shutil.rmtree(smac.output_dir + '.OLD.OLD')
         shutil.rmtree(smac.output_dir + '.OLD')
         shutil.rmtree(smac.output_dir)
         shutil.rmtree(smac4.output_dir)
+        shutil.rmtree(smac5.output_dir)
+        shutil.rmtree(smac6.output_dir + '.OLD')
