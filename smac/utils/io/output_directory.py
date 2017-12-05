@@ -34,9 +34,8 @@ def create_output_directory(
         )
     if os.path.exists(output_dir):
         move_to = output_dir + ".OLD"
-        while (os.path.exists(move_to) and len(move_to) < 70):
+        while (os.path.exists(move_to)):
             move_to += ".OLD"
-        shutil.rmtree(move_to, ignore_errors=True)
         shutil.move(output_dir, move_to)
         if logger is not None:
             logger.warning("Output directory \"%s\" already exists! "
