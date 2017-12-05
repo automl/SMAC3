@@ -9,12 +9,13 @@ import numpy as np
 
 from smac.configspace import Configuration, convert_configurations_to_array
 from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.epm.rfr_imputator import RFRImputator
 from smac.optimizer.objective import average_cost
 from smac.runhistory.runhistory import RunHistory, RunKey, StatusType
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
-from smac.tae.execute_ta_run import ExecuteTARun
+from smac.tae.execute_ta_run import ExecuteTARun, StatusType
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.utils.constants import MAXINT
 from smac.utils.util_funcs import get_types
@@ -81,34 +82,50 @@ class Validator(object):
             num_run = np.random.randint(MAXINT)
             self.rng = np.random.RandomState(seed=num_run)
 
-    def _save_results(self, rh:RunHistory, output):
-        """ Helper to save results to file """
-        if output == "":
+    def _save_results(self, rh: RunHistory, output_fn, backup_fn=None):
+        """ Helper to save results to file
+
+        Parameters
+        ----------
+        rh: RunHistory
+            runhistory to save
+        output_fn: str
+            filename to save history to
+        backup_fn: str
+            if output_fn is not a file, treating as dir and append this filename
+        """
+        if output_fn == "":
             self.logger.info("No output specified, validated runhistory not saved.")
-            return rh
-        base = os.path.split(output)[0]
+            return
+        # Check if a folder or a file is specified as output
+        if not output_fn.endswith('.json'):
+            output_dir = output_fn
+            output_fn = os.path.join(output_dir, backup_fn)
+            self.logger.debug("Output is \"%s\", changing to \"%s\"!",
+                              output_dir, output_fn)
+        base = os.path.split(output_fn)[0]
         if not base == "" and not os.path.exists(base):
             self.logger.debug("Folder (\"%s\") doesn't exist, creating.", base)
             os.makedirs(base)
-        rh.save_json(output)
-        self.logger.info("Saving validation-results in %s", output)
-        return rh
+        rh.save_json(output_fn)
+        self.logger.info("Saving validation-results in %s", output_fn)
 
     def validate(self,
                  config_mode:Union[str, typing.List[Configuration]]='def',
                  instance_mode:Union[str, typing.List[str]]='test',
                  repetitions:int=1, n_jobs:int=1, backend:str='threading',
                  runhistory:RunHistory=None, tae:ExecuteTARun=None,
-                 output:str="") -> RunHistory:
+                 output_fn:str="",
+                 ) -> RunHistory:
         """
         Validate configs on instances and save result in runhistory.
 
-        Sideeffect: if output is specified, saves runhistory to specified
-        output-directory.
+        side effect: if output is specified, saves runhistory to specified
+        output directory.
 
         Parameters
         ----------
-        output: string
+        output_fn: str
             path to runhistory to be saved
         config_mode: str or list<Configuration>
             string or directly a list of Configuration
@@ -175,14 +192,8 @@ class Validator(object):
                              additional_info=result[3])
             idx += 1
 
-        if output:
-            # Check if a folder or a file is specified as output
-            if not output.endswith('.json'):
-                old = output
-                output = os.path.join(output, "validated_runhistory.json")
-                self.logger.debug("Output is \"%s\", changing to \"%s\"!", old,
-                                  output)
-            self._save_results(validated_rh, output)
+        if output_fn:
+            self._save_results(validated_rh, output_fn, backup_fn="validated_runhistory.json")
         return validated_rh
 
     def _validate_parallel(self, tae: ExecuteTARun, runs: typing.List[Run],
@@ -199,7 +210,7 @@ class Validator(object):
             [Run(config=CONFIG1,inst=INSTANCE1,seed=SEED1,inst_specs=INST_SPECIFICS1), ...]
         n_jobs: int
             number of cpus to use for validation (-1 to use all)
-        backend: string
+        backend: str
             what backend to use for parallelization
 
         Returns
@@ -220,16 +231,17 @@ class Validator(object):
                      config_mode:Union[str, typing.List[Configuration]]='def',
                      instance_mode:Union[str, typing.List[str]]='test',
                      repetitions:int=1, runhistory:RunHistory=None,
-                     output="", reuse_epm=True) -> RunHistory:
+                     output_fn="", reuse_epm=True,
+                     ) -> RunHistory:
         """
         Use EPM to predict costs/runtimes for unknown config/inst-pairs.
 
-        Sideeffect: if output is specified, saves runhistory to specified
-        output-directory.
+        side effect: if output is specified, saves runhistory to specified
+        output directory.
 
         Parameters
         ----------
-        output: string
+        output_fn: str
             path to runhistory to be saved
         config_mode: str or list<Configuration>
             string or directly a list of Configuration
@@ -245,30 +257,46 @@ class Validator(object):
         runhistory: RunHistory
             optional, RunHistory-object to reuse runs
         reuse_epm: bool
-            if true (and if self.epm), reuse epm to validate runs
+            if true (and if `self.epm`), reuse epm to validate runs
 
         Returns
         -------
         runhistory: RunHistory
             runhistory with predicted runs
         """
-        if not isinstance(runhistory, RunHistory) and (self.epm == None or
-                                                       reuse_epm == False):
+        if not isinstance(runhistory, RunHistory) and (self.epm is None or
+                                                       reuse_epm is False):
             raise ValueError("No runhistory specified for validating with EPM!")
-        elif reuse_epm == False or self.epm == None:
-            # Train random forest and transform training data (from given rh)
-            rh2epm = RunHistory2EPM4Cost(num_params=len(self.scen.cs.get_hyperparameters()),
-                                         scenario=self.scen, rng=self.rng)
-            X, y = rh2epm.transform(runhistory)
-            self.logger.debug("Training model with data of shape X: %s, y:%s",
-                              str(X.shape), str(y.shape))
-
+        elif reuse_epm is False or self.epm is None:
+            # Create RandomForest
             types, bounds = get_types(self.scen.cs, self.scen.feature_array)
             self.epm = RandomForestWithInstances(types=types,
                                                  bounds=bounds,
                                                  instance_features=self.scen.feature_array,
                                                  seed=self.rng.randint(MAXINT),
                                                  ratio_features=1.0)
+            # Use imputor if objective is runtime
+            imputor = None
+            impute_state = None
+            impute_censored_data = False
+            if self.scen.run_obj == 'runtime':
+                threshold = self.scen.cutoff * self.scen.par_factor
+                imputor = RFRImputator(rng=self.rng,
+                                       cutoff=self.scen.cutoff,
+                                       threshold=threshold,
+                                       model=self.epm)
+                impute_censored_data=True
+                impute_state=[StatusType.CAPPED]
+            # Transform training data (from given rh)
+            rh2epm = RunHistory2EPM4Cost(num_params=len(self.scen.cs.get_hyperparameters()),
+                                         scenario=self.scen, rng=self.rng,
+                                         impute_censored_data=impute_censored_data,
+                                         imputor=imputor,
+                                         impute_state=impute_state)
+            X, y = rh2epm.transform(runhistory)
+            self.logger.debug("Training model with data of shape X: %s, y:%s",
+                              str(X.shape), str(y.shape))
+            # Train random forest
             self.epm.train(X, y)
 
         # Predict desired runs
@@ -300,24 +328,19 @@ class Validator(object):
                             additional_info={"additional_info":
                                 "ESTIMATED USING EPM!"})
 
-        if output:
-            # Check if a folder or a file is specified as output
-            if not output.endswith('.json'):
-                old = output
-                output = os.path.join(output, "validated_runhistory_EPM.json")
-                self.logger.debug("Output is \"%s\", changing to \"%s\"!", old,
-                                  output)
-            self._save_results(rh_epm, output)
+        if output_fn:
+            self._save_results(rh_epm, output_fn, backup_fn="validated_runhistory_EPM.json")
         return rh_epm
 
     def get_runs(self, configs: Union[str, typing.List[Configuration]],
                  insts: Union[str, typing.List[str]], repetitions: int=1,
-                 runhistory: RunHistory=None) -> (typing.List[Run], RunHistory):
+                 runhistory: RunHistory=None,
+                 ) -> typing.Tuple[typing.List[Run], RunHistory]:
         """
         Generate list of SMAC-TAE runs to be executed. This means
         combinations of configs with all instances on a certain number of seeds.
 
-        SideEffect: Adds runs that don't need to be reevaluated to self.rh!
+        side effect: Adds runs that don't need to be reevaluated to self.rh!
 
         Parameters
         ----------
@@ -525,12 +548,12 @@ class Validator(object):
 
         Parameters
         ----------
-        mode: string
+        mode: str
             what instances to use for validation, from [train, test, train+test]
 
         Returns
         -------
-        instances: list<strings>
+        instances: list<str>
             instances to be used
         """
         instance_mode = mode.lower()

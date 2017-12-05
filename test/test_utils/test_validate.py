@@ -1,4 +1,5 @@
 import sys
+import os
 import unittest
 import logging
 
@@ -41,24 +42,26 @@ class ValidationTest(unittest.TestCase):
     def test_rng(self):
         scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
         validator = Validator(scen, self.trajectory, 42)
+        self.assertTrue(isinstance(validator.rng, np.random.RandomState))
         validator = Validator(scen, self.trajectory)
-
-    def test_no_output(self):
-        scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
-        validator = Validator(scen, self.trajectory)
+        self.assertTrue(isinstance(validator.rng, np.random.RandomState))
+        validator = Validator(scen, self.trajectory, np.random.RandomState())
+        self.assertTrue(isinstance(validator.rng, np.random.RandomState))
 
     def test_nonexisting_output(self):
         scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
         validator = Validator(scen, self.trajectory)
-        validator.validate(output="test/test_files/validation/test/nonexisting/output")
+        path = "test/test_files/validation/test/nonexisting/output"
+        validator.validate(output_fn=path)
+        self.assertTrue(os.path.exists(path))
 
     def test_pass_tae(self):
         scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
         tae = ExecuteTARunOld(ta=scen.ta)
         validator = Validator(scen, self.trajectory)
         with mock.patch.object(Validator, "_validate_parallel",
-                return_value=[(1,2,3,4)]):
-            validator.validate(tae=tae)
+                               return_value=[(1,2,3,4)]):
+            self.assertEqual(1, len(validator.validate(tae=tae).data))
 
     def test_no_rh_epm(self):
         scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
@@ -76,8 +79,11 @@ class ValidationTest(unittest.TestCase):
         for config in [e["incumbent"] for e in self.trajectory]:
             old_rh.add(config, 1, 1, StatusType.SUCCESS, instance_id='0',
                        seed=127)
-        validator.validate_epm(runhistory=old_rh)
-        validator.validate_epm(output="test/test_files/validation/test/nonexisting/output")
+        self.assertTrue(isinstance(validator.validate_epm(runhistory=old_rh),
+                                   RunHistory))
+        self.assertTrue(isinstance(validator.validate_epm(
+                                    output_fn="test/test_files/validation/"),
+                                    RunHistory))
         self.assertRaises(ValueError, validator.validate_epm, reuse_epm=False)
 
     def test_no_feature_dict(self):
@@ -192,7 +198,7 @@ class ValidationTest(unittest.TestCase):
                         cmd_args={'run_obj':'quality'})
         validator = Validator(scen, self.trajectory, self.rng)
         rh = validator.validate(config_mode='def+inc', instance_mode='train',
-                                repetitions=3, output=self.output_rh)
+                                repetitions=3, output_fn=self.output_rh)
         self.assertEqual(len(rh.get_all_configs()), 2)
         self.assertEqual(sum([len(rh.get_runs_for_config(c)) for c in
                               rh.get_all_configs()]), 6)
@@ -303,5 +309,15 @@ class ValidationTest(unittest.TestCase):
         for config in old_configs[:int(len(old_configs)/2)]:
             old_rh.add(config, 1, 1, StatusType.SUCCESS, instance_id='0',
                        seed=127)
+        validator.validate_epm('all', 'train', 1, old_rh)
 
+    def test_objective_runtime(self):
+        ''' test if everything is ok with objective runtime (imputing!) '''
+        scen = Scenario(self.scen_fn, cmd_args={'run_obj' : 'runtime',
+                                                'cutoff_time' : 5})
+        validator = Validator(scen, self.trajectory, self.rng)
+        old_configs = [entry["incumbent"] for entry in self.trajectory]
+        old_rh = RunHistory(average_cost)
+        for config in old_configs[:int(len(old_configs)/2)]:
+            old_rh.add(config, 1, 1, StatusType.SUCCESS, instance_id='0')
         validator.validate_epm('all', 'train', 1, old_rh)
