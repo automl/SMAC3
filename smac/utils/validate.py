@@ -126,7 +126,9 @@ class Validator(object):
         Parameters
         ----------
         output_fn: str
-            path to runhistory to be saved
+            path to runhistory to be saved. if the suffix is not '.json', will
+            be interpreted as directory and filename will be
+            'validated_runhistory.json'
         config_mode: str or list<Configuration>
             string or directly a list of Configuration
             str from [def, inc, def+inc, wallclock_time, cpu_time, all]
@@ -242,7 +244,9 @@ class Validator(object):
         Parameters
         ----------
         output_fn: str
-            path to runhistory to be saved
+            path to runhistory to be saved. if the suffix is not '.json', will
+            be interpreted as directory and filename will be
+            'validated_runhistory_EPM.json'
         config_mode: str or list<Configuration>
             string or directly a list of Configuration
             str from [def, inc, def+inc, wallclock_time, cpu_time, all]
