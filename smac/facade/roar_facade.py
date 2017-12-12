@@ -3,8 +3,10 @@ import typing
 
 import numpy as np
 
-from smac.tae.execute_ta_run import ExecuteTARun
-from smac.tae.execute_ta_run import StatusType
+from smac.optimizer.objective import average_cost
+from smac.optimizer.ei_optimization import RandomSearch
+from smac.optimizer.acquisition import EI
+from smac.tae.execute_ta_run import StatusType, ExecuteTARun
 from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
 from smac.runhistory.runhistory import RunHistory
@@ -89,6 +91,20 @@ class ROAR(SMAC):
              success_states=[StatusType.SUCCESS, ],
              impute_censored_data=False, impute_state=None)
 
+        aggregate_func = average_cost
+        # initialize empty runhistory
+        if runhistory is None:
+            runhistory = RunHistory(aggregate_func=aggregate_func)
+        # inject aggr_func if necessary
+        if runhistory.aggregate_func is None:
+            runhistory.aggregate_func = aggregate_func
+
+        self.stats = Stats(scenario)
+        rs = RandomSearch(
+            acquisition_function=EI(model=model),
+            config_space=scenario.cs,
+        )
+
         # use SMAC facade
         super().__init__(
             scenario=scenario,
@@ -102,4 +118,5 @@ class ROAR(SMAC):
             stats=stats,
             rng=rng,
             run_id=run_id,
+            acquisition_function_optimizer=rs,
         )
