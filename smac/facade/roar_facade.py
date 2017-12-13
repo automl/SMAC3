@@ -5,7 +5,6 @@ import numpy as np
 
 from smac.optimizer.objective import average_cost
 from smac.optimizer.ei_optimization import RandomSearch
-from smac.optimizer.acquisition import EI
 from smac.tae.execute_ta_run import StatusType, ExecuteTARun
 from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
@@ -13,7 +12,6 @@ from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.intensification import Intensifier
-from smac.epm.random_epm import RandomEPM
 from smac.facade.smac_facade import SMAC
 from smac.configspace import Configuration
 
@@ -78,10 +76,6 @@ class ROAR(SMAC):
         # initial random number generator
         num_run, rng = self._get_rng(rng=rng)
 
-        # initial EPM
-        #use random predictions to simulate random sampling of configurations
-        model = RandomEPM(rng=rng)
-
         # initial conversion of runhistory into EPM data
         # since ROAR does not really use it the converted data
         # we simply use a cheap RunHistory2EPM here
@@ -101,7 +95,7 @@ class ROAR(SMAC):
 
         self.stats = Stats(scenario)
         rs = RandomSearch(
-            acquisition_function=EI(model=model),
+            acquisition_function=None,
             config_space=scenario.cs,
         )
 
@@ -111,7 +105,6 @@ class ROAR(SMAC):
             tae_runner=tae_runner,
             runhistory=runhistory,
             intensifier=intensifier,
-            model=model,
             runhistory2epm=runhistory2epm,
             initial_design=initial_design,
             initial_configurations=initial_configurations,
