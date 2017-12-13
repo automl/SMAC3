@@ -5,7 +5,7 @@ scipy>=0.18.1
 six
 psutil
 pynisher>=0.4.1
-ConfigSpace>=0.4.2,<0.5
+ConfigSpace>=0.4.3,<0.5
 scikit-learn>=0.18.0
 typing
 pyrfr>=0.5.0
