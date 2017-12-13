@@ -42,13 +42,13 @@ And run the f_min-function:
    :lineno-match:
 
 This way, you can optimize a blackbox-function with minimal effort. However, to
-use the whole of *SMACs* capability, a scenario_ object should be used.
+use all of *SMACs* capability, a scenario_ object should be used.
 
-Commandline
-~~~~~~~~~~~
-There are a wrapper `cmdline_wrapper.py`, a scenario-file `scenario.txt` and a
-PCS-file `param_config_space.pcs` in the branin-folder.
-To run the example scenario, change into the root-directory of *SMAC* and type the following commands:
+Command line
+~~~~~~~~~~~~
+There are a wrapper ``cmdline_wrapper.py``, a scenario-file ``scenario.txt`` and a
+PCS-file ``param_config_space.pcs`` in the branin-folder.
+To run the example scenario, change into the root directory of *SMAC* and type the following commands:
 
 .. code-block:: bash
 
@@ -74,11 +74,11 @@ The **paramfile** parameter tells *SMAC* which Parameter Configuration Space (PC
 
     x1 and x2 are both continuous parameters. x1 can take any real value in the range [-5, 10], x2 in the range [0, 15] and both have the default value 0.
 
-The **run_obj** parameter specifies what *SMAC* is supposed to **minimize**. Here we optimize solution quality.
+The **run_obj** parameter specifies what *SMAC* is supposed to **optimize**. Here we optimize solution quality.
 
 The **runcount_limit** specifies the maximum number of algorithm calls.
 
-*SMAC* reads the results from the commandline output. The wrapper returns the
+*SMAC* reads the results from the command line output. The wrapper returns the
 results of the algorithm in a specific format:
 
     .. code-block:: bash

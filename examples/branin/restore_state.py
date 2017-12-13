@@ -10,7 +10,7 @@ from smac.utils.io.traj_logging import TrajLogger
 
 """
 This file runs SMAC and then restores the run with an extended computation
-budget. This will also work for runs that have crashed and are continued.
+budget. This will also work for SMAC runs that have crashed and are continued.
 """
 
 def main():

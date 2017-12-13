@@ -30,7 +30,7 @@ A full call by SMAC looks like this:
 
 SMAC processes results from the commandline, therefore the print-statement is
 crucial. The format of the results must be:
-    Result for SMAC: <STATUS>, <runtime>, <runlength>, <quality>, seed>, <instance-specifics>
+    Result for SMAC: <STATUS>, <runtime>, <runlength>, <quality>, <seed>, <instance-specifics>
 """
 
 if __name__ == '__main__':
