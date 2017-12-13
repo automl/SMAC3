@@ -90,9 +90,12 @@ class Validator(object):
         rh: RunHistory
             runhistory to save
         output_fn: str
-            filename to save history to
+            if ends on '.json': filename to save history to
+            else: directory to save runhistory to (filename is backup_fn)
         backup_fn: str
-            if output_fn is not a file, treating as dir and append this filename
+            if output_fn does not end on '.json', treat output_fn as dir and
+            append backup_fn as filename (if output_fn ends on '.json', this
+            argument is ignored)
         """
         if output_fn == "":
             self.logger.info("No output specified, validated runhistory not saved.")
