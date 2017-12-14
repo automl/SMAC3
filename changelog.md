@@ -9,6 +9,8 @@
   `smac_/run_<run_id>/*.json`. The user can specify a output directory, e.g.
   `./myExperiment` or `./myExperiment/` which results in
   `./myExperiment/run_<run_id>/*.json`.
+* Due to changes in AnaConda's compiler setup we drop the unit tests for
+  python3.4.
 
 ## Interface changes
 
@@ -19,11 +21,15 @@
 * `run_id` is no longer an argument to the Scenario object, making the interface
   a bit cleaner.
 
-## Minor fixes
+## Minor changes
 
 * #333 fixes an incompability with `uncorrelated_mo_rf_with_instances`.
 * #323 fixes #324 and #319, which both improve the functioning of the built-in
   validation tools.
+* #350 fixes random search, which could accidentaly use configurations found my
+  a local acquisition function optimizer.
+* #336 makes validation more flexible.
+
 
 # 0.7.2
 
