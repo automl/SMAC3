@@ -285,16 +285,18 @@ class SMBO(object):
         trajectory = TrajLogger.read_traj_aclib_format(fn=traj_fn, cs=self.scenario.cs)
         new_rh_path = os.path.join(self.scenario.output_dir_for_this_run, "validated_runhistory.json")
 
-        validator = Validator(self.scenario, trajectory, new_rh_path, self.rng)
+        validator = Validator(self.scenario, trajectory, self.rng)
         if use_epm:
             new_rh = validator.validate_epm(config_mode=config_mode,
                                             instance_mode=instance_mode,
                                             repetitions=repetitions,
-                                            runhistory=self.runhistory)
+                                            runhistory=self.runhistory,
+                                            output=new_rh_path)
         else:
             new_rh = validator.validate(config_mode, instance_mode, repetitions,
                                         n_jobs, backend, self.runhistory,
-                                        self.intensifier.tae_runner)
+                                        self.intensifier.tae_runner,
+                                        output=new_rh_path)
         return new_rh
 
     def _get_timebound_for_intensification(self, time_spent):

@@ -1,5 +1,7 @@
+from contextlib import suppress
 import unittest
 from unittest import mock
+import shutil
 
 import numpy as np
 from ConfigSpace import Configuration
@@ -36,6 +38,12 @@ class TestSMBO(unittest.TestCase):
         self.scenario = Scenario({'cs': test_helpers.get_branin_config_space(),
                                   'run_obj': 'quality',
                                   'output_dir': ''})
+
+    def tearDown(self):
+        for i in range(20):
+            with suppress(Exception):
+                dirname = 'run_1' + ('.OLD' * i)
+                shutil.rmtree(dirname)
 
     def branin(self, x):
         y = (x[:, 1] - (5.1 / (4 * np.pi ** 2)) * x[:, 0] ** 2 + 5 * x[:, 0] / np.pi - 6) ** 2

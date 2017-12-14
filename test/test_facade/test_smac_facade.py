@@ -1,3 +1,4 @@
+from contextlib import suppress
 import os
 import shutil
 import unittest
@@ -25,6 +26,12 @@ class TestSMACFacade(unittest.TestCase):
         self.cs = ConfigurationSpace()
         self.scenario = Scenario({'cs': self.cs, 'run_obj': 'quality',
                                   'output_dir': ''})
+
+    def tearDown(self):
+        for i in range(20):
+            with suppress(Exception):
+                dirname = 'run_1' + ('.OLD' * i)
+                shutil.rmtree(dirname)
 
     def test_inject_stats_and_runhistory_object_to_TAE(self):
         ta = ExecuteTAFuncDict(lambda x: x**2)
@@ -190,5 +197,6 @@ class TestSMACFacade(unittest.TestCase):
         # clean up (at least whats not cleaned up by tearDown)
         shutil.rmtree(smac.output_dir + '.OLD.OLD')
         shutil.rmtree(smac.output_dir + '.OLD')
-        shutil.rmtree(smac.output_dir)
+        # This is done by teardown!
+        #shutil.rmtree(smac.output_dir)
         shutil.rmtree(smac4.output_dir)
