@@ -90,8 +90,7 @@ if __name__ == "__main__":
                                 par_factor=scenario.par_factor,
                                 cost_for_crash=scenario.cost_for_crash)
 
-    validator = Validator(scenario, trajectory, args_.output,
-                          args_.seed)
+    validator = Validator(scenario, trajectory, args_.seed)
 
     # Load runhistory
     if args_.runhistory:
@@ -105,11 +104,11 @@ if __name__ == "__main__":
         validator.validate_epm(config_mode=args_.configs,
                                instance_mode=args_.instances,
                                repetitions=args_.repetitions,
-                               runhistory=runhistory)
+                               runhistory=runhistory, output=args_.output)
     else:
         validator.validate(config_mode=args_.configs,
                            instance_mode=args_.instances,
                            repetitions=args_.repetitions,
                            n_jobs=args_.n_jobs,
                            runhistory=runhistory,
-                           tae=tae)
+                           tae=tae, output=args_.output)
