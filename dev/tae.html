@@ -265,6 +265,10 @@ like:</p>
 python algo.py <span class="m">123</span> <span class="m">0</span> <span class="m">10</span> <span class="m">25</span> <span class="m">12345</span> -param1 value1 -param2 value2 <span class="o">[</span>...<span class="o">]</span>
 </pre></div>
 </div>
+<p>The first two parameters after the <code class="docutils literal"><span class="pre">algo.py</span></code> are the instance name, on which the target algorithm is evaluated, and extra information about the instance (rarely used).
+The third parameter is the cutoff time, which is the maximal time the target algorithm is allowed to run.
+The fourth parameter is the runlength, which is the maximal number of steps an algorithm is allowed to run.
+The fifth parameter is the random seed which is followed by the target algorithm parameters.</p>
 <p>It expects the target algorithm to print a string during
 execution with on of the following formats:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>Result of this algorithm run: &lt;STATUS&gt;, &lt;running time&gt;, &lt;runlength&gt;, &lt;quality&gt;, &lt;seed&gt;, &lt;instance-specifics&gt;

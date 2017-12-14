@@ -260,8 +260,9 @@ Examples to illustrate the usage of <em>SMAC</em> - either by reading in a scena
 <div class="section" id="branin">
 <span id="branin-example"></span><h2>Branin<a class="headerlink" href="#branin" title="Permalink to this headline">¶</a></h2>
 <p>First of, we’ll demonstrate the usage of <em>SMAC</em> on the minimization of a standard 2-dimensional continuous test function (<a class="reference external" href="https://www.sfu.ca/~ssurjano/branin.html">Branin</a>).
-This example aims to explain the basic usage of <em>SMAC</em>. This example is
-implemented in two ways.</p>
+This example aims to explain the basic usage of <em>SMAC</em>. There are different ways to use <em>SMAC</em>:</p>
+<div class="section" id="f-min-wrapper">
+<h3>f_min-wrapper<a class="headerlink" href="#f-min-wrapper" title="Permalink to this headline">¶</a></h3>
 <p>The easiest way to use <em>SMAC</em> is to use the <a class="reference external" href="apidoc/smac.facade.func_facade.html#smac.facade.func_facade.fmin_smac">f_min SMAC wrapper</a>. It is
 implemented in <cite>examples/branin/branin_fmin.py</cite> and requires no extra files. We
 import the fmin-function and the Branin-function:</p>
@@ -285,18 +286,21 @@ import the fmin-function and the Branin-function:</p>
 </pre></div>
 </td></tr></table></div>
 <p>This way, you can optimize a blackbox-function with minimal effort. However, to
-use the whole of <em>SMACs</em> capability, a <a class="reference external" href="options.html#scenario">scenario</a> object should be used. There are a
-wrapper <cite>branin_cmdline.py</cite>, a scenario-file <cite>branin_scenario.txt</cite> and a
-PCS-file <cite>branin_pcs.pcs</cite> in the branin-folder.
-To run the example scenario, change into the root-directory of <em>SMAC</em> and type the following commands:</p>
+use all of <em>SMACs</em> capability, a <a class="reference external" href="options.html#scenario">scenario</a> object should be used.</p>
+</div>
+<div class="section" id="command-line">
+<h3>Command line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h3>
+<p>There are a wrapper <code class="docutils literal"><span class="pre">cmdline_wrapper.py</span></code>, a scenario-file <code class="docutils literal"><span class="pre">scenario.txt</span></code> and a
+PCS-file <code class="docutils literal"><span class="pre">param_config_space.pcs</span></code> in the branin-folder.
+To run the example scenario, change into the root directory of <em>SMAC</em> and type the following commands:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> examples/branin
-python ../../scripts/smac --scenario branin_scenario.txt
+python ../../scripts/smac --scenario scenario.txt
 </pre></div>
 </div>
-<p>The python command runs <em>SMAC</em> with the specified scenario. The scenario file contains the following five lines:</p>
+<p>The python command runs <em>SMAC</em> with the specified scenario. The scenario file contains the following lines:</p>
 <blockquote>
-<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">python</span> <span class="n">branin_cmdline</span><span class="o">.</span><span class="n">py</span>
-<span class="n">paramfile</span> <span class="o">=</span> <span class="n">branin_pcs</span><span class="o">.</span><span class="n">pcs</span>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">python</span> <span class="n">cmdline_wrapper</span><span class="o">.</span><span class="n">py</span>
+<span class="n">paramfile</span> <span class="o">=</span> <span class="n">param_config_space</span><span class="o">.</span><span class="n">pcs</span>
 <span class="n">run_obj</span> <span class="o">=</span> <span class="n">quality</span>
 <span class="n">runcount_limit</span> <span class="o">=</span> <span class="mi">500</span>
 <span class="n">deterministic</span> <span class="o">=</span> <span class="mi">1</span>
@@ -304,21 +308,13 @@ python ../../scripts/smac --scenario branin_scenario.txt
 </div>
 </div></blockquote>
 <p>The <strong>algo</strong> parameter specifies how <em>SMAC</em> can call the function or evaluate an algorithm that <em>SMAC</em> is optimizing.
-An algorithm call by <em>SMAC</em> will look like this:</p>
+This is further explained in the chapter about the <a class="reference external" href="tae.html">Target Algorithm Evaluator (TAE)</a>.
+An algorithm call by <em>SMAC</em> is of the following format:</p>
 <blockquote>
 <div><div class="highlight-bash"><div class="highlight"><pre><span></span>&lt;algo&gt; &lt;instance&gt; &lt;instance specific&gt; &lt;cutoff time&gt; &lt;runlength&gt; &lt;seed&gt; &lt;algorithm parameters&gt;
+python branin.py <span class="m">0</span> <span class="m">0</span> <span class="m">999999999</span>.0 <span class="m">0</span> <span class="m">1148756733</span> -x1 -1.1338595629 -x2 <span class="m">13</span>.8770222718
 </pre></div>
 </div>
-</div></blockquote>
-<p>An exemplary call in our Branin example would be:</p>
-<blockquote>
-<div><div class="highlight-bash"><div class="highlight"><pre><span></span>python branin.py <span class="m">0</span> <span class="m">0</span> <span class="m">999999999</span>.0 <span class="m">0</span> <span class="m">1148756733</span> -x1 -1.1338595629 -x2 <span class="m">13</span>.8770222718
-</pre></div>
-</div>
-<p>The first two parameters after the <code class="docutils literal"><span class="pre">branin.py</span></code> do not matter for this example since no instances are needed for the function optimization.
-For algorithm optimization, the first parameter holds the instance name on which the algorithm is evaluated and the second can provide extra information about the instance (rarely used).</p>
-<p>The third parameter gives the cutoff time (maximal running time) an algorithm is allowed to run and the fourth the runlength (maximal number of steps).</p>
-<p>The fifth parameter is the random seed which is followed by the algorithm/function parameters.</p>
 </div></blockquote>
 <p>The <strong>paramfile</strong> parameter tells <em>SMAC</em> which Parameter Configuration Space (<a class="reference external" href="options.html#paramcs">PCS</a>)-file to use. This file contains a list of the algorithm’s parameters, their domains and default values:</p>
 <blockquote>
@@ -328,8 +324,10 @@ For algorithm optimization, the first parameter holds the instance name on which
 </div>
 <p>x1 and x2 are both continuous parameters. x1 can take any real value in the range [-5, 10], x2 in the range [0, 15] and both have the default value 0.</p>
 </div></blockquote>
-<p>The <strong>run_obj</strong> parameter specifies what <em>SMAC</em> is supposed to <strong>minimize</strong>. For this example we are optimizing the solution quality.
-For <em>SMAC</em> to be able to interpret the results of an algorithm run, a wrapper should return the results of the algorithm run as follows:</p>
+<p>The <strong>run_obj</strong> parameter specifies what <em>SMAC</em> is supposed to <strong>optimize</strong>. Here we optimize solution quality.</p>
+<p>The <strong>runcount_limit</strong> specifies the maximum number of algorithm calls.</p>
+<p><em>SMAC</em> reads the results from the command line output. The wrapper returns the
+results of the algorithm in a specific format:</p>
 <blockquote>
 <div><div class="highlight-bash"><div class="highlight"><pre><span></span>Result <span class="k">for</span> SMAC: &lt;STATUS&gt;, &lt;running time&gt;, &lt;runlength&gt;, &lt;quality&gt;, &lt;seed&gt;, &lt;instance-specifics&gt;
 Result <span class="k">for</span> SMAC: SUCCESS, <span class="m">0</span>, <span class="m">0</span>, <span class="m">48</span>.948190, <span class="m">1148756733</span>
@@ -345,7 +343,6 @@ Result <span class="k">for</span> SMAC: SUCCESS, <span class="m">0</span>, <span
 <div class="line"><em>instance-specifics:</em> additional information</div>
 </div>
 </div></blockquote>
-<p>The <strong>runcount_limit</strong> specifies the maximum number of algorithm calls.</p>
 <p><em>SMAC</em> will terminate with the following output:</p>
 <blockquote>
 <div><div class="highlight-bash"><div class="highlight"><pre><span></span>INFO:intensifier:Updated estimated error of incumbent on <span class="m">122</span> runs: <span class="m">0</span>.5063
@@ -363,6 +360,7 @@ INFO:SMAC:Final Incumbent: Configuration:
 </div>
 </div></blockquote>
 <p>Furthermore a folder containing <em>SMACs</em> trajectory and the runhistory will be created in the branin folder.</p>
+</div>
 </div>
 <div class="section" id="using-smac-in-python-svm">
 <span id="svm-example"></span><h2>Using <em>SMAC</em> in Python: SVM<a class="headerlink" href="#using-smac-in-python-svm" title="Permalink to this headline">¶</a></h2>
