@@ -19,10 +19,18 @@ class TestUncorrelatedMultiObjectiveWrapper(unittest.TestCase):
         X = rs.rand(20, 10)
         Y = rs.rand(10, 2)
         model = UncorrelatedMultiObjectiveRandomForestWithInstances(
-            ['cost', 'ln(runtime)'], types=np.zeros((10, ), dtype=np.uint), bounds=np.array([
+            ['cost', 'ln(runtime)'],
+            types=np.zeros((10, ), dtype=np.uint),
+            bounds=np.array([
                 (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan),
                 (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan)
-            ], dtype=object))
+            ], dtype=object),
+            rf_kwargs={'seed': 1},
+            pca_components=5
+        )
+        self.assertEqual(model.estimators[0].seed, 1)
+        self.assertEqual(model.estimators[1].seed, 1)
+        self.assertEqual(model.pca_components, 5)
         model.train(X[:10], Y)
         m, v = model.predict(X[10:])
         self.assertEqual(m.shape, (10, 2))
@@ -46,10 +54,13 @@ class TestUncorrelatedMultiObjectiveWrapper(unittest.TestCase):
         X = rs.rand(20, 10)
         Y = rs.rand(10, 3)
         model = UncorrelatedMultiObjectiveRandomForestWithInstances(
-            ['cost', 'ln(runtime)', 'foo'], types=np.zeros((10,), dtype=np.uint), bounds=np.array([
+            ['cost', 'ln(runtime)', 'foo'],
+            types=np.zeros((10,), dtype=np.uint),
+            bounds=np.array([
                 (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan),
                 (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan)
-            ], dtype=object))
+            ], dtype=object),
+        )
 
         model.train(X[:10], Y[:10])
         m_hat, v_hat = model.predict(X[10:])

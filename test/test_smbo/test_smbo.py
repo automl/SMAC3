@@ -1,37 +1,27 @@
-import os
-import sys
+from contextlib import suppress
 import unittest
+from unittest import mock
 import shutil
-import glob
-import re
 
 import numpy as np
-from ConfigSpace import ConfigurationSpace, Configuration
+from ConfigSpace import Configuration
 
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.uncorrelated_mo_rf_with_instances import \
     UncorrelatedMultiObjectiveRandomForestWithInstances
 from smac.facade.smac_facade import SMAC
 from smac.initial_design.single_config_initial_design import SingleConfigInitialDesign
-from smac.intensification.intensification import Intensifier
 from smac.optimizer.acquisition import EI, EIPS, LogEI
-from smac.optimizer.local_search import LocalSearch
 from smac.optimizer.objective import average_cost
-from smac.optimizer.smbo import SMBO
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, \
     RunHistory2EPM4LogCost, RunHistory2EPM4EIPS
 from smac.scenario.scenario import Scenario
-from smac.stats.stats import Stats
-from smac.tae.execute_func import ExecuteTAFuncArray
-from smac.tae.execute_ta_run import TAEAbortException, FirstRunCrashedException
+from smac.tae.execute_ta_run import FirstRunCrashedException
 from smac.utils import test_helpers
 from smac.utils.util_funcs import get_types
-
-if sys.version_info[0] == 2:
-    import mock
-else:
-    from unittest import mock
+from smac.utils.io.traj_logging import TrajLogger
+from smac.utils.validate import Validator
 
 
 class ConfigurationMock(object):
@@ -48,6 +38,12 @@ class TestSMBO(unittest.TestCase):
         self.scenario = Scenario({'cs': test_helpers.get_branin_config_space(),
                                   'run_obj': 'quality',
                                   'output_dir': ''})
+
+    def tearDown(self):
+        for i in range(20):
+            with suppress(Exception):
+                dirname = 'run_1' + ('.OLD' * i)
+                shutil.rmtree(dirname)
 
     def branin(self, x):
         y = (x[:, 1] - (5.1 / (4 * np.pi ** 2)) * x[:, 0] ** 2 + 5 * x[:, 0] / np.pi - 6) ** 2
@@ -120,10 +116,44 @@ class TestSMBO(unittest.TestCase):
         X = self.scenario.cs.sample_configuration().get_array()[None, :]
 
         Y = self.branin(X)
-        self.assertRaises(ValueError, smbo.choose_next, **{"X":X, "Y":Y})
+        self.assertRaisesRegex(
+            ValueError,
+            'Runhistory is empty and the cost value of the incumbent is '
+            'unknown.',
+            smbo.choose_next,
+            **{"X":X, "Y":Y}
+        )
 
         x = next(smbo.choose_next(X, Y, incumbent_value=0.0)).get_array()        
         assert x.shape == (2,)
+        
+    def test_choose_next_empty_X(self):
+        smbo = SMAC(self.scenario, rng=1).solver
+        smbo.acquisition_func._compute = mock.Mock(
+            spec=RandomForestWithInstances
+        )
+        smbo._random_search.maximize = mock.Mock(
+            spec=smbo._random_search.maximize
+        )
+        smbo._random_search.maximize.return_value = [0, 1, 2]
+
+        X = np.zeros((0, 2))
+        Y = np.zeros((0, 1))
+
+        x = smbo.choose_next(X, Y)
+        self.assertEqual(x, [0, 1, 2])
+        self.assertEqual(smbo._random_search.maximize.call_count, 1)
+        self.assertEqual(smbo.acquisition_func._compute.call_count, 0)
+        
+    def test_choose_next_empty_X_2(self):
+        smbo = SMAC(self.scenario, rng=1).solver
+
+        X = np.zeros((0, 2))
+        Y = np.zeros((0, 1))
+
+        x = smbo.choose_next(X, Y)
+        self.assertEqual(len(x), 1)
+        self.assertIsInstance(x[0], Configuration)
 
     def test_choose_next_2(self):
         def side_effect(X):
@@ -145,7 +175,7 @@ class TestSMBO(unittest.TestCase):
 
         self.assertEqual(smbo.model.train.call_count, 1)
 
-        self.assertEqual(len(x), 2002)
+        self.assertEqual(len(x), 10000)
         num_random_search = 0
         num_local_search = 0
         for i in range(0, 2002, 2):
@@ -184,10 +214,10 @@ class TestSMBO(unittest.TestCase):
         x = [c for c in challengers]
 
         self.assertEqual(smbo.model.train.call_count, 1)
-        self.assertEqual(len(x), 2020)
+        self.assertEqual(len(x), 10000)
         num_random_search = 0
         num_local_search = 0
-        for i in range(0, 2020, 2):
+        for i in range(0, 10000, 2):
             # print(x[i].origin)
             self.assertIsInstance(x[i], Configuration)
             if 'Random Search (sorted)' in x[i].origin:
@@ -201,104 +231,6 @@ class TestSMBO(unittest.TestCase):
         for i in range(1, 2020, 2):
             self.assertIsInstance(x[i], Configuration)
             self.assertEqual(x[i].origin, 'Random Search')
-
-    def test_choose_next_empty_X(self):
-        smbo = SMAC(self.scenario, rng=1).solver
-        smbo.acquisition_func._compute = mock.Mock(spec=RandomForestWithInstances)
-        smbo._get_next_by_random_search = mock.Mock(spec=smbo._get_next_by_random_search)
-        smbo._get_next_by_random_search.return_value = [[0, 0], [0, 1], [0, 2]]
-
-        X = np.zeros((0, 2))
-        Y = np.zeros((0, 1))
-
-        x = smbo.choose_next(X, Y)
-        self.assertEqual(x, [0, 1, 2])
-        self.assertEqual(smbo._get_next_by_random_search.call_count, 1)
-        self.assertEqual(smbo.acquisition_func._compute.call_count, 0)
-
-    def test_choose_next_empty_X_2(self):
-        smbo = SMAC(self.scenario, rng=1).solver
-
-        X = np.zeros((0, 2))
-        Y = np.zeros((0, 1))
-
-        x = smbo.choose_next(X, Y)
-        self.assertEqual(len(x), 1)
-        self.assertIsInstance(x[0], Configuration)
-
-    @mock.patch('smac.optimizer.smbo.convert_configurations_to_array')
-    @mock.patch.object(EI, '__call__')
-    @mock.patch.object(ConfigurationSpace, 'sample_configuration')
-    def test_get_next_by_random_search_sorted(self,
-                                              patch_sample,
-                                              patch_ei,
-                                              patch_impute):
-        values = (10, 1, 9, 2, 8, 3, 7, 4, 6, 5)
-        patch_sample.return_value = [ConfigurationMock(i) for i in values]
-        patch_ei.return_value = np.array([[_] for _ in values], dtype=float)
-        patch_impute.side_effect = lambda l: values
-        smbo = SMAC(self.scenario, rng=1).solver
-        rval = smbo._get_next_by_random_search(10, True)
-        self.assertEqual(len(rval), 10)
-        for i in range(10):
-            self.assertIsInstance(rval[i][1], ConfigurationMock)
-            self.assertEqual(rval[i][1].value, 10 - i)
-            self.assertEqual(rval[i][0], 10 - i)
-            self.assertEqual(rval[i][1].origin, 'Random Search (sorted)')
-
-        # Check that config.get_array works as desired and imputation is used
-        #  in between
-        np.testing.assert_allclose(patch_ei.call_args[0][0],
-                                   np.array(values, dtype=float))
-
-    @mock.patch.object(ConfigurationSpace, 'sample_configuration')
-    def test_get_next_by_random_search(self, patch):
-        def side_effect(size):
-            return [ConfigurationMock()] * size
-        patch.side_effect = side_effect
-        smbo = SMAC(self.scenario, rng=1).solver
-        rval = smbo._get_next_by_random_search(10, False)
-        self.assertEqual(len(rval), 10)
-        for i in range(10):
-            self.assertIsInstance(rval[i][1], ConfigurationMock)
-            self.assertEqual(rval[i][1].origin, 'Random Search')
-            self.assertEqual(rval[i][0], 0)
-
-    @mock.patch.object(LocalSearch, 'maximize')
-    def test_get_next_by_local_search(self, patch):
-        # Without known incumbent
-        class SideEffect(object):
-            def __init__(self):
-                self.call_number = 0
-
-            def __call__(self, *args, **kwargs):
-                rval = 9 - self.call_number
-                self.call_number += 1
-                return (ConfigurationMock(rval), [rval])
-
-        patch.side_effect = SideEffect()
-        smbo = SMAC(self.scenario, rng=1).solver
-        rand_confs = smbo.config_space.sample_configuration(size=9)
-        rval = smbo._get_next_by_local_search(init_points=rand_confs)
-        self.assertEqual(len(rval), 9)
-        self.assertEqual(patch.call_count, 9)
-        for i in range(9):
-            self.assertIsInstance(rval[i][1], ConfigurationMock)
-            self.assertEqual(rval[i][1].value, 9 - i)
-            self.assertEqual(rval[i][0], 9 - i)
-            self.assertEqual(rval[i][1].origin, 'Local Search')
-
-        # With known incumbent
-        patch.side_effect = SideEffect()
-        smbo.incumbent = 'Incumbent'
-        rval = smbo._get_next_by_local_search(init_points=[smbo.incumbent]+rand_confs)
-        self.assertEqual(len(rval), 10)
-        self.assertEqual(patch.call_count, 19)
-        # Only the first local search in each iteration starts from the
-        # incumbent
-        self.assertEqual(patch.call_args_list[9][0][0], 'Incumbent')
-        for i in range(10):
-            self.assertEqual(rval[i][1].origin, 'Local Search')
 
     @mock.patch.object(SingleConfigInitialDesign, 'run')
     def test_abort_on_initial_design(self, patch):
@@ -337,6 +269,22 @@ class TestSMBO(unittest.TestCase):
         self.assertRaises(ValueError, smbo.run)
         smbo = get_smbo(1.2)
         self.assertRaises(ValueError, smbo.run)
+
+    def test_validation(self):
+        with mock.patch.object(TrajLogger, "read_traj_aclib_format",
+                return_value=None) as traj_mock:
+            self.scenario.output_dir = "test"
+            smbo = SMAC(self.scenario).solver
+            with mock.patch.object(Validator, "validate",
+                    return_value=None) as validation_mock:
+                smbo.validate(config_mode='inc', instance_mode='train+test',
+                              repetitions=1, use_epm=False, n_jobs=-1, backend='threading')
+                self.assertTrue(validation_mock.called)
+            with mock.patch.object(Validator, "validate_epm",
+                    return_value=None) as epm_validation_mock:
+                smbo.validate(config_mode='inc', instance_mode='train+test',
+                              repetitions=1, use_epm=True, n_jobs=-1, backend='threading')
+                self.assertTrue(epm_validation_mock.called)
 
 
 if __name__ == "__main__":

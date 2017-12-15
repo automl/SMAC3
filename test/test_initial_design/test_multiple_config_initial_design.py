@@ -20,7 +20,9 @@ class TestMultiInitialDesign(unittest.TestCase):
 
     def setUp(self):
         self.cs = ConfigurationSpace()
-        self.cs.add_hyperparameter(UniformFloatHyperparameter(name="x1", lower=1, upper=10, default=2))
+        self.cs.add_hyperparameter(UniformFloatHyperparameter(
+            name="x1", lower=1, upper=10, default_value=2)
+        )
         self.scenario = Scenario({'cs': self.cs, 'run_obj': 'quality',
                                   'output_dir': ''})
         self.ta = ExecuteTAFuncDict(lambda x: x["x1"]**2)

@@ -23,13 +23,14 @@ from smac.intensification.intensification import Intensifier
 from smac.optimizer.epils import EPILS_Solver
 from smac.optimizer.objective import average_cost
 from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
-from smac.optimizer.local_search import LocalSearch
+from smac.optimizer.ei_optimization import LocalSearch
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.base_epm import AbstractEPM
 from smac.utils.util_funcs import get_types
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.constants import MAXINT
+from smac.utils.io.output_directory import create_output_directory
 from smac.configspace import Configuration
 
 
@@ -62,7 +63,8 @@ class EPILS(object):
                  initial_design: InitialDesign=None,
                  initial_configurations: typing.List[Configuration]=None,
                  stats: Stats=None,
-                 rng: np.random.RandomState=None):
+                 rng: np.random.RandomState=None,
+                 run_id: int=1):
         """Constructor
 
         Parameters
@@ -98,6 +100,8 @@ class EPILS(object):
             optional stats object
         rng: np.random.RandomState
             Random number generator
+        run_id: int, (default: 1)
+            Run ID will be used as subfolder for output_dir.
         """
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
@@ -109,6 +113,9 @@ class EPILS(object):
             self.stats = stats
         else:
             self.stats = Stats(scenario)
+
+        self.output_dir = create_output_directory(scenario, run_id)
+        scenario.write()
 
         # initialize empty runhistory
         if runhistory is None:
@@ -126,7 +133,7 @@ class EPILS(object):
 
         # initial Trajectory Logger
         traj_logger = TrajLogger(
-            output_dir=scenario.output_dir, stats=self.stats)
+            output_dir=self.output_dir, stats=self.stats)
 
         # initial EPM
         types, bounds = get_types(scenario.cs, scenario.feature_array)
@@ -361,10 +368,10 @@ class EPILS(object):
             self.runhistory = self.solver.runhistory
             self.trajectory = self.solver.intensifier.traj_logger.trajectory
 
-            if self.solver.scenario.output_dir is not None:
+            if self.output_dir is not None:
                 self.solver.runhistory.save_json(
-                    fn=os.path.join(self.solver.scenario.output_dir,
-                                    "runhistory.json"))
+                    fn=os.path.join(self.output_dir, "runhistory.json")
+                )
         return incumbent
 
     def get_tae_runner(self):

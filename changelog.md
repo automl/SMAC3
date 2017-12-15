@@ -1,36 +1,69 @@
+# 0.8
+
+## Major changes
+
+* Upgrade to ConfigSpace (0.4.X), which is not backwards compatible. On the plus
+  side, the ConfigSpace is about 3-10 times faster, depending on the task.
+* FIX #240: improved output directory structure. If the user does not specify
+  an output directory a SMAC experiment will have the following structure:
+  `smac_/run_<run_id>/*.json`. The user can specify a output directory, e.g.
+  `./myExperiment` or `./myExperiment/` which results in
+  `./myExperiment/run_<run_id>/*.json`.
+* Due to changes in AnaConda's compiler setup we drop the unit tests for
+  python3.4.
+
+## Interface changes
+
+* Generalize the interface of the acquisition functions to work with
+  ConfigSpaces's configuration objects instead of numpy arrays.
+* The acquisition function optimizer can now be passed to the SMBO object.
+* A custom SMBO class can now be passed to the SMAC builder object.
+* `run_id` is no longer an argument to the Scenario object, making the interface
+  a bit cleaner.
+
+## Minor changes
+
+* #333 fixes an incompability with `uncorrelated_mo_rf_with_instances`.
+* #323 fixes #324 and #319, which both improve the functioning of the built-in
+  validation tools.
+* #350 fixes random search, which could accidentaly use configurations found my
+  a local acquisition function optimizer.
+* #336 makes validation more flexible.
+
+
 # 0.7.2
 
-* Introduce version upper bound on ConfigSpace dependency (<0.4)
+* Introduce version upper bound on ConfigSpace dependency (<0.4).
 
 # 0.7.1
 
-* FIX #193, restoring the scenario now possible
-* ADD #271 validation
-* FIX #311 abort on first crash
-* FIX #318, ExecuteTARunOld now always returns a StatusType
+* FIX #193, restoring the scenario now possible.
+* ADD #271 validation.
+* FIX #311 abort on first crash.
+* FIX #318, ExecuteTARunOld now always returns a StatusType.
 
 # 0.6
 
 ## Major changes
 
 * MAINT documentation (nearly every part was improved and extended, 
-  including installation, examples, API) 
-* ADD EPILS as mode (modified version of ParamILS)
+  including installation, examples, API).
+* ADD EPILS as mode (modified version of ParamILS).
 * MAINT minimal required versions of configspace, pyrfr, sklearn increased
-  (several issues fixed in new configspace version)
+  (several issues fixed in new configspace version).
 * MAINT for quality scenarios, the user can specify the objective 
   value for crashed runs 
-  (returned NaN and Inf are replaced by value for crashed runs)
+  (returned NaN and Inf are replaced by value for crashed runs).
 
 ## Minor changes
 
-* FIX issue #220, do not store external data in runhistory 
-* MAINT TAEFunc without pynisher possible
-* MAINT intensification: minimal number of required challengers parameterized
-* FIX saving duplicated (capped) runs
-* FIX handling of ordinal parameters
-* MAINT runobj is now mandatory
-* FIX arguments passed to pyrfr
+* FIX issue #220, do not store external data in runhistory.
+* MAINT TAEFunc without pynisher possible.
+* MAINT intensification: minimal number of required challengers parameterized.
+* FIX saving duplicated (capped) runs.
+* FIX handling of ordinal parameters.
+* MAINT runobj is now mandatory.
+* FIX arguments passed to pyrfr.
 
 # 0.5
 

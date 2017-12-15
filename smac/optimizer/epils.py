@@ -7,7 +7,7 @@ import math
 
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.optimizer import pSMAC
-from smac.optimizer.local_search import LocalSearch
+from smac.optimizer.ei_optimization import LocalSearch
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.intensification.intensification import Intensifier
 from smac.runhistory.runhistory import RunHistory
@@ -208,7 +208,7 @@ class EPILS_Solver(object):
 
             if self.scenario.shared_model:
                 pSMAC.write(run_history=self.runhistory,
-                            output_directory=self.scenario.output_dir,
+                            output_directory=self.stats.output_dir,
                             num_run=self.num_run)
                 
             iteration += 1
@@ -264,8 +264,7 @@ class EPILS_Solver(object):
             all_neighbors = list(get_one_exchange_neighbourhood(
                 incumbent, seed=self.rng.seed()))
 
-            neighbors_array = convert_configurations_to_array(all_neighbors)
-            acq_val = self.acquisition_func(neighbors_array)
+            acq_val = self.acquisition_func(all_neighbors)
             
             sorted_neighbors = sorted(zip(all_neighbors, acq_val), key=lambda x: x[1], reverse=True)
             prev_incumbent = incumbent

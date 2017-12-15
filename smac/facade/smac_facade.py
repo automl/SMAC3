@@ -1,5 +1,6 @@
 import logging
 import os
+import shutil
 import typing
 
 import numpy as np
@@ -23,13 +24,15 @@ from smac.intensification.intensification import Intensifier
 from smac.optimizer.smbo import SMBO
 from smac.optimizer.objective import average_cost
 from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
-from smac.optimizer.local_search import LocalSearch
+from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
+    AcquisitionFunctionMaximizer
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.base_epm import AbstractEPM
 from smac.utils.util_funcs import get_types
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.constants import MAXINT
+from smac.utils.io.output_directory import create_output_directory
 from smac.configspace import Configuration
 
 
@@ -54,19 +57,20 @@ class SMAC(object):
 
     def __init__(self,
                  scenario: Scenario,
-                 # TODO: once we drop python3.4 add type hint
-                 # typing.Union[ExecuteTARun, callable]
-                 tae_runner=None,
+                 tae_runner: typing.Union[ExecuteTARun, typing.Callable]=None,
                  runhistory: RunHistory=None,
                  intensifier: Intensifier=None,
                  acquisition_function: AbstractAcquisitionFunction=None,
+                 acquisition_function_optimizer: AcquisitionFunctionMaximizer=None,
                  model: AbstractEPM=None,
                  runhistory2epm: AbstractRunHistory2EPM=None,
                  initial_design: InitialDesign=None,
                  initial_configurations: typing.List[Configuration]=None,
                  stats: Stats=None,
                  restore_incumbent: Configuration=None,
-                 rng: np.random.RandomState=None):
+                 rng: np.random.RandomState=None,
+                 smbo_class: SMBO=None,
+                 run_id: int=1):
         """Constructor
 
         Parameters
@@ -88,6 +92,9 @@ class SMAC(object):
         acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction
             Object that implements the :class:`~smac.optimizer.acquisition.AbstractAcquisitionFunction`.
             Will use :class:`~smac.optimizer.acquisition.EI` if not set.
+        acquisition_function_optimizer : ~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
+            Object that implements the :class:`~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer`.
+            Will use :class:`smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch` if not set.
         model : AbstractEPM
             Model that implements train() and predict(). Will use a
             :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` if not set.
@@ -106,14 +113,22 @@ class SMAC(object):
             optional stats object
         rng : np.random.RandomState
             Random number generator
-        restore_incumbent: Configuration
+        restore_incumbent : Configuration
             incumbent used if restoring to previous state
+        smbo_class : ~smac.optimizer.smbo.SMBO
+            Class implementing the SMBO interface which will be used to
+            instantiate the optimizer class.
+        run_id: int, (default: 1)
+            Run ID will be used as subfolder for output_dir.
         """
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
         aggregate_func = average_cost
+
+        self.output_dir = create_output_directory(scenario, run_id)
+        scenario.write()
 
         # initialize stats object
         if stats:
@@ -136,8 +151,7 @@ class SMAC(object):
         scenario.cs.seed(rng.randint(MAXINT))
 
         # initial Trajectory Logger
-        traj_logger = TrajLogger(
-            output_dir=scenario.output_dir, stats=self.stats)
+        traj_logger = TrajLogger(output_dir=self.output_dir, stats=self.stats)
 
         # initial EPM
         types, bounds = get_types(scenario.cs, scenario.feature_array)
@@ -157,8 +171,19 @@ class SMAC(object):
             acquisition_function.model = model
 
         # initialize optimizer on acquisition function
-        local_search = LocalSearch(acquisition_function,
-                                   scenario.cs)
+        if acquisition_function_optimizer is None:
+            acquisition_function_optimizer = InterleavedLocalAndRandomSearch(
+                acquisition_function, scenario.cs
+            )
+        elif not isinstance(
+                acquisition_function_optimizer,
+                AcquisitionFunctionMaximizer,
+            ):
+            raise ValueError(
+                "Argument 'acquisition_function_optimizer' must be of type"
+                "'AcquisitionFunctionMaximizer', but is '%s'" %
+                type(acquisition_function_optimizer)
+            )
 
         # initialize tae_runner
         # First case, if tae_runner is None, the target algorithm is a call
@@ -311,19 +336,25 @@ class SMAC(object):
         if runhistory2epm.scenario is None:
             runhistory2epm.scenario = scenario
 
-        self.solver = SMBO(scenario=scenario,
-                           stats=self.stats,
-                           initial_design=initial_design,
-                           runhistory=runhistory,
-                           runhistory2epm=runhistory2epm,
-                           intensifier=intensifier,
-                           aggregate_func=aggregate_func,
-                           num_run=num_run,
-                           model=model,
-                           acq_optimizer=local_search,
-                           acquisition_func=acquisition_function,
-                           rng=rng,
-                           restore_incumbent=restore_incumbent)
+        smbo_args = {
+            'scenario': scenario,
+            'stats': self.stats,
+            'initial_design': initial_design,
+            'runhistory': runhistory,
+            'runhistory2epm': runhistory2epm,
+            'intensifier': intensifier,
+            'aggregate_func': aggregate_func,
+            'num_run': num_run,
+            'model': model,
+            'acq_optimizer': acquisition_function_optimizer,
+            'acquisition_func': acquisition_function,
+            'rng': rng,
+            'restore_incumbent': restore_incumbent
+        }
+        if smbo_class is None:
+            self.solver = SMBO(**smbo_args)
+        else:
+            self.solver = smbo_class(**smbo_args)
 
     @staticmethod
     def _get_rng(rng):
@@ -374,28 +405,32 @@ class SMAC(object):
             self.runhistory = self.solver.runhistory
             self.trajectory = self.solver.intensifier.traj_logger.trajectory
 
-            if self.solver.scenario.output_dir is not None:
+            if self.output_dir is not None:
                 self.solver.runhistory.save_json(
-                    fn=os.path.join(self.solver.scenario.output_dir,
-                                    "runhistory.json"))
+                    fn=os.path.join(self.output_dir, "runhistory.json")
+                )
         return incumbent
 
     def validate(self, config_mode='inc', instance_mode='train+test',
-                 repetitions=1, n_jobs=-1, backend='threading'):
+                 repetitions=1, use_epm=False, n_jobs=-1, backend='threading'):
         """Create validator-object and run validation, using
         scenario-information, runhistory from smbo and tae_runner from intensify
 
         Parameters
         ----------
-        config_mode: string
-            what configurations to validate
-            from [def, inc, def+inc, time, all], time means evaluation at
-            timesteps 2^-4, 2^-3, 2^-2, 2^-1, 2^0, 2^1, ...
+        config_mode: str or list<Configuration>
+            string or directly a list of Configuration
+            str from [def, inc, def+inc, wallclock_time, cpu_time, all]
+                time evaluates at cpu- or wallclock-timesteps of:
+                [max_time/2^0, max_time/2^1, max_time/2^3, ..., default]
+                with max_time being the highest recorded time
         instance_mode: string
             what instances to use for validation, from [train, test, train+test]
         repetitions: int
             number of repetitions in nondeterministic algorithms (in
             deterministic will be fixed to 1)
+        use_epm: bool
+            whether to use an EPM instead of evaluating all runs with the TAE
         n_jobs: int
             number of parallel processes used by joblib
         backend: string
@@ -407,7 +442,7 @@ class SMAC(object):
             runhistory containing all specified runs
         """
         return self.solver.validate(config_mode, instance_mode, repetitions,
-                                    n_jobs, backend)
+                                    use_epm, n_jobs, backend)
 
     def get_tae_runner(self):
         """Returns target algorithm evaluator (TAE) object which can run the

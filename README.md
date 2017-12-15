@@ -21,10 +21,10 @@ Status for development branch
 
 # OVERVIEW
 
-SMAC is a tool for algorithm configuration 
-to optimize the parameters of arbitrary algorithms across a set of instances.
-This also includes hyperparameter optimization of ML algorithms.
-The main core consists of Bayesian Optimization in combination with a simple racing mechanism to
+SMAC is a tool for algorithm configuration to optimize the parameters of
+arbitrary algorithms across a set of instances. This also includes
+hyperparameter optimization of ML algorithms. The main core consists of
+Bayesian Optimization in combination with a simple racing mechanism to
 efficiently decide which of two configuration performs better.
 
 For a detailed description of its main idea,
@@ -35,12 +35,14 @@ we refer to
     In: Proceedings of the conference on Learning and Intelligent OptimizatioN (LION 5)
 
 
-SMAC v3 is written in python3 and continuously tested with python3.4 and python3.5. 
-Its [Random Forest](https://bitbucket.org/aadfreiburg/random_forest_run) is written in C++.
+SMAC v3 is written in python3 and continuously tested with python3.5 and
+python3.6. Its [Random Forest](https://github.com/automl/random_forest_run)
+is written in C++.
 
 # Installation
 
-Besides the listed requirements (see `requirements.txt`), the random forest used in SMAC3 requires SWIG (>= 3.0).
+Besides the listed requirements (see `requirements.txt`), the random forest
+used in SMAC3 requires SWIG (>= 3.0).
 
 	apt-get install swig 
 
@@ -48,9 +50,10 @@ Besides the listed requirements (see `requirements.txt`), the random forest used
     
     python setup.py install
     
-If you use Anaconda as your Python environment, you have to install two packages before you can install SMAC:
+If you use Anaconda as your Python environment, you have to install three
+packages before you can install SMAC:
 
-	conda install gcc swig
+	conda install gxx_linux-64 gcc_linux-64 swig
     
 # License
 
@@ -68,15 +71,18 @@ If not, see <https://opensource.org/licenses/BSD-3-Clause>.
 # USAGE
 
 The usage of SMAC v3 is mainly the same as provided with [SMAC v2.08](http://www.cs.ubc.ca/labs/beta/Projects/SMAC/v2.08.00/manual.pdf).
-It supports the same parameter configuration space syntax and interface to target algorithms.
-Please note that we do not support the extended parameter configuration syntax introduced in SMACv2.10.
+It supports the same parameter configuration space syntax and interface to
+target algorithms. Please note that we do not support the extended parameter
+configuration syntax introduced in SMACv2.10.
 
 # Examples
 
 See examples/
 
-  * examples/rosenbrock.py - example on how to optimize a Python function (REQUIRES [PYNISHER](https://github.com/sfalkner/pynisher) )
-  * examples/spear_qcp/run.sh - example on how to optimize the SAT solver Spear on a set of SAT formulas
+  * examples/rosenbrock.py - example on how to optimize a Python function
+    (REQUIRES [PYNISHER](https://github.com/sfalkner/pynisher) )
+  * examples/spear_qcp/run.sh - example on how to optimize the SAT solver Spear
+    on a set of SAT formulas
  
 # Contact
  

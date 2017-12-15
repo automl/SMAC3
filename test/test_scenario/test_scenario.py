@@ -10,6 +10,7 @@ import logging
 import unittest
 import pickle
 import copy
+import shutil
 
 import numpy as np
 
@@ -68,9 +69,6 @@ class ScenarioTest(unittest.TestCase):
                                        'test/test_files/scenario_test/features.txt',
                                    'output_dir':
                                        'test/test_files/scenario_test/tmp_output'}
-
-    def tearDown(self):
-        os.chdir(self.current_dir)
 
     def test_Exception(self):
         with self.assertRaises(TypeError):
@@ -246,8 +244,13 @@ class ScenarioTest(unittest.TestCase):
                                      getattr(scen2, name))
 
         # First check with file-paths defined
-        self.test_scenario_dict['feature_file'] = 'test/test_files/scenario_test/features_multiple.txt'
+        feature_filename = 'test/test_files/scenario_test/features_multiple.txt'
+        feature_filename = os.path.abspath(feature_filename)
+        self.test_scenario_dict['feature_file'] = feature_filename
         scenario = Scenario(self.test_scenario_dict)
+        # This injection would usually happen by the facade object!
+        scenario.output_dir_for_this_run = scenario.output_dir
+        scenario.write()
         path = os.path.join(scenario.output_dir, 'scenario.txt')
         scenario_reloaded = Scenario(path)
         check_scen_eq(scenario, scenario_reloaded)
@@ -267,8 +270,11 @@ class ScenarioTest(unittest.TestCase):
     def test_write_except(self, patch_isdir, patch_mkdirs):
         patch_isdir.return_value = False
         patch_mkdirs.side_effect = OSError()
+        scenario = Scenario(self.test_scenario_dict)
+        # This injection would usually happen by the facade object!
+        scenario.output_dir_for_this_run = scenario.output_dir
         with self.assertRaises(OSError) as cm:
-            Scenario(self.test_scenario_dict)
+            scenario.write()
 
     def test_no_output_dir(self):
         self.test_scenario_dict['output_dir'] = ""
@@ -317,6 +323,10 @@ class ScenarioTest(unittest.TestCase):
                                       'test/test_files/train_insts_example.txt'})
         self.assertEquals(scenario.feature_names,
                           ['feature1', 'feature2', 'feature3'])
+
+    def tearDown(self):
+        shutil.rmtree(self.test_scenario_dict['output_dir'], ignore_errors=True)
+        os.chdir(self.current_dir)
 
 if __name__ == "__main__":
     unittest.main()
