@@ -16,17 +16,18 @@ please call:
     sudo apt-get install build-essential swig
 
 If you use Anaconda, you have to install both gcc and SWIG from Anaconda to
-prevent broken links:
+prevent compilation errors:
 
 .. code-block:: bash
 
-    conda install gcc swig
+    conda install gxx_linux-64 gcc_linux-64 swig
 
 .. _installation_pypi:
 
 Installation from pypi
 ----------------------
-To install SMAC3 from pypi, please use the following command on the command line:
+To install SMAC3 from pypi, please use the following command on the command
+line:
 
 .. code-block:: bash
 
@@ -39,7 +40,8 @@ permissions), please add the option :code:`--user` or create a virtualenv.
 
 Manual Installation
 -------------------
-To install SMAC3 from command line, please type the following commands on the command line
+To install SMAC3 from command line, please type the following commands on the
+command line:
 
 .. code-block:: bash
 

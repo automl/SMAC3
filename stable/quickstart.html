@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Quick Start &mdash; SMAC 0.7.2 documentation</title>
+  <title>Quick Start &mdash; SMAC 0.8.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="SMAC 0.7.2 documentation" href="index.html"/>
+    <link rel="top" title="SMAC 0.8.0 documentation" href="index.html"/>
         <link rel="next" title="Manual" href="manual.html"/>
         <link rel="prev" title="Installation" href="installation.html"/> 
 
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                0.7.2
+                0.8.0
               </div>
             
           
@@ -137,7 +137,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.local_search.html">smac.optimizer.local_search module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
@@ -260,8 +260,9 @@ Examples to illustrate the usage of <em>SMAC</em> - either by reading in a scena
 <div class="section" id="branin">
 <span id="branin-example"></span><h2>Branin<a class="headerlink" href="#branin" title="Permalink to this headline">¶</a></h2>
 <p>First of, we’ll demonstrate the usage of <em>SMAC</em> on the minimization of a standard 2-dimensional continuous test function (<a class="reference external" href="https://www.sfu.ca/~ssurjano/branin.html">Branin</a>).
-This example aims to explain the basic usage of <em>SMAC</em>. This example is
-implemented in two ways.</p>
+This example aims to explain the basic usage of <em>SMAC</em>. There are different ways to use <em>SMAC</em>:</p>
+<div class="section" id="f-min-wrapper">
+<h3>f_min-wrapper<a class="headerlink" href="#f-min-wrapper" title="Permalink to this headline">¶</a></h3>
 <p>The easiest way to use <em>SMAC</em> is to use the <a class="reference external" href="apidoc/smac.facade.func_facade.html#smac.facade.func_facade.fmin_smac">f_min SMAC wrapper</a>. It is
 implemented in <cite>examples/branin/branin_fmin.py</cite> and requires no extra files. We
 import the fmin-function and the Branin-function:</p>
@@ -285,18 +286,21 @@ import the fmin-function and the Branin-function:</p>
 </pre></div>
 </td></tr></table></div>
 <p>This way, you can optimize a blackbox-function with minimal effort. However, to
-use the whole of <em>SMACs</em> capability, a <a class="reference external" href="options.html#scenario">scenario</a> object should be used. There are a
-wrapper <cite>branin_cmdline.py</cite>, a scenario-file <cite>branin_scenario.txt</cite> and a
-PCS-file <cite>branin_pcs.pcs</cite> in the branin-folder.
-To run the example scenario, change into the root-directory of <em>SMAC</em> and type the following commands:</p>
+use all of <em>SMACs</em> capability, a <a class="reference external" href="options.html#scenario">scenario</a> object should be used.</p>
+</div>
+<div class="section" id="command-line">
+<h3>Command line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h3>
+<p>There are a wrapper <code class="docutils literal"><span class="pre">cmdline_wrapper.py</span></code>, a scenario-file <code class="docutils literal"><span class="pre">scenario.txt</span></code> and a
+PCS-file <code class="docutils literal"><span class="pre">param_config_space.pcs</span></code> in the branin-folder.
+To run the example scenario, change into the root directory of <em>SMAC</em> and type the following commands:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> examples/branin
-python ../../scripts/smac --scenario branin_scenario.txt
+python ../../scripts/smac --scenario scenario.txt
 </pre></div>
 </div>
-<p>The python command runs <em>SMAC</em> with the specified scenario. The scenario file contains the following five lines:</p>
+<p>The python command runs <em>SMAC</em> with the specified scenario. The scenario file contains the following lines:</p>
 <blockquote>
-<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">python</span> <span class="n">branin_cmdline</span><span class="o">.</span><span class="n">py</span>
-<span class="n">paramfile</span> <span class="o">=</span> <span class="n">branin_pcs</span><span class="o">.</span><span class="n">pcs</span>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">python</span> <span class="n">cmdline_wrapper</span><span class="o">.</span><span class="n">py</span>
+<span class="n">paramfile</span> <span class="o">=</span> <span class="n">param_config_space</span><span class="o">.</span><span class="n">pcs</span>
 <span class="n">run_obj</span> <span class="o">=</span> <span class="n">quality</span>
 <span class="n">runcount_limit</span> <span class="o">=</span> <span class="mi">500</span>
 <span class="n">deterministic</span> <span class="o">=</span> <span class="mi">1</span>
@@ -304,21 +308,13 @@ python ../../scripts/smac --scenario branin_scenario.txt
 </div>
 </div></blockquote>
 <p>The <strong>algo</strong> parameter specifies how <em>SMAC</em> can call the function or evaluate an algorithm that <em>SMAC</em> is optimizing.
-An algorithm call by <em>SMAC</em> will look like this:</p>
+This is further explained in the chapter about the <a class="reference external" href="tae.html">Target Algorithm Evaluator (TAE)</a>.
+An algorithm call by <em>SMAC</em> is of the following format:</p>
 <blockquote>
 <div><div class="highlight-bash"><div class="highlight"><pre><span></span>&lt;algo&gt; &lt;instance&gt; &lt;instance specific&gt; &lt;cutoff time&gt; &lt;runlength&gt; &lt;seed&gt; &lt;algorithm parameters&gt;
+python branin.py <span class="m">0</span> <span class="m">0</span> <span class="m">999999999</span>.0 <span class="m">0</span> <span class="m">1148756733</span> -x1 -1.1338595629 -x2 <span class="m">13</span>.8770222718
 </pre></div>
 </div>
-</div></blockquote>
-<p>An exemplary call in our Branin example would be:</p>
-<blockquote>
-<div><div class="highlight-bash"><div class="highlight"><pre><span></span>python branin.py <span class="m">0</span> <span class="m">0</span> <span class="m">999999999</span>.0 <span class="m">0</span> <span class="m">1148756733</span> -x1 -1.1338595629 -x2 <span class="m">13</span>.8770222718
-</pre></div>
-</div>
-<p>The first two parameters after the <code class="docutils literal"><span class="pre">branin.py</span></code> do not matter for this example since no instances are needed for the function optimization.
-For algorithm optimization, the first parameter holds the instance name on which the algorithm is evaluated and the second can provide extra information about the instance (rarely used).</p>
-<p>The third parameter gives the cutoff time (maximal running time) an algorithm is allowed to run and the fourth the runlength (maximal number of steps).</p>
-<p>The fifth parameter is the random seed which is followed by the algorithm/function parameters.</p>
 </div></blockquote>
 <p>The <strong>paramfile</strong> parameter tells <em>SMAC</em> which Parameter Configuration Space (<a class="reference external" href="options.html#paramcs">PCS</a>)-file to use. This file contains a list of the algorithm’s parameters, their domains and default values:</p>
 <blockquote>
@@ -328,8 +324,10 @@ For algorithm optimization, the first parameter holds the instance name on which
 </div>
 <p>x1 and x2 are both continuous parameters. x1 can take any real value in the range [-5, 10], x2 in the range [0, 15] and both have the default value 0.</p>
 </div></blockquote>
-<p>The <strong>run_obj</strong> parameter specifies what <em>SMAC</em> is supposed to <strong>minimize</strong>. For this example we are optimizing the solution quality.
-For <em>SMAC</em> to be able to interpret the results of an algorithm run, a wrapper should return the results of the algorithm run as follows:</p>
+<p>The <strong>run_obj</strong> parameter specifies what <em>SMAC</em> is supposed to <strong>optimize</strong>. Here we optimize solution quality.</p>
+<p>The <strong>runcount_limit</strong> specifies the maximum number of algorithm calls.</p>
+<p><em>SMAC</em> reads the results from the command line output. The wrapper returns the
+results of the algorithm in a specific format:</p>
 <blockquote>
 <div><div class="highlight-bash"><div class="highlight"><pre><span></span>Result <span class="k">for</span> SMAC: &lt;STATUS&gt;, &lt;running time&gt;, &lt;runlength&gt;, &lt;quality&gt;, &lt;seed&gt;, &lt;instance-specifics&gt;
 Result <span class="k">for</span> SMAC: SUCCESS, <span class="m">0</span>, <span class="m">0</span>, <span class="m">48</span>.948190, <span class="m">1148756733</span>
@@ -345,7 +343,6 @@ Result <span class="k">for</span> SMAC: SUCCESS, <span class="m">0</span>, <span
 <div class="line"><em>instance-specifics:</em> additional information</div>
 </div>
 </div></blockquote>
-<p>The <strong>runcount_limit</strong> specifies the maximum number of algorithm calls.</p>
 <p><em>SMAC</em> will terminate with the following output:</p>
 <blockquote>
 <div><div class="highlight-bash"><div class="highlight"><pre><span></span>INFO:intensifier:Updated estimated error of incumbent on <span class="m">122</span> runs: <span class="m">0</span>.5063
@@ -363,6 +360,7 @@ INFO:SMAC:Final Incumbent: Configuration:
 </div>
 </div></blockquote>
 <p>Furthermore a folder containing <em>SMACs</em> trajectory and the runhistory will be created in the branin folder.</p>
+</div>
 </div>
 <div class="section" id="using-smac-in-python-svm">
 <span id="svm-example"></span><h2>Using <em>SMAC</em> in Python: SVM<a class="headerlink" href="#using-smac-in-python-svm" title="Permalink to this headline">¶</a></h2>
@@ -419,7 +417,7 @@ the kernel.</p>
 <span class="n">cs</span> <span class="o">=</span> <span class="n">ConfigurationSpace</span><span class="p">()</span>
 
 <span class="c1"># We define a few possible types of SVM-kernels and add them as &quot;kernel&quot; to our cs</span>
-<span class="n">kernel</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;kernel&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="s2">&quot;rbf&quot;</span><span class="p">,</span> <span class="s2">&quot;poly&quot;</span><span class="p">,</span> <span class="s2">&quot;sigmoid&quot;</span><span class="p">],</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;poly&quot;</span><span class="p">)</span>
+<span class="n">kernel</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;kernel&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="s2">&quot;rbf&quot;</span><span class="p">,</span> <span class="s2">&quot;poly&quot;</span><span class="p">,</span> <span class="s2">&quot;sigmoid&quot;</span><span class="p">],</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;poly&quot;</span><span class="p">)</span>
 <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameter</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
 </pre></div>
 </td></tr></table></div>
@@ -429,8 +427,8 @@ once, by passing them in a list.</p>
 68
 69
 70</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># There are some hyperparameters shared by all kernels</span>
-<span class="n">C</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
-<span class="n">shrinking</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;shrinking&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;true&quot;</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">],</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;true&quot;</span><span class="p">)</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">shrinking</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;shrinking&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;true&quot;</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">],</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;true&quot;</span><span class="p">)</span>
 <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">C</span><span class="p">,</span> <span class="n">shrinking</span><span class="p">])</span>
 </pre></div>
 </td></tr></table></div>
@@ -445,8 +443,8 @@ This way human knowledge about the problem is introduced.</p>
 76
 77
 78</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># Others are kernel-specific, so we can add conditions to limit the searchspace</span>
-<span class="n">degree</span> <span class="o">=</span> <span class="n">UniformIntegerHyperparameter</span><span class="p">(</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>     <span class="c1"># Only used by kernel poly</span>
-<span class="n">coef0</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;coef0&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># poly, sigmoid</span>
+<span class="n">degree</span> <span class="o">=</span> <span class="n">UniformIntegerHyperparameter</span><span class="p">(</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>     <span class="c1"># Only used by kernel poly</span>
+<span class="n">coef0</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;coef0&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># poly, sigmoid</span>
 <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">degree</span><span class="p">,</span> <span class="n">coef0</span><span class="p">])</span>
 <span class="n">use_degree</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">degree</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;poly&quot;</span><span class="p">])</span>
 <span class="n">use_coef0</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">coef0</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;poly&quot;</span><span class="p">,</span> <span class="s2">&quot;sigmoid&quot;</span><span class="p">])</span>
@@ -466,8 +464,8 @@ that is only activated if <cite>gamma</cite> is not set to “auto”.</p>
 87
 88</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># This also works for parameters that are a mix of categorical and values from a range of numbers</span>
 <span class="c1"># For example, gamma can be either &quot;auto&quot; or a fixed float</span>
-<span class="n">gamma</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;gamma&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">],</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>  <span class="c1"># only rbf, poly, sigmoid</span>
-<span class="n">gamma_value</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;gamma_value&quot;</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">gamma</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;gamma&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">],</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>  <span class="c1"># only rbf, poly, sigmoid</span>
+<span class="n">gamma_value</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;gamma_value&quot;</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">gamma</span><span class="p">,</span> <span class="n">gamma_value</span><span class="p">])</span>
 <span class="c1"># We only activate gamma_value if gamma is set to &quot;value&quot;</span>
 <span class="n">cs</span><span class="o">.</span><span class="n">add_condition</span><span class="p">(</span><span class="n">InCondition</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">gamma_value</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">gamma</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]))</span>
@@ -830,7 +828,7 @@ In the folder <em>SMAC</em> generates a file for the runhistory, and two files f
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.7.2',
+            VERSION:'0.8.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

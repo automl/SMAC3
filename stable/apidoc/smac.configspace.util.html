@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.configspace.util module &mdash; SMAC 0.7.2 documentation</title>
+  <title>smac.configspace.util module &mdash; SMAC 0.8.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="SMAC 0.7.2 documentation" href="../index.html"/>
+    <link rel="top" title="SMAC 0.8.0 documentation" href="../index.html"/>
         <link rel="up" title="smac.configspace package" href="smac.configspace.html"/>
         <link rel="next" title="smac.epm package" href="smac.epm.html"/>
         <link rel="prev" title="smac.configspace package" href="smac.configspace.html"/> 
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.7.2
+                0.8.0
               </div>
             
           
@@ -138,7 +138,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.optimizer.html">smac.optimizer package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.local_search.html">smac.optimizer.local_search module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
@@ -274,6 +274,32 @@ with their default value.</td>
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="smac.configspace.util.impute_default_values">
+<code class="descclassname">smac.configspace.util.</code><code class="descname">impute_default_values</code><span class="sig-paren">(</span><em>configuration_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>configs_array: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/configspace/util.html#impute_default_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.configspace.util.impute_default_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Impute inactive hyperparameters in configuration array with their default.</p>
+<p>Necessary to apply an EPM to the data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>configuration_space</strong> (<em>ConfigurationSpace</em>) – </li>
+<li><strong>configs_array</strong> (<em>np.ndarray</em>) – Array of configurations.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Array with configuration hyperparameters. Inactive values are imputed
+with their default value.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">np.ndarray</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 
 
@@ -320,7 +346,7 @@ with their default value.</td>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.7.2',
+            VERSION:'0.8.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

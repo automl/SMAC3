@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.smac_cli &mdash; SMAC 0.7.2 documentation</title>
+  <title>smac.smac_cli &mdash; SMAC 0.8.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="SMAC 0.7.2 documentation" href="../../index.html"/>
+    <link rel="top" title="SMAC 0.8.0 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.7.2
+                0.8.0
               </div>
             
           
@@ -136,7 +136,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.optimizer.local_search.html">smac.optimizer.local_search module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
@@ -265,6 +265,7 @@
 <span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="k">import</span> <span class="n">TrajLogger</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.input_reader</span> <span class="k">import</span> <span class="n">InputReader</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">TAEAbortException</span><span class="p">,</span> <span class="n">FirstRunCrashedException</span>
+<span class="kn">from</span> <span class="nn">smac.utils.io.output_directory</span> <span class="k">import</span> <span class="n">create_output_directory</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
@@ -306,10 +307,29 @@
         <span class="c1"># remove default handler</span>
         <span class="n">root_logger</span><span class="o">.</span><span class="n">removeHandler</span><span class="p">(</span><span class="n">root_logger</span><span class="o">.</span><span class="n">handlers</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
-        <span class="n">scen</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">scenario_file</span><span class="p">,</span> <span class="n">misc_args</span><span class="p">,</span>
-                        <span class="n">run_id</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
-
+        <span class="c1"># Create defaults</span>
         <span class="n">rh</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">initial_configs</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">incumbent</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Restore state (needs to be before scenario-creation!)</span>
+        <span class="k">if</span> <span class="n">args_</span><span class="o">.</span><span class="n">restore_state</span><span class="p">:</span>
+            <span class="n">root_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Restoring state from </span><span class="si">%s</span><span class="s2">...&quot;</span><span class="p">,</span> <span class="n">args_</span><span class="o">.</span><span class="n">restore_state</span><span class="p">)</span>
+            <span class="n">rh</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">traj_list_aclib</span><span class="p">,</span> <span class="n">traj_list_old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">restore_state_before_scen</span><span class="p">(</span><span class="n">args_</span><span class="p">)</span>
+
+        <span class="c1"># Create scenario-object</span>
+        <span class="n">scen</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">scenario_file</span><span class="p">,</span> <span class="n">misc_args</span><span class="p">)</span>
+
+        <span class="c1"># Restore state (continued, needs to be after scenario-creation!)</span>
+        <span class="k">if</span> <span class="n">args_</span><span class="o">.</span><span class="n">restore_state</span><span class="p">:</span>
+            <span class="n">scen</span><span class="o">.</span><span class="n">output_dir_for_this_run</span> <span class="o">=</span> <span class="n">create_output_directory</span><span class="p">(</span>
+                <span class="n">scen</span><span class="p">,</span> <span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span> <span class="n">root_logger</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">scen</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+            <span class="n">stats</span><span class="p">,</span> <span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">restore_state_after_scen</span><span class="p">(</span><span class="n">scen</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span>
+                                           <span class="n">traj_list_aclib</span><span class="p">,</span> <span class="n">traj_list_old</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">args_</span><span class="o">.</span><span class="n">warmstart_runhistory</span><span class="p">:</span>
             <span class="n">aggregate_func</span> <span class="o">=</span> <span class="n">average_cost</span>
             <span class="n">rh</span> <span class="o">=</span> <span class="n">RunHistory</span><span class="p">(</span><span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">)</span>
@@ -322,7 +342,6 @@
                 <span class="n">cs</span><span class="o">=</span><span class="n">scen</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span>
                 <span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">)</span>
 
-        <span class="n">initial_configs</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">args_</span><span class="o">.</span><span class="n">warmstart_incumbent</span><span class="p">:</span>
             <span class="n">initial_configs</span> <span class="o">=</span> <span class="p">[</span><span class="n">scen</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">()]</span>
             <span class="k">for</span> <span class="n">traj_fn</span> <span class="ow">in</span> <span class="n">args_</span><span class="o">.</span><span class="n">warmstart_incumbent</span><span class="p">:</span>
@@ -330,12 +349,6 @@
                     <span class="n">fn</span><span class="o">=</span><span class="n">traj_fn</span><span class="p">,</span> <span class="n">cs</span><span class="o">=</span><span class="n">scen</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
                 <span class="n">initial_configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">trajectory</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;incumbent&quot;</span><span class="p">])</span>
 
-        <span class="c1"># Restore state</span>
-        <span class="n">stats</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">incumbent</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">args_</span><span class="o">.</span><span class="n">restore_state</span><span class="p">:</span>
-            <span class="n">root_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Restoring state from </span><span class="si">%s</span><span class="s2">...&quot;</span><span class="p">,</span> <span class="n">args_</span><span class="o">.</span><span class="n">restore_state</span><span class="p">)</span>
-            <span class="n">rh</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">restore_state</span><span class="p">(</span><span class="n">args_</span><span class="p">,</span> <span class="n">scen</span><span class="p">,</span> <span class="n">root_logger</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;SMAC&quot;</span><span class="p">:</span>
             <span class="n">optimizer</span> <span class="o">=</span> <span class="n">SMAC</span><span class="p">(</span>
@@ -344,50 +357,74 @@
                 <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>
                 <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configs</span><span class="p">,</span>
                 <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
-                <span class="n">restore_incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">)</span>
+                <span class="n">restore_incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
+                <span class="n">run_id</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;ROAR&quot;</span><span class="p">:</span>
             <span class="n">optimizer</span> <span class="o">=</span> <span class="n">ROAR</span><span class="p">(</span>
                 <span class="n">scenario</span><span class="o">=</span><span class="n">scen</span><span class="p">,</span>
                 <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
                 <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>
-                <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configs</span><span class="p">)</span>
+                <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configs</span><span class="p">,</span>
+                <span class="n">run_id</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;EPILS&quot;</span><span class="p">:</span>
             <span class="n">optimizer</span> <span class="o">=</span> <span class="n">EPILS</span><span class="p">(</span>
                 <span class="n">scenario</span><span class="o">=</span><span class="n">scen</span><span class="p">,</span>
                 <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
                 <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>
-                <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configs</span><span class="p">)</span>
+                <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configs</span><span class="p">,</span>
+                <span class="n">run_id</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">optimizer</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
         <span class="k">except</span> <span class="p">(</span><span class="n">TAEAbortException</span><span class="p">,</span> <span class="n">FirstRunCrashedException</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">err</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SMACCLI.restore_state"><a class="viewcode-back" href="../../apidoc/smac.smac_cli.html#smac.smac_cli.SMACCLI.restore_state">[docs]</a>    <span class="k">def</span> <span class="nf">restore_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args_</span><span class="p">,</span> <span class="n">scen</span><span class="p">,</span> <span class="n">root_logger</span><span class="p">):</span>
+<div class="viewcode-block" id="SMACCLI.restore_state_before_scen"><a class="viewcode-back" href="../../apidoc/smac.smac_cli.html#smac.smac_cli.SMACCLI.restore_state_before_scen">[docs]</a>    <span class="k">def</span> <span class="nf">restore_state_before_scen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args_</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Read in files for state-restoration: runhistory, stats, trajectory.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Construct dummy-scenario for object-creation (mainly cs is needed)</span>
+        <span class="n">tmp_scen</span> <span class="o">=</span> <span class="n">InputReader</span><span class="p">()</span><span class="o">.</span><span class="n">read_scenario_file</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">scenario_file</span><span class="p">)</span>
+        <span class="n">tmp_scen</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="n">tmp_scen</span><span class="p">,</span> <span class="n">cmd_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;output_dir&#39;</span><span class="p">:</span><span class="s1">&#39;&#39;</span><span class="p">})</span>
         <span class="c1"># Check for folder and files</span>
         <span class="n">rh_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">restore_state</span><span class="p">,</span> <span class="s2">&quot;runhistory.json&quot;</span><span class="p">)</span>
         <span class="n">stats_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">restore_state</span><span class="p">,</span> <span class="s2">&quot;stats.json&quot;</span><span class="p">)</span>
-        <span class="n">traj_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">restore_state</span><span class="p">,</span> <span class="s2">&quot;traj_aclib2.json&quot;</span><span class="p">)</span>
+        <span class="n">traj_path_aclib</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">restore_state</span><span class="p">,</span> <span class="s2">&quot;traj_aclib2.json&quot;</span><span class="p">)</span>
+        <span class="n">traj_path_old</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">restore_state</span><span class="p">,</span> <span class="s2">&quot;traj_old.csv&quot;</span><span class="p">)</span>
         <span class="n">scen_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">restore_state</span><span class="p">,</span> <span class="s2">&quot;scenario.txt&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">restore_state</span><span class="p">):</span>
            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;Could not find folder from which to restore.&quot;</span><span class="p">)</span>
         <span class="c1"># Load runhistory and stats</span>
         <span class="n">rh</span> <span class="o">=</span> <span class="n">RunHistory</span><span class="p">(</span><span class="n">aggregate_func</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-        <span class="n">rh</span><span class="o">.</span><span class="n">load_json</span><span class="p">(</span><span class="n">rh_path</span><span class="p">,</span> <span class="n">scen</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
-        <span class="n">root_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Restored runhistory from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">rh_path</span><span class="p">)</span>
-        <span class="n">stats</span> <span class="o">=</span> <span class="n">Stats</span><span class="p">(</span><span class="n">scen</span><span class="p">)</span>
+        <span class="n">rh</span><span class="o">.</span><span class="n">load_json</span><span class="p">(</span><span class="n">rh_path</span><span class="p">,</span> <span class="n">tmp_scen</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Restored runhistory from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">rh_path</span><span class="p">)</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="n">Stats</span><span class="p">(</span><span class="n">tmp_scen</span><span class="p">)</span>  <span class="c1"># Need to inject actual scenario later for output_dir!</span>
         <span class="n">stats</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stats_path</span><span class="p">)</span>
-        <span class="n">root_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Restored stats from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">stats_path</span><span class="p">)</span>
-        <span class="n">trajectory</span> <span class="o">=</span> <span class="n">TrajLogger</span><span class="o">.</span><span class="n">read_traj_aclib_format</span><span class="p">(</span>
-            <span class="n">fn</span><span class="o">=</span><span class="n">traj_path</span><span class="p">,</span> <span class="n">cs</span><span class="o">=</span><span class="n">scen</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Restored stats from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">stats_path</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">traj_path_aclib</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">traj_fn</span><span class="p">:</span>
+            <span class="n">traj_list_aclib</span> <span class="o">=</span> <span class="n">traj_fn</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">traj_path_old</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">traj_fn</span><span class="p">:</span>
+            <span class="n">traj_list_old</span> <span class="o">=</span> <span class="n">traj_fn</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">rh</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">traj_list_aclib</span><span class="p">,</span> <span class="n">traj_list_old</span></div>
+
+<div class="viewcode-block" id="SMACCLI.restore_state_after_scen"><a class="viewcode-back" href="../../apidoc/smac.smac_cli.html#smac.smac_cli.SMACCLI.restore_state_after_scen">[docs]</a>    <span class="k">def</span> <span class="nf">restore_state_after_scen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scen</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">traj_list_aclib</span><span class="p">,</span>
+                                 <span class="n">traj_list_old</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Finish processing files for state-restoration. The actual scenario</span>
+<span class="sd">        needs to be injected into stats, as well as the trajectory dealt with</span>
+<span class="sd">        (it is read in, but needs to be written to new output-folder after</span>
+<span class="sd">        scenario is constructed.&quot;&quot;&quot;</span>
+        <span class="n">stats</span><span class="o">.</span><span class="n">scenario</span> <span class="o">=</span> <span class="n">scen</span>  <span class="c1"># inject actual scen for output_dir</span>
+        <span class="c1"># write trajectory-list</span>
+        <span class="n">traj_path_aclib</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scen</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;traj_aclib2.json&quot;</span><span class="p">)</span>
+        <span class="n">traj_path_old</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scen</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;traj_old.csv&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">traj_path_aclib</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">traj_fn</span><span class="p">:</span>
+            <span class="n">traj_fn</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">traj_list_aclib</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">traj_path_old</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">traj_fn</span><span class="p">:</span>
+            <span class="n">traj_fn</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">traj_list_old</span><span class="p">)</span>
+        <span class="c1"># read trajectory to retrieve incumbent</span>
+        <span class="n">trajectory</span> <span class="o">=</span> <span class="n">TrajLogger</span><span class="o">.</span><span class="n">read_traj_aclib_format</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">traj_path_aclib</span><span class="p">,</span> <span class="n">cs</span><span class="o">=</span><span class="n">scen</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
         <span class="n">incumbent</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;incumbent&quot;</span><span class="p">]</span>
-        <span class="n">root_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Restored incumbent </span><span class="si">%s</span><span class="s2"> from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">,</span> <span class="n">traj_path</span><span class="p">)</span>
-        <span class="c1"># Copy traj if output_dir of specified scenario-file is different than</span>
-        <span class="c1"># the output_dir of the scenario-file in the folder from which to restore.</span>
-        <span class="k">if</span> <span class="n">scen</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">!=</span> <span class="n">InputReader</span><span class="p">()</span><span class="o">.</span><span class="n">read_scenario_file</span><span class="p">(</span><span class="n">scen_path</span><span class="p">)[</span><span class="s1">&#39;output_dir&#39;</span><span class="p">]:</span>
-            <span class="n">new_traj_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scen</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;traj_aclib2.json&quot;</span><span class="p">)</span>
-            <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">traj_path</span><span class="p">,</span> <span class="n">new_traj_path</span><span class="p">)</span>
-            <span class="n">root_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Copied traj </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">rh_path</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">rh</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">incumbent</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Restored incumbent </span><span class="si">%s</span><span class="s2"> from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">,</span>
+                          <span class="n">traj_path_aclib</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">stats</span><span class="p">,</span> <span class="n">incumbent</span></div></div>
 </pre></div>
 
            </div>
@@ -424,7 +461,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.7.2',
+            VERSION:'0.8.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.facade.roar_facade module &mdash; SMAC 0.7.2 documentation</title>
+  <title>smac.facade.roar_facade module &mdash; SMAC 0.8.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="SMAC 0.7.2 documentation" href="../index.html"/>
+    <link rel="top" title="SMAC 0.8.0 documentation" href="../index.html"/>
         <link rel="up" title="smac.facade package" href="smac.facade.html"/>
         <link rel="next" title="smac.facade.smac_facade module" href="smac.facade.smac_facade.html"/>
         <link rel="prev" title="smac.facade.func_facade module" href="smac.facade.func_facade.html"/> 
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.7.2
+                0.8.0
               </div>
             
           
@@ -138,7 +138,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.optimizer.html">smac.optimizer package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.local_search.html">smac.optimizer.local_search module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
@@ -256,7 +256,7 @@
 <span id="smac-facade-roar-facade-module"></span><h1>smac.facade.roar_facade module<a class="headerlink" href="#module-smac.facade.roar_facade" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.facade.roar_facade.ROAR">
-<em class="property">class </em><code class="descclassname">smac.facade.roar_facade.</code><code class="descname">ROAR</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>tae_runner: smac.tae.execute_ta_run.ExecuteTARun = None</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory = None</em>, <em>intensifier: smac.intensification.intensification.Intensifier = None</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign = None</em>, <em>initial_configurations: typing.List[ConfigSpace.configuration_space.Configuration] = None</em>, <em>stats: smac.stats.stats.Stats = None</em>, <em>rng: mtrand.RandomState = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/roar_facade.html#ROAR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.roar_facade.ROAR" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.facade.roar_facade.</code><code class="descname">ROAR</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>tae_runner: smac.tae.execute_ta_run.ExecuteTARun = None</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory = None</em>, <em>intensifier: smac.intensification.intensification.Intensifier = None</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign = None</em>, <em>initial_configurations: typing.List[ConfigSpace.configuration_space.Configuration] = None</em>, <em>stats: smac.stats.stats.Stats = None</em>, <em>rng: mtrand.RandomState = None</em>, <em>run_id: int = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/roar_facade.html#ROAR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.roar_facade.ROAR" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC" title="smac.facade.smac_facade.SMAC"><code class="xref py py-class docutils literal"><span class="pre">smac.facade.smac_facade.SMAC</span></code></a></p>
 <p>Facade to use ROAR mode</p>
 <dl class="attribute">
@@ -288,6 +288,7 @@ If not set, it will be initialized with the
 cannot be used together with initial_design</li>
 <li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – optional stats object</li>
 <li><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</li>
+<li><strong>run_id</strong> (<em>int</em><em>, </em><em>(</em><em>default: 1</em><em>)</em>) – Run ID will be used as subfolder for output_dir.</li>
 </ul>
 </td>
 </tr>
@@ -385,7 +386,7 @@ time).</p>
 
 <dl class="method">
 <dt id="smac.facade.roar_facade.ROAR.validate">
-<code class="descname">validate</code><span class="sig-paren">(</span><em>config_mode='inc'</em>, <em>instance_mode='train+test'</em>, <em>repetitions=1</em>, <em>n_jobs=-1</em>, <em>backend='threading'</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.roar_facade.ROAR.validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate</code><span class="sig-paren">(</span><em>config_mode='inc'</em>, <em>instance_mode='train+test'</em>, <em>repetitions=1</em>, <em>use_epm=False</em>, <em>n_jobs=-1</em>, <em>backend='threading'</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.roar_facade.ROAR.validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create validator-object and run validation, using
 scenario-information, runhistory from smbo and tae_runner from intensify</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -393,12 +394,17 @@ scenario-information, runhistory from smbo and tae_runner from intensify</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>config_mode</strong> (<em>string</em>) – what configurations to validate
-from [def, inc, def+inc, time, all], time means evaluation at
-timesteps 2^-4, 2^-3, 2^-2, 2^-1, 2^0, 2^1, …</li>
+<li><strong>config_mode</strong> (<em>str</em><em> or </em><em>list&lt;Configuration&gt;</em>) – <p>string or directly a list of Configuration
+str from [def, inc, def+inc, wallclock_time, cpu_time, all]</p>
+<blockquote>
+<div>time evaluates at cpu- or wallclock-timesteps of:
+[max_time/2^0, max_time/2^1, max_time/2^3, …, default]
+with max_time being the highest recorded time</div></blockquote>
+</li>
 <li><strong>instance_mode</strong> (<em>string</em>) – what instances to use for validation, from [train, test, train+test]</li>
 <li><strong>repetitions</strong> (<em>int</em>) – number of repetitions in nondeterministic algorithms (in
 deterministic will be fixed to 1)</li>
+<li><strong>use_epm</strong> (<em>bool</em>) – whether to use an EPM instead of evaluating all runs with the TAE</li>
 <li><strong>n_jobs</strong> (<em>int</em>) – number of parallel processes used by joblib</li>
 <li><strong>backend</strong> (<em>string</em>) – what backend to be used by joblib</li>
 </ul>
@@ -462,7 +468,7 @@ deterministic will be fixed to 1)</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.7.2',
+            VERSION:'0.8.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

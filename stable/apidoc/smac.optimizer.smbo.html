@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.optimizer.smbo module &mdash; SMAC 0.7.2 documentation</title>
+  <title>smac.optimizer.smbo module &mdash; SMAC 0.8.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="SMAC 0.7.2 documentation" href="../index.html"/>
+    <link rel="top" title="SMAC 0.8.0 documentation" href="../index.html"/>
         <link rel="up" title="smac.optimizer package" href="smac.optimizer.html"/>
         <link rel="next" title="smac.runhistory package" href="smac.runhistory.html"/>
         <link rel="prev" title="smac.optimizer.pSMAC module" href="smac.optimizer.pSMAC.html"/> 
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.7.2
+                0.8.0
               </div>
             
           
@@ -138,7 +138,7 @@
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="smac.optimizer.html">smac.optimizer package</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.local_search.html">smac.optimizer.local_search module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">smac.optimizer.smbo module</a></li>
@@ -255,31 +255,8 @@
   <div class="section" id="module-smac.optimizer.smbo">
 <span id="smac-optimizer-smbo-module"></span><h1>smac.optimizer.smbo module<a class="headerlink" href="#module-smac.optimizer.smbo" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="smac.optimizer.smbo.ChallengerList">
-<em class="property">class </em><code class="descclassname">smac.optimizer.smbo.</code><code class="descname">ChallengerList</code><span class="sig-paren">(</span><em>challengers</em>, <em>configuration_space</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#ChallengerList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.ChallengerList" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Helper class to interleave random configurations in a list of challengers.</p>
-<p>Provides an iterator which returns a random configuration in each second
-iteration. Reduces time necessary to generate a list of new challengers
-as one does not need to sample several hundreds of random configurations
-in each iteration which are never looked at.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>challengers</strong> (<em>list</em>) – List of challengers (without interleaved random configurations)</li>
-<li><strong>configuration_space</strong> (<em>ConfigurationSpace</em>) – ConfigurationSpace from which to sample new random configurations.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="class">
 <dt id="smac.optimizer.smbo.SMBO">
-<em class="property">class </em><code class="descclassname">smac.optimizer.smbo.</code><code class="descname">SMBO</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>stats: smac.stats.stats.Stats</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</em>, <em>intensifier: smac.intensification.intensification.Intensifier</em>, <em>aggregate_func: &lt;built-in function callable&gt;</em>, <em>num_run: int</em>, <em>model: smac.epm.rf_with_instances.RandomForestWithInstances</em>, <em>acq_optimizer: smac.optimizer.local_search.LocalSearch</em>, <em>acquisition_func: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>rng: mtrand.RandomState</em>, <em>restore_incumbent: ConfigSpace.configuration_space.Configuration = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.optimizer.smbo.</code><code class="descname">SMBO</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>stats: smac.stats.stats.Stats</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</em>, <em>intensifier: smac.intensification.intensification.Intensifier</em>, <em>aggregate_func: &lt;built-in function callable&gt;</em>, <em>num_run: int</em>, <em>model: smac.epm.rf_with_instances.RandomForestWithInstances</em>, <em>acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</em>, <em>acquisition_func: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>rng: mtrand.RandomState</em>, <em>restore_incumbent: ConfigSpace.configuration_space.Configuration = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Interface that contains the main Bayesian optimization loop</p>
 <dl class="attribute">
@@ -379,8 +356,7 @@ data into EPM data</li>
 <li><strong>num_run</strong> (<em>int</em>) – id of this run (used for pSMAC)</li>
 <li><strong>model</strong> (<a class="reference internal" href="smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances" title="smac.epm.rf_with_instances.RandomForestWithInstances"><em>RandomForestWithInstances</em></a>) – empirical performance model (right now, we support only
 RandomForestWithInstances)</li>
-<li><strong>acq_optimizer</strong> (<a class="reference internal" href="smac.optimizer.local_search.html#smac.optimizer.local_search.LocalSearch" title="smac.optimizer.local_search.LocalSearch"><em>LocalSearch</em></a>) – optimizer on acquisition function (right now, we support only a local
-search)</li>
+<li><strong>acq_optimizer</strong> (<a class="reference internal" href="smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><em>AcquisitionFunctionMaximizer</em></a>) – Optimizer of acquisition function.</li>
 <li><strong>acquisition_function</strong> (<em>AcquisitionFunction</em>) – Object that implements the AbstractAcquisitionFunction (i.e., infill
 criterion for acq_optimizer)</li>
 <li><strong>restore_incumbent</strong> (<em>Configuration</em>) – incumbent to be used from the start. ONLY used to restore states.</li>
@@ -392,8 +368,10 @@ criterion for acq_optimizer)</li>
 </table>
 <dl class="method">
 <dt id="smac.optimizer.smbo.SMBO.choose_next">
-<code class="descname">choose_next</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em>, <em>Y: numpy.ndarray</em>, <em>num_configurations_by_random_search_sorted: int = 1000</em>, <em>num_configurations_by_local_search: int = None</em>, <em>incumbent_value: float = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO.choose_next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO.choose_next" title="Permalink to this definition">¶</a></dt>
-<dd><p>Choose next candidate solution with Bayesian optimization.</p>
+<code class="descname">choose_next</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em>, <em>Y: numpy.ndarray</em>, <em>incumbent_value: float = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO.choose_next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO.choose_next" title="Permalink to this definition">¶</a></dt>
+<dd><p>Choose next candidate solution with Bayesian optimization. The
+suggested configurations depend on the argument <code class="docutils literal"><span class="pre">acq_optimizer</span></code> to
+the <code class="docutils literal"><span class="pre">SMBO</span></code> class.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -402,10 +380,6 @@ criterion for acq_optimizer)</li>
 <li><strong>X</strong> (<em>(</em><em>N</em><em>, </em><em>D</em><em>) </em><em>numpy array</em>) – Each row contains a configuration and one set of
 instance features.</li>
 <li><strong>Y</strong> (<em>(</em><em>N</em><em>, </em><em>O</em><em>) </em><em>numpy array</em>) – The function values for each configuration instance pair.</li>
-<li><strong>num_configurations_by_random_search_sorted</strong> (<em>int</em>) – Number of configurations optimized by random search</li>
-<li><strong>num_configurations_by_local_search</strong> (<em>int</em>) – Number of configurations optimized with local search
-if None, we use min(10, 1 + 0.5 x the number of configurations on
-exp average in intensify calls)</li>
 <li><strong>incumbent_value</strong> (<em>float</em>) – Cost value of incumbent configuration
 (required for acquisition function);
 if not given, it will be inferred from runhistory;
@@ -414,10 +388,10 @@ it will raise a ValueError</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of 2020 suggested configurations to evaluate.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Iterable</p>
 </td>
 </tr>
 </tbody>
@@ -449,7 +423,7 @@ Detects whether we the optimization is restored from previous state.</p>
 
 <dl class="method">
 <dt id="smac.optimizer.smbo.SMBO.validate">
-<code class="descname">validate</code><span class="sig-paren">(</span><em>config_mode='inc'</em>, <em>instance_mode='train+test'</em>, <em>repetitions=1</em>, <em>n_jobs=-1</em>, <em>backend='threading'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO.validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate</code><span class="sig-paren">(</span><em>config_mode='inc'</em>, <em>instance_mode='train+test'</em>, <em>repetitions=1</em>, <em>use_epm=False</em>, <em>n_jobs=-1</em>, <em>backend='threading'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO.validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create validator-object and run validation, using
 scenario-information, runhistory from smbo and tae_runner from intensify</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -457,12 +431,15 @@ scenario-information, runhistory from smbo and tae_runner from intensify</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>config_mode</strong> (<em>string</em>) – what configurations to validate
-from [def, inc, def+inc, time, all], time means evaluation at
-timesteps 2^-4, 2^-3, 2^-2, 2^-1, 2^0, 2^1, …</li>
+<li><strong>config_mode</strong> (<em>str</em><em> or </em><em>list&lt;Configuration&gt;</em>) – string or directly a list of Configuration
+str from [def, inc, def+inc, wallclock_time, cpu_time, all]
+time evaluates at cpu- or wallclock-timesteps of:
+[max_time/2^0, max_time/2^1, max_time/2^3, …, default]
+with max_time being the highest recorded time</li>
 <li><strong>instance_mode</strong> (<em>string</em>) – what instances to use for validation, from [train, test, train+test]</li>
 <li><strong>repetitions</strong> (<em>int</em>) – number of repetitions in nondeterministic algorithms (in
 deterministic will be fixed to 1)</li>
+<li><strong>use_epm</strong> (<em>bool</em>) – whether to use an EPM instead of evaluating all runs with the TAE</li>
 <li><strong>n_jobs</strong> (<em>int</em>) – number of parallel processes used by joblib</li>
 </ul>
 </td>
@@ -525,7 +502,7 @@ deterministic will be fixed to 1)</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.7.2',
+            VERSION:'0.8.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

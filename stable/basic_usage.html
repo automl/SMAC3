@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Basic Usage &mdash; SMAC 0.7.2 documentation</title>
+  <title>Basic Usage &mdash; SMAC 0.8.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="SMAC 0.7.2 documentation" href="index.html"/>
+    <link rel="top" title="SMAC 0.8.0 documentation" href="index.html"/>
         <link rel="up" title="Manual" href="manual.html"/>
         <link rel="next" title="Options and file formats" href="options.html"/>
         <link rel="prev" title="Manual" href="manual.html"/> 
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.7.2
+                0.8.0
               </div>
             
           
@@ -138,7 +138,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.local_search.html">smac.optimizer.local_search module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
@@ -302,16 +302,6 @@ form. Read more in the section on <a class="reference external" href="tae.html#t
 The <strong>paramfile</strong>-parameter defines the path to the <a class="reference external" href="options.html#pcs">PCS-file</a>,
 which describes the ranges and default values of the tunable parameters.
 Both will interpret paths <em>from the execution-directory</em>.</p>
-<p id="restorestate">To restore a previous <em>SMAC</em>-run, either because it was interrupted or because
-you want to extend its computation- or time-limits, use the
-<code class="docutils literal"><span class="pre">--restore_state</span> <span class="pre">FOLDER</span></code>-option in the commandline. If you want to increase
-computation- or time-limits, change the scenario-file specified with the
-<code class="docutils literal"><span class="pre">--scenario</span> <span class="pre">SCENARIOFILE</span></code>-option (not the one in the folder to be restored).
-Restarting a <em>SMAC</em>-run that quit due to budget-exhaustion will do nothing,
-because the budget is still exhausted.
-<strong>Changing any other options than *wallclock_limit*, *runcount_limit* or
-*tuner-timeout* in the scenario-file is NOT intended and will likely lead
-to unexpected behaviour!</strong></p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p>Currently, running <em>SMAC</em> via the commandline will register the algorithm with a
@@ -321,6 +311,22 @@ the results to the console in the following format (see <a class="reference exte
 </pre></div>
 </div>
 </div>
+</div>
+<div class="section" id="restoring-states">
+<span id="restorestate"></span><h2>Restoring States<a class="headerlink" href="#restoring-states" title="Permalink to this headline">¶</a></h2>
+<p>If a <em>SMAC</em>-run was interrupted or you want to extend its computation- or
+time-limits, it can be restored and continued.
+To restore or continue a previous <em>SMAC</em>-run, use the
+<code class="docutils literal"><span class="pre">--restore_state</span> <span class="pre">FOLDER</span></code>-option in the commandline. If you want to increase
+computation- or time-limits, change the scenario-file specified with the
+<code class="docutils literal"><span class="pre">--scenario</span> <span class="pre">SCENARIOFILE</span></code>-option (<strong>not the one in the folder to be restored</strong>).
+Restarting a <em>SMAC</em>-run that quit due to budget-exhaustion will do nothing,
+because the budget is still exhausted.
+<strong>Changing any other options than *output_dir*, *wallclock_limit*, *runcount_limit* or
+*tuner-timeout* in the scenario-file is NOT intended and will likely lead
+to unexpected behaviour!</strong></p>
+<p>For an example of restoring states from within your Python code, there is an
+implementation with the Branin-example in “examples/branin/restore_state.py”.</p>
 </div>
 <div class="section" id="usage-in-python">
 <span id="inpython"></span><h2>Usage in Python<a class="headerlink" href="#usage-in-python" title="Permalink to this headline">¶</a></h2>
@@ -390,7 +396,7 @@ additional information).</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.7.2',
+            VERSION:'0.8.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

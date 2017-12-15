@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.utils.io.output_writer &mdash; SMAC 0.7.2 documentation</title>
+  <title>smac.utils.io.output_writer &mdash; SMAC 0.8.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../../search.html"/>
-    <link rel="top" title="SMAC 0.7.2 documentation" href="../../../../index.html"/>
+    <link rel="top" title="SMAC 0.8.0 documentation" href="../../../../index.html"/>
         <link rel="up" title="Module code" href="../../../index.html"/> 
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.7.2
+                0.8.0
               </div>
             
           
@@ -136,7 +136,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.optimizer.local_search.html">smac.optimizer.local_search module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
@@ -278,26 +278,26 @@
 <span class="sd">            status: False or None</span>
 <span class="sd">                False indicates that writing process failed</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
             <span class="n">scenario</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No output directory for scenario logging &quot;</span>
                                  <span class="s2">&quot;specified -- scenario will not be logged.&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="c1"># Create output-dir if necessary</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">):</span>
             <span class="n">scenario</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Output directory does not exist! Will be &quot;</span>
                               <span class="s2">&quot;created.&quot;</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s2">&quot;Could not make output directory: &quot;</span>
-                              <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span><span class="p">))</span>
+                              <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">))</span>
 
         <span class="c1"># options_dest2name maps scenario._arguments from dest -&gt; name</span>
         <span class="n">options_dest2name</span> <span class="o">=</span> <span class="p">{(</span><span class="n">scenario</span><span class="o">.</span><span class="n">_arguments</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;dest&#39;</span><span class="p">]</span> <span class="k">if</span>
             <span class="n">scenario</span><span class="o">.</span><span class="n">_arguments</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;dest&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="n">v</span><span class="p">)</span> <span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">scenario</span><span class="o">.</span><span class="n">_arguments</span><span class="p">}</span>
 
         <span class="c1"># Write all options into &quot;output_dir/scenario.txt&quot;</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;scenario.txt&quot;</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">,</span> <span class="s2">&quot;scenario.txt&quot;</span><span class="p">)</span>
         <span class="n">scenario</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Writing scenario-file to </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">options_dest2name</span><span class="p">:</span>
@@ -334,20 +334,20 @@
             <span class="c1"># Copy if file exists, else write to new file</span>
             <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">)</span>
                 <span class="k">except</span> <span class="n">shutil</span><span class="o">.</span><span class="n">SameFileError</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">value</span>  <span class="c1"># File is already in output_dir</span>
             <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;pcs_fn&#39;</span> <span class="ow">and</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">new_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;configspace.pcs&quot;</span><span class="p">)</span>
+                <span class="n">new_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">,</span> <span class="s2">&quot;configspace.pcs&quot;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">write_pcs_file</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span> <span class="n">new_path</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;train_inst_fn&#39;</span> <span class="ow">and</span> <span class="n">scenario</span><span class="o">.</span><span class="n">train_insts</span> <span class="o">!=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]:</span>
-                <span class="n">new_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="s1">&#39;train_insts.txt&#39;</span><span class="p">)</span>
+                <span class="n">new_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">,</span> <span class="s1">&#39;train_insts.txt&#39;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">write_inst_file</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">train_insts</span><span class="p">,</span> <span class="n">new_path</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;test_inst_fn&#39;</span> <span class="ow">and</span> <span class="n">scenario</span><span class="o">.</span><span class="n">test_insts</span> <span class="o">!=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]:</span>
-                <span class="n">new_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="s1">&#39;test_insts.txt&#39;</span><span class="p">)</span>
+                <span class="n">new_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">,</span> <span class="s1">&#39;test_insts.txt&#39;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">write_inst_file</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">test_insts</span><span class="p">,</span> <span class="n">new_path</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;feature_fn&#39;</span> <span class="ow">and</span> <span class="n">scenario</span><span class="o">.</span><span class="n">feature_dict</span> <span class="o">!=</span> <span class="p">{}:</span>
-                <span class="n">new_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="s1">&#39;features.txt&#39;</span><span class="p">)</span>
+                <span class="n">new_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">,</span> <span class="s1">&#39;features.txt&#39;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">write_inst_features_file</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">n_features</span><span class="p">,</span>
                                               <span class="n">scenario</span><span class="o">.</span><span class="n">feature_dict</span><span class="p">,</span> <span class="n">new_path</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -443,7 +443,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../../',
-            VERSION:'0.7.2',
+            VERSION:'0.8.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Target Algorithm Evaluator &mdash; SMAC 0.7.2 documentation</title>
+  <title>Target Algorithm Evaluator &mdash; SMAC 0.8.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="SMAC 0.7.2 documentation" href="index.html"/>
+    <link rel="top" title="SMAC 0.8.0 documentation" href="index.html"/>
         <link rel="up" title="Manual" href="manual.html"/>
         <link rel="next" title="Parallel SMAC (pSMAC)" href="psmac.html"/>
         <link rel="prev" title="Options and file formats" href="options.html"/> 
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.7.2
+                0.8.0
               </div>
             
           
@@ -138,7 +138,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.local_search.html">smac.optimizer.local_search module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
@@ -265,6 +265,10 @@ like:</p>
 python algo.py <span class="m">123</span> <span class="m">0</span> <span class="m">10</span> <span class="m">25</span> <span class="m">12345</span> -param1 value1 -param2 value2 <span class="o">[</span>...<span class="o">]</span>
 </pre></div>
 </div>
+<p>The first two parameters after the <code class="docutils literal"><span class="pre">algo.py</span></code> are the instance name, on which the target algorithm is evaluated, and extra information about the instance (rarely used).
+The third parameter is the cutoff time, which is the maximal time the target algorithm is allowed to run.
+The fourth parameter is the runlength, which is the maximal number of steps an algorithm is allowed to run.
+The fifth parameter is the random seed which is followed by the target algorithm parameters.</p>
 <p>It expects the target algorithm to print a string during
 execution with on of the following formats:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>Result of this algorithm run: &lt;STATUS&gt;, &lt;running time&gt;, &lt;runlength&gt;, &lt;quality&gt;, &lt;seed&gt;, &lt;instance-specifics&gt;
@@ -341,7 +345,7 @@ enforce time- and memory-limits.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.7.2',
+            VERSION:'0.8.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
