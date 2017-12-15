@@ -13,7 +13,7 @@
 :maxR: Maximum number of calls per configuration. Default: 2000.
 :memory_limit: Maximum available memory the target algorithm can occupy before being cancelled.
 :minR: Minimum number of calls per configuration. Default: 1.
-:output_dir: Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2017-12-14_10:24:56_136320.
+:output_dir: Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2017-12-15_12:16:09_265105.
 :overall_obj: PARX, where X is an integer defining the penalty imposed on timeouts (i.e. runtimes that exceed the *cutoff-time*). Default: par10.
 :paramfile: Specifies the path to the PCS-file.
 :run_obj: Defines what metric to optimize. When optimizing runtime, *cutoff_time* is required as well. Must be from: ['runtime', 'quality'].
