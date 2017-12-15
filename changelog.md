@@ -14,7 +14,7 @@
 
 ## Interface changes
 
-* Generalize the interface of the acquisition functions interface to work with
+* Generalize the interface of the acquisition functions to work with
   ConfigSpaces's configuration objects instead of numpy arrays.
 * The acquisition function optimizer can now be passed to the SMBO object.
 * A custom SMBO class can now be passed to the SMAC builder object.
