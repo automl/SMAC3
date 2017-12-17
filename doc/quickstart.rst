@@ -3,7 +3,7 @@
 .. _TAE: tae.html
 
 Quick Start
------------
+===========
 If you have not installed *SMAC* yet take a look at the `installation instructions <installation.html>`_ and make sure that all the requirements are fulfilled.
 Examples to illustrate the usage of *SMAC* - either by reading in a scenario file, or by directly using *SMAC* in Python - are provided in the examples-folder.
 
@@ -20,11 +20,12 @@ __ spear-example_
 .. _branin-example:
 
 Branin
-~~~~~~
+------
 First of, we'll demonstrate the usage of *SMAC* on the minimization of a standard 2-dimensional continuous test function (`Branin <https://www.sfu.ca/~ssurjano/branin.html>`_).
-This example aims to explain the basic usage of *SMAC*. This example is
-implemented in two ways.
+This example aims to explain the basic usage of *SMAC*. There are different ways to use *SMAC*:
 
+f_min-wrapper
+~~~~~~~~~~~~~
 The easiest way to use *SMAC* is to use the `f_min SMAC wrapper
 <apidoc/smac.facade.func_facade.html#smac.facade.func_facade.fmin_smac>`_. It is
 implemented in `examples/branin/branin_fmin.py` and requires no extra files. We
@@ -41,48 +42,44 @@ And run the f_min-function:
    :lineno-match:
 
 This way, you can optimize a blackbox-function with minimal effort. However, to
-use the whole of *SMACs* capability, a scenario_ object should be used. There are a
-wrapper `branin_cmdline.py`, a scenario-file `branin_scenario.txt` and a
-PCS-file `branin_pcs.pcs` in the branin-folder.
-To run the example scenario, change into the root-directory of *SMAC* and type the following commands:
+use all of *SMACs* capability, a scenario_ object should be used.
+
+Command line
+~~~~~~~~~~~~
+There are a wrapper ``cmdline_wrapper.py``, a scenario-file ``scenario.txt`` and a
+PCS-file ``param_config_space.pcs`` in the branin-folder.
+To run the example scenario, change into the root directory of *SMAC* and type the following commands:
 
 .. code-block:: bash
 
     cd examples/branin
-    python ../../scripts/smac --scenario branin_scenario.txt
+    python ../../scripts/smac --scenario scenario.txt
 
-The python command runs *SMAC* with the specified scenario. The scenario file contains the following five lines:
+The python command runs *SMAC* with the specified scenario. The scenario file contains the following lines:
 
-    .. literalinclude:: ../examples/branin/branin_scenario.txt
+    .. literalinclude:: ../examples/branin/scenario.txt
 
 The **algo** parameter specifies how *SMAC* can call the function or evaluate an algorithm that *SMAC* is optimizing.
-An algorithm call by *SMAC* will look like this:
+This is further explained in the chapter about the `Target Algorithm Evaluator (TAE) <tae.html>`_.
+An algorithm call by *SMAC* is of the following format:
 
     .. code-block:: bash
 
         <algo> <instance> <instance specific> <cutoff time> <runlength> <seed> <algorithm parameters>
-        
-An exemplary call in our Branin example would be:
-
-    .. code-block:: bash
-
         python branin.py 0 0 999999999.0 0 1148756733 -x1 -1.1338595629 -x2 13.8770222718
-
-    The first two parameters after the ``branin.py`` do not matter for this example since no instances are needed for the function optimization.
-    For algorithm optimization, the first parameter holds the instance name on which the algorithm is evaluated and the second can provide extra information about the instance (rarely used).
-
-    The third parameter gives the cutoff time (maximal running time) an algorithm is allowed to run and the fourth the runlength (maximal number of steps).
-
-    The fifth parameter is the random seed which is followed by the algorithm/function parameters.
     
 The **paramfile** parameter tells *SMAC* which Parameter Configuration Space (PCS_)-file to use. This file contains a list of the algorithm's parameters, their domains and default values:
 
-    .. literalinclude:: ../examples/branin/branin_pcs.pcs
+    .. literalinclude:: ../examples/branin/param_config_space.pcs
 
     x1 and x2 are both continuous parameters. x1 can take any real value in the range [-5, 10], x2 in the range [0, 15] and both have the default value 0.
 
-The **run_obj** parameter specifies what *SMAC* is supposed to **minimize**. For this example we are optimizing the solution quality.
-For *SMAC* to be able to interpret the results of an algorithm run, a wrapper should return the results of the algorithm run as follows:
+The **run_obj** parameter specifies what *SMAC* is supposed to **optimize**. Here we optimize solution quality.
+
+The **runcount_limit** specifies the maximum number of algorithm calls.
+
+*SMAC* reads the results from the command line output. The wrapper returns the
+results of the algorithm in a specific format:
 
     .. code-block:: bash
 
@@ -96,8 +93,6 @@ For *SMAC* to be able to interpret the results of an algorithm run, a wrapper sh
     | *quality:* the solution quality
     | *seed:* the seed that was used with the algorithm call
     | *instance-specifics:* additional information
-
-The **runcount_limit** specifies the maximum number of algorithm calls.
 
 *SMAC* will terminate with the following output:
 
@@ -121,7 +116,7 @@ Furthermore a folder containing *SMACs* trajectory and the runhistory will be cr
 .. _svm-example:
 
 Using *SMAC* in Python: SVM
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------
 To explain the use of *SMAC* within Python, let's look at a real-world example,
 optimizing a Support Vector Machine (SVM) on the widely known `IRIS-dataset
 <https://en.wikipedia.org/wiki/Iris_flower_data_set>`_.
@@ -246,7 +241,7 @@ instances, but we include the code so it is easily applicable for any usecase.
 .. _spear-example:
 
 Spear-QCP
-~~~~~~~~~
+---------
 For this example we use *SMAC* to optimize the SAT solver `Spear <http://www.domagoj-babic.com/index.php/ResearchProjects/Spear>`_ on a small subset of the QCP-dataset.
 In *SMACs* root-directory type:
 

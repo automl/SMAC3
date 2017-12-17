@@ -61,6 +61,8 @@ class SingleConfigInitialDesign(InitialDesign):
             Initial incumbent configuration
         """
         initial_incumbent = self._select_configuration()
+        if initial_incumbent.origin is None:
+            initial_incumbent.origin = 'Initial design'
 
         # add this incumbent right away to have an entry to time point 0
         self.traj_logger.add_entry(train_perf=2**31,
