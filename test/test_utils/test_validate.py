@@ -2,6 +2,7 @@ import sys
 import os
 import unittest
 import logging
+import shutil
 
 import numpy as np
 
@@ -38,6 +39,19 @@ class ValidationTest(unittest.TestCase):
         scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
         self.trajectory = TrajLogger.read_traj_aclib_format(
             fn='test/test_files/validation/test_validation_traj.json', cs=scen.cs)
+        self.output_dirs = [self.output_rh + 'test']
+        self.output_files = [self.output_rh + 'validated_runhistory_EPM.json', self.output_rh + 'validated_runhistory.json']
+
+    def tearDown(self):
+        for output_dir in self.output_dirs:
+            if output_dir:
+                shutil.rmtree(output_dir, ignore_errors=True)
+        for output_file in self.output_files:
+            if output_file:
+                try:
+                    os.remove(output_file)
+                except FileNotFoundError as e:
+                    pass
 
     def test_rng(self):
         scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
