@@ -26,15 +26,19 @@ class TestSMACCLI(unittest.TestCase):
         self.current_dir = os.getcwd()
         os.chdir(base_directory)
 
-        self.output_one = "test/test_files/test_restore_state/run_1"  # From scenario_one.txt
-        self.output_two = "test/test_files/test_restored_state/run_1" # From scenario_two.txt
+        output_one_dir = "test/test_files/test_restore_state"  # From scenario_one.txt
+        self.output_one = output_one_dir + "/run_1"
+        output_two_dir = "test/test_files/test_restored_state"  # From scenario_two.txt
+        self.output_two = output_two_dir + "/run_1"
         self.smaccli = SMACCLI()
         self.scenario_one = "test/test_files/restore_scenario_one.txt"
         self.scenario_two = "test/test_files/restore_scenario_two.txt"
+        self.output_dirs = [output_one_dir, output_two_dir]
 
     def tearDown(self):
-        shutil.rmtree(self.output_one, ignore_errors=True)
-        shutil.rmtree(self.output_two, ignore_errors=True)
+        for output_dir in self.output_dirs:
+            if output_dir:
+                shutil.rmtree(output_dir, ignore_errors=True)
         os.chdir(self.current_dir)
 
     def test_run_and_restore(self):
@@ -74,6 +78,7 @@ class TestSMACCLI(unittest.TestCase):
         # Recorded runs but no incumbent.
         stats.ta_runs = 10
         smac = SMAC(scen, stats=stats, rng=np.random.RandomState(42))
+        self.output_dirs.append(scen.output_dir)
         self.assertRaises(ValueError, smac.optimize)
         # Incumbent but no recoreded runs.
         incumbent = cs.get_default_configuration()

@@ -127,6 +127,7 @@ class SMAC(object):
 
         aggregate_func = average_cost
 
+        self.scenario = scenario
         self.output_dir = create_output_directory(scenario, run_id)
         scenario.write()
 
