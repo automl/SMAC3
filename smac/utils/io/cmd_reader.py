@@ -1,6 +1,10 @@
 import os
 import logging
+import re
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter, SUPPRESS
+
+from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
+    ChooserLinearCoolDown
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -60,9 +64,11 @@ class CMDReader(object):
                               help=SUPPRESS)# list of trajectory dump files, 
                                             # reads runhistory 
                                             # and uses final incumbent as challenger 
-
+        req_opts.add_argument("--random_configuration_chooser", default="", type=str,
+                              help="[dev] Constant(<modulus > 1.0>) | "
+                                   "Linear(<modulus > 1.0>, <increment >= 0.0>, <end modulus > 1.0>)")
         args_, misc = parser.parse_known_args()
-        self._check_args(args_)
+        CMDReader._check_args(args_, set_parsed=True)
 
         # remove leading '-' in option names
         misc = dict((k.lstrip("-"), v.strip("'"))
@@ -70,7 +76,8 @@ class CMDReader(object):
 
         return args_, misc
 
-    def _check_args(self, args_):
+    @staticmethod
+    def _check_args(args_, set_parsed=False):
         """Checks command line arguments (e.g., whether all given files exist)
 
         Parameters
@@ -86,3 +93,53 @@ class CMDReader(object):
 
         if not os.path.isfile(args_.scenario_file):
             raise ValueError("Not found: %s" % (args_.scenario_file))
+        CMDReader._check_random_configuration_chooser(args_, set_parsed)
+
+    @staticmethod
+    def _check_random_configuration_chooser(args_, set_parsed=False):
+        if not hasattr(args_, 'random_configuration_chooser'):
+            if set_parsed:
+                setattr(args_, 'random_configuration_chooser', None)
+            return
+        if not args_.random_configuration_chooser:
+            if set_parsed:
+                args_.random_configuration_chooser = None
+            return
+        m = re.match(r'^Constant\((.*)\)$', args_.random_configuration_chooser)
+        if m:
+            try:
+                modulus = float(m.group(1))
+            except ValueError as e:
+                raise ValueError("Constant(modulus): modulus must be a float or int: %s" % (m.group(1)))
+            if modulus <= 1.0:
+                raise ValueError("Linear: modulus must be > 1.0")
+            if set_parsed:
+                args_.random_configuration_chooser = ChooserNoCoolDown(modulus)
+        else:
+            m = re.match(r'^Linear\(([^,]*),([^,]*)(,([^,]*))?\)$', args_.random_configuration_chooser)
+            if m:
+                groups = list(m.groups())
+                try:
+                    modulus = float(groups[0])
+                except ValueError as e:
+                    raise ValueError("Linear(modulus, ...): modulus must be a float or int: %s" % (groups[0]))
+                if modulus <= 1.0:
+                    raise ValueError("Linear: modulus must be > 1.0")
+                try:
+                    modulus_increment = float(groups[1])
+                except ValueError as e:
+                    raise ValueError("Linear(..., increment, ...): increment must be a float or int: %s" % (groups[1]))
+                if modulus_increment < 0.0:
+                    raise ValueError("Linear: increment must be >= 0.0")
+                if not groups[3]:
+                    groups[3] = 'inf'
+                try:
+                    end_modulus = float(groups[3])
+                except ValueError as e:
+                    raise ValueError("Linear(..., end modulus): end modulus must be a float or int: %s" % (groups[3]))
+                if end_modulus <= 1.0:
+                    raise ValueError("Linear: end modulus must be > 1.0")
+                if set_parsed:
+                    args_.random_configuration_chooser = ChooserLinearCoolDown(modulus, modulus_increment, end_modulus)
+            else:
+                raise ValueError("random_configuration_chooser: invalid format")

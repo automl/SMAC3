@@ -26,6 +26,8 @@ from smac.optimizer.objective import average_cost
 from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
 from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
     AcquisitionFunctionMaximizer
+from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
+    ChooserLinearCoolDown
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.base_epm import AbstractEPM
@@ -70,7 +72,8 @@ class SMAC(object):
                  restore_incumbent: Configuration=None,
                  rng: np.random.RandomState=None,
                  smbo_class: SMBO=None,
-                 run_id: int=1):
+                 run_id: int=1,
+                 random_configuration_chooser=None):
         """Constructor
 
         Parameters
@@ -120,6 +123,9 @@ class SMAC(object):
             instantiate the optimizer class.
         run_id: int, (default: 1)
             Run ID will be used as subfolder for output_dir.
+        random_configuration_chooser
+            when to choose a random configuration -- one of
+            ChooserNoCoolDown, ChooserLinearCoolDown
         """
 
         self.logger = logging.getLogger(
@@ -145,6 +151,9 @@ class SMAC(object):
 
         # initial random number generator
         num_run, rng = self._get_rng(rng=rng)
+
+        random_configuration_chooser = SMAC._get_random_configuration_chooser(
+            random_configuration_chooser=random_configuration_chooser)
 
         # reset random number generator in config space to draw different
         # random configurations with each seed given to SMAC
@@ -349,7 +358,8 @@ class SMAC(object):
             'acq_optimizer': acquisition_function_optimizer,
             'acquisition_func': acquisition_function,
             'rng': rng,
-            'restore_incumbent': restore_incumbent
+            'restore_incumbent': restore_incumbent,
+            'random_configuration_chooser': random_configuration_chooser
         }
         if smbo_class is None:
             self.solver = SMBO(**smbo_args)
@@ -386,6 +396,23 @@ class SMAC(object):
             raise TypeError('Unknown type %s for argument rng. Only accepts '
                             'None, int or np.random.RandomState' % str(type(rng)))
         return num_run, rng
+
+    @staticmethod
+    def _get_random_configuration_chooser(random_configuration_chooser):
+        """Initialize random configuration chooser
+        If random_configuration_chooser is falsy, initialize with ChooserNoCoolDown(2.0)
+
+        Parameters
+        ----------
+        random_configuration_chooser: ChooserNoCoolDown|ChooserLinearCoolDown|None
+
+        Returns
+        -------
+        ChooserNoCoolDown|ChooserLinearCoolDown
+        """
+        if not random_configuration_chooser:
+            return ChooserNoCoolDown(2.0)
+        return random_configuration_chooser
 
     def optimize(self):
         """Optimizes the algorithm provided in scenario (given in constructor)

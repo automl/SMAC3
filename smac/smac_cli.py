@@ -109,14 +109,16 @@ class SMACCLI(object):
                 initial_configurations=initial_configs,
                 stats=stats,
                 restore_incumbent=incumbent,
-                run_id=args_.seed)
+                run_id=args_.seed,
+                random_configuration_chooser=args_.random_configuration_chooser)
         elif args_.mode == "ROAR":
             optimizer = ROAR(
                 scenario=scen,
                 rng=np.random.RandomState(args_.seed),
                 runhistory=rh,
                 initial_configurations=initial_configs,
-                run_id=args_.seed)
+                run_id=args_.seed,
+                random_configuration_chooser=random_configuration_chooser)
         elif args_.mode == "EPILS":
             optimizer = EPILS(
                 scenario=scen,

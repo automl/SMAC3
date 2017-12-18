@@ -175,7 +175,7 @@ class TestSMBO(unittest.TestCase):
 
         self.assertEqual(smbo.model.train.call_count, 1)
 
-        self.assertEqual(len(x), 10000)
+        self.assertEqual(len(x), 9999)
         num_random_search = 0
         num_local_search = 0
         for i in range(0, 2002, 2):
@@ -214,10 +214,10 @@ class TestSMBO(unittest.TestCase):
         x = [c for c in challengers]
 
         self.assertEqual(smbo.model.train.call_count, 1)
-        self.assertEqual(len(x), 10000)
+        self.assertEqual(len(x), 9999)
         num_random_search = 0
         num_local_search = 0
-        for i in range(0, 10000, 2):
+        for i in range(0, 9999, 2):
             # print(x[i].origin)
             self.assertIsInstance(x[i], Configuration)
             if 'Random Search (sorted)' in x[i].origin:
