@@ -1,6 +1,6 @@
 import collections
-from threading import Lock
 from enum import Enum
+import filelock
 import json
 import logging
 import numpy as np
@@ -85,15 +85,6 @@ class RunHistory(object):
     aggregate_func
     overwrite_existing_runs
     """
-
-    """Locks for files being written to and read from"""
-    rw_locks = {}
-
-    """Lock for mutation of rw_locks"""
-    rw_locks_lock = Lock()
-
-    # These Locks do not prevent two different processes from accessing a file at the same time.
-    # To prevent this use a module like `filelock`
 
     def __init__(self, 
                  aggregate_func: typing.Callable,
@@ -339,25 +330,11 @@ class RunHistory(object):
                    for id_, conf in self.ids_config.items()
                    if id_ in config_ids_to_serialize}
 
-        # add lock object for `fn` if it does not exist
-        RunHistory.rw_locks_lock.acquire()
-        try:
-            if fn not in RunHistory.rw_locks:
-                RunHistory.rw_locks[fn] = Lock()
-        except Exception as e:
-            logging.error(e)
-        finally:
-            RunHistory.rw_locks_lock.release()
         # lock `fn` (writing)
-        RunHistory.rw_locks[fn].acquire()
-        try:
+        with filelock.FileLock(fn + ".lock"):
             with open(fn, "w") as fp:
                 json.dump({"data": data,
                            "configs": configs}, fp, cls=EnumEncoder)
-        except Exception as e2:
-            logging.error(e2)
-        finally:
-            RunHistory.rw_locks[fn].release()
 
     def load_json(self, fn: str, cs: ConfigurationSpace):
         """Load and runhistory in json representation from disk.
@@ -372,24 +349,10 @@ class RunHistory(object):
             instance of configuration space
         """
 
-        # add lock object for `fn` if it does not exist
-        RunHistory.rw_locks_lock.acquire()
-        try:
-            if fn not in RunHistory.rw_locks:
-                RunHistory.rw_locks[fn] = Lock()
-        except Exception as e:
-            logging.error(e)
-        finally:
-            RunHistory.rw_locks_lock.release()
         # lock `fn` (writing)
-        RunHistory.rw_locks[fn].acquire()
-        try:
+        with filelock.FileLock(fn + ".lock"):
             with open(fn) as fp:
                 all_data = json.load(fp, object_hook=StatusType.enum_hook)
-        except Exception as e2:
-            logging.error(e2)
-        finally:
-            RunHistory.rw_locks[fn].release()
 
         self.ids_config = {int(id_): Configuration(cs, values=values)
                            for id_, values in all_data["configs"].items()}
