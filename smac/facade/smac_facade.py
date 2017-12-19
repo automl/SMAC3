@@ -173,7 +173,7 @@ class SMAC(object):
         # initialize optimizer on acquisition function
         if acquisition_function_optimizer is None:
             acquisition_function_optimizer = InterleavedLocalAndRandomSearch(
-                acquisition_function, scenario.cs
+                acquisition_function, scenario.cs, np.random.RandomState(seed=rng.randint(MAXINT))
             )
         elif not isinstance(
                 acquisition_function_optimizer,
@@ -356,8 +356,7 @@ class SMAC(object):
         else:
             self.solver = smbo_class(**smbo_args)
 
-    @staticmethod
-    def _get_rng(rng):
+    def _get_rng(self, rng):
         """Initialize random number generator
 
         If rng is None, initialize a new generator
@@ -374,7 +373,8 @@ class SMAC(object):
         """
         # initialize random number generator
         if rng is None:
-            num_run = np.random.randint(1234567980)
+            self.logger.info('no rng given: falling back to non-deterministic behaviour')
+            num_run = np.random.randint(MAXINT)
             rng = np.random.RandomState(seed=num_run)
         elif isinstance(rng, int):
             num_run = rng

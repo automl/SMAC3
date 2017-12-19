@@ -320,8 +320,7 @@ class EPILS(object):
                                    acquisition_func=acquisition_function,
                                    rng=rng)
 
-    @staticmethod
-    def _get_rng(rng):
+    def _get_rng(self, rng):
         """Initialize random number generator
 
         If rng is None, initialize a new generator
@@ -339,6 +338,7 @@ class EPILS(object):
 
         # initialize random number generator
         if rng is None:
+            self.logger.info('no rng given, falling back to non-deterministic behaviour')
             num_run = np.random.randint(1234567980)
             rng = np.random.RandomState(seed=num_run)
         elif isinstance(rng, int):

@@ -10,6 +10,7 @@ from smac.configspace import get_one_exchange_neighbourhood, \
 from smac.runhistory.runhistory import RunHistory
 from smac.stats.stats import Stats
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
+from smac.utils.constants import MAXINT
 
 __author__ = "Aaron Klein, Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -40,17 +41,18 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
             config_space: ConfigurationSpace,
             rng: Union[bool, np.random.RandomState]=None
     ):
+        self.logger = logging.getLogger(
+            self.__module__ + "." + self.__class__.__name__
+        )
         self.acquisition_function = acquisition_function
         self.config_space = config_space
 
         if rng is None:
-            self.rng = np.random.RandomState(seed=np.random.randint(10000))
+            self.logger.info('no rng given, falling back to non-deterministic behaviour')
+            self.rng = np.random.RandomState(seed=np.random.randint(MAXINT))
         else:
             self.rng = rng
 
-        self.logger = logging.getLogger(
-            self.__module__ + "." + self.__class__.__name__
-        )
 
     def maximize(
             self,
@@ -281,7 +283,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             # Get one exchange neighborhood returns an iterator (in contrast of
             # the previously returned list).
             all_neighbors = get_one_exchange_neighbourhood(
-                incumbent, seed=self.rng.seed())
+                incumbent, seed=self.rng.randint(MAXINT))
 
             for neighbor in all_neighbors:
                 s_time = time.time()
