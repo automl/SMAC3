@@ -1,4 +1,5 @@
 import unittest
+from nose.plugins.attrib import attr
 
 import logging
 import numpy as np
@@ -204,6 +205,7 @@ class TestIntensify(unittest.TestCase):
 
         self.assertEqual(inc, self.config2)
 
+    @attr('slow')
     def test_race_challenger_2(self):
         '''
            test _race_challenger with adaptive capping
@@ -236,6 +238,7 @@ class TestIntensify(unittest.TestCase):
         # self.assertTrue(False)
         self.assertEqual(inc, self.config1)
 
+    @attr('slow')
     def test_race_challenger_3(self):
         '''
            test _race_challenger with adaptive capping on a previously capped configuration  
