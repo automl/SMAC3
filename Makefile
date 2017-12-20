@@ -1,16 +1,16 @@
 
 .PHONY: test
 test:
-	python3.6 -m nose -sv --with-coverage --cover-package=smac
+	nosetests -sv --with-coverage --cover-package=smac
 
 .PHONY: test-fast
 test-fast:
-	python3.6 -m nose -a '!slow' -sv --with-coverage --cover-package=smac
+	nosetests -a '!slow' -sv --with-coverage --cover-package=smac
 
 .PHONY: test-runtimes
 test-runtimes:
 	# requires nose-timer
-	python3.6 -m nose -sv --with-timer --timer-top-n 15
+	nosetests -sv --with-timer --timer-top-n 15
 
 .PHONY: doc
 doc:
