@@ -6,7 +6,6 @@ import typing
 
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.tae.execute_ta_run import StatusType
-from smac.utils.constants import MAXINT
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -384,14 +383,14 @@ class RunHistory(object):
 
     def update(self, runhistory: 'RunHistory',
                origin: DataOrigin=DataOrigin.EXTERNAL_SAME_INSTANCES):
-        """Update the current runhistory by adding new runs from a json file.
+        """Update the current runhistory by adding new runs from a RunHistory.
 
         Parameters
         ----------
         runhistory: RunHistory
             Runhistory with additional data to be added to self
         origin: DataOrigin
-            If set to ``INTERNAL`` or ``EXTERNAL_FULL`` the data will be 
+            If set to ``INTERNAL`` or ``EXTERNAL_FULL`` the data will be
             added to the internal data structure self._configid_to_inst_seed
             and be available :meth:`through get_runs_for_config`.
         """

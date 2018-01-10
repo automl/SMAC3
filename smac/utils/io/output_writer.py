@@ -29,26 +29,26 @@ class OutputWriter(object):
             status: False or None
                 False indicates that writing process failed
         """
-        if scenario.output_dir is None or scenario.output_dir == "":
+        if scenario.output_dir_for_this_run is None or scenario.output_dir_for_this_run == "":
             scenario.logger.info("No output directory for scenario logging "
                                  "specified -- scenario will not be logged.")
             return False
         # Create output-dir if necessary
-        if not os.path.isdir(scenario.output_dir):
+        if not os.path.isdir(scenario.output_dir_for_this_run):
             scenario.logger.debug("Output directory does not exist! Will be "
                               "created.")
             try:
-                os.makedirs(scenario.output_dir)
+                os.makedirs(scenario.output_dir_for_this_run)
             except OSError:
                 raise OSError("Could not make output directory: "
-                              "{}.".format(scenario.output_dir))
+                              "{}.".format(scenario.output_dir_for_this_run))
 
         # options_dest2name maps scenario._arguments from dest -> name
         options_dest2name = {(scenario._arguments[v]['dest'] if
             scenario._arguments[v]['dest'] else v) : v for v in scenario._arguments}
 
         # Write all options into "output_dir/scenario.txt"
-        path = os.path.join(scenario.output_dir, "scenario.txt")
+        path = os.path.join(scenario.output_dir_for_this_run, "scenario.txt")
         scenario.logger.debug("Writing scenario-file to {}.".format(path))
         with open(path, 'w') as fh:
             for key in options_dest2name:
@@ -81,25 +81,24 @@ class OutputWriter(object):
           - copies files pcs_fn, train_inst_fn, test_inst_fn and feature_fn to
             output if possible, creates the files from attributes otherwise
         """
-        if key in ['pcs_fn', 'train_inst_fn', 'test_inst_fn', 'feature_fn',
-                   'output_dir']:
+        if key in ['pcs_fn', 'train_inst_fn', 'test_inst_fn', 'feature_fn']:
             # Copy if file exists, else write to new file
             if value is not None and os.path.isfile(value):
                 try:
-                    return shutil.copy(value, scenario.output_dir)
+                    return shutil.copy(value, scenario.output_dir_for_this_run)
                 except shutil.SameFileError:
                     return value  # File is already in output_dir
             elif key == 'pcs_fn' and scenario.cs is not None:
-                new_path = os.path.join(scenario.output_dir, "configspace.pcs")
+                new_path = os.path.join(scenario.output_dir_for_this_run, "configspace.pcs")
                 self.write_pcs_file(scenario.cs, new_path)
             elif key == 'train_inst_fn' and scenario.train_insts != [None]:
-                new_path = os.path.join(scenario.output_dir, 'train_insts.txt')
+                new_path = os.path.join(scenario.output_dir_for_this_run, 'train_insts.txt')
                 self.write_inst_file(scenario.train_insts, new_path)
             elif key == 'test_inst_fn' and scenario.test_insts != [None]:
-                new_path = os.path.join(scenario.output_dir, 'test_insts.txt')
+                new_path = os.path.join(scenario.output_dir_for_this_run, 'test_insts.txt')
                 self.write_inst_file(scenario.test_insts, new_path)
             elif key == 'feature_fn' and scenario.feature_dict != {}:
-                new_path = os.path.join(scenario.output_dir, 'features.txt')
+                new_path = os.path.join(scenario.output_dir_for_this_run, 'features.txt')
                 self.write_inst_features_file(scenario.n_features,
                                               scenario.feature_dict, new_path)
             else:

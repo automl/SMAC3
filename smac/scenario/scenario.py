@@ -43,8 +43,12 @@ class Scenario(object):
 
     """
 
-    def __init__(self, scenario, cmd_args: dict=None, run_id: int=1):
-        """Constructor
+    def __init__(self, scenario, cmd_args: dict=None):
+        """ Creates a scenario-object. The output_dir will be
+        "output_dir/run_id/" and if that exists already, the old folder and its
+        content will be moved (without any checks on whether it's still used by
+        another process) to "output_dir/run_id.OLD". If that exists, ".OLD"s
+        will be appended until possible.
 
         Parameters
         ----------
@@ -53,8 +57,6 @@ class Scenario(object):
             If dict, it will be directly to get all scenario related information
         cmd_args : dict
             Command line arguments that were not processed by argparse
-        run_id: int
-            Run ID will be used as suffix for output_dir
         """
         self.logger = logging.getLogger(
             self.__module__ + '.' + self.__class__.__name__)
@@ -62,6 +64,8 @@ class Scenario(object):
 
         self.in_reader = InputReader()
         self.out_writer = OutputWriter()
+
+        self.output_dir_for_this_run = None
 
         if type(scenario) is str:
             scenario_fn = scenario
@@ -109,11 +113,6 @@ class Scenario(object):
             setattr(self, arg_name, arg_value)
 
         self._transform_arguments()
-
-        if self.output_dir:
-            self.output_dir += "_run%d" %(run_id)
-
-        self.out_writer.write_scenario_file(self)
 
         self.logger.debug("Scenario Options:")
         for arg_name, arg_value in parsed_arguments.items():
@@ -320,7 +319,7 @@ class Scenario(object):
                           default="smac3-output_%s" % (
                               datetime.datetime.fromtimestamp(
                                   time.time()).strftime(
-                                  '%Y-%m-%d_%H:%M:%S_(%f)')))
+                                  '%Y-%m-%d_%H:%M:%S_%f')))
         self.add_argument(name='input_psmac_dirs', default=None,
                           help="For parallel SMAC, multiple output-directories "
                                "are used.")
@@ -396,8 +395,9 @@ class Scenario(object):
         # read feature file
         if self.feature_fn:
             if os.path.isfile(self.feature_fn):
-                self.feature_dict = self.in_reader.read_instance_features_file(
-                    self.feature_fn)[1]
+                features = self.in_reader.read_instance_features_file(
+                    self.feature_fn)
+                self.feature_names, self.feature_dict = features
 
         if self.feature_dict:
             self.feature_array = []
@@ -457,6 +457,10 @@ class Scenario(object):
             self.logger.warn("All instances were casted to str.")
         return l
 
+    def write(self):
+        """ Write scenario to self.output_dir/scenario.txt. """
+        self.out_writer.write_scenario_file(self)
+
     def write_options_to_doc(self, path='scenario_options.rst'):
         """Writes the option-list to file for autogeneration in documentation.
         The list is created in doc/conf.py and read in doc/options.rst.
@@ -471,9 +475,11 @@ class Scenario(object):
             for arg in sorted(self._arguments.keys()):
                 if arg in exclude:
                     continue
-                fh.write("    * *{}*: {}".format(arg, self._arguments[arg]['help']))
+                fh.write(":{}: ".format(arg))
+                fh.write("{}".format(self._arguments[arg]['help']))
                 if self._arguments[arg]['default']:
                     fh.write(" Default: {}.".format(self._arguments[arg]['default']))
                 if self._arguments[arg]['choice']:
                     fh.write(" Must be from: {}.".format(self._arguments[arg]['choice']))
                 fh.write("\n")
+            fh.write("\n\n")

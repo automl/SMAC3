@@ -63,6 +63,47 @@ class TaeOldTest(unittest.TestCase):
         assert runtime == 3.0
 
         print(status, cost, runtime, ar_info)
+        
+    def test_status(self):
+        
+        scen = Scenario(scenario={'cs': ConfigurationSpace(),
+                                  'run_obj': 'quality',
+                                  'output_dir': ''}, cmd_args=None)
+        stats = Stats(scen)
+
+        eta = ExecuteTARunAClib(
+            ta=shlex.split(""),
+            stats=stats)
+        
+        def test_success(**kwargs):
+            results = {"status": "SUCCESS",
+                       "cost": 1234567890
+                       }
+            return results, "", ""
+        
+        eta._call_ta = test_success
+        status, cost, runtime, ar_info = eta.run(config={},)
+        self.assertEqual(status, StatusType.SUCCESS)
+        
+        def test_success(**kwargs):
+            results = {"status": "SUCESS",
+                       "cost": 1234567890
+                       }
+            return results, "", ""
+        
+        eta._call_ta = test_success
+        status, cost, runtime, ar_info = eta.run(config={},)
+        self.assertEqual(status, StatusType.CRASHED)
+        
+        def test_success(**kwargs):
+            results = {"status": "success",
+                       "cost": 1234567890
+                       }
+            return results, "", ""
+        
+        eta._call_ta = test_success
+        status, cost, runtime, ar_info = eta.run(config={},)
+        self.assertEqual(status, StatusType.CRASHED)
 
 
 if __name__ == "__main__":

@@ -56,7 +56,7 @@ def fmin_smac(func: callable,
         parameter = UniformFloatHyperparameter(name="x%d" % (idx + 1),
                                                lower=lower_bound,
                                                upper=upper_bound,
-                                               default=x0[idx])
+                                               default_value=x0[idx])
         cs.add_hyperparameter(parameter)
 
     # Create target algorithm runner

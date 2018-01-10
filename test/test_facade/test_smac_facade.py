@@ -1,3 +1,6 @@
+from contextlib import suppress
+import os
+import shutil
 import unittest
 
 import numpy as np
@@ -23,6 +26,12 @@ class TestSMACFacade(unittest.TestCase):
         self.cs = ConfigurationSpace()
         self.scenario = Scenario({'cs': self.cs, 'run_obj': 'quality',
                                   'output_dir': ''})
+
+    def tearDown(self):
+        for i in range(20):
+            with suppress(Exception):
+                dirname = 'run_1' + ('.OLD' * i)
+                shutil.rmtree(dirname)
 
     def test_inject_stats_and_runhistory_object_to_TAE(self):
         ta = ExecuteTAFuncDict(lambda x: x**2)
@@ -158,3 +167,36 @@ class TestSMACFacade(unittest.TestCase):
         self.assertIsInstance(init_design.stats, Stats)
         self.assertIsInstance(init_design.traj_logger, TrajLogger)
         self.assertIsInstance(rh2epm.scenario, Scenario)
+
+    def test_output_structure(self):
+        """Test whether output-dir is moved correctly."""
+        test_scenario_dict = {
+            'output_dir': 'test/test_files/scenario_test/tmp_output',
+            'run_obj': 'quality',
+            'cs': ConfigurationSpace()
+        }
+        scen1 = Scenario(test_scenario_dict)
+        smac = SMAC(scenario=scen1, run_id=1)
+
+        self.assertEqual(smac.output_dir, os.path.join(
+            test_scenario_dict['output_dir'], 'run_1'))
+        self.assertTrue(os.path.isdir(smac.output_dir))
+
+        smac2 = SMAC(scenario=scen1, run_id=1)
+        self.assertTrue(os.path.isdir(smac2.output_dir + '.OLD'))
+
+        smac3 = SMAC(scenario=scen1, run_id=1)
+        self.assertTrue(os.path.isdir(smac3.output_dir + '.OLD.OLD'))
+
+        smac4 = SMAC(scenario=scen1, run_id=2)
+        self.assertEqual(smac4.output_dir, os.path.join(
+            test_scenario_dict['output_dir'], 'run_2'))
+        self.assertTrue(os.path.isdir(smac4.output_dir))
+        self.assertFalse(os.path.isdir(smac4.output_dir + '.OLD.OLD.OLD'))
+
+        # clean up (at least whats not cleaned up by tearDown)
+        shutil.rmtree(smac.output_dir + '.OLD.OLD')
+        shutil.rmtree(smac.output_dir + '.OLD')
+        # This is done by teardown!
+        #shutil.rmtree(smac.output_dir)
+        shutil.rmtree(smac4.output_dir)

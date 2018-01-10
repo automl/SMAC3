@@ -1,0 +1,5 @@
+paramfile = examples/branin/param_config_space.pcs
+run_obj = quality
+runcount_limit = 10
+output_dir = test/test_files/test_restored_state
+algo = python examples/branin/cmdline_wrapper.py

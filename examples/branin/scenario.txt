@@ -1,0 +1,5 @@
+algo = python cmdline_wrapper.py
+paramfile = param_config_space.pcs
+run_obj = quality
+runcount_limit = 500
+deterministic = 1

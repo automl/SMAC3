@@ -43,6 +43,7 @@ Optional:
      * *seed*: The integer that the random-generator will be based upon. **Default**: 12345
      * *verbose_level*: in [INFO, DEBUG], specifies the logging-verbosity. **Default**: INFO
      * *mode*: in [SMAC, ROAR]. SMAC will use the bayeasian optimization with an intensification process, whereas ROAR stands for Random Online Adaptive Racing. **Default**: SMAC
+     * *restore_state*: A string specifying the folder of the *SMAC*-run to be continued. **Assuming exactly the same scenario, except for budget-options.**
 
 In the scenario file, there are two mandatory parameters: The **algo**-parameter
 defines how *SMAC* will call the target algorithm. Parameters will be appended to the call
@@ -51,7 +52,6 @@ form. Read more in the section on `target algorithms <tae.html#tae>`_.
 The **paramfile**-parameter defines the path to the `PCS-file <options.html#pcs>`_,
 which describes the ranges and default values of the tunable parameters.
 Both will interpret paths *from the execution-directory*.
-
 
 .. note::
 
@@ -63,6 +63,27 @@ Both will interpret paths *from the execution-directory*.
     .. code-block:: bash
     
         Result for SMAC: <STATUS>, <runtime>, <runlength>, <quality>, <seed>, <instance-specifics>
+
+
+.. _restorestate:
+
+Restoring States
+~~~~~~~~~~~~~~~~
+If a *SMAC*-run was interrupted or you want to extend its computation- or
+time-limits, it can be restored and continued.
+To restore or continue a previous *SMAC*-run, use the
+``--restore_state FOLDER``-option in the commandline. If you want to increase
+computation- or time-limits, change the scenario-file specified with the
+``--scenario SCENARIOFILE``-option (**not the one in the folder to be restored**).
+Restarting a *SMAC*-run that quit due to budget-exhaustion will do nothing,
+because the budget is still exhausted.
+**Changing any other options than *output_dir*, *wallclock_limit*, *runcount_limit* or
+*tuner-timeout* in the scenario-file is NOT intended and will likely lead
+to unexpected behaviour!**
+
+For an example of restoring states from within your Python code, there is an
+implementation with the Branin-example in "examples/branin/restore_state.py".
+
 
 .. _inpython:
 
