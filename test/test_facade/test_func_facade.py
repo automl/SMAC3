@@ -33,3 +33,18 @@ class TestSMACFacade(unittest.TestCase):
         self.assertEqual(type(f), type(f_s))
 
         self.output_dirs.append(smac.scenario.output_dir)
+
+    def test_parameter_order(self):
+        def func(x):
+            for i in range(len(x)):
+                self.assertLess(i - 1, x[i])
+                self.assertGreater(i, x[i])
+            return 1
+
+        default = [i - 0.5 for i in range(10)]
+        bounds = [(i - 1, i) for i in range(10)]
+        print(default, bounds)
+        fmin_smac(func=func, x0=default,
+                  bounds=bounds,
+                  maxfun=1,
+                  rng=1)

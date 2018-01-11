@@ -52,8 +52,12 @@ def fmin_smac(func: callable,
     """
     # create configuration space
     cs = ConfigurationSpace()
+
+    # Adjust zero padding
+    tmplt = 'x{0:0' + str(len(str(len(bounds)))) + 'd}'
+
     for idx, (lower_bound, upper_bound) in enumerate(bounds):
-        parameter = UniformFloatHyperparameter(name="x%d" % (idx + 1),
+        parameter = UniformFloatHyperparameter(name=tmplt.format(idx + 1),
                                                lower=lower_bound,
                                                upper=upper_bound,
                                                default_value=x0[idx])
