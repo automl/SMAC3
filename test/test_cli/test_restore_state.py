@@ -1,6 +1,7 @@
 import os
 import sys
 import unittest
+from nose.plugins.attrib import attr
 import shutil
 
 import numpy as np
@@ -41,6 +42,7 @@ class TestSMACCLI(unittest.TestCase):
                 shutil.rmtree(output_dir, ignore_errors=True)
         os.chdir(self.current_dir)
 
+    @attr('slow')
     def test_run_and_restore(self):
         """
         Testing basic restore functionality.
