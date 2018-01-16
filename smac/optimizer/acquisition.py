@@ -157,14 +157,22 @@ class EI(AbstractAcquisitionFunction):
                              'eta=<int>) to inform the acquisition function '
                              'about the current best value.')
 
-        z = (self.eta - m - self.par) / s
-        f = (self.eta - m - self.par) * norm.cdf(z) + s * norm.pdf(z)
+        def calculate_f():
+            z = (self.eta - m - self.par) / s
+            return (self.eta - m - self.par) * norm.cdf(z) + s * norm.pdf(z)
+
         if np.any(s == 0.0):
             # if std is zero, we have observed x on all instances
             # using a RF, std should be never exactly 0.0
-            self.logger.warn("Predicted std is 0.0 for at least one sample.")
-            f[s == 0.0] = 0.0
-
+            # Avoid zero division by setting all zeros in s to one.
+            # Consider the corresponding results in f to be zero.
+            self.logger.warning("Predicted std is 0.0 for at least one sample.")
+            s_copy = np.copy(s)
+            s[s_copy == 0.0] = 1.0
+            f = calculate_f()
+            f[s_copy == 0.0] = 0.0
+        else:
+            f = calculate_f()
         if (f < 0).any():
             raise ValueError(
                 "Expected Improvement is smaller than 0 for at least one "
@@ -228,18 +236,29 @@ class EIPS(EI):
                              'eta=<int>) to inform the acquisition function '
                              'about the current best value.')
 
-        z = (self.eta - m_cost - self.par) / s
-        f = (self.eta - m_cost - self.par) * norm.cdf(z) + s * norm.pdf(z)
-        f = f / m_runtime
+        def calculate_f():
+            z = (self.eta - m_cost - self.par) / s
+            f = (self.eta - m_cost - self.par) * norm.cdf(z) + s * norm.pdf(z)
+            f = f / m_runtime
+            return f
+
         if np.any(s == 0.0):
             # if std is zero, we have observed x on all instances
             # using a RF, std should be never exactly 0.0
-            self.logger.warn("Predicted std is 0.0 for at least one sample.")
-            f[s == 0.0] = 0.0
+            # Avoid zero division by setting all zeros in s to one.
+            # Consider the corresponding results in f to be zero.
+            self.logger.warning("Predicted std is 0.0 for at least one sample.")
+            s_copy = np.copy(s)
+            s[s_copy == 0.0] = 1.0
+            f = calculate_f()
+            f[s_copy == 0.0] = 0.0
+        else:
+            f = calculate_f()
 
         if (f < 0).any():
-            raise ValueError("Expected Improvement per Second is smaller than "
-                             "0 for at least one sample.")
+            raise ValueError(
+                "Expected Improvement per Second is smaller than 0 "
+                "for at least one sample.")
 
         return f.reshape((-1, 1))
 
@@ -293,16 +312,24 @@ class LogEI(AbstractAcquisitionFunction):
         m, var_ = self.model.predict_marginalized_over_instances(X)
         std = np.sqrt(var_)
 
-        f_min = self.eta - self.par
-        v = (np.log(f_min) - m) / std
-        log_ei = (f_min * norm.cdf(v)) - \
-            (np.exp(0.5 * var_ + m) * norm.cdf(v - std))
+        def calculate_log_ei():
+            f_min = self.eta - self.par
+            v = (np.log(f_min) - m) / std
+            return (f_min * norm.cdf(v)) - \
+                (np.exp(0.5 * var_ + m) * norm.cdf(v - std))
 
         if np.any(std == 0.0):
             # if std is zero, we have observed x on all instances
             # using a RF, std should be never exactly 0.0
-            self.logger.warn("Predicted std is 0.0 for at least one sample.")
-            log_ei[std == 0.0] = 0.0
+            # Avoid zero division by setting all zeros in s to one.
+            # Consider the corresponding results in f to be zero.
+            self.logger.warning("Predicted std is 0.0 for at least one sample.")
+            std_copy = np.copy(std)
+            std[std_copy == 0.0] = 1.0
+            log_ei = calculate_log_ei()
+            log_ei[std_copy == 0.0] = 0.0
+        else:
+            log_ei = calculate_log_ei()
 
         if (log_ei < 0).any():
             raise ValueError(

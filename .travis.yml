@@ -47,6 +47,7 @@ install:
 
 # command to run tests, e.g. python setup.py test
 script:
-  - nosetests -sv --with-coverage --cover-package=smac && bash scripts/test_no_files_left.sh
+  - echo Testing revision $(git rev-parse HEAD) ...
+  - make test && bash scripts/test_no_files_left.sh
 after_success:
   - codecov

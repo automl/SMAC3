@@ -1,6 +1,7 @@
 import sys
 import os
 import unittest
+from nose.plugins.attrib import attr
 import logging
 import shutil
 
@@ -177,6 +178,7 @@ class ValidationTest(unittest.TestCase):
         runs = validator.get_runs(['config1'], insts, repetitions=1)
         self.assertEqual(runs[0], expected)
 
+    @attr('slow')
     def test_validate(self):
         ''' test validation '''
         scen = Scenario(self.scen_fn,
