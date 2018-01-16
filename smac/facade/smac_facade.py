@@ -380,7 +380,7 @@ class SMAC(object):
             num_run = rng
             rng = np.random.RandomState(seed=rng)
         elif isinstance(rng, np.random.RandomState):
-            num_run = rng.randint(1234567980)
+            num_run = rng.randint(MAXINT)
             rng = rng
         else:
             raise TypeError('Unknown type %s for argument rng. Only accepts '

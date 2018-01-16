@@ -285,6 +285,8 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             all_neighbors = get_one_exchange_neighbourhood(
                 incumbent, seed=self.rng.randint(MAXINT))
 
+            logging.warning('__test_rng__' + str(self.rng.randint(MAXINT)))
+
             for neighbor in all_neighbors:
                 s_time = time.time()
                 acq_val = self.acquisition_function([neighbor], *args)
