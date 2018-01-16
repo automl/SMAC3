@@ -205,3 +205,15 @@ class TestSMACFacade(unittest.TestCase):
         # This is done by teardown!
         #shutil.rmtree(smac.output_dir)
         shutil.rmtree(smac4.output_dir)
+
+    def test_no_output(self):
+        """ Test whether a scenario with "" as output really does not create an
+        output. """
+        test_scenario_dict = {
+            'output_dir': '',
+            'run_obj': 'quality',
+            'cs': ConfigurationSpace()
+        }
+        scen1 = Scenario(test_scenario_dict)
+        smac = SMAC(scenario=scen1, run_id=1)
+        self.assertFalse(os.path.isdir(smac.output_dir))

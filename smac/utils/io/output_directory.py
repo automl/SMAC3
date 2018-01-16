@@ -28,10 +28,7 @@ def create_output_directory(
             "run_%d" % (run_id),
         )
     else:
-        output_dir = os.path.join(
-            os.path.abspath('.'),
-            "run_%d" % (run_id),
-        )
+        return ""
     if os.path.exists(output_dir):
         move_to = output_dir + ".OLD"
         while (os.path.exists(move_to)):
@@ -43,3 +40,4 @@ def create_output_directory(
                            output_dir, move_to)
     scenario.output_dir_for_this_run = output_dir
     return output_dir
+
