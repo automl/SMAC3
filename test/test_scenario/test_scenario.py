@@ -69,6 +69,21 @@ class ScenarioTest(unittest.TestCase):
                                        'test/test_files/scenario_test/features.txt',
                                    'output_dir':
                                        'test/test_files/scenario_test/tmp_output'}
+        self.output_dirs = []
+        self.output_files = []
+        self.output_dirs.append(self.test_scenario_dict['output_dir'])
+
+    def tearDown(self):
+        for output_dir in self.output_dirs:
+            if output_dir:
+                shutil.rmtree(output_dir, ignore_errors=True)
+        for output_file in self.output_files:
+            if output_file:
+                try:
+                    os.remove(output_file)
+                except FileNotFoundError as e:
+                    pass
+        os.chdir(self.current_dir)
 
     def test_Exception(self):
         with self.assertRaises(TypeError):
@@ -312,6 +327,7 @@ class ScenarioTest(unittest.TestCase):
                               'instances': [[1], [2]],
                               'run_obj': 'quality'})
         path = 'test/test_files/test_scenario_options_to_doc.txt'
+        self.output_files.append(path)
         scen = scen.write_options_to_doc(path)
         self.assertTrue(os.path.exists(path))
 
@@ -323,10 +339,6 @@ class ScenarioTest(unittest.TestCase):
                                       'test/test_files/train_insts_example.txt'})
         self.assertEquals(scenario.feature_names,
                           ['feature1', 'feature2', 'feature3'])
-
-    def tearDown(self):
-        shutil.rmtree(self.test_scenario_dict['output_dir'], ignore_errors=True)
-        os.chdir(self.current_dir)
 
 if __name__ == "__main__":
     unittest.main()

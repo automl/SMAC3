@@ -26,12 +26,16 @@ class TestSMACFacade(unittest.TestCase):
         self.cs = ConfigurationSpace()
         self.scenario = Scenario({'cs': self.cs, 'run_obj': 'quality',
                                   'output_dir': ''})
+        self.output_dirs = []
 
     def tearDown(self):
         for i in range(20):
             with suppress(Exception):
                 dirname = 'run_1' + ('.OLD' * i)
                 shutil.rmtree(dirname)
+        for output_dir in self.output_dirs:
+            if output_dir:
+                shutil.rmtree(output_dir, ignore_errors=True)
 
     def test_inject_stats_and_runhistory_object_to_TAE(self):
         ta = ExecuteTAFuncDict(lambda x: x**2)
@@ -176,6 +180,7 @@ class TestSMACFacade(unittest.TestCase):
             'cs': ConfigurationSpace()
         }
         scen1 = Scenario(test_scenario_dict)
+        self.output_dirs.append(scen1.output_dir)
         smac = SMAC(scenario=scen1, run_id=1)
 
         self.assertEqual(smac.output_dir, os.path.join(

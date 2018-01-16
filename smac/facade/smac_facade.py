@@ -127,6 +127,7 @@ class SMAC(object):
 
         aggregate_func = average_cost
 
+        self.scenario = scenario
         self.output_dir = create_output_directory(scenario, run_id)
         scenario.write()
 
@@ -421,9 +422,9 @@ class SMAC(object):
         config_mode: str or list<Configuration>
             string or directly a list of Configuration
             str from [def, inc, def+inc, wallclock_time, cpu_time, all]
-                time evaluates at cpu- or wallclock-timesteps of:
-                [max_time/2^0, max_time/2^1, max_time/2^3, ..., default]
-                with max_time being the highest recorded time
+            time evaluates at cpu- or wallclock-timesteps of:
+            [max_time/2^0, max_time/2^1, max_time/2^3, ..., default]
+            with max_time being the highest recorded time
         instance_mode: string
             what instances to use for validation, from [train, test, train+test]
         repetitions: int
