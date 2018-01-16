@@ -338,14 +338,14 @@ class EPILS(object):
 
         # initialize random number generator
         if rng is None:
-            self.logger.info('no rng given, falling back to non-deterministic behaviour')
-            num_run = np.random.randint(1234567980)
+            self.logger.debug('no rng given, using default seed of 1')
+            num_run = 1
             rng = np.random.RandomState(seed=num_run)
         elif isinstance(rng, int):
             num_run = rng
             rng = np.random.RandomState(seed=rng)
         elif isinstance(rng, np.random.RandomState):
-            num_run = rng.randint(1234567980)
+            num_run = rng.randint(MAXINT)
             rng = rng
         else:
             raise TypeError('Unknown type %s for argument rng. Only accepts '

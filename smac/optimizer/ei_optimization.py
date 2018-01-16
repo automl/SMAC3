@@ -48,8 +48,8 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
         self.config_space = config_space
 
         if rng is None:
-            self.logger.info('no rng given, falling back to non-deterministic behaviour')
-            self.rng = np.random.RandomState(seed=np.random.randint(MAXINT))
+            self.logger.debug('no rng given, using default seed of 1')
+            self.rng = np.random.RandomState(seed=1)
         else:
             self.rng = rng
 

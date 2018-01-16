@@ -68,7 +68,7 @@ class SMAC(object):
                  initial_configurations: typing.List[Configuration]=None,
                  stats: Stats=None,
                  restore_incumbent: Configuration=None,
-                 rng: np.random.RandomState=None,
+                 rng: typing.Union[np.random.RandomState, int]=None,
                  smbo_class: SMBO=None,
                  run_id: int=1):
         """Constructor
@@ -373,8 +373,8 @@ class SMAC(object):
         """
         # initialize random number generator
         if rng is None:
-            self.logger.info('no rng given: falling back to non-deterministic behaviour')
-            num_run = np.random.randint(MAXINT)
+            self.logger.debug('no rng given: using default seed of 1')
+            num_run = 1
             rng = np.random.RandomState(seed=num_run)
         elif isinstance(rng, int):
             num_run = rng

@@ -70,7 +70,7 @@ class TestSMACFacade(unittest.TestCase):
     def test_check_random_states(self):
         ta = ExecuteTAFuncDict(lambda x: x**2)
 
-        # Get state immediately or it will change with the next call
+        # Get state immediately or it will change with the next calltest_check_random_states
 
         # Check whether different seeds give different random states
         S1 = SMAC(tae_runner=ta, scenario=self.scenario, rng=1)
@@ -80,13 +80,13 @@ class TestSMACFacade(unittest.TestCase):
         S2 = S2.solver.scenario.cs.random
         self.assertNotEqual(sum(S1.get_state()[1] - S2.get_state()[1]), 0)
 
-        # Check whether no seeds give different random states
+        # Check whether no seeds give the same random states (use default seed)
         S1 = SMAC(tae_runner=ta, scenario=self.scenario)
         S1 = S1.solver.scenario.cs.random
 
         S2 = SMAC(tae_runner=ta, scenario=self.scenario)
         S2 = S2.solver.scenario.cs.random
-        self.assertNotEqual(sum(S1.get_state()[1] - S2.get_state()[1]), 0)
+        self.assertEqual(sum(S1.get_state()[1] - S2.get_state()[1]), 0)
 
         # Check whether the same seeds give the same random states
         S1 = SMAC(tae_runner=ta, scenario=self.scenario, rng=1)
