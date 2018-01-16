@@ -164,11 +164,6 @@ class SMAC(object):
                                               unlog_y=scenario.run_obj == "runtime")
         # initial acquisition function
         if acquisition_function is None:
-            #===================================================================
-            # if scenario.run_obj == "runtime":
-            #     acquisition_function = LogEI(model=model)
-            # else:
-            #===================================================================
             acquisition_function = EI(model=model)
             
         # inject model if necessary
