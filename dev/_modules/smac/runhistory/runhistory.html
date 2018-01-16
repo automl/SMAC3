@@ -249,9 +249,13 @@
   <h1>Source code for smac.runhistory.runhistory</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">Enum</span>
+<span class="kn">import</span> <span class="nn">filelock</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">ConfigurationSpace</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">StatusType</span>
@@ -307,7 +311,6 @@
     <span class="n">INTERNAL</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">EXTERNAL_SAME_INSTANCES</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">EXTERNAL_DIFFERENT_INSTANCES</span> <span class="o">=</span> <span class="mi">3</span></div>
-
 
 <div class="viewcode-block" id="RunHistory"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory">[docs]</a><span class="k">class</span> <span class="nc">RunHistory</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
@@ -566,7 +569,6 @@
 <span class="sd">        save_external : bool</span>
 <span class="sd">            Whether to save external data in the runhistory file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">data</span> <span class="o">=</span> <span class="p">[([</span><span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">),</span>
                   <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">instance_id</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">instance_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
                   <span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">seed</span><span class="p">)],</span> <span class="nb">list</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
@@ -577,9 +579,11 @@
                    <span class="k">for</span> <span class="n">id_</span><span class="p">,</span> <span class="n">conf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
                    <span class="k">if</span> <span class="n">id_</span> <span class="ow">in</span> <span class="n">config_ids_to_serialize</span><span class="p">}</span>
 
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
-            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span>
-                       <span class="s2">&quot;configs&quot;</span><span class="p">:</span> <span class="n">configs</span><span class="p">},</span> <span class="n">fp</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">EnumEncoder</span><span class="p">)</span></div>
+        <span class="c1"># lock `fn` (writing)</span>
+        <span class="k">with</span> <span class="n">filelock</span><span class="o">.</span><span class="n">FileLock</span><span class="p">(</span><span class="n">fn</span> <span class="o">+</span> <span class="s2">&quot;.lock&quot;</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span>
+                           <span class="s2">&quot;configs&quot;</span><span class="p">:</span> <span class="n">configs</span><span class="p">},</span> <span class="n">fp</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">EnumEncoder</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RunHistory.load_json"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.load_json">[docs]</a>    <span class="k">def</span> <span class="nf">load_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cs</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load and runhistory in json representation from disk.</span>
@@ -593,8 +597,11 @@
 <span class="sd">        cs : ConfigSpace</span>
 <span class="sd">            instance of configuration space</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
-            <span class="n">all_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">object_hook</span><span class="o">=</span><span class="n">StatusType</span><span class="o">.</span><span class="n">enum_hook</span><span class="p">)</span>
+
+        <span class="c1"># lock `fn` (writing)</span>
+        <span class="k">with</span> <span class="n">filelock</span><span class="o">.</span><span class="n">FileLock</span><span class="p">(</span><span class="n">fn</span> <span class="o">+</span> <span class="s2">&quot;.lock&quot;</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+                <span class="n">all_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">object_hook</span><span class="o">=</span><span class="n">StatusType</span><span class="o">.</span><span class="n">enum_hook</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span> <span class="o">=</span> <span class="p">{</span><span class="nb">int</span><span class="p">(</span><span class="n">id_</span><span class="p">):</span> <span class="n">Configuration</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">)</span>
                            <span class="k">for</span> <span class="n">id_</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">all_data</span><span class="p">[</span><span class="s2">&quot;configs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
