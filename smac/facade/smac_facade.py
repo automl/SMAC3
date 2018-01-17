@@ -157,16 +157,16 @@ class SMAC(object):
         # initial EPM
         types, bounds = get_types(scenario.cs, scenario.feature_array)
         if model is None:
-            model = RandomForestWithInstances(types=types, bounds=bounds,
+            model = RandomForestWithInstances(types=types, 
+                                              bounds=bounds,
                                               instance_features=scenario.feature_array,
                                               seed=rng.randint(MAXINT),
-                                              pca_components=scenario.PCA_DIM)
+                                              pca_components=scenario.PCA_DIM,
+                                              unlog_y=scenario.run_obj == "runtime")
         # initial acquisition function
         if acquisition_function is None:
-            if scenario.run_obj == "runtime":
-                acquisition_function = LogEI(model=model)
-            else:
-                acquisition_function = EI(model=model)
+            acquisition_function = EI(model=model)
+            
         # inject model if necessary
         if acquisition_function.model is None:
             acquisition_function.model = model
