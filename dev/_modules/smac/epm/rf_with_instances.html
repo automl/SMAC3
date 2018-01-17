@@ -278,6 +278,7 @@
 <span class="sd">        Only available after training</span>
 <span class="sd">    hypers: list</span>
 <span class="sd">        List of random forest hyperparameters</span>
+<span class="sd">    unlog_y: bool</span>
 <span class="sd">    seed : int</span>
 <span class="sd">    types : list</span>
 <span class="sd">    bounds : list</span>
@@ -296,6 +297,7 @@
                  <span class="n">max_depth</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
                  <span class="n">eps_purity</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">,</span>
                  <span class="n">max_num_nodes</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="mi">20</span><span class="p">,</span>
+                 <span class="n">unlog_y</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
                  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor</span>
@@ -330,6 +332,9 @@
 <span class="sd">            different</span>
 <span class="sd">        max_num_nodes : int</span>
 <span class="sd">            The maxmimum total number of nodes in a tree</span>
+<span class="sd">        unlog_y: bool</span>
+<span class="sd">            If the y data in the training data is log-transformed,</span>
+<span class="sd">            this option will undo this tranformation during predictions</span>
 <span class="sd">        seed : int</span>
 <span class="sd">            The seed that is passed to the random_forest_run library.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -444,7 +449,19 @@
 
         <span class="n">means</span><span class="p">,</span> <span class="n">vars_</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">row_X</span> <span class="ow">in</span> <span class="n">X</span><span class="p">:</span>
-            <span class="n">mean</span><span class="p">,</span> <span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rf</span><span class="o">.</span><span class="n">predict_mean_var</span><span class="p">(</span><span class="n">row_X</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">unlog_y</span><span class="p">:</span>
+                <span class="n">preds_per_tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rf</span><span class="o">.</span><span class="n">all_leaf_values</span><span class="p">(</span><span class="n">row_X</span><span class="p">)</span>
+                <span class="n">means_per_tree</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">preds</span> <span class="ow">in</span> <span class="n">preds_per_tree</span><span class="p">:</span>
+                    <span class="n">log_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">preds</span><span class="p">)</span>
+                    <span class="n">log_var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">preds</span><span class="p">)</span>
+                    <span class="c1"># mean of log-normal distribution:</span>
+                    <span class="n">mean</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">log_mean</span> <span class="o">+</span> <span class="n">log_var</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+                    <span class="n">means_per_tree</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean</span><span class="p">)</span>
+                <span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">means_per_tree</span><span class="p">)</span> 
+                <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">means_per_tree</span><span class="p">)</span> <span class="c1"># variance over trees as uncertainty estimate</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mean</span><span class="p">,</span> <span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rf</span><span class="o">.</span><span class="n">predict_mean_var</span><span class="p">(</span><span class="n">row_X</span><span class="p">)</span>
             <span class="n">means</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean</span><span class="p">)</span>
             <span class="n">vars_</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
         <span class="n">means</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">means</span><span class="p">)</span>

@@ -256,7 +256,7 @@
 <span id="smac-epm-base-epm-module"></span><h1>smac.epm.base_epm module<a class="headerlink" href="#module-smac.epm.base_epm" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.epm.base_epm.AbstractEPM">
-<em class="property">class </em><code class="descclassname">smac.epm.base_epm.</code><code class="descname">AbstractEPM</code><span class="sig-paren">(</span><em>instance_features: numpy.ndarray = None</em>, <em>pca_components: float = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.epm.base_epm.</code><code class="descname">AbstractEPM</code><span class="sig-paren">(</span><em>instance_features: numpy.ndarray = None</em>, <em>pca_components: float = None</em>, <em>unlog_y: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Abstract implementation of the EPM API.</p>
 <p><strong>Note:</strong> The input dimensionality of Y for training and the output dimensions
@@ -313,6 +313,13 @@ to var_threshold</p>
 <dd><p><em>list</em> – If set, contains a list with feature types (cat,const) of input vector</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="smac.epm.base_epm.AbstractEPM.unlog_y">
+<code class="descname">unlog_y</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.unlog_y" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> – If the y data in the training data is log-transformed,
+this option will undo this tranformation during predictions</p>
+</dd></dl>
+
 <p>Constructor</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -324,6 +331,8 @@ of the I different instances</li>
 <li><strong>pca_components</strong> (<em>float</em>) – Number of components to keep when using PCA to reduce
 dimensionality of instance features. Requires to
 set n_feats (&gt; pca_dims).</li>
+<li><strong>unlog_y</strong> (<em>bool</em>) – If the y data in the training data is log-transformed,
+this option will undo this tranformation during predictions</li>
 </ul>
 </td>
 </tr>

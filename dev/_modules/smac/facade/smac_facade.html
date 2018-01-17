@@ -406,16 +406,16 @@
         <span class="c1"># initial EPM</span>
         <span class="n">types</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">get_types</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">feature_array</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">RandomForestWithInstances</span><span class="p">(</span><span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">RandomForestWithInstances</span><span class="p">(</span><span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">,</span> 
+                                              <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
                                               <span class="n">instance_features</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">feature_array</span><span class="p">,</span>
                                               <span class="n">seed</span><span class="o">=</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">),</span>
-                                              <span class="n">pca_components</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">PCA_DIM</span><span class="p">)</span>
+                                              <span class="n">pca_components</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">PCA_DIM</span><span class="p">,</span>
+                                              <span class="n">unlog_y</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;runtime&quot;</span><span class="p">)</span>
         <span class="c1"># initial acquisition function</span>
         <span class="k">if</span> <span class="n">acquisition_function</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;runtime&quot;</span><span class="p">:</span>
-                <span class="n">acquisition_function</span> <span class="o">=</span> <span class="n">LogEI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">acquisition_function</span> <span class="o">=</span> <span class="n">EI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
+            <span class="n">acquisition_function</span> <span class="o">=</span> <span class="n">EI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
+            
         <span class="c1"># inject model if necessary</span>
         <span class="k">if</span> <span class="n">acquisition_function</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">acquisition_function</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
