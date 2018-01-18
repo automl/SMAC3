@@ -39,6 +39,7 @@ class TestSMACCLI(unittest.TestCase):
         for output_dir in self.output_dirs:
             if output_dir:
                 shutil.rmtree(output_dir, ignore_errors=True)
+                #pass
         os.chdir(self.current_dir)
 
     def test_run_and_restore(self):
@@ -101,4 +102,9 @@ class TestSMACCLI(unittest.TestCase):
                     self.scenario_one, "--verbose", "DEBUG"]
         with mock.patch.object(sys, 'argv', testargs):
             self.smaccli.main_cli()
+        self.assertTrue(os.path.exists(self.output_one))
+        self.assertFalse(os.path.exists(self.output_one + '.OLD'))
+        self.assertTrue(os.path.exists(self.output_two))
+        self.assertFalse(os.path.exists(self.output_two + '.OLD'))
+
 
