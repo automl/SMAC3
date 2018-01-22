@@ -134,12 +134,14 @@ class TestSMACFacade(unittest.TestCase):
             smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
                         tae_runner=rosenbrock_2d)
             incumbent = smac.optimize()
-            return incumbent
+            return incumbent, smac.scenario.output_dir
 
-        i1 = opt_rosenbrock()
+        i1, output_dir = opt_rosenbrock()
+        self.output_dirs.append(output_dir)
         x1_1 = i1.get('x1')
         x2_1 = i1.get('x2')
-        i2 = opt_rosenbrock()
+        i2, output_dir = opt_rosenbrock()
+        self.output_dirs.append(output_dir)
         x1_2 = i2.get('x1')
         x2_2 = i2.get('x2')
         self.assertAlmostEqual(x1_1, x1_2)
