@@ -1,11 +1,7 @@
 import os
-import itertools
 import logging
 import numpy as np
-import random
 import time
-import typing
-import math
 
 from smac.configspace import Configuration
 from smac.epm.rf_with_instances import RandomForestWithInstances
@@ -13,8 +9,8 @@ from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.optimizer import pSMAC
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
-from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
-    AcquisitionFunctionMaximizer, RandomSearch
+from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer, \
+    RandomSearch
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.scenario.scenario import Scenario
