@@ -22,6 +22,7 @@ import random
 import traceback
 import shutil
 import json
+import logging
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from subprocess import Popen, PIPE
 from tempfile import NamedTemporaryFile, mkdtemp
@@ -278,7 +279,8 @@ class AbstractWrapper(object):
             Args:
                 list of target cmd (from getCommandLineArgs)
         '''
-        random_id = random.randint(0,1000000)
+        logging.warning('genericWrapper: falling back to non-deterministic behaviour')
+        random_id = random.randint(0, 1000000)
         self._watcher_file = NamedTemporaryFile(suffix=".log", prefix="watcher-%d-" %(random_id), dir=self._tmp_dir, delete=False)
         self._solver_file = NamedTemporaryFile(suffix=".log", prefix="solver-%d-" %(random_id), dir=self._tmp_dir, delete=False)
         
