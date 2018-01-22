@@ -317,7 +317,7 @@
                  <span class="n">initial_configurations</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">restore_incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">rng</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">smbo_class</span><span class="p">:</span> <span class="n">SMBO</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor</span>
@@ -423,7 +423,7 @@
         <span class="c1"># initialize optimizer on acquisition function</span>
         <span class="k">if</span> <span class="n">acquisition_function_optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">acquisition_function_optimizer</span> <span class="o">=</span> <span class="n">InterleavedLocalAndRandomSearch</span><span class="p">(</span>
-                <span class="n">acquisition_function</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span>
+                <span class="n">acquisition_function</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">))</span>
             <span class="p">)</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
                 <span class="n">acquisition_function_optimizer</span><span class="p">,</span>
@@ -606,8 +606,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">smbo_class</span><span class="p">(</span><span class="o">**</span><span class="n">smbo_args</span><span class="p">)</span>
 
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_get_rng</span><span class="p">(</span><span class="n">rng</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_get_rng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize random number generator</span>
 
 <span class="sd">        If rng is None, initialize a new generator</span>
@@ -624,13 +623,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># initialize random number generator</span>
         <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">num_run</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1234567980</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;no rng given: using default seed of 1&#39;</span><span class="p">)</span>
+            <span class="n">num_run</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">num_run</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="n">num_run</span> <span class="o">=</span> <span class="n">rng</span>
             <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">):</span>
-            <span class="n">num_run</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1234567980</span><span class="p">)</span>
+            <span class="n">num_run</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">)</span>
             <span class="n">rng</span> <span class="o">=</span> <span class="n">rng</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Unknown type </span><span class="si">%s</span><span class="s1"> for argument rng. Only accepts &#39;</span>
