@@ -268,7 +268,6 @@
               <span class="n">x0</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
               <span class="n">bounds</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
               <span class="n">maxfun</span><span class="p">:</span> <span class="nb">int</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
-              <span class="n">maxtime</span><span class="p">:</span> <span class="nb">int</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
               <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Minimize a function func using the SMAC algorithm.</span>
 <span class="sd">    This function is a convenience wrapper for the SMAC class.</span>
@@ -282,8 +281,6 @@
 <span class="sd">    bounds : list</span>
 <span class="sd">        ``(min, max)`` pairs for each element in ``x``, defining the bound on</span>
 <span class="sd">        that parameters.</span>
-<span class="sd">    maxtime : int, optional</span>
-<span class="sd">        Maximum runtime in seconds.</span>
 <span class="sd">    maxfun : int, optional</span>
 <span class="sd">        Maximum number of function evaluations.</span>
 <span class="sd">    rng : np.random.RandomState, optional</span>
@@ -316,15 +313,15 @@
     <span class="n">ta</span> <span class="o">=</span> <span class="n">ExecuteTAFuncArray</span><span class="p">(</span><span class="n">ta</span><span class="o">=</span><span class="n">func</span><span class="p">)</span>
 
     <span class="c1"># create scenario</span>
-    <span class="n">scenario_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;run_obj&quot;</span><span class="p">:</span> <span class="s2">&quot;quality&quot;</span><span class="p">,</span>
-                     <span class="s2">&quot;cs&quot;</span><span class="p">:</span> <span class="n">cs</span><span class="p">,</span>
-                     <span class="s2">&quot;deterministic&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
-                     <span class="s2">&quot;initial_incumbent&quot;</span><span class="p">:</span> <span class="s2">&quot;DEFAULT&quot;</span>
-                     <span class="p">}</span>
+    <span class="n">scenario_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;run_obj&quot;</span><span class="p">:</span> <span class="s2">&quot;quality&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;cs&quot;</span><span class="p">:</span> <span class="n">cs</span><span class="p">,</span>
+        <span class="s2">&quot;deterministic&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;initial_incumbent&quot;</span><span class="p">:</span> <span class="s2">&quot;DEFAULT&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;intensification_percentage&quot;</span><span class="p">:</span> <span class="mf">0.000001</span><span class="p">,</span>
+    <span class="p">}</span>
     <span class="k">if</span> <span class="n">maxfun</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">scenario_dict</span><span class="p">[</span><span class="s2">&quot;runcount_limit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">maxfun</span>
-    <span class="k">if</span> <span class="n">maxtime</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">scenario_dict</span><span class="p">[</span><span class="s2">&quot;wallclock_limit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">maxtime</span>
     <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="n">scenario_dict</span><span class="p">)</span>
 
     <span class="n">smac</span> <span class="o">=</span> <span class="n">SMAC</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">tae_runner</span><span class="o">=</span><span class="n">ta</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
