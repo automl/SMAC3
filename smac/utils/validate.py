@@ -310,13 +310,14 @@ class Validator(object):
 
         # Predict desired runs
         runs, rh_epm = self.get_runs(config_mode, instance_mode, repetitions, runhistory)
-        try:
-            feature_array_size = len(self.scen.cs.get_hyperparameters()) + self.scen.feature_array.shape[1]
-        except AttributeError:
-            feature_array_size = len(self.scen.cs.get_hyperparameters())
+
+        feature_array_size = len(self.scen.cs.get_hyperparameters())
+        if self.scen.feature_array is not None:
+            feature_array_size += self.scen.feature_array.shape[1]
+
         X_pred = np.empty((len(runs), feature_array_size))
         for idx, run in enumerate(runs):
-            if hasattr(self.scen, "feature_dict") and run.inst != None:
+            if self.scen.feature_array is not None and run.inst is not None:
                 X_pred[idx] = np.hstack([convert_configurations_to_array([run.config])[0],
                                          self.scen.feature_dict[run.inst]])
             else:

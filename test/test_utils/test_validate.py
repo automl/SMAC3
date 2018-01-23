@@ -337,3 +337,25 @@ class ValidationTest(unittest.TestCase):
         for config in old_configs[:int(len(old_configs)/2)]:
             old_rh.add(config, 1, 1, StatusType.SUCCESS, instance_id='0')
         validator.validate_epm('all', 'train', 1, old_rh)
+
+    def test_inst_no_feat(self):
+        ''' test if scenarios are treated correctly if no features are
+        specified.'''
+        scen = Scenario(self.scen_fn,
+                        cmd_args={'run_obj':'quality',
+                                  'instances' : self.train_insts,
+                                  'test_instances': self.test_insts})
+        self.assertTrue(scen.feature_array is None)
+        self.assertEqual(len(scen.feature_dict), 0)
+
+        scen.instance_specific = self.inst_specs
+        validator = Validator(scen, self.trajectory, self.rng)
+        # Add a few runs and check, if they are correctly processed
+        old_configs = [entry["incumbent"] for entry in self.trajectory]
+        old_rh = RunHistory(average_cost)
+        for config in old_configs[:int(len(old_configs)/2)]:
+            old_rh.add(config, 1, 1, StatusType.SUCCESS, instance_id='0',
+                       seed=127)
+        rh = validator.validate_epm('all', 'train+test', 1, old_rh)
+        self.assertEqual(len(old_rh.get_all_configs()), 4)
+        self.assertEqual(len(rh.get_all_configs()), 10)
