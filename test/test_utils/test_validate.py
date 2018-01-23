@@ -343,6 +343,9 @@ class ValidationTest(unittest.TestCase):
                         cmd_args={'run_obj':'quality',
                                   'instances' : self.train_insts,
                                   'test_instances': self.test_insts})
+        self.assertTrue(scen.feature_array is None)
+        self.assertEqual(len(scen.feature_dict), 0)
+
         scen.instance_specific = self.inst_specs
         validator = Validator(scen, self.trajectory, self.rng)
         # Add a few runs and check, if they are correctly processed
