@@ -19,7 +19,8 @@ def fmin_smac(func: callable,
               x0: list,
               bounds: list,
               maxfun: int=-1,
-              rng: np.random.RandomState=None):
+              rng: np.random.RandomState=None,
+              **kwargs):
     """ Minimize a function func using the SMAC algorithm.
     This function is a convenience wrapper for the SMAC class.
 
@@ -36,6 +37,8 @@ def fmin_smac(func: callable,
         Maximum number of function evaluations.
     rng : np.random.RandomState, optional
             Random number generator used by SMAC.
+    **kwargs:
+        arguments passed to SMAC facade
 
     Returns
     -------
@@ -75,7 +78,7 @@ def fmin_smac(func: callable,
         scenario_dict["runcount_limit"] = maxfun
     scenario = Scenario(scenario_dict)
 
-    smac = SMAC(scenario=scenario, tae_runner=ta, rng=rng)
+    smac = SMAC(scenario=scenario, tae_runner=ta, rng=rng, **kwargs)
     smac.logger = logging.getLogger(smac.__module__ + "." + smac.__class__.__name__)
     incumbent = smac.optimize()
     config_id = smac.solver.runhistory.config_ids[incumbent]
