@@ -1,8 +1,12 @@
 import collections
 from enum import Enum
+import filelock
 import json
+import logging
 import numpy as np
 import typing
+
+import sys
 
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.tae.execute_ta_run import StatusType
@@ -58,7 +62,6 @@ class DataOrigin(Enum):
     INTERNAL = 1
     EXTERNAL_SAME_INSTANCES = 2
     EXTERNAL_DIFFERENT_INSTANCES = 3
-
 
 class RunHistory(object):
 
@@ -317,7 +320,6 @@ class RunHistory(object):
         save_external : bool
             Whether to save external data in the runhistory file.
         """
-
         data = [([int(k.config_id),
                   str(k.instance_id) if k.instance_id is not None else None,
                   int(k.seed)], list(v))
@@ -332,10 +334,12 @@ class RunHistory(object):
                           if (id_ in config_ids_to_serialize and
                               conf.origin is not None)}
 
-        with open(fn, "w") as fp:
-            json.dump({"data": data,
-                       "config_origins": config_origins,
-                       "configs": configs}, fp, cls=EnumEncoder, indent=2)
+        # lock `fn` (writing)
+        with filelock.FileLock(fn + ".lock"):
+            with open(fn, "w") as fp:
+                json.dump({"data": data,
+                           "config_origins": config_origins,
+                           "configs": configs}, fp, cls=EnumEncoder, indent=2)
 
     def load_json(self, fn: str, cs: ConfigurationSpace):
         """Load and runhistory in json representation from disk.
@@ -349,8 +353,11 @@ class RunHistory(object):
         cs : ConfigSpace
             instance of configuration space
         """
-        with open(fn) as fp:
-            all_data = json.load(fp, object_hook=StatusType.enum_hook)
+
+        # lock `fn` (writing)
+        with filelock.FileLock(fn + ".lock"):
+            with open(fn) as fp:
+                all_data = json.load(fp, object_hook=StatusType.enum_hook)
 
         config_origins = all_data.get("config_origins", {})
 
