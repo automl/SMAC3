@@ -327,10 +327,15 @@ class RunHistory(object):
         configs = {id_: conf.get_dictionary()
                    for id_, conf in self.ids_config.items()
                    if id_ in config_ids_to_serialize}
+        config_origins = {id_: conf.origin
+                          for id_, conf in self.ids_config.items()
+                          if (id_ in config_ids_to_serialize and
+                              conf.origin is not None)}
 
         with open(fn, "w") as fp:
             json.dump({"data": data,
-                       "configs": configs}, fp, cls=EnumEncoder)
+                       "config_origins": config_origins,
+                       "configs": configs}, fp, cls=EnumEncoder, indent=2)
 
     def load_json(self, fn: str, cs: ConfigurationSpace):
         """Load and runhistory in json representation from disk.
@@ -347,7 +352,10 @@ class RunHistory(object):
         with open(fn) as fp:
             all_data = json.load(fp, object_hook=StatusType.enum_hook)
 
-        self.ids_config = {int(id_): Configuration(cs, values=values)
+        config_origins = all_data.get("config_origins", {})
+
+        self.ids_config = {int(id_): Configuration(cs, values=values,
+                                origin=config_origins.get(id_, None))
                            for id_, values in all_data["configs"].items()}
 
         self.config_ids = {config: id_ for id_, config in self.ids_config.items()}

@@ -1,3 +1,4 @@
+import os
 import pickle
 import tempfile
 import unittest
@@ -148,6 +149,27 @@ class RunhistoryTest(unittest.TestCase):
                seed=1)
 
         self.assertTrue(rh.get_cost(config1) == 15)
+
+    def test_json_origin(self):
+
+        for origin in ['test_origin', None]:
+            rh = RunHistory(aggregate_func=average_cost)
+            cs = get_config_space()
+            config1 = Configuration(cs,
+                                    values={'a': 1, 'b': 2},
+                                    origin=origin)
+
+            rh.add(config=config1, cost=10, time=20,
+                   status=StatusType.SUCCESS, instance_id=1,
+                   seed=1)
+
+            path = 'test/test_files/test_json_origin.json'
+            rh.save_json(path)
+            new_rh = rh.load_json(path, cs)
+
+            self.assertEqual(rh.get_all_configs()[0].origin, origin)
+
+            os.remove(path)
 
 
 if __name__ == "__main__":
