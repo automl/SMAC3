@@ -21,7 +21,7 @@ def fmin_smac(func: typing.Callable,
               bounds: typing.List[typing.List[float]],
               maxfun: int=-1,
               rng: np.random.RandomState=None,
-              scenario_args: typing.Mapping[str,typing.Any]
+              scenario_args: typing.Mapping[str,typing.Any]=None,
               **kwargs):
     """ Minimize a function func using the SMAC algorithm.
     This function is a convenience wrapper for the SMAC class.
@@ -81,7 +81,8 @@ def fmin_smac(func: typing.Callable,
         "intensification_percentage": 0.000001,
     }
     
-    scenario_dict.update(scenario_args)
+    if scenario_args is not None:
+        scenario_dict.update(scenario_args)
     
     if maxfun > 0:
         scenario_dict["runcount_limit"] = maxfun
