@@ -1,6 +1,7 @@
 import sys
 import os
 import unittest
+from nose.plugins.attrib import attr
 import logging
 import shutil
 
@@ -140,43 +141,44 @@ class ValidationTest(unittest.TestCase):
         # Get multiple configs
         expected = [Run(inst_specs='three', seed=1608637542, inst='3', config='config1'),
                     Run(inst_specs='three', seed=1608637542, inst='3', config='config2'),
-                    Run(inst_specs='three', seed=1273642419, inst='3', config='config1'),
-                    Run(inst_specs='three', seed=1273642419, inst='3', config='config2'),
-                    Run(inst_specs='four',  seed=1935803228, inst='4', config='config1'),
-                    Run(inst_specs='four',  seed=1935803228, inst='4', config='config2'),
-                    Run(inst_specs='four',  seed=787846414,  inst='4', config='config1'),
-                    Run(inst_specs='four',  seed=787846414,  inst='4', config='config2'),
-                    Run(inst_specs='five',  seed=996406378,  inst='5', config='config1'),
-                    Run(inst_specs='five',  seed=996406378,  inst='5', config='config2'),
-                    Run(inst_specs='five',  seed=1201263687, inst='5', config='config1'),
-                    Run(inst_specs='five',  seed=1201263687, inst='5', config='config2')]
+                    Run(inst_specs='three', seed=1935803228, inst='3', config='config1'),
+                    Run(inst_specs='three', seed=1935803228, inst='3', config='config2'),
+                    Run(inst_specs='four',  seed=996406378, inst='4', config='config1'),
+                    Run(inst_specs='four',  seed=996406378, inst='4', config='config2'),
+                    Run(inst_specs='four',  seed=423734972,  inst='4', config='config1'),
+                    Run(inst_specs='four',  seed=423734972,  inst='4', config='config2'),
+                    Run(inst_specs='five',  seed=670094950,  inst='5', config='config1'),
+                    Run(inst_specs='five',  seed=670094950,  inst='5', config='config2'),
+                    Run(inst_specs='five',  seed=669991378, inst='5', config='config1'),
+                    Run(inst_specs='five',  seed=669991378, inst='5', config='config2')]
 
         runs = validator.get_runs(['config1', 'config2'], scen.test_insts, repetitions=2)
         self.assertEqual(runs[0], expected)
 
         # Only train
-        expected = [Run(inst_specs='null', seed=423734972,  inst='0', config='config1'),
-                    Run(inst_specs='null', seed=415968276,  inst='0', config='config1'),
-                    Run(inst_specs='one',  seed=670094950,  inst='1', config='config1'),
-                    Run(inst_specs='one',  seed=1914837113, inst='1', config='config1'),
-                    Run(inst_specs='two',  seed=669991378,  inst='2', config='config1'),
-                    Run(inst_specs='two',  seed=429389014,  inst='2', config='config1')]
+        expected = [Run(inst_specs='null', seed=249467210,  inst='0', config='config1'),
+                    Run(inst_specs='null', seed=1572714583,  inst='0', config='config1'),
+                    Run(inst_specs='one',  seed=434285667,  inst='1', config='config1'),
+                    Run(inst_specs='one',  seed=893664919, inst='1', config='config1'),
+                    Run(inst_specs='two',  seed=88409749,  inst='2', config='config1'),
+                    Run(inst_specs='two',  seed=2018247425,  inst='2', config='config1')]
 
         runs = validator.get_runs(['config1'], scen.train_insts, repetitions=2)
         self.assertEqual(runs[0], expected)
 
         # Test and train
-        expected = [Run(inst='0', seed=249467210,  config='config1', inst_specs='null' ),
-                    Run(inst='1', seed=1972458954, config='config1', inst_specs='one'  ),
-                    Run(inst='2', seed=1572714583, config='config1', inst_specs='two'  ),
-                    Run(inst='3', seed=1433267572, config='config1', inst_specs='three'),
-                    Run(inst='4', seed=434285667,  config='config1', inst_specs='four' ),
-                    Run(inst='5', seed=613608295,  config='config1', inst_specs='five' )]
+        expected = [Run(inst='0', seed=1427830251,  config='config1', inst_specs='null' ),
+                    Run(inst='1', seed=911989541, config='config1', inst_specs='one'  ),
+                    Run(inst='2', seed=780932287, config='config1', inst_specs='two'  ),
+                    Run(inst='3', seed=787716372, config='config1', inst_specs='three'),
+                    Run(inst='4', seed=1306710475,  config='config1', inst_specs='four' ),
+                    Run(inst='5', seed=106328085,  config='config1', inst_specs='five' )]
         insts = self.train_insts
         insts.extend(self.test_insts)
         runs = validator.get_runs(['config1'], insts, repetitions=1)
         self.assertEqual(runs[0], expected)
 
+    @attr('slow')
     def test_validate(self):
         ''' test validation '''
         scen = Scenario(self.scen_fn,
@@ -335,3 +337,25 @@ class ValidationTest(unittest.TestCase):
         for config in old_configs[:int(len(old_configs)/2)]:
             old_rh.add(config, 1, 1, StatusType.SUCCESS, instance_id='0')
         validator.validate_epm('all', 'train', 1, old_rh)
+
+    def test_inst_no_feat(self):
+        ''' test if scenarios are treated correctly if no features are
+        specified.'''
+        scen = Scenario(self.scen_fn,
+                        cmd_args={'run_obj':'quality',
+                                  'instances' : self.train_insts,
+                                  'test_instances': self.test_insts})
+        self.assertTrue(scen.feature_array is None)
+        self.assertEqual(len(scen.feature_dict), 0)
+
+        scen.instance_specific = self.inst_specs
+        validator = Validator(scen, self.trajectory, self.rng)
+        # Add a few runs and check, if they are correctly processed
+        old_configs = [entry["incumbent"] for entry in self.trajectory]
+        old_rh = RunHistory(average_cost)
+        for config in old_configs[:int(len(old_configs)/2)]:
+            old_rh.add(config, 1, 1, StatusType.SUCCESS, instance_id='0',
+                       seed=127)
+        rh = validator.validate_epm('all', 'train+test', 1, old_rh)
+        self.assertEqual(len(old_rh.get_all_configs()), 4)
+        self.assertEqual(len(rh.get_all_configs()), 10)

@@ -1,4 +1,4 @@
-algo = python -u ./target_algorithm/scripts/SATCSSCWrapper.py --mem-limit 1024 --script ./target_algorithm/spear-python/spearCSSCWrapper.py 
+algo = python3 -u ./target_algorithm/scripts/SATCSSCWrapper.py --mem-limit 1024 --script ./target_algorithm/spear-python/spearCSSCWrapper.py
 paramfile = ./target_algorithm/spear-python/spear-params-mixed.pcs
 execdir = .
 deterministic = 0
