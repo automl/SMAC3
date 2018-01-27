@@ -44,7 +44,7 @@ def fmin_smac(func: typing.Callable,
         See smac.scenario.scenario.Scenario
     **kwargs:
         Arguments passed to the optimizer class
-        See smac.facade.smac_facade.SMAC
+        See ~smac.facade.smac_facade.SMAC
         
     Returns
     -------
