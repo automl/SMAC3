@@ -1,4 +1,5 @@
 import logging
+import typing
 
 import numpy as np
 
@@ -15,28 +16,36 @@ __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-def fmin_smac(func: callable,
-              x0: list,
-              bounds: list,
+def fmin_smac(func: typing.Callable,
+              x0: typing.List[float],
+              bounds: typing.List[typing.List[float]],
               maxfun: int=-1,
-              rng: np.random.RandomState=None):
+              rng: np.random.RandomState=None,
+              scenario_args: typing.Mapping[str,typing.Any]=None,
+              **kwargs):
     """ Minimize a function func using the SMAC algorithm.
     This function is a convenience wrapper for the SMAC class.
 
     Parameters
     ----------
-    func : callable f(x)
+    func : typing.Callable
         Function to minimize.
-    x0 : list
+    x0 : typing.List[float]
         Initial guess/default configuration.
-    bounds : list
+    bounds : typing.List[typing.List[float]]
         ``(min, max)`` pairs for each element in ``x``, defining the bound on
         that parameters.
     maxfun : int, optional
         Maximum number of function evaluations.
     rng : np.random.RandomState, optional
             Random number generator used by SMAC.
-
+    scenario_args: typing.Mapping[str,typing.Any]
+        Arguments passed to the scenario
+        See smac.scenario.scenario.Scenario
+    **kwargs:
+        Arguments passed to the optimizer class
+        See ~smac.facade.smac_facade.SMAC
+        
     Returns
     -------
     x : list
@@ -71,11 +80,15 @@ def fmin_smac(func: callable,
         "initial_incumbent": "DEFAULT",
         "intensification_percentage": 0.000001,
     }
+    
+    if scenario_args is not None:
+        scenario_dict.update(scenario_args)
+    
     if maxfun > 0:
         scenario_dict["runcount_limit"] = maxfun
     scenario = Scenario(scenario_dict)
 
-    smac = SMAC(scenario=scenario, tae_runner=ta, rng=rng)
+    smac = SMAC(scenario=scenario, tae_runner=ta, rng=rng, **kwargs)
     smac.logger = logging.getLogger(smac.__module__ + "." + smac.__class__.__name__)
     incumbent = smac.optimize()
     config_id = smac.solver.runhistory.config_ids[incumbent]
