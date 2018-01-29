@@ -195,8 +195,8 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
         """
 
-        num_configurations_by_local_search = self._calculate_num_points(
-            num_points, stats, runhistory
+        num_configurations_by_local_search = min(
+            len(runhistory.data), num_points,
         )
         init_points = self._get_initial_points(
             num_configurations_by_local_search, runhistory)
@@ -217,9 +217,6 @@ class LocalSearch(AcquisitionFunctionMaximizer):
         configs_acq.sort(reverse=True, key=lambda x: x[0])
 
         return configs_acq
-
-    def _calculate_num_points(self, num_points, stats, runhistory):
-        return min(len(runhistory.data), num_points)
 
     def _get_initial_points(self, num_configurations_by_local_search,
                             runhistory):
@@ -246,6 +243,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             start_point: Configuration,
             *args
     ) -> Tuple[float, Configuration]:
+        N_STEPS_PLATEAU_WALK = 10
 
         incumbent = start_point
         # Compute the acquisition value of the incumbent
@@ -289,7 +287,11 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                     changed_inc = True
                     break
 
-            if not changed_inc and n_no_improvements < 10 and len(neighbors) > 0:
+            if (
+                not changed_inc
+                and n_no_improvements < N_STEPS_PLATEAU_WALK
+                and len(neighbors) > 0
+            ):
                 n_no_improvements += 1
                 incumbent = neighbors[0]
                 changed_inc = True
