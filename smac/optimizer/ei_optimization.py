@@ -160,7 +160,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             acquisition_function: AbstractAcquisitionFunction,
             config_space: ConfigurationSpace,
             rng: Union[bool, np.random.RandomState] = None,
-            epsilon: float=0.00001,
+            epsilon: float=0.0,
             max_iterations: Optional[int]=None
     ):
         super().__init__(acquisition_function, config_space, rng)
@@ -219,20 +219,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
         return configs_acq
 
     def _calculate_num_points(self, num_points, stats, runhistory):
-        if stats._ema_n_configs_per_intensifiy > 0:
-            num_configurations_by_local_search = (
-                min(
-                    num_points,
-                    np.ceil(0.5 * stats._ema_n_configs_per_intensifiy) + 1
-                )
-            )
-        else:
-            num_configurations_by_local_search = num_points
-        num_configurations_by_local_search = min(
-            len(runhistory.data),
-            num_configurations_by_local_search
-        )
-        return num_configurations_by_local_search
+        return min(len(runhistory.data), num_points)
 
     def _get_initial_points(self, num_configurations_by_local_search,
                             runhistory):
@@ -266,6 +253,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
         local_search_steps = 0
         neighbors_looked_at = 0
+        n_no_improvements = 0
         time_n = []
         while True:
 
@@ -285,18 +273,26 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             all_neighbors = get_one_exchange_neighbourhood(
                 incumbent, seed=self.rng.randint(MAXINT))
 
+            neighbors = []
             for neighbor in all_neighbors:
                 s_time = time.time()
                 acq_val = self.acquisition_function([neighbor], *args)
                 neighbors_looked_at += 1
                 time_n.append(time.time() - s_time)
 
+                if acq_val == acq_val_incumbent:
+                    neighbors.append(neighbor)
                 if acq_val > acq_val_incumbent + self.epsilon:
                     self.logger.debug("Switch to one of the neighbors")
                     incumbent = neighbor
                     acq_val_incumbent = acq_val
                     changed_inc = True
                     break
+
+            if not changed_inc and n_no_improvements < 10 and len(neighbors) > 0:
+                n_no_improvements += 1
+                incumbent = neighbors[0]
+                changed_inc = True
 
             if (not changed_inc) or \
                     (self.max_iterations is not None and
