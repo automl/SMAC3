@@ -16,28 +16,49 @@ def get_types(config_space, instance_features=None):
     bounds = [(np.nan, np.nan)]*types.shape[0]
 
     for i, param in enumerate(config_space.get_hyperparameters()):
+        parents = config_space.get_parents_of(param.name)
+        if len(parents) == 0:
+            can_be_inactive = False
+        else:
+            can_be_inactive = True
+
         if isinstance(param, (CategoricalHyperparameter)):
             n_cats = len(param.choices)
+            if can_be_inactive:
+                n_cats = len(param.choices) + 1
             types[i] = n_cats
             bounds[i] = (int(n_cats), np.nan)
 
         elif isinstance(param, (OrdinalHyperparameter)):
             n_cats = len(param.sequence)
             types[i] = 0
-            bounds[i] = (0, int(n_cats) - 1)
+            if can_be_inactive:
+                bounds[i] = (0, int(n_cats))
+            else:
+                bounds[i] = (0, int(n_cats) - 1)
 
         elif isinstance(param, Constant):
-            # for constants we simply set types to 0
-            # which makes it a numerical parameter
-            types[i] = 0
-            bounds[i] = (0, np.nan)
+            # for constants we simply set types to 0 which makes it a numerical
+            # parameter
+            if can_be_inactive:
+                bounds[i] = (2, np.nan)
+                types[i] = 2
+            else:
+                bounds[i] = (0, np.nan)
+                types[i] = 0
             # and we leave the bounds to be 0 for now
-        elif isinstance(param, UniformFloatHyperparameter):         # Are sampled on the unit hypercube thus the bounds
-            # bounds[i] = (float(param.lower), float(param.upper))  # are always 0.0, 1.0
-            bounds[i] = (0.0, 1.0)
+        elif isinstance(param, UniformFloatHyperparameter):
+            # Are sampled on the unit hypercube thus the bounds
+            # are always 0.0, 1.0
+            if can_be_inactive:
+                bounds[i] = (-1.0, 1.0)
+            else:
+                bounds[i] = (0, 1.0)
         elif isinstance(param, UniformIntegerHyperparameter):
-            # bounds[i] = (int(param.lower), int(param.upper))
-            bounds[i] = (0.0, 1.0)
+            if can_be_inactive:
+                bounds[i] = (-1.0, 1.0)
+            else:
+                bounds[i] = (0, 1.0)
         elif not isinstance(param, (UniformFloatHyperparameter,
                                     UniformIntegerHyperparameter,
                                     OrdinalHyperparameter,
@@ -46,7 +67,8 @@ def get_types(config_space, instance_features=None):
 
     if instance_features is not None:
         types = np.hstack(
-            (types, np.zeros((instance_features.shape[1]))))
+            (types, np.zeros((instance_features.shape[1])))
+        )
 
     types = np.array(types, dtype=np.uint)
     bounds = np.array(bounds, dtype=object)

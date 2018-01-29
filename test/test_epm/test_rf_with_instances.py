@@ -8,9 +8,9 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     OrdinalHyperparameter
 
 from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.epm.util_funcs import get_types
 import smac
 import smac.configspace
-from smac.utils.util_funcs import get_types
 
 
 class TestRFWithInstances(unittest.TestCase):

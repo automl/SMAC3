@@ -16,8 +16,8 @@ from smac.runhistory import runhistory, runhistory2epm
 from smac.scenario import scenario
 from smac.epm import rfr_imputator
 from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.epm.util_funcs import get_types
 from smac.optimizer.objective import average_cost
-from smac.utils.util_funcs import get_types
 
 
 def generate_config(cs, rs):

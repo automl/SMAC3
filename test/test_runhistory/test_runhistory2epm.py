@@ -19,7 +19,7 @@ from smac.scenario.scenario import Scenario
 from smac.optimizer.objective import average_cost
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.rf_with_instances import RandomForestWithInstances
-from smac.utils.util_funcs import get_types
+from smac.epm.util_funcs import get_types
 
 
 def get_config_space():
