@@ -248,6 +248,7 @@
             
   <h1>Source code for smac.facade.func_facade</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -264,28 +265,36 @@
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
-<div class="viewcode-block" id="fmin_smac"><a class="viewcode-back" href="../../../apidoc/smac.facade.func_facade.html#smac.facade.func_facade.fmin_smac">[docs]</a><span class="k">def</span> <span class="nf">fmin_smac</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">callable</span><span class="p">,</span>
-              <span class="n">x0</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
-              <span class="n">bounds</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+<div class="viewcode-block" id="fmin_smac"><a class="viewcode-back" href="../../../apidoc/smac.facade.func_facade.html#smac.facade.func_facade.fmin_smac">[docs]</a><span class="k">def</span> <span class="nf">fmin_smac</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
+              <span class="n">x0</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+              <span class="n">bounds</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
               <span class="n">maxfun</span><span class="p">:</span> <span class="nb">int</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
-              <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+              <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">scenario_args</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Minimize a function func using the SMAC algorithm.</span>
 <span class="sd">    This function is a convenience wrapper for the SMAC class.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    func : callable f(x)</span>
+<span class="sd">    func : typing.Callable</span>
 <span class="sd">        Function to minimize.</span>
-<span class="sd">    x0 : list</span>
+<span class="sd">    x0 : typing.List[float]</span>
 <span class="sd">        Initial guess/default configuration.</span>
-<span class="sd">    bounds : list</span>
+<span class="sd">    bounds : typing.List[typing.List[float]]</span>
 <span class="sd">        ``(min, max)`` pairs for each element in ``x``, defining the bound on</span>
 <span class="sd">        that parameters.</span>
 <span class="sd">    maxfun : int, optional</span>
 <span class="sd">        Maximum number of function evaluations.</span>
 <span class="sd">    rng : np.random.RandomState, optional</span>
 <span class="sd">            Random number generator used by SMAC.</span>
-
+<span class="sd">    scenario_args: typing.Mapping[str,typing.Any]</span>
+<span class="sd">        Arguments passed to the scenario</span>
+<span class="sd">        See smac.scenario.scenario.Scenario</span>
+<span class="sd">    **kwargs:</span>
+<span class="sd">        Arguments passed to the optimizer class</span>
+<span class="sd">        See ~smac.facade.smac_facade.SMAC</span>
+<span class="sd">        </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    x : list</span>
@@ -320,11 +329,15 @@
         <span class="s2">&quot;initial_incumbent&quot;</span><span class="p">:</span> <span class="s2">&quot;DEFAULT&quot;</span><span class="p">,</span>
         <span class="s2">&quot;intensification_percentage&quot;</span><span class="p">:</span> <span class="mf">0.000001</span><span class="p">,</span>
     <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="n">scenario_args</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">scenario_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">scenario_args</span><span class="p">)</span>
+    
     <span class="k">if</span> <span class="n">maxfun</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">scenario_dict</span><span class="p">[</span><span class="s2">&quot;runcount_limit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">maxfun</span>
     <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="n">scenario_dict</span><span class="p">)</span>
 
-    <span class="n">smac</span> <span class="o">=</span> <span class="n">SMAC</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">tae_runner</span><span class="o">=</span><span class="n">ta</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+    <span class="n">smac</span> <span class="o">=</span> <span class="n">SMAC</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">tae_runner</span><span class="o">=</span><span class="n">ta</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="n">smac</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">smac</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">smac</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
     <span class="n">incumbent</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
     <span class="n">config_id</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">config_ids</span><span class="p">[</span><span class="n">incumbent</span><span class="p">]</span>

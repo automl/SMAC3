@@ -256,7 +256,7 @@
 <span id="smac-facade-func-facade-module"></span><h1>smac.facade.func_facade module<a class="headerlink" href="#module-smac.facade.func_facade" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="smac.facade.func_facade.fmin_smac">
-<code class="descclassname">smac.facade.func_facade.</code><code class="descname">fmin_smac</code><span class="sig-paren">(</span><em>func: &lt;built-in function callable&gt;</em>, <em>x0: list</em>, <em>bounds: list</em>, <em>maxfun: int = -1</em>, <em>rng: mtrand.RandomState = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/func_facade.html#fmin_smac"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.func_facade.fmin_smac" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">smac.facade.func_facade.</code><code class="descname">fmin_smac</code><span class="sig-paren">(</span><em>func: typing.Callable, x0: typing.List[float], bounds: typing.List[typing.List[float]], maxfun: int = -1, rng: mtrand.RandomState = None, scenario_args: typing.Mapping[str, typing.Any] = None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/func_facade.html#fmin_smac"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.func_facade.fmin_smac" title="Permalink to this definition">¶</a></dt>
 <dd><p>Minimize a function func using the SMAC algorithm.
 This function is a convenience wrapper for the SMAC class.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -264,12 +264,16 @@ This function is a convenience wrapper for the SMAC class.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>func</strong> (<em>callable f</em><em>(</em><em>x</em><em>)</em>) – Function to minimize.</li>
-<li><strong>x0</strong> (<em>list</em>) – Initial guess/default configuration.</li>
-<li><strong>bounds</strong> (<em>list</em>) – <code class="docutils literal"><span class="pre">(min,</span> <span class="pre">max)</span></code> pairs for each element in <code class="docutils literal"><span class="pre">x</span></code>, defining the bound on
+<li><strong>func</strong> (<em>typing.Callable</em>) – Function to minimize.</li>
+<li><strong>x0</strong> (<em>typing.List</em><em>[</em><em>float</em><em>]</em>) – Initial guess/default configuration.</li>
+<li><strong>bounds</strong> (<em>typing.List</em><em>[</em><em>typing.List</em><em>[</em><em>float</em><em>]</em><em>]</em>) – <code class="docutils literal"><span class="pre">(min,</span> <span class="pre">max)</span></code> pairs for each element in <code class="docutils literal"><span class="pre">x</span></code>, defining the bound on
 that parameters.</li>
 <li><strong>maxfun</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of function evaluations.</li>
 <li><strong>rng</strong> (<em>np.random.RandomState</em><em>, </em><em>optional</em>) – Random number generator used by SMAC.</li>
+<li><strong>scenario_args</strong> (<em>typing.Mapping</em><em>[</em><em>str</em><em>,</em><em>typing.Any</em><em>]</em>) – Arguments passed to the scenario
+See smac.scenario.scenario.Scenario</li>
+<li><strong>**kwargs</strong> – Arguments passed to the optimizer class
+See ~smac.facade.smac_facade.SMAC</li>
 </ul>
 </td>
 </tr>
