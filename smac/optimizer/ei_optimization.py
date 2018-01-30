@@ -161,11 +161,13 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             config_space: ConfigurationSpace,
             rng: Union[bool, np.random.RandomState] = None,
             epsilon: float=0.0,
-            max_iterations: Optional[int]=None
+            max_iterations: Optional[int]=None,
+            n_steps_plateau_walk=10,
     ):
         super().__init__(acquisition_function, config_space, rng)
         self.epsilon = epsilon
         self.max_iterations = max_iterations
+        self.n_steps_plateau_walk = n_steps_plateau_walk
 
     def _maximize(
             self,
@@ -243,7 +245,6 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             start_point: Configuration,
             *args
     ) -> Tuple[float, Configuration]:
-        N_STEPS_PLATEAU_WALK = 10
 
         incumbent = start_point
         # Compute the acquisition value of the incumbent
@@ -289,7 +290,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
             if (
                 not changed_inc
-                and n_no_improvements < N_STEPS_PLATEAU_WALK
+                and n_no_improvements < self.n_steps_plateau_walk
                 and len(neighbors) > 0
             ):
                 n_no_improvements += 1
