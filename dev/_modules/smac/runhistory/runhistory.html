@@ -295,17 +295,17 @@
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Definition of how data in the runhistory is used.</span>
-<span class="sd">    </span>
-<span class="sd">    * ``INTERNAL``: internal data which was gathered during the current </span>
-<span class="sd">      optimization run. It will be saved to disk, used for building EPMs and </span>
+
+<span class="sd">    * ``INTERNAL``: internal data which was gathered during the current</span>
+<span class="sd">      optimization run. It will be saved to disk, used for building EPMs and</span>
 <span class="sd">      during intensify.</span>
 <span class="sd">    * ``EXTERNAL_SAME_INSTANCES``: external data, which was gathered by running</span>
-<span class="sd">       another program on the same instances as the current optimization run </span>
-<span class="sd">       runs on (for example pSMAC). It will not be saved to disk, but used both </span>
+<span class="sd">       another program on the same instances as the current optimization run</span>
+<span class="sd">       runs on (for example pSMAC). It will not be saved to disk, but used both</span>
 <span class="sd">       for EPM building and during intensify.</span>
 <span class="sd">    * ``EXTERNAL_DIFFERENT_INSTANCES``: external data, which was gathered on a</span>
-<span class="sd">       different instance set as the one currently used, but due to having the </span>
-<span class="sd">       same instance features can still provide useful information. Will not be </span>
+<span class="sd">       different instance set as the one currently used, but due to having the</span>
+<span class="sd">       same instance features can still provide useful information. Will not be</span>
 <span class="sd">       saved to disk and only used for EPM building.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">INTERNAL</span> <span class="o">=</span> <span class="mi">1</span>
@@ -335,7 +335,7 @@
 <span class="sd">    overwrite_existing_runs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">aggregate_func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
                  <span class="n">overwrite_existing_runs</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span>
                  <span class="p">):</span>
@@ -578,12 +578,17 @@
         <span class="n">configs</span> <span class="o">=</span> <span class="p">{</span><span class="n">id_</span><span class="p">:</span> <span class="n">conf</span><span class="o">.</span><span class="n">get_dictionary</span><span class="p">()</span>
                    <span class="k">for</span> <span class="n">id_</span><span class="p">,</span> <span class="n">conf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
                    <span class="k">if</span> <span class="n">id_</span> <span class="ow">in</span> <span class="n">config_ids_to_serialize</span><span class="p">}</span>
+        <span class="n">config_origins</span> <span class="o">=</span> <span class="p">{</span><span class="n">id_</span><span class="p">:</span> <span class="n">conf</span><span class="o">.</span><span class="n">origin</span>
+                          <span class="k">for</span> <span class="n">id_</span><span class="p">,</span> <span class="n">conf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                          <span class="k">if</span> <span class="p">(</span><span class="n">id_</span> <span class="ow">in</span> <span class="n">config_ids_to_serialize</span> <span class="ow">and</span>
+                              <span class="n">conf</span><span class="o">.</span><span class="n">origin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)}</span>
 
         <span class="c1"># lock `fn` (writing)</span>
         <span class="k">with</span> <span class="n">filelock</span><span class="o">.</span><span class="n">FileLock</span><span class="p">(</span><span class="n">fn</span> <span class="o">+</span> <span class="s2">&quot;.lock&quot;</span><span class="p">):</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
                 <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span>
-                           <span class="s2">&quot;configs&quot;</span><span class="p">:</span> <span class="n">configs</span><span class="p">},</span> <span class="n">fp</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">EnumEncoder</span><span class="p">)</span></div>
+                           <span class="s2">&quot;config_origins&quot;</span><span class="p">:</span> <span class="n">config_origins</span><span class="p">,</span>
+                           <span class="s2">&quot;configs&quot;</span><span class="p">:</span> <span class="n">configs</span><span class="p">},</span> <span class="n">fp</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">EnumEncoder</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RunHistory.load_json"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.load_json">[docs]</a>    <span class="k">def</span> <span class="nf">load_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cs</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load and runhistory in json representation from disk.</span>
@@ -603,7 +608,10 @@
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
                 <span class="n">all_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">object_hook</span><span class="o">=</span><span class="n">StatusType</span><span class="o">.</span><span class="n">enum_hook</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span> <span class="o">=</span> <span class="p">{</span><span class="nb">int</span><span class="p">(</span><span class="n">id_</span><span class="p">):</span> <span class="n">Configuration</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">config_origins</span> <span class="o">=</span> <span class="n">all_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;config_origins&quot;</span><span class="p">,</span> <span class="p">{})</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span> <span class="o">=</span> <span class="p">{</span><span class="nb">int</span><span class="p">(</span><span class="n">id_</span><span class="p">):</span> <span class="n">Configuration</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">,</span>
+                                <span class="n">origin</span><span class="o">=</span><span class="n">config_origins</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">id_</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
                            <span class="k">for</span> <span class="n">id_</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">all_data</span><span class="p">[</span><span class="s2">&quot;configs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">config_ids</span> <span class="o">=</span> <span class="p">{</span><span class="n">config</span><span class="p">:</span> <span class="n">id_</span> <span class="k">for</span> <span class="n">id_</span><span class="p">,</span> <span class="n">config</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
