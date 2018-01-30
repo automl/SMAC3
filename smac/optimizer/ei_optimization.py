@@ -162,7 +162,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             rng: Union[bool, np.random.RandomState] = None,
             epsilon: float=0.0,
             max_iterations: Optional[int]=None,
-            n_steps_plateau_walk=10,
+            n_steps_plateau_walk: int=10,
     ):
         super().__init__(acquisition_function, config_space, rng)
         self.epsilon = epsilon
