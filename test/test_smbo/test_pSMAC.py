@@ -39,6 +39,7 @@ class TestPSMAC(unittest.TestCase):
                   '"StatusType.SUCCESS"}, null]], ' \
                   '[[4, null, 1], [1, 1, {"__enum__": ' \
                   '"StatusType.SUCCESS"}, null]]],' \
+                  '"config_origins": {},' \
                   '"configs": {' \
                   '"4": {"x": -2.2060968293349363, "y": 5.183410905645716}, ' \
                   '"3": {"x": -2.7986616377433045, "y": 1.385078921531967}, ' \

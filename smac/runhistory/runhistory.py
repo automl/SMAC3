@@ -46,17 +46,17 @@ class DataOrigin(Enum):
 
     """
     Definition of how data in the runhistory is used.
-    
-    * ``INTERNAL``: internal data which was gathered during the current 
-      optimization run. It will be saved to disk, used for building EPMs and 
+
+    * ``INTERNAL``: internal data which was gathered during the current
+      optimization run. It will be saved to disk, used for building EPMs and
       during intensify.
     * ``EXTERNAL_SAME_INSTANCES``: external data, which was gathered by running
-       another program on the same instances as the current optimization run 
-       runs on (for example pSMAC). It will not be saved to disk, but used both 
+       another program on the same instances as the current optimization run
+       runs on (for example pSMAC). It will not be saved to disk, but used both
        for EPM building and during intensify.
     * ``EXTERNAL_DIFFERENT_INSTANCES``: external data, which was gathered on a
-       different instance set as the one currently used, but due to having the 
-       same instance features can still provide useful information. Will not be 
+       different instance set as the one currently used, but due to having the
+       same instance features can still provide useful information. Will not be
        saved to disk and only used for EPM building.
     """
     INTERNAL = 1
@@ -86,7 +86,7 @@ class RunHistory(object):
     overwrite_existing_runs
     """
 
-    def __init__(self, 
+    def __init__(self,
                  aggregate_func: typing.Callable,
                  overwrite_existing_runs: bool=False
                  ):
@@ -329,12 +329,17 @@ class RunHistory(object):
         configs = {id_: conf.get_dictionary()
                    for id_, conf in self.ids_config.items()
                    if id_ in config_ids_to_serialize}
+        config_origins = {id_: conf.origin
+                          for id_, conf in self.ids_config.items()
+                          if (id_ in config_ids_to_serialize and
+                              conf.origin is not None)}
 
         # lock `fn` (writing)
         with filelock.FileLock(fn + ".lock"):
             with open(fn, "w") as fp:
                 json.dump({"data": data,
-                           "configs": configs}, fp, cls=EnumEncoder)
+                           "config_origins": config_origins,
+                           "configs": configs}, fp, cls=EnumEncoder, indent=2)
 
     def load_json(self, fn: str, cs: ConfigurationSpace):
         """Load and runhistory in json representation from disk.
@@ -354,7 +359,10 @@ class RunHistory(object):
             with open(fn) as fp:
                 all_data = json.load(fp, object_hook=StatusType.enum_hook)
 
-        self.ids_config = {int(id_): Configuration(cs, values=values)
+        config_origins = all_data.get("config_origins", {})
+
+        self.ids_config = {int(id_): Configuration(cs, values=values,
+                                origin=config_origins.get(id_, None))
                            for id_, values in all_data["configs"].items()}
 
         self.config_ids = {config: id_ for id_, config in self.ids_config.items()}
