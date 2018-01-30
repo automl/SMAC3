@@ -9,7 +9,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.configspace import ConfigurationSpace
 
 RUNHISTORY_FILEPATTERN = 'runhistory.json'
-RUNHISTORY_RE = r'runhistory\.json'
+RUNHISTORY_RE = r'runhistory\.json$'
 
 
 def read(run_history: RunHistory, 
@@ -47,6 +47,7 @@ def read(run_history: RunHistory,
             if match:
                 runhistory_file = os.path.join(output_directory,
                                                file_in_output_directory)
+                print(runhistory_file)
                 run_history.update_from_json(runhistory_file,
                                              configuration_space)
 
@@ -61,7 +62,8 @@ def read(run_history: RunHistory,
                  'runs.' % difference)
 
 
-def write(run_history: RunHistory, output_directory: str):
+def write(run_history: RunHistory, output_directory: str,
+          logger: logging.Logger):
     """Write the runhistory to the output directory.
 
     Overwrites previously outputted runhistories.
@@ -72,9 +74,13 @@ def write(run_history: RunHistory, output_directory: str):
         RunHistory object to be saved.
 
     output_directory : str
+    
+    logger : logging.Logger
     """
 
     output_filename = os.path.join(output_directory, RUNHISTORY_FILEPATTERN)
+    
+    logging.debug("Saving runhistory to %s" %(output_filename))
 
     with tempfile.NamedTemporaryFile('wb', dir=output_directory,
                                      delete=False) as fh:
