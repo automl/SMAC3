@@ -29,6 +29,7 @@ class RandomForestWithInstances(AbstractEPM):
         Only available after training
     hypers: list
         List of random forest hyperparameters
+    unlog_y: bool
     seed : int
     types : list
     bounds : list
@@ -47,6 +48,7 @@ class RandomForestWithInstances(AbstractEPM):
                  max_depth: int=20,
                  eps_purity: int=1e-8,
                  max_num_nodes: int=2**20,
+                 unlog_y:bool=False,
                  seed: int=42,
                  **kwargs):
         """Constructor
@@ -81,6 +83,9 @@ class RandomForestWithInstances(AbstractEPM):
             different
         max_num_nodes : int
             The maxmimum total number of nodes in a tree
+        unlog_y: bool
+            If the y data in the training data is log-transformed,
+            this option will undo this tranformation during predictions
         seed : int
             The seed that is passed to the random_forest_run library.
         """
@@ -195,7 +200,19 @@ class RandomForestWithInstances(AbstractEPM):
 
         means, vars_ = [], []
         for row_X in X:
-            mean, var = self.rf.predict_mean_var(row_X)
+            if self.unlog_y:
+                preds_per_tree = self.rf.all_leaf_values(row_X)
+                means_per_tree = []
+                for preds in preds_per_tree:
+                    log_mean = np.mean(preds)
+                    log_var = np.var(preds)
+                    # mean of log-normal distribution:
+                    mean = 10**(log_mean + log_var/2)
+                    means_per_tree.append(mean)
+                mean = np.mean(means_per_tree) 
+                var = np.var(means_per_tree) # variance over trees as uncertainty estimate
+            else:
+                mean, var = self.rf.predict_mean_var(row_X)
             means.append(mean)
             vars_.append(var)
         means = np.array(means)

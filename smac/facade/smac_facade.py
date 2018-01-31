@@ -68,7 +68,7 @@ class SMAC(object):
                  initial_configurations: typing.List[Configuration]=None,
                  stats: Stats=None,
                  restore_incumbent: Configuration=None,
-                 rng: np.random.RandomState=None,
+                 rng: typing.Union[np.random.RandomState, int]=None,
                  smbo_class: SMBO=None,
                  run_id: int=1):
         """Constructor
@@ -158,16 +158,16 @@ class SMAC(object):
         # initial EPM
         types, bounds = get_types(scenario.cs, scenario.feature_array)
         if model is None:
-            model = RandomForestWithInstances(types=types, bounds=bounds,
+            model = RandomForestWithInstances(types=types, 
+                                              bounds=bounds,
                                               instance_features=scenario.feature_array,
                                               seed=rng.randint(MAXINT),
-                                              pca_components=scenario.PCA_DIM)
+                                              pca_components=scenario.PCA_DIM,
+                                              unlog_y=scenario.run_obj == "runtime")
         # initial acquisition function
         if acquisition_function is None:
-            if scenario.run_obj == "runtime":
-                acquisition_function = LogEI(model=model)
-            else:
-                acquisition_function = EI(model=model)
+            acquisition_function = EI(model=model)
+            
         # inject model if necessary
         if acquisition_function.model is None:
             acquisition_function.model = model
@@ -175,7 +175,7 @@ class SMAC(object):
         # initialize optimizer on acquisition function
         if acquisition_function_optimizer is None:
             acquisition_function_optimizer = InterleavedLocalAndRandomSearch(
-                acquisition_function, scenario.cs
+                acquisition_function, scenario.cs, np.random.RandomState(seed=rng.randint(MAXINT))
             )
         elif not isinstance(
                 acquisition_function_optimizer,
@@ -358,8 +358,7 @@ class SMAC(object):
         else:
             self.solver = smbo_class(**smbo_args)
 
-    @staticmethod
-    def _get_rng(rng):
+    def _get_rng(self, rng):
         """Initialize random number generator
 
         If rng is None, initialize a new generator
@@ -376,13 +375,14 @@ class SMAC(object):
         """
         # initialize random number generator
         if rng is None:
-            num_run = np.random.randint(1234567980)
+            self.logger.debug('no rng given: using default seed of 1')
+            num_run = 1
             rng = np.random.RandomState(seed=num_run)
         elif isinstance(rng, int):
             num_run = rng
             rng = np.random.RandomState(seed=rng)
         elif isinstance(rng, np.random.RandomState):
-            num_run = rng.randint(1234567980)
+            num_run = rng.randint(MAXINT)
             rng = rng
         else:
             raise TypeError('Unknown type %s for argument rng. Only accepts '
@@ -423,9 +423,9 @@ class SMAC(object):
         config_mode: str or list<Configuration>
             string or directly a list of Configuration
             str from [def, inc, def+inc, wallclock_time, cpu_time, all]
-                time evaluates at cpu- or wallclock-timesteps of:
-                [max_time/2^0, max_time/2^1, max_time/2^3, ..., default]
-                with max_time being the highest recorded time
+            time evaluates at cpu- or wallclock-timesteps of:
+            [max_time/2^0, max_time/2^1, max_time/2^3, ..., default]
+            with max_time being the highest recorded time
         instance_mode: string
             what instances to use for validation, from [train, test, train+test]
         repetitions: int

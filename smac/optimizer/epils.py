@@ -1,6 +1,5 @@
 import logging
 import numpy as np
-import random
 import typing
 import math
 
@@ -18,7 +17,7 @@ from smac.scenario.scenario import Scenario
 from smac.configspace import Configuration, convert_configurations_to_array, \
     get_one_exchange_neighbourhood
 from smac.tae.execute_ta_run import FirstRunCrashedException
-
+from smac.utils.constants import MAXINT
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2017, ML4AAD"
@@ -183,8 +182,8 @@ class EPILS_Solver(object):
                     self.logger.info("Pertubate Incumbent")
                     start_point = self.incumbent
                     for _ in range(self.pertubation_steps):
-                        start_point = random.choice(list(get_one_exchange_neighbourhood(
-                            start_point, seed=self.rng.seed())))
+                        start_point = self.rng.choice(list(get_one_exchange_neighbourhood(
+                            start_point, seed=self.rng.randint(MAXINT))))
 
             # SLS
             self.logger.info("SLS")
@@ -262,7 +261,7 @@ class EPILS_Solver(object):
             # Get one exchange neighborhood returns an iterator (in contrast of
             # the previously returned list).
             all_neighbors = list(get_one_exchange_neighbourhood(
-                incumbent, seed=self.rng.seed()))
+                incumbent, seed=self.rng.randint(MAXINT)))
 
             acq_val = self.acquisition_func(all_neighbors)
             

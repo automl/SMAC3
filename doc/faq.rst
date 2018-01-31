@@ -25,7 +25,7 @@ You can also run SMAC with :code:`--verbose DEBUG` to see how *SMAC* tried to ca
 Use the `restore-option <basic_usage.html#restorestate>`_.
 
 .. rubric:: I discovered a bug/have criticism or ideas on *SMAC*. Where should
-I report to?
+   I report to?
 
 *SMAC* uses the
 `GitHub issue-tracker <https://github.com/automl/SMAC3/issues>`_ to take care

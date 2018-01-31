@@ -46,7 +46,8 @@ class TrajLogger(object):
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         self.output_dir = output_dir
-        if output_dir is None:
+        if output_dir is None or output_dir == "":
+            self.output_dir = None
             self.logger.info("No output directory for trajectory logging "
                              "specified -- trajectory will not be logged.")
 
