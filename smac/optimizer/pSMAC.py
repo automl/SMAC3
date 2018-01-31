@@ -47,7 +47,6 @@ def read(run_history: RunHistory,
             if match:
                 runhistory_file = os.path.join(output_directory,
                                                file_in_output_directory)
-                print(runhistory_file)
                 run_history.update_from_json(runhistory_file,
                                              configuration_space)
 
