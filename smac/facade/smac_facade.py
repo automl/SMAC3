@@ -129,6 +129,15 @@ class SMAC(object):
 
         self.scenario = scenario
         self.output_dir = create_output_directory(scenario, run_id)
+        if (
+            scenario.deterministic is True
+            and getattr(scenario, 'tuner_timeout', None) is None
+            and scenario.run_obj == 'quality'
+        ):
+            self.logger.info('Optimizing a deterministic scenario for '
+                             'qualitiy without a tuner timeout - will make '
+                             'SMAC deterministi!')
+            scenario.intensification_percentage = 1e-10
         scenario.write()
 
         # initialize stats object
