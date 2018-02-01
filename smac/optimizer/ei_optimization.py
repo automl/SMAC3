@@ -146,10 +146,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
     config_space : ~smac.configspace.ConfigurationSpace
     
     rng : np.random.RandomState or int, optional
-    
-    epsilon: float
-        In order to perform a local move one of the incumbent's neighbors
-        needs at least an improvement higher than epsilon
+
     max_iterations: int
         Maximum number of iterations that the local search will perform
 
@@ -160,12 +157,10 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             acquisition_function: AbstractAcquisitionFunction,
             config_space: ConfigurationSpace,
             rng: Union[bool, np.random.RandomState] = None,
-            epsilon: float=0.0,
             max_iterations: Optional[int]=None,
             n_steps_plateau_walk: int=10,
     ):
         super().__init__(acquisition_function, config_space, rng)
-        self.epsilon = epsilon
         self.max_iterations = max_iterations
         self.n_steps_plateau_walk = n_steps_plateau_walk
 
@@ -281,7 +276,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
                 if acq_val == acq_val_incumbent:
                     neighbors.append(neighbor)
-                if acq_val > acq_val_incumbent + self.epsilon:
+                if acq_val > acq_val_incumbent:
                     self.logger.debug("Switch to one of the neighbors")
                     incumbent = neighbor
                     acq_val_incumbent = acq_val
