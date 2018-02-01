@@ -395,10 +395,7 @@
 <span class="sd">    config_space : ~smac.configspace.ConfigurationSpace</span>
 <span class="sd">    </span>
 <span class="sd">    rng : np.random.RandomState or int, optional</span>
-<span class="sd">    </span>
-<span class="sd">    epsilon: float</span>
-<span class="sd">        In order to perform a local move one of the incumbent&#39;s neighbors</span>
-<span class="sd">        needs at least an improvement higher than epsilon</span>
+
 <span class="sd">    max_iterations: int</span>
 <span class="sd">        Maximum number of iterations that the local search will perform</span>
 
@@ -409,12 +406,12 @@
             <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
             <span class="n">config_space</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
             <span class="n">rng</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">epsilon</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">0.00001</span><span class="p">,</span>
-            <span class="n">max_iterations</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span>
+            <span class="n">max_iterations</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">n_steps_plateau_walk</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">acquisition_function</span><span class="p">,</span> <span class="n">config_space</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="n">epsilon</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_iterations</span> <span class="o">=</span> <span class="n">max_iterations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_plateau_walk</span> <span class="o">=</span> <span class="n">n_steps_plateau_walk</span>
 
     <span class="k">def</span> <span class="nf">_maximize</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
@@ -444,8 +441,8 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">num_configurations_by_local_search</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_num_points</span><span class="p">(</span>
-            <span class="n">num_points</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">runhistory</span>
+        <span class="n">num_configurations_by_local_search</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="n">num_points</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">init_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_initial_points</span><span class="p">(</span>
             <span class="n">num_configurations_by_local_search</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">)</span>
@@ -466,22 +463,6 @@
         <span class="n">configs_acq</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">configs_acq</span>
-
-    <span class="k">def</span> <span class="nf">_calculate_num_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_points</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">stats</span><span class="o">.</span><span class="n">_ema_n_configs_per_intensifiy</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">num_configurations_by_local_search</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="nb">min</span><span class="p">(</span>
-                    <span class="n">num_points</span><span class="p">,</span>
-                    <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">stats</span><span class="o">.</span><span class="n">_ema_n_configs_per_intensifiy</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-                <span class="p">)</span>
-            <span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">num_configurations_by_local_search</span> <span class="o">=</span> <span class="n">num_points</span>
-        <span class="n">num_configurations_by_local_search</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
-            <span class="nb">len</span><span class="p">(</span><span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="p">),</span>
-            <span class="n">num_configurations_by_local_search</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">num_configurations_by_local_search</span>
 
     <span class="k">def</span> <span class="nf">_get_initial_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_configurations_by_local_search</span><span class="p">,</span>
                             <span class="n">runhistory</span><span class="p">):</span>
@@ -515,6 +496,7 @@
 
         <span class="n">local_search_steps</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">neighbors_looked_at</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">n_no_improvements</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">time_n</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
 
@@ -534,18 +516,30 @@
             <span class="n">all_neighbors</span> <span class="o">=</span> <span class="n">get_one_exchange_neighbourhood</span><span class="p">(</span>
                 <span class="n">incumbent</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">))</span>
 
+            <span class="n">neighbors</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="n">all_neighbors</span><span class="p">:</span>
                 <span class="n">s_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
                 <span class="n">acq_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function</span><span class="p">([</span><span class="n">neighbor</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
                 <span class="n">neighbors_looked_at</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="n">time_n</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">s_time</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="n">acq_val</span> <span class="o">&gt;</span> <span class="n">acq_val_incumbent</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">acq_val</span> <span class="o">==</span> <span class="n">acq_val_incumbent</span><span class="p">:</span>
+                    <span class="n">neighbors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neighbor</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">acq_val</span> <span class="o">&gt;</span> <span class="n">acq_val_incumbent</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Switch to one of the neighbors&quot;</span><span class="p">)</span>
                     <span class="n">incumbent</span> <span class="o">=</span> <span class="n">neighbor</span>
                     <span class="n">acq_val_incumbent</span> <span class="o">=</span> <span class="n">acq_val</span>
                     <span class="n">changed_inc</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="k">break</span>
+
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="ow">not</span> <span class="n">changed_inc</span>
+                <span class="ow">and</span> <span class="n">n_no_improvements</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_plateau_walk</span>
+                <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">neighbors</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="p">):</span>
+                <span class="n">n_no_improvements</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">incumbent</span> <span class="o">=</span> <span class="n">neighbors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">changed_inc</span> <span class="o">=</span> <span class="kc">True</span>
 
             <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">changed_inc</span><span class="p">)</span> <span class="ow">or</span> \
                     <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iterations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>

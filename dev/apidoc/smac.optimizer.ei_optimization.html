@@ -355,7 +355,7 @@ sampled configurations in between.</p>
 
 <dl class="class">
 <dt id="smac.optimizer.ei_optimization.LocalSearch">
-<em class="property">class </em><code class="descclassname">smac.optimizer.ei_optimization.</code><code class="descname">LocalSearch</code><span class="sig-paren">(</span><em>acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>rng: typing.Union[bool</em>, <em>mtrand.RandomState] = None</em>, <em>epsilon: float = 1e-05</em>, <em>max_iterations: typing.Union[int</em>, <em>NoneType] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#LocalSearch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.LocalSearch" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.optimizer.ei_optimization.</code><code class="descname">LocalSearch</code><span class="sig-paren">(</span><em>acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>rng: typing.Union[bool</em>, <em>mtrand.RandomState] = None</em>, <em>max_iterations: typing.Union[int</em>, <em>NoneType] = None</em>, <em>n_steps_plateau_walk: int = 10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#LocalSearch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.LocalSearch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><code class="xref py py-class docutils literal"><span class="pre">smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</span></code></a></p>
 <p>Implementation of SMAC’s local search.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -366,8 +366,6 @@ sampled configurations in between.</p>
 <li><strong>acquisition_function</strong> (<a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </li>
 <li><strong>config_space</strong> (<em>ConfigurationSpace</em>) – </li>
 <li><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </li>
-<li><strong>epsilon</strong> (<em>float</em>) – In order to perform a local move one of the incumbent’s neighbors
-needs at least an improvement higher than epsilon</li>
 <li><strong>max_iterations</strong> (<em>int</em>) – Maximum number of iterations that the local search will perform</li>
 </ul>
 </td>
