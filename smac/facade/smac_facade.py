@@ -128,8 +128,14 @@ class SMAC(object):
         aggregate_func = average_cost
 
         self.scenario = scenario
+        self.output_dir = ""
         if not restore_incumbent:
             self.output_dir = create_output_directory(scenario, run_id)
+        elif scenario.output_dir is not None:
+            # output-dir has been created in CLI because we are restoring.
+            # necessary because we want to write traj to new output-dir in CLI.
+            self.output_dir = os.path.join(scenario.output_dir,
+                                           "run_%d" % (run_id))
         scenario.write()
 
         # initialize stats object
@@ -167,7 +173,7 @@ class SMAC(object):
         # initial acquisition function
         if acquisition_function is None:
             acquisition_function = EI(model=model)
-            
+
         # inject model if necessary
         if acquisition_function.model is None:
             acquisition_function.model = model

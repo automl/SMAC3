@@ -29,7 +29,8 @@ def main():
 
     print("\n########## BUDGET EXHAUSTED! Restoring optimization: ##########\n")
 
-    # Now the output is in the folder 'restore_me/run_1'
+    # Now the output is in the folder 'restore_me/run_1' (or whatever run_id has
+    # been passed to the SMAC-object above)
     old_output_dir = os.path.join(original_scenario.output_dir, 'run_1')
     #
     # We could simply modify the scenario-object, stored in
