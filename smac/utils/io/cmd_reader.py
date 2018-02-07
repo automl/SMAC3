@@ -22,25 +22,30 @@ class ConfigurableHelpFormatter(ArgumentDefaultsHelpFormatter):
         super(ConfigurableHelpFormatter, self).__init__(*args, **kwargs)
 
     def _add_item(self, func, args):
-        if help_type == 'standard':
-            if func.__name__ == '_format_usage':
-                filtered_actions = []
-                for arg in args[1]:
-                    if isinstance(arg, Action):
-                        dev = False
-                        for s in arg.option_strings:
+        def filter_actions(actions):
+            filtered_actions = []
+            for action in actions:
+                if isinstance(action, Action):
+                    dev = False
+                    if isinstance(action.help, str):
+                        if action.help.startswith('[dev]'):
+                            dev = True
+                    else:
+                        for s in action.option_strings:
                             if s.startswith('--dev'):
                                 dev = True
                                 break
-                        if not dev:
-                            filtered_actions.append(arg)
-                args = (args[0], filtered_actions, args[2], args[3])
+                    if not dev:
+                        filtered_actions.append(action)
+            return filtered_actions
+        if help_type == 'standard':
+            if func.__name__ == '_format_usage':
+                args = (args[0], filter_actions(args[1]), args[2], args[3])
             elif isinstance(args, list):
-                for arg in args:
-                    if isinstance(arg, Action):
-                        for s in arg.option_strings:
-                            if s.startswith('--dev'):
-                                return
+                if len(args):
+                    args = filter_actions(args)
+                    if not len(args):
+                        return
         self._current_section.items.append((func, args))
 
 
@@ -48,7 +53,7 @@ class StandardHelpAction(Action):
     """Action to only show standard options in help message"""
 
     def __init__(self, *args, **kwargs):
-        super(StandardHelpAction, self).__init__(*args, **kwargs)
+        super(StandardHelpAction, self).__init__(default=SUPPRESS, nargs=0, *args, **kwargs)
 
     def __call__(self, parser, namespace, values, option_string=None):
         global help_type
@@ -61,7 +66,7 @@ class DevHelpAction(Action):
     """Action to show standard and developer options in help message"""
 
     def __init__(self, *args, **kwargs):
-        super(DevHelpAction, self).__init__(*args, **kwargs)
+        super(DevHelpAction, self).__init__(default=SUPPRESS, nargs=0, *args, **kwargs)
 
     def __call__(self, parser, namespace, values, option_string=None):
         global help_type
@@ -71,7 +76,6 @@ class DevHelpAction(Action):
 
 
 class CMDReader(object):
-    
     """Use argparse to parse command line options
 
     Attributes
@@ -98,9 +102,9 @@ class CMDReader(object):
 
         # let a help message begin with "[dev]" to add a developer option
         req_opts = parser.add_argument_group("Optional Options")
-        req_opts.add_argument("--help", action=StandardHelpAction, default=SUPPRESS,
+        req_opts.add_argument("--help", action=StandardHelpAction,
                               help="Show help messages for standard options.")
-        req_opts.add_argument("--help-all", action=DevHelpAction, default=SUPPRESS,
+        req_opts.add_argument("--help-all", action=DevHelpAction,
                               help="Show help messages for both standard and developer options.")
         req_opts.add_argument("--seed", default=1, type=int,
                               help="random seed")
@@ -125,7 +129,8 @@ class CMDReader(object):
                               help=SUPPRESS)# list of trajectory dump files, 
                                             # reads runhistory 
                                             # and uses final incumbent as challenger
-        req_opts.add_argument("--dev_test", action="store_true", help="[dev] Developer test option")
+        req_opts.add_argument("--test", action="store_true",
+                              help="[dev] Developer test option")
 
         args_, misc = parser.parse_known_args()
         self._check_args(args_)
