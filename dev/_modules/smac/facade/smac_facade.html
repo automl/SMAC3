@@ -378,6 +378,15 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span> <span class="o">=</span> <span class="n">scenario</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">create_output_directory</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">scenario</span><span class="o">.</span><span class="n">deterministic</span> <span class="ow">is</span> <span class="kc">True</span>
+            <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="s1">&#39;tuner_timeout&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s1">&#39;quality&#39;</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Optimizing a deterministic scenario for &#39;</span>
+                             <span class="s1">&#39;qualitiy without a tuner timeout - will make &#39;</span>
+                             <span class="s1">&#39;SMAC deterministi!&#39;</span><span class="p">)</span>
+            <span class="n">scenario</span><span class="o">.</span><span class="n">intensification_percentage</span> <span class="o">=</span> <span class="mf">1e-10</span>
         <span class="n">scenario</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
 
         <span class="c1"># initialize stats object</span>
