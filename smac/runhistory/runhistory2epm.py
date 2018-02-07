@@ -88,7 +88,7 @@ class AbstractRunHistory2EPM(object):
 
         # Fill with some default values
         if rng is None:
-            self.rng = np.random.RandomState()
+            self.rng = np.random.RandomState(seed=1)
 
         if self.impute_state is None:
             self.impute_state = [StatusType.CAPPED, ]

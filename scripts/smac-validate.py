@@ -104,11 +104,11 @@ if __name__ == "__main__":
         validator.validate_epm(config_mode=args_.configs,
                                instance_mode=args_.instances,
                                repetitions=args_.repetitions,
-                               runhistory=runhistory, output=args_.output)
+                               runhistory=runhistory, output_fn=args_.output)
     else:
         validator.validate(config_mode=args_.configs,
                            instance_mode=args_.instances,
                            repetitions=args_.repetitions,
                            n_jobs=args_.n_jobs,
                            runhistory=runhistory,
-                           tae=tae, output=args_.output)
+                           tae=tae, output_fn=args_.output)

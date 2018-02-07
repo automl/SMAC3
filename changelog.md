@@ -1,3 +1,12 @@
+# 0.9
+
+## Major changes
+
+* Model predictions fixed: 
+  * FIX predictions if EPM was trained on log(y)
+  * FIX marginalized variance across instances
+  * FIX optimize EI also for runtime scenario (logEI not used anymore)
+
 # 0.8
 
 ## Major changes
