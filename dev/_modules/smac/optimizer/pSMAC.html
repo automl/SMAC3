@@ -258,7 +258,7 @@
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">ConfigurationSpace</span>
 
 <span class="n">RUNHISTORY_FILEPATTERN</span> <span class="o">=</span> <span class="s1">&#39;runhistory.json&#39;</span>
-<span class="n">RUNHISTORY_RE</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;runhistory\.json&#39;</span>
+<span class="n">RUNHISTORY_RE</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;runhistory\.json$&#39;</span>
 
 
 <div class="viewcode-block" id="read"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.pSMAC.html#smac.optimizer.pSMAC.read">[docs]</a><span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span> 
@@ -310,7 +310,8 @@
                  <span class="s1">&#39;runs.&#39;</span> <span class="o">%</span> <span class="n">difference</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="write"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.pSMAC.html#smac.optimizer.pSMAC.write">[docs]</a><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">output_directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="write"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.pSMAC.html#smac.optimizer.pSMAC.write">[docs]</a><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">output_directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+          <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Write the runhistory to the output directory.</span>
 
 <span class="sd">    Overwrites previously outputted runhistories.</span>
@@ -321,9 +322,13 @@
 <span class="sd">        RunHistory object to be saved.</span>
 
 <span class="sd">    output_directory : str</span>
+<span class="sd">    </span>
+<span class="sd">    logger : logging.Logger</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">output_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_directory</span><span class="p">,</span> <span class="n">RUNHISTORY_FILEPATTERN</span><span class="p">)</span>
+    
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Saving runhistory to </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">output_filename</span><span class="p">))</span>
 
     <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="s1">&#39;wb&#39;</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="n">output_directory</span><span class="p">,</span>
                                      <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>

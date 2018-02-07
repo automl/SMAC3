@@ -438,7 +438,8 @@
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">shared_model</span><span class="p">:</span>
                 <span class="n">pSMAC</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">run_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
-                            <span class="n">output_directory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">)</span>
+                            <span class="n">output_directory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">,</span>
+                            <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
 
             <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Remaining budget: </span><span class="si">%f</span><span class="s2"> (wallclock), </span><span class="si">%f</span><span class="s2"> (ta costs), </span><span class="si">%f</span><span class="s2"> (target runs)&quot;</span> <span class="o">%</span> <span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get_remaing_time_budget</span><span class="p">(),</span>
