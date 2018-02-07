@@ -129,8 +129,6 @@ class CMDReader(object):
                               help=SUPPRESS)# list of trajectory dump files, 
                                             # reads runhistory 
                                             # and uses final incumbent as challenger
-        req_opts.add_argument("--test", action="store_true",
-                              help="[dev] Developer test option")
 
         args_, misc = parser.parse_known_args()
         self._check_args(args_)
