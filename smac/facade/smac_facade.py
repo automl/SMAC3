@@ -132,7 +132,11 @@ class SMAC(object):
         if not restore_incumbent:
             self.output_dir = create_output_directory(scenario, run_id)
         elif scenario.output_dir is not None:
-            # output-dir has been created in CLI because we are restoring.
+            # output-directory is created in CLI when restoring from a
+            # folder. calling the function again in the facade results in two
+            # folders being created: run_X and run_X.OLD. if we are
+            # restoring, the output-folder exists already and we omit creating it,
+            # but set the self-output_dir to the dir.
             # necessary because we want to write traj to new output-dir in CLI.
             self.output_dir = os.path.join(scenario.output_dir,
                                            "run_%d" % (run_id))
