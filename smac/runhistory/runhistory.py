@@ -4,6 +4,7 @@ import filelock
 import json
 import logging
 import numpy as np
+import os
 import typing
 
 import sys
@@ -27,7 +28,6 @@ InstSeedKey = collections.namedtuple(
 
 RunValue = collections.namedtuple(
     'RunValue', ['cost', 'time', 'status', 'additional_info'])
-
 
 class EnumEncoder(json.JSONEncoder):
     """Custom encoder for enum-serialization
@@ -335,11 +335,16 @@ class RunHistory(object):
                               conf.origin is not None)}
 
         # lock `fn` (writing)
-        with filelock.FileLock(fn + ".lock"):
+        lock_file_name = fn + ".lock"
+        with filelock.SoftFileLock(lock_file_name):
             with open(fn, "w") as fp:
                 json.dump({"data": data,
                            "config_origins": config_origins,
                            "configs": configs}, fp, cls=EnumEncoder, indent=2)
+        try:
+            os.remove(lock_file_name)
+        except FileNotFoundError:
+            pass
 
     def load_json(self, fn: str, cs: ConfigurationSpace):
         """Load and runhistory in json representation from disk.
@@ -355,9 +360,14 @@ class RunHistory(object):
         """
 
         # lock `fn` (writing)
-        with filelock.FileLock(fn + ".lock"):
+        lock_file_name = fn + ".lock"
+        with filelock.FileLock(lock_file_name):
             with open(fn) as fp:
                 all_data = json.load(fp, object_hook=StatusType.enum_hook)
+        try:
+            os.remove(lock_file_name)
+        except FileNotFoundError:
+            pass
 
         config_origins = all_data.get("config_origins", {})
 

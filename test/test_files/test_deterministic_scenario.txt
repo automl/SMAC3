@@ -3,3 +3,4 @@ paramfile = test/test_files/test_deterministic.pcs
 run_obj = quality
 runcount_limit = 40
 deterministic = 1
+intensification_percentage = 0.000001

@@ -25,6 +25,8 @@ class TestDeterministicSMAC(unittest.TestCase):
         self.scenario_file = "test/test_files/test_deterministic_scenario.txt"
         self.output_dirs = [self.output_dir_1, self.output_dir_2, self.output_dir_3]
 
+        self.maxDiff = None
+
     def tearDown(self):
         for output_dir in self.output_dirs:
             if output_dir:

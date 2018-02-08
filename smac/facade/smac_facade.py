@@ -136,6 +136,15 @@ class SMAC(object):
             # necessary because we want to write traj to new output-dir in CLI.
             self.output_dir = os.path.join(scenario.output_dir,
                                            "run_%d" % (run_id))
+        if (
+            scenario.deterministic is True
+            and getattr(scenario, 'tuner_timeout', None) is None
+            and scenario.run_obj == 'quality'
+        ):
+            self.logger.info('Optimizing a deterministic scenario for '
+                             'quality without a tuner timeout - will make '
+                             'SMAC deterministic!')
+            scenario.intensification_percentage = 1e-10
         scenario.write()
 
         # initialize stats object

@@ -431,8 +431,8 @@ class Scenario(object):
 
         if self.shared_model and self.input_psmac_dirs is None:
             # per default, we assume that
-            # all psmac runs write to the same directory
-            self.input_psmac_dirs = [self.output_dir]
+            # all pSMAC runs write to the default output dir
+            self.input_psmac_dirs = "smac3-output*/run*/"
 
     def __getstate__(self):
         d = dict(self.__dict__)

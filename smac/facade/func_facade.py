@@ -78,7 +78,6 @@ def fmin_smac(func: typing.Callable,
         "cs": cs,
         "deterministic": "true",
         "initial_incumbent": "DEFAULT",
-        "intensification_percentage": 0.000001,
     }
     
     if scenario_args is not None:

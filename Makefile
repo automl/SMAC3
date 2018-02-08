@@ -25,6 +25,7 @@ clean-data:
 	# remove all files that could have been left by test cases or by manual runs
 	# feel free to add more lines
 	find . -maxdepth 3 -iname 'smac3-output_*-*-*_*' | tac | while read -r TESTDIR ; do rm -Rf "$${TESTDIR}" ; done
+	find . -maxdepth 3 -iname '*.lock' -exec rm {} \;
 	rm -Rf run_*
 	rm -Rf test/test_files/scenario_test/tmp_output_*
 	rm -Rf test/test_files/test_*_run1
@@ -37,3 +38,4 @@ clean-data:
 	rm -Rf test/test_files/validation/test/
 	rm  -f test/test_files/validation/validated_runhistory.json*
 	rm  -f test/test_files/validation/validated_runhistory_EPM.json*
+	rm -Rf test/test_files/out_*/
