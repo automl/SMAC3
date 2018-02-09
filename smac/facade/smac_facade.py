@@ -128,15 +128,26 @@ class SMAC(object):
         aggregate_func = average_cost
 
         self.scenario = scenario
-        self.output_dir = create_output_directory(scenario, run_id)
+        self.output_dir = ""
+        if not restore_incumbent:
+            self.output_dir = create_output_directory(scenario, run_id)
+        elif scenario.output_dir is not None:
+            # output-directory is created in CLI when restoring from a
+            # folder. calling the function again in the facade results in two
+            # folders being created: run_X and run_X.OLD. if we are
+            # restoring, the output-folder exists already and we omit creating it,
+            # but set the self-output_dir to the dir.
+            # necessary because we want to write traj to new output-dir in CLI.
+            self.output_dir = os.path.join(scenario.output_dir,
+                                           "run_%d" % (run_id))
         if (
             scenario.deterministic is True
             and getattr(scenario, 'tuner_timeout', None) is None
             and scenario.run_obj == 'quality'
         ):
             self.logger.info('Optimizing a deterministic scenario for '
-                             'qualitiy without a tuner timeout - will make '
-                             'SMAC deterministi!')
+                             'quality without a tuner timeout - will make '
+                             'SMAC deterministic!')
             scenario.intensification_percentage = 1e-10
         scenario.write()
 
@@ -175,7 +186,7 @@ class SMAC(object):
         # initial acquisition function
         if acquisition_function is None:
             acquisition_function = EI(model=model)
-            
+
         # inject model if necessary
         if acquisition_function.model is None:
             acquisition_function.model = model

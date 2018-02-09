@@ -40,6 +40,7 @@ class TestSMACCLI(unittest.TestCase):
         for output_dir in self.output_dirs:
             if output_dir:
                 shutil.rmtree(output_dir, ignore_errors=True)
+                #pass
         os.chdir(self.current_dir)
 
     @attr('slow')
@@ -100,7 +101,12 @@ class TestSMACCLI(unittest.TestCase):
         # Increase limit and run for 10 (so 5 more) by using restore_state
         testargs = ["python", "scripts/smac", "--restore_state",
                     self.output_one, "--scenario_file",
-                    self.scenario_one, "--verbose", "DEBUG"]
+                    self.scenario_two, "--verbose", "DEBUG"]
         with mock.patch.object(sys, 'argv', testargs):
             self.smaccli.main_cli()
+        self.assertTrue(os.path.exists(self.output_one))
+        self.assertFalse(os.path.exists(self.output_one + '.OLD'))
+        self.assertTrue(os.path.exists(self.output_two))
+        self.assertFalse(os.path.exists(self.output_two + '.OLD'))
+
 
