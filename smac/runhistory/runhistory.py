@@ -1,13 +1,9 @@
 import collections
 from enum import Enum
-import filelock
 import json
-import logging
 import numpy as np
 import os
 import typing
-
-import sys
 
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.tae.execute_ta_run import StatusType
@@ -334,17 +330,11 @@ class RunHistory(object):
                           if (id_ in config_ids_to_serialize and
                               conf.origin is not None)}
 
-        # lock `fn` (writing)
-        lock_file_name = fn + ".lock"
-        with filelock.SoftFileLock(lock_file_name):
-            with open(fn, "w") as fp:
-                json.dump({"data": data,
-                           "config_origins": config_origins,
-                           "configs": configs}, fp, cls=EnumEncoder, indent=2)
-        try:
-            os.remove(lock_file_name)
-        except FileNotFoundError:
-            pass
+        with open(fn, "w") as fp:
+            json.dump({"data": data,
+                       "config_origins": config_origins,
+                       "configs": configs}, fp, cls=EnumEncoder, indent=2)
+
 
     def load_json(self, fn: str, cs: ConfigurationSpace):
         """Load and runhistory in json representation from disk.
@@ -358,22 +348,26 @@ class RunHistory(object):
         cs : ConfigSpace
             instance of configuration space
         """
-
-        # lock `fn` (writing)
-        lock_file_name = fn + ".lock"
-        with filelock.FileLock(lock_file_name):
+        try:
             with open(fn) as fp:
                 all_data = json.load(fp, object_hook=StatusType.enum_hook)
-        try:
-            os.remove(lock_file_name)
-        except FileNotFoundError:
-            pass
+        except Exception as e:
+            self.logger.warning(
+                'Encountered exception %s while reading runhistory from %s. '
+                'Not adding any runs!',
+                e,
+                fn,
+            )
+            return
+
 
         config_origins = all_data.get("config_origins", {})
 
-        self.ids_config = {int(id_): Configuration(cs, values=values,
-                                origin=config_origins.get(id_, None))
-                           for id_, values in all_data["configs"].items()}
+        self.ids_config = {
+            int(id_): Configuration(
+                cs, values=values, origin=config_origins.get(id_, None)
+            ) for id_, values in all_data["configs"].items()
+        }
 
         self.config_ids = {config: id_ for id_, config in self.ids_config.items()}
 
