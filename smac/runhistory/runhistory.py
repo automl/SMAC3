@@ -1,9 +1,10 @@
 import collections
 from enum import Enum
 import json
-import numpy as np
-import os
+import logging
 import typing
+
+import numpy as np
 
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.tae.execute_ta_run import StatusType
@@ -97,6 +98,10 @@ class RunHistory(object):
             algorithm-instance-seed were measured
             multiple times
         """
+        self.logger = logging.getLogger(
+            self.__module__ + "." + self.__class__.__name__
+        )
+
         # By having the data in a deterministic order we can do useful tests
         # when we serialize the data and can assume it's still in the same
         # order as it was added.
