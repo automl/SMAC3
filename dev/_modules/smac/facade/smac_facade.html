@@ -377,15 +377,26 @@
         <span class="n">aggregate_func</span> <span class="o">=</span> <span class="n">average_cost</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span> <span class="o">=</span> <span class="n">scenario</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">create_output_directory</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">restore_incumbent</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">create_output_directory</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># output-directory is created in CLI when restoring from a</span>
+            <span class="c1"># folder. calling the function again in the facade results in two</span>
+            <span class="c1"># folders being created: run_X and run_X.OLD. if we are</span>
+            <span class="c1"># restoring, the output-folder exists already and we omit creating it,</span>
+            <span class="c1"># but set the self-output_dir to the dir.</span>
+            <span class="c1"># necessary because we want to write traj to new output-dir in CLI.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span>
+                                           <span class="s2">&quot;run_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">run_id</span><span class="p">))</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="n">scenario</span><span class="o">.</span><span class="n">deterministic</span> <span class="ow">is</span> <span class="kc">True</span>
             <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="s1">&#39;tuner_timeout&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
             <span class="ow">and</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s1">&#39;quality&#39;</span>
         <span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Optimizing a deterministic scenario for &#39;</span>
-                             <span class="s1">&#39;qualitiy without a tuner timeout - will make &#39;</span>
-                             <span class="s1">&#39;SMAC deterministi!&#39;</span><span class="p">)</span>
+                             <span class="s1">&#39;quality without a tuner timeout - will make &#39;</span>
+                             <span class="s1">&#39;SMAC deterministic!&#39;</span><span class="p">)</span>
             <span class="n">scenario</span><span class="o">.</span><span class="n">intensification_percentage</span> <span class="o">=</span> <span class="mf">1e-10</span>
         <span class="n">scenario</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
 
@@ -424,7 +435,7 @@
         <span class="c1"># initial acquisition function</span>
         <span class="k">if</span> <span class="n">acquisition_function</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">acquisition_function</span> <span class="o">=</span> <span class="n">EI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
-            
+
         <span class="c1"># inject model if necessary</span>
         <span class="k">if</span> <span class="n">acquisition_function</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">acquisition_function</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
