@@ -1,13 +1,13 @@
 import collections
 from enum import Enum
 import json
-import logging
 import typing
 
 import numpy as np
 
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.tae.execute_ta_run import StatusType
+from smac.utils.logging import PickableLoggerAdapter
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -98,7 +98,7 @@ class RunHistory(object):
             algorithm-instance-seed were measured
             multiple times
         """
-        self.logger = logging.getLogger(
+        self.logger = PickableLoggerAdapter(
             self.__module__ + "." + self.__class__.__name__
         )
 
