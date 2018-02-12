@@ -1,6 +1,7 @@
 import copy
 import unittest
 import logging
+from nose.plugins.attrib import attr
 import numpy
 
 from ConfigSpace import Configuration, ConfigurationSpace
@@ -99,6 +100,7 @@ class ImputorTest(unittest.TestCase):
                 types=types, bounds=bounds,
                 instance_features=None, seed=1234567980)
 
+    @attr('slow')
     def testRandomImputation(self):
         rs = numpy.random.RandomState(1)
 

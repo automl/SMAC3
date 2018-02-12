@@ -1,6 +1,7 @@
 from contextlib import suppress
 import unittest
 from unittest import mock
+import os
 import shutil
 
 import numpy as np
@@ -37,13 +38,14 @@ class TestSMBO(unittest.TestCase):
     def setUp(self):
         self.scenario = Scenario({'cs': test_helpers.get_branin_config_space(),
                                   'run_obj': 'quality',
-                                  'output_dir': ''})
+                                  'output_dir': 'data-test_smbo'})
+        self.output_dirs = []
+        self.output_dirs.append(self.scenario.output_dir)
 
     def tearDown(self):
-        for i in range(20):
-            with suppress(Exception):
-                dirname = 'run_1' + ('.OLD' * i)
-                shutil.rmtree(dirname)
+        for output_dir in self.output_dirs:
+            if output_dir:
+                shutil.rmtree(output_dir, ignore_errors=True)
 
     def branin(self, x):
         y = (x[:, 1] - (5.1 / (4 * np.pi ** 2)) * x[:, 0] ** 2 + 5 * x[:, 0] / np.pi - 6) ** 2
@@ -57,7 +59,7 @@ class TestSMBO(unittest.TestCase):
         smbo = SMAC(self.scenario).solver
         self.assertIsInstance(smbo.model, RandomForestWithInstances)
         self.assertIsInstance(smbo.rh2EPM, RunHistory2EPM4LogCost)
-        self.assertIsInstance(smbo.acquisition_func, LogEI)
+        self.assertIsInstance(smbo.acquisition_func, EI)
 
     def test_init_only_scenario_quality(self):
         smbo = SMAC(self.scenario).solver
@@ -238,8 +240,9 @@ class TestSMBO(unittest.TestCase):
             return 5
         patch.side_effect = FirstRunCrashedException()
         scen = Scenario({'cs': test_helpers.get_branin_config_space(),
-                         'run_obj': 'quality', 'output_dir': '',
+                         'run_obj': 'quality', 'output_dir': 'data-test_smbo-abort',
                          'abort_on_first_run_crash': 1})
+        self.output_dirs.append(scen.output_dir)
         smbo = SMAC(scen, tae_runner=target, rng=1).solver
         self.assertRaises(FirstRunCrashedException, smbo.run)
 
@@ -249,8 +252,9 @@ class TestSMBO(unittest.TestCase):
         def get_smbo(intensification_perc):
             """ Return SMBO with intensification_percentage. """
             scen = Scenario({'cs': test_helpers.get_branin_config_space(),
-                             'run_obj': 'quality', 'output_dir': '',
+                             'run_obj': 'quality', 'output_dir': 'data-test_smbo-intensification',
                              'intensification_percentage' : intensification_perc})
+            self.output_dirs.append(scen.output_dir)
             return SMAC(scen, tae_runner=target, rng=1).solver
         # Test for valid values
         smbo = get_smbo(0.3)
@@ -274,7 +278,9 @@ class TestSMBO(unittest.TestCase):
         with mock.patch.object(TrajLogger, "read_traj_aclib_format",
                 return_value=None) as traj_mock:
             self.scenario.output_dir = "test"
-            smbo = SMAC(self.scenario).solver
+            smac = SMAC(self.scenario)
+            self.output_dirs.append(smac.output_dir)
+            smbo = smac.solver
             with mock.patch.object(Validator, "validate",
                     return_value=None) as validation_mock:
                 smbo.validate(config_mode='inc', instance_mode='train+test',

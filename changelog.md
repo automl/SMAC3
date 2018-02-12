@@ -1,3 +1,12 @@
+# 0.9
+
+## Major changes
+
+* Model predictions fixed: 
+  * FIX predictions if EPM was trained on log(y)
+  * FIX marginalized variance across instances
+  * FIX optimize EI also for runtime scenario (logEI not used anymore)
+
 # 0.8
 
 ## Major changes
@@ -14,7 +23,7 @@
 
 ## Interface changes
 
-* Generalize the interface of the acquisition functions interface to work with
+* Generalize the interface of the acquisition functions to work with
   ConfigSpaces's configuration objects instead of numpy arrays.
 * The acquisition function optimizer can now be passed to the SMBO object.
 * A custom SMBO class can now be passed to the SMAC builder object.

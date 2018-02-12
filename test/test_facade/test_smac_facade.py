@@ -4,6 +4,7 @@ import shutil
 import unittest
 
 import numpy as np
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 from smac.configspace import ConfigurationSpace
 
@@ -26,12 +27,16 @@ class TestSMACFacade(unittest.TestCase):
         self.cs = ConfigurationSpace()
         self.scenario = Scenario({'cs': self.cs, 'run_obj': 'quality',
                                   'output_dir': ''})
+        self.output_dirs = []
 
     def tearDown(self):
         for i in range(20):
             with suppress(Exception):
                 dirname = 'run_1' + ('.OLD' * i)
                 shutil.rmtree(dirname)
+        for output_dir in self.output_dirs:
+            if output_dir:
+                shutil.rmtree(output_dir, ignore_errors=True)
 
     def test_inject_stats_and_runhistory_object_to_TAE(self):
         ta = ExecuteTAFuncDict(lambda x: x**2)
@@ -70,7 +75,7 @@ class TestSMACFacade(unittest.TestCase):
     def test_check_random_states(self):
         ta = ExecuteTAFuncDict(lambda x: x**2)
 
-        # Get state immediately or it will change with the next call
+        # Get state immediately or it will change with the next calltest_check_random_states
 
         # Check whether different seeds give different random states
         S1 = SMAC(tae_runner=ta, scenario=self.scenario, rng=1)
@@ -80,13 +85,13 @@ class TestSMACFacade(unittest.TestCase):
         S2 = S2.solver.scenario.cs.random
         self.assertNotEqual(sum(S1.get_state()[1] - S2.get_state()[1]), 0)
 
-        # Check whether no seeds give different random states
+        # Check whether no seeds give the same random states (use default seed)
         S1 = SMAC(tae_runner=ta, scenario=self.scenario)
         S1 = S1.solver.scenario.cs.random
 
         S2 = SMAC(tae_runner=ta, scenario=self.scenario)
         S2 = S2.solver.scenario.cs.random
-        self.assertNotEqual(sum(S1.get_state()[1] - S2.get_state()[1]), 0)
+        self.assertEqual(sum(S1.get_state()[1] - S2.get_state()[1]), 0)
 
         # Check whether the same seeds give the same random states
         S1 = SMAC(tae_runner=ta, scenario=self.scenario, rng=1)
@@ -105,6 +110,42 @@ class TestSMACFacade(unittest.TestCase):
                   rng=np.random.RandomState(1))
         S2 = S2.solver.scenario.cs.random
         self.assertEqual(sum(S1.get_state()[1] - S2.get_state()[1]), 0)
+
+    def test_check_deterministic_rosenbrock(self):
+        def rosenbrock_2d(x):
+            x1 = x['x1']
+            x2 = x['x2']
+            val = 100. * (x2 - x1 ** 2.) ** 2. + (1 - x1) ** 2.
+            return val
+
+        def opt_rosenbrock():
+            cs = ConfigurationSpace()
+
+            cs.add_hyperparameter(UniformFloatHyperparameter("x1", -5, 5, default_value=-3))
+            cs.add_hyperparameter(UniformFloatHyperparameter("x2", -5, 5, default_value=-4))
+
+            scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternatively runtime)
+                                 "runcount-limit": 50,  # maximum function evaluations
+                                 "cs": cs,  # configuration space
+                                 "deterministic": "true",
+                                 "intensification_percentage": 0.000000001
+                                 })
+
+            smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
+                        tae_runner=rosenbrock_2d)
+            incumbent = smac.optimize()
+            return incumbent, smac.scenario.output_dir
+
+        i1, output_dir = opt_rosenbrock()
+        self.output_dirs.append(output_dir)
+        x1_1 = i1.get('x1')
+        x2_1 = i1.get('x2')
+        i2, output_dir = opt_rosenbrock()
+        self.output_dirs.append(output_dir)
+        x1_2 = i2.get('x1')
+        x2_2 = i2.get('x2')
+        self.assertAlmostEqual(x1_1, x1_2)
+        self.assertAlmostEqual(x2_1, x2_2)
 
     def test_get_runhistory_and_trajectory_and_tae_runner(self):
         ta = ExecuteTAFuncDict(lambda x: x ** 2)
@@ -176,6 +217,7 @@ class TestSMACFacade(unittest.TestCase):
             'cs': ConfigurationSpace()
         }
         scen1 = Scenario(test_scenario_dict)
+        self.output_dirs.append(scen1.output_dir)
         smac = SMAC(scenario=scen1, run_id=1)
 
         self.assertEqual(smac.output_dir, os.path.join(
@@ -200,3 +242,15 @@ class TestSMACFacade(unittest.TestCase):
         # This is done by teardown!
         #shutil.rmtree(smac.output_dir)
         shutil.rmtree(smac4.output_dir)
+
+    def test_no_output(self):
+        """ Test whether a scenario with "" as output really does not create an
+        output. """
+        test_scenario_dict = {
+            'output_dir': '',
+            'run_obj': 'quality',
+            'cs': ConfigurationSpace()
+        }
+        scen1 = Scenario(test_scenario_dict)
+        smac = SMAC(scenario=scen1, run_id=1)
+        self.assertFalse(os.path.isdir(smac.output_dir))

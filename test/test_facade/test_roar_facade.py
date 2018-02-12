@@ -20,7 +20,7 @@ class TestROARFacade(unittest.TestCase):
                                   'output_dir': ''})
 
     def tearDown(self):
-        shutil.rmtree('run_1')
+        shutil.rmtree('run_1', ignore_errors=True)
 
     def test_inject_stats_and_runhistory_object_to_TAE(self):
         ta = ExecuteTAFuncArray(lambda x: x**2)

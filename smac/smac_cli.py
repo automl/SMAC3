@@ -64,21 +64,19 @@ class SMACCLI(object):
         stats = None
         incumbent = None
 
-        # Restore state (needs to be before scenario-creation!)
-        if args_.restore_state:
-            root_logger.debug("Restoring state from %s...", args_.restore_state)
-            rh, stats, traj_list_aclib, traj_list_old = self.restore_state_before_scen(args_)
-
         # Create scenario-object
         scen = Scenario(args_.scenario_file, misc_args)
 
-        # Restore state (continued, needs to be after scenario-creation!)
+        # Restore state
         if args_.restore_state:
+            root_logger.debug("Restoring state from %s...", args_.restore_state)
+            rh, stats, traj_list_aclib, traj_list_old = self.restore_state(scen, args_)
+
             scen.output_dir_for_this_run = create_output_directory(
                 scen, args_.seed, root_logger,
             )
             scen.write()
-            stats, incumbent = self.restore_state_after_scen(scen, stats,
+            incumbent = self.restore_state_after_output_dir(scen, stats,
                                            traj_list_aclib, traj_list_old)
 
         if args_.warmstart_runhistory:
@@ -131,12 +129,9 @@ class SMACCLI(object):
         except (TAEAbortException, FirstRunCrashedException) as err:
             self.logger.error(err)
 
-    def restore_state_before_scen(self, args_):
+    def restore_state(self, scen, args_):
         """Read in files for state-restoration: runhistory, stats, trajectory.
         """
-        # Construct dummy-scenario for object-creation (mainly cs is needed)
-        tmp_scen = InputReader().read_scenario_file(args_.scenario_file)
-        tmp_scen = Scenario(tmp_scen, cmd_args={'output_dir':''})
         # Check for folder and files
         rh_path = os.path.join(args_.restore_state, "runhistory.json")
         stats_path = os.path.join(args_.restore_state, "stats.json")
@@ -147,9 +142,9 @@ class SMACCLI(object):
            raise FileNotFoundError("Could not find folder from which to restore.")
         # Load runhistory and stats
         rh = RunHistory(aggregate_func=None)
-        rh.load_json(rh_path, tmp_scen.cs)
+        rh.load_json(rh_path, scen.cs)
         self.logger.debug("Restored runhistory from %s", rh_path)
-        stats = Stats(tmp_scen)  # Need to inject actual scenario later for output_dir!
+        stats = Stats(scen)
         stats.load(stats_path)
         self.logger.debug("Restored stats from %s", stats_path)
         with open(traj_path_aclib, 'r') as traj_fn:
@@ -158,13 +153,11 @@ class SMACCLI(object):
             traj_list_old = traj_fn.readlines()
         return rh, stats, traj_list_aclib, traj_list_old
 
-    def restore_state_after_scen(self, scen, stats, traj_list_aclib,
-                                 traj_list_old):
-        """Finish processing files for state-restoration. The actual scenario
-        needs to be injected into stats, as well as the trajectory dealt with
-        (it is read in, but needs to be written to new output-folder after
-        scenario is constructed."""
-        stats.scenario = scen  # inject actual scen for output_dir
+    def restore_state_after_output_dir(self, scen, stats, traj_list_aclib,
+                                       traj_list_old):
+        """Finish processing files for state-restoration. Trajectory
+        is read in, but needs to be written to new output-folder. Therefore, the
+        output-dir is created. This needs to be considered in the SMAC-facade."""
         # write trajectory-list
         traj_path_aclib = os.path.join(scen.output_dir, "traj_aclib2.json")
         traj_path_old = os.path.join(scen.output_dir, "traj_old.csv")
@@ -173,8 +166,9 @@ class SMACCLI(object):
         with open(traj_path_old, 'w') as traj_fn:
             traj_fn.writelines(traj_list_old)
         # read trajectory to retrieve incumbent
+        # TODO replace this with simple traj_path_aclib?
         trajectory = TrajLogger.read_traj_aclib_format(fn=traj_path_aclib, cs=scen.cs)
         incumbent = trajectory[-1]["incumbent"]
         self.logger.debug("Restored incumbent %s from %s", incumbent,
                           traj_path_aclib)
-        return stats, incumbent
+        return incumbent

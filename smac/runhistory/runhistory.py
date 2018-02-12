@@ -1,8 +1,13 @@
 import collections
 from enum import Enum
+import filelock
 import json
+import logging
 import numpy as np
+import os
 import typing
+
+import sys
 
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.tae.execute_ta_run import StatusType
@@ -24,7 +29,6 @@ InstSeedKey = collections.namedtuple(
 RunValue = collections.namedtuple(
     'RunValue', ['cost', 'time', 'status', 'additional_info'])
 
-
 class EnumEncoder(json.JSONEncoder):
     """Custom encoder for enum-serialization
     (implemented for StatusType from tae/execute_ta_run).
@@ -42,23 +46,22 @@ class DataOrigin(Enum):
 
     """
     Definition of how data in the runhistory is used.
-    
-    * ``INTERNAL``: internal data which was gathered during the current 
-      optimization run. It will be saved to disk, used for building EPMs and 
+
+    * ``INTERNAL``: internal data which was gathered during the current
+      optimization run. It will be saved to disk, used for building EPMs and
       during intensify.
     * ``EXTERNAL_SAME_INSTANCES``: external data, which was gathered by running
-       another program on the same instances as the current optimization run 
-       runs on (for example pSMAC). It will not be saved to disk, but used both 
+       another program on the same instances as the current optimization run
+       runs on (for example pSMAC). It will not be saved to disk, but used both
        for EPM building and during intensify.
     * ``EXTERNAL_DIFFERENT_INSTANCES``: external data, which was gathered on a
-       different instance set as the one currently used, but due to having the 
-       same instance features can still provide useful information. Will not be 
+       different instance set as the one currently used, but due to having the
+       same instance features can still provide useful information. Will not be
        saved to disk and only used for EPM building.
     """
     INTERNAL = 1
     EXTERNAL_SAME_INSTANCES = 2
     EXTERNAL_DIFFERENT_INSTANCES = 3
-
 
 class RunHistory(object):
 
@@ -83,7 +86,7 @@ class RunHistory(object):
     overwrite_existing_runs
     """
 
-    def __init__(self, 
+    def __init__(self,
                  aggregate_func: typing.Callable,
                  overwrite_existing_runs: bool=False
                  ):
@@ -317,7 +320,6 @@ class RunHistory(object):
         save_external : bool
             Whether to save external data in the runhistory file.
         """
-
         data = [([int(k.config_id),
                   str(k.instance_id) if k.instance_id is not None else None,
                   int(k.seed)], list(v))
@@ -327,10 +329,22 @@ class RunHistory(object):
         configs = {id_: conf.get_dictionary()
                    for id_, conf in self.ids_config.items()
                    if id_ in config_ids_to_serialize}
+        config_origins = {id_: conf.origin
+                          for id_, conf in self.ids_config.items()
+                          if (id_ in config_ids_to_serialize and
+                              conf.origin is not None)}
 
-        with open(fn, "w") as fp:
-            json.dump({"data": data,
-                       "configs": configs}, fp, cls=EnumEncoder)
+        # lock `fn` (writing)
+        lock_file_name = fn + ".lock"
+        with filelock.SoftFileLock(lock_file_name):
+            with open(fn, "w") as fp:
+                json.dump({"data": data,
+                           "config_origins": config_origins,
+                           "configs": configs}, fp, cls=EnumEncoder, indent=2)
+        try:
+            os.remove(lock_file_name)
+        except FileNotFoundError:
+            pass
 
     def load_json(self, fn: str, cs: ConfigurationSpace):
         """Load and runhistory in json representation from disk.
@@ -344,10 +358,21 @@ class RunHistory(object):
         cs : ConfigSpace
             instance of configuration space
         """
-        with open(fn) as fp:
-            all_data = json.load(fp, object_hook=StatusType.enum_hook)
 
-        self.ids_config = {int(id_): Configuration(cs, values=values)
+        # lock `fn` (writing)
+        lock_file_name = fn + ".lock"
+        with filelock.FileLock(lock_file_name):
+            with open(fn) as fp:
+                all_data = json.load(fp, object_hook=StatusType.enum_hook)
+        try:
+            os.remove(lock_file_name)
+        except FileNotFoundError:
+            pass
+
+        config_origins = all_data.get("config_origins", {})
+
+        self.ids_config = {int(id_): Configuration(cs, values=values,
+                                origin=config_origins.get(id_, None))
                            for id_, values in all_data["configs"].items()}
 
         self.config_ids = {config: id_ for id_, config in self.ids_config.items()}

@@ -1,11 +1,8 @@
 import os
-import itertools
 import logging
 import numpy as np
-import random
 import time
 import typing
-import math
 
 from smac.configspace import Configuration
 from smac.epm.rf_with_instances import RandomForestWithInstances
@@ -203,7 +200,8 @@ class SMBO(object):
 
             if self.scenario.shared_model:
                 pSMAC.write(run_history=self.runhistory,
-                            output_directory=self.scenario.output_dir_for_this_run)
+                            output_directory=self.scenario.output_dir_for_this_run,
+                            logger=self.logger)
 
             logging.debug("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
                 self.stats.get_remaing_time_budget(),
