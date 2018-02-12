@@ -247,72 +247,16 @@ class Scenario(object):
                           help="Race new incumbents always against default "
                                "configuration.",
                           callback=_is_truthy, dest="always_race_default")
-        self.add_argument(name='algo', dest='ta', callback=shlex.split,
-                          help="Specifies the target algorithm call that *SMAC* "
-                               "will optimize. Interpreted as a bash-command.")
-        self.add_argument(name='execdir', default='.',
-                          help="Specifies the path to the execution-directory.")
-        self.add_argument(name='deterministic', default=False,
-                          help="If true, the optimization process will be "
-                               "repeatable.", callback=_is_truthy)
         self.add_argument(name='intensification_percentage', default=0.5,
                           help="The fraction of time to be used on "
                                "intensification (versus choice of next "
                                 "Configurations).", callback=float)
-        self.add_argument(name='paramfile', help="Specifies the path to the "
-                                                 "PCS-file.",
-                          dest='pcs_fn', mutually_exclusive_group='cs')
-        self.add_argument(name='run_obj',
-                          help="Defines what metric to optimize. When "
-                               "optimizing runtime, *cutoff_time* is "
-                               "required as well.",
-                          required=True, choice=['runtime', 'quality'])
-        self.add_argument(name='overall_obj',
-                          help="PARX, where X is an integer defining the "
-                               "penalty imposed on timeouts (i.e. runtimes that "
-                               "exceed the *cutoff-time*).",
-                          default='par10')
-        self.add_argument(name='cost_for_crash', default=float(MAXINT),
-                          help="Defines the cost-value for crashed runs "
-                               "on scenarios with quality as run-obj.",
-                          callback=float)
-        self.add_argument(name='cutoff_time',
-                          help="Maximum runtime, after which the "
-                               "target algorithm is cancelled. **Required "
-                               "if *run_obj* is runtime.**", default=None,
-                          dest='cutoff', callback=float)
-        self.add_argument(name='memory_limit',
-                          help="Maximum available memory the target algorithm "
-                               "can occupy before being cancelled.")
-        self.add_argument(name='tuner-timeout',
-                          help="Maximum amount of CPU-time used for optimization.",
-                          default=numpy.inf,
-                          dest='algo_runs_timelimit', callback=float)
-        self.add_argument(name='wallclock_limit',
-                          help="Maximum amount of wallclock-time used for optimization.",
-                          default=numpy.inf, callback=float)
-        self.add_argument(name='always_race_default',
-                          help="Race new incumbents always against default configuration.",
-                          default=False,
-                          callback=_is_truthy, dest="always_race_default")
-        self.add_argument(name='runcount_limit',
-                          help="Maximum number of algorithm-calls during optimization.",
-                          default=numpy.inf, callback=float, dest="ta_run_limit")
         self.add_argument(name='minR',
                           help="Minimum number of calls per configuration.",
                           default=1, callback=int, dest='minR')
         self.add_argument(name='maxR',
                           help="Maximum number of calls per configuration.",
                           default=2000, callback=int, dest='maxR')
-        self.add_argument(name='instance_file',
-                          help="Specifies the file with the training-instances.",
-                          dest='train_inst_fn')
-        self.add_argument(name='test_instance_file',
-                          help="Specifies the file with the test-instances.",
-                          dest='test_inst_fn')
-        self.add_argument(name='feature_file',
-                          help="Specifies the file with the instance-features.",
-                          dest='feature_fn')
         self.add_argument(name='output_dir',
                           help="Specifies the output-directory for all emerging "
                                "files, such as logging and results.",
@@ -326,19 +270,76 @@ class Scenario(object):
         self.add_argument(name='shared_model',
                           help="Whether to run SMAC in parallel mode.",
                           default=False, callback=_is_truthy)
-        self.add_argument(name='instances', default=[[None]], help=None,
+        
+        self.add_argument(name='algo', dest='ta', callback=shlex.split,
+                          help="[dev] Specifies the target algorithm call that *SMAC* "
+                               "will optimize. Interpreted as a bash-command.")
+        self.add_argument(name='execdir', default='.',
+                          help="[dev] Specifies the path to the execution-directory.")
+        self.add_argument(name='deterministic', default=False,
+                          help="[dev] If true, the optimization process will be "
+                               "repeatable.", callback=_is_truthy)
+        self.add_argument(name='paramfile', help="[dev] Specifies the path to the "
+                                                 "PCS-file.",
+                          dest='pcs_fn', mutually_exclusive_group='cs')
+        self.add_argument(name='run_obj',
+                          help="[dev] Defines what metric to optimize. When "
+                               "optimizing runtime, *cutoff_time* is "
+                               "required as well.",
+                          required=True, choice=['runtime', 'quality'])
+        self.add_argument(name='overall_obj',
+                          help="[dev] PARX, where X is an integer defining the "
+                               "penalty imposed on timeouts (i.e. runtimes that "
+                               "exceed the *cutoff-time*).",
+                          default='par10')
+        self.add_argument(name='cost_for_crash', default=float(MAXINT),
+                          help="[dev] Defines the cost-value for crashed runs "
+                               "on scenarios with quality as run-obj.",
+                          callback=float)
+        self.add_argument(name='cutoff_time',
+                          help="[dev] Maximum runtime, after which the "
+                               "target algorithm is cancelled. **Required "
+                               "if *run_obj* is runtime.**", default=None,
+                          dest='cutoff', callback=float)
+        self.add_argument(name='memory_limit',
+                          help="[dev] Maximum available memory the target algorithm "
+                               "can occupy before being cancelled.")
+        self.add_argument(name='tuner-timeout',
+                          help="[dev] Maximum amount of CPU-time used for optimization.",
+                          default=numpy.inf,
+                          dest='algo_runs_timelimit', callback=float)
+        self.add_argument(name='wallclock_limit',
+                          help="[dev] Maximum amount of wallclock-time used for optimization.",
+                          default=numpy.inf, callback=float)
+        self.add_argument(name='always_race_default',
+                          help="[dev] Race new incumbents always against default configuration.",
+                          default=False,
+                          callback=_is_truthy, dest="always_race_default")
+        self.add_argument(name='runcount_limit',
+                          help="[dev] Maximum number of algorithm-calls during optimization.",
+                          default=numpy.inf, callback=float, dest="ta_run_limit")
+        self.add_argument(name='instance_file',
+                          help="[dev] Specifies the file with the training-instances.",
+                          dest='train_inst_fn')
+        self.add_argument(name='test_instance_file',
+                          help="[dev] Specifies the file with the test-instances.",
+                          dest='test_inst_fn')
+        self.add_argument(name='feature_file',
+                          help="[dev] Specifies the file with the instance-features.",
+                          dest='feature_fn')
+        self.add_argument(name='instances', default=[[None]], help="[dev]",
                           dest='train_insts')
-        self.add_argument(name='test_instances', default=[[None]], help=None,
+        self.add_argument(name='test_instances', default=[[None]], help="[dev]",
                           dest='test_insts')
         self.add_argument(name='initial_incumbent', default="DEFAULT",
-                          help="DEFAULT is the default from the PCS.",
+                          help="[dev] DEFAULT is the default from the PCS.",
                           dest='initial_incumbent',
                           choice=['DEFAULT', 'RANDOM'])
         # instance name -> feature vector
-        self.add_argument(name='features', default={}, help=None,
+        self.add_argument(name='features', default={}, help="[dev]",
                           dest='feature_dict')
         # ConfigSpace object
-        self.add_argument(name='cs', help=None, mutually_exclusive_group='cs')
+        self.add_argument(name='cs', help="[dev]", mutually_exclusive_group='cs')
 
     def _transform_arguments(self):
         """TODO"""
