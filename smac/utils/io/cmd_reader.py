@@ -1,5 +1,6 @@
 import os
 import logging
+import typing
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter, SUPPRESS, Action
 
 __author__ = "Marius Lindauer"
@@ -18,25 +19,24 @@ class ConfigurableHelpFormatter(ArgumentDefaultsHelpFormatter):
     Configurable Help Formatter. Can filter out developer options.
     """
 
-    def __init(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(ConfigurableHelpFormatter, self).__init__(*args, **kwargs)
 
-    def _add_item(self, func, args):
-        def filter_actions(actions):
+    def _add_item(self, func: typing.Callable, args: typing.Union[list, tuple]):
+        def filter_actions(actions: typing.List[Action]):
             filtered_actions = []
             for action in actions:
-                if isinstance(action, Action):
-                    dev = False
-                    if isinstance(action.help, str):
-                        if action.help.startswith('[dev]'):
+                dev = False
+                if isinstance(action.help, str):
+                    if action.help.startswith('[dev]'):
+                        dev = True
+                else:
+                    for s in action.option_strings:
+                        if s.startswith('--dev'):
                             dev = True
-                    else:
-                        for s in action.option_strings:
-                            if s.startswith('--dev'):
-                                dev = True
-                                break
-                    if not dev:
-                        filtered_actions.append(action)
+                            break
+                if not dev:
+                    filtered_actions.append(action)
             return filtered_actions
         if help_type == 'standard':
             if func.__name__ == '_format_usage':
