@@ -1,7 +1,7 @@
 import os
 import logging
 import re
-from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter, SUPPRESS
+from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter, SUPPRESS, FileType
 
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
     ChooserLinearCoolDown
@@ -64,9 +64,9 @@ class CMDReader(object):
                               help=SUPPRESS)# list of trajectory dump files, 
                                             # reads runhistory 
                                             # and uses final incumbent as challenger 
-        req_opts.add_argument("--random_configuration_chooser", default="", type=str,
-                              help="[dev] Constant(<modulus > 1.0>) | "
-                                   "Linear(<modulus > 1.0>, <increment >= 0.0>, <end modulus > 1.0>)")
+        req_opts.add_argument("--random_configuration_chooser", default=None, type=FileType('r'),
+                              help="[dev] path to a python module containing a class `RandomConfigurationChooserImpl`"
+                                   "implementing the interface of `RandomConfigurationChooser`")
         args_, misc = parser.parse_known_args()
         CMDReader._check_args(args_, set_parsed=True)
 
@@ -101,45 +101,14 @@ class CMDReader(object):
             if set_parsed:
                 setattr(args_, 'random_configuration_chooser', None)
             return
-        if not args_.random_configuration_chooser:
+        elif not args_.random_configuration_chooser:
             if set_parsed:
                 args_.random_configuration_chooser = None
             return
-        m = re.match(r'^Constant\((.*)\)$', args_.random_configuration_chooser)
-        if m:
-            try:
-                modulus = float(m.group(1))
-            except ValueError as e:
-                raise ValueError("Constant(modulus): modulus must be a float or int: %s" % (m.group(1)))
-            if modulus <= 1.0:
-                raise ValueError("Linear: modulus must be > 1.0")
-            if set_parsed:
-                args_.random_configuration_chooser = ChooserNoCoolDown(modulus)
         else:
-            m = re.match(r'^Linear\(([^,]*),([^,]*)(,([^,]*))?\)$', args_.random_configuration_chooser)
-            if m:
-                groups = list(m.groups())
-                try:
-                    modulus = float(groups[0])
-                except ValueError as e:
-                    raise ValueError("Linear(modulus, ...): modulus must be a float or int: %s" % (groups[0]))
-                if modulus <= 1.0:
-                    raise ValueError("Linear: modulus must be > 1.0")
-                try:
-                    modulus_increment = float(groups[1])
-                except ValueError as e:
-                    raise ValueError("Linear(..., increment, ...): increment must be a float or int: %s" % (groups[1]))
-                if modulus_increment < 0.0:
-                    raise ValueError("Linear: increment must be >= 0.0")
-                if not groups[3]:
-                    groups[3] = 'inf'
-                try:
-                    end_modulus = float(groups[3])
-                except ValueError as e:
-                    raise ValueError("Linear(..., end modulus): end modulus must be a float or int: %s" % (groups[3]))
-                if end_modulus <= 1.0:
-                    raise ValueError("Linear: end modulus must be > 1.0")
-                if set_parsed:
-                    args_.random_configuration_chooser = ChooserLinearCoolDown(modulus, modulus_increment, end_modulus)
-            else:
-                raise ValueError("random_configuration_chooser: invalid format")
+            import importlib.util
+            spec = importlib.util.spec_from_file_location("smac.custom.random_configuration_chooser", args_.random_configuration_chooser.name)
+            rcc_module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(rcc_module)
+            if set_parsed:
+                setattr(args_, 'random_configuration_chooser', rcc_module.RandomConfigurationChooserImpl())
