@@ -9,20 +9,23 @@ import os
 import logging
 import unittest
 import pickle
-import copy
 import shutil
 
 import numpy as np
 
-from ConfigSpace import Configuration, ConfigurationSpace
+from ConfigSpace import Configuration
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
-from smac.scenario.scenario import Scenario, _is_truthy
+from smac.scenario.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.utils.merge_foreign_data import merge_foreign_data
+from smac.utils.io.cmd_reader import truthy as _is_truthy
+from smac.utils.io.input_reader import InputReader
 from smac.runhistory.runhistory import RunHistory
 from smac.optimizer.objective import average_cost
 from smac.tae.execute_ta_run import StatusType
+
+in_reader = InputReader()
 
 if sys.version_info[0] == 2:
     import mock
@@ -33,7 +36,7 @@ else:
 class InitFreeScenario(Scenario):
 
     def __init__(self):
-        self._groups = defaultdict(set)
+        pass
 
 
 class ScenarioTest(unittest.TestCase):
@@ -135,22 +138,6 @@ class ScenarioTest(unittest.TestCase):
                                {'wallclock-limit': '12345',
                                 'duairznbvulncbzpneairzbnuqdae': 'uqpab'})
 
-    def test_add_argument(self):
-        # Check if adding non-bool required fails
-        scenario = InitFreeScenario()
-        self.assertRaisesRegexp(TypeError, "Argument 'required' must be of "
-                                           "type 'bool'.",
-                                scenario.add_argument, 'name', required=1,
-                                help=None)
-
-        # Check that adding a parameter which is both required and in a
-        # required-group fails
-        self.assertRaisesRegexp(ValueError, "Cannot make argument 'name' "
-                                            "required and add it to a group of "
-                                            "mutually exclusive arguments.",
-                                scenario.add_argument, 'name', required=True,
-                                help=None, mutually_exclusive_group='required')
-
     def test_merge_foreign_data(self):
         ''' test smac.utils.merge_foreign_data '''
 
@@ -214,22 +201,6 @@ class ScenarioTest(unittest.TestCase):
         self.assertIsNotNone(unpacked_scenario)
         self.assertIsNotNone(unpacked_scenario.logger)
         self.assertEqual(scenario.logger.name, unpacked_scenario.logger.name)
-
-    def test_choice_argument(self):
-        scenario_dict = self.test_scenario_dict
-        scenario_dict['initial_incumbent'] = 'DEFAULT'
-        scenario = Scenario(scenario_dict)
-        self.assertEqual(scenario.initial_incumbent, 'DEFAULT')
-
-        self.assertRaisesRegex(TypeError, 'Choice must be of type '
-                                          'list/set/tuple.',
-                               scenario.add_argument, name='a', choice='abc',
-                               help=None)
-
-        scenario_dict['initial_incumbent'] = 'Default'
-        self.assertRaisesRegex(ValueError,
-                               "Argument initial_incumbent can only take a "
-                               "value in ['DEFAULT, 'RANDOM'] but is Default")
 
     def test_write(self):
         """ Test whether a reloaded scenario still holds all the necessary
@@ -322,23 +293,16 @@ class ScenarioTest(unittest.TestCase):
         self.assertIsInstance(self.scen.train_insts[0], str)
         self.assertIsInstance(self.scen.train_insts[1], str)
 
-    def test_create_scenario_option_for_doc(self):
-        scen = Scenario({'cs': None,
-                              'instances': [[1], [2]],
-                              'run_obj': 'quality'})
-        path = 'test/test_files/test_scenario_options_to_doc.txt'
-        self.output_files.append(path)
-        scen = scen.write_options_to_doc(path)
-        self.assertTrue(os.path.exists(path))
-
     def test_features(self):
+        cmd_options = {
+            'feature_file': 'test/test_files/features_example.csv',
+            'instance_file': 'test/test_files/train_insts_example.txt'
+        }
         scenario = Scenario(self.test_scenario_dict,
-                            cmd_args={'feature_file':
-                                      'test/test_files/features_example.csv',
-                                      'instance_file':
-                                      'test/test_files/train_insts_example.txt'})
+                            cmd_options=cmd_options)
         self.assertEquals(scenario.feature_names,
                           ['feature1', 'feature2', 'feature3'])
+
 
 if __name__ == "__main__":
     unittest.main()

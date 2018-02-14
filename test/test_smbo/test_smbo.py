@@ -253,7 +253,7 @@ class TestSMBO(unittest.TestCase):
             """ Return SMBO with intensification_percentage. """
             scen = Scenario({'cs': test_helpers.get_branin_config_space(),
                              'run_obj': 'quality', 'output_dir': 'data-test_smbo-intensification',
-                             'intensification_percentage' : intensification_perc})
+                             'intensification_percentage': intensification_perc})
             self.output_dirs.append(scen.output_dir)
             return SMAC(scen, tae_runner=target, rng=1).solver
         # Test for valid values

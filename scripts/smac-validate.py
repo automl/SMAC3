@@ -76,7 +76,7 @@ if __name__ == "__main__":
     else:
         logging.basicConfig(level=logging.DEBUG)
 
-    scenario = Scenario(args_.scenario, cmd_args={'output_dir': ""})
+    scenario = Scenario(args_.scenario, cmd_options={'output_dir': ""})
     traj_logger = TrajLogger(None, Stats(scenario))
     trajectory = traj_logger.read_traj_aclib_format(args_.trajectory, scenario.cs)
     if args_.tae == "old":

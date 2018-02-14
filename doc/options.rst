@@ -16,6 +16,22 @@ Optional:
     * Instance_- and feature_-files, that list the instances and features to
       optimize upon.
 
+.. _smac_options:
+
+SMAC Options
+~~~~~~~~~~~~
+The basic command line options have been described in `Basic Usage <basic_usage.html#commandline>`_.
+The options are separated into three groups, *Main Options*, *SMAC Options* and *Scenario Options*.
+See the Main and SMAC Options below. Find the Scenario Options in the next section.
+
+Main Options:
+
+.. include:: main_options.rst
+
+SMAC Options:
+
+.. include:: smac_options.rst
+
 .. _scenario:
 
 Scenario
@@ -23,6 +39,7 @@ Scenario
 The scenario-object (:class:`smac.scenario.scenario.Scenario`) is used to configure *SMAC* and can be constructed either by providing an actual
 scenario-object (see `SVM-example <quickstart.html#using-smac-in-python-svm>`_), or by specifing the options in a
 scenario file (see `SPEAR example <quickstart.html#spear-example>`_).
+
 The format of the scenario file is one option per line:
 
 .. code-block:: bash
@@ -35,9 +52,13 @@ For boolean options "1" or "true" both evaluate to True.
 The following assumes that the scenario is created via a scenario-file. If it is
 generated within custom code, you might not need *algo* or *paramfile*.
 
-Options:
+Scenario Options:
 
 .. include:: scenario_options.rst
+
+These options are also available as command line switches: Prepend two "-" and replace each "_" by "-", 
+e.g. "wallclock_limit" becomes "--wallclock-limit". The options on the command line overwrite the values 
+given in the scenario file.
 
 .. _paramcs:
 

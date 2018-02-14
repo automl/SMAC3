@@ -31,7 +31,7 @@ class TaeOldTest(unittest.TestCase):
         '''
         scen = Scenario(scenario={'cs': ConfigurationSpace(),
                                   'run_obj': 'quality',
-                                  'output_dir': ''}, cmd_args=None)
+                                  'output_dir': ''}, cmd_options=None)
         stats = Stats(scen)
 
         eta = ExecuteTARunAClib(
@@ -68,7 +68,7 @@ class TaeOldTest(unittest.TestCase):
         
         scen = Scenario(scenario={'cs': ConfigurationSpace(),
                                   'run_obj': 'quality',
-                                  'output_dir': ''}, cmd_args=None)
+                                  'output_dir': ''}, cmd_options=None)
         stats = Stats(scen)
 
         eta = ExecuteTARunAClib(

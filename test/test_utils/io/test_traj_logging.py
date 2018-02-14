@@ -35,7 +35,7 @@ class TrajLoggerTest(unittest.TestCase):
 
     def test_init(self):
         scen = Scenario(scenario={'run_obj': 'quality', 'cs': self.cs,
-                                  'output_dir': ''}, cmd_args=None)
+                                  'output_dir': ''}, cmd_options=None)
         stats = Stats(scen)
         TrajLogger(output_dir='./tmp_test_folder', stats=stats)
         self.assertFalse(os.path.exists('smac3-output'))

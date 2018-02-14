@@ -20,7 +20,7 @@ import sphinx_rtd_theme
 
 sys.path.insert(0, '..')
 import smac
-from smac.scenario.scenario import Scenario
+from smac.utils.io.cmd_reader import CMDReader
 
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -307,5 +307,7 @@ texinfo_documents = [
 autoclass_content = 'both'
 
 # Create Scenario-object to update the list of options in the docs
-scenario = Scenario({'run_obj':'runtime', 'cutoff_time':1, 'output_dir':''})
-scenario.write_options_to_doc()
+cmd_reader = CMDReader()
+cmd_reader.write_main_options_to_doc()
+cmd_reader.write_smac_options_to_doc()
+cmd_reader.write_scenario_options_to_doc()
