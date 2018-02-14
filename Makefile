@@ -10,7 +10,7 @@ test-fast:
 .PHONY: test-runtimes
 test-runtimes:
 	# requires nose-timer
-	nosetests -sv --with-timer --timer-top-n 15
+	python -m nose -sv --with-timer --timer-top-n 15
 
 .PHONY: doc
 doc:
