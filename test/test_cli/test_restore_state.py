@@ -86,6 +86,7 @@ class TestSMACCLI(unittest.TestCase):
                     rng=np.random.RandomState(42))
         self.assertRaises(ValueError, smac.optimize)
 
+    @attr('slow')
     def test_same_dir(self):
         """
         Testing possible error using same dir for restore

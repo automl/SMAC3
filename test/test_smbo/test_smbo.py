@@ -3,6 +3,7 @@ import unittest
 from unittest import mock
 import os
 import shutil
+from nose.plugins.attrib import attr
 
 import numpy as np
 from ConfigSpace import Configuration
@@ -246,6 +247,7 @@ class TestSMBO(unittest.TestCase):
         smbo = SMAC(scen, tae_runner=target, rng=1).solver
         self.assertRaises(FirstRunCrashedException, smbo.run)
 
+    @attr('slow')
     def test_intensification_percentage(self):
         def target(x):
             return 5

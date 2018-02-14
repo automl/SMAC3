@@ -5,6 +5,7 @@ import unittest
 
 import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
+from nose.plugins.attrib import attr
 
 from smac.configspace import ConfigurationSpace
 
@@ -111,6 +112,7 @@ class TestSMACFacade(unittest.TestCase):
         S2 = S2.solver.scenario.cs.random
         self.assertEqual(sum(S1.get_state()[1] - S2.get_state()[1]), 0)
 
+    @attr('slow')
     def test_check_deterministic_rosenbrock(self):
         def rosenbrock_2d(x):
             x1 = x['x1']

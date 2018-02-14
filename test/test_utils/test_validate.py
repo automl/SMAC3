@@ -210,6 +210,7 @@ class ValidationTest(unittest.TestCase):
         self.assertEqual(len(rh.get_all_configs()), 1)
         self.assertEqual(len(rh.get_runs_for_config(rh.get_all_configs()[0])), 9)
 
+    @attr('slow')
     def test_validate_no_insts(self):
         ''' no instances '''
         scen = Scenario(self.scen_fn,
@@ -221,6 +222,7 @@ class ValidationTest(unittest.TestCase):
         self.assertEqual(sum([len(rh.get_runs_for_config(c)) for c in
                               rh.get_all_configs()]), 6)
 
+    @attr('slow')
     def test_validate_deterministic(self):
         ''' deterministic ta '''
         scen = Scenario(self.scen_fn,
@@ -235,6 +237,7 @@ class ValidationTest(unittest.TestCase):
         self.assertEqual(sum([len(rh.get_runs_for_config(c)) for c in
                               rh.get_all_configs()]), 6)
 
+    @attr('slow')
     def test_parallel(self):
         ''' test parallel '''
         scen = Scenario(self.scen_fn,
