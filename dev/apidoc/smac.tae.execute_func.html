@@ -257,7 +257,7 @@
 <dl class="class">
 <dt id="smac.tae.execute_func.AbstractTAFunc">
 <em class="property">class </em><code class="descclassname">smac.tae.execute_func.</code><code class="descname">AbstractTAFunc</code><span class="sig-paren">(</span><em>ta</em>, <em>stats=None</em>, <em>runhistory=None</em>, <em>run_obj: str = 'quality'</em>, <em>memory_limit: int = None</em>, <em>par_factor: int = 1</em>, <em>cost_for_crash: float = 2147483647.0</em>, <em>use_pynisher: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#AbstractTAFunc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><code class="xref py py-class docutils literal"><span class="pre">smac.tae.execute_ta_run.ExecuteTARun</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.tae.execute_ta_run.ExecuteTARun</span></code></a></p>
 <p>Baseclass to execute target algorithms which are python functions.</p>
 <p><strong>Note:*</strong> Do not use directly</p>
 <dl class="attribute">
@@ -345,14 +345,14 @@ uses StatusType.CAPPED</li>
 <dl class="class">
 <dt id="smac.tae.execute_func.ExecuteTAFuncArray">
 <em class="property">class </em><code class="descclassname">smac.tae.execute_func.</code><code class="descname">ExecuteTAFuncArray</code><span class="sig-paren">(</span><em>ta</em>, <em>stats=None</em>, <em>runhistory=None</em>, <em>run_obj: str = 'quality'</em>, <em>memory_limit: int = None</em>, <em>par_factor: int = 1</em>, <em>cost_for_crash: float = 2147483647.0</em>, <em>use_pynisher: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#ExecuteTAFuncArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncArray" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#smac.tae.execute_func.AbstractTAFunc" title="smac.tae.execute_func.AbstractTAFunc"><code class="xref py py-class docutils literal"><span class="pre">smac.tae.execute_func.AbstractTAFunc</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#smac.tae.execute_func.AbstractTAFunc" title="smac.tae.execute_func.AbstractTAFunc"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.tae.execute_func.AbstractTAFunc</span></code></a></p>
 <p>Evaluate function for given configuration and resource limit.</p>
 <p>Passes the configuration as an array-like to the target algorithm. The
 target algorithm needs to implement one of the following signatures:</p>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">target_algorithm(config:</span> <span class="pre">np.ndarray)</span> <span class="pre">-&gt;</span> <span class="pre">Union[float,</span> <span class="pre">Tuple[float,</span> <span class="pre">Any]]</span></code></li>
-<li><code class="docutils literal"><span class="pre">target_algorithm(config:</span> <span class="pre">np.ndarray,</span> <span class="pre">seed:</span> <span class="pre">int)</span> <span class="pre">-&gt;</span> <span class="pre">Union[float,</span> <span class="pre">Tuple[float,</span> <span class="pre">Any]]</span></code></li>
-<li><code class="docutils literal"><span class="pre">target_algorithm(config:</span> <span class="pre">np.ndarray,</span> <span class="pre">seed:</span> <span class="pre">int,</span> <span class="pre">instance:</span> <span class="pre">str)</span> <span class="pre">-&gt;</span> <span class="pre">Union[float,</span> <span class="pre">Tuple[float,</span> <span class="pre">Any]]</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">target_algorithm(config:</span> <span class="pre">np.ndarray)</span> <span class="pre">-&gt;</span> <span class="pre">Union[float,</span> <span class="pre">Tuple[float,</span> <span class="pre">Any]]</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">target_algorithm(config:</span> <span class="pre">np.ndarray,</span> <span class="pre">seed:</span> <span class="pre">int)</span> <span class="pre">-&gt;</span> <span class="pre">Union[float,</span> <span class="pre">Tuple[float,</span> <span class="pre">Any]]</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">target_algorithm(config:</span> <span class="pre">np.ndarray,</span> <span class="pre">seed:</span> <span class="pre">int,</span> <span class="pre">instance:</span> <span class="pre">str)</span> <span class="pre">-&gt;</span> <span class="pre">Union[float,</span> <span class="pre">Tuple[float,</span> <span class="pre">Any]]</span></code></li>
 </ul>
 <p>The target algorithm can either return a float (the loss), or a tuple
 with the first element being a float and the second being additional run
@@ -450,14 +450,14 @@ uses StatusType.CAPPED</li>
 <dl class="class">
 <dt id="smac.tae.execute_func.ExecuteTAFuncDict">
 <em class="property">class </em><code class="descclassname">smac.tae.execute_func.</code><code class="descname">ExecuteTAFuncDict</code><span class="sig-paren">(</span><em>ta</em>, <em>stats=None</em>, <em>runhistory=None</em>, <em>run_obj: str = 'quality'</em>, <em>memory_limit: int = None</em>, <em>par_factor: int = 1</em>, <em>cost_for_crash: float = 2147483647.0</em>, <em>use_pynisher: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#ExecuteTAFuncDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncDict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#smac.tae.execute_func.AbstractTAFunc" title="smac.tae.execute_func.AbstractTAFunc"><code class="xref py py-class docutils literal"><span class="pre">smac.tae.execute_func.AbstractTAFunc</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#smac.tae.execute_func.AbstractTAFunc" title="smac.tae.execute_func.AbstractTAFunc"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.tae.execute_func.AbstractTAFunc</span></code></a></p>
 <p>Evaluate function for given configuration and resource limit.</p>
 <p>Passes the configuration as a dictionary to the target algorithm. The
 target algorithm needs to implement one of the following signatures:</p>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">target_algorithm(config:</span> <span class="pre">Configuration)</span> <span class="pre">-&gt;</span> <span class="pre">Union[float,</span> <span class="pre">Tuple[float,</span> <span class="pre">Any]]</span></code></li>
-<li><code class="docutils literal"><span class="pre">target_algorithm(config:</span> <span class="pre">Configuration,</span> <span class="pre">seed:</span> <span class="pre">int)</span> <span class="pre">-&gt;</span> <span class="pre">Union[float,</span> <span class="pre">Tuple[float,</span> <span class="pre">Any]]</span></code></li>
-<li><code class="docutils literal"><span class="pre">target_algorithm(config:</span> <span class="pre">Configuration,</span> <span class="pre">seed:</span> <span class="pre">int,</span> <span class="pre">instance:</span> <span class="pre">str)</span> <span class="pre">-&gt;</span> <span class="pre">Union[float,</span> <span class="pre">Tuple[float,</span> <span class="pre">Any]]</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">target_algorithm(config:</span> <span class="pre">Configuration)</span> <span class="pre">-&gt;</span> <span class="pre">Union[float,</span> <span class="pre">Tuple[float,</span> <span class="pre">Any]]</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">target_algorithm(config:</span> <span class="pre">Configuration,</span> <span class="pre">seed:</span> <span class="pre">int)</span> <span class="pre">-&gt;</span> <span class="pre">Union[float,</span> <span class="pre">Tuple[float,</span> <span class="pre">Any]]</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">target_algorithm(config:</span> <span class="pre">Configuration,</span> <span class="pre">seed:</span> <span class="pre">int,</span> <span class="pre">instance:</span> <span class="pre">str)</span> <span class="pre">-&gt;</span> <span class="pre">Union[float,</span> <span class="pre">Tuple[float,</span> <span class="pre">Any]]</span></code></li>
 </ul>
 <p>The target algorithm can either return a float (the loss), or a tuple
 with the first element being a float and the second being additional run

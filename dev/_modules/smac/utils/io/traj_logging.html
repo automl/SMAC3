@@ -344,8 +344,8 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_add_in_old_format</span><span class="p">(</span><span class="n">train_perf</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">,</span>
                                     <span class="n">ta_time_used</span><span class="p">,</span> <span class="n">wallclock_time</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_add_in_aclib_format</span><span class="p">(</span><span class="n">train_perf</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">,</span>
-                                      <span class="n">ta_time_used</span><span class="p">,</span> <span class="n">wallclock_time</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_in_aclib_format</span><span class="p">(</span><span class="n">train_perf</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">,</span></div>
+                                      <span class="n">ta_time_used</span><span class="p">,</span> <span class="n">wallclock_time</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_add_in_old_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_perf</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                            <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">ta_time_used</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -449,8 +449,8 @@
                 <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;incumbent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">TrajLogger</span><span class="o">.</span><span class="n">_convert_dict_to_config</span><span class="p">(</span>
                     <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;incumbent&quot;</span><span class="p">],</span> <span class="n">cs</span><span class="o">=</span><span class="n">cs</span><span class="p">)</span>
                 <span class="n">trajectory</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">trajectory</span></div>
+</div>
+        <span class="k">return</span> <span class="n">trajectory</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_convert_dict_to_config</span><span class="p">(</span><span class="n">config_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">cs</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">):</span>
@@ -477,8 +477,8 @@
             
         <span class="n">config</span> <span class="o">=</span> <span class="n">Configuration</span><span class="p">(</span><span class="n">configuration_space</span><span class="o">=</span><span class="n">cs</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">config_dict</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s2">&quot;External Trajectory&quot;</span>
-
-        <span class="k">return</span> <span class="n">config</span></div>
+</div>
+        <span class="k">return</span> <span class="n">config</span>
 </pre></div>
 
            </div>

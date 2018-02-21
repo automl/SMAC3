@@ -362,8 +362,8 @@
             <span class="k">del</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;cost&quot;</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">pass</span>
-
-        <span class="k">return</span> <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">results</span></div>
+</div>
+        <span class="k">return</span> <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">results</span>
 
     <span class="k">def</span> <span class="nf">_call_ta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
@@ -401,8 +401,8 @@
             <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Result of this algorithm run:&quot;</span><span class="p">):</span>
                 <span class="n">fields</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:])</span>
                 <span class="n">results</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">results</span><span class="p">,</span> <span class="n">stdout_</span><span class="p">,</span> <span class="n">stderr_</span></div>
+</div>
+        <span class="k">return</span> <span class="n">results</span><span class="p">,</span> <span class="n">stdout_</span><span class="p">,</span> <span class="n">stderr_</span>
 </pre></div>
 
            </div>

@@ -293,8 +293,8 @@
         <span class="n">rh</span> <span class="o">=</span> <span class="n">RunHistory</span><span class="p">(</span><span class="n">aggregate_func</span><span class="p">)</span>
         <span class="n">rh</span><span class="o">.</span><span class="n">load_json</span><span class="p">(</span><span class="n">rh_fn</span><span class="p">,</span> <span class="n">cs</span><span class="p">)</span>
         <span class="n">rhs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rh</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">merge_foreign_data</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">,</span> <span class="n">in_scenario_list</span><span class="o">=</span><span class="n">scens</span><span class="p">,</span> <span class="n">in_runhistory_list</span><span class="o">=</span><span class="n">rhs</span><span class="p">)</span></div>
+</div>
+    <span class="k">return</span> <span class="n">merge_foreign_data</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">,</span> <span class="n">in_scenario_list</span><span class="o">=</span><span class="n">scens</span><span class="p">,</span> <span class="n">in_runhistory_list</span><span class="o">=</span><span class="n">rhs</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="merge_foreign_data"><a class="viewcode-back" href="../../../apidoc/smac.utils.merge_foreign_data.html#smac.utils.merge_foreign_data.merge_foreign_data">[docs]</a><span class="k">def</span> <span class="nf">merge_foreign_data</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
@@ -344,8 +344,8 @@
                 <span class="s2">&quot;Instance feature for </span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s2"> was not found in scenario data.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">instance_id</span><span class="p">))</span>
 
     <span class="n">runhistory</span><span class="o">.</span><span class="n">compute_all_costs</span><span class="p">(</span><span class="n">instances</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">train_insts</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">runhistory</span></div>
+</div>
+    <span class="k">return</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">runhistory</span>
 </pre></div>
 
            </div>

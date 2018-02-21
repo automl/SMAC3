@@ -277,7 +277,7 @@ paths to the instances and features (see <a class="reference external" href="opt
 The script to invoke <em>SMAC</em> is located in <em>scripts/smac</em>. Please see the
 <a class="reference external" href="quickstart.html#branin">Branin</a>-example to see how to use it.</p>
 <p><em>SMAC</em> is called via the commandline with the following arguments:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>python smac --scenario SCENARIO --seed INT --verbose_level LEVEL --mode MODE
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python smac --scenario SCENARIO --seed INT --verbose_level LEVEL --mode MODE
 </pre></div>
 </div>
 <dl class="docutils">
@@ -297,7 +297,7 @@ The script to invoke <em>SMAC</em> is located in <em>scripts/smac</em>. Please s
 </dl>
 <p>In the scenario file, there are two mandatory parameters: The <strong>algo</strong>-parameter
 defines how <em>SMAC</em> will call the target algorithm. Parameters will be appended to the call
-with <code class="docutils literal"><span class="pre">-PARAMETER</span> <span class="pre">VALUE</span></code>, so make sure your algorithm will accept the parameters in this
+with <code class="docutils literal notranslate"><span class="pre">-PARAMETER</span> <span class="pre">VALUE</span></code>, so make sure your algorithm will accept the parameters in this
 form. Read more in the section on <a class="reference external" href="tae.html#tae">target algorithms</a>.
 The <strong>paramfile</strong>-parameter defines the path to the <a class="reference external" href="options.html#pcs">PCS-file</a>,
 which describes the ranges and default values of the tunable parameters.
@@ -307,7 +307,7 @@ Both will interpret paths <em>from the execution-directory</em>.</p>
 <p>Currently, running <em>SMAC</em> via the commandline will register the algorithm with a
 <a class="reference external" href="tae.html#tae">Target Algorithm Evaluator (TAE)</a>, that requires the target algorithm to print
 the results to the console in the following format (see <a class="reference external" href="quickstart.html#branin">Branin</a>):</p>
-<div class="last highlight-bash"><div class="highlight"><pre><span></span>Result <span class="k">for</span> SMAC: &lt;STATUS&gt;, &lt;runtime&gt;, &lt;runlength&gt;, &lt;quality&gt;, &lt;seed&gt;, &lt;instance-specifics&gt;
+<div class="last highlight-bash notranslate"><div class="highlight"><pre><span></span>Result <span class="k">for</span> SMAC: &lt;STATUS&gt;, &lt;runtime&gt;, &lt;runlength&gt;, &lt;quality&gt;, &lt;seed&gt;, &lt;instance-specifics&gt;
 </pre></div>
 </div>
 </div>
@@ -317,9 +317,9 @@ the results to the console in the following format (see <a class="reference exte
 <p>If a <em>SMAC</em>-run was interrupted or you want to extend its computation- or
 time-limits, it can be restored and continued.
 To restore or continue a previous <em>SMAC</em>-run, use the
-<code class="docutils literal"><span class="pre">--restore_state</span> <span class="pre">FOLDER</span></code>-option in the commandline. If you want to increase
+<code class="docutils literal notranslate"><span class="pre">--restore_state</span> <span class="pre">FOLDER</span></code>-option in the commandline. If you want to increase
 computation- or time-limits, change the scenario-file specified with the
-<code class="docutils literal"><span class="pre">--scenario</span> <span class="pre">SCENARIOFILE</span></code>-option (<strong>not the one in the folder to be restored</strong>).
+<code class="docutils literal notranslate"><span class="pre">--scenario</span> <span class="pre">SCENARIOFILE</span></code>-option (<strong>not the one in the folder to be restored</strong>).
 Restarting a <em>SMAC</em>-run that quit due to budget-exhaustion will do nothing,
 because the budget is still exhausted.
 <strong>Changing any other options than *output_dir*, *wallclock_limit*, *runcount_limit* or

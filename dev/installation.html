@@ -255,12 +255,12 @@
 and on SWIG (&gt;3.0).</p>
 <p>To install both requirements system-wide on a linux system with apt,
 please call:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>sudo apt-get install build-essential swig
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install build-essential swig
 </pre></div>
 </div>
 <p>If you use Anaconda, you have to install both gcc and SWIG from Anaconda to
 prevent compilation errors:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>conda install gxx_linux-64 gcc_linux-64 swig
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda install gxx_linux-64 gcc_linux-64 swig
 </pre></div>
 </div>
 </div>
@@ -268,17 +268,17 @@ prevent compilation errors:</p>
 <span id="installation-pypi"></span><h2>Installation from pypi<a class="headerlink" href="#installation-from-pypi" title="Permalink to this headline">¶</a></h2>
 <p>To install SMAC3 from pypi, please use the following command on the command
 line:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>pip install smac
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install smac
 </pre></div>
 </div>
 <p>If you want to install it in the user space (e.g., because of missing
-permissions), please add the option <code class="code docutils literal"><span class="pre">--user</span></code> or create a virtualenv.</p>
+permissions), please add the option <code class="code docutils literal notranslate"><span class="pre">--user</span></code> or create a virtualenv.</p>
 </div>
 <div class="section" id="manual-installation">
 <span id="id2"></span><h2>Manual Installation<a class="headerlink" href="#manual-installation" title="Permalink to this headline">¶</a></h2>
 <p>To install SMAC3 from command line, please type the following commands on the
 command line:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>git clone https://github.com/automl/SMAC3
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/automl/SMAC3
 <span class="nb">cd</span> SMAC3
 cat requirements.txt <span class="p">|</span> xargs -n <span class="m">1</span> -L <span class="m">1</span> pip install
 python setup.py install

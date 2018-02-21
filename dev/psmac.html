@@ -278,13 +278,13 @@ please specify the following two arguments:</p>
 <p class="last"><em>pSMAC</em> has no option to specify the number of parallel runs. You have to start as many <em>pSMAC</em> runs as you want to run.</p>
 </div>
 <p>On the command line an exemplary call could be:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>python smac --scenario SCENARIO --seed INT --shared_model True --input_psmac_dirs smac3-output*
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python smac --scenario SCENARIO --seed INT --shared_model True --input_psmac_dirs smac3-output*
 </pre></div>
 </div>
 <p>We recommend that each <em>pSMAC</em> uses a different random <strong>seed</strong>.</p>
 <p>If you want to verify that all arguments are correct and <em>pSMAC</em> finds all file on the file space,
 please set the <strong>verbose</strong> level to <strong>DEBUG</strong> and grep in the following way</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>python smac --verbose DEBUG <span class="o">[</span>...<span class="o">]</span> <span class="p">|</span> grep -E <span class="s2">&quot;Loaded [0-9]+ new runs&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python smac --verbose DEBUG <span class="o">[</span>...<span class="o">]</span> <span class="p">|</span> grep -E <span class="s2">&quot;Loaded [0-9]+ new runs&quot;</span>
 </pre></div>
 </div>
 </div>
@@ -292,7 +292,7 @@ please set the <strong>verbose</strong> level to <strong>DEBUG</strong> and grep
 <span id="psmacinpython"></span><h2>Usage in Python<a class="headerlink" href="#usage-in-python" title="Permalink to this headline">¶</a></h2>
 <p>The same arguments used on the commandline can also be passed to the <em>Scenario</em> constructor.
 See above for a detailed description.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">({</span><span class="o">...</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">({</span><span class="o">...</span>
                 <span class="s2">&quot;shared_model&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
                 <span class="s2">&quot;input_psmac_dirs&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">output_path</span><span class="o">&gt;</span>
                 <span class="p">})</span>

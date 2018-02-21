@@ -414,8 +414,8 @@
                                  <span class="s1">&#39;callback&#39;</span><span class="p">:</span> <span class="n">callback</span><span class="p">,</span>
                                  <span class="s1">&#39;choice&#39;</span><span class="p">:</span> <span class="n">choice</span><span class="p">}</span>
 
-        <span class="k">if</span> <span class="n">mutually_exclusive_group</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_groups</span><span class="p">[</span><span class="n">mutually_exclusive_group</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">mutually_exclusive_group</span><span class="p">:</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_groups</span><span class="p">[</span><span class="n">mutually_exclusive_group</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_parse_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">scenario</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">help</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                         <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -707,8 +707,8 @@
         <span class="k">return</span> <span class="n">l</span>
 
 <div class="viewcode-block" id="Scenario.write"><a class="viewcode-back" href="../../../apidoc/smac.scenario.scenario.html#smac.scenario.scenario.Scenario.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Write scenario to self.output_dir/scenario.txt. &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out_writer</span><span class="o">.</span><span class="n">write_scenario_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="sd">&quot;&quot;&quot; Write scenario to self.output_dir/scenario.txt. &quot;&quot;&quot;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_writer</span><span class="o">.</span><span class="n">write_scenario_file</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Scenario.write_options_to_doc"><a class="viewcode-back" href="../../../apidoc/smac.scenario.scenario.html#smac.scenario.scenario.Scenario.write_options_to_doc">[docs]</a>    <span class="k">def</span> <span class="nf">write_options_to_doc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;scenario_options.rst&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Writes the option-list to file for autogeneration in documentation.</span>
@@ -730,8 +730,8 @@
                     <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot; Default: </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_arguments</span><span class="p">[</span><span class="n">arg</span><span class="p">][</span><span class="s1">&#39;default&#39;</span><span class="p">]))</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arguments</span><span class="p">[</span><span class="n">arg</span><span class="p">][</span><span class="s1">&#39;choice&#39;</span><span class="p">]:</span>
                     <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot; Must be from: </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_arguments</span><span class="p">[</span><span class="n">arg</span><span class="p">][</span><span class="s1">&#39;choice&#39;</span><span class="p">]))</span>
-                <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
+                <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
+            <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 
            </div>

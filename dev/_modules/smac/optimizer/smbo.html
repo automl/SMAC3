@@ -251,6 +251,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">smac.epm.rf_with_instances</span> <span class="k">import</span> <span class="n">RandomForestWithInstances</span>
@@ -258,6 +259,8 @@
 <span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="k">import</span> <span class="n">Intensifier</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer</span> <span class="k">import</span> <span class="n">pSMAC</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="k">import</span> <span class="n">AbstractAcquisitionFunction</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.random_configuration_chooser</span> <span class="k">import</span> <span class="n">ChooserNoCoolDown</span><span class="p">,</span> \
+    <span class="n">ChooserLinearCoolDown</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="k">import</span> <span class="n">AcquisitionFunctionMaximizer</span><span class="p">,</span> \
     <span class="n">RandomSearch</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
@@ -296,6 +299,7 @@
 <span class="sd">    acq_optimizer</span>
 <span class="sd">    acquisition_func</span>
 <span class="sd">    rng</span>
+<span class="sd">    random_configuration_chooser</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
@@ -311,7 +315,9 @@
                  <span class="n">acq_optimizer</span><span class="p">:</span> <span class="n">AcquisitionFunctionMaximizer</span><span class="p">,</span>
                  <span class="n">acquisition_func</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
                  <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span>
-                 <span class="n">restore_incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">restore_incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">random_configuration_chooser</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+                     <span class="n">ChooserNoCoolDown</span><span class="p">,</span> <span class="n">ChooserLinearCoolDown</span><span class="p">]</span><span class="o">=</span><span class="n">ChooserNoCoolDown</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Interface that contains the main Bayesian optimization loop</span>
 
@@ -348,6 +354,10 @@
 <span class="sd">            incumbent to be used from the start. ONLY used to restore states.</span>
 <span class="sd">        rng: np.random.RandomState</span>
 <span class="sd">            Random number generator</span>
+<span class="sd">        random_configuration_chooser</span>
+<span class="sd">            Chooser for random configuration -- one of</span>
+<span class="sd">            * ChooserNoCoolDown(modulus)</span>
+<span class="sd">            * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
@@ -367,6 +377,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span> <span class="o">=</span> <span class="n">acq_optimizer</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_func</span> <span class="o">=</span> <span class="n">acquisition_func</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">rng</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_configuration_chooser</span> <span class="o">=</span> <span class="n">random_configuration_chooser</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_random_search</span> <span class="o">=</span> <span class="n">RandomSearch</span><span class="p">(</span>
             <span class="n">acquisition_func</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_space</span><span class="p">,</span> <span class="n">rng</span>
@@ -396,8 +407,8 @@
             <span class="c1"># Restoring state!</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;State Restored! Starting optimization with &quot;</span>
                              <span class="s2">&quot;incumbent </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;State restored with following budget:&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">print_stats</span><span class="p">()</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;State restored with following budget:&quot;</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">print_stats</span><span class="p">()</span>
 
 <div class="viewcode-block" id="SMBO.run"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Runs the Bayesian optimization loop</span>
@@ -450,8 +461,8 @@
                 <span class="k">break</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">print_stats</span><span class="p">(</span><span class="n">debug_out</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span></div>
+</div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span>
 
 <div class="viewcode-block" id="SMBO.choose_next"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.choose_next">[docs]</a>    <span class="k">def</span> <span class="nf">choose_next</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                     <span class="n">incumbent_value</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -495,9 +506,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_func</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="n">incumbent_value</span><span class="p">)</span>
 
         <span class="n">challengers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span><span class="o">.</span><span class="n">maximize</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span> <span class="mi">5000</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">challengers</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_configuration_chooser</span>
+        <span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">challengers</span>
 
 <div class="viewcode-block" id="SMBO.validate"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_mode</span><span class="o">=</span><span class="s1">&#39;inc&#39;</span><span class="p">,</span> <span class="n">instance_mode</span><span class="o">=</span><span class="s1">&#39;train+test&#39;</span><span class="p">,</span>
                  <span class="n">repetitions</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_epm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;threading&#39;</span><span class="p">):</span>
@@ -542,8 +553,8 @@
             <span class="n">new_rh</span> <span class="o">=</span> <span class="n">validator</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">config_mode</span><span class="p">,</span> <span class="n">instance_mode</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">,</span>
                                         <span class="n">n_jobs</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
                                         <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">tae_runner</span><span class="p">,</span>
-                                        <span class="n">output</span><span class="o">=</span><span class="n">new_rh_path</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">new_rh</span></div>
+                                        <span class="n">output</span><span class="o">=</span><span class="n">new_rh_path</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">new_rh</span>
 
     <span class="k">def</span> <span class="nf">_get_timebound_for_intensification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_spent</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculate time left for intensify from the time spent on</span>
@@ -569,8 +580,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Total time: </span><span class="si">%.4f</span><span class="s2">, time spent on choosing next &quot;</span>
                           <span class="s2">&quot;configurations: </span><span class="si">%.4f</span><span class="s2"> (</span><span class="si">%.2f</span><span class="s2">), time left for &quot;</span>
                           <span class="s2">&quot;intensification: </span><span class="si">%.4f</span><span class="s2"> (</span><span class="si">%.2f</span><span class="s2">)&quot;</span> <span class="o">%</span>
-                          <span class="p">(</span><span class="n">total_time</span><span class="p">,</span> <span class="n">time_spent</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">frac_intensify</span><span class="p">),</span> <span class="n">time_left</span><span class="p">,</span> <span class="n">frac_intensify</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">time_left</span></div>
+                          <span class="p">(</span><span class="n">total_time</span><span class="p">,</span> <span class="n">time_spent</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">frac_intensify</span><span class="p">),</span> <span class="n">time_left</span><span class="p">,</span> <span class="n">frac_intensify</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="n">time_left</span>
 </pre></div>
 
            </div>

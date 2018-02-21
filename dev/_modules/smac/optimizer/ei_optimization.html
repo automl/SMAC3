@@ -259,6 +259,7 @@
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="k">import</span> <span class="n">Stats</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="k">import</span> <span class="n">AbstractAcquisitionFunction</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.random_configuration_chooser</span> <span class="k">import</span> <span class="n">ChooserNoCoolDown</span>
 <span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="k">import</span> <span class="n">MAXINT</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Aaron Klein, Marius Lindauer&quot;</span>
@@ -323,8 +324,8 @@
 <span class="sd">        -------</span>
 <span class="sd">        iterable</span>
 <span class="sd">            An iterable consisting of :class:`smac.configspace.Configuration`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maximize</span><span class="p">(</span><span class="n">runhistory</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">num_points</span><span class="p">)]</span></div>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="k">return</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maximize</span><span class="p">(</span><span class="n">runhistory</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">num_points</span><span class="p">)]</span>
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_maximize</span><span class="p">(</span>
@@ -380,8 +381,8 @@
         <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">lexsort</span><span class="p">((</span><span class="n">random</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">acq_values</span><span class="o">.</span><span class="n">flatten</span><span class="p">()))</span>
 
         <span class="c1"># Cannot use zip here because the indices array cannot index the</span>
-        <span class="c1"># rand_configs list, because the second is a pure python list</span>
-        <span class="k">return</span> <span class="p">[(</span><span class="n">acq_values</span><span class="p">[</span><span class="n">ind</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">configs</span><span class="p">[</span><span class="n">ind</span><span class="p">])</span> <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span></div>
+        <span class="c1"># rand_configs list, because the second is a pure python list</span></div>
+        <span class="k">return</span> <span class="p">[(</span><span class="n">acq_values</span><span class="p">[</span><span class="n">ind</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">configs</span><span class="p">[</span><span class="n">ind</span><span class="p">])</span> <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
 
 
 <div class="viewcode-block" id="LocalSearch"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.LocalSearch">[docs]</a><span class="k">class</span> <span class="nc">LocalSearch</span><span class="p">(</span><span class="n">AcquisitionFunctionMaximizer</span><span class="p">):</span>
@@ -551,8 +552,8 @@
                                   <span class="n">local_search_steps</span><span class="p">,</span> <span class="n">neighbors_looked_at</span><span class="p">,</span>
                                   <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">time_n</span><span class="p">))</span>
                 <span class="k">break</span>
-
-        <span class="k">return</span> <span class="n">acq_val_incumbent</span><span class="p">,</span> <span class="n">incumbent</span></div>
+</div>
+        <span class="k">return</span> <span class="n">acq_val_incumbent</span><span class="p">,</span> <span class="n">incumbent</span>
 
 
 <div class="viewcode-block" id="RandomSearch"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.RandomSearch">[docs]</a><span class="k">class</span> <span class="nc">RandomSearch</span><span class="p">(</span><span class="n">AcquisitionFunctionMaximizer</span><span class="p">):</span>
@@ -587,8 +588,8 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sort_configs_by_acq_value</span><span class="p">(</span><span class="n">rand_configs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rand_configs</span><span class="p">)):</span>
-                <span class="n">rand_configs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;Random Search&#39;</span>
-            <span class="k">return</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rand_configs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rand_configs</span><span class="p">))]</span></div>
+                <span class="n">rand_configs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;Random Search&#39;</span></div>
+            <span class="k">return</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rand_configs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rand_configs</span><span class="p">))]</span>
 
 
 <div class="viewcode-block" id="InterleavedLocalAndRandomSearch"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch">[docs]</a><span class="k">class</span> <span class="nc">InterleavedLocalAndRandomSearch</span><span class="p">(</span><span class="n">AcquisitionFunctionMaximizer</span><span class="p">):</span>
@@ -626,6 +627,7 @@
             <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
             <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">,</span>
             <span class="n">num_points</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="n">random_configuration_chooser</span><span class="p">,</span>
             <span class="o">*</span><span class="n">args</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
         <span class="n">next_configs_by_local_search</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_search</span><span class="o">.</span><span class="n">_maximize</span><span class="p">(</span>
@@ -658,17 +660,18 @@
         <span class="n">next_configs_by_acq_value</span> <span class="o">=</span> <span class="p">[</span><span class="n">_</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">next_configs_by_acq_value</span><span class="p">]</span>
 
         <span class="n">challengers</span> <span class="o">=</span> <span class="n">ChallengerList</span><span class="p">(</span><span class="n">next_configs_by_acq_value</span><span class="p">,</span>
-                                     <span class="bp">self</span><span class="o">.</span><span class="n">config_space</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">challengers</span></div>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">config_space</span><span class="p">,</span>
+                                     <span class="n">random_configuration_chooser</span><span class="p">)</span>
+        <span class="n">random_configuration_chooser</span><span class="o">.</span><span class="n">next_smbo_iteration</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="n">challengers</span>
 
     <span class="k">def</span> <span class="nf">_maximize</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
             <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">,</span>
             <span class="n">num_points</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
-
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
         
         
 <div class="viewcode-block" id="ChallengerList"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.ChallengerList">[docs]</a><span class="k">class</span> <span class="nc">ChallengerList</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -688,28 +691,28 @@
 <span class="sd">        ConfigurationSpace from which to sample new random configurations.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">challengers</span><span class="p">,</span> <span class="n">configuration_space</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">challengers</span><span class="p">,</span> <span class="n">configuration_space</span><span class="p">,</span> <span class="n">random_configuration_chooser</span><span class="o">=</span><span class="n">ChooserNoCoolDown</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">challengers</span> <span class="o">=</span> <span class="n">challengers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">configuration_space</span> <span class="o">=</span> <span class="n">configuration_space</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_next_is_random</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_iteration</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># 1-based to prevent from starting with a random configuration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_configuration_chooser</span> <span class="o">=</span> <span class="n">random_configuration_chooser</span>
 
     <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">challengers</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_is_random</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">challengers</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">StopIteration</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_is_random</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_next_is_random</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configuration_space</span><span class="o">.</span><span class="n">sample_configuration</span><span class="p">()</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;Random Search&#39;</span>
-            <span class="k">return</span> <span class="n">config</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_next_is_random</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">challengers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_index</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="k">return</span> <span class="n">config</span></div>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_configuration_chooser</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_iteration</span><span class="p">):</span>
+                <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configuration_space</span><span class="o">.</span><span class="n">sample_configuration</span><span class="p">()</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;Random Search&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">challengers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_index</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_iteration</span> <span class="o">+=</span> <span class="mi">1</span></div>
+            <span class="k">return</span> <span class="n">config</span>
 </pre></div>
 
            </div>

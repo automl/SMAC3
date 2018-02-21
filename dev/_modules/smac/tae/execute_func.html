@@ -416,11 +416,11 @@
             
             <span class="n">runtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
             <span class="n">additional_run_info</span> <span class="o">=</span> <span class="p">{}</span>
+</div>
+        <span class="k">return</span> <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">additional_run_info</span>
 
-        <span class="k">return</span> <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">additional_run_info</span></div>
-
-    <span class="k">def</span> <span class="nf">_call_ta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+    <span class="k">def</span> <span class="nf">_call_ta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="p">):</span></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="ExecuteTAFuncDict"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict">[docs]</a><span class="k">class</span> <span class="nc">ExecuteTAFuncDict</span><span class="p">(</span><span class="n">AbstractTAFunc</span><span class="p">):</span>
@@ -458,8 +458,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">_call_ta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-
-        <span class="k">return</span> <span class="n">obj</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+</div>
+        <span class="k">return</span> <span class="n">obj</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="ExecuteTAFuncArray"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncArray">[docs]</a><span class="k">class</span> <span class="nc">ExecuteTAFuncArray</span><span class="p">(</span><span class="n">AbstractTAFunc</span><span class="p">):</span>
@@ -498,8 +498,8 @@
     <span class="k">def</span> <span class="nf">_call_ta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
         <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">val</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_dictionary</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">())],</span>
-                     <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">obj</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+                     <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">obj</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
            </div>

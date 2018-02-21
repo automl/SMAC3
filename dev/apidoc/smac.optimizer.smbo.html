@@ -256,8 +256,8 @@
 <span id="smac-optimizer-smbo-module"></span><h1>smac.optimizer.smbo module<a class="headerlink" href="#module-smac.optimizer.smbo" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.optimizer.smbo.SMBO">
-<em class="property">class </em><code class="descclassname">smac.optimizer.smbo.</code><code class="descname">SMBO</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>stats: smac.stats.stats.Stats</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</em>, <em>intensifier: smac.intensification.intensification.Intensifier</em>, <em>aggregate_func: &lt;built-in function callable&gt;</em>, <em>num_run: int</em>, <em>model: smac.epm.rf_with_instances.RandomForestWithInstances</em>, <em>acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</em>, <em>acquisition_func: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>rng: mtrand.RandomState</em>, <em>restore_incumbent: ConfigSpace.configuration_space.Configuration = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<em class="property">class </em><code class="descclassname">smac.optimizer.smbo.</code><code class="descname">SMBO</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>stats: smac.stats.stats.Stats</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</em>, <em>intensifier: smac.intensification.intensification.Intensifier</em>, <em>aggregate_func: &lt;built-in function callable&gt;</em>, <em>num_run: int</em>, <em>model: smac.epm.rf_with_instances.RandomForestWithInstances</em>, <em>acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</em>, <em>acquisition_func: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>rng: mtrand.RandomState</em>, <em>restore_incumbent: ConfigSpace.configuration_space.Configuration = None</em>, <em>random_configuration_chooser: Union[smac.optimizer.random_configuration_chooser.ChooserNoCoolDown</em>, <em>smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown] = &lt;smac.optimizer.random_configuration_chooser.ChooserNoCoolDown object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Interface that contains the main Bayesian optimization loop</p>
 <dl class="attribute">
 <dt id="smac.optimizer.smbo.SMBO.logger">
@@ -334,6 +334,11 @@
 <code class="descname">rng</code><a class="headerlink" href="#smac.optimizer.smbo.SMBO.rng" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="smac.optimizer.smbo.SMBO.random_configuration_chooser">
+<code class="descname">random_configuration_chooser</code><a class="headerlink" href="#smac.optimizer.smbo.SMBO.random_configuration_chooser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <p>Interface that contains the main Bayesian optimization loop</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -361,6 +366,9 @@ RandomForestWithInstances)</li>
 criterion for acq_optimizer)</li>
 <li><strong>restore_incumbent</strong> (<em>Configuration</em>) – incumbent to be used from the start. ONLY used to restore states.</li>
 <li><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</li>
+<li><strong>random_configuration_chooser</strong> – Chooser for random configuration – one of
+* ChooserNoCoolDown(modulus)
+* ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)</li>
 </ul>
 </td>
 </tr>
@@ -370,8 +378,8 @@ criterion for acq_optimizer)</li>
 <dt id="smac.optimizer.smbo.SMBO.choose_next">
 <code class="descname">choose_next</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em>, <em>Y: numpy.ndarray</em>, <em>incumbent_value: float = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO.choose_next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO.choose_next" title="Permalink to this definition">¶</a></dt>
 <dd><p>Choose next candidate solution with Bayesian optimization. The
-suggested configurations depend on the argument <code class="docutils literal"><span class="pre">acq_optimizer</span></code> to
-the <code class="docutils literal"><span class="pre">SMBO</span></code> class.</p>
+suggested configurations depend on the argument <code class="docutils literal notranslate"><span class="pre">acq_optimizer</span></code> to
+the <code class="docutils literal notranslate"><span class="pre">SMBO</span></code> class.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

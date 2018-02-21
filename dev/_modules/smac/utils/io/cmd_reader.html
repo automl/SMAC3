@@ -249,7 +249,11 @@
   <h1>Source code for smac.utils.io.cmd_reader</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">argparse</span> <span class="k">import</span> <span class="n">ArgumentParser</span><span class="p">,</span> <span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span> <span class="n">SUPPRESS</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">argparse</span> <span class="k">import</span> <span class="n">ArgumentParser</span><span class="p">,</span> <span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span> <span class="n">SUPPRESS</span><span class="p">,</span> <span class="n">FileType</span>
+
+<span class="kn">from</span> <span class="nn">smac.optimizer.random_configuration_chooser</span> <span class="k">import</span> <span class="n">ChooserNoCoolDown</span><span class="p">,</span> \
+    <span class="n">ChooserLinearCoolDown</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
@@ -309,17 +313,20 @@
                               <span class="n">help</span><span class="o">=</span><span class="n">SUPPRESS</span><span class="p">)</span><span class="c1"># list of trajectory dump files, </span>
                                             <span class="c1"># reads runhistory </span>
                                             <span class="c1"># and uses final incumbent as challenger </span>
-
+        <span class="n">req_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--random_configuration_chooser&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">FileType</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">),</span>
+                              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;[dev] path to a python module containing a class `RandomConfigurationChooserImpl`&quot;</span>
+                                   <span class="s2">&quot;implementing the interface of `RandomConfigurationChooser`&quot;</span><span class="p">)</span>
         <span class="n">args_</span><span class="p">,</span> <span class="n">misc</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_known_args</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_check_args</span><span class="p">(</span><span class="n">args_</span><span class="p">)</span>
+        <span class="n">CMDReader</span><span class="o">.</span><span class="n">_check_args</span><span class="p">(</span><span class="n">args_</span><span class="p">,</span> <span class="n">set_parsed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># remove leading &#39;-&#39; in option names</span>
         <span class="n">misc</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">k</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">),</span> <span class="n">v</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">))</span>
                     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">misc</span><span class="p">[::</span><span class="mi">2</span><span class="p">],</span> <span class="n">misc</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]))</span>
+</div>
+        <span class="k">return</span> <span class="n">args_</span><span class="p">,</span> <span class="n">misc</span>
 
-        <span class="k">return</span> <span class="n">args_</span><span class="p">,</span> <span class="n">misc</span></div>
-
-    <span class="k">def</span> <span class="nf">_check_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args_</span><span class="p">):</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_check_args</span><span class="p">(</span><span class="n">args_</span><span class="p">,</span> <span class="n">set_parsed</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Checks command line arguments (e.g., whether all given files exist)</span>
 
 <span class="sd">        Parameters</span>
@@ -334,7 +341,26 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">scenario_file</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Not found: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">scenario_file</span><span class="p">))</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Not found: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">scenario_file</span><span class="p">))</span>
+        <span class="n">CMDReader</span><span class="o">.</span><span class="n">_check_random_configuration_chooser</span><span class="p">(</span><span class="n">args_</span><span class="p">,</span> <span class="n">set_parsed</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_check_random_configuration_chooser</span><span class="p">(</span><span class="n">args_</span><span class="p">,</span> <span class="n">set_parsed</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">args_</span><span class="p">,</span> <span class="s1">&#39;random_configuration_chooser&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">set_parsed</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">args_</span><span class="p">,</span> <span class="s1">&#39;random_configuration_chooser&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">args_</span><span class="o">.</span><span class="n">random_configuration_chooser</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">set_parsed</span><span class="p">:</span>
+                <span class="n">args_</span><span class="o">.</span><span class="n">random_configuration_chooser</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">importlib.util</span>
+            <span class="n">spec</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">spec_from_file_location</span><span class="p">(</span><span class="s2">&quot;smac.custom.random_configuration_chooser&quot;</span><span class="p">,</span> <span class="n">args_</span><span class="o">.</span><span class="n">random_configuration_chooser</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">rcc_module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">module_from_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+            <span class="n">spec</span><span class="o">.</span><span class="n">loader</span><span class="o">.</span><span class="n">exec_module</span><span class="p">(</span><span class="n">rcc_module</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">set_parsed</span><span class="p">:</span></div>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">args_</span><span class="p">,</span> <span class="s1">&#39;random_configuration_chooser&#39;</span><span class="p">,</span> <span class="n">rcc_module</span><span class="o">.</span><span class="n">RandomConfigurationChooserImpl</span><span class="p">())</span>
 </pre></div>
 
            </div>

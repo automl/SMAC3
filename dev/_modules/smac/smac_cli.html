@@ -356,14 +356,16 @@
                 <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configs</span><span class="p">,</span>
                 <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
                 <span class="n">restore_incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
-                <span class="n">run_id</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+                <span class="n">run_id</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+                <span class="n">random_configuration_chooser</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">random_configuration_chooser</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;ROAR&quot;</span><span class="p">:</span>
             <span class="n">optimizer</span> <span class="o">=</span> <span class="n">ROAR</span><span class="p">(</span>
                 <span class="n">scenario</span><span class="o">=</span><span class="n">scen</span><span class="p">,</span>
                 <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
                 <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>
                 <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configs</span><span class="p">,</span>
-                <span class="n">run_id</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+                <span class="n">run_id</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+                <span class="n">random_configuration_chooser</span><span class="o">=</span><span class="n">random_configuration_chooser</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;EPILS&quot;</span><span class="p">:</span>
             <span class="n">optimizer</span> <span class="o">=</span> <span class="n">EPILS</span><span class="p">(</span>
                 <span class="n">scenario</span><span class="o">=</span><span class="n">scen</span><span class="p">,</span>
@@ -373,8 +375,8 @@
                 <span class="n">run_id</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">optimizer</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
-        <span class="k">except</span> <span class="p">(</span><span class="n">TAEAbortException</span><span class="p">,</span> <span class="n">FirstRunCrashedException</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">err</span><span class="p">)</span></div>
+        <span class="k">except</span> <span class="p">(</span><span class="n">TAEAbortException</span><span class="p">,</span> <span class="n">FirstRunCrashedException</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SMACCLI.restore_state"><a class="viewcode-back" href="../../apidoc/smac.smac_cli.html#smac.smac_cli.SMACCLI.restore_state">[docs]</a>    <span class="k">def</span> <span class="nf">restore_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scen</span><span class="p">,</span> <span class="n">args_</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Read in files for state-restoration: runhistory, stats, trajectory.</span>
@@ -397,8 +399,8 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">traj_path_aclib</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">traj_fn</span><span class="p">:</span>
             <span class="n">traj_list_aclib</span> <span class="o">=</span> <span class="n">traj_fn</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">traj_path_old</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">traj_fn</span><span class="p">:</span>
-            <span class="n">traj_list_old</span> <span class="o">=</span> <span class="n">traj_fn</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">rh</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">traj_list_aclib</span><span class="p">,</span> <span class="n">traj_list_old</span></div>
+            <span class="n">traj_list_old</span> <span class="o">=</span> <span class="n">traj_fn</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="n">rh</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">traj_list_aclib</span><span class="p">,</span> <span class="n">traj_list_old</span>
 
 <div class="viewcode-block" id="SMACCLI.restore_state_after_output_dir"><a class="viewcode-back" href="../../apidoc/smac.smac_cli.html#smac.smac_cli.SMACCLI.restore_state_after_output_dir">[docs]</a>    <span class="k">def</span> <span class="nf">restore_state_after_output_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scen</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">traj_list_aclib</span><span class="p">,</span>
                                        <span class="n">traj_list_old</span><span class="p">):</span>
@@ -417,8 +419,8 @@
         <span class="n">trajectory</span> <span class="o">=</span> <span class="n">TrajLogger</span><span class="o">.</span><span class="n">read_traj_aclib_format</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">traj_path_aclib</span><span class="p">,</span> <span class="n">cs</span><span class="o">=</span><span class="n">scen</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
         <span class="n">incumbent</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;incumbent&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Restored incumbent </span><span class="si">%s</span><span class="s2"> from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">,</span>
-                          <span class="n">traj_path_aclib</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">incumbent</span></div></div>
+                          <span class="n">traj_path_aclib</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">incumbent</span>
 </pre></div>
 
            </div>

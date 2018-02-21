@@ -257,7 +257,7 @@
 <dl class="class">
 <dt id="smac.optimizer.acquisition.AbstractAcquisitionFunction">
 <em class="property">class </em><code class="descclassname">smac.optimizer.acquisition.</code><code class="descname">AbstractAcquisitionFunction</code><span class="sig-paren">(</span><em>model: smac.epm.base_epm.AbstractEPM</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#AbstractAcquisitionFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Abstract base class for acquisition function</p>
 <dl class="attribute">
 <dt id="smac.optimizer.acquisition.AbstractAcquisitionFunction.model">
@@ -302,11 +302,11 @@ respective attributes for the acquisition function object.</p>
 <dl class="class">
 <dt id="smac.optimizer.acquisition.EI">
 <em class="property">class </em><code class="descclassname">smac.optimizer.acquisition.</code><code class="descname">EI</code><span class="sig-paren">(</span><em>model: smac.epm.base_epm.AbstractEPM</em>, <em>par: float = 0.0</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#EI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.EI" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal"><span class="pre">smac.optimizer.acquisition.AbstractAcquisitionFunction</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.acquisition.AbstractAcquisitionFunction</span></code></a></p>
 <p>Computes for a given x the expected improvement as
 acquisition value.</p>
-<p><span class="math">\(EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]\)</span>,
-with <span class="math">\(f(X^+)\)</span> as the incumbent.</p>
+<p><span class="math notranslate">\(EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]\)</span>,
+with <span class="math notranslate">\(f(X^+)\)</span> as the incumbent.</p>
 <p>Constructor</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -352,11 +352,11 @@ respective attributes for the acquisition function object.</p>
 <dl class="class">
 <dt id="smac.optimizer.acquisition.EIPS">
 <em class="property">class </em><code class="descclassname">smac.optimizer.acquisition.</code><code class="descname">EIPS</code><span class="sig-paren">(</span><em>model: smac.epm.base_epm.AbstractEPM</em>, <em>par: float = 0.0</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#EIPS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.EIPS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.EI" title="smac.optimizer.acquisition.EI"><code class="xref py py-class docutils literal"><span class="pre">smac.optimizer.acquisition.EI</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.EI" title="smac.optimizer.acquisition.EI"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.acquisition.EI</span></code></a></p>
 <p>Computes for a given x the expected improvement as
 acquisition value.
-<span class="math">\(EI(X) := \frac{\mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]} {np.log10(r(x))}\)</span>,
-with <span class="math">\(f(X^+)\)</span> as the incumbent and <span class="math">\(r(x)\)</span> as runtime.</p>
+<span class="math notranslate">\(EI(X) := \frac{\mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]} {np.log10(r(x))}\)</span>,
+with <span class="math notranslate">\(f(X^+)\)</span> as the incumbent and <span class="math notranslate">\(r(x)\)</span> as runtime.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -402,7 +402,7 @@ respective attributes for the acquisition function object.</p>
 <dl class="class">
 <dt id="smac.optimizer.acquisition.LogEI">
 <em class="property">class </em><code class="descclassname">smac.optimizer.acquisition.</code><code class="descname">LogEI</code><span class="sig-paren">(</span><em>model: smac.epm.base_epm.AbstractEPM</em>, <em>par: float = 0.0</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#LogEI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.LogEI" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal"><span class="pre">smac.optimizer.acquisition.AbstractAcquisitionFunction</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.acquisition.AbstractAcquisitionFunction</span></code></a></p>
 <p>Computes for a given x the logarithm expected improvement as
 acquisition value.</p>
 <table class="docutils field-list" frame="void" rules="none">

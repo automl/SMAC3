@@ -266,13 +266,13 @@ This example aims to explain the basic usage of <em>SMAC</em>. There are differe
 <p>The easiest way to use <em>SMAC</em> is to use the <a class="reference external" href="apidoc/smac.facade.func_facade.html#smac.facade.func_facade.fmin_smac">f_min SMAC wrapper</a>. It is
 implemented in <cite>examples/branin/branin_fmin.py</cite> and requires no extra files. We
 import the fmin-function and the Branin-function:</p>
-<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>3
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>3
 4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">branin</span> <span class="k">import</span> <span class="n">branin</span>
 <span class="kn">from</span> <span class="nn">smac.facade.func_facade</span> <span class="k">import</span> <span class="n">fmin_smac</span>
 </pre></div>
 </td></tr></table></div>
 <p>And run the f_min-function:</p>
-<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>16
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>16
 17
 18
 19
@@ -290,16 +290,16 @@ use all of <em>SMACs</em> capability, a <a class="reference external" href="opti
 </div>
 <div class="section" id="command-line">
 <h3>Command line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h3>
-<p>There are a wrapper <code class="docutils literal"><span class="pre">cmdline_wrapper.py</span></code>, a scenario-file <code class="docutils literal"><span class="pre">scenario.txt</span></code> and a
-PCS-file <code class="docutils literal"><span class="pre">param_config_space.pcs</span></code> in the branin-folder.
+<p>There are a wrapper <code class="docutils literal notranslate"><span class="pre">cmdline_wrapper.py</span></code>, a scenario-file <code class="docutils literal notranslate"><span class="pre">scenario.txt</span></code> and a
+PCS-file <code class="docutils literal notranslate"><span class="pre">param_config_space.pcs</span></code> in the branin-folder.
 To run the example scenario, change into the root directory of <em>SMAC</em> and type the following commands:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> examples/branin
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> examples/branin
 python ../../scripts/smac --scenario scenario.txt
 </pre></div>
 </div>
 <p>The python command runs <em>SMAC</em> with the specified scenario. The scenario file contains the following lines:</p>
 <blockquote>
-<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">python</span> <span class="n">cmdline_wrapper</span><span class="o">.</span><span class="n">py</span>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">python</span> <span class="n">cmdline_wrapper</span><span class="o">.</span><span class="n">py</span>
 <span class="n">paramfile</span> <span class="o">=</span> <span class="n">param_config_space</span><span class="o">.</span><span class="n">pcs</span>
 <span class="n">run_obj</span> <span class="o">=</span> <span class="n">quality</span>
 <span class="n">runcount_limit</span> <span class="o">=</span> <span class="mi">500</span>
@@ -311,14 +311,14 @@ python ../../scripts/smac --scenario scenario.txt
 This is further explained in the chapter about the <a class="reference external" href="tae.html">Target Algorithm Evaluator (TAE)</a>.
 An algorithm call by <em>SMAC</em> is of the following format:</p>
 <blockquote>
-<div><div class="highlight-bash"><div class="highlight"><pre><span></span>&lt;algo&gt; &lt;instance&gt; &lt;instance specific&gt; &lt;cutoff time&gt; &lt;runlength&gt; &lt;seed&gt; &lt;algorithm parameters&gt;
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&lt;algo&gt; &lt;instance&gt; &lt;instance specific&gt; &lt;cutoff time&gt; &lt;runlength&gt; &lt;seed&gt; &lt;algorithm parameters&gt;
 python branin.py <span class="m">0</span> <span class="m">0</span> <span class="m">999999999</span>.0 <span class="m">0</span> <span class="m">1148756733</span> -x1 -1.1338595629 -x2 <span class="m">13</span>.8770222718
 </pre></div>
 </div>
 </div></blockquote>
 <p>The <strong>paramfile</strong> parameter tells <em>SMAC</em> which Parameter Configuration Space (<a class="reference external" href="options.html#paramcs">PCS</a>)-file to use. This file contains a list of the algorithm’s parameters, their domains and default values:</p>
 <blockquote>
-<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">x1</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">]</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x1</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">]</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">x2</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">15</span><span class="p">]</span>  <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -329,7 +329,7 @@ python branin.py <span class="m">0</span> <span class="m">0</span> <span class="
 <p><em>SMAC</em> reads the results from the command line output. The wrapper returns the
 results of the algorithm in a specific format:</p>
 <blockquote>
-<div><div class="highlight-bash"><div class="highlight"><pre><span></span>Result <span class="k">for</span> SMAC: &lt;STATUS&gt;, &lt;running time&gt;, &lt;runlength&gt;, &lt;quality&gt;, &lt;seed&gt;, &lt;instance-specifics&gt;
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Result <span class="k">for</span> SMAC: &lt;STATUS&gt;, &lt;running time&gt;, &lt;runlength&gt;, &lt;quality&gt;, &lt;seed&gt;, &lt;instance-specifics&gt;
 Result <span class="k">for</span> SMAC: SUCCESS, <span class="m">0</span>, <span class="m">0</span>, <span class="m">48</span>.948190, <span class="m">1148756733</span>
 </pre></div>
 </div>
@@ -345,7 +345,7 @@ Result <span class="k">for</span> SMAC: SUCCESS, <span class="m">0</span>, <span
 </div></blockquote>
 <p><em>SMAC</em> will terminate with the following output:</p>
 <blockquote>
-<div><div class="highlight-bash"><div class="highlight"><pre><span></span>INFO:intensifier:Updated estimated error of incumbent on <span class="m">122</span> runs: <span class="m">0</span>.5063
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>INFO:intensifier:Updated estimated error of incumbent on <span class="m">122</span> runs: <span class="m">0</span>.5063
 DEBUG:root:Remaining budget: inf <span class="o">(</span>wallclock<span class="o">)</span>, inf <span class="o">(</span>ta costs<span class="o">)</span>, -6.000000 <span class="o">(</span>target runs<span class="o">)</span>
 INFO:Stats:##########################################################
 INFO:Stats:Statistics:
@@ -366,9 +366,9 @@ INFO:SMAC:Final Incumbent: Configuration:
 <span id="svm-example"></span><h2>Using <em>SMAC</em> in Python: SVM<a class="headerlink" href="#using-smac-in-python-svm" title="Permalink to this headline">¶</a></h2>
 <p>To explain the use of <em>SMAC</em> within Python, let’s look at a real-world example,
 optimizing a Support Vector Machine (SVM) on the widely known <a class="reference external" href="https://en.wikipedia.org/wiki/Iris_flower_data_set">IRIS-dataset</a>.
-This example is located in <code class="code docutils literal"><span class="pre">examples/svm.py</span></code>.</p>
+This example is located in <code class="code docutils literal notranslate"><span class="pre">examples/svm.py</span></code>.</p>
 <p>To use <em>SMAC</em> directly with Python, we first import the necessary modules</p>
-<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 9
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 9
 10
 11
 12
@@ -408,7 +408,7 @@ quickly lead to overfitting, which is why we use cross-validation to evaluate
 the configuration.</p>
 <p>Let’s start by creating a ConfigSpace-object and adding the first hyperparameter: the choice of
 the kernel.</p>
-<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>60
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>60
 61
 62
 63
@@ -423,7 +423,7 @@ the kernel.</p>
 </td></tr></table></div>
 <p>We can add Integers, Floats or Categoricals to the ConfigSpace-object all at
 once, by passing them in a list.</p>
-<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>67
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>67
 68
 69
 70</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># There are some hyperparameters shared by all kernels</span>
@@ -436,7 +436,7 @@ once, by passing them in a list.</p>
 We can reflect this in optimization using <strong>conditions</strong> to deactivate parameters that are irrelevant to the current kernel.
 Deactivated parameters are not considered during optimization, limiting the search-space to reasonable configurations.
 This way human knowledge about the problem is introduced.</p>
-<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>72
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>72
 73
 74
 75
@@ -454,7 +454,7 @@ This way human knowledge about the problem is introduced.</p>
 <p>Conditions can be used for various reasons. The <cite>gamma</cite>-hyperparameter for
 example can be set to “auto” or to a fixed float-value. We introduce a parameter
 that is only activated if <cite>gamma</cite> is not set to “auto”.</p>
-<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>80
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>80
 81
 82
 83
@@ -476,7 +476,7 @@ that is only activated if <cite>gamma</cite> is not set to “auto”.</p>
 <p>Of course we also define a function to evaluate the configured SVM on the IRIS-dataset.
 Some options, such as the <em>kernel</em> or <em>C</em>, can be passed directly.
 Others, such as <em>gamma</em>, need to be translated before the call to the SVM.</p>
-<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>28
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>28
 29
 30
 31
@@ -537,7 +537,7 @@ Others, such as <em>gamma</em>, need to be translated before the call to the SVM
 We provide a <a class="reference external" href="options.html#scenario">list of possible options</a> in the scenario.</p>
 <p>The initialization of a scenario in the code uses the same keywords as a
 scenario-file, which we used in the Branin example.</p>
-<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>91
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>91
 92
 93
 94
@@ -555,7 +555,7 @@ Optimization-loop and calculates the incumbent.
 To automatically handle the exploration of the search space
 and evaluation of the function, SMAC needs as inputs the scenario object
 as well as the function.</p>
-<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>103
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>103
 104
 105
 106
@@ -579,7 +579,7 @@ as well as the function.</p>
 <p>We start the optimization loop.</p>
 <p>Internally SMAC keeps track of the number of algorithm calls and the remaining time budget via a Stats object.</p>
 <p>After successful execution of the optimization loop the Stats object outputs the result of the loop.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>INFO:smac.stats.stats.Stats:##########################################################
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>INFO:smac.stats.stats.Stats:##########################################################
 INFO:smac.stats.stats.Stats:Statistics:
 INFO:smac.stats.stats.Stats:#Incumbent changed: <span class="m">88</span>
 INFO:smac.stats.stats.Stats:#Target algorithm runs: <span class="m">200</span> / <span class="m">200</span>.0
@@ -598,12 +598,12 @@ INFO:smac.facade.smac_facade.SMAC:Final Incumbent: Configuration:
 </div>
 <p>We further query the target function at the incumbent, using the function evaluator
 so that as final output we can see the error value of the incumbent.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>Optimized Value: <span class="m">0</span>.02
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Optimized Value: <span class="m">0</span>.02
 </pre></div>
 </div>
 <p>As a bonus, we can validate our results. This is more useful when optimizing on
 instances, but we include the code so it is easily applicable for any usecase.</p>
-<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>115
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>115
 116
 117
 118
@@ -619,7 +619,7 @@ instances, but we include the code so it is easily applicable for any usecase.</
 <span id="spear-example"></span><h2>Spear-QCP<a class="headerlink" href="#spear-qcp" title="Permalink to this headline">¶</a></h2>
 <p>For this example we use <em>SMAC</em> to optimize the SAT solver <a class="reference external" href="http://www.domagoj-babic.com/index.php/ResearchProjects/Spear">Spear</a> on a small subset of the QCP-dataset.
 In <em>SMACs</em> root-directory type:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">cd</span> examples/spear_qcp <span class="o">&amp;&amp;</span> ls -l
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> examples/spear_qcp <span class="o">&amp;&amp;</span> ls -l
 </pre></div>
 </div>
 <p>In this folder you see the following files and directories:</p>
@@ -665,7 +665,7 @@ In <em>SMACs</em> root-directory type:</p>
 <li><dl class="first docutils">
 <dt><strong>scenario.txt</strong></dt>
 <dd><p class="first">The <a class="reference external" href="options.html#scenario">scenario</a> file contains all the necessary information about the configuration scenario at hand.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">python3</span> <span class="o">-</span><span class="n">u</span> <span class="o">./</span><span class="n">target_algorithm</span><span class="o">/</span><span class="n">scripts</span><span class="o">/</span><span class="n">SATCSSCWrapper</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">mem</span><span class="o">-</span><span class="n">limit</span> <span class="mi">1024</span> <span class="o">--</span><span class="n">script</span> <span class="o">./</span><span class="n">target_algorithm</span><span class="o">/</span><span class="n">spear</span><span class="o">-</span><span class="n">python</span><span class="o">/</span><span class="n">spearCSSCWrapper</span><span class="o">.</span><span class="n">py</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">python3</span> <span class="o">-</span><span class="n">u</span> <span class="o">./</span><span class="n">target_algorithm</span><span class="o">/</span><span class="n">scripts</span><span class="o">/</span><span class="n">SATCSSCWrapper</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">mem</span><span class="o">-</span><span class="n">limit</span> <span class="mi">1024</span> <span class="o">--</span><span class="n">script</span> <span class="o">./</span><span class="n">target_algorithm</span><span class="o">/</span><span class="n">spear</span><span class="o">-</span><span class="n">python</span><span class="o">/</span><span class="n">spearCSSCWrapper</span><span class="o">.</span><span class="n">py</span>
 <span class="n">paramfile</span> <span class="o">=</span> <span class="o">./</span><span class="n">target_algorithm</span><span class="o">/</span><span class="n">spear</span><span class="o">-</span><span class="n">python</span><span class="o">/</span><span class="n">spear</span><span class="o">-</span><span class="n">params</span><span class="o">-</span><span class="n">mixed</span><span class="o">.</span><span class="n">pcs</span>
 <span class="n">execdir</span> <span class="o">=</span> <span class="o">.</span>
 <span class="n">deterministic</span> <span class="o">=</span> <span class="mi">0</span>
@@ -681,7 +681,7 @@ In <em>SMACs</em> root-directory type:</p>
 <ul class="last">
 <li><p class="first"><em>algo:</em></p>
 <blockquote>
-<div><div class="highlight-bash"><div class="highlight"><pre><span></span>python -u ./target_algorithm/scripts/SATCSSCWrapper.py --mem-limit <span class="m">1024</span> --script ./target_algorithm/spear-python/spearCSSCWrapper.py
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -u ./target_algorithm/scripts/SATCSSCWrapper.py --mem-limit <span class="m">1024</span> --script ./target_algorithm/spear-python/spearCSSCWrapper.py
 </pre></div>
 </div>
 <p>This specifies the wrapper that <em>SMAC</em> executes with a pre-specified syntax in order to evaluate the algorithm to be optimized.
@@ -689,11 +689,11 @@ This wrapper script takes an instantiation of the parameters as input, runs the 
 the error of the algorithm; since every algorithm has a different input and output format, this wrapper acts as an interface between the
 algorithm and <em>SMAC</em>, which executes the wrapper through a command line call.</p>
 <p>An example call would look something like this:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>&lt;algo&gt; &lt;instance&gt; &lt;instance specifics&gt; &lt;cutoff time&gt; &lt;runlength&gt; &lt;seed&gt; &lt;algorithm parameters&gt;
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&lt;algo&gt; &lt;instance&gt; &lt;instance specifics&gt; &lt;cutoff time&gt; &lt;runlength&gt; &lt;seed&gt; &lt;algorithm parameters&gt;
 </pre></div>
 </div>
 <p>For <em>SMAC</em> to be able to interpret the results of the algorithm run, the wrapper returns the results of the algorithm run as follows:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>STATUS, running time, runlength, quality, seed, instance-specifics
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>STATUS, running time, runlength, quality, seed, instance-specifics
 </pre></div>
 </div>
 </div></blockquote>
@@ -729,7 +729,7 @@ parameters, 9 parameters are conditionals (they are only active if their parent 
 <li><dl class="first docutils">
 <dt><strong>run.sh</strong></dt>
 <dd><p class="first">A shell script calling <em>SMAC</em> with the following command:</p>
-<p><code class="docutils literal"><span class="pre">python</span> <span class="pre">../../scripts/smac</span> <span class="pre">--scenario</span> <span class="pre">scenario.txt</span> <span class="pre">--verbose</span> <span class="pre">DEBUG</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">../../scripts/smac</span> <span class="pre">--scenario</span> <span class="pre">scenario.txt</span> <span class="pre">--verbose</span> <span class="pre">DEBUG</span></code></p>
 <p class="last">This runs <em>SMAC</em> with the scenario options specified in the scenario.txt file.</p>
 </dd>
 </dl>
@@ -740,13 +740,13 @@ parameters, 9 parameters are conditionals (they are only active if their parent 
 </li>
 </ul>
 <p>To run the example type one of the two commands below into a terminal:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>bash run.sh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bash run.sh
 python ../../scripts/smac --scenario scenario.txt
 </pre></div>
 </div>
 <p><em>SMAC</em> will run for a few seconds and generate a lot of logging output.
 After <em>SMAC</em> finished the configuration process you’ll get some final statistics about the configuration process:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>INFO:   <span class="c1">##########################################################</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>INFO:   <span class="c1">##########################################################</span>
 INFO:   Statistics:
 INFO:   <span class="c1">#Incumbent changed: 2</span>
 INFO:   <span class="c1">#Target algorithm runs: 17 / inf</span>

@@ -306,8 +306,8 @@
                 <span class="n">numruns_in_runhistory</span> <span class="o">=</span> <span class="n">new_numruns_in_runhistory</span>
 
     <span class="n">difference</span> <span class="o">=</span> <span class="n">numruns_in_runhistory</span> <span class="o">-</span> <span class="n">initial_numruns_in_runhistory</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Shared model mode: Finished loading new runs, found </span><span class="si">%d</span><span class="s1"> new &#39;</span>
-                 <span class="s1">&#39;runs.&#39;</span> <span class="o">%</span> <span class="n">difference</span><span class="p">)</span></div>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Shared model mode: Finished loading new runs, found </span><span class="si">%d</span><span class="s1"> new &#39;</span></div>
+                 <span class="s1">&#39;runs.&#39;</span> <span class="o">%</span> <span class="n">difference</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="write"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.pSMAC.html#smac.optimizer.pSMAC.write">[docs]</a><span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">output_directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -334,8 +334,8 @@
                                      <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
         <span class="n">temporary_filename</span> <span class="o">=</span> <span class="n">fh</span><span class="o">.</span><span class="n">name</span>
 
-    <span class="n">run_history</span><span class="o">.</span><span class="n">save_json</span><span class="p">(</span><span class="n">temporary_filename</span><span class="p">,</span> <span class="n">save_external</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">temporary_filename</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">)</span></div>
+    <span class="n">run_history</span><span class="o">.</span><span class="n">save_json</span><span class="p">(</span><span class="n">temporary_filename</span><span class="p">,</span> <span class="n">save_external</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">temporary_filename</span><span class="p">,</span> <span class="n">output_filename</span><span class="p">)</span>
 </pre></div>
 
            </div>

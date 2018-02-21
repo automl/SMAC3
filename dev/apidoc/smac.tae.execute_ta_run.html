@@ -257,7 +257,7 @@
 <dl class="exception">
 <dt id="smac.tae.execute_ta_run.BudgetExhaustedException">
 <em class="property">exception </em><code class="descclassname">smac.tae.execute_ta_run.</code><code class="descname">BudgetExhaustedException</code><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#BudgetExhaustedException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.BudgetExhaustedException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <p>Exception indicating that time- or memory-budgets are exhausted.</p>
 <dl class="attribute">
 <dt id="smac.tae.execute_ta_run.BudgetExhaustedException.args">
@@ -276,7 +276,7 @@ set self.__traceback__ to tb and return self.</p>
 <dl class="exception">
 <dt id="smac.tae.execute_ta_run.CappedRunException">
 <em class="property">exception </em><code class="descclassname">smac.tae.execute_ta_run.</code><code class="descname">CappedRunException</code><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#CappedRunException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.CappedRunException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <p>Exception indicating that a run was capped with a cutoff smaller than
 the actual timeout</p>
 <dl class="attribute">
@@ -296,7 +296,7 @@ set self.__traceback__ to tb and return self.</p>
 <dl class="class">
 <dt id="smac.tae.execute_ta_run.ExecuteTARun">
 <em class="property">class </em><code class="descclassname">smac.tae.execute_ta_run.</code><code class="descname">ExecuteTARun</code><span class="sig-paren">(</span><em>ta</em>, <em>stats=None</em>, <em>runhistory=None</em>, <em>run_obj: str = 'runtime'</em>, <em>par_factor: int = 1</em>, <em>cost_for_crash: float = 2147483647.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#ExecuteTARun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Executes a target algorithm run with a given configuration on a given
 instance and some resource limitations</p>
 <dl class="attribute">
@@ -423,7 +423,7 @@ uses StatusType.CAPPED</li>
 <dl class="exception">
 <dt id="smac.tae.execute_ta_run.FirstRunCrashedException">
 <em class="property">exception </em><code class="descclassname">smac.tae.execute_ta_run.</code><code class="descname">FirstRunCrashedException</code><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#FirstRunCrashedException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.FirstRunCrashedException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#smac.tae.execute_ta_run.TAEAbortException" title="smac.tae.execute_ta_run.TAEAbortException"><code class="xref py py-class docutils literal"><span class="pre">smac.tae.execute_ta_run.TAEAbortException</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#smac.tae.execute_ta_run.TAEAbortException" title="smac.tae.execute_ta_run.TAEAbortException"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.tae.execute_ta_run.TAEAbortException</span></code></a></p>
 <p>Exception indicating that the first run crashed (depending on options
 this could trigger an ABORT of SMAC.)</p>
 <dl class="attribute">
@@ -443,7 +443,7 @@ set self.__traceback__ to tb and return self.</p>
 <dl class="class">
 <dt id="smac.tae.execute_ta_run.StatusType">
 <em class="property">class </em><code class="descclassname">smac.tae.execute_ta_run.</code><code class="descname">StatusType</code><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#StatusType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.StatusType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">enum.Enum</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
 <p>Class to define numbers for status types</p>
 <dl class="attribute">
 <dt id="smac.tae.execute_ta_run.StatusType.ABORT">
@@ -480,7 +480,7 @@ set self.__traceback__ to tb and return self.</p>
 <dl class="exception">
 <dt id="smac.tae.execute_ta_run.TAEAbortException">
 <em class="property">exception </em><code class="descclassname">smac.tae.execute_ta_run.</code><code class="descname">TAEAbortException</code><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#TAEAbortException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.TAEAbortException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <p>Exception indicating that the target algorithm suggests an ABORT of
 SMAC, usually because it assumes that all further runs will surely fail.</p>
 <dl class="attribute">

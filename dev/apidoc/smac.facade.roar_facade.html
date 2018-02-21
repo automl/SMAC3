@@ -256,8 +256,8 @@
 <span id="smac-facade-roar-facade-module"></span><h1>smac.facade.roar_facade module<a class="headerlink" href="#module-smac.facade.roar_facade" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.facade.roar_facade.ROAR">
-<em class="property">class </em><code class="descclassname">smac.facade.roar_facade.</code><code class="descname">ROAR</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>tae_runner: smac.tae.execute_ta_run.ExecuteTARun = None</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory = None</em>, <em>intensifier: smac.intensification.intensification.Intensifier = None</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign = None</em>, <em>initial_configurations: typing.List[ConfigSpace.configuration_space.Configuration] = None</em>, <em>stats: smac.stats.stats.Stats = None</em>, <em>rng: mtrand.RandomState = None</em>, <em>run_id: int = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/roar_facade.html#ROAR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.roar_facade.ROAR" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC" title="smac.facade.smac_facade.SMAC"><code class="xref py py-class docutils literal"><span class="pre">smac.facade.smac_facade.SMAC</span></code></a></p>
+<em class="property">class </em><code class="descclassname">smac.facade.roar_facade.</code><code class="descname">ROAR</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>tae_runner: smac.tae.execute_ta_run.ExecuteTARun = None</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory = None</em>, <em>intensifier: smac.intensification.intensification.Intensifier = None</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign = None</em>, <em>initial_configurations: List[ConfigSpace.configuration_space.Configuration] = None</em>, <em>stats: smac.stats.stats.Stats = None</em>, <em>rng: mtrand.RandomState = None</em>, <em>run_id: int = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/roar_facade.html#ROAR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.roar_facade.ROAR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC" title="smac.facade.smac_facade.SMAC"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.facade.smac_facade.SMAC</span></code></a></p>
 <p>Facade to use ROAR mode</p>
 <dl class="attribute">
 <dt id="smac.facade.roar_facade.ROAR.logger">
@@ -266,7 +266,7 @@
 
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC" title="smac.facade.smac_facade.SMAC"><code class="xref py py-class docutils literal"><span class="pre">SMAC</span></code></a></p>
+<p class="last"><a class="reference internal" href="smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC" title="smac.facade.smac_facade.SMAC"><code class="xref py py-class docutils literal notranslate"><span class="pre">SMAC</span></code></a></p>
 </div>
 <p>Constructor</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -276,11 +276,11 @@
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>smac.scenario.scenario.Scenario</em></a>) – Scenario object</li>
 <li><strong>tae_runner</strong> (<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><em>smac.tae.execute_ta_run.ExecuteTARun</em></a><em> or </em><em>callable</em>) – Callable or implementation of
-<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><code class="xref py py-class docutils literal"><span class="pre">ExecuteTARun</span></code></a>. In case a
+<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExecuteTARun</span></code></a>. In case a
 callable is passed it will be wrapped by
-<a class="reference internal" href="smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict" title="smac.tae.execute_func.ExecuteTAFuncDict"><code class="xref py py-class docutils literal"><span class="pre">ExecuteTAFuncDict</span></code></a>.
+<a class="reference internal" href="smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict" title="smac.tae.execute_func.ExecuteTAFuncDict"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExecuteTAFuncDict</span></code></a>.
 If not set, it will be initialized with the
-<a class="reference internal" href="smac.tae.execute_ta_run_old.html#smac.tae.execute_ta_run_old.ExecuteTARunOld" title="smac.tae.execute_ta_run_old.ExecuteTARunOld"><code class="xref py py-class docutils literal"><span class="pre">ExecuteTARunOld</span></code></a>.</li>
+<a class="reference internal" href="smac.tae.execute_ta_run_old.html#smac.tae.execute_ta_run_old.ExecuteTARunOld" title="smac.tae.execute_ta_run_old.ExecuteTARunOld"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExecuteTARunOld</span></code></a>.</li>
 <li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – Runhistory to store all algorithm runs</li>
 <li><strong>intensifier</strong> (<a class="reference internal" href="smac.intensification.intensification.html#smac.intensification.intensification.Intensifier" title="smac.intensification.intensification.Intensifier"><em>Intensifier</em></a>) – intensification object to issue a racing to decide the current incumbent</li>
 <li><strong>initial_design</strong> (<a class="reference internal" href="smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign" title="smac.initial_design.initial_design.InitialDesign"><em>InitialDesign</em></a>) – initial sampling design</li>
@@ -297,9 +297,9 @@ cannot be used together with initial_design</li>
 <dl class="method">
 <dt id="smac.facade.roar_facade.ROAR.get_X_y">
 <code class="descname">get_X_y</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.roar_facade.ROAR.get_X_y" title="Permalink to this definition">¶</a></dt>
-<dd><p>Simple interface to obtain all data in runhistory in <code class="docutils literal"><span class="pre">X,</span> <span class="pre">y</span></code> format.</p>
+<dd><p>Simple interface to obtain all data in runhistory in <code class="docutils literal notranslate"><span class="pre">X,</span> <span class="pre">y</span></code> format.</p>
 <p>Uses
-<a class="reference internal" href="smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y" title="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y"><code class="xref py py-meth docutils literal"><span class="pre">smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()</span></code></a>.</p>
+<a class="reference internal" href="smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y" title="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y"><code class="xref py py-meth docutils literal notranslate"><span class="pre">smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -362,7 +362,7 @@ time).</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>Trajectory</strong></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">List of <a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajEntry" title="smac.utils.io.traj_logging.TrajEntry"><code class="xref py py-class docutils literal"><span class="pre">TrajEntry</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">List of <a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajEntry" title="smac.utils.io.traj_logging.TrajEntry"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrajEntry</span></code></a></td>
 </tr>
 </tbody>
 </table>
