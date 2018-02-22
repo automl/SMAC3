@@ -4,6 +4,7 @@ import unittest
 from smac.scenario.scenario import Scenario
 from smac.utils import test_helpers
 from smac.optimizer.smbo import SMBO, get_types
+from smac.optimizer.ei_optimization import ChooserNoCoolDown
 from smac.runhistory.runhistory2epm import RunHistory2EPM4EIPS
 from smac.epm.uncorrelated_mo_rf_with_instances import \
     UncorrelatedMultiObjectiveRandomForestWithInstances
@@ -32,7 +33,8 @@ class TestEIPS(unittest.TestCase):
         rh2EPM = RunHistory2EPM4EIPS(scenario, 2)
         taf = ExecuteTAFunc(test_function)
         smbo = SMBO(scenario, model=umrfwi, acquisition_function=eips,
-                    runhistory2epm=rh2EPM, tae_runner=taf)
+                    runhistory2epm=rh2EPM, tae_runner=taf,
+                    random_configuration_chooser=ChooserNoCoolDown(2.0))
         smbo.run(5)
         print(smbo.incumbent)
         raise ValueError()

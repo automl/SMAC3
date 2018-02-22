@@ -2,6 +2,7 @@ import os
 import logging
 import numpy as np
 import time
+import typing
 
 from smac.configspace import Configuration
 from smac.epm.rf_with_instances import RandomForestWithInstances
@@ -9,6 +10,8 @@ from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.optimizer import pSMAC
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
+from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
+    ChooserLinearCoolDown
 from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer, \
     RandomSearch
 from smac.runhistory.runhistory import RunHistory
@@ -47,6 +50,7 @@ class SMBO(object):
     acq_optimizer
     acquisition_func
     rng
+    random_configuration_chooser
     """
 
     def __init__(self,
@@ -62,7 +66,9 @@ class SMBO(object):
                  acq_optimizer: AcquisitionFunctionMaximizer,
                  acquisition_func: AbstractAcquisitionFunction,
                  rng: np.random.RandomState,
-                 restore_incumbent: Configuration=None):
+                 restore_incumbent: Configuration=None,
+                 random_configuration_chooser: typing.Union[
+                     ChooserNoCoolDown, ChooserLinearCoolDown]=ChooserNoCoolDown(2.0)):
         """
         Interface that contains the main Bayesian optimization loop
 
@@ -99,6 +105,10 @@ class SMBO(object):
             incumbent to be used from the start. ONLY used to restore states.
         rng: np.random.RandomState
             Random number generator
+        random_configuration_chooser
+            Chooser for random configuration -- one of
+            * ChooserNoCoolDown(modulus)
+            * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)
         """
 
         self.logger = logging.getLogger(
@@ -118,6 +128,7 @@ class SMBO(object):
         self.acq_optimizer = acq_optimizer
         self.acquisition_func = acquisition_func
         self.rng = rng
+        self.random_configuration_chooser = random_configuration_chooser
 
         self._random_search = RandomSearch(
             acquisition_func, self.config_space, rng
@@ -246,7 +257,7 @@ class SMBO(object):
         self.acquisition_func.update(model=self.model, eta=incumbent_value)
 
         challengers = self.acq_optimizer.maximize(
-            self.runhistory, self.stats, 5000
+            self.runhistory, self.stats, 5000, self.random_configuration_chooser
         )
         return challengers
 

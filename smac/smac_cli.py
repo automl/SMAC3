@@ -14,7 +14,6 @@ from smac.stats.stats import Stats
 from smac.optimizer.objective import average_cost
 from smac.utils.merge_foreign_data import merge_foreign_data_from_file
 from smac.utils.io.traj_logging import TrajLogger
-from smac.utils.io.input_reader import InputReader
 from smac.tae.execute_ta_run import TAEAbortException, FirstRunCrashedException
 from smac.utils.io.output_directory import create_output_directory
 
@@ -103,7 +102,6 @@ class SMACCLI(object):
                 trajectory = TrajLogger.read_traj_aclib_format(
                     fn=traj_fn, cs=scen.cs)
                 initial_configs.append(trajectory[-1]["incumbent"])
-
 
         if main_args_.mode == "SMAC":
             optimizer = SMAC(
