@@ -10,6 +10,7 @@ from smac.configspace import get_one_exchange_neighbourhood, \
 from smac.runhistory.runhistory import RunHistory
 from smac.stats.stats import Stats
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
+from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown
 from smac.utils.constants import MAXINT
 
 __author__ = "Aaron Klein, Marius Lindauer"
@@ -377,6 +378,7 @@ class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
             runhistory: RunHistory,
             stats: Stats,
             num_points: int,
+            random_configuration_chooser,
             *args
     ) -> Iterable[Configuration]:
         next_configs_by_local_search = self.local_search._maximize(
@@ -409,7 +411,9 @@ class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
         next_configs_by_acq_value = [_[1] for _ in next_configs_by_acq_value]
 
         challengers = ChallengerList(next_configs_by_acq_value,
-                                     self.config_space)
+                                     self.config_space,
+                                     random_configuration_chooser)
+        random_configuration_chooser.next_smbo_iteration()
         return challengers
 
     def _maximize(
@@ -419,7 +423,6 @@ class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
             num_points: int
     ) -> Iterable[Tuple[float, Configuration]]:
         raise NotImplementedError()
-
         
         
 class ChallengerList(object):
@@ -439,25 +442,25 @@ class ChallengerList(object):
         ConfigurationSpace from which to sample new random configurations.
     """
 
-    def __init__(self, challengers, configuration_space):
+    def __init__(self, challengers, configuration_space, random_configuration_chooser=ChooserNoCoolDown(2.0)):
         self.challengers = challengers
         self.configuration_space = configuration_space
         self._index = 0
-        self._next_is_random = False
+        self._iteration = 1  # 1-based to prevent from starting with a random configuration
+        self.random_configuration_chooser = random_configuration_chooser
 
     def __iter__(self):
         return self
 
     def __next__(self):
-        if self._index == len(self.challengers) and not self._next_is_random:
+        if self._index == len(self.challengers):
             raise StopIteration
-        elif self._next_is_random:
-            self._next_is_random = False
-            config = self.configuration_space.sample_configuration()
-            config.origin = 'Random Search'
-            return config
         else:
-            self._next_is_random = True
-            config = self.challengers[self._index]
-            self._index += 1
+            if self.random_configuration_chooser.check(self._iteration):
+                config = self.configuration_space.sample_configuration()
+                config.origin = 'Random Search'
+            else:
+                config = self.challengers[self._index]
+                self._index += 1
+            self._iteration += 1
             return config

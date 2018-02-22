@@ -1,7 +1,7 @@
 import os
 import logging
 import typing
-from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter, SUPPRESS, Action, Namespace
+from argparse import Action, ArgumentDefaultsHelpFormatter, ArgumentParser, FileType, Namespace, SUPPRESS
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -124,14 +124,16 @@ class CMDReader(object):
         req_opts.add_argument("--warmstart_scenario", default=None,
                               nargs="*",
                               help=SUPPRESS)
+        # list of trajectory dump files, reads runhistory and uses final incumbent as challenger
         req_opts.add_argument("--warmstart_incumbent", default=None,
                               nargs="*",
-                              help=SUPPRESS)# list of trajectory dump files, 
-                                            # reads runhistory 
-                                            # and uses final incumbent as challenger
+                              help=SUPPRESS)
+        req_opts.add_argument("--random_configuration_chooser", default=None, type=FileType('r'),
+                              help="[dev] path to a python module containing a class `RandomConfigurationChooserImpl`"
+                                   "implementing the interface of `RandomConfigurationChooser`")
 
         args_, misc = parser.parse_known_args()
-        self._check_args(args_)
+        CMDReader._check_args(args_, set_parsed=True)
 
         # remove leading '-' in option names
         misc = dict((k.lstrip("-"), v.strip("'"))
@@ -139,7 +141,8 @@ class CMDReader(object):
 
         return args_, misc
 
-    def _check_args(self, args_: Namespace):
+    @staticmethod
+    def _check_args(args_: Namespace, set_parsed: bool=False):
         """Checks command line arguments (e.g., whether all given files exist)
 
         Parameters
@@ -155,3 +158,22 @@ class CMDReader(object):
 
         if not os.path.isfile(args_.scenario_file):
             raise ValueError("Not found: %s" % (args_.scenario_file))
+        CMDReader._check_random_configuration_chooser(args_, set_parsed)
+
+    @staticmethod
+    def _check_random_configuration_chooser(args_: Namespace, set_parsed: bool=False):
+        if not hasattr(args_, 'random_configuration_chooser'):
+            if set_parsed:
+                setattr(args_, 'random_configuration_chooser', None)
+            return
+        elif not args_.random_configuration_chooser:
+            if set_parsed:
+                args_.random_configuration_chooser = None
+            return
+        else:
+            import importlib.util
+            spec = importlib.util.spec_from_file_location("smac.custom.random_configuration_chooser", args_.random_configuration_chooser.name)
+            rcc_module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(rcc_module)
+            if set_parsed:
+                setattr(args_, 'random_configuration_chooser', rcc_module.RandomConfigurationChooserImpl())

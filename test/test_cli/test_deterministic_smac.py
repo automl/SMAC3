@@ -42,6 +42,7 @@ class TestDeterministicSMAC(unittest.TestCase):
                     "--scenario", self.scenario_file,
                     "--verbose_level", "DEBUG",
                     "--seed", "1",
+                    "--random_configuration_chooser", "test/test_cli/random_configuration_chooser_impl.py",
                     "--output_dir", self.output_dir_1]
         with mock.patch.object(sys, 'argv', testargs):
             SMACCLI().main_cli()
@@ -49,6 +50,7 @@ class TestDeterministicSMAC(unittest.TestCase):
                     "--scenario", self.scenario_file,
                     "--verbose_level", "DEBUG",
                     "--seed", "1",
+                    "--random_configuration_chooser", "test/test_cli/random_configuration_chooser_impl.py",
                     "--output_dir", self.output_dir_2]
         with mock.patch.object(sys, 'argv', testargs):
             SMACCLI().main_cli()
@@ -56,6 +58,7 @@ class TestDeterministicSMAC(unittest.TestCase):
                     "--scenario", self.scenario_file,
                     "--verbose_level", "DEBUG",
                     "--seed", "2",
+                    "--random_configuration_chooser", "test/test_cli/random_configuration_chooser_impl.py",
                     "--output_dir", self.output_dir_3]
         with mock.patch.object(sys, 'argv', testargs):
             SMACCLI().main_cli()
