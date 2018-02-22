@@ -1,7 +1,7 @@
 import os
 import logging
 import typing
-from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter, SUPPRESS, Action
+from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter, SUPPRESS, Action, Namespace
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -55,7 +55,7 @@ class StandardHelpAction(Action):
     def __init__(self, *args, **kwargs):
         super(StandardHelpAction, self).__init__(default=SUPPRESS, nargs=0, *args, **kwargs)
 
-    def __call__(self, parser, namespace, values, option_string=None):
+    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
         global help_type
         help_type = 'standard'
         parser.print_help()
@@ -68,7 +68,7 @@ class DevHelpAction(Action):
     def __init__(self, *args, **kwargs):
         super(DevHelpAction, self).__init__(default=SUPPRESS, nargs=0, *args, **kwargs)
 
-    def __call__(self, parser, namespace, values, option_string=None):
+    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
         global help_type
         help_type = 'dev'
         parser.print_help()
@@ -139,7 +139,7 @@ class CMDReader(object):
 
         return args_, misc
 
-    def _check_args(self, args_):
+    def _check_args(self, args_: Namespace):
         """Checks command line arguments (e.g., whether all given files exist)
 
         Parameters
