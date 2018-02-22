@@ -249,11 +249,8 @@
   <h1>Source code for smac.utils.io.cmd_reader</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">argparse</span> <span class="k">import</span> <span class="n">ArgumentParser</span><span class="p">,</span> <span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span> <span class="n">SUPPRESS</span><span class="p">,</span> <span class="n">FileType</span>
-
-<span class="kn">from</span> <span class="nn">smac.optimizer.random_configuration_chooser</span> <span class="k">import</span> <span class="n">ChooserNoCoolDown</span><span class="p">,</span> \
-    <span class="n">ChooserLinearCoolDown</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">argparse</span> <span class="k">import</span> <span class="n">Action</span><span class="p">,</span> <span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span> <span class="n">ArgumentParser</span><span class="p">,</span> <span class="n">FileType</span><span class="p">,</span> <span class="n">Namespace</span><span class="p">,</span> <span class="n">SUPPRESS</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
@@ -263,8 +260,71 @@
 <span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.0.1&quot;</span>
 
 
-<div class="viewcode-block" id="CMDReader"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader">[docs]</a><span class="k">class</span> <span class="nc">CMDReader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="n">help_type</span> <span class="o">=</span> <span class="s2">&quot;standard&quot;</span>
 
+
+<div class="viewcode-block" id="ConfigurableHelpFormatter"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.ConfigurableHelpFormatter">[docs]</a><span class="k">class</span> <span class="nc">ConfigurableHelpFormatter</span><span class="p">(</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Configurable Help Formatter. Can filter out developer options.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ConfigurableHelpFormatter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_add_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">]):</span>
+        <span class="k">def</span> <span class="nf">filter_actions</span><span class="p">(</span><span class="n">actions</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Action</span><span class="p">]):</span>
+            <span class="n">filtered_actions</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">actions</span><span class="p">:</span>
+                <span class="n">dev</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">help</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">help</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;[dev]&#39;</span><span class="p">):</span>
+                        <span class="n">dev</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">action</span><span class="o">.</span><span class="n">option_strings</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;--dev&#39;</span><span class="p">):</span>
+                            <span class="n">dev</span> <span class="o">=</span> <span class="kc">True</span>
+                            <span class="k">break</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">dev</span><span class="p">:</span>
+                    <span class="n">filtered_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">filtered_actions</span>
+        <span class="k">if</span> <span class="n">help_type</span> <span class="o">==</span> <span class="s1">&#39;standard&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;_format_usage&#39;</span><span class="p">:</span>
+                <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">filter_actions</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">args</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+                    <span class="n">args</span> <span class="o">=</span> <span class="n">filter_actions</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+                        <span class="k">return</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_section</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="StandardHelpAction"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.StandardHelpAction">[docs]</a><span class="k">class</span> <span class="nc">StandardHelpAction</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Action to only show standard options in help message&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">StandardHelpAction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">SUPPRESS</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">:</span> <span class="n">ArgumentParser</span><span class="p">,</span> <span class="n">namespace</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">option_string</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">help_type</span>
+        <span class="n">help_type</span> <span class="o">=</span> <span class="s1">&#39;standard&#39;</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">print_help</span><span class="p">()</span></div>
+        <span class="n">parser</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="DevHelpAction"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.DevHelpAction">[docs]</a><span class="k">class</span> <span class="nc">DevHelpAction</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Action to show standard and developer options in help message&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DevHelpAction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">SUPPRESS</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">:</span> <span class="n">ArgumentParser</span><span class="p">,</span> <span class="n">namespace</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">option_string</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">help_type</span>
+        <span class="n">help_type</span> <span class="o">=</span> <span class="s1">&#39;dev&#39;</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">print_help</span><span class="p">()</span></div>
+        <span class="n">parser</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="CMDReader"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader">[docs]</a><span class="k">class</span> <span class="nc">CMDReader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Use argparse to parse command line options</span>
 
 <span class="sd">    Attributes</span>
@@ -284,12 +344,17 @@
 <span class="sd">            args_: parsed arguments; return of parse_args of ArgumentParser</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">)</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">ConfigurableHelpFormatter</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">req_opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;Required Options&quot;</span><span class="p">)</span>
         <span class="n">req_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--scenario_file&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;scenario file in AClib format&quot;</span><span class="p">)</span>
 
+        <span class="c1"># let a help message begin with &quot;[dev]&quot; to add a developer option</span>
         <span class="n">req_opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;Optional Options&quot;</span><span class="p">)</span>
+        <span class="n">req_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--help&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">StandardHelpAction</span><span class="p">,</span>
+                              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Show help messages for standard options.&quot;</span><span class="p">)</span>
+        <span class="n">req_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--help-all&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">DevHelpAction</span><span class="p">,</span>
+                              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Show help messages for both standard and developer options.&quot;</span><span class="p">)</span>
         <span class="n">req_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--seed&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
                               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;random seed&quot;</span><span class="p">)</span>
         <span class="n">req_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--verbose_level&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
@@ -308,14 +373,14 @@
         <span class="n">req_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--warmstart_scenario&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                               <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
                               <span class="n">help</span><span class="o">=</span><span class="n">SUPPRESS</span><span class="p">)</span>
+        <span class="c1"># list of trajectory dump files, reads runhistory and uses final incumbent as challenger</span>
         <span class="n">req_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--warmstart_incumbent&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                               <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
-                              <span class="n">help</span><span class="o">=</span><span class="n">SUPPRESS</span><span class="p">)</span><span class="c1"># list of trajectory dump files, </span>
-                                            <span class="c1"># reads runhistory </span>
-                                            <span class="c1"># and uses final incumbent as challenger </span>
+                              <span class="n">help</span><span class="o">=</span><span class="n">SUPPRESS</span><span class="p">)</span>
         <span class="n">req_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--random_configuration_chooser&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">FileType</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">),</span>
                               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;[dev] path to a python module containing a class `RandomConfigurationChooserImpl`&quot;</span>
                                    <span class="s2">&quot;implementing the interface of `RandomConfigurationChooser`&quot;</span><span class="p">)</span>
+
         <span class="n">args_</span><span class="p">,</span> <span class="n">misc</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_known_args</span><span class="p">()</span>
         <span class="n">CMDReader</span><span class="o">.</span><span class="n">_check_args</span><span class="p">(</span><span class="n">args_</span><span class="p">,</span> <span class="n">set_parsed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -326,7 +391,7 @@
         <span class="k">return</span> <span class="n">args_</span><span class="p">,</span> <span class="n">misc</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_check_args</span><span class="p">(</span><span class="n">args_</span><span class="p">,</span> <span class="n">set_parsed</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_check_args</span><span class="p">(</span><span class="n">args_</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">,</span> <span class="n">set_parsed</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Checks command line arguments (e.g., whether all given files exist)</span>
 
 <span class="sd">        Parameters</span>
@@ -345,7 +410,7 @@
         <span class="n">CMDReader</span><span class="o">.</span><span class="n">_check_random_configuration_chooser</span><span class="p">(</span><span class="n">args_</span><span class="p">,</span> <span class="n">set_parsed</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_check_random_configuration_chooser</span><span class="p">(</span><span class="n">args_</span><span class="p">,</span> <span class="n">set_parsed</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_check_random_configuration_chooser</span><span class="p">(</span><span class="n">args_</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">,</span> <span class="n">set_parsed</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">args_</span><span class="p">,</span> <span class="s1">&#39;random_configuration_chooser&#39;</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">set_parsed</span><span class="p">:</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="n">args_</span><span class="p">,</span> <span class="s1">&#39;random_configuration_chooser&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
