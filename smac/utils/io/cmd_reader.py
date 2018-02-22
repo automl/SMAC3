@@ -1,10 +1,7 @@
 import os
 import logging
-import re
-from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter, SUPPRESS, FileType
-
-from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
-    ChooserLinearCoolDown
+import typing
+from argparse import Action, ArgumentDefaultsHelpFormatter, ArgumentParser, FileType, Namespace, SUPPRESS
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -14,8 +11,71 @@ __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class CMDReader(object):
+help_type = "standard"
 
+
+class ConfigurableHelpFormatter(ArgumentDefaultsHelpFormatter):
+    """
+    Configurable Help Formatter. Can filter out developer options.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super(ConfigurableHelpFormatter, self).__init__(*args, **kwargs)
+
+    def _add_item(self, func: typing.Callable, args: typing.Union[list, tuple]):
+        def filter_actions(actions: typing.List[Action]):
+            filtered_actions = []
+            for action in actions:
+                dev = False
+                if isinstance(action.help, str):
+                    if action.help.startswith('[dev]'):
+                        dev = True
+                else:
+                    for s in action.option_strings:
+                        if s.startswith('--dev'):
+                            dev = True
+                            break
+                if not dev:
+                    filtered_actions.append(action)
+            return filtered_actions
+        if help_type == 'standard':
+            if func.__name__ == '_format_usage':
+                args = (args[0], filter_actions(args[1]), args[2], args[3])
+            elif isinstance(args, list):
+                if len(args):
+                    args = filter_actions(args)
+                    if not len(args):
+                        return
+        self._current_section.items.append((func, args))
+
+
+class StandardHelpAction(Action):
+    """Action to only show standard options in help message"""
+
+    def __init__(self, *args, **kwargs):
+        super(StandardHelpAction, self).__init__(default=SUPPRESS, nargs=0, *args, **kwargs)
+
+    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
+        global help_type
+        help_type = 'standard'
+        parser.print_help()
+        parser.exit()
+
+
+class DevHelpAction(Action):
+    """Action to show standard and developer options in help message"""
+
+    def __init__(self, *args, **kwargs):
+        super(DevHelpAction, self).__init__(default=SUPPRESS, nargs=0, *args, **kwargs)
+
+    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
+        global help_type
+        help_type = 'dev'
+        parser.print_help()
+        parser.exit()
+
+
+class CMDReader(object):
     """Use argparse to parse command line options
 
     Attributes
@@ -35,12 +95,17 @@ class CMDReader(object):
             args_: parsed arguments; return of parse_args of ArgumentParser
         """
 
-        parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
+        parser = ArgumentParser(formatter_class=ConfigurableHelpFormatter, add_help=False)
         req_opts = parser.add_argument_group("Required Options")
         req_opts.add_argument("--scenario_file", required=True,
                               help="scenario file in AClib format")
 
+        # let a help message begin with "[dev]" to add a developer option
         req_opts = parser.add_argument_group("Optional Options")
+        req_opts.add_argument("--help", action=StandardHelpAction,
+                              help="Show help messages for standard options.")
+        req_opts.add_argument("--help-all", action=DevHelpAction,
+                              help="Show help messages for both standard and developer options.")
         req_opts.add_argument("--seed", default=1, type=int,
                               help="random seed")
         req_opts.add_argument("--verbose_level", default=logging.INFO,
@@ -59,14 +124,14 @@ class CMDReader(object):
         req_opts.add_argument("--warmstart_scenario", default=None,
                               nargs="*",
                               help=SUPPRESS)
+        # list of trajectory dump files, reads runhistory and uses final incumbent as challenger
         req_opts.add_argument("--warmstart_incumbent", default=None,
                               nargs="*",
-                              help=SUPPRESS)# list of trajectory dump files, 
-                                            # reads runhistory 
-                                            # and uses final incumbent as challenger 
+                              help=SUPPRESS)
         req_opts.add_argument("--random_configuration_chooser", default=None, type=FileType('r'),
                               help="[dev] path to a python module containing a class `RandomConfigurationChooserImpl`"
                                    "implementing the interface of `RandomConfigurationChooser`")
+
         args_, misc = parser.parse_known_args()
         CMDReader._check_args(args_, set_parsed=True)
 
@@ -77,7 +142,7 @@ class CMDReader(object):
         return args_, misc
 
     @staticmethod
-    def _check_args(args_, set_parsed=False):
+    def _check_args(args_: Namespace, set_parsed: bool=False):
         """Checks command line arguments (e.g., whether all given files exist)
 
         Parameters
@@ -96,7 +161,7 @@ class CMDReader(object):
         CMDReader._check_random_configuration_chooser(args_, set_parsed)
 
     @staticmethod
-    def _check_random_configuration_chooser(args_, set_parsed=False):
+    def _check_random_configuration_chooser(args_: Namespace, set_parsed: bool=False):
         if not hasattr(args_, 'random_configuration_chooser'):
             if set_parsed:
                 setattr(args_, 'random_configuration_chooser', None)
