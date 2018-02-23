@@ -249,17 +249,14 @@
   <h1>Source code for smac.runhistory.runhistory</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">Enum</span>
-<span class="kn">import</span> <span class="nn">filelock</span>
 <span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">ConfigurationSpace</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">StatusType</span>
+<span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="k">import</span> <span class="n">PickableLoggerAdapter</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
@@ -350,6 +347,10 @@
 <span class="sd">            algorithm-instance-seed were measured</span>
 <span class="sd">            multiple times</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">PickableLoggerAdapter</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="p">)</span>
+
         <span class="c1"># By having the data in a deterministic order we can do useful tests</span>
         <span class="c1"># when we serialize the data and can assume it&#39;s still in the same</span>
         <span class="c1"># order as it was added.</span>
@@ -583,17 +584,11 @@
                           <span class="k">if</span> <span class="p">(</span><span class="n">id_</span> <span class="ow">in</span> <span class="n">config_ids_to_serialize</span> <span class="ow">and</span>
                               <span class="n">conf</span><span class="o">.</span><span class="n">origin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)}</span>
 
-        <span class="c1"># lock `fn` (writing)</span>
-        <span class="n">lock_file_name</span> <span class="o">=</span> <span class="n">fn</span> <span class="o">+</span> <span class="s2">&quot;.lock&quot;</span>
-        <span class="k">with</span> <span class="n">filelock</span><span class="o">.</span><span class="n">SoftFileLock</span><span class="p">(</span><span class="n">lock_file_name</span><span class="p">):</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
-                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span>
-                           <span class="s2">&quot;config_origins&quot;</span><span class="p">:</span> <span class="n">config_origins</span><span class="p">,</span>
-                           <span class="s2">&quot;configs&quot;</span><span class="p">:</span> <span class="n">configs</span><span class="p">},</span> <span class="n">fp</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">EnumEncoder</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">lock_file_name</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span></div>
-            <span class="k">pass</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span>
+                       <span class="s2">&quot;config_origins&quot;</span><span class="p">:</span> <span class="n">config_origins</span><span class="p">,</span></div>
+                       <span class="s2">&quot;configs&quot;</span><span class="p">:</span> <span class="n">configs</span><span class="p">},</span> <span class="n">fp</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">EnumEncoder</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="RunHistory.load_json"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.load_json">[docs]</a>    <span class="k">def</span> <span class="nf">load_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cs</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load and runhistory in json representation from disk.</span>
@@ -607,22 +602,26 @@
 <span class="sd">        cs : ConfigSpace</span>
 <span class="sd">            instance of configuration space</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># lock `fn` (writing)</span>
-        <span class="n">lock_file_name</span> <span class="o">=</span> <span class="n">fn</span> <span class="o">+</span> <span class="s2">&quot;.lock&quot;</span>
-        <span class="k">with</span> <span class="n">filelock</span><span class="o">.</span><span class="n">FileLock</span><span class="p">(</span><span class="n">lock_file_name</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
                 <span class="n">all_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">,</span> <span class="n">object_hook</span><span class="o">=</span><span class="n">StatusType</span><span class="o">.</span><span class="n">enum_hook</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">lock_file_name</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
-            <span class="k">pass</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s1">&#39;Encountered exception </span><span class="si">%s</span><span class="s1"> while reading runhistory from </span><span class="si">%s</span><span class="s1">. &#39;</span>
+                <span class="s1">&#39;Not adding any runs!&#39;</span><span class="p">,</span>
+                <span class="n">e</span><span class="p">,</span>
+                <span class="n">fn</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
 
         <span class="n">config_origins</span> <span class="o">=</span> <span class="n">all_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;config_origins&quot;</span><span class="p">,</span> <span class="p">{})</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span> <span class="o">=</span> <span class="p">{</span><span class="nb">int</span><span class="p">(</span><span class="n">id_</span><span class="p">):</span> <span class="n">Configuration</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">,</span>
-                                <span class="n">origin</span><span class="o">=</span><span class="n">config_origins</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">id_</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
-                           <span class="k">for</span> <span class="n">id_</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">all_data</span><span class="p">[</span><span class="s2">&quot;configs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">id_</span><span class="p">):</span> <span class="n">Configuration</span><span class="p">(</span>
+                <span class="n">cs</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="n">config_origins</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">id_</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="p">)</span> <span class="k">for</span> <span class="n">id_</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">all_data</span><span class="p">[</span><span class="s2">&quot;configs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">config_ids</span> <span class="o">=</span> <span class="p">{</span><span class="n">config</span><span class="p">:</span> <span class="n">id_</span> <span class="k">for</span> <span class="n">id_</span><span class="p">,</span> <span class="n">config</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 
