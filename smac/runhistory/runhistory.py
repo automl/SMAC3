@@ -289,6 +289,31 @@ class RunHistory(object):
         """
         config_id = self.config_ids.get(config)
         return self._configid_to_inst_seed.get(config_id, [])
+    
+    def get_instance_costs_for_config(self, config: Configuration):
+        """
+            Returns the average cost per instance (across seeds) 
+            for a configuration
+            Parameters
+            ----------
+            config : Configuration from ConfigSpace
+                Parameter configuration
+
+            Returns
+            -------
+            cost_per_inst: dict<instance name<str>, cost<float>>
+        """
+        config_id = self.config_ids.get(config)
+        runs_ = self._configid_to_inst_seed.get(config_id, [])
+        cost_per_inst = {}
+        for inst, seed in runs_:
+            cost_per_inst[inst] = cost_per_inst.get(inst,[])
+            rkey = RunKey(config_id, inst, seed)
+            vkey = self.data[rkey]
+            cost_per_inst[inst].append(vkey.cost)
+        cost_per_inst = dict([(inst, np.mean(costs)) for inst, costs in cost_per_inst.items()])
+        return cost_per_inst
+        
 
     def get_all_configs(self):
         """Return all configurations in this RunHistory object
