@@ -24,6 +24,7 @@ parsed_scen_args = {}
 logger = None
 
 def truthy(x):
+    """Convert x into its truth value"""
     if isinstance(x, bool):
         return x
     elif isinstance(x, int) or isinstance(x, float):
@@ -35,6 +36,7 @@ def truthy(x):
 
 
 class CheckScenarioFileAction(Action):
+    """Check scenario file given by user"""
 
     def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
         fn = values
@@ -45,6 +47,7 @@ class CheckScenarioFileAction(Action):
 
 
 class ParseRandomConfigurationChooserAction(Action):
+    """Parse random configuration chooser given by user"""
 
     def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str = None):
         module_file = values
@@ -58,6 +61,7 @@ class ParseRandomConfigurationChooserAction(Action):
 
 
 class ProcessRunObjectiveAction(Action):
+    """Process run objective given by user"""
 
     def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
         if values is "runtime":
@@ -68,6 +72,7 @@ class ProcessRunObjectiveAction(Action):
 
 
 class ParseOverallObjectiveAction(Action):
+    """Parse overall objective given by user"""
 
     def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
         par_str = values
@@ -85,6 +90,7 @@ class ParseOverallObjectiveAction(Action):
 
 
 class ReadTrainInstFileAction(Action):
+    """Read training instance file given by user"""
 
     def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
         fn = values
@@ -97,6 +103,7 @@ class ReadTrainInstFileAction(Action):
 
 
 class ReadTestInstFileAction(Action):
+    """Read test instance file given by user"""
 
     def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
         fn = values
@@ -109,6 +116,7 @@ class ReadTestInstFileAction(Action):
 
 
 class ReadFeatureFileAction(Action):
+    """Read feature file given by user"""
 
     def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
         fn = values
@@ -122,6 +130,7 @@ class ReadFeatureFileAction(Action):
 
 
 class ReadPCSFileAction(Action):
+    """Read PCS (parameter configuration space) file given by user"""
 
     def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
         fn = values
@@ -141,6 +150,7 @@ class ReadPCSFileAction(Action):
 
 
 class ProcessOutputDirAction(Action):
+    """Process output directory given by user"""
 
     def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
         directory = values
@@ -199,7 +209,7 @@ class SMACArgumentParser(ArgumentParser):
         self.help_type = 'standard'  # standard or dev
         super(SMACArgumentParser, self).__init__(*args, **kwargs)
 
-    def set_help_type(self, help_type):
+    def set_help_type(self, help_type: str):
         self.help_type = help_type
         for parser in self.additional_parsers:
             parser.help_type = help_type
@@ -344,6 +354,7 @@ class CMDReader(object):
         return extracted_info, translations
 
     def _add_main_options(self):
+        """Add main Options"""
         prog = sys.argv[0]
         if re.match("^python[0-9._-]*$", sys.argv[0]):
             prog = sys.argv[1]
@@ -384,7 +395,7 @@ class CMDReader(object):
         opt_opts.add_argument("--warmstart-incumbent", "--warmstart_incumbent", dest="warmstart_incumbent",
                               default=None, nargs="*",
                               help=SUPPRESS)
-        
+
         self.main_cmd_actions, self.main_cmd_translations = CMDReader._extract_action_info(self.parser._actions)
 
     def _add_smac_options(self):
@@ -398,20 +409,20 @@ class CMDReader(object):
                                     "the target algorithm crashes.")
         smac_opts.add_argument("--always-race-default", "--always_race_default", dest='always_race_default',
                                default=False, type=truthy,
-                               help="Race new incumbents always against default "
+                               help="[dev] Race new incumbents always against default "
                                     "configuration.")
         smac_opts.add_argument("--intensification-percentage", "--intensification_percentage",
                                dest='intensification_percentage',
                                default=0.5, type=float,
-                               help="The fraction of time to be used on "
+                               help="[dev] The fraction of time to be used on "
                                     "intensification (versus choice of next "
                                     "Configurations).")
         smac_opts.add_argument("--minr", dest='minR',
                                default=1, type=int,
-                               help="Minimum number of calls per configuration.")
+                               help="[dev] Minimum number of calls per configuration.")
         smac_opts.add_argument("--maxr", dest='maxR',
                                default=2000, type=int,
-                               help="Maximum number of calls per configuration.")
+                               help="[dev] Maximum number of calls per configuration.")
         self.output_dir_arg = \
             smac_opts.add_argument("--output-dir", "--output_dir", dest='output_dir',
                                    type=str, action=ProcessOutputDirAction,
@@ -524,6 +535,7 @@ class CMDReader(object):
         self.scen_cmd_actions, self.scen_cmd_translations = CMDReader._extract_action_info(self.scen_parser._actions)
 
     def parse_main_command(self, main_cmd_opts: typing.List[str]):
+        """Parse main options"""
         args_, misc = self.parser.parse_known_args(main_cmd_opts)
         try:
             misc.remove(self.parser.prog)
@@ -532,6 +544,7 @@ class CMDReader(object):
         return args_, misc
 
     def parse_smac_command(self, smac_dict: dict = {}, smac_cmd_opts: typing.List[str] = []):
+        """Parse SMAC options"""
         # transform smac dict to smac_args
         try:
             smac_cmd_opts.remove(self.parser.prog)
@@ -573,7 +586,7 @@ class CMDReader(object):
                                scenario_dict: dict={},
                                scenario_cmd_opts: typing.List[str]=[]):
         """
-        Parse scenario command
+        Parse scenario options
         :param scenario_file: str or None
         Path to the scenario file.
         :param scenario_dict: dict

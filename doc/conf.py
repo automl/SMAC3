@@ -306,7 +306,6 @@ texinfo_documents = [
 # Show init as well as moduledoc
 autoclass_content = 'both'
 
-# Create Scenario-object to update the list of options in the docs
 cmd_reader = CMDReader()
 cmd_reader.write_main_options_to_doc()
 cmd_reader.write_smac_options_to_doc()
