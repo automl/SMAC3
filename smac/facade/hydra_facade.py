@@ -70,6 +70,9 @@ class Hydra(object):
             self.logger.info("Iteration: %d" %(i+1))
             
             incumbent = smac.solver.run()
+            smac.stats.print_stats()
+            self.logger.info("Incumbent of %d-th Iteration" %(i+1))
+            self.logger.info(incumbent)
             portfolio.append(incumbent)
             
             # validate incumbent on all trainings instances
@@ -78,6 +81,7 @@ class Hydra(object):
                                   repetitions=1, 
                                   use_epm=False, 
                                   n_jobs=1)
+            self.logger.info("Number of validated runs: %d" %(len(new_rh.data)))
             # since the TAE uses already the portfolio as an upper limit
             # the following dict already contains oracle performance
             self.logger.info("Start validation of current portfolio")
@@ -94,6 +98,8 @@ class Hydra(object):
             #TODO: This only works for the old command line interface
             tae = ExecuteTARunOldHydra(ta=self.scenario.ta, run_obj=self.scenario.run_obj,
                                        cost_oracle=cost_per_inst)
+            
+            self.scenario.ta_run_limit = 20 
             
             smac = SMAC(scenario=self.scenario, tae_runner=tae, **self.kwargs)
             
