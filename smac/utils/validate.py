@@ -283,7 +283,6 @@ class Validator(object):
                                                  instance_features=self.scen.feature_array,
                                                  seed=self.rng.randint(MAXINT),
                                                  ratio_features=1.0)
-            logging.warning('validate_1__test_rng__' + str(self.rng.randint(MAXINT)))
             # Use imputor if objective is runtime
             imputor = None
             impute_state = None
@@ -422,7 +421,6 @@ class Validator(object):
                 else:
                     # If no runhistory or no entries for instance, get new seed
                     seed = self.rng.randint(MAXINT)
-                    logging.warning('validate_2__test_rng__' + str(self.rng.randint(MAXINT)))
                     # if self.scen.deterministic:
                     #     seed = 0
                 # We now have a seed and add all configs that are not already
