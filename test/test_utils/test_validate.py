@@ -129,6 +129,34 @@ class ValidationTest(unittest.TestCase):
         self.assertRaises(ValueError, validator._get_configs, "notanoption")
         self.assertRaises(ValueError, validator._get_instances, "notanoption")
 
+    def test_get_runs_capped(self):
+        ''' test if capped, crashed and aborted runs are ignored
+            during rh-recovery '''
+        scen = Scenario(self.scen_fn,
+                        cmd_args={'run_obj':'quality',
+                                  'instances' : ['0']})
+
+        validator = Validator(scen, self.trajectory, self.rng)
+
+        # Get runhistory
+        old_configs = ['config1', 'config2', 'config3',
+                       'config4', 'config5', 'config6']
+        old_rh = RunHistory(average_cost)
+        old_rh.add('config1', 1, 1, StatusType.SUCCESS, instance_id='0', seed=0)
+        old_rh.add('config2', 1, 1, StatusType.TIMEOUT, instance_id='0', seed=0)
+        old_rh.add('config3', 1, 1, StatusType.CRASHED, instance_id='0', seed=0)
+        old_rh.add('config4', 1, 1, StatusType.ABORT, instance_id='0', seed=0)
+        old_rh.add('config5', 1, 1, StatusType.MEMOUT, instance_id='0', seed=0)
+        old_rh.add('config6', 1, 1, StatusType.CAPPED, instance_id='0', seed=0)
+
+        # Get multiple configs
+        expected = [Run(inst_specs='0', seed=0, inst='0', config='config3'),
+                    Run(inst_specs='0', seed=0, inst='0', config='config4'),
+                    Run(inst_specs='0', seed=0, inst='0', config='config6')]
+
+        runs = validator.get_runs(old_configs, ['0'], repetitions=1, runhistory=old_rh)
+        self.assertEqual(runs[0], expected)
+
     def test_get_runs(self):
         ''' test if the runs are generated as expected '''
         scen = Scenario(self.scen_fn,
