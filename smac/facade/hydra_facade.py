@@ -64,6 +64,7 @@ class Hydra(object):
         """
 
         portfolio = []
+        #self.scenario.ta_run_limit = 10
         smac = SMAC(scenario=self.scenario, **self.kwargs)
         portfolio_cost = np.inf
         for i in range(self.n_iterations):
@@ -86,6 +87,7 @@ class Hydra(object):
             # the following dict already contains oracle performance
             self.logger.info("Start validation of current portfolio")
             cost_per_inst = new_rh.get_instance_costs_for_config(config=incumbent)
+            self.logger.info("Lower bounds for %d instances" %(len(cost_per_inst)))
             cur_portfolio_cost = np.mean(list(cost_per_inst.values()))
             if portfolio_cost <= cur_portfolio_cost:
                 self.logger.info("No further progress (%f) --- terminate hydra" %(portfolio_cost))

@@ -31,7 +31,7 @@ class ExecuteTARunOldHydra(ExecuteTARunOld):
         status, cost, runtime, additional_info = super(ExecuteTARunOldHydra,self).run(**kwargs)
         inst = kwargs["instance"]
         oracle_perf = self.cost_oracle.get(inst)
-        if oracle_perf:
+        if oracle_perf is not None:
             # at this point, cost is not overwritten by runtime
             #TODO: This could be problematic for PAR10?
             if self.run_obj == "runtime":
