@@ -99,8 +99,6 @@ class Hydra(object):
             tae = ExecuteTARunOldHydra(ta=self.scenario.ta, run_obj=self.scenario.run_obj,
                                        cost_oracle=cost_per_inst)
             
-            self.scenario.ta_run_limit = 20 
-            
             smac = SMAC(scenario=self.scenario, tae_runner=tae, **self.kwargs)
             
         return portfolio
