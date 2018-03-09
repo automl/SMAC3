@@ -413,9 +413,13 @@ class Validator(object):
                     if len(inst_seed_config[i]) == 0:
                         inst_seed_config.pop(i)
                     # Add runs to runhistory
-                    for c in configs_evaluated:
+                    for c in configs_evaluated[:]:
                         runkey = RunKey(runhistory.config_ids[c], i, seed)
                         cost, time, status, additional_info = runhistory.data[runkey]
+                        if status in [StatusType.CRASHED, StatusType.ABORT, StatusType.CAPPED]:
+                            # Not properly executed target algorithm runs should be repeated
+                            configs_evaluated.remove(c)
+                            continue
                         new_rh.add(c, cost, time, status, instance_id=i,
                                    seed=seed, additional_info=additional_info)
                         runs_from_rh += 1
@@ -491,7 +495,7 @@ class Validator(object):
                     inst_seed_config[inst] = {seed : [config]}
 
             inst_seed_config = {i :
-                                sorted([(seed, tuple(inst_seed_config[i][seed]))
+                                sorted([(seed, list(inst_seed_config[i][seed]))
                                         for seed in inst_seed_config[i]],
                                        key=lambda x: len(x[1]))
                                 for i in inst_seed_config}
