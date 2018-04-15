@@ -40,7 +40,6 @@ class OutputWriter(object):
                                   "created.")
             try:
                 os.makedirs(scenario.output_dir_for_this_run)
-                raise OSError()
             except OSError:
                 scenario.logger.debug("Could not make output directory.", exc_info=1)
                 raise OSError("Could not make output directory: "
