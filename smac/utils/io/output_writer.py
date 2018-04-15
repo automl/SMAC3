@@ -42,10 +42,9 @@ class OutputWriter(object):
                 os.makedirs(scenario.output_dir_for_this_run)
                 raise OSError()
             except OSError:
-                scenario.logger.error("Could not make output directory: "
-                                      "{}.".format(scenario.output_dir_for_this_run),
-                                      exc_info=1)
-                sys.exit(3)
+                scenario.logger.debug("Could not make output directory.", exc_info=1)
+                raise OSError("Could not make output directory: "
+                              "{}.".format(scenario.output_dir_for_this_run))
 
         # options_dest2name maps scenario._arguments from dest -> name
         options_dest2name = {(scenario._arguments[v]['dest'] if

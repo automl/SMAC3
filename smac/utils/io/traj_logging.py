@@ -56,9 +56,9 @@ class TrajLogger(object):
                 try:
                     os.makedirs(output_dir)
                 except OSError:
-                    self.logger.error("Could not make output directory: "
-                                      "{}.".format(output_dir), exc_info=1)
-                    sys.exit(3)
+                    self.logger.debug("Could not make output directory.", exc_info=1)
+                    raise OSError("Could not make output directory: "
+                                  "{}.".format(output_dir))
 
             self.old_traj_fn = os.path.join(output_dir, "traj_old.csv")
             if not os.path.isfile(self.old_traj_fn):
