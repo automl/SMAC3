@@ -1,4 +1,5 @@
 import os
+import sys
 import shutil
 
 import typing
@@ -36,12 +37,15 @@ class OutputWriter(object):
         # Create output-dir if necessary
         if not os.path.isdir(scenario.output_dir_for_this_run):
             scenario.logger.debug("Output directory does not exist! Will be "
-                              "created.")
+                                  "created.")
             try:
                 os.makedirs(scenario.output_dir_for_this_run)
+                raise OSError()
             except OSError:
-                raise OSError("Could not make output directory: "
-                              "{}.".format(scenario.output_dir_for_this_run))
+                scenario.logger.error("Could not make output directory: "
+                                      "{}.".format(scenario.output_dir_for_this_run),
+                                      exc_info=1)
+                sys.exit(3)
 
         # options_dest2name maps scenario._arguments from dest -> name
         options_dest2name = {(scenario._arguments[v]['dest'] if
