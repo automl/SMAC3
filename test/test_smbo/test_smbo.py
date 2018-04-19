@@ -153,7 +153,8 @@ class TestSMBO(unittest.TestCase):
         X = np.zeros((0, 2))
         Y = np.zeros((0, 1))
 
-        x = smbo.choose_next(X, Y)
+        challengers = smbo.choose_next(X, Y)
+        x = [c for c in challengers]
         self.assertEqual(len(x), 1)
         self.assertIsInstance(x[0], Configuration)
 
