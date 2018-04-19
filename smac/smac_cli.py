@@ -115,8 +115,7 @@ class SMACCLI(object):
                 rng=np.random.RandomState(args_.seed),
                 runhistory=rh,
                 initial_configurations=initial_configs,
-                run_id=args_.seed,
-                random_configuration_chooser=random_configuration_chooser)
+                run_id=args_.seed)
         elif args_.mode == "EPILS":
             optimizer = EPILS(
                 scenario=scen,

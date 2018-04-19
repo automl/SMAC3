@@ -318,6 +318,23 @@ class RandomSearch(AcquisitionFunctionMaximizer):
     
     rng : np.random.RandomState or int, optional
     """
+    
+    def maximize(
+        self, 
+        runhistory:RunHistory, 
+        stats:Stats, 
+        num_points:int,
+        _sorted: bool=False,
+        **args)-> Iterable[Configuration]:
+        
+        configs = self._maximize(runhistory, stats, num_points, _sorted, **args)
+        configs = list(map(lambda x: x[1], configs))
+        
+        challengers = ChallengerList(configs,
+                             self.config_space)
+        
+        return challengers
+    
 
     def _maximize(
             self,
@@ -325,7 +342,7 @@ class RandomSearch(AcquisitionFunctionMaximizer):
             stats: Stats,
             num_points: int,
             _sorted: bool=False,
-            *args
+            **args
     ) -> List[Tuple[float, Configuration]]:
 
         if num_points > 1:
