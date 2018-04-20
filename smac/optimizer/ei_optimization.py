@@ -59,7 +59,8 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
             self,
             runhistory: RunHistory,
             stats: Stats,
-            num_points: int
+            num_points: int,
+            **kwargs
     ) -> Iterable[Configuration]:
         """Maximize acquisition function using ``_maximize``.
         
@@ -319,30 +320,13 @@ class RandomSearch(AcquisitionFunctionMaximizer):
     rng : np.random.RandomState or int, optional
     """
     
-    def maximize(
-        self, 
-        runhistory:RunHistory, 
-        stats:Stats, 
-        num_points:int,
-        _sorted: bool=False,
-        **args)-> Iterable[Configuration]:
-        
-        configs = self._maximize(runhistory, stats, num_points, _sorted, **args)
-        configs = list(map(lambda x: x[1], configs))
-        
-        challengers = ChallengerList(configs,
-                             self.config_space)
-        
-        return challengers
-    
-
     def _maximize(
             self,
             runhistory: RunHistory,
             stats: Stats,
             num_points: int,
             _sorted: bool=False,
-            **args
+            **kwargs
     ) -> List[Tuple[float, Configuration]]:
 
         if num_points > 1:
