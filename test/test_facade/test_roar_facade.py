@@ -1,3 +1,4 @@
+from contextlib import suppress
 import shutil
 import unittest
 
@@ -23,6 +24,7 @@ class TestROARFacade(unittest.TestCase):
         self.output_dirs = []
         
     def tearDown(self):
+        shutil.rmtree('run_1', ignore_errors=True)
         for i in range(20):
             with suppress(Exception):
                 dirname = 'run_1' + ('.OLD' * i)
@@ -30,10 +32,6 @@ class TestROARFacade(unittest.TestCase):
         for output_dir in self.output_dirs:
             if output_dir:
                 shutil.rmtree(output_dir, ignore_errors=True)
-
-
-    def tearDown(self):
-        shutil.rmtree('run_1', ignore_errors=True)
 
     def test_inject_stats_and_runhistory_object_to_TAE(self):
         ta = ExecuteTAFuncArray(lambda x: x**2)
