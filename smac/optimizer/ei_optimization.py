@@ -66,25 +66,29 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
         
         Parameters
         ----------
-        runhistory : ~smac.runhistory.runhistory.RunHistory
-        
-        stats : ~smac.stats.stats.Stats
-        
-        num_points : int
+        runhistory: ~smac.runhistory.runhistory.RunHistory
+            runhistory object 
+        stats: ~smac.stats.stats.Stats
+            current stats object
+        num_points: int
+            number of points to be sampled
+        **kwargs
         
         Returns
         -------
         iterable
             An iterable consisting of :class:`smac.configspace.Configuration`.
         """
-        return [t[1] for t in self._maximize(runhistory, stats, num_points)]
+        return [t[1] for t in self._maximize(runhistory, stats, num_points, **kwargs)]
 
     @abc.abstractmethod
     def _maximize(
             self,
             runhistory: RunHistory,
             stats: Stats,
-            num_points: int
+            num_points: int,
+            **kwargs
+            
     ) -> Iterable[Tuple[float, Configuration]]:
         """Implements acquisition function maximization.
         
@@ -94,11 +98,13 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
 
         Parameters
         ----------
-        runhistory : ~smac.runhistory.runhistory.RunHistory
-
-        stats : ~smac.stats.stats.Stats
-
-        num_points : int
+        runhistory: ~smac.runhistory.runhistory.RunHistory
+            runhistory object 
+        stats: ~smac.stats.stats.Stats
+            current stats object
+        num_points: int
+            number of points to be sampled
+        **kwargs
 
         Returns
         -------
@@ -179,8 +185,12 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
         Parameters
         ----------
-        start_point:  np.array(1, D)
-            The point from where the local search starts
+        runhistory: ~smac.runhistory.runhistory.RunHistory
+            runhistory object 
+        stats: ~smac.stats.stats.Stats
+            current stats object
+        num_points: int
+            number of points to be sampled
         *args:
             Additional parameters that will be passed to the
             acquisition function
@@ -328,6 +338,28 @@ class RandomSearch(AcquisitionFunctionMaximizer):
             _sorted: bool=False,
             **kwargs
     ) -> List[Tuple[float, Configuration]]:
+        """Randomly sampled configurations
+
+        Parameters
+        ----------
+        runhistory: ~smac.runhistory.runhistory.RunHistory
+            runhistory object 
+        stats: ~smac.stats.stats.Stats
+            current stats object
+        num_points: int
+            number of points to be sampled
+        _sorted: bool
+            whether random configurations are sorted according to acquisition function
+        **kwargs
+
+        Returns
+        -------
+        iterable
+            An iterable consistng of 
+            tuple(acqusition_value, :class:`smac.configspace.Configuration`).
+        """
+        
+        
 
         if num_points > 1:
             rand_configs = self.config_space.sample_configuration(
@@ -382,6 +414,31 @@ class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
             random_configuration_chooser,
             *args
     ) -> Iterable[Configuration]:
+        """Maximize acquisition function using ``_maximize``.
+        
+        Parameters
+        ----------
+        runhistory: ~smac.runhistory.runhistory.RunHistory
+            runhistory object 
+        stats: ~smac.stats.stats.Stats
+            current stats object
+        num_points: int
+            number of points to be sampled
+        random_configuration_chooser: ~smac.optimizer.random_configuration_chooser.RandomConfigurationChooser
+            part of the returned ChallengerList such 
+            that we can interleave random configurations
+            by a scheme defined by the random_configuration_chooser;
+            random_configuration_chooser.next_smbo_iteration() 
+            is called at the end of this function
+            
+        **kwargs
+        
+        Returns
+        -------
+        Iterable[Configuration]
+            to be concrete: ~smac.ei_optimization.ChallengerList
+        """
+        
         next_configs_by_local_search = self.local_search._maximize(
             runhistory, stats, 10,
         )
