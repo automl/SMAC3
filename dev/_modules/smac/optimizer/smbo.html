@@ -25,25 +25,17 @@
   
 
   
-  
     <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="SMAC 0.8.0 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -60,7 +52,7 @@
 
           
             
-            <img src="../../../_static/SMAC3.png" class="logo" />
+            <img src="../../../_static/SMAC3.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -194,7 +186,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">SMAC</a>
@@ -202,9 +194,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -233,8 +226,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -407,8 +398,8 @@
             <span class="c1"># Restoring state!</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;State Restored! Starting optimization with &quot;</span>
                              <span class="s2">&quot;incumbent </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;State restored with following budget:&quot;</span><span class="p">)</span></div>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">print_stats</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;State restored with following budget:&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">print_stats</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="SMBO.run"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Runs the Bayesian optimization loop</span>
@@ -461,8 +452,8 @@
                 <span class="k">break</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">print_stats</span><span class="p">(</span><span class="n">debug_out</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</div>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span></div>
 
 <div class="viewcode-block" id="SMBO.choose_next"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.choose_next">[docs]</a>    <span class="k">def</span> <span class="nf">choose_next</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                     <span class="n">incumbent_value</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -507,8 +498,8 @@
 
         <span class="n">challengers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span><span class="o">.</span><span class="n">maximize</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_configuration_chooser</span>
-        <span class="p">)</span></div>
-        <span class="k">return</span> <span class="n">challengers</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">challengers</span></div>
 
 <div class="viewcode-block" id="SMBO.validate"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_mode</span><span class="o">=</span><span class="s1">&#39;inc&#39;</span><span class="p">,</span> <span class="n">instance_mode</span><span class="o">=</span><span class="s1">&#39;train+test&#39;</span><span class="p">,</span>
                  <span class="n">repetitions</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_epm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;threading&#39;</span><span class="p">):</span>
@@ -553,8 +544,8 @@
             <span class="n">new_rh</span> <span class="o">=</span> <span class="n">validator</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">config_mode</span><span class="p">,</span> <span class="n">instance_mode</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">,</span>
                                         <span class="n">n_jobs</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
                                         <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">tae_runner</span><span class="p">,</span>
-                                        <span class="n">output</span><span class="o">=</span><span class="n">new_rh_path</span><span class="p">)</span></div>
-        <span class="k">return</span> <span class="n">new_rh</span>
+                                        <span class="n">output</span><span class="o">=</span><span class="n">new_rh_path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_rh</span></div>
 
     <span class="k">def</span> <span class="nf">_get_timebound_for_intensification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_spent</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculate time left for intensify from the time spent on</span>
@@ -580,14 +571,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Total time: </span><span class="si">%.4f</span><span class="s2">, time spent on choosing next &quot;</span>
                           <span class="s2">&quot;configurations: </span><span class="si">%.4f</span><span class="s2"> (</span><span class="si">%.2f</span><span class="s2">), time left for &quot;</span>
                           <span class="s2">&quot;intensification: </span><span class="si">%.4f</span><span class="s2"> (</span><span class="si">%.2f</span><span class="s2">)&quot;</span> <span class="o">%</span>
-                          <span class="p">(</span><span class="n">total_time</span><span class="p">,</span> <span class="n">time_spent</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">frac_intensify</span><span class="p">),</span> <span class="n">time_left</span><span class="p">,</span> <span class="n">frac_intensify</span><span class="p">))</span></div>
-        <span class="k">return</span> <span class="n">time_left</span>
+                          <span class="p">(</span><span class="n">total_time</span><span class="p">,</span> <span class="n">time_spent</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">frac_intensify</span><span class="p">),</span> <span class="n">time_left</span><span class="p">,</span> <span class="n">frac_intensify</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">time_left</span></div>
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -600,7 +589,7 @@
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -619,6 +608,7 @@
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
             VERSION:'0.8.0',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -637,14 +627,13 @@
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

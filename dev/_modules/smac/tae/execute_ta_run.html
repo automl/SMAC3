@@ -25,25 +25,17 @@
   
 
   
-  
     <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="SMAC 0.8.0 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -60,7 +52,7 @@
 
           
             
-            <img src="../../../_static/SMAC3.png" class="logo" />
+            <img src="../../../_static/SMAC3.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -194,7 +186,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">SMAC</a>
@@ -202,9 +194,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -233,8 +226,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -282,32 +273,32 @@
             <span class="c1"># object is marked as enum</span>
             <span class="n">name</span><span class="p">,</span> <span class="n">member</span> <span class="o">=</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;__enum__&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;StatusType&quot;</span><span class="p">:</span>
-                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">globals</span><span class="p">()[</span><span class="n">name</span><span class="p">],</span> <span class="n">member</span><span class="p">)</span></div>
-        <span class="k">return</span> <span class="n">obj</span>
+                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">globals</span><span class="p">()[</span><span class="n">name</span><span class="p">],</span> <span class="n">member</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">obj</span></div>
 
 
 <div class="viewcode-block" id="BudgetExhaustedException"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_func.BudgetExhaustedException">[docs]</a><span class="k">class</span> <span class="nc">BudgetExhaustedException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Exception indicating that time- or memory-budgets are exhausted.&quot;&quot;&quot;</span></div>
-    <span class="k">pass</span>
+    <span class="sd">&quot;&quot;&quot;Exception indicating that time- or memory-budgets are exhausted.&quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="TAEAbortException"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_func.TAEAbortException">[docs]</a><span class="k">class</span> <span class="nc">TAEAbortException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Exception indicating that the target algorithm suggests an ABORT of</span>
 <span class="sd">    SMAC, usually because it assumes that all further runs will surely fail.</span>
-<span class="sd">    &quot;&quot;&quot;</span></div>
-    <span class="k">pass</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="FirstRunCrashedException"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_func.FirstRunCrashedException">[docs]</a><span class="k">class</span> <span class="nc">FirstRunCrashedException</span><span class="p">(</span><span class="n">TAEAbortException</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Exception indicating that the first run crashed (depending on options</span>
-<span class="sd">    this could trigger an ABORT of SMAC.) &quot;&quot;&quot;</span></div>
-    <span class="k">pass</span>
+<span class="sd">    this could trigger an ABORT of SMAC.) &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="CappedRunException"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_func.CappedRunException">[docs]</a><span class="k">class</span> <span class="nc">CappedRunException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Exception indicating that a run was capped with a cutoff smaller than</span>
-<span class="sd">    the actual timeout &quot;&quot;&quot;</span></div>
-    <span class="k">pass</span>
+<span class="sd">    the actual timeout &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="ExecuteTARun"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_func.ExecuteTARun">[docs]</a><span class="k">class</span> <span class="nc">ExecuteTARun</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -473,8 +464,8 @@
                                            <span class="s2">&quot;(To deactivate this exception,&quot;</span> 
                                            <span class="s2">&quot; use the SMAC scenario option &quot;</span>
                                            <span class="s2">&quot;&#39;abort_on_first_run_crash&#39;)&quot;</span><span class="p">)</span>
-</div>
-        <span class="k">return</span> <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">additional_info</span>
+
+        <span class="k">return</span> <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">additional_info</span></div>
 
 <div class="viewcode-block" id="ExecuteTARun.run"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_func.ExecuteTARun.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">cutoff</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -508,14 +499,12 @@
 <span class="sd">                runtime (None if not returned by TA)</span>
 <span class="sd">            additional_info: dict</span>
 <span class="sd">                all further additional run information</span>
-<span class="sd">        &quot;&quot;&quot;</span></div></div>
-        <span class="k">return</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span> <span class="mf">12345.0</span><span class="p">,</span> <span class="mf">1.2345</span><span class="p">,</span> <span class="p">{}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span> <span class="mf">12345.0</span><span class="p">,</span> <span class="mf">1.2345</span><span class="p">,</span> <span class="p">{}</span></div></div>
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -528,7 +517,7 @@
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -547,6 +536,7 @@
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
             VERSION:'0.8.0',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -565,14 +555,13 @@
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

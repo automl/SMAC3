@@ -25,25 +25,17 @@
   
 
   
-  
     <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="SMAC 0.8.0 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -60,7 +52,7 @@
 
           
             
-            <img src="../../../_static/SMAC3.png" class="logo" />
+            <img src="../../../_static/SMAC3.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -194,7 +186,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">SMAC</a>
@@ -202,9 +194,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -233,8 +226,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -293,8 +284,8 @@
         <span class="n">rh</span> <span class="o">=</span> <span class="n">RunHistory</span><span class="p">(</span><span class="n">aggregate_func</span><span class="p">)</span>
         <span class="n">rh</span><span class="o">.</span><span class="n">load_json</span><span class="p">(</span><span class="n">rh_fn</span><span class="p">,</span> <span class="n">cs</span><span class="p">)</span>
         <span class="n">rhs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rh</span><span class="p">)</span>
-</div>
-    <span class="k">return</span> <span class="n">merge_foreign_data</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">,</span> <span class="n">in_scenario_list</span><span class="o">=</span><span class="n">scens</span><span class="p">,</span> <span class="n">in_runhistory_list</span><span class="o">=</span><span class="n">rhs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">merge_foreign_data</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">,</span> <span class="n">in_scenario_list</span><span class="o">=</span><span class="n">scens</span><span class="p">,</span> <span class="n">in_runhistory_list</span><span class="o">=</span><span class="n">rhs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="merge_foreign_data"><a class="viewcode-back" href="../../../apidoc/smac.utils.merge_foreign_data.html#smac.utils.merge_foreign_data.merge_foreign_data">[docs]</a><span class="k">def</span> <span class="nf">merge_foreign_data</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
@@ -344,14 +335,12 @@
                 <span class="s2">&quot;Instance feature for </span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s2"> was not found in scenario data.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">instance_id</span><span class="p">))</span>
 
     <span class="n">runhistory</span><span class="o">.</span><span class="n">compute_all_costs</span><span class="p">(</span><span class="n">instances</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">train_insts</span><span class="p">)</span>
-</div>
-    <span class="k">return</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">runhistory</span>
+
+    <span class="k">return</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">runhistory</span></div>
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -364,7 +353,7 @@
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -383,6 +372,7 @@
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
             VERSION:'0.8.0',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -401,14 +391,13 @@
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

@@ -25,25 +25,17 @@
   
 
   
-  
     <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../../search.html"/>
-    <link rel="top" title="SMAC 0.8.0 documentation" href="../../../../index.html"/>
-        <link rel="up" title="Module code" href="../../../index.html"/> 
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
 
   
   <script src="../../../../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -60,7 +52,7 @@
 
           
             
-            <img src="../../../../_static/SMAC3.png" class="logo" />
+            <img src="../../../../_static/SMAC3.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -194,7 +186,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../../index.html">SMAC</a>
@@ -202,9 +194,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -233,8 +226,6 @@
     
     
       <li class="wy-breadcrumbs-aside">
-        
-            
         
       </li>
     
@@ -305,9 +296,9 @@
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
                 <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                        <span class="s2">&quot;Could not make output directory: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">output_dir</span><span class="p">))</span>
-                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Could not make output directory.&quot;</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s2">&quot;Could not make output directory: &quot;</span>
+                                  <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output_dir</span><span class="p">))</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">old_traj_fn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;traj_old.csv&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">old_traj_fn</span><span class="p">):</span>
@@ -344,8 +335,8 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_add_in_old_format</span><span class="p">(</span><span class="n">train_perf</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">,</span>
                                     <span class="n">ta_time_used</span><span class="p">,</span> <span class="n">wallclock_time</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_add_in_aclib_format</span><span class="p">(</span><span class="n">train_perf</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">,</span></div>
-                                      <span class="n">ta_time_used</span><span class="p">,</span> <span class="n">wallclock_time</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_in_aclib_format</span><span class="p">(</span><span class="n">train_perf</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">,</span>
+                                      <span class="n">ta_time_used</span><span class="p">,</span> <span class="n">wallclock_time</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_add_in_old_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_perf</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                            <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">ta_time_used</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -449,8 +440,8 @@
                 <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;incumbent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">TrajLogger</span><span class="o">.</span><span class="n">_convert_dict_to_config</span><span class="p">(</span>
                     <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;incumbent&quot;</span><span class="p">],</span> <span class="n">cs</span><span class="o">=</span><span class="n">cs</span><span class="p">)</span>
                 <span class="n">trajectory</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
-</div>
-        <span class="k">return</span> <span class="n">trajectory</span>
+
+        <span class="k">return</span> <span class="n">trajectory</span></div>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_convert_dict_to_config</span><span class="p">(</span><span class="n">config_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">cs</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">):</span>
@@ -477,14 +468,12 @@
             
         <span class="n">config</span> <span class="o">=</span> <span class="n">Configuration</span><span class="p">(</span><span class="n">configuration_space</span><span class="o">=</span><span class="n">cs</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">config_dict</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s2">&quot;External Trajectory&quot;</span>
-</div>
-        <span class="k">return</span> <span class="n">config</span>
+
+        <span class="k">return</span> <span class="n">config</span></div>
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -497,7 +486,7 @@
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -516,6 +505,7 @@
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../../',
             VERSION:'0.8.0',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -534,14 +524,13 @@
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>
