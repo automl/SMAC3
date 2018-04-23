@@ -88,7 +88,6 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
             stats: Stats,
             num_points: int,
             **kwargs
-            
     ) -> Iterable[Tuple[float, Configuration]]:
         """Implements acquisition function maximization.
         
@@ -177,7 +176,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             runhistory: RunHistory,
             stats: Stats,
             num_points: int,
-            *args
+            **kwargs
     ) -> List[Tuple[float, Configuration]]:
         """Starts a local search from the given startpoint and quits
         if either the max number of steps is reached or no neighbor
@@ -191,7 +190,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             current stats object
         num_points: int
             number of points to be sampled
-        *args:
+        ***kwargs:
             Additional parameters that will be passed to the
             acquisition function
 
@@ -214,7 +213,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
         # Start N local search from different random start points
         for start_point in init_points:
             acq_val, configuration = self._one_iter(
-                start_point)
+                start_point, **kwargs)
 
             configuration.origin = "Local Search"
             configs_acq.append((acq_val, configuration))
@@ -250,12 +249,12 @@ class LocalSearch(AcquisitionFunctionMaximizer):
     def _one_iter(
             self,
             start_point: Configuration,
-            *args
+            **kwargs
     ) -> Tuple[float, Configuration]:
 
         incumbent = start_point
         # Compute the acquisition value of the incumbent
-        acq_val_incumbent = self.acquisition_function([incumbent], *args)[0]
+        acq_val_incumbent = self.acquisition_function([incumbent], **kwargs)[0]
 
         local_search_steps = 0
         neighbors_looked_at = 0
@@ -282,7 +281,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             neighbors = []
             for neighbor in all_neighbors:
                 s_time = time.time()
-                acq_val = self.acquisition_function([neighbor], *args)
+                acq_val = self.acquisition_function([neighbor], **kwargs)
                 neighbors_looked_at += 1
                 time_n.append(time.time() - s_time)
 
@@ -351,15 +350,14 @@ class RandomSearch(AcquisitionFunctionMaximizer):
         _sorted: bool
             whether random configurations are sorted according to acquisition function
         **kwargs
-
+            not used
+    
         Returns
         -------
         iterable
             An iterable consistng of 
             tuple(acqusition_value, :class:`smac.configspace.Configuration`).
         """
-        
-        
 
         if num_points > 1:
             rand_configs = self.config_space.sample_configuration(
@@ -412,7 +410,7 @@ class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
             stats: Stats,
             num_points: int,
             random_configuration_chooser,
-            *args
+            **kwargs
     ) -> Iterable[Configuration]:
         """Maximize acquisition function using ``_maximize``.
         
@@ -430,8 +428,8 @@ class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
             by a scheme defined by the random_configuration_chooser;
             random_configuration_chooser.next_smbo_iteration() 
             is called at the end of this function
-            
         **kwargs
+            passed to acquisition function
         
         Returns
         -------
@@ -440,7 +438,7 @@ class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
         """
         
         next_configs_by_local_search = self.local_search._maximize(
-            runhistory, stats, 10,
+            runhistory, stats, 10, **kwargs
         )
 
         # Get configurations sorted by EI
@@ -478,7 +476,8 @@ class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
             self,
             runhistory: RunHistory,
             stats: Stats,
-            num_points: int
+            num_points: int,
+            **kwargs
     ) -> Iterable[Tuple[float, Configuration]]:
         raise NotImplementedError()
         
