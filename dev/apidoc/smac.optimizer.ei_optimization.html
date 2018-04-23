@@ -269,16 +269,17 @@
 </table>
 <dl class="method">
 <dt id="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer.maximize">
-<code class="descname">maximize</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>stats: smac.stats.stats.Stats</em>, <em>num_points: int</em><span class="sig-paren">)</span> &#x2192; Iterable[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#AcquisitionFunctionMaximizer.maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer.maximize" title="Permalink to this definition">¶</a></dt>
+<code class="descname">maximize</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>stats: smac.stats.stats.Stats</em>, <em>num_points: int</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; Iterable[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#AcquisitionFunctionMaximizer.maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer.maximize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maximize acquisition function using <code class="docutils literal notranslate"><span class="pre">_maximize</span></code>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – </li>
-<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – </li>
-<li><strong>num_points</strong> (<em>int</em>) – </li>
+<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</li>
+<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</li>
+<li><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</li>
+<li><strong>**kwargs</strong> – </li>
 </ul>
 </td>
 </tr>
@@ -341,23 +342,29 @@ sampled configurations in between.</p>
 </table>
 <dl class="method">
 <dt id="smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch.maximize">
-<code class="descname">maximize</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>stats: smac.stats.stats.Stats</em>, <em>num_points: int</em>, <em>random_configuration_chooser</em>, <em>*args</em><span class="sig-paren">)</span> &#x2192; Iterable[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#InterleavedLocalAndRandomSearch.maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch.maximize" title="Permalink to this definition">¶</a></dt>
+<code class="descname">maximize</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>stats: smac.stats.stats.Stats</em>, <em>num_points: int</em>, <em>random_configuration_chooser</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; Iterable[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#InterleavedLocalAndRandomSearch.maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch.maximize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maximize acquisition function using <code class="docutils literal notranslate"><span class="pre">_maximize</span></code>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – </li>
-<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – </li>
-<li><strong>num_points</strong> (<em>int</em>) – </li>
+<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</li>
+<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</li>
+<li><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</li>
+<li><strong>random_configuration_chooser</strong> (<em>RandomConfigurationChooser</em>) – part of the returned ChallengerList such
+that we can interleave random configurations
+by a scheme defined by the random_configuration_chooser;
+random_configuration_chooser.next_smbo_iteration()
+is called at the end of this function</li>
+<li><strong>**kwargs</strong> – passed to acquisition function</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">An iterable consisting of <code class="xref py py-class docutils literal notranslate"><span class="pre">smac.configspace.Configuration</span></code>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">to be concrete: ~smac.ei_optimization.ChallengerList</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">iterable</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Iterable[Configuration]</p>
 </td>
 </tr>
 </tbody>
@@ -387,16 +394,17 @@ sampled configurations in between.</p>
 </table>
 <dl class="method">
 <dt id="smac.optimizer.ei_optimization.LocalSearch.maximize">
-<code class="descname">maximize</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>stats: smac.stats.stats.Stats</em>, <em>num_points: int</em><span class="sig-paren">)</span> &#x2192; Iterable[ConfigSpace.configuration_space.Configuration]<a class="headerlink" href="#smac.optimizer.ei_optimization.LocalSearch.maximize" title="Permalink to this definition">¶</a></dt>
+<code class="descname">maximize</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>stats: smac.stats.stats.Stats</em>, <em>num_points: int</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; Iterable[ConfigSpace.configuration_space.Configuration]<a class="headerlink" href="#smac.optimizer.ei_optimization.LocalSearch.maximize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maximize acquisition function using <code class="docutils literal notranslate"><span class="pre">_maximize</span></code>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – </li>
-<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – </li>
-<li><strong>num_points</strong> (<em>int</em>) – </li>
+<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</li>
+<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</li>
+<li><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</li>
+<li><strong>**kwargs</strong> – </li>
 </ul>
 </td>
 </tr>
@@ -432,16 +440,17 @@ sampled configurations in between.</p>
 </table>
 <dl class="method">
 <dt id="smac.optimizer.ei_optimization.RandomSearch.maximize">
-<code class="descname">maximize</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>stats: smac.stats.stats.Stats</em>, <em>num_points: int</em><span class="sig-paren">)</span> &#x2192; Iterable[ConfigSpace.configuration_space.Configuration]<a class="headerlink" href="#smac.optimizer.ei_optimization.RandomSearch.maximize" title="Permalink to this definition">¶</a></dt>
+<code class="descname">maximize</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>stats: smac.stats.stats.Stats</em>, <em>num_points: int</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; Iterable[ConfigSpace.configuration_space.Configuration]<a class="headerlink" href="#smac.optimizer.ei_optimization.RandomSearch.maximize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maximize acquisition function using <code class="docutils literal notranslate"><span class="pre">_maximize</span></code>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – </li>
-<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – </li>
-<li><strong>num_points</strong> (<em>int</em>) – </li>
+<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</li>
+<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</li>
+<li><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</li>
+<li><strong>**kwargs</strong> – </li>
 </ul>
 </td>
 </tr>

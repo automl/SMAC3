@@ -298,8 +298,8 @@ respective attributes for the acquisition function object.</p>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.acquisition.AbstractAcquisitionFunction</span></code></a></p>
 <p>Computes for a given x the expected improvement as
 acquisition value.</p>
-<p><span class="math notranslate">\(EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]\)</span>,
-with <span class="math notranslate">\(f(X^+)\)</span> as the incumbent.</p>
+<p><span class="math notranslate nohighlight">\(EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]\)</span>,
+with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the incumbent.</p>
 <p>Constructor</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -348,8 +348,8 @@ respective attributes for the acquisition function object.</p>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.EI" title="smac.optimizer.acquisition.EI"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.acquisition.EI</span></code></a></p>
 <p>Computes for a given x the expected improvement as
 acquisition value.
-<span class="math notranslate">\(EI(X) := \frac{\mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]} {np.log10(r(x))}\)</span>,
-with <span class="math notranslate">\(f(X^+)\)</span> as the incumbent and <span class="math notranslate">\(r(x)\)</span> as runtime.</p>
+<span class="math notranslate nohighlight">\(EI(X) := \frac{\mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]} {np.log10(r(x))}\)</span>,
+with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the incumbent and <span class="math notranslate nohighlight">\(r(x)\)</span> as runtime.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
