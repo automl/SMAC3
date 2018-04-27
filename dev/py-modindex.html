@@ -95,6 +95,7 @@
 <li class="toctree-l2"><a class="reference internal" href="options.html">Options and file formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tae.html">Target Algorithm Evaluator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="psmac.html">Parallel SMAC (pSMAC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="validation.html">Validation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a><ul>
@@ -112,6 +113,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.facade.html">smac.facade package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.epils_facade.html">smac.facade.epils_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_facade.html">smac.facade.smac_facade module</a></li>
@@ -132,8 +134,10 @@
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
 </ul>
 </li>
@@ -161,15 +165,18 @@
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.io.html">smac.utils.io package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.cmd_reader.html">smac.utils.io.cmd_reader module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.input_reader.html">smac.utils.io.input_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.output_directory.html">smac.utils.io.output_directory module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.output_writer.html">smac.utils.io.output_writer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.traj_logging.html">smac.utils.io.traj_logging module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.constants.html">smac.utils.constants module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.logging.html">smac.utils.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.util_funcs.html">smac.utils.util_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.validate.html">smac.utils.validate module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.smac_cli.html">smac.smac_cli module</a></li>
@@ -308,6 +315,11 @@
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
+       <a href="apidoc/smac.facade.epils_facade.html#module-smac.facade.epils_facade"><code class="xref">smac.facade.epils_facade</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
        <a href="apidoc/smac.facade.func_facade.html#module-smac.facade.func_facade"><code class="xref">smac.facade.func_facade</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
@@ -378,12 +390,22 @@
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
+       <a href="apidoc/smac.optimizer.epils.html#module-smac.optimizer.epils"><code class="xref">smac.optimizer.epils</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
        <a href="apidoc/smac.optimizer.objective.html#module-smac.optimizer.objective"><code class="xref">smac.optimizer.objective</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="apidoc/smac.optimizer.pSMAC.html#module-smac.optimizer.pSMAC"><code class="xref">smac.optimizer.pSMAC</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="apidoc/smac.optimizer.random_configuration_chooser.html#module-smac.optimizer.random_configuration_chooser"><code class="xref">smac.optimizer.random_configuration_chooser</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
@@ -488,12 +510,22 @@
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
+       <a href="apidoc/smac.utils.io.output_directory.html#module-smac.utils.io.output_directory"><code class="xref">smac.utils.io.output_directory</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
        <a href="apidoc/smac.utils.io.output_writer.html#module-smac.utils.io.output_writer"><code class="xref">smac.utils.io.output_writer</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="apidoc/smac.utils.io.traj_logging.html#module-smac.utils.io.traj_logging"><code class="xref">smac.utils.io.traj_logging</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="apidoc/smac.utils.logging.html#module-smac.utils.logging"><code class="xref">smac.utils.logging</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
@@ -509,6 +541,11 @@
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="apidoc/smac.utils.util_funcs.html#module-smac.utils.util_funcs"><code class="xref">smac.utils.util_funcs</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="apidoc/smac.utils.validate.html#module-smac.utils.validate"><code class="xref">smac.utils.validate</code></a></td><td>
        <em></em></td></tr>
    </table>
 

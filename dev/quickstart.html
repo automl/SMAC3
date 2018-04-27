@@ -94,6 +94,7 @@
 <li class="toctree-l2"><a class="reference internal" href="options.html">Options and file formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tae.html">Target Algorithm Evaluator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="psmac.html">Parallel SMAC (pSMAC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="validation.html">Validation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a><ul>
@@ -111,6 +112,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.facade.html">smac.facade package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.epils_facade.html">smac.facade.epils_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_facade.html">smac.facade.smac_facade module</a></li>
@@ -131,8 +133,10 @@
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
 </ul>
 </li>
@@ -160,15 +164,18 @@
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.io.html">smac.utils.io package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.cmd_reader.html">smac.utils.io.cmd_reader module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.input_reader.html">smac.utils.io.input_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.output_directory.html">smac.utils.io.output_directory module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.output_writer.html">smac.utils.io.output_writer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.traj_logging.html">smac.utils.io.traj_logging module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.constants.html">smac.utils.constants module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.logging.html">smac.utils.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.util_funcs.html">smac.utils.util_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.validate.html">smac.utils.validate module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.smac_cli.html">smac.smac_cli module</a></li>
@@ -280,18 +287,19 @@ import the fmin-function and the Branin-function:</p>
 </pre></div>
 </td></tr></table></div>
 <p>This way, you can optimize a blackbox-function with minimal effort. However, to
-use all of <em>SMACs</em> capability, a <a class="reference external" href="options.html#scenario">scenario</a> object should be used.</p>
+use all of <em>SMAC’s</em> capability, a <a class="reference external" href="options.html#scenario">scenario</a> object should be used.</p>
 </div>
 <div class="section" id="command-line">
 <h3>Command line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h3>
-<p>There are a wrapper <code class="docutils literal notranslate"><span class="pre">cmdline_wrapper.py</span></code>, a scenario-file <code class="docutils literal notranslate"><span class="pre">scenario.txt</span></code> and a
-PCS-file <code class="docutils literal notranslate"><span class="pre">param_config_space.pcs</span></code> in the branin-folder.
+<p>A more evolved example can be found in <code class="docutils literal notranslate"><span class="pre">examples/branin/</span></code>. In this directory you can find
+a wrapper <code class="docutils literal notranslate"><span class="pre">cmdline_wrapper.py</span></code>, a scenario-file <code class="docutils literal notranslate"><span class="pre">scenario.txt</span></code>, and a
+<em>PCS</em>-file <code class="docutils literal notranslate"><span class="pre">param_config_space.pcs</span></code>.
 To run the example scenario, change into the root directory of <em>SMAC</em> and type the following commands:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> examples/branin
 python ../../scripts/smac --scenario scenario.txt
 </pre></div>
 </div>
-<p>The python command runs <em>SMAC</em> with the specified scenario. The scenario file contains the following lines:</p>
+<p>The Python command runs <em>SMAC</em> with the specified scenario. The scenario file consists of the following lines:</p>
 <blockquote>
 <div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">python</span> <span class="n">cmdline_wrapper</span><span class="o">.</span><span class="n">py</span>
 <span class="n">paramfile</span> <span class="o">=</span> <span class="n">param_config_space</span><span class="o">.</span><span class="n">pcs</span>
@@ -301,7 +309,7 @@ python ../../scripts/smac --scenario scenario.txt
 </pre></div>
 </div>
 </div></blockquote>
-<p>The <strong>algo</strong> parameter specifies how <em>SMAC</em> can call the function or evaluate an algorithm that <em>SMAC</em> is optimizing.
+<p>The <strong>algo</strong> parameter specifies how <em>SMAC</em> calls the target algorithm to be optimized.
 This is further explained in the chapter about the <a class="reference external" href="tae.html">Target Algorithm Evaluator (TAE)</a>.
 An algorithm call by <em>SMAC</em> is of the following format:</p>
 <blockquote>
@@ -353,13 +361,13 @@ INFO:SMAC:Final Incumbent: Configuration:
 </pre></div>
 </div>
 </div></blockquote>
-<p>Furthermore a folder containing <em>SMACs</em> trajectory and the runhistory will be created in the branin folder.</p>
+<p>Furthermore, <em>SMACs</em> trajectory and runhistory will be stored in <code class="docutils literal notranslate"><span class="pre">branin/</span></code>.</p>
 </div>
 </div>
 <div class="section" id="using-smac-in-python-svm">
 <span id="svm-example"></span><h2>Using <em>SMAC</em> in Python: SVM<a class="headerlink" href="#using-smac-in-python-svm" title="Permalink to this headline">¶</a></h2>
 <p>To explain the use of <em>SMAC</em> within Python, let’s look at a real-world example,
-optimizing a Support Vector Machine (SVM) on the widely known <a class="reference external" href="https://en.wikipedia.org/wiki/Iris_flower_data_set">IRIS-dataset</a>.
+optimizing the hyperparameters of a Support Vector Machine (SVM) trained on the widely known <a class="reference external" href="https://en.wikipedia.org/wiki/Iris_flower_data_set">IRIS-dataset</a>.
 This example is located in <code class="code docutils literal notranslate"><span class="pre">examples/svm.py</span></code>.</p>
 <p>To use <em>SMAC</em> directly with Python, we first import the necessary modules</p>
 <div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 9
@@ -391,12 +399,13 @@ This example is located in <code class="code docutils literal notranslate"><span
 <span class="kn">from</span> <span class="nn">smac.facade.smac_facade</span> <span class="k">import</span> <span class="n">SMAC</span>
 </pre></div>
 </td></tr></table></div>
-<p>We import the <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html">SVM from Scikit-Learn</a>,
-the ConfigurationSpace with different types of parameters and objects we need
-from <em>SMAC</em>.
-The ConfigurationSpace is used to define the parameters we want to optimize as well as
-their domains. The parametertypes are floats, integers and categorical parameters.</p>
-<p>We optimize a SVM with the parameters <em>kernel</em>, <em>C</em>, <em>gamma</em>, <em>coef0</em>, <em>degree</em> and <em>shrinking</em>, which
+<dl class="docutils">
+<dt>We import the <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html">SVM from Scikit-Learn</a>,</dt>
+<dd>different hyperparameter types, the ConfigurationSpace, and the objects we need from <em>SMAC</em>.</dd>
+</dl>
+<p>The ConfigurationSpace is used to define the hyperparameters we want to optimize as well as
+their domains. Possible hyperparameter types are floats, integers and categorical parameters.</p>
+<p>We optimize a SVM with the hyperparameters <em>kernel</em>, <em>C</em>, <em>gamma</em>, <em>coef0</em>, <em>degree</em> and <em>shrinking</em>, which
 are further explained in the documentation of sklearn. Note that modifying <em>C</em> can
 quickly lead to overfitting, which is why we use cross-validation to evaluate
 the configuration.</p>
@@ -426,9 +435,9 @@ once, by passing them in a list.</p>
 <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">C</span><span class="p">,</span> <span class="n">shrinking</span><span class="p">])</span>
 </pre></div>
 </td></tr></table></div>
-<p>Not every kernel uses all the parameters. The sklearn-implementation of the SVM accepts all parameters we are optimizing, but ignores all those incompatible with the chosen kernel.
-We can reflect this in optimization using <strong>conditions</strong> to deactivate parameters that are irrelevant to the current kernel.
-Deactivated parameters are not considered during optimization, limiting the search-space to reasonable configurations.
+<p>Not every kernel uses all the parameters. The sklearn-implementation of the SVM accepts all hyperparameters we want to optimize, but ignores all those incompatible with the chosen kernel.
+We can reflect this in optimization using <strong>conditions</strong> to deactivate hyperparameters that are irrelevant to the current kernel.
+Deactivated hyperparameters are not considered during optimization, limiting the search-space to reasonable configurations.
 This way human knowledge about the problem is introduced.</p>
 <div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>72
 73
@@ -446,7 +455,7 @@ This way human knowledge about the problem is introduced.</p>
 </pre></div>
 </td></tr></table></div>
 <p>Conditions can be used for various reasons. The <cite>gamma</cite>-hyperparameter for
-example can be set to “auto” or to a fixed float-value. We introduce a parameter
+example can be set to “auto” or to a fixed float-value. We introduce a hyperparameters
 that is only activated if <cite>gamma</cite> is not set to “auto”.</p>
 <div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>80
 81
@@ -611,8 +620,9 @@ instances, but we include the code so it is easily applicable for any usecase.</
 </div>
 <div class="section" id="spear-qcp">
 <span id="spear-example"></span><h2>Spear-QCP<a class="headerlink" href="#spear-qcp" title="Permalink to this headline">¶</a></h2>
-<p>For this example we use <em>SMAC</em> to optimize the SAT solver <a class="reference external" href="http://www.domagoj-babic.com/index.php/ResearchProjects/Spear">Spear</a> on a small subset of the QCP-dataset.
-In <em>SMACs</em> root-directory type:</p>
+<p>For this example we use <em>SMAC</em> to optimize the runtime required by the SAT solver <a class="reference external" href="http://www.domagoj-babic.com/index.php/ResearchProjects/Spear">Spear</a>
+to solve a small subset of the QCP-dataset.</p>
+<p>In <em>SMACs</em> root-directory type:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> examples/spear_qcp <span class="o">&amp;&amp;</span> ls -l
 </pre></div>
 </div>
@@ -680,7 +690,7 @@ In <em>SMACs</em> root-directory type:</p>
 </div>
 <p>This specifies the wrapper that <em>SMAC</em> executes with a pre-specified syntax in order to evaluate the algorithm to be optimized.
 This wrapper script takes an instantiation of the parameters as input, runs the algorithm with these parameters, and returns
-the error of the algorithm; since every algorithm has a different input and output format, this wrapper acts as an interface between the
+the cost of running the algorithm; since every algorithm has a different input and output format, this wrapper acts as an interface between the
 algorithm and <em>SMAC</em>, which executes the wrapper through a command line call.</p>
 <p>An example call would look something like this:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&lt;algo&gt; &lt;instance&gt; &lt;instance specifics&gt; &lt;cutoff time&gt; &lt;runlength&gt; &lt;seed&gt; &lt;algorithm parameters&gt;
@@ -695,7 +705,7 @@ algorithm and <em>SMAC</em>, which executes the wrapper through a command line c
 <li><p class="first"><em>paramfile:</em></p>
 <blockquote>
 <div><p>This parameter specifies which pcs-file to use and where it is located.</p>
-<p>The pcs-file specifies the Parameter Configuration Space file, which lists the algorithm’s parameters, their domains, and default values (one per line)</p>
+<p>The PCS-file specifies the Parameter Configuration Space file, which lists the algorithm’s parameters, their domains, and default values (one per line)</p>
 <p>In this example we are dealing with 26 parameters of which 12 are categorical and 14 are continuous. Out of these 26
 parameters, 9 parameters are conditionals (they are only active if their parent parameter takes on a certain value).</p>
 </div></blockquote>
@@ -740,14 +750,14 @@ python ../../scripts/smac --scenario scenario.txt
 </div>
 <p><em>SMAC</em> will run for a few seconds and generate a lot of logging output.
 After <em>SMAC</em> finished the configuration process you’ll get some final statistics about the configuration process:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>INFO:   <span class="c1">##########################################################</span>
-INFO:   Statistics:
-INFO:   <span class="c1">#Incumbent changed: 2</span>
-INFO:   <span class="c1">#Target algorithm runs: 17 / inf</span>
-INFO:   Used wallclock time: <span class="m">35</span>.38 / <span class="m">30</span>.00 sec
-INFO:   Used target algorithm runtime: <span class="m">20</span>.10 / inf sec
-INFO:   <span class="c1">##########################################################</span>
-INFO:   Final Incumbent: Configuration:
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>INFO:    <span class="c1">##########################################################</span>
+INFO:    Statistics:
+INFO:    <span class="c1">#Incumbent changed: 2</span>
+INFO:    <span class="c1">#Target algorithm runs: 17 / inf</span>
+INFO:    Used wallclock time: <span class="m">35</span>.38 / <span class="m">30</span>.00 sec
+INFO:    Used target algorithm runtime: <span class="m">20</span>.10 / inf sec
+INFO:    <span class="c1">##########################################################</span>
+INFO:    Final Incumbent: Configuration:
   sp-clause-activity-inc, Value: <span class="m">0</span>.9846527087294622
   sp-clause-decay, Value: <span class="m">1</span>.1630090545101102
   sp-clause-del-heur, Value: <span class="s1">&#39;0&#39;</span>

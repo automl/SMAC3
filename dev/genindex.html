@@ -93,6 +93,7 @@
 <li class="toctree-l2"><a class="reference internal" href="options.html">Options and file formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tae.html">Target Algorithm Evaluator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="psmac.html">Parallel SMAC (pSMAC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="validation.html">Validation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a><ul>
@@ -110,6 +111,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.facade.html">smac.facade package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.epils_facade.html">smac.facade.epils_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_facade.html">smac.facade.smac_facade module</a></li>
@@ -130,8 +132,10 @@
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
 </ul>
 </li>
@@ -159,15 +163,18 @@
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.io.html">smac.utils.io package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.cmd_reader.html">smac.utils.io.cmd_reader module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.input_reader.html">smac.utils.io.input_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.output_directory.html">smac.utils.io.output_directory module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.output_writer.html">smac.utils.io.output_writer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.traj_logging.html">smac.utils.io.traj_logging module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.constants.html">smac.utils.constants module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.logging.html">smac.utils.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.util_funcs.html">smac.utils.util_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.validate.html">smac.utils.validate module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.smac_cli.html">smac.smac_cli module</a></li>
@@ -280,10 +287,18 @@
 </li>
       <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger.aclib_traj_fn">aclib_traj_fn (smac.utils.io.traj_logging.TrajLogger attribute)</a>
 </li>
-      <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.acq_optimizer">acq_optimizer (smac.optimizer.smbo.SMBO attribute)</a>
+      <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.acq_optimizer">acq_optimizer (smac.optimizer.epils.EPILS_Solver attribute)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.acq_optimizer">(smac.optimizer.smbo.SMBO attribute)</a>
 </li>
-      <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.acquisition_func">acquisition_func (smac.optimizer.smbo.SMBO attribute)</a>
+      </ul></li>
+      <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.acquisition_func">acquisition_func (smac.optimizer.epils.EPILS_Solver attribute)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.acquisition_func">(smac.optimizer.smbo.SMBO attribute)</a>
 </li>
+      </ul></li>
       <li><a href="apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer">AcquisitionFunctionMaximizer (class in smac.optimizer.ei_optimization)</a>
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.add">add() (smac.runhistory.runhistory.RunHistory method)</a>
@@ -309,6 +324,8 @@
       <li><a href="apidoc/smac.initial_design.multi_config_initial_design.html#smac.initial_design.multi_config_initial_design.MultiConfigInitialDesign.aggregate_func">aggregate_func (smac.initial_design.multi_config_initial_design.MultiConfigInitialDesign attribute)</a>
 
       <ul>
+        <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.aggregate_func">(smac.optimizer.epils.EPILS_Solver attribute)</a>
+</li>
         <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.aggregate_func">(smac.optimizer.smbo.SMBO attribute)</a>
 </li>
         <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.aggregate_func">(smac.runhistory.runhistory.RunHistory attribute)</a>
@@ -354,7 +371,19 @@
 </li>
       <li><a href="apidoc/smac.epm.rfr_imputator.html#smac.epm.rfr_imputator.RFRImputator.change_threshold">change_threshold (smac.epm.rfr_imputator.RFRImputator attribute)</a>
 </li>
+      <li><a href="apidoc/smac.optimizer.random_configuration_chooser.html#smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown.check">check() (smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown method)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.optimizer.random_configuration_chooser.html#smac.optimizer.random_configuration_chooser.ChooserNoCoolDown.check">(smac.optimizer.random_configuration_chooser.ChooserNoCoolDown method)</a>
+</li>
+        <li><a href="apidoc/smac.optimizer.random_configuration_chooser.html#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser.check">(smac.optimizer.random_configuration_chooser.RandomConfigurationChooser method)</a>
+</li>
+      </ul></li>
       <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.choose_next">choose_next() (smac.optimizer.smbo.SMBO method)</a>
+</li>
+      <li><a href="apidoc/smac.optimizer.random_configuration_chooser.html#smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown">ChooserLinearCoolDown (class in smac.optimizer.random_configuration_chooser)</a>
+</li>
+      <li><a href="apidoc/smac.optimizer.random_configuration_chooser.html#smac.optimizer.random_configuration_chooser.ChooserNoCoolDown">ChooserNoCoolDown (class in smac.optimizer.random_configuration_chooser)</a>
 </li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader">CMDReader (class in smac.utils.io.cmd_reader)</a>
 </li>
@@ -364,12 +393,16 @@
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.config_ids">config_ids (smac.runhistory.runhistory.RunHistory attribute)</a>
 </li>
-      <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.config_space">config_space (smac.optimizer.smbo.SMBO attribute)</a>
+      <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.config_space">config_space (smac.optimizer.epils.EPILS_Solver attribute)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.config_space">(smac.optimizer.smbo.SMBO attribute)</a>
 </li>
-      <li><a href="apidoc/smac.initial_design.multi_config_initial_design.html#smac.initial_design.multi_config_initial_design.MultiConfigInitialDesign.configs">configs (smac.initial_design.multi_config_initial_design.MultiConfigInitialDesign attribute)</a>
-</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apidoc/smac.initial_design.multi_config_initial_design.html#smac.initial_design.multi_config_initial_design.MultiConfigInitialDesign.configs">configs (smac.initial_design.multi_config_initial_design.MultiConfigInitialDesign attribute)</a>
+</li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.ConfigurableHelpFormatter">ConfigurableHelpFormatter (class in smac.utils.io.cmd_reader)</a>
 </li>
       <li><a href="apidoc/smac.configspace.util.html#smac.configspace.util.convert_configurations_to_array">convert_configurations_to_array() (in module smac.configspace.util)</a>
@@ -392,6 +425,10 @@
 </li>
       <li><a href="apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType.CRASHED">CRASHED (smac.tae.execute_ta_run.StatusType attribute)</a>
 </li>
+      <li><a href="apidoc/smac.utils.io.output_directory.html#smac.utils.io.output_directory.create_output_directory">create_output_directory() (in module smac.utils.io.output_directory)</a>
+</li>
+      <li><a href="apidoc/smac.utils.logging.html#smac.utils.logging.PickableLoggerAdapter.critical">critical() (smac.utils.logging.PickableLoggerAdapter method)</a>
+</li>
       <li><a href="apidoc/smac.epm.rfr_imputator.html#smac.epm.rfr_imputator.RFRImputator.cutoff">cutoff (smac.epm.rfr_imputator.RFRImputator attribute)</a>
 </li>
   </ul></td>
@@ -404,10 +441,12 @@
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.DataOrigin">DataOrigin (class in smac.runhistory.runhistory)</a>
 </li>
-      <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.EnumEncoder.default">default() (smac.runhistory.runhistory.EnumEncoder method)</a>
+      <li><a href="apidoc/smac.utils.logging.html#smac.utils.logging.PickableLoggerAdapter.debug">debug() (smac.utils.logging.PickableLoggerAdapter method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.EnumEncoder.default">default() (smac.runhistory.runhistory.EnumEncoder method)</a>
+</li>
       <li><a href="apidoc/smac.initial_design.default_configuration_design.html#smac.initial_design.default_configuration_design.DefaultConfiguration">DefaultConfiguration (class in smac.initial_design.default_configuration_design)</a>
 </li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.DevHelpAction">DevHelpAction (class in smac.utils.io.cmd_reader)</a>
@@ -432,10 +471,18 @@
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.EnumEncoder">EnumEncoder (class in smac.runhistory.runhistory)</a>
 </li>
-      <li><a href="apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.estimators">estimators (smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances attribute)</a>
+      <li><a href="apidoc/smac.facade.epils_facade.html#smac.facade.epils_facade.EPILS">EPILS (class in smac.facade.epils_facade)</a>
+</li>
+      <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver">EPILS_Solver (class in smac.optimizer.epils)</a>
+</li>
+      <li><a href="apidoc/smac.utils.logging.html#smac.utils.logging.PickableLoggerAdapter.error">error() (smac.utils.logging.PickableLoggerAdapter method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.estimators">estimators (smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances attribute)</a>
+</li>
+      <li><a href="apidoc/smac.utils.logging.html#smac.utils.logging.PickableLoggerAdapter.exception">exception() (smac.utils.logging.PickableLoggerAdapter method)</a>
+</li>
       <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncArray">ExecuteTAFuncArray (class in smac.tae.execute_func)</a>
 </li>
       <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict">ExecuteTAFuncDict (class in smac.tae.execute_func)</a>
@@ -456,12 +503,16 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="apidoc/smac.utils.duplicate_filter_logging.html#smac.utils.duplicate_filter_logging.DuplicateFilter.filter">filter() (smac.utils.duplicate_filter_logging.DuplicateFilter method)</a>
+      <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.fast_race_adaptive_capping_factor">fast_race_adaptive_capping_factor (smac.optimizer.epils.EPILS_Solver attribute)</a>
 </li>
-      <li><a href="apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.FirstRunCrashedException">FirstRunCrashedException</a>
+      <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.fast_race_minR">fast_race_minR (smac.optimizer.epils.EPILS_Solver attribute)</a>
+</li>
+      <li><a href="apidoc/smac.utils.duplicate_filter_logging.html#smac.utils.duplicate_filter_logging.DuplicateFilter.filter">filter() (smac.utils.duplicate_filter_logging.DuplicateFilter method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.FirstRunCrashedException">FirstRunCrashedException</a>
+</li>
       <li><a href="apidoc/smac.facade.func_facade.html#smac.facade.func_facade.fmin_smac">fmin_smac() (in module smac.facade.func_facade)</a>
 </li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.ConfigurableHelpFormatter.format_help">format_help() (smac.utils.io.cmd_reader.ConfigurableHelpFormatter method)</a>
@@ -484,25 +535,31 @@
 </li>
       <li><a href="apidoc/smac.stats.stats.html#smac.stats.stats.Stats.get_remaining_ta_runs">get_remaining_ta_runs() (smac.stats.stats.Stats method)</a>
 </li>
-      <li><a href="apidoc/smac.facade.roar_facade.html#smac.facade.roar_facade.ROAR.get_runhistory">get_runhistory() (smac.facade.roar_facade.ROAR method)</a>
+      <li><a href="apidoc/smac.facade.epils_facade.html#smac.facade.epils_facade.EPILS.get_runhistory">get_runhistory() (smac.facade.epils_facade.EPILS method)</a>
 
       <ul>
+        <li><a href="apidoc/smac.facade.roar_facade.html#smac.facade.roar_facade.ROAR.get_runhistory">(smac.facade.roar_facade.ROAR method)</a>
+</li>
         <li><a href="apidoc/smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC.get_runhistory">(smac.facade.smac_facade.SMAC method)</a>
 </li>
       </ul></li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_runs_for_config">get_runs_for_config() (smac.runhistory.runhistory.RunHistory method)</a>
 </li>
-      <li><a href="apidoc/smac.facade.roar_facade.html#smac.facade.roar_facade.ROAR.get_tae_runner">get_tae_runner() (smac.facade.roar_facade.ROAR method)</a>
+      <li><a href="apidoc/smac.facade.epils_facade.html#smac.facade.epils_facade.EPILS.get_tae_runner">get_tae_runner() (smac.facade.epils_facade.EPILS method)</a>
 
       <ul>
+        <li><a href="apidoc/smac.facade.roar_facade.html#smac.facade.roar_facade.ROAR.get_tae_runner">(smac.facade.roar_facade.ROAR method)</a>
+</li>
         <li><a href="apidoc/smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC.get_tae_runner">(smac.facade.smac_facade.SMAC method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="apidoc/smac.facade.roar_facade.html#smac.facade.roar_facade.ROAR.get_trajectory">get_trajectory() (smac.facade.roar_facade.ROAR method)</a>
+      <li><a href="apidoc/smac.facade.epils_facade.html#smac.facade.epils_facade.EPILS.get_trajectory">get_trajectory() (smac.facade.epils_facade.EPILS method)</a>
 
       <ul>
+        <li><a href="apidoc/smac.facade.roar_facade.html#smac.facade.roar_facade.ROAR.get_trajectory">(smac.facade.roar_facade.ROAR method)</a>
+</li>
         <li><a href="apidoc/smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC.get_trajectory">(smac.facade.smac_facade.SMAC method)</a>
 </li>
       </ul></li>
@@ -510,9 +567,11 @@
 </li>
       <li><a href="apidoc/smac.stats.stats.html#smac.stats.stats.Stats.get_used_wallclock_time">get_used_wallclock_time() (smac.stats.stats.Stats method)</a>
 </li>
-      <li><a href="apidoc/smac.facade.roar_facade.html#smac.facade.roar_facade.ROAR.get_X_y">get_X_y() (smac.facade.roar_facade.ROAR method)</a>
+      <li><a href="apidoc/smac.facade.epils_facade.html#smac.facade.epils_facade.EPILS.get_X_y">get_X_y() (smac.facade.epils_facade.EPILS method)</a>
 
       <ul>
+        <li><a href="apidoc/smac.facade.roar_facade.html#smac.facade.roar_facade.ROAR.get_X_y">(smac.facade.roar_facade.ROAR method)</a>
+</li>
         <li><a href="apidoc/smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC.get_X_y">(smac.facade.smac_facade.SMAC method)</a>
 </li>
         <li><a href="apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y">(smac.runhistory.runhistory2epm.AbstractRunHistory2EPM method)</a>
@@ -552,9 +611,11 @@
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.incremental_update_cost">incremental_update_cost() (smac.runhistory.runhistory.RunHistory method)</a>
 </li>
-      <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.incumbent">incumbent (smac.optimizer.smbo.SMBO attribute)</a>
+      <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.incumbent">incumbent (smac.optimizer.epils.EPILS_Solver attribute)</a>
 
       <ul>
+        <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.incumbent">(smac.optimizer.smbo.SMBO attribute)</a>
+</li>
         <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajEntry.incumbent">(smac.utils.io.traj_logging.TrajEntry attribute)</a>
 </li>
       </ul></li>
@@ -570,8 +631,14 @@
         <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajEntry.index">(smac.utils.io.traj_logging.TrajEntry method)</a>
 </li>
       </ul></li>
-      <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.initial_design">initial_design (smac.optimizer.smbo.SMBO attribute)</a>
+      <li><a href="apidoc/smac.utils.logging.html#smac.utils.logging.PickableLoggerAdapter.info">info() (smac.utils.logging.PickableLoggerAdapter method)</a>
 </li>
+      <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.initial_design">initial_design (smac.optimizer.epils.EPILS_Solver attribute)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.initial_design">(smac.optimizer.smbo.SMBO attribute)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign">InitialDesign (class in smac.initial_design.initial_design)</a>
@@ -591,6 +658,8 @@
       <li><a href="apidoc/smac.initial_design.multi_config_initial_design.html#smac.initial_design.multi_config_initial_design.MultiConfigInitialDesign.intensifier">intensifier (smac.initial_design.multi_config_initial_design.MultiConfigInitialDesign attribute)</a>
 
       <ul>
+        <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.intensifier">(smac.optimizer.epils.EPILS_Solver attribute)</a>
+</li>
         <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.intensifier">(smac.optimizer.smbo.SMBO attribute)</a>
 </li>
       </ul></li>
@@ -601,6 +670,8 @@
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.DataOrigin.INTERNAL">INTERNAL (smac.runhistory.runhistory.DataOrigin attribute)</a>
 </li>
       <li><a href="apidoc/smac.stats.stats.html#smac.stats.stats.Stats.is_budget_exhausted">is_budget_exhausted() (smac.stats.stats.Stats method)</a>
+</li>
+      <li><a href="apidoc/smac.utils.logging.html#smac.utils.logging.PickableLoggerAdapter.isEnabledFor">isEnabledFor() (smac.utils.logging.PickableLoggerAdapter method)</a>
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.EnumEncoder.item_separator">item_separator (smac.runhistory.runhistory.EnumEncoder attribute)</a>
 </li>
@@ -624,7 +695,11 @@
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.load_json">load_json() (smac.runhistory.runhistory.RunHistory method)</a>
 </li>
+      <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.local_search">local_search() (smac.optimizer.epils.EPILS_Solver method)</a>
+</li>
       <li><a href="apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.LocalSearch">LocalSearch (class in smac.optimizer.ei_optimization)</a>
+</li>
+      <li><a href="apidoc/smac.utils.logging.html#smac.utils.logging.PickableLoggerAdapter.log">log() (smac.utils.logging.PickableLoggerAdapter method)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.acquisition.html#smac.optimizer.acquisition.LogEI">LogEI (class in smac.optimizer.acquisition)</a>
 </li>
@@ -635,6 +710,8 @@
 </li>
         <li><a href="apidoc/smac.epm.rfr_imputator.html#smac.epm.rfr_imputator.RFRImputator.logger">(smac.epm.rfr_imputator.RFRImputator attribute)</a>
 </li>
+        <li><a href="apidoc/smac.facade.epils_facade.html#smac.facade.epils_facade.EPILS.logger">(smac.facade.epils_facade.EPILS attribute)</a>
+</li>
         <li><a href="apidoc/smac.facade.roar_facade.html#smac.facade.roar_facade.ROAR.logger">(smac.facade.roar_facade.ROAR attribute)</a>
 </li>
         <li><a href="apidoc/smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC.logger">(smac.facade.smac_facade.SMAC attribute)</a>
@@ -642,6 +719,8 @@
         <li><a href="apidoc/smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign.logger">(smac.initial_design.initial_design.InitialDesign attribute)</a>
 </li>
         <li><a href="apidoc/smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction.logger">(smac.optimizer.acquisition.AbstractAcquisitionFunction attribute)</a>
+</li>
+        <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.logger">(smac.optimizer.epils.EPILS_Solver attribute)</a>
 </li>
         <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.logger">(smac.optimizer.smbo.SMBO attribute)</a>
 </li>
@@ -661,6 +740,8 @@
       <li><a href="apidoc/smac.smac_cli.html#smac.smac_cli.SMACCLI.main_cli">main_cli() (smac.smac_cli.SMACCLI method)</a>
 </li>
       <li><a href="apidoc/smac.epm.rfr_imputator.html#smac.epm.rfr_imputator.RFRImputator.max_iter">max_iter (smac.epm.rfr_imputator.RFRImputator attribute)</a>
+</li>
+      <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.max_neighbors">max_neighbors (smac.optimizer.epils.EPILS_Solver attribute)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer.maximize">maximize() (smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer method)</a>
 
@@ -687,6 +768,8 @@
       <ul>
         <li><a href="apidoc/smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction.model">(smac.optimizer.acquisition.AbstractAcquisitionFunction attribute)</a>
 </li>
+        <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.model">(smac.optimizer.epils.EPILS_Solver attribute)</a>
+</li>
         <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.model">(smac.optimizer.smbo.SMBO attribute)</a>
 </li>
       </ul></li>
@@ -702,12 +785,24 @@
 </li>
       <li><a href="apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.n_params">n_params (smac.epm.base_epm.AbstractEPM attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances.n_points_per_tree">n_points_per_tree (smac.epm.rf_with_instances.RandomForestWithInstances attribute)</a>
 </li>
-      <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.num_run">num_run (smac.optimizer.smbo.SMBO attribute)</a>
+      <li><a href="apidoc/smac.optimizer.random_configuration_chooser.html#smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown.next_smbo_iteration">next_smbo_iteration() (smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown method)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.optimizer.random_configuration_chooser.html#smac.optimizer.random_configuration_chooser.ChooserNoCoolDown.next_smbo_iteration">(smac.optimizer.random_configuration_chooser.ChooserNoCoolDown method)</a>
 </li>
+        <li><a href="apidoc/smac.optimizer.random_configuration_chooser.html#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser.next_smbo_iteration">(smac.optimizer.random_configuration_chooser.RandomConfigurationChooser method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.num_run">num_run (smac.optimizer.epils.EPILS_Solver attribute)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.num_run">(smac.optimizer.smbo.SMBO attribute)</a>
+</li>
+      </ul></li>
       <li><a href="apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.num_targets">num_targets (smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances attribute)</a>
 </li>
   </ul></td>
@@ -718,9 +813,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger.old_traj_fn">old_traj_fn (smac.utils.io.traj_logging.TrajLogger attribute)</a>
 </li>
-      <li><a href="apidoc/smac.facade.roar_facade.html#smac.facade.roar_facade.ROAR.optimize">optimize() (smac.facade.roar_facade.ROAR method)</a>
+      <li><a href="apidoc/smac.facade.epils_facade.html#smac.facade.epils_facade.EPILS.optimize">optimize() (smac.facade.epils_facade.EPILS method)</a>
 
       <ul>
+        <li><a href="apidoc/smac.facade.roar_facade.html#smac.facade.roar_facade.ROAR.optimize">(smac.facade.roar_facade.ROAR method)</a>
+</li>
         <li><a href="apidoc/smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC.optimize">(smac.facade.smac_facade.SMAC method)</a>
 </li>
       </ul></li>
@@ -743,6 +840,10 @@
       <li><a href="apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.pca">pca (smac.epm.base_epm.AbstractEPM attribute)</a>
 </li>
       <li><a href="apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.pca_components">pca_components (smac.epm.base_epm.AbstractEPM attribute)</a>
+</li>
+      <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.pertubation_steps">pertubation_steps (smac.optimizer.epils.EPILS_Solver attribute)</a>
+</li>
+      <li><a href="apidoc/smac.utils.logging.html#smac.utils.logging.PickableLoggerAdapter">PickableLoggerAdapter (class in smac.utils.logging)</a>
 </li>
       <li><a href="apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.predict">predict() (smac.epm.base_epm.AbstractEPM method)</a>
 
@@ -778,6 +879,8 @@
 </li>
       <li><a href="apidoc/smac.initial_design.random_configuration_design.html#smac.initial_design.random_configuration_design.RandomConfiguration">RandomConfiguration (class in smac.initial_design.random_configuration_design)</a>
 </li>
+      <li><a href="apidoc/smac.optimizer.random_configuration_chooser.html#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser">RandomConfigurationChooser (class in smac.optimizer.random_configuration_chooser)</a>
+</li>
       <li><a href="apidoc/smac.epm.random_epm.html#smac.epm.random_epm.RandomEPM">RandomEPM (class in smac.epm.random_epm)</a>
 </li>
       <li><a href="apidoc/smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances">RandomForestWithInstances (class in smac.epm.rf_with_instances)</a>
@@ -798,6 +901,8 @@
 </li>
       <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger.read_traj_aclib_format">read_traj_aclib_format() (smac.utils.io.traj_logging.TrajLogger static method)</a>
 </li>
+      <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.restart_prob">restart_prob (smac.optimizer.epils.EPILS_Solver attribute)</a>
+</li>
       <li><a href="apidoc/smac.smac_cli.html#smac.smac_cli.SMACCLI.restore_state">restore_state() (smac.smac_cli.SMACCLI method)</a>
 </li>
       <li><a href="apidoc/smac.smac_cli.html#smac.smac_cli.SMACCLI.restore_state_after_output_dir">restore_state_after_output_dir() (smac.smac_cli.SMACCLI method)</a>
@@ -808,8 +913,12 @@
 </li>
       <li><a href="apidoc/smac.epm.rfr_imputator.html#smac.epm.rfr_imputator.RFRImputator">RFRImputator (class in smac.epm.rfr_imputator)</a>
 </li>
-      <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.rh2EPM">rh2EPM (smac.optimizer.smbo.SMBO attribute)</a>
+      <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.rh2EPM">rh2EPM (smac.optimizer.epils.EPILS_Solver attribute)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.rh2EPM">(smac.optimizer.smbo.SMBO attribute)</a>
 </li>
+      </ul></li>
       <li><a href="apidoc/smac.epm.random_epm.html#smac.epm.random_epm.RandomEPM.rng">rng (smac.epm.random_epm.RandomEPM attribute)</a>
 
       <ul>
@@ -817,13 +926,15 @@
 </li>
         <li><a href="apidoc/smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign.rng">(smac.initial_design.initial_design.InitialDesign attribute)</a>
 </li>
+        <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.rng">(smac.optimizer.epils.EPILS_Solver attribute)</a>
+</li>
         <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.rng">(smac.optimizer.smbo.SMBO attribute)</a>
 </li>
       </ul></li>
-      <li><a href="apidoc/smac.facade.roar_facade.html#smac.facade.roar_facade.ROAR">ROAR (class in smac.facade.roar_facade)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apidoc/smac.facade.roar_facade.html#smac.facade.roar_facade.ROAR">ROAR (class in smac.facade.roar_facade)</a>
+</li>
       <li><a href="apidoc/smac.initial_design.default_configuration_design.html#smac.initial_design.default_configuration_design.DefaultConfiguration.run">run() (smac.initial_design.default_configuration_design.DefaultConfiguration method)</a>
 
       <ul>
@@ -834,6 +945,8 @@
         <li><a href="apidoc/smac.initial_design.random_configuration_design.html#smac.initial_design.random_configuration_design.RandomConfiguration.run">(smac.initial_design.random_configuration_design.RandomConfiguration method)</a>
 </li>
         <li><a href="apidoc/smac.initial_design.single_config_initial_design.html#smac.initial_design.single_config_initial_design.SingleConfigInitialDesign.run">(smac.initial_design.single_config_initial_design.SingleConfigInitialDesign method)</a>
+</li>
+        <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.run">(smac.optimizer.epils.EPILS_Solver method)</a>
 </li>
         <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.run">(smac.optimizer.smbo.SMBO method)</a>
 </li>
@@ -858,6 +971,8 @@
 
       <ul>
         <li><a href="apidoc/smac.initial_design.multi_config_initial_design.html#smac.initial_design.multi_config_initial_design.MultiConfigInitialDesign.runhistory">(smac.initial_design.multi_config_initial_design.MultiConfigInitialDesign attribute)</a>
+</li>
+        <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.runhistory">(smac.optimizer.epils.EPILS_Solver attribute)</a>
 </li>
         <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.runhistory">(smac.optimizer.smbo.SMBO attribute)</a>
 </li>
@@ -895,6 +1010,8 @@
       <li><a href="apidoc/smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign.scenario">scenario (smac.initial_design.initial_design.InitialDesign attribute)</a>
 
       <ul>
+        <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.scenario">(smac.optimizer.epils.EPILS_Solver attribute)</a>
+</li>
         <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.scenario">(smac.optimizer.smbo.SMBO attribute)</a>
 </li>
       </ul></li>
@@ -909,6 +1026,10 @@
 </li>
       </ul></li>
       <li><a href="apidoc/smac.initial_design.single_config_initial_design.html#smac.initial_design.single_config_initial_design.SingleConfigInitialDesign">SingleConfigInitialDesign (class in smac.initial_design.single_config_initial_design)</a>
+</li>
+      <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.slow_race_adaptive_capping_factor">slow_race_adaptive_capping_factor (smac.optimizer.epils.EPILS_Solver attribute)</a>
+</li>
+      <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.slow_race_minR">slow_race_minR (smac.optimizer.epils.EPILS_Solver attribute)</a>
 </li>
       <li><a href="apidoc/smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC">SMAC (class in smac.facade.smac_facade)</a>
 </li>
@@ -933,6 +1054,8 @@
       <li><a href="apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html#module-smac.epm.uncorrelated_mo_rf_with_instances">smac.epm.uncorrelated_mo_rf_with_instances (module)</a>
 </li>
       <li><a href="apidoc/smac.facade.html#module-smac.facade">smac.facade (module)</a>
+</li>
+      <li><a href="apidoc/smac.facade.epils_facade.html#module-smac.facade.epils_facade">smac.facade.epils_facade (module)</a>
 </li>
       <li><a href="apidoc/smac.facade.func_facade.html#module-smac.facade.func_facade">smac.facade.func_facade (module)</a>
 </li>
@@ -962,9 +1085,13 @@
 </li>
       <li><a href="apidoc/smac.optimizer.ei_optimization.html#module-smac.optimizer.ei_optimization">smac.optimizer.ei_optimization (module)</a>
 </li>
+      <li><a href="apidoc/smac.optimizer.epils.html#module-smac.optimizer.epils">smac.optimizer.epils (module)</a>
+</li>
       <li><a href="apidoc/smac.optimizer.objective.html#module-smac.optimizer.objective">smac.optimizer.objective (module)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.pSMAC.html#module-smac.optimizer.pSMAC">smac.optimizer.pSMAC (module)</a>
+</li>
+      <li><a href="apidoc/smac.optimizer.random_configuration_chooser.html#module-smac.optimizer.random_configuration_chooser">smac.optimizer.random_configuration_chooser (module)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.smbo.html#module-smac.optimizer.smbo">smac.optimizer.smbo (module)</a>
 </li>
@@ -1008,9 +1135,13 @@
 </li>
       <li><a href="apidoc/smac.utils.io.input_reader.html#module-smac.utils.io.input_reader">smac.utils.io.input_reader (module)</a>
 </li>
+      <li><a href="apidoc/smac.utils.io.output_directory.html#module-smac.utils.io.output_directory">smac.utils.io.output_directory (module)</a>
+</li>
       <li><a href="apidoc/smac.utils.io.output_writer.html#module-smac.utils.io.output_writer">smac.utils.io.output_writer (module)</a>
 </li>
       <li><a href="apidoc/smac.utils.io.traj_logging.html#module-smac.utils.io.traj_logging">smac.utils.io.traj_logging (module)</a>
+</li>
+      <li><a href="apidoc/smac.utils.logging.html#module-smac.utils.logging">smac.utils.logging (module)</a>
 </li>
       <li><a href="apidoc/smac.utils.merge_foreign_data.html#module-smac.utils.merge_foreign_data">smac.utils.merge_foreign_data (module)</a>
 </li>
@@ -1018,12 +1149,18 @@
 </li>
       <li><a href="apidoc/smac.utils.util_funcs.html#module-smac.utils.util_funcs">smac.utils.util_funcs (module)</a>
 </li>
+      <li><a href="apidoc/smac.utils.validate.html#module-smac.utils.validate">smac.utils.validate (module)</a>
+</li>
       <li><a href="apidoc/smac.smac_cli.html#smac.smac_cli.SMACCLI">SMACCLI (class in smac.smac_cli)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO">SMBO (class in smac.optimizer.smbo)</a>
 </li>
-      <li><a href="apidoc/smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC.solver">solver (smac.facade.smac_facade.SMAC attribute)</a>
+      <li><a href="apidoc/smac.facade.epils_facade.html#smac.facade.epils_facade.EPILS.solver">solver (smac.facade.epils_facade.EPILS attribute)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC.solver">(smac.facade.smac_facade.SMAC attribute)</a>
 </li>
+      </ul></li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.StandardHelpAction">StandardHelpAction (class in smac.utils.io.cmd_reader)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.start">start() (smac.optimizer.smbo.SMBO method)</a>
@@ -1048,10 +1185,14 @@
 </li>
       <li><a href="apidoc/smac.stats.stats.html#smac.stats.stats.Stats">Stats (class in smac.stats.stats)</a>
 </li>
-      <li><a href="apidoc/smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC.stats">stats (smac.facade.smac_facade.SMAC attribute)</a>
+      <li><a href="apidoc/smac.facade.epils_facade.html#smac.facade.epils_facade.EPILS.stats">stats (smac.facade.epils_facade.EPILS attribute)</a>
 
       <ul>
+        <li><a href="apidoc/smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC.stats">(smac.facade.smac_facade.SMAC attribute)</a>
+</li>
         <li><a href="apidoc/smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign.stats">(smac.initial_design.initial_design.InitialDesign attribute)</a>
+</li>
+        <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.stats">(smac.optimizer.epils.EPILS_Solver attribute)</a>
 </li>
         <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.stats">(smac.optimizer.smbo.SMBO attribute)</a>
 </li>
@@ -1193,9 +1334,15 @@
 </li>
         <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.validate">(smac.optimizer.smbo.SMBO method)</a>
 </li>
+        <li><a href="apidoc/smac.utils.validate.html#smac.utils.validate.Validator.validate">(smac.utils.validate.Validator method)</a>
+</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apidoc/smac.utils.validate.html#smac.utils.validate.Validator.validate_epm">validate_epm() (smac.utils.validate.Validator method)</a>
+</li>
+      <li><a href="apidoc/smac.utils.validate.html#smac.utils.validate.Validator">Validator (class in smac.utils.validate)</a>
+</li>
       <li><a href="apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.var_threshold">var_threshold (smac.epm.base_epm.AbstractEPM attribute)</a>
 
       <ul>
@@ -1211,6 +1358,8 @@
       <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajEntry.wallclock_time">wallclock_time (smac.utils.io.traj_logging.TrajEntry attribute)</a>
 </li>
       <li><a href="apidoc/smac.stats.stats.html#smac.stats.stats.Stats.wallclock_time_used">wallclock_time_used (smac.stats.stats.Stats attribute)</a>
+</li>
+      <li><a href="apidoc/smac.utils.logging.html#smac.utils.logging.PickableLoggerAdapter.warning">warning() (smac.utils.logging.PickableLoggerAdapter method)</a>
 </li>
       <li><a href="apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.BudgetExhaustedException.with_traceback">with_traceback() (smac.tae.execute_ta_run.BudgetExhaustedException method)</a>
 
