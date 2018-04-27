@@ -58,11 +58,11 @@ To define parameters and their ranges, the following format is supported:
         parameter_name real [min_value, max_value] [default value]
         parameter_name real [min_value, max_value] [default value] log
 
-The prefix "log" indicates that SMAC should sample from the defined ranges
+The trailing "log" indicates that SMAC should sample from the defined ranges
 on a log scale.
 
 Furthermore, conditional dependencies can be expressed. That is useful if
-a parameter enables sub-parameters. For example, only if a certain heuristic
+a parameter activates sub-parameters. For example, only if a certain heuristic
 is used, the heuristic's parameter are active and otherwise SMAC can ignore these.
 
 .. code-block:: bash
