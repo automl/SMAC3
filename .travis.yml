@@ -4,9 +4,9 @@ matrix:
 
   include:
   - os: linux
-    env: PYTHON_VERSION="3.5" COVERAGE="true" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
+    env: TESTSUITE=unittests PYTHON_VERSION="3.5" COVERAGE="true" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
   - os: linux
-    env: PYTHON_VERSION="3.6" COVERAGE="true" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
+    env: TESTSUITE=unittests PYTHON_VERSION="3.6" COVERAGE="true" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
 
   # Disable OSX building because it takes too long and hinders progress
   # Set language to generic to not break travis-ci
@@ -47,7 +47,6 @@ install:
 
 # command to run tests, e.g. python setup.py test
 script:
-  - echo Testing revision $(git rev-parse HEAD) ...
-  - make test && bash scripts/test_no_files_left.sh
+  - travis/$TESTSUITE
 after_success:
   - codecov
