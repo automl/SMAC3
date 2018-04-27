@@ -148,7 +148,7 @@ class SMAC(object):
             # restoring, the output-folder exists already and we omit creating it,
             # but set the self-output_dir to the dir.
             # necessary because we want to write traj to new output-dir in CLI.
-            self.output_dir = os.path.join(scenario.output_dir, "run_%d" % (run_id))
+            self.output_dir = scenario.output_dir_for_this_run
 
         if (
             scenario.deterministic is True
