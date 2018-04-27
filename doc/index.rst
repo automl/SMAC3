@@ -6,11 +6,11 @@
 SMAC3 documentation!
 =================================
 SMAC is a tool for algorithm configuration.
-It optimizes parameters of arbitrary algorithms across a set of instances.
-This includes, but is not limited to, optimization of hard combinatorial problem solvers and 
+It optimizes configurations of arbitrary algorithms across a set of instances.
+This includes, but is not limited to, optimization of parameters of hard combinatorial problem solvers and
 hyperparameter optimization of various machine learning algorithms.
 The main core consists of Bayesian Optimization in combination with a simple racing mechanism on 
-the instances to efficiently decide which of two configuration performs better.
+the instances to efficiently decide which of two configurations performs better.
 
 
 Contents:
