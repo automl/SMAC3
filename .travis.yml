@@ -1,12 +1,20 @@
 language: python
 
 matrix:
-
-  include:
-  - os: linux
-    env: TESTSUITE=unittester PYTHON_VERSION="3.5" COVERAGE="true" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
-  - os: linux
-    env: TESTSUITE=unittester PYTHON_VERSION="3.6" COVERAGE="true" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
+  os:
+    - linux
+  env:
+    - TESTSUITE=unittester
+      PYTHON_VERSION="3.5"
+      COVERAGE="true"
+      MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
+    - TESTSUITE=unittester
+      PYTHON_VERSION="3.6"
+      COVERAGE="true"
+      MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
+    - TESTSUITE=mypyer
+      PYTHON_VERSION="3.6"
+      MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
 
   # Disable OSX building because it takes too long and hinders progress
   # Set language to generic to not break travis-ci
@@ -49,4 +57,4 @@ install:
 script:
   - travis/$TESTSUITE
 after_success:
-  - codecov
+  - if [[ $TESTSUITE == "unittester" ]]; then codecov; fi
