@@ -20,11 +20,14 @@ __version__ = "0.0.1"
 RunKey = collections.namedtuple(
     'RunKey', ['config_id', 'instance_id', 'seed'])
 
+
 InstSeedKey = collections.namedtuple(
     'InstSeedKey', ['instance', 'seed'])
 
+
 RunValue = collections.namedtuple(
     'RunValue', ['cost', 'time', 'status', 'additional_info'])
+
 
 class EnumEncoder(json.JSONEncoder):
     """Custom encoder for enum-serialization
@@ -60,6 +63,7 @@ class DataOrigin(Enum):
     EXTERNAL_SAME_INSTANCES = 2
     EXTERNAL_DIFFERENT_INSTANCES = 3
 
+
 class RunHistory(object):
 
     """Container for target algorithm run information.
@@ -83,10 +87,11 @@ class RunHistory(object):
     overwrite_existing_runs
     """
 
-    def __init__(self,
-                 aggregate_func: typing.Callable,
-                 overwrite_existing_runs: bool=False
-                 ):
+    def __init__(
+        self,
+        aggregate_func: typing.Callable,
+        overwrite_existing_runs: bool=False
+    ) -> None:
         """Constructor
 
         Parameters
@@ -105,23 +110,25 @@ class RunHistory(object):
         # By having the data in a deterministic order we can do useful tests
         # when we serialize the data and can assume it's still in the same
         # order as it was added.
-        self.data = collections.OrderedDict()
+        self.data = collections.OrderedDict()  # type: typing.Dict[RunKey: RunValue]
 
         # for fast access, we have also an unordered data structure
         # to get all instance seed pairs of a configuration
-        self._configid_to_inst_seed = {}
+        self._configid_to_inst_seed = {}  # type: typing.Dict[int: InstSeedKey]
 
-        self.config_ids = {}  # config -> id
-        self.ids_config = {}  # id -> config
+        self.config_ids = {}  # type: typing.Dict[Configuration: int]
+        self.ids_config = {}  # type: typing.Dict[int: Configuration]
         self._n_id = 0
 
-        self.cost_per_config = {}  # config_id -> cost
-        # runs_per_config is necessary for computing the moving average
-        self.runs_per_config = {}  # config_id -> number of runs
+        # Stores cost for each configuration ID
+        self.cost_per_config = {}  # type: typing.Dict[int: float]
+        # runs_per_config maps the configuration ID to the number of runs for that configuration
+        # and is necessary for computing the moving average
+        self.runs_per_config = {}  # type: typing.Dict[int: int]
 
         # Store whether a datapoint is "external", which means it was read from
         # a JSON file. Can be chosen to not be written to disk
-        self.external = {}  # RunKey -> DataOrigin
+        self.external = {}  # type: typing.Dict[RunKey: DataOrigin]
 
         self.aggregate_func = aggregate_func
         self.overwrite_existing_runs = overwrite_existing_runs
@@ -365,7 +372,6 @@ class RunHistory(object):
                        "config_origins": config_origins,
                        "configs": configs}, fp, cls=EnumEncoder, indent=2)
 
-
     def load_json(self, fn: str, cs: ConfigurationSpace):
         """Load and runhistory in json representation from disk.
 
@@ -389,7 +395,6 @@ class RunHistory(object):
                 fn,
             )
             return
-
 
         config_origins = all_data.get("config_origins", {})
 
