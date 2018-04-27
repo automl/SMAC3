@@ -33,13 +33,13 @@ a full error report with all the typical information (OS, version,
 console-output, minimum working example, ...). This makes it a lot easier to
 reproduce the error and locate the problem.
 
-.. rubric:: What does the *deterministic* flag in a scenario mean?
+.. rubric:: What is the meaning of *deterministic*?
 
 If the *deterministic* flag is set to **False** the target algorithm is assumed to be non-deterministic.
-To evaluate a configuration of a non-deterministic algorithm, multiple evaluations with different seeds are necessary
+To evaluate a configuration of a non-deterministic algorithm, multiple runs with different seeds will be evaluated
 to determine the performance of that configuration on one instance.
 Deterministic algorithms don't depend on seeds, thus requiring only one evaluation of a configuration on an instance
-to evaluate the performance on that instance.
+to evaluate the performance on that instance. Nevertheless the default seed 0 is still passed to the target algorithm.
 
 
 .. rubric:: **Glossary**
