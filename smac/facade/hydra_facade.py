@@ -68,11 +68,11 @@ class Hydra(object):
         self.solver = SMAC(scenario=self.scenario, **self.kwargs)
         portfolio_cost = np.inf
         for i in range(self.n_iterations):
-            self.logger.info("Iteration: %d" % (i + 1))
+            self.logger.info("Iteration: %d", (i + 1))
 
             incumbent = self.solver.solver.run()
             self.solver.stats.print_stats()
-            self.logger.info("Incumbent of %d-th Iteration" % (i + 1))
+            self.logger.info("Incumbent of %d-th Iteration", (i + 1))
             self.logger.info(incumbent)
             portfolio.append(incumbent)
 
@@ -87,7 +87,7 @@ class Hydra(object):
                                           repetitions=1,
                                           use_epm=False,
                                           n_jobs=1)
-            self.logger.info("Number of validated runs: %d" % (len(new_rh.data)))
+            self.logger.info("Number of validated runs: %d", (len(new_rh.data)))
             # since the TAE uses already the portfolio as an upper limit
             # the following dict already contains oracle performance
             self.logger.info("Start validation of current portfolio")
@@ -95,11 +95,11 @@ class Hydra(object):
 
             cur_portfolio_cost = np.mean(list(cost_per_inst.values()))
             if portfolio_cost <= cur_portfolio_cost:
-                self.logger.info("No further progress (%f) --- terminate hydra" % (portfolio_cost))
+                self.logger.info("No further progress (%f) --- terminate hydra", portfolio_cost)
                 break
             else:
                 portfolio_cost = cur_portfolio_cost
-                self.logger.info("Current pertfolio cost: %f" % (portfolio_cost))
+                self.logger.info("Current pertfolio cost: %f", portfolio_cost)
 
             # modify TAE such that it return oracle performance
             # TODO: This only works for the old command line interface
