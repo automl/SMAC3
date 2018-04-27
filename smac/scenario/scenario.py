@@ -67,11 +67,11 @@ class Scenario(object):
 
         self.output_dir_for_this_run = None
 
-        if type(scenario) is str:
+        if isinstance(scenario, str):
             scenario_fn = scenario
-            self.logger.info("Reading scenario file: %s" % (scenario_fn))
+            self.logger.info("Reading scenario file: %s", scenario_fn)
             scenario = self.in_reader.read_scenario_file(scenario_fn)
-        elif type(scenario) is dict:
+        elif isinstance(scenario, dict):
             scenario = copy.copy(scenario)
         else:
             raise TypeError(
@@ -94,11 +94,11 @@ class Scenario(object):
             arg_name, arg_value = self._parse_argument(key, scenario, **value)
             parsed_arguments[arg_name] = arg_value
 
-        if len(scenario) != 0:
+        if scenario:
             raise ValueError('Could not parse the following arguments: %s' %
                              str(list(scenario.keys())))
 
-        for group, potential_members in self._groups.items():
+        for _, potential_members in self._groups.items():
             n_members_in_scenario = 0
             for pm in potential_members:
                 if pm in parsed_arguments:
@@ -116,8 +116,8 @@ class Scenario(object):
 
         self.logger.debug("Scenario Options:")
         for arg_name, arg_value in parsed_arguments.items():
-            if isinstance(arg_value,(int,str,float)):
-                self.logger.debug("%s = %s" %(arg_name,arg_value))
+            if isinstance(arg_value, (int, str, float)):
+                self.logger.debug("%s = %s", arg_name, arg_value)
 
     def add_argument(self, name: str, help: str, callback=None, default=None,
                      dest: str=None, required: bool=False,
@@ -253,8 +253,8 @@ class Scenario(object):
         self.add_argument(name='execdir', default='.',
                           help="Specifies the path to the execution-directory.")
         self.add_argument(name='deterministic', default=False,
-                          help="If true, the optimization process will be "
-                               "repeatable.", callback=_is_truthy)
+                          help="If true, the target algorithm is expected to be deterministic.",
+                          callback=_is_truthy)
         self.add_argument(name='intensification_percentage', default=0.5,
                           help="The fraction of time to be used on "
                                "intensification (versus choice of next "
@@ -350,7 +350,7 @@ class Scenario(object):
         elif self.overall_obj[:4] in ["mean", "MEAN"]:
             par_str = self.overall_obj[4:]
         # Check for par-value as in "par10"/ "mean5"
-        if len(par_str) > 0:
+        if par_str:
             self.par_factor = int(par_str)
         else:
             self.logger.debug("No par-factor detected. Using 1 by default.")
@@ -363,7 +363,7 @@ class Scenario(object):
                     self.train_inst_fn)
             else:
                 self.logger.error(
-                    "Have not found instance file: %s" % (self.train_inst_fn))
+                    "Have not found instance file: %s", self.train_inst_fn)
                 sys.exit(1)
         if self.test_inst_fn:
             if os.path.isfile(self.test_inst_fn):
@@ -371,8 +371,7 @@ class Scenario(object):
                     self.test_inst_fn)
             else:
                 self.logger.error(
-                    "Have not found test instance file: %s" % (
-                        self.test_inst_fn))
+                    "Could not find test instance file: %s", self.test_inst_fn)
                 sys.exit(1)
 
         self.instance_specific = {}
@@ -417,8 +416,7 @@ class Scenario(object):
                     self.cs = pcs_new.read(pcs_str)
                 self.cs.seed(42)
         elif self.pcs_fn:
-            self.logger.error("Have not found pcs file: %s" %
-                              (self.pcs_fn))
+            self.logger.error("Could not find pcs file: %s", self.pcs_fn)
             sys.exit(1)
 
         # you cannot set output dir to None directly
@@ -427,7 +425,7 @@ class Scenario(object):
             self.output_dir = None
             self.logger.debug("Deactivate output directory.")
         else:
-            self.logger.info("Output to %s" % (self.output_dir))
+            self.logger.info("Output to %s", self.output_dir)
 
         if self.shared_model and self.input_psmac_dirs is None:
             # per default, we assume that
@@ -454,7 +452,7 @@ class Scenario(object):
                 except ValueError:
                     raise ValueError("Failed to cast all instances to str")
         if warn_:
-            self.logger.warn("All instances were casted to str.")
+            self.logger.warning("All instances were casted to str.")
         return l
 
     def write(self):
