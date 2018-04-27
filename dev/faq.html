@@ -257,14 +257,19 @@ details on how to wrap your algorithm.</p>
 <p>You can also run SMAC with <code class="code docutils literal notranslate"><span class="pre">--verbose</span> <span class="pre">DEBUG</span></code> to see how <em>SMAC</em> tried to call your algorithm.</p>
 <p class="rubric">Can I restore SMAC from a previous state?</p>
 <p>Use the <a class="reference external" href="basic_usage.html#restorestate">restore-option</a>.</p>
-<p class="rubric">I discovered a bug/have criticism or ideas on <em>SMAC</em>. Where should
-I report to?</p>
+<p class="rubric">I discovered a bug/have criticism or ideas on <em>SMAC</em>. Where should I report to?</p>
 <p><em>SMAC</em> uses the
 <a class="reference external" href="https://github.com/automl/SMAC3/issues">GitHub issue-tracker</a> to take care
 of bugs and questions. If you experience problems with <em>SMAC</em>, try to provide
 a full error report with all the typical information (OS, version,
 console-output, minimum working example, …). This makes it a lot easier to
 reproduce the error and locate the problem.</p>
+<p class="rubric">What is the meaning of <em>deterministic</em>?</p>
+<p>If the <em>deterministic</em> flag is set to <strong>False</strong> the target algorithm is assumed to be non-deterministic.
+To evaluate a configuration of a non-deterministic algorithm, multiple runs with different seeds will be evaluated
+to determine the performance of that configuration on one instance.
+Deterministic algorithms don’t depend on seeds, thus requiring only one evaluation of a configuration on an instance
+to evaluate the performance on that instance. Nevertheless the default seed 0 is still passed to the target algorithm.</p>
 <p class="rubric"><strong>Glossary</strong></p>
 <ul class="simple">
 <li><strong>SMAC</strong>: Sequential Model-Based Algorithm Configuration</li>

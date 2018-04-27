@@ -3,7 +3,7 @@
 :always_race_default: Race new incumbents always against default configuration.
 :cost_for_crash: Defines the cost-value for crashed runs on scenarios with quality as run-obj. Default: 2147483647.0.
 :cutoff_time: Maximum runtime, after which the target algorithm is cancelled. **Required if *run_obj* is runtime.**
-:deterministic: If true, the optimization process will be repeatable.
+:deterministic: If true, the target algorithm is expected to be deterministic.
 :execdir: Specifies the path to the execution-directory. Default: ..
 :feature_file: Specifies the file with the instance-features.
 :initial_incumbent: DEFAULT is the default from the PCS. Default: DEFAULT. Must be from: ['DEFAULT', 'RANDOM'].
@@ -13,7 +13,7 @@
 :maxR: Maximum number of calls per configuration. Default: 2000.
 :memory_limit: Maximum available memory the target algorithm can occupy before being cancelled.
 :minR: Minimum number of calls per configuration. Default: 1.
-:output_dir: Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2018-04-27_08:36:30_204895.
+:output_dir: Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2018-04-27_11:26:30_874073.
 :overall_obj: PARX, where X is an integer defining the penalty imposed on timeouts (i.e. runtimes that exceed the *cutoff-time*). Default: par10.
 :paramfile: Specifies the path to the PCS-file.
 :run_obj: Defines what metric to optimize. When optimizing runtime, *cutoff_time* is required as well. Must be from: ['runtime', 'quality'].
