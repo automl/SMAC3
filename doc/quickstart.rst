@@ -381,3 +381,29 @@ The directory in which you invoked *SMAC* now contains a new folder called **SMA
 The .json file contains the information about the target algorithms *SMAC* just executed. In this file you can see the *status* of the algorithm run, *misc*, the *instance* on which the algorithm was evaluated, which *seed* was used, how much *time* the algorithm needed and with which *configuration* the algorithm was run.
 In the folder *SMAC* generates a file for the runhistory, and two files for the trajectory.
 
+
+.. _hydra-example:
+
+Hydra on Spear-QCP
+------------------
+
+For this example we use *Hydra* to build a portfolio on the same example data presented in `Spear-QCP`__.
+Hydra is a portfolio builder that aims to build a portfolio by iteratively adding complementary configurations to the
+already existing portfolio. In the first iteration Hydra runs standard *SMAC* to determine a well performing configuration
+across all instances as a starting point for the portfolio. In following iterations Hydra only considers configurations
+that can improve the portfolio performance. Configurations that perform poor on instances that are already solved well
+by the portfolio are not punished for performing worse on these instances but rewarded for outperforming the portfolio
+on other instances.
+
+__ spear-example_
+
+To run Hydra for three iterations you can run the following code in the spear-qcp example folder.
+
+ ``python ../../scripts/smac --scenario scenario.txt --verbose DEBUG --mode Hydra --hydra_iterations 3``
+
+As the individual SMAC scenario takes 30 seconds to run Hydra will run for ~90 seconds on this example.
+You will see the same output to the terminal as with standard SMAC. In the folder where you executed the above command,
+you will find a *hydra-output-yyy-mm-dd_hh:mm:ss_xyz* folder. This folder contains the results of all three performed
+SMAC runs, as well as the resulting portfolio (as pkl file).
+
+The resulting portfolio can be used with any algorithm selector such as `AutoFolio <https://github.com/mlindauer/AutoFolio>`_
