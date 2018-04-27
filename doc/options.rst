@@ -47,6 +47,8 @@ The Parameter Configuration Space (PCS) defines the legal ranges of the
 parameters to be optimized and their default values. In the examples-folder you
 can find several examples for PCS-files. Generally, the format is:
 
+To define parameters and their ranges, the following format is supported:
+
 .. code-block:: bash
 
         parameter_name categorical {value_1, ..., value_N} [default value]
@@ -56,13 +58,28 @@ can find several examples for PCS-files. Generally, the format is:
         parameter_name real [min_value, max_value] [default value]
         parameter_name real [min_value, max_value] [default value] log
 
+The trailing "log" indicates that SMAC should sample from the defined ranges
+on a log scale.
+
+Furthermore, conditional dependencies can be expressed. That is useful if
+a parameter activates sub-parameters. For example, only if a certain heuristic
+is used, the heuristic's parameter are active and otherwise SMAC can ignore these.
+
+.. code-block:: bash
+
         # Conditionals:
         child_name | condition [&&,||] condition ...
 
-        # Condition Operators: 
+        # Condition Operators:
         # parent_x [<, >] parent_x_value (if parameter type is ordinal, integer or real)
         # parent_x [==,!=] parent_x_value (if parameter type is categorical, ordinal or integer)
         # parent_x in {parent_x_value1, parent_x_value2,...}
+
+Forbidden constraints allow for specifications of forbidden combinations of
+parameter values. Please note that SMAC uses a simple rejection sampling
+strategy. Therefore, SMAC cannot handle efficiently highly constrained spaces.
+
+.. code-block:: bash
 
         # Forbiddens:
         {parameter_name_1=value_1, ..., parameter_name_N=value_N}
