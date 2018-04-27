@@ -4,9 +4,9 @@ matrix:
 
   include:
   - os: linux
-    env: TESTSUITE=unittests PYTHON_VERSION="3.5" COVERAGE="true" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
+    env: TESTSUITE=unittester PYTHON_VERSION="3.5" COVERAGE="true" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
   - os: linux
-    env: TESTSUITE=unittests PYTHON_VERSION="3.6" COVERAGE="true" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
+    env: TESTSUITE=unittester PYTHON_VERSION="3.6" COVERAGE="true" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
 
   # Disable OSX building because it takes too long and hinders progress
   # Set language to generic to not break travis-ci
@@ -41,7 +41,7 @@ before_install:
   - source activate testenv
 
 install:
-  - pip install pep8 codecov
+  - pip install pep8 codecov mypy
   - cat requirements.txt | xargs -n 1 -L 1 pip install
   - python setup.py install
 
