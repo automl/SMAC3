@@ -240,7 +240,6 @@
   <h1>Source code for smac.facade.smac_facade</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -267,7 +266,7 @@
 <span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="k">import</span> <span class="n">InterleavedLocalAndRandomSearch</span><span class="p">,</span> \
     <span class="n">AcquisitionFunctionMaximizer</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.random_configuration_chooser</span> <span class="k">import</span> <span class="n">ChooserNoCoolDown</span><span class="p">,</span> \
-    <span class="n">ChooserLinearCoolDown</span>
+    <span class="n">ChooserLinearCoolDown</span><span class="p">,</span> <span class="n">RandomConfigurationChooser</span>
 <span class="kn">from</span> <span class="nn">smac.epm.rf_with_instances</span> <span class="k">import</span> <span class="n">RandomForestWithInstances</span>
 <span class="kn">from</span> <span class="nn">smac.epm.rfr_imputator</span> <span class="k">import</span> <span class="n">RFRImputator</span>
 <span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="k">import</span> <span class="n">AbstractEPM</span>
@@ -299,21 +298,21 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
-                 <span class="n">tae_runner</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">ExecuteTARun</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">intensifier</span><span class="p">:</span> <span class="n">Intensifier</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">acquisition_function_optimizer</span><span class="p">:</span> <span class="n">AcquisitionFunctionMaximizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">model</span><span class="p">:</span> <span class="n">AbstractEPM</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">runhistory2epm</span><span class="p">:</span> <span class="n">AbstractRunHistory2EPM</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">initial_design</span><span class="p">:</span> <span class="n">InitialDesign</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">initial_configurations</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">restore_incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">rng</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">smbo_class</span><span class="p">:</span> <span class="n">SMBO</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">random_configuration_chooser</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">tae_runner</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">ExecuteTARun</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">]]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">runhistory</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">RunHistory</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">intensifier</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Intensifier</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">AbstractAcquisitionFunction</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">acquisition_function_optimizer</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">AcquisitionFunctionMaximizer</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">model</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">AbstractEPM</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">runhistory2epm</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">AbstractRunHistory2EPM</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">initial_design</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">InitialDesign</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">initial_configurations</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">stats</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Stats</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">restore_incumbent</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">rng</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">smbo_class</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">SMBO</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">run_id</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">random_configuration_chooser</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">RandomConfigurationChooser</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor</span>
 
 <span class="sd">        Parameters</span>
@@ -361,11 +360,11 @@
 <span class="sd">        smbo_class : ~smac.optimizer.smbo.SMBO</span>
 <span class="sd">            Class implementing the SMBO interface which will be used to</span>
 <span class="sd">            instantiate the optimizer class.</span>
-<span class="sd">        run_id: int, (default: 1)</span>
-<span class="sd">            Run ID will be used as subfolder for output_dir.</span>
-<span class="sd">        random_configuration_chooser</span>
-<span class="sd">            when to choose a random configuration -- one of</span>
-<span class="sd">            ChooserNoCoolDown, ChooserLinearCoolDown</span>
+<span class="sd">        run_id : int (optional)</span>
+<span class="sd">            Run ID will be used as subfolder for output_dir. If no ``run_id`` is given, a random ``run_id`` will be</span>
+<span class="sd">            chosen.</span>
+<span class="sd">        random_configuration_chooser : ~smac.optimizer.random_configuration_chooser.RandomConfigurationChooser</span>
+<span class="sd">            How often to choose a random configuration during the intensification procedure.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
@@ -376,16 +375,21 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span> <span class="o">=</span> <span class="n">scenario</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">restore_incumbent</span><span class="p">:</span>
+            <span class="c1"># restore_incumbent is used by the CLI interface which provides a method for restoring a SMAC run given an</span>
+            <span class="c1"># output directory. This is the default path.</span>
+            <span class="c1"># initial random number generator</span>
+            <span class="n">run_id</span><span class="p">,</span> <span class="n">rng</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_rng</span><span class="p">(</span><span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">create_output_directory</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">run_id</span><span class="p">,</span> <span class="n">rng</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_rng</span><span class="p">(</span><span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">)</span>
             <span class="c1"># output-directory is created in CLI when restoring from a</span>
             <span class="c1"># folder. calling the function again in the facade results in two</span>
             <span class="c1"># folders being created: run_X and run_X.OLD. if we are</span>
             <span class="c1"># restoring, the output-folder exists already and we omit creating it,</span>
             <span class="c1"># but set the self-output_dir to the dir.</span>
             <span class="c1"># necessary because we want to write traj to new output-dir in CLI.</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span>
-                                           <span class="s2">&quot;run_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">run_id</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span>
+
         <span class="k">if</span> <span class="p">(</span>
             <span class="n">scenario</span><span class="o">.</span><span class="n">deterministic</span> <span class="ow">is</span> <span class="kc">True</span>
             <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="s1">&#39;tuner_timeout&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
@@ -410,9 +414,6 @@
         <span class="k">if</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">aggregate_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">runhistory</span><span class="o">.</span><span class="n">aggregate_func</span> <span class="o">=</span> <span class="n">aggregate_func</span>
 
-        <span class="c1"># initial random number generator</span>
-        <span class="n">num_run</span><span class="p">,</span> <span class="n">rng</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_rng</span><span class="p">(</span><span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
-
         <span class="n">random_configuration_chooser</span> <span class="o">=</span> <span class="n">SMAC</span><span class="o">.</span><span class="n">_get_random_configuration_chooser</span><span class="p">(</span>
             <span class="n">random_configuration_chooser</span><span class="o">=</span><span class="n">random_configuration_chooser</span><span class="p">)</span>
 
@@ -426,7 +427,7 @@
         <span class="c1"># initial EPM</span>
         <span class="n">types</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">get_types</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">feature_array</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">RandomForestWithInstances</span><span class="p">(</span><span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">,</span> 
+            <span class="n">model</span> <span class="o">=</span> <span class="n">RandomForestWithInstances</span><span class="p">(</span><span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">,</span>
                                               <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
                                               <span class="n">instance_features</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">feature_array</span><span class="p">,</span>
                                               <span class="n">seed</span><span class="o">=</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">),</span>
@@ -594,7 +595,7 @@
             <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s1">&#39;quality&#39;</span><span class="p">:</span>
                 <span class="n">runhistory2epm</span> <span class="o">=</span> <span class="n">RunHistory2EPM4Cost</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">num_params</span><span class="o">=</span><span class="n">num_params</span><span class="p">,</span>
                                                      <span class="n">success_states</span><span class="o">=</span><span class="p">[</span>
-                                                         <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span> 
+                                                         <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span>
                                                          <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">],</span>
                                                      <span class="n">impute_censored_data</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">impute_state</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
@@ -614,7 +615,7 @@
             <span class="s1">&#39;runhistory2epm&#39;</span><span class="p">:</span> <span class="n">runhistory2epm</span><span class="p">,</span>
             <span class="s1">&#39;intensifier&#39;</span><span class="p">:</span> <span class="n">intensifier</span><span class="p">,</span>
             <span class="s1">&#39;aggregate_func&#39;</span><span class="p">:</span> <span class="n">aggregate_func</span><span class="p">,</span>
-            <span class="s1">&#39;num_run&#39;</span><span class="p">:</span> <span class="n">num_run</span><span class="p">,</span>
+            <span class="s1">&#39;num_run&#39;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">,</span>
             <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="n">model</span><span class="p">,</span>
             <span class="s1">&#39;acq_optimizer&#39;</span><span class="p">:</span> <span class="n">acquisition_function_optimizer</span><span class="p">,</span>
             <span class="s1">&#39;acquisition_func&#39;</span><span class="p">:</span> <span class="n">acquisition_function</span><span class="p">,</span>
@@ -627,36 +628,61 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">smbo_class</span><span class="p">(</span><span class="o">**</span><span class="n">smbo_args</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_get_rng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initialize random number generator</span>
+    <span class="k">def</span> <span class="nf">_get_rng</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">rng</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">]]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">run_id</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Initialize random number generator and set run_id</span>
 
-<span class="sd">        If rng is None, initialize a new generator</span>
-<span class="sd">        If rng is Int, create RandomState from that</span>
-<span class="sd">        If rng is RandomState, return it</span>
+<span class="sd">        * If rng and run_id are None, initialize a new generator and sample a run_id</span>
+<span class="sd">        * If rng is None and a run_id is given, use the run_id to initialize the rng</span>
+<span class="sd">        * If rng is an int, a RandomState object is created from that.</span>
+<span class="sd">        * If rng is RandomState, return it</span>
+<span class="sd">        * If only run_id is None, a run_id is sampled from the random state.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        rng: np.random.RandomState|int|None</span>
+<span class="sd">        rng : np.random.RandomState|int|None</span>
+
+<span class="sd">        run_id : int, optional</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        int, np.random.RandomState</span>
+<span class="sd">        int</span>
+<span class="sd">        np.random.RandomState</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># initialize random number generator</span>
-        <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;no rng given: using default seed of 1&#39;</span><span class="p">)</span>
-            <span class="n">num_run</span> <span class="o">=</span> <span class="mi">1</span>
-            <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">num_run</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Argument rng accepts only arguments of type None, int or np.random.RandomState, &#39;</span>
+                            <span class="s1">&#39;you provided </span><span class="si">%s</span><span class="s1">.&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">rng</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="n">run_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Argument run_id accepts only arguments of type None, int or np.random.RandomState, &#39;</span>
+                            <span class="s1">&#39;you provided </span><span class="si">%s</span><span class="s1">.&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">run_id</span><span class="p">)))</span>
+
+        <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">run_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Case that both are None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;No rng and no run_id given: using a random value to initialize run_id.&#39;</span><span class="p">)</span>
+            <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">()</span>
+            <span class="n">run_id</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">rng</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;No rng and no run_id given: using run_id </span><span class="si">%d</span><span class="s1"> as seed.&#39;</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+            <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">run_id</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="n">num_run</span> <span class="o">=</span> <span class="n">rng</span>
+            <span class="k">if</span> <span class="n">run_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">run_id</span> <span class="o">=</span> <span class="n">rng</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">pass</span>
             <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">):</span>
-            <span class="n">num_run</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">)</span>
-            <span class="n">rng</span> <span class="o">=</span> <span class="n">rng</span>
+            <span class="k">if</span> <span class="n">run_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">run_id</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Unknown type </span><span class="si">%s</span><span class="s1"> for argument rng. Only accepts &#39;</span>
-                            <span class="s1">&#39;None, int or np.random.RandomState&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">rng</span><span class="p">)))</span>
-        <span class="k">return</span> <span class="n">num_run</span><span class="p">,</span> <span class="n">rng</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;This should not happen! Please contact the developers! Arguments: rng=</span><span class="si">%s</span><span class="s1"> of type </span><span class="si">%s</span><span class="s1"> and &#39;</span>
+                             <span class="s1">&#39;run_id=</span><span class="si">% o</span><span class="s1">f type </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">rng</span><span class="p">),</span> <span class="n">run_id</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">run_id</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">rng</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_random_configuration_chooser</span><span class="p">(</span><span class="n">random_configuration_chooser</span><span class="p">):</span>
@@ -689,7 +715,7 @@
         <span class="k">finally</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">print_stats</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Final Incumbent: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Final Incumbent: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">runhistory</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">traj_logger</span><span class="o">.</span><span class="n">trajectory</span>
 

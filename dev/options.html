@@ -320,7 +320,7 @@ generated within custom code, you might not need <em>algo</em> or <em>paramfile<
 </tr>
 <tr class="field-odd field"><th class="field-name">minR:</th><td class="field-body">Minimum number of calls per configuration. Default: 1.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">output_dir:</th><td class="field-body">Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2018-04-27_11:44:49_905780.</td>
+<tr class="field-even field"><th class="field-name">output_dir:</th><td class="field-body">Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2018-04-27_12:35:37_335708.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">overall_obj:</th><td class="field-body">PARX, where X is an integer defining the penalty imposed on timeouts (i.e. runtimes that exceed the <em>cutoff-time</em>). Default: par10.</td>
 </tr>
@@ -348,22 +348,33 @@ generated within custom code, you might not need <em>algo</em> or <em>paramfile<
 <p>The Parameter Configuration Space (PCS) defines the legal ranges of the
 parameters to be optimized and their default values. In the examples-folder you
 can find several examples for PCS-files. Generally, the format is:</p>
+<p>To define parameters and their ranges, the following format is supported:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>parameter_name categorical <span class="o">{</span>value_1, ..., value_N<span class="o">}</span> <span class="o">[</span>default value<span class="o">]</span>
 parameter_name ordinal <span class="o">{</span>value_1, ..., value_N<span class="o">}</span> <span class="o">[</span>default value<span class="o">]</span>
 parameter_name integer <span class="o">[</span>min_value, max_value<span class="o">]</span> <span class="o">[</span>default value<span class="o">]</span>
 parameter_name integer <span class="o">[</span>min_value, max_value<span class="o">]</span> <span class="o">[</span>default value<span class="o">]</span> log
 parameter_name real <span class="o">[</span>min_value, max_value<span class="o">]</span> <span class="o">[</span>default value<span class="o">]</span>
 parameter_name real <span class="o">[</span>min_value, max_value<span class="o">]</span> <span class="o">[</span>default value<span class="o">]</span> log
-
-<span class="c1"># Conditionals:</span>
+</pre></div>
+</div>
+<p>The trailing “log” indicates that SMAC should sample from the defined ranges
+on a log scale.</p>
+<p>Furthermore, conditional dependencies can be expressed. That is useful if
+a parameter activates sub-parameters. For example, only if a certain heuristic
+is used, the heuristic’s parameter are active and otherwise SMAC can ignore these.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Conditionals:</span>
 child_name <span class="p">|</span> condition <span class="o">[&amp;&amp;</span>,<span class="o">||]</span> condition ...
 
 <span class="c1"># Condition Operators:</span>
 <span class="c1"># parent_x [&lt;, &gt;] parent_x_value (if parameter type is ordinal, integer or real)</span>
 <span class="c1"># parent_x [==,!=] parent_x_value (if parameter type is categorical, ordinal or integer)</span>
 <span class="c1"># parent_x in {parent_x_value1, parent_x_value2,...}</span>
-
-<span class="c1"># Forbiddens:</span>
+</pre></div>
+</div>
+<p>Forbidden constraints allow for specifications of forbidden combinations of
+parameter values. Please note that SMAC uses a simple rejection sampling
+strategy. Therefore, SMAC cannot handle efficiently highly constrained spaces.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Forbiddens:</span>
 <span class="o">{</span><span class="nv">parameter_name_1</span><span class="o">=</span>value_1, ..., <span class="nv">parameter_name_N</span><span class="o">=</span>value_N<span class="o">}</span>
 </pre></div>
 </div>
