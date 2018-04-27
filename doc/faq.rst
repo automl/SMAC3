@@ -24,8 +24,7 @@ You can also run SMAC with :code:`--verbose DEBUG` to see how *SMAC* tried to ca
 
 Use the `restore-option <basic_usage.html#restorestate>`_.
 
-.. rubric:: I discovered a bug/have criticism or ideas on *SMAC*. Where should
-   I report to?
+.. rubric:: I discovered a bug/have criticism or ideas on *SMAC*. Where should I report to?
 
 *SMAC* uses the
 `GitHub issue-tracker <https://github.com/automl/SMAC3/issues>`_ to take care
@@ -33,6 +32,14 @@ of bugs and questions. If you experience problems with *SMAC*, try to provide
 a full error report with all the typical information (OS, version,
 console-output, minimum working example, ...). This makes it a lot easier to
 reproduce the error and locate the problem.
+
+.. rubric:: What does the *deterministic* flag in a scenario mean?
+
+If the *deterministic* flag is set to **False** the target algorithm is assumed to be non-deterministic.
+To evaluate a configuration of a non-deterministic algorithm, multiple evaluations with different seeds are necessary
+to determine the performance of that configuration on one instance.
+Deterministic algorithms don't depend on seeds, thus requiring only one evaluation of a configuration on an instance
+to evaluate the performance on that instance.
 
 
 .. rubric:: **Glossary**

@@ -253,8 +253,8 @@ class Scenario(object):
         self.add_argument(name='execdir', default='.',
                           help="Specifies the path to the execution-directory.")
         self.add_argument(name='deterministic', default=False,
-                          help="If true, the optimization process will be "
-                               "repeatable.", callback=_is_truthy)
+                          help="If true, the target algorithm is expected to be deterministic.",
+                          callback=_is_truthy)
         self.add_argument(name='intensification_percentage', default=0.5,
                           help="The fraction of time to be used on "
                                "intensification (versus choice of next "
