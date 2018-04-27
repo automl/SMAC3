@@ -158,6 +158,10 @@ class SMBO(object):
             self.logger.info("State restored with following budget:")
             self.stats.print_stats()
 
+        # To be on the safe side -> never return "None" as incumbent
+        if not self.incumbent:
+            self.incumbent = self.scenario.cs.get_default_configuration()
+
     def run(self):
         """Runs the Bayesian optimization loop
 

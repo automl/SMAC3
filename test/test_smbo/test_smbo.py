@@ -293,6 +293,14 @@ class TestSMBO(unittest.TestCase):
                               repetitions=1, use_epm=True, n_jobs=-1, backend='threading')
                 self.assertTrue(epm_validation_mock.called)
 
+    def test_no_initial_design(self):
+        self.scenario.output_dir = "test"
+        smac = SMAC(self.scenario)
+        smbo = smac.solver
+        with mock.patch.object(SingleConfigInitialDesign, "run", return_value=None) as initial_mock:
+            smbo.start()
+            self.assertEqual(smbo.incumbent, smbo.scenario.cs.get_default_configuration())
+
 
 if __name__ == "__main__":
     unittest.main()
