@@ -260,11 +260,14 @@
 <span class="n">RunKey</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span>
     <span class="s1">&#39;RunKey&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;config_id&#39;</span><span class="p">,</span> <span class="s1">&#39;instance_id&#39;</span><span class="p">,</span> <span class="s1">&#39;seed&#39;</span><span class="p">])</span>
 
+
 <span class="n">InstSeedKey</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span>
     <span class="s1">&#39;InstSeedKey&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;instance&#39;</span><span class="p">,</span> <span class="s1">&#39;seed&#39;</span><span class="p">])</span>
 
+
 <span class="n">RunValue</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span>
     <span class="s1">&#39;RunValue&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;cost&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">,</span> <span class="s1">&#39;additional_info&#39;</span><span class="p">])</span>
+
 
 <div class="viewcode-block" id="EnumEncoder"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.EnumEncoder">[docs]</a><span class="k">class</span> <span class="nc">EnumEncoder</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Custom encoder for enum-serialization</span>
@@ -300,6 +303,7 @@
     <span class="n">EXTERNAL_SAME_INSTANCES</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">EXTERNAL_DIFFERENT_INSTANCES</span> <span class="o">=</span> <span class="mi">3</span></div>
 
+
 <div class="viewcode-block" id="RunHistory"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory">[docs]</a><span class="k">class</span> <span class="nc">RunHistory</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;Container for target algorithm run information.</span>
@@ -323,10 +327,11 @@
 <span class="sd">    overwrite_existing_runs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">aggregate_func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
-                 <span class="n">overwrite_existing_runs</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span>
-                 <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">aggregate_func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
+        <span class="n">overwrite_existing_runs</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Constructor</span>
 
 <span class="sd">        Parameters</span>
@@ -345,23 +350,25 @@
         <span class="c1"># By having the data in a deterministic order we can do useful tests</span>
         <span class="c1"># when we serialize the data and can assume it&#39;s still in the same</span>
         <span class="c1"># order as it was added.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>  <span class="c1"># type: typing.Dict[RunKey: RunValue]</span>
 
         <span class="c1"># for fast access, we have also an unordered data structure</span>
         <span class="c1"># to get all instance seed pairs of a configuration</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_configid_to_inst_seed</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_configid_to_inst_seed</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: typing.Dict[int: InstSeedKey]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">config_ids</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># config -&gt; id</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># id -&gt; config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_ids</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: typing.Dict[Configuration: int]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: typing.Dict[int: Configuration]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_n_id</span> <span class="o">=</span> <span class="mi">0</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">cost_per_config</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># config_id -&gt; cost</span>
-        <span class="c1"># runs_per_config is necessary for computing the moving average</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">runs_per_config</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># config_id -&gt; number of runs</span>
+        <span class="c1"># Stores cost for each configuration ID</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cost_per_config</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: typing.Dict[int: float]</span>
+        <span class="c1"># runs_per_config maps the configuration ID to the number of runs for that configuration</span>
+        <span class="c1"># and is necessary for computing the moving average</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runs_per_config</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: typing.Dict[int: int]</span>
 
         <span class="c1"># Store whether a datapoint is &quot;external&quot;, which means it was read from</span>
         <span class="c1"># a JSON file. Can be chosen to not be written to disk</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">external</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># RunKey -&gt; DataOrigin</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">external</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: typing.Dict[RunKey: DataOrigin]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">aggregate_func</span> <span class="o">=</span> <span class="n">aggregate_func</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_existing_runs</span> <span class="o">=</span> <span class="n">overwrite_existing_runs</span>
@@ -580,7 +587,6 @@
                        <span class="s2">&quot;config_origins&quot;</span><span class="p">:</span> <span class="n">config_origins</span><span class="p">,</span>
                        <span class="s2">&quot;configs&quot;</span><span class="p">:</span> <span class="n">configs</span><span class="p">},</span> <span class="n">fp</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">EnumEncoder</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
 
-
 <div class="viewcode-block" id="RunHistory.load_json"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.load_json">[docs]</a>    <span class="k">def</span> <span class="nf">load_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cs</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load and runhistory in json representation from disk.</span>
 
@@ -604,7 +610,6 @@
                 <span class="n">fn</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">return</span>
-
 
         <span class="n">config_origins</span> <span class="o">=</span> <span class="n">all_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;config_origins&quot;</span><span class="p">,</span> <span class="p">{})</span>
 
