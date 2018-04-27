@@ -135,8 +135,8 @@ class ValidationTest(unittest.TestCase):
         ''' test if capped, crashed and aborted runs are ignored
             during rh-recovery '''
         scen = Scenario(self.scen_fn,
-                        cmd_args={'run_obj':'quality',
-                                  'instances' : ['0']})
+                        cmd_options={'run_obj':'quality',
+                                     'instances' : ['0']})
 
         validator = Validator(scen, self.trajectory, self.rng)
 
