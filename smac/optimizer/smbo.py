@@ -257,7 +257,10 @@ class SMBO(object):
         self.acquisition_func.update(model=self.model, eta=incumbent_value)
 
         challengers = self.acq_optimizer.maximize(
-            self.runhistory, self.stats, 5000, self.random_configuration_chooser
+            runhistory=self.runhistory, 
+            stats=self.stats, 
+            num_points=5000, 
+            random_configuration_chooser=self.random_configuration_chooser
         )
         return challengers
 
