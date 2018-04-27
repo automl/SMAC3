@@ -147,3 +147,9 @@ class TestExecuteFunc(unittest.TestCase):
         self.assertEqual(rval[1], 2147483647.0)
         self.assertGreaterEqual(rval[2], 0.0)
         self.assertEqual(rval[3], dict())
+
+    def test_cutoff_too_large(self):
+        target = lambda x: x**2
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
+        self.assertRaises(ValueError, taf.run, config=2, cutoff=65535)
+

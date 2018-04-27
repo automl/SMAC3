@@ -116,6 +116,9 @@ class AbstractTAFunc(ExecuteTARun):
         # walltime for pynisher has to be a rounded up integer
         if cutoff is not None:
             cutoff = int(math.ceil(cutoff))
+            if cutoff > 65534:
+                raise ValueError("%d is outside the legal range of [0, 65534] "
+                                 "for cutoff (when using pynisher)" % cutoff)
 
         arguments = {'logger': logging.getLogger("pynisher"),
                      'wall_time_in_s': cutoff,
