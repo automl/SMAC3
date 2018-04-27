@@ -2,6 +2,7 @@ from contextlib import suppress
 import os
 import shutil
 import unittest
+import unittest.mock
 
 import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
@@ -57,59 +58,91 @@ class TestSMACFacade(unittest.TestCase):
         self.assertIs(smac.solver.intensifier.tae_runner.ta, target_algorithm)
 
     def test_pass_invalid_tae_runner(self):
-        self.assertRaisesRegexp(TypeError, "Argument 'tae_runner' is <class "
-                                           "'int'>, but must be either a "
-                                           "callable or an instance of "
-                                           "ExecuteTaRun.",
-                                SMAC, tae_runner=1, scenario=self.scenario)
+        self.assertRaisesRegex(
+            TypeError,
+            "Argument 'tae_runner' is <class 'int'>, but must be either a callable or an instance of ExecuteTaRun.",
+            SMAC,
+            tae_runner=1,
+            scenario=self.scenario,
+        )
 
     def test_pass_tae_runner_objective(self):
-        tae = ExecuteTAFuncDict(lambda: 1,
-                                run_obj='runtime')
-        self.assertRaisesRegexp(ValueError, "Objective for the target algorithm"
-                                            " runner and the scenario must be "
-                                            "the same, but are 'runtime' and "
-                                            "'quality'",
-                                SMAC, tae_runner=tae, scenario=self.scenario)
+        tae = ExecuteTAFuncDict(lambda: 1, run_obj='runtime')
+        self.assertRaisesRegex(
+            ValueError,
+            "Objective for the target algorithm runner and the scenario must be the same, but are 'runtime' and "
+            "'quality'",
+            SMAC,
+            tae_runner=tae,
+            scenario=self.scenario,
+        )
 
-    def test_check_random_states(self):
-        ta = ExecuteTAFuncDict(lambda x: x**2)
+    @unittest.mock.patch.object(SMAC, '__init__')
+    def test_check_random_states(self, patch):
+        patch.return_value = None
+        smac = SMAC()
+        smac.logger = unittest.mock.MagicMock()
 
-        # Get state immediately or it will change with the next calltest_check_random_states
-
+        # Check some properties
         # Check whether different seeds give different random states
-        S1 = SMAC(tae_runner=ta, scenario=self.scenario, rng=1)
-        S1 = S1.solver.scenario.cs.random
+        _, rng_1 = smac._get_rng(1)
+        _, rng_2 = smac._get_rng(2)
+        self.assertNotEqual(sum(rng_1.get_state()[1] - rng_2.get_state()[1]), 0)
 
-        S2 = SMAC(tae_runner=ta, scenario=self.scenario, rng=2)
-        S2 = S2.solver.scenario.cs.random
-        self.assertNotEqual(sum(S1.get_state()[1] - S2.get_state()[1]), 0)
+        # Check whether no seeds gives different random states
+        _, rng_1 = smac._get_rng()
+        self.assertEqual(smac.logger.debug.call_count, 1)
+        _, rng_2 = smac._get_rng()
+        self.assertEqual(smac.logger.debug.call_count, 2)
 
-        # Check whether no seeds give the same random states (use default seed)
-        S1 = SMAC(tae_runner=ta, scenario=self.scenario)
-        S1 = S1.solver.scenario.cs.random
+        self.assertNotEqual(sum(rng_1.get_state()[1] - rng_2.get_state()[1]), 0)
 
-        S2 = SMAC(tae_runner=ta, scenario=self.scenario)
-        S2 = S2.solver.scenario.cs.random
-        self.assertEqual(sum(S1.get_state()[1] - S2.get_state()[1]), 0)
+        # Check whether the same int seeds give the same random states
+        _, rng_1 = smac._get_rng(1)
+        _, rng_2 = smac._get_rng(1)
+        self.assertEqual(sum(rng_1.get_state()[1] - rng_2.get_state()[1]), 0)
 
-        # Check whether the same seeds give the same random states
-        S1 = SMAC(tae_runner=ta, scenario=self.scenario, rng=1)
-        S1 = S1.solver.scenario.cs.random
+        # Check all execution paths
+        self.assertRaisesRegex(
+            TypeError,
+            "Argument rng accepts only arguments of type None, int or np.random.RandomState, "
+            "you provided <class 'str'>.",
+            smac._get_rng,
+            rng='ABC',
+        )
+        self.assertRaisesRegex(
+            TypeError,
+            "Argument run_id accepts only arguments of type None, int or np.random.RandomState, "
+            "you provided <class 'str'>.",
+            smac._get_rng,
+            run_id='ABC'
+        )
 
-        S2 = SMAC(tae_runner=ta, scenario=self.scenario, rng=1)
-        S2 = S2.solver.scenario.cs.random
-        self.assertEqual(sum(S1.get_state()[1] - S2.get_state()[1]), 0)
+        run_id, rng_1 = smac._get_rng(rng=None, run_id=None)
+        self.assertIsInstance(run_id, int)
+        self.assertIsInstance(rng_1, np.random.RandomState)
+        self.assertEqual(smac.logger.debug.call_count, 3)
 
-        # Check whether the same RandomStates give the same random states
-        S1 = SMAC(tae_runner=ta, scenario=self.scenario,
-                  rng=np.random.RandomState(1))
-        S1 = S1.solver.scenario.cs.random
+        run_id, rng_1 = smac._get_rng(rng=None, run_id=1)
+        self.assertEqual(run_id, 1)
+        self.assertIsInstance(rng_1, np.random.RandomState)
 
-        S2 = SMAC(tae_runner=ta, scenario=self.scenario,
-                  rng=np.random.RandomState(1))
-        S2 = S2.solver.scenario.cs.random
-        self.assertEqual(sum(S1.get_state()[1] - S2.get_state()[1]), 0)
+        run_id, rng_1 = smac._get_rng(rng=1, run_id=None)
+        self.assertEqual(run_id, 1)
+        self.assertIsInstance(rng_1, np.random.RandomState)
+
+        run_id, rng_1 = smac._get_rng(rng=1, run_id=1337)
+        self.assertEqual(run_id, 1337)
+        self.assertIsInstance(rng_1, np.random.RandomState)
+
+        rs = np.random.RandomState(1)
+        run_id, rng_1 = smac._get_rng(rng=rs, run_id=None)
+        self.assertIsInstance(run_id, int)
+        self.assertIs(rng_1, rs)
+
+        run_id, rng_1 = smac._get_rng(rng=rs, run_id=2505)
+        self.assertEqual(run_id, 2505)
+        self.assertIs(rng_1, rs)
 
     def test_check_deterministic_rosenbrock(self):
         def rosenbrock_2d(x):
