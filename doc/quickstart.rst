@@ -393,7 +393,7 @@ For this example we use *Hydra* to build a portfolio on the same example data pr
 Hydra is a portfolio builder that aims to build a portfolio by iteratively adding complementary configurations to the
 already existing portfolio. In the first iteration Hydra runs standard *SMAC* to determine a well performing configuration
 across all instances as a starting point for the portfolio. In following iterations Hydra only considers configurations
-that can improve the portfolio performance. Configurations that perform poor on instances that are already solved well
+that can improve the portfolio performance. Configurations that perform poor on instances which are already solved well
 by the portfolio are not punished for performing worse on these instances but rewarded for outperforming the portfolio
 on other instances.
 

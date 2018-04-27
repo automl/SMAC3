@@ -10,14 +10,14 @@ __license__ = "3-clause BSD"
 __maintainer__ = "Marius Lindauer"
 
 
-class ExecuteTARunOldHydra(ExecuteTARun):
+class ExecuteTARunHydra(ExecuteTARun):
 
     """Returns min(cost, cost_portfolio)
     """
     
     def __init__(self,
                  cost_oracle: typing.Mapping[str, float],
-                 tae: typing.Type[ExecuteTARun] = None,
+                 tae: typing.Type[ExecuteTARun] = ExecuteTARunOld,
                  **kwargs):
         '''
             Constructor

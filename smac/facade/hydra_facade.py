@@ -8,10 +8,10 @@ import pickle
 
 import numpy as np
 
-from smac.tae.execute_ta_run_old_hydra import ExecuteTARunOldHydra
-from smac.tae.execute_ta_run_old_hydra import ExecuteTARunOld
-from smac.tae.execute_ta_run_old_hydra import ExecuteTARun
-from smac.tae.execute_ta_run_old_hydra import ExecuteTARunAClib
+from smac.tae.execute_ta_run_hydra import ExecuteTARunHydra
+from smac.tae.execute_ta_run_hydra import ExecuteTARunOld
+from smac.tae.execute_ta_run_hydra import ExecuteTARun
+from smac.tae.execute_ta_run_hydra import ExecuteTARunAClib
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_facade import SMAC
 from smac.utils.io.output_directory import create_output_directory
@@ -127,8 +127,8 @@ class Hydra(object):
                 self.logger.info("Current pertfolio cost: %f", portfolio_cost)
 
             # modify TAE such that it return oracle performance
-            self.tae = ExecuteTARunOldHydra(ta=self.scenario.ta, run_obj=self.scenario.run_obj,
-                                            cost_oracle=cost_per_inst, tae=self.tae_type)
+            self.tae = ExecuteTARunHydra(ta=self.scenario.ta, run_obj=self.scenario.run_obj,
+                                         cost_oracle=cost_per_inst, tae=self.tae_type)
 
             self.scenario.output_dir = os.path.join(self.top_dir, "smac3-output_%s" % (
                 datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f')))
