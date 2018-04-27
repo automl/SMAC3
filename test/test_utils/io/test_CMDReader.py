@@ -48,5 +48,11 @@ class CMDReaderTest(unittest.TestCase):
         targs = TestArgs('test/test_files/scenario_test/scenario.txt', 1234, 2, 'DEBUG')
         self.cr.read_cmd(targs.cmdline())
 
+    def test_doc_files(self):
+        self.cr.write_main_options_to_doc(path="test.rst")
+        self.cr.write_smac_options_to_doc(path="test.rst")
+        self.cr.write_scenario_options_to_doc(path="test.rst")
+        os.remove("./test.rst")
+
 if __name__ == "__main__":
     unittest.main()
