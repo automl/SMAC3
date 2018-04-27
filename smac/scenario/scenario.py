@@ -8,7 +8,7 @@ from smac.utils.io.output_writer import OutputWriter
 from smac.utils.io.cmd_reader import CMDReader
 
 
-__author__ = "Marius Lindauer, Matthias Feurer"
+__author__ = "Marius Lindauer, Matthias Feurer, Aaron Kimmig"
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 __maintainer__ = "Marius Lindauer"
@@ -56,18 +56,18 @@ class Scenario(object):
 
         if scenario is None:
             scenario = {}
-        if type(scenario) is str:
+        if isinstance(scenario, str):
             scenario_fn = scenario
             scenario = {}
             if cmd_options:
                 scenario.update(cmd_options)
             cmd_reader = CMDReader()
-            self.logger.info("Reading scenario file: %s" % scenario_fn)
+            self.logger.info("Reading scenario file: %s", scenario_fn)
             smac_args_, scen_args_ = cmd_reader.read_smac_scenario_dict_cmd(scenario, scenario_fn)
             scenario = {}
             scenario.update(vars(smac_args_))
             scenario.update(vars(scen_args_))
-        elif type(scenario) is dict:
+        elif isinstance(scenario, dict):
             scenario = copy.copy(scenario)
             if cmd_options:
                 scenario.update(cmd_options)
@@ -79,6 +79,7 @@ class Scenario(object):
         else:
             raise TypeError(
                 "Wrong type of scenario (str or dict are supported)")
+
 
         for arg_name, arg_value in scenario.items():
             setattr(self, arg_name, arg_value)

@@ -10,7 +10,7 @@ such that all *SMAC* are better informed and can work together.
 
 	To use *pSMAC*, please note that it communicates via the file space,
 	i.e., all *pSMAC* runs write from time to time its runhistory (all target algorithm evaluations)
-	to disk and read the runhistories of all *pSMAC* runs.
+	to disk and read the runhistories of all other *pSMAC* runs.
 	So, a requirement for *pSMAC* is that it can write to a shared file space.
 
 .. _psmaccommandline:
