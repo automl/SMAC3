@@ -363,6 +363,9 @@
         <span class="c1"># walltime for pynisher has to be a rounded up integer</span>
         <span class="k">if</span> <span class="n">cutoff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">cutoff</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">cutoff</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">cutoff</span> <span class="o">&gt;</span> <span class="mi">65535</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2"> is outside the legal range of [0, 65535] &quot;</span>
+                                 <span class="s2">&quot;for cutoff (when using pynisher, due to OS limitations)&quot;</span> <span class="o">%</span> <span class="n">cutoff</span><span class="p">)</span>
 
         <span class="n">arguments</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;logger&#39;</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;pynisher&quot;</span><span class="p">),</span>
                      <span class="s1">&#39;wall_time_in_s&#39;</span><span class="p">:</span> <span class="n">cutoff</span><span class="p">,</span>
