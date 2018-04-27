@@ -255,6 +255,26 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Writing scenario to file.</p>
 <dl class="method">
+<dt id="smac.utils.io.output_writer.OutputWriter.save_configspace">
+<code class="descname">save_configspace</code><span class="sig-paren">(</span><em>cs: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>fn: str</em>, <em>output_format: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.save_configspace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.save_configspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writing ConfigSpace to file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cs</strong> (<em>ConfigurationSpace</em>) – Config-space to be written</li>
+<li><strong>fn</strong> (<em>str</em>) – Output-file-path</li>
+<li><strong>output_format</strong> (<em>str</em>) – Output format of the configuration space file. Currently,
+<code class="docutils literal notranslate"><span class="pre">json</span></code> and <code class="docutils literal notranslate"><span class="pre">pcs_new</span></code> are supported.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="smac.utils.io.output_writer.OutputWriter.write_inst_features_file">
 <code class="descname">write_inst_features_file</code><span class="sig-paren">(</span><em>n_features: int</em>, <em>feat_dict</em>, <em>fn: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.write_inst_features_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.write_inst_features_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes features to file.</p>
@@ -284,24 +304,6 @@
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>insts</strong> (<em>list&lt;string&gt;</em>) – Instance list to be written</li>
 <li><strong>fn</strong> (<em>string</em>) – Output path</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="smac.utils.io.output_writer.OutputWriter.write_pcs_file">
-<code class="descname">write_pcs_file</code><span class="sig-paren">(</span><em>cs: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>fn: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.write_pcs_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.write_pcs_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writing ConfigSpace to file.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>cs</strong> (<em>ConfigurationSpace</em>) – Config-space to be written</li>
-<li><strong>fn</strong> (<em>string</em>) – Output-file-path</li>
 </ul>
 </td>
 </tr>
