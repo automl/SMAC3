@@ -160,7 +160,7 @@ class OutputWriter(object):
             fn : str
                 Output-file-path
             output_format : str
-                Output format of the configuration space file. Currently, 
+                Output format of the configuration space file. Currently,
                 ``json`` and ``pcs_new`` are supported.
         """
         writers = {
@@ -176,4 +176,3 @@ class OutputWriter(object):
                 "Configuration space output format %s not supported. "
                 "Please choose one of %s" % set(writers.keys())
             )
-
