@@ -4,12 +4,17 @@ import datetime
 import time
 import typing
 
+import pickle
+
 import numpy as np
 
 from smac.tae.execute_ta_run_old_hydra import ExecuteTARunOldHydra
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_facade import SMAC
 from smac.utils.io.output_directory import create_output_directory
+from smac.runhistory.runhistory import RunHistory
+from smac.runhistory.runhistory import DataOrigin
+from smac.optimizer.objective import average_cost
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2017, ML4AAD"
@@ -57,7 +62,9 @@ class Hydra(object):
         self.run_id = run_id
         self.kwargs = kwargs
         self.output_dir = None
+        self.top_dir = None
         self.solver = None
+        self.rh = RunHistory(average_cost)
 
     def optimize(self):
         """Optimizes the algorithm provided in scenario (given in constructor)
@@ -69,15 +76,15 @@ class Hydra(object):
         """
 
         portfolio = []
-        self.solver = SMAC(scenario=self.scenario, **self.kwargs)
         portfolio_cost = np.inf
         if self.output_dir is None:
-            print(os.path.exists(self.scenario.output_dir))
-            self.output_dir = "hydra-output_%s" % (
+            self.top_dir = "hydra-output_%s" % (
                 datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f'))
-            self.scenario.output_dir = os.path.join(self.output_dir, "smac3-output_%s" % (
+            self.scenario.output_dir = os.path.join(self.top_dir, "smac3-output_%s" % (
                 datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f')))
             self.output_dir = create_output_directory(self.scenario, run_id=self.run_id, logger=self.logger)
+
+        self.solver = SMAC(scenario=self.scenario, **self.kwargs)
         for i in range(self.n_iterations):
             self.logger.info("Iteration: %d", (i + 1))
 
@@ -88,7 +95,7 @@ class Hydra(object):
             portfolio.append(incumbent)
 
             if self.output_dir is not None:
-                self.solver.runhistory.save_json(
+                self.solver.solver.runhistory.save_json(
                     fn=os.path.join(self.output_dir, "runhistory.json")
                 )
 
@@ -98,6 +105,7 @@ class Hydra(object):
                                           repetitions=1,
                                           use_epm=False,
                                           n_jobs=1)
+            self.rh.update(new_rh, origin=DataOrigin.EXTERNAL_SAME_INSTANCES)
             self.logger.info("Number of validated runs: %d", (len(new_rh.data)))
             # since the TAE uses already the portfolio as an upper limit
             # the following dict already contains oracle performance
@@ -117,6 +125,13 @@ class Hydra(object):
             tae = ExecuteTARunOldHydra(ta=self.scenario.ta, run_obj=self.scenario.run_obj,
                                        cost_oracle=cost_per_inst)
 
-            smac = SMAC(scenario=self.scenario, tae_runner=tae, **self.kwargs)
+            self.scenario.output_dir = os.path.join(self.top_dir, "smac3-output_%s" % (
+                datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f')))
+            self.output_dir = create_output_directory(self.scenario, run_id=self.run_id, logger=self.logger)
+            if i != self.n_iterations - 1:
+                self.solver = SMAC(scenario=self.scenario, tae_runner=tae, **self.kwargs)
+        self.rh.save_json(fn=os.path.join(self.top_dir, 'all_runs_runhistory.json'), save_external=True)
+        with open(os.path.join(self.top_dir, 'portfolio.pkl'), 'wb') as fh:
+            pickle.dump(portfolio, fh)
 
         return portfolio
