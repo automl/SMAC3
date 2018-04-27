@@ -44,8 +44,10 @@ class OutputWriter(object):
                               "{}.".format(scenario.output_dir_for_this_run))
 
         # options_dest2name maps scenario._arguments from dest -> name
-        options_dest2name = {(scenario._arguments[v]['dest'] if
-            scenario._arguments[v]['dest'] else v) : v for v in scenario._arguments}
+        options_dest2name = {
+            (scenario._arguments[v]['dest'] if scenario._arguments[v]['dest'] else v): v
+            for v in scenario._arguments
+        }
 
         # Write all options into "output_dir/scenario.txt"
         path = os.path.join(scenario.output_dir_for_this_run, "scenario.txt")
@@ -148,7 +150,7 @@ class OutputWriter(object):
         with open(fn, 'w') as fh:
             fh.write(header + "".join(body))
 
-    def save_configspace(self, cs: ConfigurationSpace, fn: str, format: str):
+    def save_configspace(self, cs: ConfigurationSpace, fn: str, output_format: str):
         """Writing ConfigSpace to file.
 
         Parameters
@@ -157,7 +159,7 @@ class OutputWriter(object):
                 Config-space to be written
             fn : str
                 Output-file-path
-            format : str
+            output_format : str
                 Output format of the configuration space file. Currently, 
                 ``json`` and ``pcs_new`` are supported.
         """
@@ -165,7 +167,7 @@ class OutputWriter(object):
             'pcs_new': pcs_new.write,
             'json': json.write
         }
-        writer = writers.get(format)
+        writer = writers.get(output_format)
         if writer:
             with open(fn, 'w') as fh:
                 fh.write(writer(cs))
