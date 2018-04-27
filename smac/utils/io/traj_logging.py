@@ -205,6 +205,7 @@ class TrajLogger(object):
 
     @staticmethod
     def _convert_dict_to_config(config_list: typing.List[str], cs: ConfigurationSpace):
+        # CAN BE DONE IN CONFIGSPACE
         """Since we save a configurations in a dictionary str->str we have to
         try to figure out the type (int, float, str) of each parameter value
 

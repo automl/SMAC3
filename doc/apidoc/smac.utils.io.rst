@@ -12,6 +12,7 @@ smac\.utils\.io package
 
    smac.utils.io.cmd_reader
    smac.utils.io.input_reader
+   smac.utils.io.output_directory
    smac.utils.io.output_writer
    smac.utils.io.traj_logging
 

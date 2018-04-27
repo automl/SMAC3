@@ -12,7 +12,9 @@ smac\.optimizer package
 
    smac.optimizer.acquisition
    smac.optimizer.ei_optimization
+   smac.optimizer.epils
    smac.optimizer.objective
    smac.optimizer.pSMAC
+   smac.optimizer.random_configuration_chooser
    smac.optimizer.smbo
 
