@@ -9,6 +9,9 @@ import pickle
 import numpy as np
 
 from smac.tae.execute_ta_run_old_hydra import ExecuteTARunOldHydra
+from smac.tae.execute_ta_run_old_hydra import ExecuteTARunOld
+from smac.tae.execute_ta_run_old_hydra import ExecuteTARun
+from smac.tae.execute_ta_run_old_hydra import ExecuteTARunAClib
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_facade import SMAC
 from smac.utils.io.output_directory import create_output_directory
@@ -39,6 +42,7 @@ class Hydra(object):
                  scenario: Scenario,
                  n_iterations: int,
                  run_id: int=1,
+                 tae: typing.Type[ExecuteTARun]=ExecuteTARunOld,
                  **kwargs):
         """Constructor
 
@@ -65,6 +69,8 @@ class Hydra(object):
         self.top_dir = None
         self.solver = None
         self.rh = RunHistory(average_cost)
+        self.tae = tae(ta=self.scenario.ta, run_obj=self.scenario.run_obj)
+        self.tae_type = tae
 
     def optimize(self):
         """Optimizes the algorithm provided in scenario (given in constructor)
@@ -84,7 +90,7 @@ class Hydra(object):
                 datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f')))
             self.output_dir = create_output_directory(self.scenario, run_id=self.run_id, logger=self.logger)
 
-        self.solver = SMAC(scenario=self.scenario, **self.kwargs)
+        self.solver = SMAC(scenario=self.scenario, tae_runner=self.tae, **self.kwargs)
         for i in range(self.n_iterations):
             self.logger.info("Iteration: %d", (i + 1))
 
@@ -121,15 +127,14 @@ class Hydra(object):
                 self.logger.info("Current pertfolio cost: %f", portfolio_cost)
 
             # modify TAE such that it return oracle performance
-            # TODO: This only works for the old command line interface
-            tae = ExecuteTARunOldHydra(ta=self.scenario.ta, run_obj=self.scenario.run_obj,
-                                       cost_oracle=cost_per_inst)
+            self.tae = ExecuteTARunOldHydra(ta=self.scenario.ta, run_obj=self.scenario.run_obj,
+                                            cost_oracle=cost_per_inst, tae=self.tae_type)
 
             self.scenario.output_dir = os.path.join(self.top_dir, "smac3-output_%s" % (
                 datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f')))
             self.output_dir = create_output_directory(self.scenario, run_id=self.run_id, logger=self.logger)
             if i != self.n_iterations - 1:
-                self.solver = SMAC(scenario=self.scenario, tae_runner=tae, **self.kwargs)
+                self.solver = SMAC(scenario=self.scenario, tae_runner=self.tae, **self.kwargs)
         self.rh.save_json(fn=os.path.join(self.top_dir, 'all_runs_runhistory.json'), save_external=True)
         with open(os.path.join(self.top_dir, 'portfolio.pkl'), 'wb') as fh:
             pickle.dump(portfolio, fh)

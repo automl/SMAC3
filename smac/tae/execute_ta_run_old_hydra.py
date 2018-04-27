@@ -1,6 +1,8 @@
 import typing
 
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
+from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
+from smac.tae.execute_ta_run_aclib import ExecuteTARun
 from smac.tae.execute_ta_run_old import StatusType
 
 __copyright__ = "Copyright 2018, ML4AAD"
@@ -8,13 +10,14 @@ __license__ = "3-clause BSD"
 __maintainer__ = "Marius Lindauer"
 
 
-class ExecuteTARunOldHydra(ExecuteTARunOld):
+class ExecuteTARunOldHydra(ExecuteTARun):
 
     """Returns min(cost, cost_portfolio)
     """
     
     def __init__(self,
                  cost_oracle: typing.Mapping[str, float],
+                 tae: typing.Type[ExecuteTARun] = None,
                  **kwargs):
         '''
             Constructor
@@ -24,14 +27,19 @@ class ExecuteTARunOldHydra(ExecuteTARunOld):
             cost_oracle: typing.Mapping[str,float]
                 cost of oracle per instance
         '''
-        
+
         super().__init__(**kwargs)
         self.cost_oracle = cost_oracle
+        if tae is ExecuteTARunAClib:
+            self.runner = ExecuteTARunAClib(**kwargs)
+        elif tae is ExecuteTARunOld:
+            self.runner = ExecuteTARunOld(**kwargs)
 
     def run(self, **kwargs):
         """ see ~smac.tae.execute_ta_run.ExecuteTARunOld for docstring
         """
-        status, cost, runtime, additional_info = super(ExecuteTARunOldHydra, self).run(**kwargs)
+
+        status, cost, runtime, additional_info = self.runner.run(**kwargs)
         inst = kwargs["instance"]
         oracle_perf = self.cost_oracle.get(inst)
         if oracle_perf is not None:
