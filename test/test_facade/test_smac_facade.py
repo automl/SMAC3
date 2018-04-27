@@ -58,20 +58,24 @@ class TestSMACFacade(unittest.TestCase):
         self.assertIs(smac.solver.intensifier.tae_runner.ta, target_algorithm)
 
     def test_pass_invalid_tae_runner(self):
-        self.assertRaisesRegexp(TypeError, "Argument 'tae_runner' is <class "
-                                           "'int'>, but must be either a "
-                                           "callable or an instance of "
-                                           "ExecuteTaRun.",
-                                SMAC, tae_runner=1, scenario=self.scenario)
+        self.assertRaisesRegex(
+            TypeError,
+            "Argument 'tae_runner' is <class 'int'>, but must be either a callable or an instance of ExecuteTaRun.",
+            SMAC,
+            tae_runner=1,
+            scenario=self.scenario,
+        )
 
     def test_pass_tae_runner_objective(self):
-        tae = ExecuteTAFuncDict(lambda: 1,
-                                run_obj='runtime')
-        self.assertRaisesRegexp(ValueError, "Objective for the target algorithm"
-                                            " runner and the scenario must be "
-                                            "the same, but are 'runtime' and "
-                                            "'quality'",
-                                SMAC, tae_runner=tae, scenario=self.scenario)
+        tae = ExecuteTAFuncDict(lambda: 1, run_obj='runtime')
+        self.assertRaisesRegex(
+            ValueError,
+            "Objective for the target algorithm runner and the scenario must be the same, but are 'runtime' and "
+            "'quality'",
+            SMAC,
+            tae_runner=tae,
+            scenario=self.scenario,
+        )
 
     @unittest.mock.patch.object(SMAC, '__init__')
     def test_check_random_states(self, patch):

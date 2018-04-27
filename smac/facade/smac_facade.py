@@ -426,7 +426,7 @@ class SMAC(object):
             rng = np.random.RandomState()
             run_id = rng.randint(MAXINT)
         elif rng is None and isinstance(run_id, int):
-            self.logger.debug('No rng and no run_id given: using run_id %d as seed.' % run_id)
+            self.logger.debug('No rng and no run_id given: using run_id %d as seed.', run_id)
             rng = np.random.RandomState(seed=run_id)
         elif isinstance(rng, int):
             if run_id is None:
@@ -475,7 +475,7 @@ class SMAC(object):
         finally:
             self.solver.stats.save()
             self.solver.stats.print_stats()
-            self.logger.info("Final Incumbent: %s" % (self.solver.incumbent))
+            self.logger.info("Final Incumbent: %s", (self.solver.incumbent))
             self.runhistory = self.solver.runhistory
             self.trajectory = self.solver.intensifier.traj_logger.trajectory
 

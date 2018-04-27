@@ -93,7 +93,7 @@ class TestSMBO(unittest.TestCase):
         self.assertIsInstance(smbo.num_run, int)
         self.assertIs(smbo.rng, rng)
         # ML: I don't understand the following line and it throws an error
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             TypeError,
             "Argument rng accepts only arguments of type None, int or np.random.RandomState, you provided "
             "<class 'str'>.",
