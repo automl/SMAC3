@@ -118,7 +118,7 @@ class AbstractTAFunc(ExecuteTARun):
             cutoff = int(math.ceil(cutoff))
             if cutoff > 65535:
                 raise ValueError("%d is outside the legal range of [0, 65535] "
-                                 "for cutoff (when using pynisher)" % cutoff)
+                                 "for cutoff (when using pynisher, due to OS limitations)" % cutoff)
 
         arguments = {'logger': logging.getLogger("pynisher"),
                      'wall_time_in_s': cutoff,
