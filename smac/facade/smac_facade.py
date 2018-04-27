@@ -475,7 +475,8 @@ class SMAC(object):
         finally:
             self.solver.stats.save()
             self.solver.stats.print_stats()
-            self.logger.info("Final Incumbent: %s", (self.solver.incumbent))
+            self.logger.info("Final Incumbent: %s (value: %f)", self.solver.incumbent,
+                             self.solver.runhistory.get_cost(self.solver.incumbent))
             self.runhistory = self.solver.runhistory
             self.trajectory = self.solver.intensifier.traj_logger.trajectory
 
