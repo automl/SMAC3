@@ -340,7 +340,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_num_run</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span> <span class="o">=</span> <span class="mi">0</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_min_time</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**-</span><span class="mi">5</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_min_chall</span> <span class="o">=</span> <span class="mi">2</span>
 
@@ -388,8 +388,7 @@
         <span class="c1"># Line 1 + 2</span>
         <span class="k">for</span> <span class="n">challenger</span> <span class="ow">in</span> <span class="n">challengers</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">challenger</span> <span class="o">==</span> <span class="n">incumbent</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                    <span class="s2">&quot;Challenger was the same as the current incumbent; Skipping challenger&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Challenger was the same as the current incumbent; Skipping challenger&quot;</span><span class="p">)</span>
                 <span class="k">continue</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Intensify on </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">challenger</span><span class="p">)</span>
@@ -723,8 +722,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Incumbent (</span><span class="si">%.4f</span><span class="s2">) is at least as good as the &quot;</span>
                                   <span class="s2">&quot;challenger (</span><span class="si">%.4f</span><span class="s2">) on </span><span class="si">%d</span><span class="s2"> runs.&quot;</span> <span class="o">%</span>
                                   <span class="p">(</span><span class="n">inc_perf</span><span class="p">,</span> <span class="n">chal_perf</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">chall_runs</span><span class="p">)))</span>
-                <span class="k">return</span> <span class="n">incumbent</span> 
-            
+                <span class="k">return</span> <span class="n">incumbent</span>
+
             <span class="c1"># Challenger is better than incumbent</span>
             <span class="c1"># and has at least the same runs as inc</span>
             <span class="c1"># -&gt; change incumbent</span>
@@ -741,7 +740,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;  </span><span class="si">%s</span><span class="s2"> remains unchanged: </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span>
                                       <span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">param</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
-            
+
             <span class="k">if</span> <span class="n">log_traj</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">traj_logger</span><span class="o">.</span><span class="n">add_entry</span><span class="p">(</span><span class="n">train_perf</span><span class="o">=</span><span class="n">chal_perf</span><span class="p">,</span>
