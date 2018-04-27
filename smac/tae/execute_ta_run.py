@@ -82,7 +82,7 @@ class ExecuteTARun(object):
     def __init__(self, ta, stats=None, runhistory=None,
                  run_obj: str="runtime", par_factor: int=1,
                  cost_for_crash: float=float(MAXINT),
-                 abort_on_first_run_crash: bool=False):
+                 abort_on_first_run_crash: bool=True):
         """Constructor
 
         Parameters
