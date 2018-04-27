@@ -20,7 +20,7 @@ Optional:
 
 SMAC Options
 ~~~~~~~~~~~~
-The basic command line options have been described in `Basic Usage <basic_usage.html#commandline>`_.
+The basic command line options are described in `Basic Usage <basic_usage.html#commandline>`_.
 The options are separated into three groups, *Main Options*, *SMAC Options* and *Scenario Options*.
 See the Main and SMAC Options below. Find the Scenario Options in the next section.
 
@@ -56,8 +56,8 @@ Scenario Options:
 
 .. include:: scenario_options.rst
 
-These options are also available as command line switches: Prepend two "-" and replace each "_" by "-", 
-e.g. "wallclock_limit" becomes "--wallclock-limit". The options on the command line overwrite the values 
+These options are also available as command line switches: Prepend two "-" and replace each "_" by "-",
+e.g. "wallclock_limit" becomes "--wallclock-limit". The options on the command line overwrite the values
 given in the scenario file.
 
 .. _paramcs:
