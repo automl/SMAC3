@@ -100,7 +100,7 @@ class Intensifier(object):
 
         self._num_run = 0
         self._chall_indx = 0
-        
+
         self._min_time = 10**-5
         self._min_chall = 2
 
@@ -148,8 +148,7 @@ class Intensifier(object):
         # Line 1 + 2
         for challenger in challengers:
             if challenger == incumbent:
-                self.logger.warning(
-                    "Challenger was the same as the current incumbent; Skipping challenger")
+                self.logger.debug("Challenger was the same as the current incumbent; Skipping challenger")
                 continue
 
             self.logger.debug("Intensify on %s", challenger)
@@ -483,8 +482,8 @@ class Intensifier(object):
                 self.logger.debug("Incumbent (%.4f) is at least as good as the "
                                   "challenger (%.4f) on %d runs." %
                                   (inc_perf, chal_perf, len(chall_runs)))
-                return incumbent 
-            
+                return incumbent
+
             # Challenger is better than incumbent
             # and has at least the same runs as inc
             # -> change incumbent
@@ -501,7 +500,7 @@ class Intensifier(object):
                 else:
                     self.logger.debug("  %s remains unchanged: %r" %
                                       (param[0], param[1]))
-            
+
             if log_traj:
                 self.stats.inc_changed += 1
                 self.traj_logger.add_entry(train_perf=chal_perf,
