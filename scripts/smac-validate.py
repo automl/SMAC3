@@ -45,9 +45,9 @@ if __name__ == "__main__":
                           choices=["train", "test", "train+test"],
                           help="what instances to evaluate")
     req_opts.add_argument('--epm', dest='epm', action='store_true',
-                        help="Use EPM to validate")
+                          help="Use EPM to validate")
     req_opts.add_argument('--no-epm', dest='epm', action='store_false',
-                        help="Don't use EPM to validate")
+                          help="Don't use EPM to validate")
     req_opts.set_defaults(epm=False)
     req_opts.add_argument("--runhistory", default=None, type=str, nargs='*',
                           help="path to one or more runhistories to take runs "

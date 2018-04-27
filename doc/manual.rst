@@ -27,3 +27,4 @@ We provide examples for the usage of *SMAC* in the `Quickstart guide <quickstart
     options
     tae
     psmac
+    validation
