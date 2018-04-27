@@ -164,8 +164,6 @@ class AbstractRunHistory2EPM(object):
         """
         self.logger.debug("Transform runhistory into X,y format")
 
-        assert isinstance(runhistory, RunHistory)
-
         # consider only successfully finished runs
         s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
                       if runhistory.data[run].status in self.success_states}

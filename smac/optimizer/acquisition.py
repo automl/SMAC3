@@ -223,8 +223,11 @@ class EIPS(EI):
             X = X[:, np.newaxis]
 
         m, v = self.model.predict_marginalized_over_instances(X)
-        assert m.shape[1] == 2
-        assert v.shape[1] == 2
+        if m.shape[1] != 2:
+            raise ValueError("m has wrong shape: %s != (-1, 2)" % str(m.shape))
+        if v.shape[1] != 2:
+            raise ValueError("v has wrong shape: %s != (-1, 2)" % str(v.shape))
+
         m_cost = m[:, 0]
         v_cost = v[:, 0]
         # The model already predicts log(runtime)
