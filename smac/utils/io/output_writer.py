@@ -1,11 +1,9 @@
 import os
-import sys
 import shutil
 
 import typing
-from ConfigSpace import ConfigurationSpace
 
-from smac.configspace import pcs_new as pcs
+from smac.configspace import pcs_new, json, ConfigurationSpace
 
 
 class OutputWriter(object):
@@ -91,8 +89,10 @@ class OutputWriter(object):
                 except shutil.SameFileError:
                     return value  # File is already in output_dir
             elif key == 'pcs_fn' and scenario.cs is not None:
-                new_path = os.path.join(scenario.output_dir_for_this_run, "configspace.pcs")
-                self.write_pcs_file(scenario.cs, new_path)
+                new_path = os.path.join(scenario.output_dir_for_this_run, 'configspace.pcs')
+                self.save_configspace(scenario.cs, new_path, 'pcs_new')
+                json_path = os.path.join(scenario.output_dir_for_this_run, 'configspace.json')
+                self.save_configspace(scenario.cs, json_path, 'json')
             elif key == 'train_inst_fn' and scenario.train_insts != [None]:
                 new_path = os.path.join(scenario.output_dir_for_this_run, 'train_insts.txt')
                 self.write_inst_file(scenario.train_insts, new_path)
@@ -148,15 +148,30 @@ class OutputWriter(object):
         with open(fn, 'w') as fh:
             fh.write(header + "".join(body))
 
-    def write_pcs_file(self, cs: ConfigurationSpace, fn: str):
+    def save_configspace(self, cs: ConfigurationSpace, fn: str, format: str):
         """Writing ConfigSpace to file.
 
         Parameters
         ----------
-            cs: ConfigurationSpace
-                 Config-space to be written
-            fn: string
-                 Output-file-path
+            cs : ConfigurationSpace
+                Config-space to be written
+            fn : str
+                Output-file-path
+            format : str
+                Output format of the configuration space file. Currently, 
+                ``json`` and ``pcs_new`` are supported.
         """
-        with open(fn, 'w') as fh:
-            fh.write(pcs.write(cs))
+        writers = {
+            'pcs_new': pcs_new.write,
+            'json': json.write
+        }
+        writer = writers.get(format)
+        if writer:
+            with open(fn, 'w') as fh:
+                fh.write(writer(cs))
+        else:
+            raise ValueError(
+                "Configuration space output format %s not supported. "
+                "Please choose one of %s" % set(writers.keys())
+            )
+
