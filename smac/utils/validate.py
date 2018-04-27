@@ -15,7 +15,7 @@ from smac.runhistory.runhistory import RunHistory, RunKey, StatusType
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
-from smac.tae.execute_ta_run import ExecuteTARun, StatusType
+from smac.tae.execute_ta_run import ExecuteTARun
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.utils.constants import MAXINT
 from smac.utils.util_funcs import get_types
@@ -290,7 +290,6 @@ class Validator(object):
                                                  instance_features=self.scen.feature_array,
                                                  seed=self.rng.randint(MAXINT),
                                                  ratio_features=1.0)
-            logging.warning('validate_1__test_rng__' + str(self.rng.randint(MAXINT)))
             # Use imputor if objective is runtime
             imputor = None
             impute_state = None
@@ -392,7 +391,7 @@ class Validator(object):
             insts = self._get_instances(insts)
 
         # If no instances are given, fix the instances to one "None" instance
-        if len(insts) == 0:
+        if not insts:
             insts = [None]
         # If algorithm is deterministic, fix repetitions to 1
         if self.scen.deterministic and repetitions != 1:
@@ -419,7 +418,7 @@ class Validator(object):
                     # Choose seed based on most often evaluated inst-seed-pair
                     seed, configs_evaluated = inst_seed_config[i].pop(0)
                     # Delete inst if all seeds are used
-                    if len(inst_seed_config[i]) == 0:
+                    if not inst_seed_config[i]:
                         inst_seed_config.pop(i)
                     # Add runs to runhistory
                     for c in configs_evaluated[:]:
@@ -435,9 +434,6 @@ class Validator(object):
                 else:
                     # If no runhistory or no entries for instance, get new seed
                     seed = self.rng.randint(MAXINT)
-                    logging.warning('validate_2__test_rng__' + str(self.rng.randint(MAXINT)))
-                    # if self.scen.deterministic:
-                    #     seed = 0
                 # We now have a seed and add all configs that are not already
                 # evaluated on that seed to the runs-list. This way, we
                 # guarantee the same inst-seed-pairs for all configs.
