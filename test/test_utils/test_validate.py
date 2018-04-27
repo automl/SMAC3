@@ -14,7 +14,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.stats.stats import Stats
 from smac.optimizer.objective import average_cost
 from smac.utils.io.traj_logging import TrajLogger
-from smac.utils.validate import Validator, Run
+from smac.utils.validate import Validator, _Run
 
 from unittest import mock
 
@@ -150,11 +150,11 @@ class ValidationTest(unittest.TestCase):
         old_rh.add('config6', 1, 1, StatusType.CAPPED, instance_id='0', seed=0)
 
         # Get multiple configs
-        expected = [Run(inst_specs='0', seed=0, inst='0', config='config3'),
-                    Run(inst_specs='0', seed=0, inst='0', config='config4'),
-                    Run(inst_specs='0', seed=0, inst='0', config='config6')]
+        expected = [_Run(inst_specs='0', seed=0, inst='0', config='config3'),
+                    _Run(inst_specs='0', seed=0, inst='0', config='config4'),
+                    _Run(inst_specs='0', seed=0, inst='0', config='config6')]
 
-        runs = validator.get_runs(old_configs, ['0'], repetitions=1, runhistory=old_rh)
+        runs = validator._get_runs(old_configs, ['0'], repetitions=1, runhistory=old_rh)
         self.assertEqual(runs[0], expected)
 
     def test_get_runs(self):
@@ -167,43 +167,44 @@ class ValidationTest(unittest.TestCase):
 
         validator = Validator(scen, self.trajectory, self.rng)
         # Get multiple configs
-        expected = [Run(inst_specs='three', seed=1608637542, inst='3', config='config1'),
-                    Run(inst_specs='three', seed=1608637542, inst='3', config='config2'),
-                    Run(inst_specs='three', seed=1935803228, inst='3', config='config1'),
-                    Run(inst_specs='three', seed=1935803228, inst='3', config='config2'),
-                    Run(inst_specs='four',  seed=996406378, inst='4', config='config1'),
-                    Run(inst_specs='four',  seed=996406378, inst='4', config='config2'),
-                    Run(inst_specs='four',  seed=423734972,  inst='4', config='config1'),
-                    Run(inst_specs='four',  seed=423734972,  inst='4', config='config2'),
-                    Run(inst_specs='five',  seed=670094950,  inst='5', config='config1'),
-                    Run(inst_specs='five',  seed=670094950,  inst='5', config='config2'),
-                    Run(inst_specs='five',  seed=669991378, inst='5', config='config1'),
-                    Run(inst_specs='five',  seed=669991378, inst='5', config='config2')]
+        self.maxDiff=None
+        expected = [_Run(config='config1', inst='3', seed=1608637542, inst_specs='three'),
+                    _Run(config='config2', inst='3', seed=1608637542, inst_specs='three'),
+                    _Run(config='config1', inst='3', seed=1273642419, inst_specs='three'),
+                    _Run(config='config2', inst='3', seed=1273642419, inst_specs='three'),
+                    _Run(config='config1', inst='4', seed=1935803228, inst_specs='four'),
+                    _Run(config='config2', inst='4', seed=1935803228, inst_specs='four'),
+                    _Run(config='config1', inst='4', seed=787846414, inst_specs='four'),
+                    _Run(config='config2', inst='4', seed=787846414, inst_specs='four'),
+                    _Run(config='config1', inst='5', seed=996406378, inst_specs='five'),
+                    _Run(config='config2', inst='5', seed=996406378, inst_specs='five'),
+                    _Run(config='config1', inst='5', seed=1201263687, inst_specs='five'),
+                    _Run(config='config2', inst='5', seed=1201263687, inst_specs='five')]
 
-        runs = validator.get_runs(['config1', 'config2'], scen.test_insts, repetitions=2)
+        runs = validator._get_runs(['config1', 'config2'], scen.test_insts, repetitions=2)
         self.assertEqual(runs[0], expected)
 
         # Only train
-        expected = [Run(inst_specs='null', seed=249467210,  inst='0', config='config1'),
-                    Run(inst_specs='null', seed=1572714583,  inst='0', config='config1'),
-                    Run(inst_specs='one',  seed=434285667,  inst='1', config='config1'),
-                    Run(inst_specs='one',  seed=893664919, inst='1', config='config1'),
-                    Run(inst_specs='two',  seed=88409749,  inst='2', config='config1'),
-                    Run(inst_specs='two',  seed=2018247425,  inst='2', config='config1')]
+        expected = [_Run(config='config1', inst='0', seed=423734972, inst_specs='null'),
+                    _Run(config='config1', inst='0', seed=415968276, inst_specs='null'),
+                    _Run(config='config1', inst='1', seed=670094950, inst_specs='one'),
+                    _Run(config='config1', inst='1', seed=1914837113, inst_specs='one'),
+                    _Run(config='config1', inst='2', seed=669991378, inst_specs='two'),
+                    _Run(config='config1', inst='2', seed=429389014, inst_specs='two')]
 
-        runs = validator.get_runs(['config1'], scen.train_insts, repetitions=2)
+        runs = validator._get_runs(['config1'], scen.train_insts, repetitions=2)
         self.assertEqual(runs[0], expected)
 
         # Test and train
-        expected = [Run(inst='0', seed=1427830251,  config='config1', inst_specs='null' ),
-                    Run(inst='1', seed=911989541, config='config1', inst_specs='one'  ),
-                    Run(inst='2', seed=780932287, config='config1', inst_specs='two'  ),
-                    Run(inst='3', seed=787716372, config='config1', inst_specs='three'),
-                    Run(inst='4', seed=1306710475,  config='config1', inst_specs='four' ),
-                    Run(inst='5', seed=106328085,  config='config1', inst_specs='five' )]
+        expected = [_Run(config='config1', inst='0', seed=249467210, inst_specs='null'),
+                    _Run(config='config1', inst='1', seed=1972458954, inst_specs='one'),
+                    _Run(config='config1', inst='2', seed=1572714583, inst_specs='two'),
+                    _Run(config='config1', inst='3', seed=1433267572, inst_specs='three'),
+                    _Run(config='config1', inst='4', seed=434285667, inst_specs='four'),
+                    _Run(config='config1', inst='5', seed=613608295, inst_specs='five')]
         insts = self.train_insts
         insts.extend(self.test_insts)
-        runs = validator.get_runs(['config1'], insts, repetitions=1)
+        runs = validator._get_runs(['config1'], insts, repetitions=1)
         self.assertEqual(runs[0], expected)
 
     @attr('slow')
@@ -287,9 +288,9 @@ class ValidationTest(unittest.TestCase):
 
         configs = validator._get_configs('all')
         insts = validator._get_instances('train')
-        runs_w_rh = validator.get_runs(configs, insts, repetitions=2,
+        runs_w_rh = validator._get_runs(configs, insts, repetitions=2,
                                        runhistory=old_rh)
-        runs_wo_rh = validator.get_runs(configs, insts, repetitions=2)
+        runs_wo_rh = validator._get_runs(configs, insts, repetitions=2)
         self.assertEqual(len(runs_w_rh[0]), len(runs_wo_rh[0]) - 4)
         self.assertEqual(len(runs_w_rh[1].data), 4)
         self.assertEqual(len(runs_wo_rh[1].data), 0)
@@ -310,9 +311,9 @@ class ValidationTest(unittest.TestCase):
 
         configs = validator._get_configs('all')
         insts = validator._get_instances('train')
-        runs_w_rh = validator.get_runs(configs, insts, repetitions=2,
+        runs_w_rh = validator._get_runs(configs, insts, repetitions=2,
                                        runhistory=old_rh)
-        runs_wo_rh = validator.get_runs(configs, insts, repetitions=2)
+        runs_wo_rh = validator._get_runs(configs, insts, repetitions=2)
         self.assertEqual(len(runs_w_rh[0]), len(runs_wo_rh[0]) - 4)
         self.assertEqual(len(runs_w_rh[1].data), 4)
         self.assertEqual(len(runs_wo_rh[1].data), 0)
@@ -331,9 +332,9 @@ class ValidationTest(unittest.TestCase):
 
         configs = validator._get_configs('all')
         insts = validator._get_instances('train')
-        runs_w_rh = validator.get_runs(configs, insts, repetitions=2,
+        runs_w_rh = validator._get_runs(configs, insts, repetitions=2,
                                        runhistory=old_rh)
-        runs_wo_rh = validator.get_runs(configs, insts, repetitions=2)
+        runs_wo_rh = validator._get_runs(configs, insts, repetitions=2)
         self.assertEqual(len(runs_w_rh[0]), len(runs_wo_rh[0]) - 4)
         self.assertEqual(len(runs_w_rh[1].data), 4)
         self.assertEqual(len(runs_wo_rh[1].data), 0)
