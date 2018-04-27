@@ -21,6 +21,12 @@ from unittest import mock
 class ValidationTest(unittest.TestCase):
 
     def setUp(self):
+        base_directory = os.path.split(__file__)[0]
+        base_directory = os.path.abspath(
+            os.path.join(base_directory, '..', '..'))
+        self.current_dir = os.getcwd()
+        os.chdir(base_directory)
+
         logging.basicConfig()
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.logger.setLevel(logging.DEBUG)
@@ -53,6 +59,7 @@ class ValidationTest(unittest.TestCase):
                     os.remove(output_file)
                 except FileNotFoundError as e:
                     pass
+        os.chdir(self.current_dir)
 
     def test_rng(self):
         scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
