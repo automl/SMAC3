@@ -1,6 +1,7 @@
 import logging
 import os
-import shutil
+import datetime
+import time
 import typing
 
 import numpy as np
@@ -8,6 +9,7 @@ import numpy as np
 from smac.tae.execute_ta_run_old_hydra import ExecuteTARunOldHydra
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_facade import SMAC
+from smac.utils.io.output_directory import create_output_directory
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2017, ML4AAD"
@@ -31,6 +33,7 @@ class Hydra(object):
     def __init__(self,
                  scenario: Scenario,
                  n_iterations: int,
+                 run_id: int=1,
                  **kwargs):
         """Constructor
 
@@ -51,6 +54,7 @@ class Hydra(object):
             self.__module__ + "." + self.__class__.__name__)
 
         self.scenario = scenario
+        self.run_id = run_id
         self.kwargs = kwargs
         self.output_dir = None
         self.solver = None
@@ -67,6 +71,13 @@ class Hydra(object):
         portfolio = []
         self.solver = SMAC(scenario=self.scenario, **self.kwargs)
         portfolio_cost = np.inf
+        if self.output_dir is None:
+            print(os.path.exists(self.scenario.output_dir))
+            self.output_dir = "hydra-output_%s" % (
+                datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f'))
+            self.scenario.output_dir = os.path.join(self.output_dir, "smac3-output_%s" % (
+                datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f')))
+            self.output_dir = create_output_directory(self.scenario, run_id=self.run_id, logger=self.logger)
         for i in range(self.n_iterations):
             self.logger.info("Iteration: %d", (i + 1))
 
