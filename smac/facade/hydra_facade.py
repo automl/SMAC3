@@ -76,7 +76,7 @@ class Hydra(object):
         """Optimizes the algorithm provided in scenario (given in constructor)
 
         Returns
-        ----------
+        -------
         portfolio : typing.List[Configuration]
             Portfolio of found configurations
         """
