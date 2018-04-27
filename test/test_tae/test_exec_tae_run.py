@@ -84,7 +84,8 @@ class TaeTest(unittest.TestCase):
                                   'output_dir': ''}, cmd_args=None)
         stats = Stats(scen)
         stats.start_timing()
-        eta = ExecuteTARun(ta=lambda *args: None, stats=stats, run_obj="quality")
+        eta = ExecuteTARun(ta=lambda *args: None, stats=stats,
+                           run_obj="quality", abort_on_first_run_crash=True)
 
         self.assertRaises(
             FirstRunCrashedException, eta.start, config={}, instance=1)
