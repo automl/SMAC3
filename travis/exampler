@@ -1,0 +1,7 @@
+cd examples
+python rf.py
+python rosenbrock.py
+python svm.py
+
+cd spear_qcp
+bash run.sh
