@@ -12,7 +12,7 @@ RUNHISTORY_FILEPATTERN = 'runhistory.json'
 RUNHISTORY_RE = r'runhistory\.json$'
 
 
-def read(run_history: RunHistory, 
+def read(run_history: RunHistory,
          output_dirs: typing.Union[str, typing.List[str]],
          configuration_space: ConfigurationSpace,
          logger: logging.Logger):
@@ -23,25 +23,26 @@ def read(run_history: RunHistory,
     run_history : smac.runhistory.RunHistory
         RunHistory object to be updated with run information from runhistory
         objects stored in the output directory.
-
     output_dirs : typing.Union[str,typing.List[str]]
         List of SMAC output directories
         or Linux path expression (str) which will be casted into a list with
         glob.glob(). This function will search the output directories
         for files matching the runhistory regular expression.
-
     configuration_space : ConfigSpace.ConfigurationSpace
         A ConfigurationSpace object to check if loaded configurations are valid.
-
     logger : logging.Logger
     """
     numruns_in_runhistory = len(run_history.data)
     initial_numruns_in_runhistory = numruns_in_runhistory
 
     if isinstance(output_dirs, str):
-        output_dirs = glob.glob(output_dirs)
+        parsed_output_dirs = glob.glob(output_dirs)
+        if glob.glob(output_dirs+"/run_*"):
+            parsed_output_dirs += glob.glob(output_dirs+"/run_*")
+    else:
+        parsed_output_dirs = output_dirs
 
-    for output_directory in output_dirs:
+    for output_directory in parsed_output_dirs:
         for file_in_output_directory in os.listdir(output_directory):
             match = re.match(RUNHISTORY_RE, file_in_output_directory)
             if match:
@@ -73,12 +74,12 @@ def write(run_history: RunHistory, output_directory: str,
         RunHistory object to be saved.
 
     output_directory : str
-    
+
     logger : logging.Logger
     """
 
     output_filename = os.path.join(output_directory, RUNHISTORY_FILEPATTERN)
-    
+
     logging.debug("Saving runhistory to %s" %(output_filename))
 
     with tempfile.NamedTemporaryFile('wb', dir=output_directory,
