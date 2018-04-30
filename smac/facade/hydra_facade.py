@@ -31,7 +31,9 @@ class Hydra(object):
     ----------
     logger
     stats : Stats
+        loggs information about used resources
     solver : SMBO
+        handles the actual algorithm calls
     runhistory : RunHistory
         List with information about previous runs
     trajectory : list
