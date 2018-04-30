@@ -296,6 +296,7 @@ class TestSMBO(unittest.TestCase):
     def test_no_initial_design(self):
         self.scenario.output_dir = "test"
         smac = SMAC(self.scenario)
+        self.output_dirs.append(smac.output_dir)
         smbo = smac.solver
         with mock.patch.object(SingleConfigInitialDesign, "run", return_value=None) as initial_mock:
             smbo.start()
