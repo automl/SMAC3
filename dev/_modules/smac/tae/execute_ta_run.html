@@ -421,6 +421,7 @@
         <span class="c1"># update SMAC stats</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_runs</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_time_used</span> <span class="o">+=</span> <span class="nb">float</span><span class="p">(</span><span class="n">runtime</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">n_configs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">config_ids</span><span class="p">)</span>
 
         <span class="c1"># Catch NaN or inf.</span>
         <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s1">&#39;runtime&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">runtime</span><span class="p">)</span> <span class="ow">or</span>
