@@ -479,7 +479,7 @@ class SMAC(object):
             self.solver.stats.print_stats()
             self.logger.info("Final Incumbent: %s", self.solver.incumbent)
             if self.solver.incumbent and self.solver.incumbent in self.solver.runhistory.get_all_configs():
-                self.logger.info("Final Incumbent value: %f", self.solver.runhistory.get_cost(self.solver.incumbent))
+                self.logger.info("Estimated cost of incumbent: %f", self.solver.runhistory.get_cost(self.solver.incumbent))
             self.runhistory = self.solver.runhistory
             self.trajectory = self.solver.intensifier.traj_logger.trajectory
 

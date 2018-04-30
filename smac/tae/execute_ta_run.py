@@ -174,6 +174,7 @@ class ExecuteTARun(object):
         # update SMAC stats
         self.stats.ta_runs += 1
         self.stats.ta_time_used += float(runtime)
+        self.stats.n_configs = len(self.runhistory.config_ids)
 
         # Catch NaN or inf.
         if (self.run_obj == 'runtime' and not np.isfinite(runtime) or
