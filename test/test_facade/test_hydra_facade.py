@@ -55,7 +55,9 @@ class TestHydraFacade(unittest.TestCase):
 
     def setUp(self):
         self.output_dirs = []
-        self.scenario = Scenario('../test_files/spear_hydra_test_scenario.txt')
+        print(os.path.dirname(__file__))
+        fn = os.path.join(os.path.dirname(__file__), '../test_files/spear_hydra_test_scenario.txt')
+        self.scenario = Scenario(fn)
 
     @patch('smac.facade.smac_facade.SMBO', new=MockSMBO)
     @patch('smac.facade.hydra_facade.SMAC', new=MockSMAC)
