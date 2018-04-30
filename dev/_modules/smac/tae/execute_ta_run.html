@@ -328,7 +328,8 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ta</span><span class="p">,</span> <span class="n">stats</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">runhistory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">run_obj</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">&quot;runtime&quot;</span><span class="p">,</span> <span class="n">par_factor</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">cost_for_crash</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">)):</span>
+                 <span class="n">cost_for_crash</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">),</span>
+                 <span class="n">abort_on_first_run_crash</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor</span>
 
 <span class="sd">        Parameters</span>
@@ -346,6 +347,8 @@
 <span class="sd">        crash_cost : float</span>
 <span class="sd">            cost that is used in case of crashed runs (including runs</span>
 <span class="sd">            that returned NaN or inf)</span>
+<span class="sd">        abort_on_first_run_crash: bool</span>
+<span class="sd">            if true and first run crashes, raise FirstRunCrashedException</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ta</span> <span class="o">=</span> <span class="n">ta</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="n">stats</span>
@@ -354,6 +357,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">par_factor</span> <span class="o">=</span> <span class="n">par_factor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">crash_cost</span> <span class="o">=</span> <span class="n">cost_for_crash</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span> <span class="o">=</span> <span class="n">abort_on_first_run_crash</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
@@ -462,13 +466,13 @@
 
         <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">CappedRunException</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-        
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_runs</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_runs</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">FirstRunCrashedException</span><span class="p">(</span><span class="s2">&quot;First run crashed, abort. &quot;</span>
                                            <span class="s2">&quot;Please check your setup -- &quot;</span>
                                            <span class="s2">&quot;we assume that your default&quot;</span>
                                            <span class="s2">&quot;configuration does not crashes. &quot;</span>
-                                           <span class="s2">&quot;(To deactivate this exception,&quot;</span> 
+                                           <span class="s2">&quot;(To deactivate this exception,&quot;</span>
                                            <span class="s2">&quot; use the SMAC scenario option &quot;</span>
                                            <span class="s2">&quot;&#39;abort_on_first_run_crash&#39;)&quot;</span><span class="p">)</span>
 

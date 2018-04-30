@@ -256,7 +256,7 @@
 <span id="smac-tae-execute-ta-run-aclib-module"></span><h1>smac.tae.execute_ta_run_aclib module<a class="headerlink" href="#module-smac.tae.execute_ta_run_aclib" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.tae.execute_ta_run_aclib.ExecuteTARunAClib">
-<em class="property">class </em><code class="descclassname">smac.tae.execute_ta_run_aclib.</code><code class="descname">ExecuteTARunAClib</code><span class="sig-paren">(</span><em>ta</em>, <em>stats=None</em>, <em>runhistory=None</em>, <em>run_obj: str = 'runtime'</em>, <em>par_factor: int = 1</em>, <em>cost_for_crash: float = 2147483647.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run_aclib.html#ExecuteTARunAClib"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run_aclib.ExecuteTARunAClib" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.tae.execute_ta_run_aclib.</code><code class="descname">ExecuteTARunAClib</code><span class="sig-paren">(</span><em>ta</em>, <em>stats=None</em>, <em>runhistory=None</em>, <em>run_obj: str = 'runtime'</em>, <em>par_factor: int = 1</em>, <em>cost_for_crash: float = 2147483647.0</em>, <em>abort_on_first_run_crash: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run_aclib.html#ExecuteTARunAClib"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run_aclib.ExecuteTARunAClib" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.tae.execute_ta_run.ExecuteTARun</span></code></a></p>
 <p>Executes a target algorithm run with a given configuration on a given
 instance and some resource limitations. Uses the AClib 2.0 style</p>
@@ -273,6 +273,7 @@ instance and some resource limitations. Uses the AClib 2.0 style</p>
 <li><strong>par_factor</strong> (<em>int</em>) – penalization factor</li>
 <li><strong>crash_cost</strong> (<em>float</em>) – cost that is used in case of crashed runs (including runs
 that returned NaN or inf)</li>
+<li><strong>abort_on_first_run_crash</strong> (<em>bool</em>) – if true and first run crashes, raise FirstRunCrashedException</li>
 </ul>
 </td>
 </tr>

@@ -472,7 +472,8 @@
                                          <span class="n">run_obj</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span><span class="p">,</span>
                                          <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
                                          <span class="n">par_factor</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">par_factor</span><span class="p">,</span>
-                                         <span class="n">cost_for_crash</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">cost_for_crash</span><span class="p">)</span>
+                                         <span class="n">cost_for_crash</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">cost_for_crash</span><span class="p">,</span>
+                                         <span class="n">abort_on_first_run_crash</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span><span class="p">)</span>
         <span class="c1"># Second case, the tae_runner is a function to be optimized</span>
         <span class="k">elif</span> <span class="n">callable</span><span class="p">(</span><span class="n">tae_runner</span><span class="p">):</span>
             <span class="n">tae_runner</span> <span class="o">=</span> <span class="n">ExecuteTAFuncDict</span><span class="p">(</span><span class="n">ta</span><span class="o">=</span><span class="n">tae_runner</span><span class="p">,</span>
@@ -481,7 +482,8 @@
                                            <span class="n">memory_limit</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">memory_limit</span><span class="p">,</span>
                                            <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
                                            <span class="n">par_factor</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">par_factor</span><span class="p">,</span>
-                                           <span class="n">cost_for_crash</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">cost_for_crash</span><span class="p">)</span>
+                                           <span class="n">cost_for_crash</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">cost_for_crash</span><span class="p">,</span>
+                                           <span class="n">abort_on_first_run_crash</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span><span class="p">)</span>
         <span class="c1"># Third case, if it is an ExecuteTaRun we can simply use the</span>
         <span class="c1"># instance. Otherwise, the next check raises an exception</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tae_runner</span><span class="p">,</span> <span class="n">ExecuteTARun</span><span class="p">):</span>
