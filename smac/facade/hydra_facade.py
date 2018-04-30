@@ -102,7 +102,7 @@ class Hydra(object):
 
             if self.output_dir is not None:
                 self.solver.solver.runhistory.save_json(
-                    fn=os.path.join(self.output_dir, "runhistory.json")
+                    fn=os.path.join(self.solver.output_dir, "runhistory.json")
                 )
 
             # validate incumbent on all trainings instances
