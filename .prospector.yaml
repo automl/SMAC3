@@ -15,7 +15,6 @@ pep8:
 
 pylint:
   disable:
-    - C0326              # ignore pylint bad-whitespace  (func arguments)
     - R0913              # ignore pylint too-many-arguments
     - R0916              # ignore pylint too-many-boolean-expressions
     - R0902              # ignore pylint too-many-instance-attributes
