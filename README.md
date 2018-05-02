@@ -13,13 +13,13 @@ The documentation can be found [here](https://automl.github.io/SMAC3/).
 Status for master branch:
 
 [![Build Status](https://travis-ci.org/automl/SMAC3.svg?branch=master)](https://travis-ci.org/automl/SMAC3)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/58f47a4bd25e45c9a4901ebca68118ff?branch=master)](https://www.codacy.com/app/KEggensperger/SMAC3?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=automl/SMAC3&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/58f47a4bd25e45c9a4901ebca68118ff?branch=master)](https://www.codacy.com/app/automl/SMAC3?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=automl/SMAC3&amp;utm_campaign=Badge_Grade)
 [![codecov Status](https://codecov.io/gh/automl/SMAC3/branch/master/graph/badge.svg)](https://codecov.io/gh/automl/SMAC3)
 
 Status for development branch
 
 [![Build Status](https://travis-ci.org/automl/SMAC3.svg?branch=development)](https://travis-ci.org/automl/SMAC3)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/58f47a4bd25e45c9a4901ebca68118ff?branch=development)](https://www.codacy.com/app/KEggensperger/SMAC3?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=automl/SMAC3&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/58f47a4bd25e45c9a4901ebca68118ff?branch=development)](https://www.codacy.com/app/automl/SMAC3?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=automl/SMAC3&amp;utm_campaign=Badge_Grade)
 [![codecov](https://codecov.io/gh/automl/SMAC3/branch/development/graph/badge.svg)](https://codecov.io/gh/automl/SMAC3)
 
 # OVERVIEW
