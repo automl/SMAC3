@@ -37,8 +37,8 @@ def read(run_history: RunHistory,
 
     if isinstance(output_dirs, str):
         parsed_output_dirs = glob.glob(output_dirs)
-        if glob.glob(output_dirs+"/run_*"):
-            parsed_output_dirs += glob.glob(output_dirs+"/run_*")
+        if glob.glob(os.path.join(output_dirs, "run_*")):
+            parsed_output_dirs += glob.glob(os.path.join(output_dirs, "run_*"))
     else:
         parsed_output_dirs = output_dirs
 
