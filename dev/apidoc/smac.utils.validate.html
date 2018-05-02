@@ -277,7 +277,8 @@ Evaluates specified configurations on specified instances.</p>
 <dl class="method">
 <dt id="smac.utils.validate.Validator.validate">
 <code class="descname">validate</code><span class="sig-paren">(</span><em>config_mode: Union[str</em>, <em>typing.List[ConfigSpace.configuration_space.Configuration]] = 'def'</em>, <em>instance_mode: Union[str</em>, <em>typing.List[str]] = 'test'</em>, <em>repetitions: int = 1</em>, <em>n_jobs: int = 1</em>, <em>backend: str = 'threading'</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory = None</em>, <em>tae: smac.tae.execute_ta_run.ExecuteTARun = None</em>, <em>output_fn: str = ''</em><span class="sig-paren">)</span> &#x2192; smac.runhistory.runhistory.RunHistory<a class="reference internal" href="../_modules/smac/utils/validate.html#Validator.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validate configs on instances and save result in runhistory.</p>
+<dd><p>Validate configs on instances and save result in runhistory.
+If a runhistory is provided as input it is important that you run it on the same/comparable hardware.</p>
 <p>side effect: if output is specified, saves runhistory to specified
 output directory.</p>
 <table class="docutils field-list" frame="void" rules="none">

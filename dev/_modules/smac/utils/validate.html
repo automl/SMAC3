@@ -375,6 +375,7 @@
                  <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistory</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validate configs on instances and save result in runhistory.</span>
+<span class="sd">        If a runhistory is provided as input it is important that you run it on the same/comparable hardware.</span>
 
 <span class="sd">        side effect: if output is specified, saves runhistory to specified</span>
 <span class="sd">        output directory.</span>
@@ -415,8 +416,6 @@
                           <span class="n">config_mode</span><span class="p">,</span> <span class="n">instance_mode</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span>
 
         <span class="c1"># Get all runs to be evaluated as list</span>
-        <span class="k">if</span> <span class="n">runhistory</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Only reuse runhistories on comparable hardware!&quot;</span><span class="p">)</span>
         <span class="n">runs</span><span class="p">,</span> <span class="n">validated_rh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_runs</span><span class="p">(</span><span class="n">config_mode</span><span class="p">,</span> <span class="n">instance_mode</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">)</span>
 
         <span class="c1"># Create new Stats without limits</span>

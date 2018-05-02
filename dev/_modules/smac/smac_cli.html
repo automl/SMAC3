@@ -256,6 +256,7 @@
 <span class="kn">from</span> <span class="nn">smac.facade.smac_facade</span> <span class="k">import</span> <span class="n">SMAC</span>
 <span class="kn">from</span> <span class="nn">smac.facade.roar_facade</span> <span class="k">import</span> <span class="n">ROAR</span>
 <span class="kn">from</span> <span class="nn">smac.facade.epils_facade</span> <span class="k">import</span> <span class="n">EPILS</span>
+<span class="kn">from</span> <span class="nn">smac.facade.hydra_facade</span> <span class="k">import</span> <span class="n">Hydra</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="k">import</span> <span class="n">Stats</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="k">import</span> <span class="n">average_cost</span>
@@ -370,6 +371,17 @@
                 <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>
                 <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configs</span><span class="p">,</span>
                 <span class="n">run_id</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;Hydra&quot;</span><span class="p">:</span>
+            <span class="n">optimizer</span> <span class="o">=</span> <span class="n">Hydra</span><span class="p">(</span>
+                <span class="n">scenario</span><span class="o">=</span><span class="n">scen</span><span class="p">,</span>
+                <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
+                <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>
+                <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configs</span><span class="p">,</span>
+                <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
+                <span class="n">restore_incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
+                <span class="n">run_id</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+                <span class="n">random_configuration_chooser</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">random_configuration_chooser</span><span class="p">,</span>
+                <span class="n">n_iterations</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">hydra_iterations</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">optimizer</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
         <span class="k">except</span> <span class="p">(</span><span class="n">TAEAbortException</span><span class="p">,</span> <span class="n">FirstRunCrashedException</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>

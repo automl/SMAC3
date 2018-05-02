@@ -573,6 +573,25 @@ False otherwise</td>
 </dd></dl>
 
 <dl class="method">
+<dt id="smac.runhistory.runhistory.RunHistory.get_instance_costs_for_config">
+<code class="descname">get_instance_costs_for_config</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_instance_costs_for_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_instance_costs_for_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the average cost per instance (across seeds)
+for a configuration
+:param config: Parameter configuration
+:type config: Configuration from ConfigSpace</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>cost_per_inst</strong></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict&lt;instance name&lt;str&gt;, cost&lt;float&gt;&gt;</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.get_runs_for_config">
 <code class="descname">get_runs_for_config</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_runs_for_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_runs_for_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all runs (instance seed pairs) for a configuration.</p>

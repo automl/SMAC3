@@ -786,6 +786,24 @@ and the corresponding budgets—here we exhausted the wallclock time budget.</p>
 The .json file contains the information about the target algorithms <em>SMAC</em> just executed. In this file you can see the <em>status</em> of the algorithm run, <em>misc</em>, the <em>instance</em> on which the algorithm was evaluated, which <em>seed</em> was used, how much <em>time</em> the algorithm needed and with which <em>configuration</em> the algorithm was run.
 In the folder <em>SMAC</em> generates a file for the runhistory, and two files for the trajectory.</p>
 </div>
+<div class="section" id="hydra-on-spear-qcp">
+<span id="hydra-example"></span><h2>Hydra on Spear-QCP<a class="headerlink" href="#hydra-on-spear-qcp" title="Permalink to this headline">¶</a></h2>
+<p>For this example we use <em>Hydra</em> to build a portfolio on the same example data presented in <a class="reference internal" href="#spear-example">Spear-QCP</a>.
+Hydra is a portfolio builder that aims to build a portfolio by iteratively adding complementary configurations to the
+already existing portfolio. To select these complementary configurations <em>Hydra</em> compares new configurations to the
+portfolio and only considers configurations that improve the portfolio performance.
+In the first iteration Hydra runs standard <em>SMAC</em> to determine a well performing configuration
+across all instances as a starting point for the portfolio. In following iterations <em>Hydra</em> adds one configuration that
+improves the portfolio performance.</p>
+<p>To run Hydra for three iterations you can run the following code in the spear-qcp example folder.</p>
+<blockquote>
+<div><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">../../scripts/smac</span> <span class="pre">--scenario</span> <span class="pre">scenario.txt</span> <span class="pre">--verbose</span> <span class="pre">DEBUG</span> <span class="pre">--mode</span> <span class="pre">Hydra</span> <span class="pre">--hydra_iterations</span> <span class="pre">3</span></code></div></blockquote>
+<p>As the individual SMAC scenario takes 30 seconds to run Hydra will run for ~90 seconds on this example.
+You will see the same output to the terminal as with standard SMAC. In the folder where you executed the above command,
+you will find a <em>hydra-output-yyy-mm-dd_hh:mm:ss_xyz</em> folder. This folder contains the results of all three performed
+SMAC runs, as well as the resulting portfolio (as pkl file).</p>
+<p>The resulting portfolio can be used with any algorithm selector such as <a class="reference external" href="https://github.com/mlindauer/AutoFolio">AutoFolio</a></p>
+</div>
 </div>
 
 

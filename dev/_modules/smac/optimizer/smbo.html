@@ -550,12 +550,12 @@
                                             <span class="n">instance_mode</span><span class="o">=</span><span class="n">instance_mode</span><span class="p">,</span>
                                             <span class="n">repetitions</span><span class="o">=</span><span class="n">repetitions</span><span class="p">,</span>
                                             <span class="n">runhistory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
-                                            <span class="n">output</span><span class="o">=</span><span class="n">new_rh_path</span><span class="p">)</span>
+                                            <span class="n">output_fn</span><span class="o">=</span><span class="n">new_rh_path</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">new_rh</span> <span class="o">=</span> <span class="n">validator</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">config_mode</span><span class="p">,</span> <span class="n">instance_mode</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">,</span>
                                         <span class="n">n_jobs</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
                                         <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">tae_runner</span><span class="p">,</span>
-                                        <span class="n">output</span><span class="o">=</span><span class="n">new_rh_path</span><span class="p">)</span>
+                                        <span class="n">output_fn</span><span class="o">=</span><span class="n">new_rh_path</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">new_rh</span></div>
 
     <span class="k">def</span> <span class="nf">_get_timebound_for_intensification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_spent</span><span class="p">):</span>
