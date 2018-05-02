@@ -391,11 +391,11 @@ Hydra on Spear-QCP
 
 For this example we use *Hydra* to build a portfolio on the same example data presented in `Spear-QCP`__.
 Hydra is a portfolio builder that aims to build a portfolio by iteratively adding complementary configurations to the
-already existing portfolio. In the first iteration Hydra runs standard *SMAC* to determine a well performing configuration
-across all instances as a starting point for the portfolio. In following iterations Hydra only considers configurations
-that can improve the portfolio performance. Configurations that perform poor on instances which are already solved well
-by the portfolio are not punished for performing worse on these instances but rewarded for outperforming the portfolio
-on other instances.
+already existing portfolio. To select these complementary configurations *Hydra* compares new configurations to the
+portfolio and only considers configurations that improve the portfolio performance.
+In the first iteration Hydra runs standard *SMAC* to determine a well performing configuration
+across all instances as a starting point for the portfolio. In following iterations *Hydra* adds one configuration that
+improves the portfolio performance.
 
 __ spear-example_
 
