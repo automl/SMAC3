@@ -11,7 +11,6 @@ import numpy as np
 from smac.tae.execute_ta_run_hydra import ExecuteTARunHydra
 from smac.tae.execute_ta_run_hydra import ExecuteTARunOld
 from smac.tae.execute_ta_run_hydra import ExecuteTARun
-from smac.tae.execute_ta_run_hydra import ExecuteTARunAClib
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_facade import SMAC
 from smac.utils.io.output_directory import create_output_directory
@@ -94,7 +93,8 @@ class Hydra(object):
 
         self.solver = SMAC(scenario=self.scenario, tae_runner=self.tae, **self.kwargs)
         for i in range(self.n_iterations):
-            self.logger.info("Iteration: %d", (i + 1))
+            self.logger.info("="*120)
+            self.logger.info("Hydra Iteration: %d", (i + 1))
 
             incumbent = self.solver.solver.run()
             self.solver.stats.print_stats()
@@ -140,5 +140,10 @@ class Hydra(object):
         self.rh.save_json(fn=os.path.join(self.top_dir, 'all_runs_runhistory.json'), save_external=True)
         with open(os.path.join(self.top_dir, 'portfolio.pkl'), 'wb') as fh:
             pickle.dump(portfolio, fh)
+        self.logger.info("~"*120)
+        self.logger.info('Resulting Portfolio:')
+        for configuration in portfolio:
+            self.logger.info(str(configuration))
+        self.logger.info("~"*120)
 
         return portfolio
