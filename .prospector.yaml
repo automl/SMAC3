@@ -1,0 +1,27 @@
+strictness: medium     # default strictness
+test-warnings: false   # inspect unittests
+doc-warnings: true     # inspect docstrings
+
+ignore-paths:          # ignore the docs folder
+  - docs
+  - ci_scripts
+  - examples
+
+pep8:
+  disable:
+    - N806              # ignore pep8 naming (func arg should be lowercase i.e. X_pred)
+  options:
+    max-line-length: 120
+
+pylint:
+  disable:
+    - C0326              # ignore pylint bad-whitespace  (func arguments)
+    - R0913              # ignore pylint too-many-arguments
+    - R0916              # ignore pylint too-many-boolean-expressions
+    - R0902              # ignore pylint too-many-instance-attributes
+    - R0914              # ignore pylint too-many-locals
+  options:
+    max-line-length: 120
+
+mccabe:                  # disable complexity analysis
+  run: false
