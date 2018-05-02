@@ -1,0 +1,10 @@
+algo = python3 -u test/test_files/spear_qcp/target_algorithm/scripts/SATCSSCWrapper.py --mem-limit 1024 --script test/test_files/spear_qcp/target_algorithm/spear-python/spearCSSCWrapper.py
+paramfile = test/test_files/spear_qcp/target_algorithm/spear-python/spear-params-mixed.pcs
+execdir = .
+deterministic = 0
+run_obj = runtime
+overall_obj = PAR10
+cutoff_time = 5
+wallclock-limit = 5
+instance_file = test/test_files/spear_qcp/instances.txt
+feature_file = test/test_files/spear_qcp/features.txt

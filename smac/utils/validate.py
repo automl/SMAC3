@@ -128,6 +128,7 @@ class Validator(object):
                  ) -> RunHistory:
         """
         Validate configs on instances and save result in runhistory.
+        If a runhistory is provided as input it is important that you run it on the same/comparable hardware.
 
         side effect: if output is specified, saves runhistory to specified
         output directory.
@@ -168,8 +169,6 @@ class Validator(object):
                           config_mode, instance_mode, repetitions, n_jobs, backend)
 
         # Get all runs to be evaluated as list
-        if runhistory:
-            self.logger.warning("Only reuse runhistories on comparable hardware!")
         runs, validated_rh = self._get_runs(config_mode, instance_mode, repetitions, runhistory)
 
         # Create new Stats without limits

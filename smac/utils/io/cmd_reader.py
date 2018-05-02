@@ -112,7 +112,7 @@ class CMDReader(object):
                               choices=["INFO", "DEBUG"],
                               help="verbose level")
         req_opts.add_argument("--mode", default="SMAC",
-                              choices=["SMAC", "ROAR", "EPILS"],
+                              choices=["SMAC", "ROAR", "EPILS", "Hydra"],
                               help="Configuration mode.")
         req_opts.add_argument("--restore_state", default=None,
                               help="Path to dir with SMAC-files.")
@@ -131,6 +131,8 @@ class CMDReader(object):
         req_opts.add_argument("--random_configuration_chooser", default=None, type=FileType('r'),
                               help="[dev] path to a python module containing a class `RandomConfigurationChooserImpl`"
                                    "implementing the interface of `RandomConfigurationChooser`")
+        req_opts.add_argument("--hydra_iterations", default=3, type=int,
+                              help="[dev] number of hydra iterations. Only active if mode is set to Hydra")
 
         args_, misc = parser.parse_known_args()
         CMDReader._check_args(args_, set_parsed=True)

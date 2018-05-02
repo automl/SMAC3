@@ -303,12 +303,12 @@ class SMBO(object):
                                             instance_mode=instance_mode,
                                             repetitions=repetitions,
                                             runhistory=self.runhistory,
-                                            output=new_rh_path)
+                                            output_fn=new_rh_path)
         else:
             new_rh = validator.validate(config_mode, instance_mode, repetitions,
                                         n_jobs, backend, self.runhistory,
                                         self.intensifier.tae_runner,
-                                        output=new_rh_path)
+                                        output_fn=new_rh_path)
         return new_rh
 
     def _get_timebound_for_intensification(self, time_spent):
