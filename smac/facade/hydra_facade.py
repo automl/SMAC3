@@ -109,7 +109,7 @@ class Hydra(object):
             insts = np.array(self.scenario.train_insts)
             # just to make sure this also works with the small example we have to round up to 3
             size = max(np.floor(insts.shape[0] * size).astype(int), 3)
-            ids = np.random.choice(insts.shape[0], size)
+            ids = np.random.choice(insts.shape[0], size, replace=False)
             val = insts[ids].tolist()
             if delete:
                 self.scenario.train_insts = np.delete(insts, ids).tolist()
