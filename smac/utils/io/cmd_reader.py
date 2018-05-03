@@ -417,10 +417,10 @@ class CMDReader(object):
                                help="[dev] The fraction of time to be used on "
                                     "intensification (versus choice of next "
                                     "Configurations).")
-        smac_opts.add_argument("--minr", dest='minR',
+        smac_opts.add_argument("--minr", "--minR", dest='minR',
                                default=1, type=int,
                                help="[dev] Minimum number of calls per configuration.")
-        smac_opts.add_argument("--maxr", dest='maxR',
+        smac_opts.add_argument("--maxr", "--maxR", dest='maxR',
                                default=2000, type=int,
                                help="[dev] Maximum number of calls per configuration.")
         self.output_dir_arg = \
@@ -454,7 +454,7 @@ class CMDReader(object):
         """Add Scenario Options"""
         self.scen_parser = SMACArgumentParser(formatter_class=ConfigurableHelpFormatter, add_help=False)
         scen_opts = self.scen_parser.add_argument_group("Scenario Options")
-        scen_opts.add_argument("--algo", dest='ta',
+        scen_opts.add_argument("--algo", "--ta", dest='ta',
                                type=shlex.split,
                                help="[dev] Specifies the target algorithm call that *SMAC* "
                                     "will optimize. Interpreted as a bash-command.")
@@ -477,11 +477,14 @@ class CMDReader(object):
                                    help="[dev] PARX, where X is an integer defining the "
                                         "penalty imposed on timeouts (i.e. runtimes that "
                                         "exceed the *cutoff-time*).")
+        scen_opts.add_argument("--par-factor", "--par_factor", dest="par_factor",
+                               type=float, default=10.0,
+                               help=SUPPRESS)  # added after parsing --overall-obj
         scen_opts.add_argument("--cost-for-crash", "--cost_for_crash", dest="cost_for_crash",
                                default=float(MAXINT), type=float,
                                help="[dev] Defines the cost-value for crashed runs "
                                     "on scenarios with quality as run-obj.")
-        scen_opts.add_argument("--cutoff-time", "--cutoff_time", dest="cutoff",
+        scen_opts.add_argument("--cutoff-time", "--cutoff_time", "--cutoff", dest="cutoff",
                                default=None, type=float,
                                help="[dev] Maximum runtime, after which the "
                                     "target algorithm is cancelled. **Required "
@@ -490,7 +493,7 @@ class CMDReader(object):
                                type=float,
                                help="[dev] Maximum available memory the target algorithm "
                                     "can occupy before being cancelled in MB.")
-        scen_opts.add_argument("--tuner-timeout", "--tuner_timeout", dest="algo_runs_timelimit",
+        scen_opts.add_argument("--tuner-timeout", "--tuner_timeout", "--algo-runs-timelimit", "--algo_runs_timelimit", dest="algo_runs_timelimit",
                                default=float('inf'), type=float,
                                help="[dev] Maximum amount of CPU-time used for optimization.")
         scen_opts.add_argument("--wallclock-limit", "--wallclock_limit", dest="wallclock_limit",
@@ -499,31 +502,34 @@ class CMDReader(object):
         scen_opts.add_argument("--always-race-default", "--always_race_default", dest="always_race_default",
                                default=False, type=truthy,
                                help="[dev] Race new incumbents always against default configuration.")
-        scen_opts.add_argument("--runcount-limit", "--runcount_limit", dest="ta_run_limit",
+        scen_opts.add_argument("--runcount-limit", "--runcount_limit", "--ta-run-limit", "--ta_run_limit", dest="ta_run_limit",
                                default=float('inf'), type=float,
                                help="[dev] Maximum number of algorithm-calls during optimization.")
-        scen_opts.add_argument("--instance-file", "--instance_file", dest='train_inst_fn',
+        scen_opts.add_argument("--instance-file", "--instance_file", "--train-inst-fn", "--train_inst_fn", dest='train_inst_fn',
                                type=str, action=ReadTrainInstFileAction,
                                help="[dev] Specifies the file with the training-instances.")
-        scen_opts.add_argument("--instances", dest="train_insts",
+        scen_opts.add_argument("--instances", "--train-insts", "--train_insts", dest="train_insts",
                                default=[[None]],  # overridden by --instance-file
                                help=SUPPRESS)
-        scen_opts.add_argument("--test-instance-file", "--test_instance_file", dest='test_inst_fn',
+        scen_opts.add_argument("--test-instance-file", "--test_instance_file", "--test-inst-fn", "--test_inst_fn", dest='test_inst_fn',
                                type=str, action=ReadTestInstFileAction,
                                help="[dev] Specifies the file with the test-instances.")
-        scen_opts.add_argument("--test-instances", "--test_instances", dest="test_insts",
+        scen_opts.add_argument("--test-instances", "--test_instances", "--test-insts", "--test_insts", dest="test_insts",
                                default=[[None]],  # overridden by --test-instance-file
                                help=SUPPRESS)
-        scen_opts.add_argument("--feature-file", "--feature_file", dest='feature_fn',
+        scen_opts.add_argument("--feature-file", "--feature_file", "--feature-fn", "--feature_fn", dest='feature_fn',
                                type=str, action=ReadFeatureFileAction,
                                help="[dev] Specifies the file with the instance-features.")
-        scen_opts.add_argument("--features", dest='feature_dict',
+        scen_opts.add_argument("--features", "--feature-dict", "--feature_dict", dest='feature_dict',
                                default={},  # instance name -> feature vector, overridden by --feature-file
                                help=SUPPRESS)
+        scen_opts.add_argument("--feature-names", "--feature_names", dest="feature_names",
+                               type=list,
+                               help=SUPPRESS)  # added after parsing --features
         scen_opts.add_argument("--initial-incumbent", "--initial_incumbent", dest='initial_incumbent',
                                default="DEFAULT", type=str, choices=['DEFAULT', 'RANDOM'],
                                help="[dev] DEFAULT is the default from the PCS.")
-        scen_opts.add_argument("--paramfile", "--param-file", "--param_file", dest='pcs_fn',
+        scen_opts.add_argument("--paramfile", "--param-file", "--param_file", "--pcs-fn", "--pcs_fn", dest='pcs_fn',
                                type=str, action=ReadPCSFileAction,
                                help="[dev] Specifies the path to the "
                                     "PCS-file.")
