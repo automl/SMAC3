@@ -124,7 +124,7 @@ class SMACCLI(object):
                 runhistory=rh,
                 initial_configurations=initial_configs,
                 run_id=args_.seed)
-        elif args_.mode == "HYDRA":
+        elif args_.mode == "Hydra":
             optimizer = Hydra(
                 scenario=scen,
                 rng=np.random.RandomState(args_.seed),
@@ -134,7 +134,10 @@ class SMACCLI(object):
                 restore_incumbent=incumbent,
                 run_id=args_.seed,
                 random_configuration_chooser=args_.random_configuration_chooser,
-                n_iterations=args_.hydra_iterations)
+                n_iterations=args_.hydra_iterations,
+                val_set=args_.hydra_validation,
+                incs_per_round=args_.hydra_incumbents_per_round,
+                n_optimizers=args_.hydra_n_optimizers)
         try:
             optimizer.optimize()
         except (TAEAbortException, FirstRunCrashedException) as err:

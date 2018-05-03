@@ -40,8 +40,11 @@ class Hydra(object):
     """
 
     def __init__(self,
-                 scenario: Scenario,
+                 scenario: typing.Type[Scenario],
                  n_iterations: int,
+                 val_set: str='train',
+                 incs_per_round: int=1,
+                 n_optimizers: int=1,
                  run_id: int=1,
                  tae: typing.Type[ExecuteTARun]=ExecuteTARunOld,
                  **kwargs):
@@ -53,6 +56,14 @@ class Hydra(object):
             Scenario object
         n_iterations: int,
             number of Hydra iterations
+        val_set: str
+            Set to validate incumbent(s) on. [train, valX].
+            train => whole training set,
+            valX => train_set * 100/X
+        incs_per_round: int
+            Number of incumbents to keep per round
+        n_optimizers: int
+            Number of optimizers to run in parallel per round
         """
 
         self.logger = logging.getLogger(
@@ -72,6 +83,37 @@ class Hydra(object):
         self.rh = RunHistory(average_cost)
         self.tae = tae(ta=self.scenario.ta, run_obj=self.scenario.run_obj)
         self.tae_type = tae
+        if incs_per_round <= 0:
+            self.logger.warning('Invalid value in %s: %d. Setting to 1', 'incs_per_round', incs_per_round)
+        self.incs_per_round = max(incs_per_round, 1)
+        if n_optimizers <= 0:
+            self.logger.warning('Invalid value in %s: %d. Setting to 1', 'n_optimizers', n_optimizers)
+        self.n_optimizers = max(n_optimizers, 1)
+        self.val_set = self._get_validation_set(val_set)
+        self.cost_per_inst = {}
+
+    def _get_validation_set(self, val_set: str, delete: bool=True):
+        """
+        Create small validation set for hydra to determine incumbent performance
+        :param val_set:
+        :param delete:
+        :return:
+        """
+        if val_set == 'train':
+            return self.scenario.train_insts
+        elif val_set[:3] != 'val':
+            self.logger.warning('Can not determine validation set size. Using full training-set!')
+        else:
+            size = int(val_set[3:])/100
+            assert 0 < size < 1, 'X too large in valX'
+            insts = np.array(self.scenario.train_insts)
+            # just to make sure this also works with the small example we have to round up to 3
+            size = max(np.floor(insts.shape[0] * size).astype(int), 3)
+            ids = np.random.choice(insts.shape[0], size)
+            val = insts[ids].tolist()
+            if delete:
+                self.scenario.train_insts = np.delete(insts, ids).tolist()
+            return val
 
     def optimize(self):
         """Optimizes the algorithm provided in scenario (given in constructor)
@@ -109,7 +151,7 @@ class Hydra(object):
 
             # validate incumbent on all trainings instances
             new_rh = self.solver.validate(config_mode='inc',
-                                          instance_mode='train',
+                                          instance_mode=self.val_set,
                                           repetitions=1,
                                           use_epm=False,
                                           n_jobs=1)
@@ -119,8 +161,14 @@ class Hydra(object):
             # the following dict already contains oracle performance
             self.logger.info("Start validation of current portfolio")
             cost_per_inst = new_rh.get_instance_costs_for_config(config=incumbent)
+            if self.cost_per_inst:
+                assert len(self.cost_per_inst) == len(cost_per_inst), 'Num validated Instances mismatch'
+                for key in cost_per_inst:
+                    self.cost_per_inst[key] = min(self.cost_per_inst[key], cost_per_inst[key])
+            else:
+                self.cost_per_inst = cost_per_inst
 
-            cur_portfolio_cost = np.mean(list(cost_per_inst.values()))
+            cur_portfolio_cost = np.mean(list(self.cost_per_inst.values()))
             if portfolio_cost <= cur_portfolio_cost:
                 self.logger.info("No further progress (%f) --- terminate hydra", portfolio_cost)
                 break
@@ -130,7 +178,7 @@ class Hydra(object):
 
             # modify TAE such that it return oracle performance
             self.tae = ExecuteTARunHydra(ta=self.scenario.ta, run_obj=self.scenario.run_obj,
-                                         cost_oracle=cost_per_inst, tae=self.tae_type)
+                                         cost_oracle=self.cost_per_inst, tae=self.tae_type)
 
             self.scenario.output_dir = os.path.join(self.top_dir, "smac3-output_%s" % (
                 datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f')))

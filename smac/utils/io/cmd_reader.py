@@ -131,8 +131,24 @@ class CMDReader(object):
         req_opts.add_argument("--random_configuration_chooser", default=None, type=FileType('r'),
                               help="[dev] path to a python module containing a class `RandomConfigurationChooserImpl`"
                                    "implementing the interface of `RandomConfigurationChooser`")
-        req_opts.add_argument("--hydra_iterations", default=3, type=int,
+        req_opts.add_argument("--hydra_iterations",
+                              default=3,
+                              type=int,
                               help="[dev] number of hydra iterations. Only active if mode is set to Hydra")
+        req_opts.add_argument("--hydra_validation",
+                              default='train',
+                              choices=['train', 'val10', 'val20'],
+                              type=str.lower,
+                              help="[dev] set to validate incumbents on. valX =>"
+                                   " validation set of size training_set * 0.X")
+        req_opts.add_argument("--hydra_incumbents_per_round",
+                              default=1,
+                              type=int,
+                              help="[dev] number of configurations to keep per hydra iteration.")
+        req_opts.add_argument("--hydra_n_optimizers",
+                              default=1,
+                              type=int,
+                              help="[dev] number of optimizers to run in parallel per hydra iteration.")
 
         args_, misc = parser.parse_known_args()
         CMDReader._check_args(args_, set_parsed=True)
