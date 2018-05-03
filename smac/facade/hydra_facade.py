@@ -5,6 +5,7 @@ import time
 import typing
 
 import pickle
+import multiprocessing
 
 import numpy as np
 
@@ -17,10 +18,37 @@ from smac.utils.io.output_directory import create_output_directory
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory import DataOrigin
 from smac.optimizer.objective import average_cost
+from smac.utils.constants import MAXINT
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2017, ML4AAD"
 __license__ = "3-clause BSD"
+
+
+def optimize(queue: multiprocessing.Queue, scenario, tae, rng, output_dir, cost_per_inst, **kwargs):
+    if not cost_per_inst:
+        tae = tae(ta=scenario.ta, run_obj=scenario.run_obj)
+    else:
+        tae = ExecuteTARunHydra(ta=scenario.ta, run_obj=scenario.run_obj,
+                                cost_oracle=cost_per_inst, tae=tae)
+    solver = SMAC(scenario=scenario, tae_runner=tae, rng=rng, **kwargs)
+    solver.stats.start_timing()
+    solver.stats.print_stats()
+    # logger.info("=" * 120)
+    # logger.info("Hydra Iteration: %d", (i + 1))
+
+    incumbent = solver.solver.run()
+    solver.stats.print_stats()
+    # logger.info("Incumbent of %d-th Iteration", (i + 1))
+    # logger.info(incumbent)
+    # portfolio.append(incumbent)
+
+    if output_dir is not None:
+        solver.solver.runhistory.save_json(
+            fn=os.path.join(solver.output_dir, "runhistory.json")
+        )
+    queue.put(incumbent)
+    return incumbent
 
 
 class Hydra(object):
@@ -45,6 +73,7 @@ class Hydra(object):
                  val_set: str='train',
                  incs_per_round: int=1,
                  n_optimizers: int=1,
+                 rng: typing.Optional[typing.Union[np.random.RandomState, int]]=None,
                  run_id: int=1,
                  tae: typing.Type[ExecuteTARun]=ExecuteTARunOld,
                  **kwargs):
@@ -70,19 +99,15 @@ class Hydra(object):
             self.__module__ + "." + self.__class__.__name__)
 
         self.n_iterations = n_iterations
-
-        self.logger = logging.getLogger(
-            self.__module__ + "." + self.__class__.__name__)
-
         self.scenario = scenario
-        self.run_id = run_id
+        self.run_id, self.rng = self._get_rng(rng, run_id)
         self.kwargs = kwargs
         self.output_dir = None
         self.top_dir = None
         self.solver = None
         self.rh = RunHistory(average_cost)
+        self._tae = tae
         self.tae = tae(ta=self.scenario.ta, run_obj=self.scenario.run_obj)
-        self.tae_type = tae
         if incs_per_round <= 0:
             self.logger.warning('Invalid value in %s: %d. Setting to 1', 'incs_per_round', incs_per_round)
         self.incs_per_round = max(incs_per_round, 1)
@@ -134,20 +159,42 @@ class Hydra(object):
             self.output_dir = create_output_directory(self.scenario, run_id=self.run_id, logger=self.logger)
 
         self.solver = SMAC(scenario=self.scenario, tae_runner=self.tae, **self.kwargs)
+        q = multiprocessing.Queue()
         for i in range(self.n_iterations):
             self.logger.info("="*120)
             self.logger.info("Hydra Iteration: %d", (i + 1))
 
-            incumbent = self.solver.solver.run()
-            self.solver.stats.print_stats()
-            self.logger.info("Incumbent of %d-th Iteration", (i + 1))
-            self.logger.info(incumbent)
-            portfolio.append(incumbent)
+            # incumbent = self.solver.solver.run()
+            procs = []
+            for p in range(self.n_optimizers):
+                proc = multiprocessing.Process(target=optimize,
+                                               args=(
+                                                   q,
+                                                   self.scenario,
+                                                   self._tae,
+                                                   p,
+                                                   self.output_dir,
+                                                   self.cost_per_inst
+                                               ),
+                                               kwargs=self.kwargs)
+                proc.start()
+                procs.append(proc)
+            for proc in procs:
+                proc.join()
+            while not q.empty():
+                print(q.get_nowait())
 
-            if self.output_dir is not None:
-                self.solver.solver.runhistory.save_json(
-                    fn=os.path.join(self.solver.output_dir, "runhistory.json")
-                )
+            # print(awer)
+            # TODO TODO TODO
+            # self.solver.stats.print_stats()
+            # self.logger.info("Incumbent of %d-th Iteration", (i + 1))
+            # self.logger.info(incumbent)
+            # portfolio.append(incumbent)
+            #
+            # if self.output_dir is not None:
+            #     self.solver.solver.runhistory.save_json(
+            #         fn=os.path.join(self.solver.output_dir, "runhistory.json")
+            #     )
 
             # validate incumbent on all trainings instances
             new_rh = self.solver.validate(config_mode='inc',
@@ -178,7 +225,7 @@ class Hydra(object):
 
             # modify TAE such that it return oracle performance
             self.tae = ExecuteTARunHydra(ta=self.scenario.ta, run_obj=self.scenario.run_obj,
-                                         cost_oracle=self.cost_per_inst, tae=self.tae_type)
+                                         cost_oracle=self.cost_per_inst, tae=self._tae)
 
             self.scenario.output_dir = os.path.join(self.top_dir, "smac3-output_%s" % (
                 datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f')))
@@ -195,3 +242,59 @@ class Hydra(object):
         self.logger.info("~"*120)
 
         return portfolio
+
+    def _get_rng(
+            self,
+            rng: typing.Optional[typing.Union[int, np.random.RandomState]]=None,
+            run_id: typing.Optional[int]=None,
+    ) -> typing.Tuple[int, np.random.RandomState]:
+        """Initialize random number generator and set run_id
+
+        * If rng and run_id are None, initialize a new generator and sample a run_id
+        * If rng is None and a run_id is given, use the run_id to initialize the rng
+        * If rng is an int, a RandomState object is created from that.
+        * If rng is RandomState, return it
+        * If only run_id is None, a run_id is sampled from the random state.
+
+        Parameters
+        ----------
+        rng : np.random.RandomState|int|None
+
+        run_id : int, optional
+
+        Returns
+        -------
+        int
+        np.random.RandomState
+        """
+        # initialize random number generator
+        if rng is not None and not isinstance(rng, (int, np.random.RandomState)):
+            raise TypeError('Argument rng accepts only arguments of type None, int or np.random.RandomState, '
+                            'you provided %s.' % str(type(rng)))
+        if run_id is not None and not isinstance(run_id, int):
+            raise TypeError('Argument run_id accepts only arguments of type None, int or np.random.RandomState, '
+                            'you provided %s.' % str(type(run_id)))
+
+        if rng is None and run_id is None:
+            # Case that both are None
+            self.logger.debug('No rng and no run_id given: using a random value to initialize run_id.')
+            rng = np.random.RandomState()
+            run_id = rng.randint(MAXINT)
+        elif rng is None and isinstance(run_id, int):
+            self.logger.debug('No rng and no run_id given: using run_id %d as seed.', run_id)
+            rng = np.random.RandomState(seed=run_id)
+        elif isinstance(rng, int):
+            if run_id is None:
+                run_id = rng
+            else:
+                pass
+            rng = np.random.RandomState(seed=rng)
+        elif isinstance(rng, np.random.RandomState):
+            if run_id is None:
+                run_id = rng.randint(MAXINT)
+            else:
+                pass
+        else:
+            raise ValueError('This should not happen! Please contact the developers! Arguments: rng=%s of type %s and '
+                             'run_id=% of type %s' % (rng, type(rng), run_id, type(run_id)))
+        return run_id, rng
