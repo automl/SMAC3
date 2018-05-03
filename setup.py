@@ -23,6 +23,9 @@ setuptools.setup(
     keywords="machine learning algorithm configuration hyperparameter "
              "optimization tuning",
     url="",
+    entry_points={
+        'console_scripts': ['smac=smac.smac_cli:cmd_line_call'],
+    },
     packages=setuptools.find_packages(exclude=['test', 'source']),
     classifiers=[
         "Development Status :: 3 - Alpha",

@@ -124,7 +124,7 @@ class SMACCLI(object):
                 runhistory=rh,
                 initial_configurations=initial_configs,
                 run_id=args_.seed)
-        elif args_.mode == "Hydra":
+        elif args_.mode == "HYDRA":
             optimizer = Hydra(
                 scenario=scen,
                 rng=np.random.RandomState(args_.seed),
@@ -183,3 +183,12 @@ class SMACCLI(object):
         self.logger.debug("Restored incumbent %s from %s", incumbent,
                           traj_path_aclib)
         return incumbent
+
+
+def cmd_line_call():
+    """
+    Entry point to be installable to /user/bin
+    :return:
+    """
+    smac = SMACCLI()
+    smac.main_cli()
