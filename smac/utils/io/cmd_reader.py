@@ -27,7 +27,7 @@ def truthy(x):
     """Convert x into its truth value"""
     if isinstance(x, bool):
         return x
-    elif isinstance(x, int) or isinstance(x, float):
+    elif isinstance(x, (int, float)):
         return x != 0
     elif isinstance(x, str):
         return bool(distutils.util.strtobool(x))
@@ -64,7 +64,7 @@ class ProcessRunObjectiveAction(Action):
     """Process run objective given by user"""
 
     def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
-        if values is "runtime":
+        if values == "runtime":
             parsed_scen_args["cutoff_time_required"] = {
                 "error": "--cutoff-time is required when --run-objective is set to \"runtime\""
             }
@@ -81,7 +81,7 @@ class ParseOverallObjectiveAction(Action):
         elif par_str[:4] in ["mean", "MEAN"]:
             par_str = par_str[4:]
         # Check for par-value as in "par10"/ "mean5"
-        if len(par_str) > 0:
+        if par_str:
             parsed_scen_args["par_factor"] = int(par_str)
         else:
             logger.debug("No par-factor detected. Using 1 by default.")
@@ -192,9 +192,9 @@ class ConfigurableHelpFormatter(ArgumentDefaultsHelpFormatter):
             if func.__name__ == '_format_usage':
                 args = (args[0], filter_actions(args[1]), args[2], args[3])
             elif isinstance(args, list):
-                if len(args):
+                if args:
                     args = filter_actions(args)
-                    if not len(args):
+                    if not args:
                         return
         self._current_section.items.append((func, args))
 
@@ -314,7 +314,7 @@ class CMDReader(object):
         translations = {}
         for action in actions:
             name = list(filter(lambda e: e.startswith('--'), action.option_strings))
-            if len(name) > 0:
+            if name:
                 name = name[0]
             else:
                 name = action.option_strings[0]
@@ -632,7 +632,7 @@ class CMDReader(object):
                 misc_dict[k] = v
         scen_cmd.extend(scenario_cmd_opts)
 
-        if len(misc_dict.keys()):
+        if misc_dict.keys():
             self.logger.warning('Adding unsupported scenario options: {}'.format(misc_dict))
             for k, v in misc_dict.items():
                 self.parsed_scen_args[k] = v
@@ -643,7 +643,7 @@ class CMDReader(object):
         # parse them with the scenario parser
         scen_args_, misc = self.scen_parser.parse_known_args([str(e) for e in scen_cmd])
 
-        if len(misc):
+        if misc:
             self.scen_parser.exit(1, 'Error: Can not parse arguments: {}'.format(misc))
 
         # execute overall_obj action for default value
