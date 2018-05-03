@@ -29,8 +29,9 @@ class AbstractTAFunc(ExecuteTARun):
     """
 
     def __init__(self, ta, stats=None, runhistory=None, run_obj:str="quality",
-                 memory_limit:int=None, par_factor:int=1, 
+                 memory_limit:int=None, par_factor:int=1,
                  cost_for_crash:float=float(MAXINT),
+                 abort_on_first_run_crash: bool=False,
                  use_pynisher:bool=True):
 
         super().__init__(ta=ta, stats=stats, runhistory=runhistory,
@@ -38,7 +39,7 @@ class AbstractTAFunc(ExecuteTARun):
                          cost_for_crash=cost_for_crash)
         """
         Abstract class for having a function as target algorithm
-        
+
         Parameters
         ----------
         ta : callable
@@ -116,6 +117,9 @@ class AbstractTAFunc(ExecuteTARun):
         # walltime for pynisher has to be a rounded up integer
         if cutoff is not None:
             cutoff = int(math.ceil(cutoff))
+            if cutoff > 65535:
+                raise ValueError("%d is outside the legal range of [0, 65535] "
+                                 "for cutoff (when using pynisher, due to OS limitations)" % cutoff)
 
         arguments = {'logger': logging.getLogger("pynisher"),
                      'wall_time_in_s': cutoff,

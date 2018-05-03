@@ -9,6 +9,7 @@ from smac.scenario.scenario import Scenario
 from smac.facade.smac_facade import SMAC
 from smac.facade.roar_facade import ROAR
 from smac.facade.epils_facade import EPILS
+from smac.facade.hydra_facade import Hydra
 from smac.runhistory.runhistory import RunHistory
 from smac.stats.stats import Stats
 from smac.optimizer.objective import average_cost
@@ -126,6 +127,17 @@ class SMACCLI(object):
                 runhistory=rh,
                 initial_configurations=initial_configs,
                 run_id=main_args_.seed)
+        elif main_args_.mode == "Hydra":
+            optimizer = Hydra(
+                scenario=scen,
+                rng=np.random.RandomState(main_args_.seed),
+                runhistory=rh,
+                initial_configurations=initial_configs,
+                stats=stats,
+                restore_incumbent=incumbent,
+                run_id=main_args_.seed,
+                random_configuration_chooser=smac_args_.random_configuration_chooser,
+                n_iterations=smac_args_.hydra_iterations)
         try:
             optimizer.optimize()
         except (TAEAbortException, FirstRunCrashedException) as err:

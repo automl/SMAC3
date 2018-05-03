@@ -377,7 +377,7 @@ class CMDReader(object):
                               default=logging.INFO, choices=["INFO", "DEBUG"],
                               help="Verbosity level.")
         opt_opts.add_argument("--mode",
-                              default="SMAC", choices=["SMAC", "ROAR", "EPILS"],
+                              default="SMAC", choices=["SMAC", "ROAR", "EPILS", "Hydra"],
                               help="Configuration mode.")
         opt_opts.add_argument("--restore-state", "--restore_state", dest="restore_state",
                               default=None,
@@ -446,6 +446,9 @@ class CMDReader(object):
                                help="[dev] path to a python module containing a class"
                                     "`RandomConfigurationChooserImpl` implementing"
                                     "the interface of `RandomConfigurationChooser`")
+        smac_opts.add_argument("--hydra-iterations", "--hydra_iterations", dest="hydra_iterations",
+                               default=3, type=int,
+                               help="[dev] number of hydra iterations. Only active if mode is set to Hydra")
 
         self.parser.add_parser(self.smac_parser)
         self.smac_cmd_actions, self.smac_cmd_translations = CMDReader._extract_action_info(self.smac_parser._actions)

@@ -208,6 +208,7 @@ class ScenarioTest(unittest.TestCase):
         pcs- or instance-files, so they are checked manually. """
 
         def check_scen_eq(scen1, scen2):
+            print('check_scen_eq')
             """ Customized check for scenario-equality, ignoring file-paths """
             for name in scen1._arguments:
                 dest = scen1._arguments[name]['dest']
@@ -226,6 +227,7 @@ class ScenarioTest(unittest.TestCase):
                         self.assertTrue((scen1.feature_dict[key] ==
                                          scen2.feature_dict[key]).all())
                 else:
+                    print(name, getattr(scen1, name), getattr(scen2, name))
                     self.assertEqual(getattr(scen1, name),
                                      getattr(scen2, name))
 
@@ -245,8 +247,10 @@ class ScenarioTest(unittest.TestCase):
         self.test_scenario_dict.update({
             'paramfile': None, 'cs': scenario.cs,
             'feature_file': None, 'features': scenario.feature_dict,
+            'feature_names': scenario.feature_names,
             'instance_file': None, 'instances': scenario.train_insts,
             'test_instance_file': None, 'test_instances': scenario.test_insts})
+        logging.debug(scenario_reloaded)
         scenario_no_fn = Scenario(self.test_scenario_dict)
         scenario_reloaded = Scenario(path)
         check_scen_eq(scenario_no_fn, scenario_reloaded)

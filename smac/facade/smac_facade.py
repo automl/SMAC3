@@ -225,7 +225,8 @@ class SMAC(object):
                                          run_obj=scenario.run_obj,
                                          runhistory=runhistory,
                                          par_factor=scenario.par_factor,
-                                         cost_for_crash=scenario.cost_for_crash)
+                                         cost_for_crash=scenario.cost_for_crash,
+                                         abort_on_first_run_crash=scenario.abort_on_first_run_crash)
         # Second case, the tae_runner is a function to be optimized
         elif callable(tae_runner):
             tae_runner = ExecuteTAFuncDict(ta=tae_runner,
@@ -234,7 +235,8 @@ class SMAC(object):
                                            memory_limit=scenario.memory_limit,
                                            runhistory=runhistory,
                                            par_factor=scenario.par_factor,
-                                           cost_for_crash=scenario.cost_for_crash)
+                                           cost_for_crash=scenario.cost_for_crash,
+                                           abort_on_first_run_crash=scenario.abort_on_first_run_crash)
         # Third case, if it is an ExecuteTaRun we can simply use the
         # instance. Otherwise, the next check raises an exception
         elif not isinstance(tae_runner, ExecuteTARun):
@@ -475,7 +477,9 @@ class SMAC(object):
         finally:
             self.solver.stats.save()
             self.solver.stats.print_stats()
-            self.logger.info("Final Incumbent: %s", (self.solver.incumbent))
+            self.logger.info("Final Incumbent: %s", self.solver.incumbent)
+            if self.solver.incumbent and self.solver.incumbent in self.solver.runhistory.get_all_configs():
+                self.logger.info("Estimated cost of incumbent: %f", self.solver.runhistory.get_cost(self.solver.incumbent))
             self.runhistory = self.solver.runhistory
             self.trajectory = self.solver.intensifier.traj_logger.trajectory
 

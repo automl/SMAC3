@@ -141,11 +141,8 @@ class SMBO(object):
         self.stats.start_timing()
         # Initialization, depends on input
         if self.stats.ta_runs == 0 and self.incumbent is None:
-            try:
-                self.incumbent = self.initial_design.run()
-            except FirstRunCrashedException as err:
-                if self.scenario.abort_on_first_run_crash:
-                    raise
+            self.incumbent = self.initial_design.run()
+
         elif self.stats.ta_runs > 0 and self.incumbent is None:
             raise ValueError("According to stats there have been runs performed, "
                              "but the optimizer cannot detect an incumbent. Did "
@@ -160,6 +157,10 @@ class SMBO(object):
                              "incumbent %s", self.incumbent)
             self.logger.info("State restored with following budget:")
             self.stats.print_stats()
+
+        # To be on the safe side -> never return "None" as incumbent
+        if not self.incumbent:
+            self.incumbent = self.scenario.cs.get_default_configuration()
 
     def run(self):
         """Runs the Bayesian optimization loop
@@ -302,12 +303,12 @@ class SMBO(object):
                                             instance_mode=instance_mode,
                                             repetitions=repetitions,
                                             runhistory=self.runhistory,
-                                            output=new_rh_path)
+                                            output_fn=new_rh_path)
         else:
             new_rh = validator.validate(config_mode, instance_mode, repetitions,
                                         n_jobs, backend, self.runhistory,
                                         self.intensifier.tae_runner,
-                                        output=new_rh_path)
+                                        output_fn=new_rh_path)
         return new_rh
 
     def _get_timebound_for_intensification(self, time_spent):
