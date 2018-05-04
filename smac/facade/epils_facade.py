@@ -417,7 +417,6 @@ class EPILS(object):
         'ta_runs', 'ta_time_used', 'wallclock_time'
 
         """
-
         if not hasattr(self, 'trajectory'):
             raise ValueError('SMAC was not fitted yet. Call optimize() prior '
                              'to accessing the runhistory.')

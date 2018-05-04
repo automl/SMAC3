@@ -103,7 +103,8 @@ class Hydra(object):
                  run_id: int=1,
                  tae: typing.Type[ExecuteTARun]=ExecuteTARunOld,
                  **kwargs):
-        """Constructor
+        """
+        Constructor
 
         Parameters
         ----------
@@ -127,7 +128,6 @@ class Hydra(object):
             Target Algorithm Runner (supports old and aclib format)
 
         """
-
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
@@ -155,7 +155,6 @@ class Hydra(object):
         """
         Create small validation set for hydra to determine incumbent performance
 
-
         Parameters
         ----------
         val_set: str
@@ -173,7 +172,8 @@ class Hydra(object):
             return self.scenario.train_insts
         else:
             size = int(val_set[3:])/100
-            assert 0 < size < 1, 'X too large in valX'
+            if size < 0 or size > 1:
+                raise ValueError('X too large in valX')
             insts = np.array(self.scenario.train_insts)
             # just to make sure this also works with the small example we have to round up to 3
             size = max(np.floor(insts.shape[0] * size).astype(int), 3)
@@ -306,7 +306,8 @@ class Hydra(object):
             self.portfolio.append(kept)
             cost_per_inst = config_cost_per_inst[kept]
             if self.cost_per_inst:
-                assert len(self.cost_per_inst) == len(cost_per_inst), 'Num validated Instances mismatch'
+                if len(self.cost_per_inst) != len(cost_per_inst):
+                    raise ValueError('Num validated Instances mismatch!')
                 for key in cost_per_inst:
                     self.cost_per_inst[key] = min(self.cost_per_inst[key], cost_per_inst[key])
             else:
@@ -320,7 +321,8 @@ class Hydra(object):
             rng: typing.Optional[typing.Union[int, np.random.RandomState]]=None,
             run_id: typing.Optional[int]=None,
     ) -> typing.Tuple[int, np.random.RandomState]:
-        """Initialize random number generator and set run_id
+        """
+        Initialize random number generator and set run_id
 
         * If rng and run_id are None, initialize a new generator and sample a run_id
         * If rng is None and a run_id is given, use the run_id to initialize the rng
@@ -338,6 +340,7 @@ class Hydra(object):
         -------
         int
         np.random.RandomState
+
         """
         # initialize random number generator
         if rng is not None and not isinstance(rng, (int, np.random.RandomState)):
