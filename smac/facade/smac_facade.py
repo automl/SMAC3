@@ -22,11 +22,11 @@ from smac.initial_design.multi_config_initial_design import \
 from smac.intensification.intensification import Intensifier
 from smac.optimizer.smbo import SMBO
 from smac.optimizer.objective import average_cost
-from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
+from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction
 from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
     AcquisitionFunctionMaximizer
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
-    ChooserLinearCoolDown, RandomConfigurationChooser
+    RandomConfigurationChooser
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.base_epm import AbstractEPM
@@ -130,7 +130,6 @@ class SMAC(object):
             How often to choose a random configuration during the intensification procedure.
 
         """
-
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
@@ -213,7 +212,7 @@ class SMAC(object):
         elif not isinstance(
                 acquisition_function_optimizer,
                 AcquisitionFunctionMaximizer,
-            ):
+        ):
             raise ValueError(
                 "Argument 'acquisition_function_optimizer' must be of type"
                 "'AcquisitionFunctionMaximizer', but is '%s'" %
@@ -277,8 +276,8 @@ class SMAC(object):
                                       cutoff=scenario.cutoff,
                                       deterministic=scenario.deterministic,
                                       run_obj_time=scenario.run_obj == "runtime",
-                                      always_race_against=scenario.cs.get_default_configuration() \
-                                        if scenario.always_race_default else None,
+                                      always_race_against=scenario.cs.get_default_configuration()
+                                      if scenario.always_race_default else None,
                                       instance_specifics=scenario.instance_specific,
                                       minR=scenario.minR,
                                       maxR=scenario.maxR)
@@ -476,7 +475,7 @@ class SMAC(object):
         Optimizes the algorithm provided in scenario (given in constructor)
 
         Returns
-        ----------
+        -------
         incumbent : Configuration
             Best found configuration
 
@@ -489,7 +488,8 @@ class SMAC(object):
             self.solver.stats.print_stats()
             self.logger.info("Final Incumbent: %s", self.solver.incumbent)
             if self.solver.incumbent and self.solver.incumbent in self.solver.runhistory.get_all_configs():
-                self.logger.info("Estimated cost of incumbent: %f", self.solver.runhistory.get_cost(self.solver.incumbent))
+                self.logger.info("Estimated cost of incumbent: %f",
+                                 self.solver.runhistory.get_cost(self.solver.incumbent))
             self.runhistory = self.solver.runhistory
             self.trajectory = self.solver.intensifier.traj_logger.trajectory
 
@@ -571,7 +571,6 @@ class SMAC(object):
         Trajectory : List of :class:`~smac.utils.io.traj_logging.TrajEntry`
 
         """
-
         if not hasattr(self, 'trajectory'):
             raise ValueError('SMAC was not fitted yet. Call optimize() prior '
                              'to accessing the runhistory.')
