@@ -499,8 +499,10 @@ class SMAC(object):
                 )
         return incumbent
 
-    def validate(self, config_mode='inc', instance_mode='train+test',
-                 repetitions=1, use_epm=False, n_jobs=-1, backend='threading'):
+    def validate(self,
+                 config_mode: typing.Union[typing.List[Configuration], np.ndarray, str]='inc',
+                 instance_mode: typing.Union[typing.List[str], str]='train+test',
+                 repetitions: int=1, use_epm: bool=False, n_jobs: int=-1, backend: str='threading'):
         """
         Create validator-object and run validation, using
         scenario-information, runhistory from smbo and tae_runner from intensify
