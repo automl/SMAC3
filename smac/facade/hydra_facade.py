@@ -3,7 +3,7 @@ import os
 import datetime
 import time
 import typing
-import sys
+import copy
 
 import pickle
 import multiprocessing
@@ -37,14 +37,9 @@ def optimize(queue: multiprocessing.Queue, scenario, tae, rng, output_dir, cost_
     solver = SMAC(scenario=scenario, tae_runner=tae, rng=rng, **kwargs)
     solver.stats.start_timing()
     solver.stats.print_stats()
-    # logger.info("=" * 120)
-    # logger.info("Hydra Iteration: %d", (i + 1))
 
     incumbent = solver.solver.run()
     solver.stats.print_stats()
-    # logger.info("Incumbent of %d-th Iteration", (i + 1))
-    # logger.info(incumbent)
-    # portfolio.append(incumbent)
 
     if output_dir is not None:
         solver.solver.runhistory.save_json(
@@ -162,13 +157,16 @@ class Hydra(object):
                 datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f')))
             self.output_dir = create_output_directory(self.scenario, run_id=self.run_id, logger=self.logger)
 
-        self.solver = SMAC(scenario=self.scenario, tae_runner=self.tae, **self.kwargs)
-        q = multiprocessing.Queue()
+        scen = copy.deepcopy(self.scenario)
+        scen.output_dir_for_this_run = None
+        scen.output_dir = None
+        self.solver = SMAC(scenario=scen, tae_runner=self.tae, rng=self.rng, run_id=self.run_id, **self.kwargs)
         for i in range(self.n_iterations):
             self.logger.info("="*120)
             self.logger.info("Hydra Iteration: %d", (i + 1))
 
             # incumbent = self.solver.solver.run()
+            q = multiprocessing.Queue()
             procs = []
             for p in range(self.n_optimizers):
                 proc = multiprocessing.Process(target=optimize,
@@ -191,27 +189,44 @@ class Hydra(object):
             idx = 0
             while not q.empty():
                 conf = q.get_nowait()
+                self.logger.info(conf)
                 incs[idx] = conf
                 idx += 1
             q.close()
 
+            self.logger.info('*'*120)
+            self.logger.info('Validating')
             new_rh = self.solver.validate(config_mode=incs,
                                           instance_mode=self.val_set,
                                           repetitions=1,
                                           use_epm=False,
-                                          n_jobs=1)
+                                          n_jobs=self.n_optimizers)
             self.rh.update(new_rh, origin=DataOrigin.EXTERNAL_SAME_INSTANCES)
             self.logger.info("Number of validated runs: %d", (len(new_rh.data)))
-            # since the TAE uses already the portfolio as an upper limit
-            # the following dict already contains oracle performance
-            self.logger.info("Start validation of current portfolio")
-            cost_per_inst = new_rh.get_instance_costs_for_config(config=incumbent)
-            if self.cost_per_inst:
-                assert len(self.cost_per_inst) == len(cost_per_inst), 'Num validated Instances mismatch'
-                for key in cost_per_inst:
-                    self.cost_per_inst[key] = min(self.cost_per_inst[key], cost_per_inst[key])
+            self.logger.info('*'*120)
+            self.logger.info('Determining best incumbents')
+            results = []
+            config_cost_per_inst = {}
+            for incumbent in incs:
+                cost_per_inst = new_rh.get_instance_costs_for_config(config=incumbent)
+                config_cost_per_inst[incumbent] = cost_per_inst
+                results.append(np.mean(list(self.cost_per_inst.values())))
+            to_keep_ids = list(map(lambda x: x[0],
+                                   sorted(enumerate(results), key=lambda y: y[1])))[:self.incs_per_round]
+            if len(to_keep_ids) > 1:
+                self.logger.info('Keeping incumbents of runs ' + ', '.join(map(str, to_keep_ids)))
             else:
-                self.cost_per_inst = cost_per_inst
+                self.logger.info('Keeping incumbent of run ' + str(to_keep_ids))
+            keep_incumbents = incs[to_keep_ids]
+            for kept in keep_incumbents:
+                portfolio.append(kept)
+                cost_per_inst = config_cost_per_inst[kept]
+                if self.cost_per_inst:
+                    assert len(self.cost_per_inst) == len(cost_per_inst), 'Num validated Instances mismatch'
+                    for key in cost_per_inst:
+                        self.cost_per_inst[key] = min(self.cost_per_inst[key], cost_per_inst[key])
+                else:
+                    self.cost_per_inst = cost_per_inst
 
             cur_portfolio_cost = np.mean(list(self.cost_per_inst.values()))
             if portfolio_cost <= cur_portfolio_cost:
@@ -228,8 +243,6 @@ class Hydra(object):
             self.scenario.output_dir = os.path.join(self.top_dir, "smac3-output_%s" % (
                 datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f')))
             self.output_dir = create_output_directory(self.scenario, run_id=self.run_id, logger=self.logger)
-            if i != self.n_iterations - 1:
-                self.solver = SMAC(scenario=self.scenario, tae_runner=self.tae, **self.kwargs)
         self.rh.save_json(fn=os.path.join(self.top_dir, 'all_runs_runhistory.json'), save_external=True)
         with open(os.path.join(self.top_dir, 'portfolio.pkl'), 'wb') as fh:
             pickle.dump(portfolio, fh)
