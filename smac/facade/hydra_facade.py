@@ -3,11 +3,14 @@ import os
 import datetime
 import time
 import typing
+import sys
 
 import pickle
 import multiprocessing
 
 import numpy as np
+
+from ConfigSpace.configuration_space import Configuration
 
 from smac.tae.execute_ta_run_hydra import ExecuteTARunHydra
 from smac.tae.execute_ta_run_hydra import ExecuteTARunOld
@@ -48,6 +51,7 @@ def optimize(queue: multiprocessing.Queue, scenario, tae, rng, output_dir, cost_
             fn=os.path.join(solver.output_dir, "runhistory.json")
         )
     queue.put(incumbent)
+    queue.close()
     return incumbent
 
 
@@ -181,23 +185,17 @@ class Hydra(object):
                 procs.append(proc)
             for proc in procs:
                 proc.join()
+            incs = np.empty((self.n_optimizers, ), dtype=Configuration)
+            self.logger.info('*'*120)
+            self.logger.info('Incumbents this round:')
+            idx = 0
             while not q.empty():
-                print(q.get_nowait())
+                conf = q.get_nowait()
+                incs[idx] = conf
+                idx += 1
+            q.close()
 
-            # print(awer)
-            # TODO TODO TODO
-            # self.solver.stats.print_stats()
-            # self.logger.info("Incumbent of %d-th Iteration", (i + 1))
-            # self.logger.info(incumbent)
-            # portfolio.append(incumbent)
-            #
-            # if self.output_dir is not None:
-            #     self.solver.solver.runhistory.save_json(
-            #         fn=os.path.join(self.solver.output_dir, "runhistory.json")
-            #     )
-
-            # validate incumbent on all trainings instances
-            new_rh = self.solver.validate(config_mode='inc',
+            new_rh = self.solver.validate(config_mode=incs,
                                           instance_mode=self.val_set,
                                           repetitions=1,
                                           use_epm=False,

@@ -57,7 +57,8 @@ class SMACCLI(object):
         logger_handler.setFormatter(formatter)
         root_logger.addHandler(logger_handler)
         # remove default handler
-        root_logger.removeHandler(root_logger.handlers[0])
+        if len(root_logger.handlers) > 1:
+            root_logger.removeHandler(root_logger.handlers[0])
 
         # Create defaults
         rh = None
