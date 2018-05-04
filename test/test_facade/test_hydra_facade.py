@@ -32,7 +32,6 @@ class MockSMAC(SMAC):
 
     def validate(self, **kwargs):
         # randomly populate the runhistory
-        assert kwargs['config_mode'] == 'inc', "Don't waste resources on validating irrelevant configs."
         rh = RunHistory(average_cost)
         smbo_calls = self.solver.calls
         config = self.scenario.cs.sample_configuration(1)
