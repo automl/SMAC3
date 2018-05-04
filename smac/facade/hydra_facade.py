@@ -127,6 +127,7 @@ class Hydra(object):
             return self.scenario.train_insts
         elif val_set[:3] != 'val':
             self.logger.warning('Can not determine validation set size. Using full training-set!')
+            return self.scenario.train_insts
         else:
             size = int(val_set[3:])/100
             assert 0 < size < 1, 'X too large in valX'
@@ -214,9 +215,9 @@ class Hydra(object):
             to_keep_ids = list(map(lambda x: x[0],
                                    sorted(enumerate(results), key=lambda y: y[1])))[:self.incs_per_round]
             if len(to_keep_ids) > 1:
-                self.logger.info('Keeping incumbents of runs ' + ', '.join(map(str, to_keep_ids)))
+                self.logger.info('Keeping incumbents of runs %s', ', '.join(map(str, to_keep_ids)))
             else:
-                self.logger.info('Keeping incumbent of run ' + str(to_keep_ids))
+                self.logger.info('Keeping incumbent of run %s', str(to_keep_ids))
             keep_incumbents = incs[to_keep_ids]
             for kept in keep_incumbents:
                 portfolio.append(kept)
