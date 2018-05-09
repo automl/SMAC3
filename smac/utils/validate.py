@@ -433,6 +433,7 @@ class Validator(object):
                 else:
                     # If no runhistory or no entries for instance, get new seed
                     seed = self.rng.randint(MAXINT)
+
                 # We now have a seed and add all configs that are not already
                 # evaluated on that seed to the runs-list. This way, we
                 # guarantee the same inst-seed-pairs for all configs.

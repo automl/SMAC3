@@ -1,6 +1,7 @@
 from contextlib import suppress
 import shutil
 import unittest
+from nose.plugins.attrib import attr
 
 import numpy as np
 
@@ -40,7 +41,8 @@ class TestROARFacade(unittest.TestCase):
         ROAR(tae_runner=ta, scenario=self.scenario)
         self.assertIsInstance(ta.stats, Stats)
         self.assertIsInstance(ta.runhistory, RunHistory)
-        
+
+    @attr('slow')
     def test_check_deterministic_rosenbrock(self):
         def rosenbrock_2d(x):
             x1 = x['x1']

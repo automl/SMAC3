@@ -3,6 +3,7 @@ import unittest
 from unittest import mock
 import os
 import shutil
+from nose.plugins.attrib import attr
 
 import numpy as np
 from ConfigSpace import Configuration
@@ -250,6 +251,7 @@ class TestSMBO(unittest.TestCase):
         smbo = SMAC(scen, tae_runner=target, rng=1).solver
         self.assertRaises(FirstRunCrashedException, smbo.run)
 
+    @attr('slow')
     def test_intensification_percentage(self):
         def target(x):
             return 5
@@ -257,7 +259,7 @@ class TestSMBO(unittest.TestCase):
             """ Return SMBO with intensification_percentage. """
             scen = Scenario({'cs': test_helpers.get_branin_config_space(),
                              'run_obj': 'quality', 'output_dir': 'data-test_smbo-intensification',
-                             'intensification_percentage' : intensification_perc})
+                             'intensification_percentage': intensification_perc})
             self.output_dirs.append(scen.output_dir)
             return SMAC(scen, tae_runner=target, rng=1).solver
         # Test for valid values
