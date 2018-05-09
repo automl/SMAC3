@@ -291,16 +291,15 @@
                               <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">))</span>
 
         <span class="c1"># options_dest2name maps scenario._arguments from dest -&gt; name</span>
-        <span class="n">options_dest2name</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">_arguments</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;dest&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">_arguments</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;dest&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="n">v</span><span class="p">):</span> <span class="n">v</span>
-            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">scenario</span><span class="o">.</span><span class="n">_arguments</span>
-        <span class="p">}</span>
+        <span class="n">options_dest2name</span> <span class="o">=</span> <span class="p">{(</span><span class="n">scenario</span><span class="o">.</span><span class="n">_arguments</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;dest&#39;</span><span class="p">]</span> <span class="k">if</span>
+            <span class="n">scenario</span><span class="o">.</span><span class="n">_arguments</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;dest&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="n">v</span><span class="p">)</span> <span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">scenario</span><span class="o">.</span><span class="n">_arguments</span><span class="p">}</span>
 
         <span class="c1"># Write all options into &quot;output_dir/scenario.txt&quot;</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">,</span> <span class="s2">&quot;scenario.txt&quot;</span><span class="p">)</span>
         <span class="n">scenario</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Writing scenario-file to </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">options_dest2name</span><span class="p">:</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
                 <span class="n">new_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_argument</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
                 <span class="k">if</span> <span class="n">new_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> = </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">options_dest2name</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">new_value</span><span class="p">))</span></div>
@@ -479,9 +478,7 @@
 
   <script type="text/javascript">
       jQuery(function () {
-          
-          SphinxRtdTheme.Navigation.enableSticky();
-          
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script> 
 

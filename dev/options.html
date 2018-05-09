@@ -273,12 +273,68 @@ optimize upon.</li>
 </ul>
 </dd>
 </dl>
+<div class="section" id="smac-options">
+<span id="id1"></span><h2>SMAC Options<a class="headerlink" href="#smac-options" title="Permalink to this headline">¶</a></h2>
+<p>The basic command line options are described in <a class="reference external" href="basic_usage.html#commandline">Basic Usage</a>.
+The options are separated into three groups, <em>Main Options</em>, <em>SMAC Options</em> and <em>Scenario Options</em>.
+See the Main and SMAC Options below. Find the Scenario Options in the next section.</p>
+<p>Main Options:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">mode:</th><td class="field-body">Configuration mode. Default: SMAC.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">restore_state:</th><td class="field-body">Path to directory with SMAC-files.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">scenario_file:</th><td class="field-body">Scenario file in AClib format.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">seed:</th><td class="field-body">Random Seed. Default: 1.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">verbose_level:</th><td class="field-body">Verbosity level. Default: 20.</td>
+</tr>
+</tbody>
+</table>
+<p>SMAC Options:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">abort_on_first_run_crash:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">If true, <em>SMAC</em> will abort if the first run of the target algorithm crashes. Default: True.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">always_race_default:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">Race new incumbents always against default configuration.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">hydra_iterations:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">number of hydra iterations. Only active if mode is set to Hydra Default: 3.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">input_psmac_dirs:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">For parallel SMAC, multiple output-directories are used.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">intensification_percentage:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">The fraction of time to be used on intensification (versus choice of next Configurations). Default: 0.5.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">maxR:</th><td class="field-body">Maximum number of calls per configuration. Default: 2000.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">minR:</th><td class="field-body">Minimum number of calls per configuration. Default: 1.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">output_dir:</th><td class="field-body">Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2018-05-09_15:06:38_905940.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">random_configuration_chooser:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">path to a python module containing a class`RandomConfigurationChooserImpl` implementingthe interface of <cite>RandomConfigurationChooser</cite></td>
+</tr>
+<tr class="field-even field"><th class="field-name">shared_model:</th><td class="field-body">Whether to run SMAC in parallel mode.</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="section" id="scenario">
-<span id="id1"></span><h2>Scenario<a class="headerlink" href="#scenario" title="Permalink to this headline">¶</a></h2>
+<span id="id2"></span><h2>Scenario<a class="headerlink" href="#scenario" title="Permalink to this headline">¶</a></h2>
 <p>The scenario-object (<a class="reference internal" href="apidoc/smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.scenario.scenario.Scenario</span></code></a>) is used to configure <em>SMAC</em> and can be constructed either by providing an actual
 scenario-object (see <a class="reference external" href="quickstart.html#using-smac-in-python-svm">SVM-example</a>), or by specifing the options in a
-scenario file (see <a class="reference external" href="quickstart.html#spear-example">SPEAR example</a>).
-The format of the scenario file is one option per line:</p>
+scenario file (see <a class="reference external" href="quickstart.html#spear-example">SPEAR example</a>).</p>
+<p>The format of the scenario file is one option per line:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">OPTION1</span> <span class="o">=</span> VALUE1
 <span class="nv">OPTION2</span> <span class="o">=</span> VALUE2
 ...
@@ -287,68 +343,54 @@ The format of the scenario file is one option per line:</p>
 <p>For boolean options “1” or “true” both evaluate to True.
 The following assumes that the scenario is created via a scenario-file. If it is
 generated within custom code, you might not need <em>algo</em> or <em>paramfile</em>.</p>
-<p>Options:</p>
+<p>Scenario Options:</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">abort_on_first_run_crash:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">If true, <em>SMAC</em> will abort if the first run of the target algorithm crashes. Default: True.</td>
+<tr class="field-odd field"><th class="field-name" colspan="2">algo_runs_timelimit:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">Maximum amount of CPU-time used for optimization. Default: inf.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">algo:</th><td class="field-body">Specifies the target algorithm call that <em>SMAC</em> will optimize. Interpreted as a bash-command.</td>
+<tr class="field-even field"><th class="field-name" colspan="2">always_race_default:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">Race new incumbents always against default configuration.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">always_race_default:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">Race new incumbents always against default configuration.</td>
+<tr class="field-odd field"><th class="field-name">cost_for_crash:</th><td class="field-body">Defines the cost-value for crashed runs on scenarios with quality as run-obj. Default: 2147483647.0.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">cost_for_crash:</th><td class="field-body">Defines the cost-value for crashed runs on scenarios with quality as run-obj. Default: 2147483647.0.</td>
+<tr class="field-even field"><th class="field-name">cutoff:</th><td class="field-body">Maximum runtime, after which the target algorithm is cancelled. <strong>Required if *run_obj* is runtime.</strong></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">cutoff_time:</th><td class="field-body">Maximum runtime, after which the target algorithm is cancelled. <strong>Required if *run_obj* is runtime.</strong></td>
+<tr class="field-odd field"><th class="field-name">deterministic:</th><td class="field-body">If true, the optimization process will be repeatable.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">deterministic:</th><td class="field-body">If true, the target algorithm is expected to be deterministic.</td>
+<tr class="field-even field"><th class="field-name">execdir:</th><td class="field-body">Specifies the path to the execution-directory. Default: ..</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">execdir:</th><td class="field-body">Specifies the path to the execution-directory. Default: ..</td>
+<tr class="field-odd field"><th class="field-name">feature_fn:</th><td class="field-body">Specifies the file with the instance-features.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">feature_file:</th><td class="field-body">Specifies the file with the instance-features.</td>
+<tr class="field-even field"><th class="field-name" colspan="2">initial_incumbent:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">DEFAULT is the default from the PCS. Default: DEFAULT.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">initial_incumbent:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">DEFAULT is the default from the PCS. Default: DEFAULT. Must be from: [‘DEFAULT’, ‘RANDOM’].</td>
+<tr class="field-odd field"><th class="field-name">memory_limit:</th><td class="field-body">Maximum available memory the target algorithm can occupy before being cancelled in MB.</td>
 </tr>
-<tr class="field-even field"><th class="field-name" colspan="2">input_psmac_dirs:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">For parallel SMAC, multiple output-directories are used.</td>
+<tr class="field-even field"><th class="field-name">overall_obj:</th><td class="field-body">PARX, where X is an integer defining the penalty imposed on timeouts (i.e. runtimes that exceed the <em>cutoff-time</em>). Default: par10.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">instance_file:</th><td class="field-body">Specifies the file with the training-instances.</td>
+<tr class="field-odd field"><th class="field-name">pcs_fn:</th><td class="field-body">Specifies the path to the PCS-file.</td>
 </tr>
-<tr class="field-even field"><th class="field-name" colspan="2">intensification_percentage:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">The fraction of time to be used on intensification (versus choice of next Configurations). Default: 0.5.</td>
+<tr class="field-even field"><th class="field-name">run_obj:</th><td class="field-body">Defines what metric to optimize. When optimizing runtime, <em>cutoff_time</em> is required as well.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">maxR:</th><td class="field-body">Maximum number of calls per configuration. Default: 2000.</td>
+<tr class="field-odd field"><th class="field-name">ta:</th><td class="field-body">Specifies the target algorithm call that <em>SMAC</em> will optimize. Interpreted as a bash-command.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">memory_limit:</th><td class="field-body">Maximum available memory the target algorithm can occupy before being cancelled.</td>
+<tr class="field-even field"><th class="field-name">ta_run_limit:</th><td class="field-body">Maximum number of algorithm-calls during optimization. Default: inf.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">minR:</th><td class="field-body">Minimum number of calls per configuration. Default: 1.</td>
+<tr class="field-odd field"><th class="field-name">test_inst_fn:</th><td class="field-body">Specifies the file with the test-instances.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">output_dir:</th><td class="field-body">Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2018-05-02_12:10:25_728114.</td>
+<tr class="field-even field"><th class="field-name">train_inst_fn:</th><td class="field-body">Specifies the file with the training-instances.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">overall_obj:</th><td class="field-body">PARX, where X is an integer defining the penalty imposed on timeouts (i.e. runtimes that exceed the <em>cutoff-time</em>). Default: par10.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">paramfile:</th><td class="field-body">Specifies the path to the PCS-file.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">run_obj:</th><td class="field-body">Defines what metric to optimize. When optimizing runtime, <em>cutoff_time</em> is required as well. Must be from: [‘runtime’, ‘quality’].</td>
-</tr>
-<tr class="field-even field"><th class="field-name">runcount_limit:</th><td class="field-body">Maximum number of algorithm-calls during optimization. Default: inf.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">shared_model:</th><td class="field-body">Whether to run SMAC in parallel mode.</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">test_instance_file:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">Specifies the file with the test-instances.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">tuner-timeout:</th><td class="field-body">Maximum amount of CPU-time used for optimization. Default: inf.</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">wallclock_limit:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">Maximum amount of wallclock-time used for optimization. Default: inf.</td>
+<tr class="field-odd field"><th class="field-name" colspan="2">wallclock_limit:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">Maximum amount of wallclock-time used for optimization. Default: inf.</td>
 </tr>
 </tbody>
 </table>
+<p>These options are also available as command line switches: Prepend two “-” and replace each “_” by “-“,
+e.g. “wallclock_limit” becomes “–wallclock-limit”. The options on the command line overwrite the values
+given in the scenario file.</p>
 </div>
 <div class="section" id="parameter-configuration-space-pcs">
 <span id="paramcs"></span><h2>Parameter Configuration Space (PCS)<a class="headerlink" href="#parameter-configuration-space-pcs" title="Permalink to this headline">¶</a></h2>
@@ -490,9 +532,7 @@ seen in the <a class="reference external" href="quickstart.html#spear-qcp">SPEAR
 
   <script type="text/javascript">
       jQuery(function () {
-          
-          SphinxRtdTheme.Navigation.enableSticky();
-          
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script> 
 

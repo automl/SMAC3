@@ -256,7 +256,7 @@
 <span id="smac-scenario-scenario-module"></span><h1>smac.scenario.scenario module<a class="headerlink" href="#module-smac.scenario.scenario" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.scenario.scenario.Scenario">
-<em class="property">class </em><code class="descclassname">smac.scenario.scenario.</code><code class="descname">Scenario</code><span class="sig-paren">(</span><em>scenario</em>, <em>cmd_args: dict = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/scenario/scenario.html#Scenario"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.scenario.scenario.Scenario" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.scenario.scenario.</code><code class="descname">Scenario</code><span class="sig-paren">(</span><em>scenario=None</em>, <em>cmd_options: dict = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/scenario/scenario.html#Scenario"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.scenario.scenario.Scenario" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Scenario contains the configuration of the optimization process and
 constructs a scenario object from a file or dictionary.</p>
@@ -271,63 +271,19 @@ will be appended until possible.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>scenario</strong> (<em>str</em><em> or </em><em>dict</em>) – If str, it will be interpreted as to a path a scenario file
-If dict, it will be directly to get all scenario related information</li>
-<li><strong>cmd_args</strong> (<em>dict</em>) – Command line arguments that were not processed by argparse</li>
+<li><strong>scenario</strong> (<em>str</em><em> or </em><em>dict</em><em> or </em><em>None</em>) – If str, it will be interpreted as to a path a scenario file
+If dict, it will be directly to get all scenario related information
+If None, only cmd_options will be used</li>
+<li><strong>cmd_options</strong> (<em>dict</em>) – Options from parsed command line arguments</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<dl class="method">
-<dt id="smac.scenario.scenario.Scenario.add_argument">
-<code class="descname">add_argument</code><span class="sig-paren">(</span><em>name: str</em>, <em>help: str</em>, <em>callback=None</em>, <em>default=None</em>, <em>dest: str = None</em>, <em>required: bool = False</em>, <em>mutually_exclusive_group: str = None</em>, <em>choice=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/scenario/scenario.html#Scenario.add_argument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.scenario.scenario.Scenario.add_argument" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add argument to the scenario object.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<em>str</em>) – Argument name</li>
-<li><strong>help</strong> (<em>str</em>) – Help text which can be displayed in the documentation.</li>
-<li><strong>callback</strong> (<em>callable</em><em>, </em><em>optional</em>) – If given, the callback will be called when the argument is
-parsed. Useful for custom casting/typechecking.</li>
-<li><strong>default</strong> (<em>object</em><em>, </em><em>optional</em>) – Default value if the argument is not given. Default to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</li>
-<li><strong>dest</strong> (<em>str</em>) – Assign the argument to scenario object by this name.</li>
-<li><strong>required</strong> (<em>bool</em>) – If True, the scenario will raise an error if the argument is not
-given.</li>
-<li><strong>mutually_exclusive_group</strong> (<em>str</em>) – Group arguments with similar behaviour by assigning the same string
-value. The scenario will ensure that exactly one of the arguments is
-given. Is used for example to ensure that either a configuration
-space object or a parameter file is passed to the scenario. Can not
-be used together with <code class="docutils literal notranslate"><span class="pre">required</span></code>.</li>
-<li><strong>choice</strong> (<em>list/set/tuple</em>) – List of possible string for this argument</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="method">
 <dt id="smac.scenario.scenario.Scenario.write">
 <code class="descname">write</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/scenario/scenario.html#Scenario.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.scenario.scenario.Scenario.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write scenario to self.output_dir/scenario.txt.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="smac.scenario.scenario.Scenario.write_options_to_doc">
-<code class="descname">write_options_to_doc</code><span class="sig-paren">(</span><em>path='scenario_options.rst'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/scenario/scenario.html#Scenario.write_options_to_doc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.scenario.scenario.Scenario.write_options_to_doc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes the option-list to file for autogeneration in documentation.
-The list is created in doc/conf.py and read in doc/options.rst.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<em>string</em>) – Where to write to (relative to doc-folder since executed in conf.py)</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 </dd></dl>
@@ -398,9 +354,7 @@ The list is created in doc/conf.py and read in doc/options.rst.</p>
 
   <script type="text/javascript">
       jQuery(function () {
-          
-          SphinxRtdTheme.Navigation.enableSticky();
-          
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script> 
 

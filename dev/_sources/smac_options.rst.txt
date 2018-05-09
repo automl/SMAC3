@@ -1,0 +1,12 @@
+:abort_on_first_run_crash: If true, *SMAC* will abort if the first run of the target algorithm crashes. Default: True.
+:always_race_default: Race new incumbents always against default configuration.
+:hydra_iterations: number of hydra iterations. Only active if mode is set to Hydra Default: 3.
+:input_psmac_dirs: For parallel SMAC, multiple output-directories are used.
+:intensification_percentage: The fraction of time to be used on intensification (versus choice of next Configurations). Default: 0.5.
+:maxR: Maximum number of calls per configuration. Default: 2000.
+:minR: Minimum number of calls per configuration. Default: 1.
+:output_dir: Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2018-05-09_15:06:38_905940.
+:random_configuration_chooser: path to a python module containing a class`RandomConfigurationChooserImpl` implementingthe interface of `RandomConfigurationChooser`
+:shared_model: Whether to run SMAC in parallel mode.
+
+

@@ -680,6 +680,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># If no runhistory or no entries for instance, get new seed</span>
                     <span class="n">seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">)</span>
+
                 <span class="c1"># We now have a seed and add all configs that are not already</span>
                 <span class="c1"># evaluated on that seed to the runs-list. This way, we</span>
                 <span class="c1"># guarantee the same inst-seed-pairs for all configs.</span>
@@ -899,9 +900,7 @@
 
   <script type="text/javascript">
       jQuery(function () {
-          
-          SphinxRtdTheme.Navigation.enableSticky();
-          
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script> 
 

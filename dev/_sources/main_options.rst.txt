@@ -1,0 +1,7 @@
+:mode: Configuration mode. Default: SMAC.
+:restore_state: Path to directory with SMAC-files.
+:scenario_file: Scenario file in AClib format.
+:seed: Random Seed. Default: 1.
+:verbose_level: Verbosity level. Default: 20.
+
+

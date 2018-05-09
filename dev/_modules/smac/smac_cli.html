@@ -249,7 +249,7 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">from</span> <span class="nn">smac.utils.io.cmd_reader</span> <span class="k">import</span> <span class="n">CMDReader</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
@@ -262,7 +262,6 @@
 <span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="k">import</span> <span class="n">average_cost</span>
 <span class="kn">from</span> <span class="nn">smac.utils.merge_foreign_data</span> <span class="k">import</span> <span class="n">merge_foreign_data_from_file</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="k">import</span> <span class="n">TrajLogger</span>
-<span class="kn">from</span> <span class="nn">smac.utils.io.input_reader</span> <span class="k">import</span> <span class="n">InputReader</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">TAEAbortException</span><span class="p">,</span> <span class="n">FirstRunCrashedException</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.output_directory</span> <span class="k">import</span> <span class="n">create_output_directory</span>
 
@@ -283,15 +282,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
-<div class="viewcode-block" id="SMACCLI.main_cli"><a class="viewcode-back" href="../../apidoc/smac.smac_cli.html#smac.smac_cli.SMACCLI.main_cli">[docs]</a>    <span class="k">def</span> <span class="nf">main_cli</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SMACCLI.main_cli"><a class="viewcode-back" href="../../apidoc/smac.smac_cli.html#smac.smac_cli.SMACCLI.main_cli">[docs]</a>    <span class="k">def</span> <span class="nf">main_cli</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commandline_arguments</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Main function of SMAC for CLI interface&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;SMAC call: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)))</span>
 
         <span class="n">cmd_reader</span> <span class="o">=</span> <span class="n">CMDReader</span><span class="p">()</span>
-        <span class="n">args_</span><span class="p">,</span> <span class="n">misc_args</span> <span class="o">=</span> <span class="n">cmd_reader</span><span class="o">.</span><span class="n">read_cmd</span><span class="p">()</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">commandline_arguments</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;commandline_arguments&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">commandline_arguments</span>
+        <span class="n">main_args_</span><span class="p">,</span> <span class="n">smac_args_</span><span class="p">,</span> <span class="n">scen_args_</span> <span class="o">=</span> <span class="n">cmd_reader</span><span class="o">.</span><span class="n">read_cmd</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="n">root_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
-        <span class="n">root_logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">verbose_level</span><span class="p">)</span>
+        <span class="n">root_logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">main_args_</span><span class="o">.</span><span class="n">verbose_level</span><span class="p">)</span>
         <span class="n">logger_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">(</span>
                 <span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">root_logger</span><span class="o">.</span><span class="n">level</span> <span class="o">&gt;=</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">:</span>
@@ -313,75 +315,76 @@
         <span class="n">incumbent</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="c1"># Create scenario-object</span>
-        <span class="n">scen</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">scenario_file</span><span class="p">,</span> <span class="n">misc_args</span><span class="p">)</span>
+        <span class="n">scenario</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">scenario</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">vars</span><span class="p">(</span><span class="n">smac_args_</span><span class="p">))</span>
+        <span class="n">scenario</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">vars</span><span class="p">(</span><span class="n">scen_args_</span><span class="p">))</span>
+        <span class="n">scen</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">)</span>
 
         <span class="c1"># Restore state</span>
-        <span class="k">if</span> <span class="n">args_</span><span class="o">.</span><span class="n">restore_state</span><span class="p">:</span>
-            <span class="n">root_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Restoring state from </span><span class="si">%s</span><span class="s2">...&quot;</span><span class="p">,</span> <span class="n">args_</span><span class="o">.</span><span class="n">restore_state</span><span class="p">)</span>
-            <span class="n">rh</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">traj_list_aclib</span><span class="p">,</span> <span class="n">traj_list_old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">restore_state</span><span class="p">(</span><span class="n">scen</span><span class="p">,</span> <span class="n">args_</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">main_args_</span><span class="o">.</span><span class="n">restore_state</span><span class="p">:</span>
+            <span class="n">root_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Restoring state from </span><span class="si">%s</span><span class="s2">...&quot;</span><span class="p">,</span> <span class="n">main_args_</span><span class="o">.</span><span class="n">restore_state</span><span class="p">)</span>
+            <span class="n">rh</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">traj_list_aclib</span><span class="p">,</span> <span class="n">traj_list_old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">restore_state</span><span class="p">(</span><span class="n">scen</span><span class="p">,</span> <span class="n">main_args_</span><span class="p">)</span>
 
             <span class="n">scen</span><span class="o">.</span><span class="n">output_dir_for_this_run</span> <span class="o">=</span> <span class="n">create_output_directory</span><span class="p">(</span>
-                <span class="n">scen</span><span class="p">,</span> <span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span> <span class="n">root_logger</span><span class="p">,</span>
+                <span class="n">scen</span><span class="p">,</span> <span class="n">main_args_</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span> <span class="n">root_logger</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">scen</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
             <span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">restore_state_after_output_dir</span><span class="p">(</span><span class="n">scen</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span>
-                                           <span class="n">traj_list_aclib</span><span class="p">,</span> <span class="n">traj_list_old</span><span class="p">)</span>
+                                                            <span class="n">traj_list_aclib</span><span class="p">,</span> <span class="n">traj_list_old</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">args_</span><span class="o">.</span><span class="n">warmstart_runhistory</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">main_args_</span><span class="o">.</span><span class="n">warmstart_runhistory</span><span class="p">:</span>
             <span class="n">aggregate_func</span> <span class="o">=</span> <span class="n">average_cost</span>
             <span class="n">rh</span> <span class="o">=</span> <span class="n">RunHistory</span><span class="p">(</span><span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">)</span>
 
             <span class="n">scen</span><span class="p">,</span> <span class="n">rh</span> <span class="o">=</span> <span class="n">merge_foreign_data_from_file</span><span class="p">(</span>
                 <span class="n">scenario</span><span class="o">=</span><span class="n">scen</span><span class="p">,</span>
                 <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>
-                <span class="n">in_scenario_fn_list</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">warmstart_scenario</span><span class="p">,</span>
-                <span class="n">in_runhistory_fn_list</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">warmstart_runhistory</span><span class="p">,</span>
+                <span class="n">in_scenario_fn_list</span><span class="o">=</span><span class="n">main_args_</span><span class="o">.</span><span class="n">warmstart_scenario</span><span class="p">,</span>
+                <span class="n">in_runhistory_fn_list</span><span class="o">=</span><span class="n">main_args_</span><span class="o">.</span><span class="n">warmstart_runhistory</span><span class="p">,</span>
                 <span class="n">cs</span><span class="o">=</span><span class="n">scen</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span>
                 <span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">args_</span><span class="o">.</span><span class="n">warmstart_incumbent</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">main_args_</span><span class="o">.</span><span class="n">warmstart_incumbent</span><span class="p">:</span>
             <span class="n">initial_configs</span> <span class="o">=</span> <span class="p">[</span><span class="n">scen</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">()]</span>
-            <span class="k">for</span> <span class="n">traj_fn</span> <span class="ow">in</span> <span class="n">args_</span><span class="o">.</span><span class="n">warmstart_incumbent</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">traj_fn</span> <span class="ow">in</span> <span class="n">main_args_</span><span class="o">.</span><span class="n">warmstart_incumbent</span><span class="p">:</span>
                 <span class="n">trajectory</span> <span class="o">=</span> <span class="n">TrajLogger</span><span class="o">.</span><span class="n">read_traj_aclib_format</span><span class="p">(</span>
                     <span class="n">fn</span><span class="o">=</span><span class="n">traj_fn</span><span class="p">,</span> <span class="n">cs</span><span class="o">=</span><span class="n">scen</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
                 <span class="n">initial_configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">trajectory</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;incumbent&quot;</span><span class="p">])</span>
 
-
-        <span class="k">if</span> <span class="n">args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;SMAC&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">main_args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;SMAC&quot;</span><span class="p">:</span>
             <span class="n">optimizer</span> <span class="o">=</span> <span class="n">SMAC</span><span class="p">(</span>
                 <span class="n">scenario</span><span class="o">=</span><span class="n">scen</span><span class="p">,</span>
-                <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
+                <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">main_args_</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
                 <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>
                 <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configs</span><span class="p">,</span>
                 <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
                 <span class="n">restore_incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
-                <span class="n">run_id</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
-                <span class="n">random_configuration_chooser</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">random_configuration_chooser</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;ROAR&quot;</span><span class="p">:</span>
+                <span class="n">run_id</span><span class="o">=</span><span class="n">main_args_</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">main_args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;ROAR&quot;</span><span class="p">:</span>
             <span class="n">optimizer</span> <span class="o">=</span> <span class="n">ROAR</span><span class="p">(</span>
                 <span class="n">scenario</span><span class="o">=</span><span class="n">scen</span><span class="p">,</span>
-                <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
+                <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">main_args_</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
                 <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>
                 <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configs</span><span class="p">,</span>
-                <span class="n">run_id</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;EPILS&quot;</span><span class="p">:</span>
+                <span class="n">run_id</span><span class="o">=</span><span class="n">main_args_</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">main_args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;EPILS&quot;</span><span class="p">:</span>
             <span class="n">optimizer</span> <span class="o">=</span> <span class="n">EPILS</span><span class="p">(</span>
                 <span class="n">scenario</span><span class="o">=</span><span class="n">scen</span><span class="p">,</span>
-                <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
+                <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">main_args_</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
                 <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>
                 <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configs</span><span class="p">,</span>
-                <span class="n">run_id</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;Hydra&quot;</span><span class="p">:</span>
+                <span class="n">run_id</span><span class="o">=</span><span class="n">main_args_</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">main_args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;Hydra&quot;</span><span class="p">:</span>
             <span class="n">optimizer</span> <span class="o">=</span> <span class="n">Hydra</span><span class="p">(</span>
                 <span class="n">scenario</span><span class="o">=</span><span class="n">scen</span><span class="p">,</span>
-                <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
+                <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">main_args_</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
                 <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>
                 <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configs</span><span class="p">,</span>
                 <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
                 <span class="n">restore_incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
-                <span class="n">run_id</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
-                <span class="n">random_configuration_chooser</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">random_configuration_chooser</span><span class="p">,</span>
-                <span class="n">n_iterations</span><span class="o">=</span><span class="n">args_</span><span class="o">.</span><span class="n">hydra_iterations</span><span class="p">)</span>
+                <span class="n">run_id</span><span class="o">=</span><span class="n">main_args_</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+                <span class="n">random_configuration_chooser</span><span class="o">=</span><span class="n">smac_args_</span><span class="o">.</span><span class="n">random_configuration_chooser</span><span class="p">,</span>
+                <span class="n">n_iterations</span><span class="o">=</span><span class="n">smac_args_</span><span class="o">.</span><span class="n">hydra_iterations</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">optimizer</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
         <span class="k">except</span> <span class="p">(</span><span class="n">TAEAbortException</span><span class="p">,</span> <span class="n">FirstRunCrashedException</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
@@ -486,9 +489,7 @@
 
   <script type="text/javascript">
       jQuery(function () {
-          
-          SphinxRtdTheme.Navigation.enableSticky();
-          
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script> 
 

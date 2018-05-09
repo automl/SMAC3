@@ -285,16 +285,21 @@
         <span class="c1"># kept for backwards-compatibility</span>
         <span class="n">scenario_option_names</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;algo-exec&#39;</span><span class="p">:</span> <span class="s1">&#39;algo&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;algoExec&#39;</span><span class="p">:</span> <span class="s1">&#39;algo&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;algo&#39;</span><span class="p">:</span> <span class="s1">&#39;algo&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;algo-exec-dir&#39;</span><span class="p">:</span> <span class="s1">&#39;execdir&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;exec-dir&#39;</span><span class="p">:</span> <span class="s1">&#39;execdir&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;execDir&#39;</span><span class="p">:</span> <span class="s1">&#39;execdir&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;execdir&#39;</span><span class="p">:</span> <span class="s1">&#39;execdir&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;algo-deterministic&#39;</span><span class="p">:</span> <span class="s1">&#39;deterministic&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;deterministic&#39;</span><span class="p">:</span> <span class="s1">&#39;deterministic&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;paramFile&#39;</span><span class="p">:</span> <span class="s1">&#39;paramfile&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;pcs-file&#39;</span><span class="p">:</span> <span class="s1">&#39;paramfile&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;param-file&#39;</span><span class="p">:</span> <span class="s1">&#39;paramfile&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;paramfile&#39;</span><span class="p">:</span> <span class="s1">&#39;paramfile&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;run-obj&#39;</span><span class="p">:</span> <span class="s1">&#39;run_obj&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;run-objective&#39;</span><span class="p">:</span> <span class="s1">&#39;run_obj&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;runObj&#39;</span><span class="p">:</span> <span class="s1">&#39;run_obj&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;run_obj&#39;</span><span class="p">:</span> <span class="s1">&#39;run_obj&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;overall_obj&#39;</span><span class="p">:</span> <span class="s1">&#39;overall_obj&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;intra-obj&#39;</span><span class="p">:</span> <span class="s1">&#39;overall_obj&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;intra-instance-obj&#39;</span><span class="p">:</span> <span class="s1">&#39;overall_obj&#39;</span><span class="p">,</span>
@@ -302,26 +307,36 @@
                                  <span class="s1">&#39;intraInstanceObj&#39;</span><span class="p">:</span> <span class="s1">&#39;overall_obj&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;overallObj&#39;</span><span class="p">:</span> <span class="s1">&#39;overall_obj&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;intra_instance_obj&#39;</span><span class="p">:</span> <span class="s1">&#39;overall_obj&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;cost-for-crash&#39;</span><span class="p">:</span> <span class="s1">&#39;cost_for_crash&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;cost_for_crash&#39;</span><span class="p">:</span> <span class="s1">&#39;cost_for_crash&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;algo-cutoff-time&#39;</span><span class="p">:</span> <span class="s1">&#39;cutoff_time&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;target-run-cputime-limit&#39;</span><span class="p">:</span> <span class="s1">&#39;cutoff_time&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;target_run_cputime_limit&#39;</span><span class="p">:</span> <span class="s1">&#39;cutoff_time&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;cutoff-time&#39;</span><span class="p">:</span> <span class="s1">&#39;cutoff_time&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;cutoffTime&#39;</span><span class="p">:</span> <span class="s1">&#39;cutoff_time&#39;</span><span class="p">,</span>
-                                 <span class="s1">&#39;cputime-limit&#39;</span><span class="p">:</span> <span class="s1">&#39;tunerTimeout&#39;</span><span class="p">,</span>
-                                 <span class="s1">&#39;cputime_limit&#39;</span><span class="p">:</span> <span class="s1">&#39;tunerTimeout&#39;</span><span class="p">,</span>
-                                 <span class="s1">&#39;tunertime-limit&#39;</span><span class="p">:</span> <span class="s1">&#39;tunerTimeout&#39;</span><span class="p">,</span>
-                                 <span class="s1">&#39;tuner-timeout&#39;</span><span class="p">:</span> <span class="s1">&#39;tunerTimeout&#39;</span><span class="p">,</span>
-                                 <span class="s1">&#39;tunerTimeout&#39;</span><span class="p">:</span> <span class="s1">&#39;tunerTimeout&#39;</span><span class="p">,</span>
-                                 <span class="s1">&#39;wallclock_limit&#39;</span><span class="p">:</span> <span class="s1">&#39;wallclock-limit&#39;</span><span class="p">,</span>
-                                 <span class="s1">&#39;runtime-limit&#39;</span><span class="p">:</span> <span class="s1">&#39;wallclock-limit&#39;</span><span class="p">,</span>
-                                 <span class="s1">&#39;runtimeLimit&#39;</span><span class="p">:</span> <span class="s1">&#39;wallclock-limit&#39;</span><span class="p">,</span>
-                                 <span class="s1">&#39;wallClockLimit&#39;</span><span class="p">:</span> <span class="s1">&#39;wallclock-limit&#39;</span><span class="p">,</span>
-                                 <span class="s1">&#39;output-dir&#39;</span><span class="p">:</span> <span class="s1">&#39;outdir&#39;</span><span class="p">,</span>
-                                 <span class="s1">&#39;outputDirectory&#39;</span><span class="p">:</span> <span class="s1">&#39;outdir&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;cutoff_time&#39;</span><span class="p">:</span> <span class="s1">&#39;cutoff_time&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;memory-limit&#39;</span><span class="p">:</span> <span class="s1">&#39;memory_limit&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;memory_limit&#39;</span><span class="p">:</span> <span class="s1">&#39;memory_limit&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;cputime-limit&#39;</span><span class="p">:</span> <span class="s1">&#39;tuner_timeout&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;cputime_limit&#39;</span><span class="p">:</span> <span class="s1">&#39;tuner_timeout&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;tunertime-limit&#39;</span><span class="p">:</span> <span class="s1">&#39;tuner_timeout&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;tuner-timeout&#39;</span><span class="p">:</span> <span class="s1">&#39;tuner_timeout&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;tunerTimeout&#39;</span><span class="p">:</span> <span class="s1">&#39;tuner_timeout&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;tuner_timeout&#39;</span><span class="p">:</span> <span class="s1">&#39;tuner_timeout&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;wallclock-limit&#39;</span><span class="p">:</span> <span class="s1">&#39;wallclock_limit&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;runtime-limit&#39;</span><span class="p">:</span> <span class="s1">&#39;wallclock_limit&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;runtimeLimit&#39;</span><span class="p">:</span> <span class="s1">&#39;wallclock_limit&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;wallClockLimit&#39;</span><span class="p">:</span> <span class="s1">&#39;wallclock_limit&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;wallclock_limit&#39;</span><span class="p">:</span> <span class="s1">&#39;wallclock_limit&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;output-dir&#39;</span><span class="p">:</span> <span class="s1">&#39;output_dir&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;outputDirectory&#39;</span><span class="p">:</span> <span class="s1">&#39;output_dir&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;outdir&#39;</span><span class="p">:</span> <span class="s1">&#39;output_dir&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;output_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;output_dir&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;instances&#39;</span><span class="p">:</span> <span class="s1">&#39;instance_file&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;instance-file&#39;</span><span class="p">:</span> <span class="s1">&#39;instance_file&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;instance-dir&#39;</span><span class="p">:</span> <span class="s1">&#39;instance_file&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;instanceFile&#39;</span><span class="p">:</span> <span class="s1">&#39;instance_file&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;instance_file&#39;</span><span class="p">:</span> <span class="s1">&#39;instance_file&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;i&#39;</span><span class="p">:</span> <span class="s1">&#39;instance_file&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;instance_seed_file&#39;</span><span class="p">:</span> <span class="s1">&#39;instance_file&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;test-instances&#39;</span><span class="p">:</span> <span class="s1">&#39;test_instance_file&#39;</span><span class="p">,</span>
@@ -333,11 +348,13 @@
                                  <span class="s1">&#39;feature-file&#39;</span><span class="p">:</span> <span class="s1">&#39;feature_file&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;instanceFeatureFile&#39;</span><span class="p">:</span> <span class="s1">&#39;feature_file&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;feature_file&#39;</span><span class="p">:</span> <span class="s1">&#39;feature_file&#39;</span><span class="p">,</span>
-                                 <span class="s1">&#39;runcount-limit&#39;</span><span class="p">:</span> <span class="s1">&#39;runcount-limit&#39;</span><span class="p">,</span>
-                                 <span class="s1">&#39;runcount_limit&#39;</span><span class="p">:</span> <span class="s1">&#39;runcount-limit&#39;</span><span class="p">,</span>
-                                 <span class="s1">&#39;totalNumRunsLimit&#39;</span><span class="p">:</span> <span class="s1">&#39;runcount-limit&#39;</span><span class="p">,</span>
-                                 <span class="s1">&#39;numRunsLimit&#39;</span><span class="p">:</span> <span class="s1">&#39;runcount-limit&#39;</span><span class="p">,</span>
-                                 <span class="s1">&#39;numberOfRunsLimit&#39;</span><span class="p">:</span> <span class="s1">&#39;runcount-limit&#39;</span>
+                                 <span class="s1">&#39;runcount-limit&#39;</span><span class="p">:</span> <span class="s1">&#39;runcount_limit&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;runcount_limit&#39;</span><span class="p">:</span> <span class="s1">&#39;runcount_limit&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;totalNumRunsLimit&#39;</span><span class="p">:</span> <span class="s1">&#39;runcount_limit&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;numRunsLimit&#39;</span><span class="p">:</span> <span class="s1">&#39;runcount_limit&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;numberOfRunsLimit&#39;</span><span class="p">:</span> <span class="s1">&#39;runcount_limit&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;initial-incumbent&#39;</span><span class="p">:</span> <span class="s1">&#39;initial_incumbent&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;initial_incumbent&#39;</span><span class="p">:</span> <span class="s1">&#39;initial_incumbent&#39;</span>
                                  <span class="p">}</span>
 
         <span class="n">scenario_dict</span> <span class="o">=</span> <span class="p">{}</span>
@@ -472,9 +489,7 @@
 
   <script type="text/javascript">
       jQuery(function () {
-          
-          SphinxRtdTheme.Navigation.enableSticky();
-          
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script> 
 
