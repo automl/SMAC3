@@ -142,7 +142,13 @@ class EPILS(object):
                     types=types, bounds=bounds,
                     instance_features=scenario.feature_array,
                     seed=rng.randint(MAXINT),
-                    pca_components=scenario.PCA_DIM)
+                    pca_components=scenario.PCA_DIM,
+                    num_trees=scenario.rf_num_trees,
+                    do_bootstrapping=scenario.rf_do_bootstrapping,
+                    ratio_features=scenario.rf_ratio_features,
+                    min_samples_split=scenario.rf_min_samples_split,
+                    min_samples_leaf=scenario.rf_min_samples_leaf,
+                    max_depth=scenario.rf_max_depth)
         # initial acquisition function
         if acquisition_function is None:
             if scenario.run_obj == "runtime":
@@ -155,7 +161,9 @@ class EPILS(object):
 
         # initialize optimizer on acquisition function
         local_search = LocalSearch(acquisition_function,
-                                   scenario.cs)
+                                   scenario.cs,
+                                   max_steps=scenario.sls_max_steps,
+                                   n_steps_plateau_walk=scenario.sls_n_steps_plateau_walk)
 
         # initialize tae_runner
         # First case, if tae_runner is None, the target algorithm is a call
@@ -216,7 +224,9 @@ class EPILS(object):
                                         if scenario.always_race_default else None,
                                       instance_specifics=scenario.instance_specific,
                                       minR=scenario.minR,
-                                      maxR=scenario.maxR)
+                                      maxR=scenario.maxR,
+                                      adaptive_capping_slackfactor=scenario.intens_adaptive_capping_slackfactor,
+                                      min_chall=scenario.intens_min_chall)
         # inject deps if necessary
         if intensifier.tae_runner is None:
             intensifier.tae_runner = tae_runner
@@ -414,7 +424,7 @@ class EPILS(object):
 
     def get_X_y(self):
         """Simple interface to obtain all data in runhistory in X, y format
-            
+
         Uses smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()
 
         Returns
