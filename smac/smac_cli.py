@@ -2,7 +2,7 @@ import os
 import sys
 import logging
 import numpy as np
-import shutil
+import typing
 
 from smac.utils.io.cmd_reader import CMDReader
 from smac.scenario.scenario import Scenario
@@ -15,7 +15,6 @@ from smac.stats.stats import Stats
 from smac.optimizer.objective import average_cost
 from smac.utils.merge_foreign_data import merge_foreign_data_from_file
 from smac.utils.io.traj_logging import TrajLogger
-from smac.utils.io.input_reader import InputReader
 from smac.tae.execute_ta_run import TAEAbortException, FirstRunCrashedException
 from smac.utils.io.output_directory import create_output_directory
 
@@ -36,15 +35,18 @@ class SMACCLI(object):
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
-    def main_cli(self):
+    def main_cli(self, commandline_arguments: typing.List[str]=None):
         """Main function of SMAC for CLI interface"""
         self.logger.info("SMAC call: %s" % (" ".join(sys.argv)))
 
         cmd_reader = CMDReader()
-        args_, misc_args = cmd_reader.read_cmd()
+        kwargs = {}
+        if commandline_arguments:
+            kwargs['commandline_arguments'] = commandline_arguments
+        main_args_, smac_args_, scen_args_ = cmd_reader.read_cmd(**kwargs)
 
         root_logger = logging.getLogger()
-        root_logger.setLevel(args_.verbose_level)
+        root_logger.setLevel(main_args_.verbose_level)
         logger_handler = logging.StreamHandler(
                 stream=sys.stdout)
         if root_logger.level >= logging.INFO:
@@ -67,78 +69,79 @@ class SMACCLI(object):
         incumbent = None
 
         # Create scenario-object
-        scen = Scenario(args_.scenario_file, misc_args)
+        scenario = {}
+        scenario.update(vars(smac_args_))
+        scenario.update(vars(scen_args_))
+        scen = Scenario(scenario=scenario)
 
         # Restore state
-        if args_.restore_state:
-            root_logger.debug("Restoring state from %s...", args_.restore_state)
-            rh, stats, traj_list_aclib, traj_list_old = self.restore_state(scen, args_)
+        if main_args_.restore_state:
+            root_logger.debug("Restoring state from %s...", main_args_.restore_state)
+            rh, stats, traj_list_aclib, traj_list_old = self.restore_state(scen, main_args_)
 
             scen.output_dir_for_this_run = create_output_directory(
-                scen, args_.seed, root_logger,
+                scen, main_args_.seed, root_logger,
             )
             scen.write()
             incumbent = self.restore_state_after_output_dir(scen, stats,
-                                           traj_list_aclib, traj_list_old)
+                                                            traj_list_aclib, traj_list_old)
 
-        if args_.warmstart_runhistory:
+        if main_args_.warmstart_runhistory:
             aggregate_func = average_cost
             rh = RunHistory(aggregate_func=aggregate_func)
 
             scen, rh = merge_foreign_data_from_file(
                 scenario=scen,
                 runhistory=rh,
-                in_scenario_fn_list=args_.warmstart_scenario,
-                in_runhistory_fn_list=args_.warmstart_runhistory,
+                in_scenario_fn_list=main_args_.warmstart_scenario,
+                in_runhistory_fn_list=main_args_.warmstart_runhistory,
                 cs=scen.cs,
                 aggregate_func=aggregate_func)
 
-        if args_.warmstart_incumbent:
+        if main_args_.warmstart_incumbent:
             initial_configs = [scen.cs.get_default_configuration()]
-            for traj_fn in args_.warmstart_incumbent:
+            for traj_fn in main_args_.warmstart_incumbent:
                 trajectory = TrajLogger.read_traj_aclib_format(
                     fn=traj_fn, cs=scen.cs)
                 initial_configs.append(trajectory[-1]["incumbent"])
 
-
-        if args_.mode == "SMAC":
+        if main_args_.mode == "SMAC":
             optimizer = SMAC(
                 scenario=scen,
-                rng=np.random.RandomState(args_.seed),
+                rng=np.random.RandomState(main_args_.seed),
                 runhistory=rh,
                 initial_configurations=initial_configs,
                 stats=stats,
                 restore_incumbent=incumbent,
-                run_id=args_.seed,
-                random_configuration_chooser=args_.random_configuration_chooser)
-        elif args_.mode == "ROAR":
+                run_id=main_args_.seed)
+        elif main_args_.mode == "ROAR":
             optimizer = ROAR(
                 scenario=scen,
-                rng=np.random.RandomState(args_.seed),
+                rng=np.random.RandomState(main_args_.seed),
                 runhistory=rh,
                 initial_configurations=initial_configs,
-                run_id=args_.seed)
-        elif args_.mode == "EPILS":
+                run_id=main_args_.seed)
+        elif main_args_.mode == "EPILS":
             optimizer = EPILS(
                 scenario=scen,
-                rng=np.random.RandomState(args_.seed),
+                rng=np.random.RandomState(main_args_.seed),
                 runhistory=rh,
                 initial_configurations=initial_configs,
-                run_id=args_.seed)
-        elif args_.mode == "Hydra":
+                run_id=main_args_.seed)
+        elif main_args_.mode == "Hydra":
             optimizer = Hydra(
                 scenario=scen,
-                rng=np.random.RandomState(args_.seed),
+                rng=np.random.RandomState(main_args_.seed),
                 runhistory=rh,
                 initial_configurations=initial_configs,
                 stats=stats,
                 restore_incumbent=incumbent,
-                run_id=args_.seed,
-                random_configuration_chooser=args_.random_configuration_chooser,
-                n_iterations=args_.hydra_iterations,
-                val_set=args_.hydra_validation,
-                incs_per_round=args_.hydra_incumbents_per_round,
-                n_optimizers=args_.hydra_n_optimizers)
+                run_id=main_args_.seed,
+                random_configuration_chooser=main_args_.random_configuration_chooser,
+                n_iterations=main_args_.hydra_iterations,
+                val_set=main_args_.hydra_validation,
+                incs_per_round=main_args_.hydra_incumbents_per_round,
+                n_optimizers=main_args_.hydra_n_optimizers)
         try:
             optimizer.optimize()
         except (TAEAbortException, FirstRunCrashedException) as err:

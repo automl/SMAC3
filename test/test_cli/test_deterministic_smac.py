@@ -44,24 +44,21 @@ class TestDeterministicSMAC(unittest.TestCase):
                     "--seed", "1",
                     "--random_configuration_chooser", "test/test_cli/random_configuration_chooser_impl.py",
                     "--output_dir", self.output_dir_1]
-        with mock.patch.object(sys, 'argv', testargs):
-            SMACCLI().main_cli()
+        SMACCLI().main_cli(testargs[1:])
         testargs = ["scripts/smac",
                     "--scenario", self.scenario_file,
                     "--verbose_level", "DEBUG",
                     "--seed", "1",
                     "--random_configuration_chooser", "test/test_cli/random_configuration_chooser_impl.py",
                     "--output_dir", self.output_dir_2]
-        with mock.patch.object(sys, 'argv', testargs):
-            SMACCLI().main_cli()
+        SMACCLI().main_cli(testargs[1:])
         testargs = ["scripts/smac",
                     "--scenario", self.scenario_file,
                     "--verbose_level", "DEBUG",
                     "--seed", "2",
                     "--random_configuration_chooser", "test/test_cli/random_configuration_chooser_impl.py",
                     "--output_dir", self.output_dir_3]
-        with mock.patch.object(sys, 'argv', testargs):
-            SMACCLI().main_cli()
+        SMACCLI().main_cli(testargs[1:])
         # compare trajectories in output_dir_{1,2,3}
         h1 = json.load(open(self.output_dir_1 + '/run_1/runhistory.json'))
         h2 = json.load(open(self.output_dir_2 + '/run_1/runhistory.json'))

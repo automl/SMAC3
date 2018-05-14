@@ -44,16 +44,15 @@ class OutputWriter(object):
                               "{}.".format(scenario.output_dir_for_this_run))
 
         # options_dest2name maps scenario._arguments from dest -> name
-        options_dest2name = {
-            (scenario._arguments[v]['dest'] if scenario._arguments[v]['dest'] else v): v
-            for v in scenario._arguments
-        }
+        options_dest2name = {(scenario._arguments[v]['dest'] if
+            scenario._arguments[v]['dest'] else v) : v.lstrip('-').replace('-', '_') for v in scenario._arguments}
 
         # Write all options into "output_dir/scenario.txt"
         path = os.path.join(scenario.output_dir_for_this_run, "scenario.txt")
         scenario.logger.debug("Writing scenario-file to {}.".format(path))
         with open(path, 'w') as fh:
             for key in options_dest2name:
+                key = key.lstrip('-').replace('-', '_')
                 new_value = self._parse_argument(scenario, key, getattr(scenario, key))
                 if new_value is not None:
                     fh.write("{} = {}\n".format(options_dest2name[key], new_value))

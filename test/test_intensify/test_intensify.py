@@ -177,6 +177,7 @@ class TestIntensify(unittest.TestCase):
         # challenger worse than inc
         self.assertIsNone(conf, "conf: %s" % (conf))
 
+    @attr('slow')
     def test_race_challenger(self):
         '''
            test _race_challenger without adaptive capping
