@@ -34,7 +34,7 @@ def optimize(queue: multiprocessing.Queue,
              rng: typing.Union[np.random.RandomState, int],
              output_dir: str,
              cost_per_inst: typing.Dict[str, float],
-             **kwargs):
+             **kwargs) -> Configuration:
     """
     Unbound method to be called in a subprocess
 
@@ -52,6 +52,11 @@ def optimize(queue: multiprocessing.Queue,
         The directory in which each smac run should write it's results
     cost_per_inst: dict
         maps instance to cost. Contains portfolio performance on each instance
+
+    Returns
+    -------
+    incumbent: Configuration
+        The incumbent configuration of this run
 
     """
     if not cost_per_inst:
@@ -115,7 +120,7 @@ class Hydra(object):
         val_set: str
             Set to validate incumbent(s) on. [train, valX].
             train => whole training set,
-            valX => train_set * 100/X
+            valX => train_set * 100/X where X in (0, 100)
         incs_per_round: int
             Number of incumbents to keep per round
         n_optimizers: int
@@ -160,9 +165,14 @@ class Hydra(object):
         val_set: str
             Set to validate incumbent(s) on. [train, valX].
             train => whole training set,
-            valX => train_set * 100/X
+            valX => train_set * 100/X where X in (0, 100)
         delete: bool
             Flag to delete all validation instances from the training set
+
+        Returns
+        -------
+        val: typing.List[str]
+            List of instance-ids to validate on
 
         """
         if val_set == 'train':
@@ -172,8 +182,8 @@ class Hydra(object):
             return self.scenario.train_insts
         else:
             size = int(val_set[3:])/100
-            if size < 0 or size > 1:
-                raise ValueError('X too large in valX')
+            if size <= 0 or size >= 1:
+                raise ValueError('X invalid in valX, should be between 0 and 1')
             insts = np.array(self.scenario.train_insts)
             # just to make sure this also works with the small example we have to round up to 3
             size = max(np.floor(insts.shape[0] * size).astype(int), 3)
@@ -218,12 +228,12 @@ class Hydra(object):
             for p in range(self.n_optimizers):
                 proc = multiprocessing.Process(target=optimize,
                                                args=(
-                                                   q,
-                                                   self.scenario,
-                                                   self._tae,
-                                                   p,
-                                                   self.output_dir,
-                                                   self.cost_per_inst
+                                                   q,                   # Output queue
+                                                   self.scenario,       # Scenario object
+                                                   self._tae,           # type of tae to run target with
+                                                   p,                   # process_id (used in output folder name)
+                                                   self.output_dir,     # directory to create outputs in
+                                                   self.cost_per_inst   # portfolio cost per instance
                                                ),
                                                kwargs=self.kwargs)
                 proc.start()
@@ -276,6 +286,11 @@ class Hydra(object):
         ----------
         incs: np.ndarray
             List of Configurations
+
+        Returns
+        -------
+        cur_cost: typing.Union[np.float, float]
+            The current cost of the portfolio
 
         """
         self.logger.info('*'*120)

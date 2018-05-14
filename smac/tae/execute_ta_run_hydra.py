@@ -3,6 +3,8 @@ import typing
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
 from smac.tae.execute_ta_run_aclib import ExecuteTARun
+from smac.tae.execute_func import ExecuteTAFuncDict
+from smac.tae.execute_func import ExecuteTAFuncArray
 from smac.tae.execute_ta_run_old import StatusType
 
 __copyright__ = "Copyright 2018, ML4AAD"
@@ -34,6 +36,12 @@ class ExecuteTARunHydra(ExecuteTARun):
             self.runner = ExecuteTARunAClib(**kwargs)
         elif tae is ExecuteTARunOld:
             self.runner = ExecuteTARunOld(**kwargs)
+        elif tae is ExecuteTAFuncDict:
+            self.runner = ExecuteTAFuncDict(**kwargs)
+        elif tae is ExecuteTAFuncArray:
+            self.runner = ExecuteTAFuncArray(**kwargs)
+        else:
+            raise Exception('TAE not supported')
 
     def run(self, **kwargs):
         """ see ~smac.tae.execute_ta_run.ExecuteTARunOld for docstring
