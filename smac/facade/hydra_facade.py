@@ -6,7 +6,7 @@ import typing
 import copy
 
 import pickle
-import multiprocessing
+from functools import partial
 
 import numpy as np
 
@@ -17,6 +17,7 @@ from smac.tae.execute_ta_run_hydra import ExecuteTARunOld
 from smac.tae.execute_ta_run_hydra import ExecuteTARun
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_facade import SMAC
+from smac.facade.psmac_facade import PSMAC
 from smac.utils.io.output_directory import create_output_directory
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory import DataOrigin
@@ -26,58 +27,6 @@ from smac.utils.util_funcs import get_rng
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2017, ML4AAD"
 __license__ = "3-clause BSD"
-
-
-def optimize(queue: multiprocessing.Queue,
-             scenario: typing.Type[Scenario],
-             tae: typing.Type[ExecuteTARun],
-             rng: typing.Union[np.random.RandomState, int],
-             output_dir: str,
-             cost_per_inst: typing.Dict[str, float],
-             **kwargs) -> Configuration:
-    """
-    Unbound method to be called in a subprocess
-
-    Parameters
-    ----------
-    queue: multiprocessing.Queue
-        incumbents (Configurations) of each SMAC call will be pushed to this queue
-    scenario: Scenario
-        smac.Scenario to initialize SMAC
-    tae: ExecuteTARun
-        Target Algorithm Runner (supports old and aclib format)
-    rng: int/np.random.RandomState
-        The randomState/seed to pass to each smac run
-    output_dir: str
-        The directory in which each smac run should write it's results
-    cost_per_inst: dict
-        maps instance to cost. Contains portfolio performance on each instance
-
-    Returns
-    -------
-    incumbent: Configuration
-        The incumbent configuration of this run
-
-    """
-    if not cost_per_inst:
-        tae = tae(ta=scenario.ta, run_obj=scenario.run_obj)
-    else:
-        tae = ExecuteTARunHydra(ta=scenario.ta, run_obj=scenario.run_obj,
-                                cost_oracle=cost_per_inst, tae=tae)
-    solver = SMAC(scenario=scenario, tae_runner=tae, rng=rng, **kwargs)
-    solver.stats.start_timing()
-    solver.stats.print_stats()
-
-    incumbent = solver.solver.run()
-    solver.stats.print_stats()
-
-    if output_dir is not None:
-        solver.solver.runhistory.save_json(
-            fn=os.path.join(solver.output_dir, "runhistory.json")
-        )
-    queue.put(incumbent)
-    queue.close()
-    return incumbent
 
 
 class Hydra(object):
@@ -209,7 +158,7 @@ class Hydra(object):
         if self.output_dir is None:
             self.top_dir = "hydra-output_%s" % (
                 datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f'))
-            self.scenario.output_dir = os.path.join(self.top_dir, "smac3-output_%s" % (
+            self.scenario.output_dir = os.path.join(self.top_dir, "psmac3-output_%s" % (
                 datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f')))
             self.output_dir = create_output_directory(self.scenario, run_id=self.run_id, logger=self.logger)
 
@@ -222,37 +171,22 @@ class Hydra(object):
             self.logger.info("="*120)
             self.logger.info("Hydra Iteration: %d", (i + 1))
 
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Multiprocessing part start ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-            q = multiprocessing.Queue()
-            procs = []
-            for p in range(self.n_optimizers):
-                proc = multiprocessing.Process(target=optimize,
-                                               args=(
-                                                   q,                   # Output queue
-                                                   self.scenario,       # Scenario object
-                                                   self._tae,           # type of tae to run target with
-                                                   p,                   # process_id (used in output folder name)
-                                                   self.output_dir,     # directory to create outputs in
-                                                   self.cost_per_inst   # portfolio cost per instance
-                                               ),
-                                               kwargs=self.kwargs)
-                proc.start()
-                procs.append(proc)
-            for proc in procs:
-                proc.join()
-            incs = np.empty((self.n_optimizers, ), dtype=Configuration)
-            self.logger.info('*'*120)
-            self.logger.info('Incumbents this round:')
-            idx = 0
-            while not q.empty():
-                conf = q.get_nowait()
-                self.logger.info(conf)
-                incs[idx] = conf
-                idx += 1
-            q.close()
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Multiprocessing part end ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+            psmac = PSMAC(
+                scenario=self.scenario,
+                run_id=self.run_id,
+                rng=self.rng,
+                tae=self._tae if i == 0 else partial(ExecuteTARunHydra, cost_oracle=self.cost_per_inst),
+                shared_model=False,
+                validate=False,
+                n_optimizers=self.n_optimizers,
+                val_set=self.val_set,
+                n_incs=self.n_optimizers,  # return the whole portfolio
+                **self.kwargs
+            )
+            incs = psmac.optimize()
+            _, config_cost_per_inst = psmac.validate_incs(incs)
 
-            cur_portfolio_cost = self._update_portfolio(incs)
+            cur_portfolio_cost = self._update_portfolio(incs, config_cost_per_inst)
             if portfolio_cost <= cur_portfolio_cost:
                 self.logger.info("No further progress (%f) --- terminate hydra", portfolio_cost)
                 break
@@ -278,7 +212,7 @@ class Hydra(object):
 
         return self.portfolio
 
-    def _update_portfolio(self, incs: np.ndarray) -> typing.Union[np.float, float]:
+    def _update_portfolio(self, incs: np.ndarray, config_cost_per_inst: typing.Dict) -> typing.Union[np.float, float]:
         """
         Validates all configurations (in incs) and determines which ones to add to the portfolio
 
@@ -293,31 +227,7 @@ class Hydra(object):
             The current cost of the portfolio
 
         """
-        self.logger.info('*'*120)
-        self.logger.info('Validating')
-        new_rh = self.solver.validate(config_mode=incs,
-                                      instance_mode=self.val_set,
-                                      repetitions=1,
-                                      use_epm=False,
-                                      n_jobs=self.n_optimizers)
-        self.rh.update(new_rh, origin=DataOrigin.EXTERNAL_SAME_INSTANCES)
-        self.logger.info("Number of validated runs: %d", (len(new_rh.data)))
-        self.logger.info('*'*120)
-        self.logger.info('Determining best incumbents')
-        results = []
-        config_cost_per_inst = {}
-        for incumbent in incs:
-            cost_per_inst = new_rh.get_instance_costs_for_config(config=incumbent)
-            config_cost_per_inst[incumbent] = cost_per_inst
-            results.append(np.mean(list(cost_per_inst.values())))
-        to_keep_ids = list(map(lambda x: x[0],
-                               sorted(enumerate(results), key=lambda y: y[1])))[:self.incs_per_round]
-        if len(to_keep_ids) > 1:
-            self.logger.info('Keeping incumbents of runs %s', ', '.join(map(str, to_keep_ids)))
-        else:
-            self.logger.info('Keeping incumbent of run %s', str(to_keep_ids))
-        keep_incumbents = incs[to_keep_ids]
-        for kept in keep_incumbents:
+        for kept in incs:
             self.portfolio.append(kept)
             cost_per_inst = config_cost_per_inst[kept]
             if self.cost_per_inst:
