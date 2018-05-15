@@ -14,6 +14,7 @@ from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.facade.smac_facade import SMAC
 from smac.configspace import Configuration
+from smac.utils.util_funcs import get_rng
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -78,7 +79,7 @@ class ROAR(SMAC):
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         # initial random number generator
-        _, rng = self._get_rng(rng=rng)
+        _, rng = get_rng(rng=rng)
 
         # initial conversion of runhistory into EPM data
         # since ROAR does not really use it the converted data

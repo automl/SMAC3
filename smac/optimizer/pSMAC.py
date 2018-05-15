@@ -58,7 +58,7 @@ def read(run_history: RunHistory,
                 numruns_in_runhistory = new_numruns_in_runhistory
 
     difference = numruns_in_runhistory - initial_numruns_in_runhistory
-    logger.debug('Shared model mode: Finished loading new runs, found %d new '
+    logger.info('Shared model mode: Finished loading new runs, found %d new '
                  'runs.' % difference)
 
 

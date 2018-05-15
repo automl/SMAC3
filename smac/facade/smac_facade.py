@@ -33,6 +33,7 @@ from smac.epm.base_epm import AbstractEPM
 from smac.utils.util_funcs import get_types
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.constants import MAXINT
+from smac.utils.util_funcs import get_rng
 from smac.utils.io.output_directory import create_output_directory
 from smac.configspace import Configuration
 
@@ -141,10 +142,10 @@ class SMAC(object):
             # restore_incumbent is used by the CLI interface which provides a method for restoring a SMAC run given an
             # output directory. This is the default path.
             # initial random number generator
-            run_id, rng = self._get_rng(rng=rng, run_id=run_id)
+            run_id, rng = get_rng(rng=rng, run_id=run_id)
             self.output_dir = create_output_directory(scenario, run_id)
         elif scenario.output_dir is not None:
-            run_id, rng = self._get_rng(rng=rng, run_id=run_id)
+            run_id, rng = get_rng(rng=rng, run_id=run_id)
             # output-directory is created in CLI when restoring from a
             # folder. calling the function again in the facade results in two
             # folders being created: run_X and run_X.OLD. if we are
@@ -392,64 +393,6 @@ class SMAC(object):
             self.solver = SMBO(**smbo_args)
         else:
             self.solver = smbo_class(**smbo_args)
-
-    def _get_rng(
-            self,
-            rng: typing.Optional[typing.Union[int, np.random.RandomState]]=None,
-            run_id: typing.Optional[int]=None,
-    ) -> typing.Tuple[int, np.random.RandomState]:
-        """
-        Initialize random number generator and set run_id
-
-        * If rng and run_id are None, initialize a new generator and sample a run_id
-        * If rng is None and a run_id is given, use the run_id to initialize the rng
-        * If rng is an int, a RandomState object is created from that.
-        * If rng is RandomState, return it
-        * If only run_id is None, a run_id is sampled from the random state.
-
-        Parameters
-        ----------
-        rng : np.random.RandomState|int|None
-
-        run_id : int, optional
-
-        Returns
-        -------
-        int
-        np.random.RandomState
-
-        """
-        # initialize random number generator
-        if rng is not None and not isinstance(rng, (int, np.random.RandomState)):
-            raise TypeError('Argument rng accepts only arguments of type None, int or np.random.RandomState, '
-                            'you provided %s.' % str(type(rng)))
-        if run_id is not None and not isinstance(run_id, int):
-            raise TypeError('Argument run_id accepts only arguments of type None, int or np.random.RandomState, '
-                            'you provided %s.' % str(type(run_id)))
-
-        if rng is None and run_id is None:
-            # Case that both are None
-            self.logger.debug('No rng and no run_id given: using a random value to initialize run_id.')
-            rng = np.random.RandomState()
-            run_id = rng.randint(MAXINT)
-        elif rng is None and isinstance(run_id, int):
-            self.logger.debug('No rng and no run_id given: using run_id %d as seed.', run_id)
-            rng = np.random.RandomState(seed=run_id)
-        elif isinstance(rng, int):
-            if run_id is None:
-                run_id = rng
-            else:
-                pass
-            rng = np.random.RandomState(seed=rng)
-        elif isinstance(rng, np.random.RandomState):
-            if run_id is None:
-                run_id = rng.randint(MAXINT)
-            else:
-                pass
-        else:
-            raise ValueError('This should not happen! Please contact the developers! Arguments: rng=%s of type %s and '
-                             'run_id=% of type %s' % (rng, type(rng), run_id, type(run_id)))
-        return run_id, rng
 
     @staticmethod
     def _get_random_configuration_chooser(random_configuration_chooser):

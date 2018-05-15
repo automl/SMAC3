@@ -21,7 +21,7 @@ from smac.utils.io.output_directory import create_output_directory
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory import DataOrigin
 from smac.optimizer.objective import average_cost
-from smac.utils.constants import MAXINT
+from smac.utils.util_funcs import get_rng
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2017, ML4AAD"
@@ -138,7 +138,7 @@ class Hydra(object):
 
         self.n_iterations = n_iterations
         self.scenario = scenario
-        self.run_id, self.rng = self._get_rng(rng, run_id)
+        self.run_id, self.rng = get_rng(rng, run_id)
         self.kwargs = kwargs
         self.output_dir = None
         self.top_dir = None
@@ -330,61 +330,3 @@ class Hydra(object):
 
         cur_cost = np.mean(list(self.cost_per_inst.values()))  # type: np.float
         return cur_cost
-
-    def _get_rng(
-            self,
-            rng: typing.Optional[typing.Union[int, np.random.RandomState]]=None,
-            run_id: typing.Optional[int]=None,
-    ) -> typing.Tuple[int, np.random.RandomState]:
-        """
-        Initialize random number generator and set run_id
-
-        * If rng and run_id are None, initialize a new generator and sample a run_id
-        * If rng is None and a run_id is given, use the run_id to initialize the rng
-        * If rng is an int, a RandomState object is created from that.
-        * If rng is RandomState, return it
-        * If only run_id is None, a run_id is sampled from the random state.
-
-        Parameters
-        ----------
-        rng : np.random.RandomState|int|None
-
-        run_id : int, optional
-
-        Returns
-        -------
-        int
-        np.random.RandomState
-
-        """
-        # initialize random number generator
-        if rng is not None and not isinstance(rng, (int, np.random.RandomState)):
-            raise TypeError('Argument rng accepts only arguments of type None, int or np.random.RandomState, '
-                            'you provided %s.' % str(type(rng)))
-        if run_id is not None and not isinstance(run_id, int):
-            raise TypeError('Argument run_id accepts only arguments of type None, int or np.random.RandomState, '
-                            'you provided %s.' % str(type(run_id)))
-
-        if rng is None and run_id is None:
-            # Case that both are None
-            self.logger.debug('No rng and no run_id given: using a random value to initialize run_id.')
-            rng = np.random.RandomState()
-            run_id = rng.randint(MAXINT)
-        elif rng is None and isinstance(run_id, int):
-            self.logger.debug('No rng and no run_id given: using run_id %d as seed.', run_id)
-            rng = np.random.RandomState(seed=run_id)
-        elif isinstance(rng, int):
-            if run_id is None:
-                run_id = rng
-            else:
-                pass
-            rng = np.random.RandomState(seed=rng)
-        elif isinstance(rng, np.random.RandomState):
-            if run_id is None:
-                run_id = rng.randint(MAXINT)
-            else:
-                pass
-        else:
-            raise ValueError('This should not happen! Please contact the developers! Arguments: rng=%s of type %s and '
-                             'run_id=% of type %s' % (rng, type(rng), run_id, type(run_id)))
-        return run_id, rng
