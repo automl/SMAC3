@@ -130,7 +130,7 @@ class Hydra(object):
         run_id: int
             run_id for this hydra run
         tae: ExecuteTARun
-            Target Algorithm Runner (supports old and aclib format)
+            Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)
 
         """
         self.logger = logging.getLogger(
