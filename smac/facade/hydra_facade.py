@@ -309,7 +309,7 @@ class Hydra(object):
         for incumbent in incs:
             cost_per_inst = new_rh.get_instance_costs_for_config(config=incumbent)
             config_cost_per_inst[incumbent] = cost_per_inst
-            results.append(np.mean(list(self.cost_per_inst.values())))
+            results.append(np.mean(list(cost_per_inst.values())))
         to_keep_ids = list(map(lambda x: x[0],
                                sorted(enumerate(results), key=lambda y: y[1])))[:self.incs_per_round]
         if len(to_keep_ids) > 1:
