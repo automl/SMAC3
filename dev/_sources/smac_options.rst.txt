@@ -7,7 +7,7 @@
 :intensification_percentage: The fraction of time to be used on intensification (versus choice of next Configurations). Default: 0.5.
 :maxR: Maximum number of calls per configuration. Default: 2000.
 :minR: Minimum number of calls per configuration. Default: 1.
-:output_dir: Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2018-05-16_08:08:38_472370.
+:output_dir: Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2018-05-16_16:15:35_041441.
 :random_configuration_chooser: path to a python module containing a class`RandomConfigurationChooserImpl` implementingthe interface of `RandomConfigurationChooser`
 :rf_do_bootstrapping: Use bootstraping in random forest. Default: True.
 :rf_max_depth: Maximum depth of each tree in the random forest. Default: 20.

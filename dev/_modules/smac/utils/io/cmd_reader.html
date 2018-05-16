@@ -639,6 +639,27 @@
         <span class="n">opt_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--warmstart-incumbent&quot;</span><span class="p">,</span> <span class="s2">&quot;--warmstart_incumbent&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;warmstart_incumbent&quot;</span><span class="p">,</span>
                               <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
                               <span class="n">help</span><span class="o">=</span><span class="n">SUPPRESS</span><span class="p">)</span>
+        <span class="n">req_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--random_configuration_chooser&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">FileType</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">),</span>
+                              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;[dev] path to a python module containing a class `RandomConfigurationChooserImpl`&quot;</span>
+                                   <span class="s2">&quot;implementing the interface of `RandomConfigurationChooser`&quot;</span><span class="p">)</span>
+        <span class="n">req_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--hydra_iterations&quot;</span><span class="p">,</span>
+                              <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                              <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+                              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;[dev] number of hydra iterations. Only active if mode is set to Hydra&quot;</span><span class="p">)</span>
+        <span class="n">req_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--hydra_validation&quot;</span><span class="p">,</span>
+                              <span class="n">default</span><span class="o">=</span><span class="s1">&#39;train&#39;</span><span class="p">,</span>
+                              <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">,</span> <span class="s1">&#39;val10&#39;</span><span class="p">,</span> <span class="s1">&#39;val20&#39;</span><span class="p">],</span>
+                              <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span>
+                              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;[dev] set to validate incumbents on. valX =&gt;&quot;</span>
+                                   <span class="s2">&quot; validation set of size training_set * 0.X&quot;</span><span class="p">)</span>
+        <span class="n">req_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--hydra_incumbents_per_round&quot;</span><span class="p">,</span>
+                              <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                              <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+                              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;[dev] number of configurations to keep per hydra iteration.&quot;</span><span class="p">)</span>
+        <span class="n">req_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--hydra_n_optimizers&quot;</span><span class="p">,</span>
+                              <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                              <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+                              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;[dev] number of optimizers to run in parallel per hydra iteration.&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">main_cmd_actions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_cmd_translations</span> <span class="o">=</span> <span class="n">CMDReader</span><span class="o">.</span><span class="n">_extract_action_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">_actions</span><span class="p">)</span>
 

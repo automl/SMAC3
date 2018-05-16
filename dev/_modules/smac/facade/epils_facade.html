@@ -280,14 +280,14 @@
 <span class="kn">from</span> <span class="nn">smac.utils.io.output_directory</span> <span class="k">import</span> <span class="n">create_output_directory</span>
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">Configuration</span>
 
-
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2016, ML4AAD&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
 <div class="viewcode-block" id="EPILS"><a class="viewcode-back" href="../../../apidoc/smac.facade.epils_facade.html#smac.facade.epils_facade.EPILS">[docs]</a><span class="k">class</span> <span class="nc">EPILS</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Facade to use EPILS mode</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Facade to use EPILS mode</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -295,6 +295,43 @@
 <span class="sd">    stats : Stats</span>
 <span class="sd">    solver : EPILS_Solver</span>
 <span class="sd">        Optimizer object, see :class:`~smac.optimizer.epils.EPILS_Solver`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    scenario: smac.scenario.scenario.Scenario</span>
+<span class="sd">        Scenario object</span>
+<span class="sd">    tae_runner: ExecuteTARun or callable</span>
+<span class="sd">        Callable or implementation of :class:`ExecuteTaRun`. In case a</span>
+<span class="sd">        callable is passed it will be wrapped by tae.ExecuteTaFunc().</span>
+<span class="sd">        If not set, tae_runner will be initialized with</span>
+<span class="sd">        the tae.ExecuteTARunOld()</span>
+<span class="sd">    runhistory: RunHistory</span>
+<span class="sd">        runhistory to store all algorithm runs</span>
+<span class="sd">    intensifier: Intensifier</span>
+<span class="sd">        intensification object to issue a racing to decide the current</span>
+<span class="sd">        incumbent</span>
+<span class="sd">    acquisition_function : AcquisitionFunction</span>
+<span class="sd">        Object that implements the AbstractAcquisitionFunction. Will use</span>
+<span class="sd">        EI if not set.</span>
+<span class="sd">    model : AbstractEPM</span>
+<span class="sd">        Model that implements train() and predict(). Will use a</span>
+<span class="sd">        RandomForest if not set.</span>
+<span class="sd">    runhistory2epm : RunHistory2EMP</span>
+<span class="sd">        Object that implements the AbstractRunHistory2EPM. If None,</span>
+<span class="sd">        will use RunHistory2EPM4Cost if objective is cost or</span>
+<span class="sd">        RunHistory2EPM4LogCost if objective is runtime.</span>
+<span class="sd">    initial_design: InitialDesign</span>
+<span class="sd">        initial sampling design</span>
+<span class="sd">    initial_configurations: typing.List[Configuration]</span>
+<span class="sd">        list of initial configurations for initial design --</span>
+<span class="sd">        cannot be used together with initial_design</span>
+<span class="sd">    stats: Stats</span>
+<span class="sd">        optional stats object</span>
+<span class="sd">    rng: np.random.RandomState</span>
+<span class="sd">        Random number generator</span>
+<span class="sd">    run_id: int, (default: 1)</span>
+<span class="sd">        Run ID will be used as subfolder for output_dir.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
@@ -302,58 +339,23 @@
                  <span class="c1"># TODO: once we drop python3.4 add type hint</span>
                  <span class="c1"># typing.Union[ExecuteTARun, callable]</span>
                  <span class="n">tae_runner</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">intensifier</span><span class="p">:</span> <span class="n">Intensifier</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">model</span><span class="p">:</span> <span class="n">AbstractEPM</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">runhistory2epm</span><span class="p">:</span> <span class="n">AbstractRunHistory2EPM</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">initial_design</span><span class="p">:</span> <span class="n">InitialDesign</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">initial_configurations</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        scenario: smac.scenario.scenario.Scenario</span>
-<span class="sd">            Scenario object</span>
-<span class="sd">        tae_runner: ExecuteTARun or callable</span>
-<span class="sd">            Callable or implementation of :class:`ExecuteTaRun`. In case a</span>
-<span class="sd">            callable is passed it will be wrapped by tae.ExecuteTaFunc().</span>
-<span class="sd">            If not set, tae_runner will be initialized with</span>
-<span class="sd">            the tae.ExecuteTARunOld()</span>
-<span class="sd">        runhistory: RunHistory</span>
-<span class="sd">            runhistory to store all algorithm runs</span>
-<span class="sd">        intensifier: Intensifier</span>
-<span class="sd">            intensification object to issue a racing to decide the current</span>
-<span class="sd">            incumbent</span>
-<span class="sd">        acquisition_function : AcquisitionFunction</span>
-<span class="sd">            Object that implements the AbstractAcquisitionFunction. Will use</span>
-<span class="sd">            EI if not set.</span>
-<span class="sd">        model : AbstractEPM</span>
-<span class="sd">            Model that implements train() and predict(). Will use a</span>
-<span class="sd">            RandomForest if not set.</span>
-<span class="sd">        runhistory2epm : RunHistory2EMP</span>
-<span class="sd">            Object that implements the AbstractRunHistory2EPM. If None,</span>
-<span class="sd">            will use RunHistory2EPM4Cost if objective is cost or</span>
-<span class="sd">            RunHistory2EPM4LogCost if objective is runtime.</span>
-<span class="sd">        initial_design: InitialDesign</span>
-<span class="sd">            initial sampling design</span>
-<span class="sd">        initial_configurations: typing.List[Configuration]</span>
-<span class="sd">            list of initial configurations for initial design --</span>
-<span class="sd">            cannot be used together with initial_design</span>
-<span class="sd">        stats: Stats</span>
-<span class="sd">            optional stats object</span>
-<span class="sd">        rng: np.random.RandomState</span>
-<span class="sd">            Random number generator</span>
-<span class="sd">        run_id: int, (default: 1)</span>
-<span class="sd">            Run ID will be used as subfolder for output_dir.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+                 <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">intensifier</span><span class="p">:</span> <span class="n">Intensifier</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">model</span><span class="p">:</span> <span class="n">AbstractEPM</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">runhistory2epm</span><span class="p">:</span> <span class="n">AbstractRunHistory2EPM</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">initial_design</span><span class="p">:</span> <span class="n">InitialDesign</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">initial_configurations</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
         <span class="n">aggregate_func</span> <span class="o">=</span> <span class="n">average_cost</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="c1"># initialize stats object</span>
         <span class="k">if</span> <span class="n">stats</span><span class="p">:</span>
@@ -467,8 +469,8 @@
                                       <span class="n">cutoff</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">cutoff</span><span class="p">,</span>
                                       <span class="n">deterministic</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">deterministic</span><span class="p">,</span>
                                       <span class="n">run_obj_time</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;runtime&quot;</span><span class="p">,</span>
-                                      <span class="n">always_race_against</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">()</span> \
-                                        <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">always_race_default</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                                      <span class="n">always_race_against</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">()</span>
+                                      <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">always_race_default</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
                                       <span class="n">instance_specifics</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">instance_specific</span><span class="p">,</span>
                                       <span class="n">minR</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">minR</span><span class="p">,</span>
                                       <span class="n">maxR</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">maxR</span><span class="p">,</span>
@@ -578,7 +580,8 @@
                                    <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_rng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initialize random number generator</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize random number generator</span>
 
 <span class="sd">        If rng is None, initialize a new generator</span>
 <span class="sd">        If rng is Int, create RandomState from that</span>
@@ -591,8 +594,8 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        int, np.random.RandomState</span>
-<span class="sd">        &quot;&quot;&quot;</span>
 
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># initialize random number generator</span>
         <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;no rng given, using default seed of 1&#39;</span><span class="p">)</span>
@@ -610,18 +613,20 @@
         <span class="k">return</span> <span class="n">num_run</span><span class="p">,</span> <span class="n">rng</span>
 
 <div class="viewcode-block" id="EPILS.optimize"><a class="viewcode-back" href="../../../apidoc/smac.facade.epils_facade.html#smac.facade.epils_facade.EPILS.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Optimizes the algorithm provided in scenario (given in constructor)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Optimizes the algorithm provided in scenario (given in constructor)</span>
 
 <span class="sd">        Returns</span>
-<span class="sd">        ----------</span>
+<span class="sd">        -------</span>
 <span class="sd">        incumbent</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">incumbent</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
         <span class="k">finally</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">print_stats</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Final Incumbent: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Final Incumbent: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">runhistory</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">traj_logger</span><span class="o">.</span><span class="n">trajectory</span>
 
@@ -632,22 +637,26 @@
         <span class="k">return</span> <span class="n">incumbent</span></div>
 
 <div class="viewcode-block" id="EPILS.get_tae_runner"><a class="viewcode-back" href="../../../apidoc/smac.facade.epils_facade.html#smac.facade.epils_facade.EPILS.get_tae_runner">[docs]</a>    <span class="k">def</span> <span class="nf">get_tae_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns target algorithm evaluator (TAE) object which can run the</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns target algorithm evaluator (TAE) object which can run the</span>
 <span class="sd">        target algorithm given a configuration</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        smac.tae.execute_ta_run.ExecuteTARun</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">tae_runner</span></div>
 
 <div class="viewcode-block" id="EPILS.get_runhistory"><a class="viewcode-back" href="../../../apidoc/smac.facade.epils_facade.html#smac.facade.epils_facade.EPILS.get_runhistory">[docs]</a>    <span class="k">def</span> <span class="nf">get_runhistory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the runhistory (i.e., all evaluated configurations and</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the runhistory (i.e., all evaluated configurations and</span>
 <span class="sd">        the results)</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        smac.runhistory.runhistory.RunHistory</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;runhistory&#39;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;SMAC was not fitted yet. Call optimize() prior &#39;</span>
@@ -655,23 +664,24 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span></div>
 
 <div class="viewcode-block" id="EPILS.get_trajectory"><a class="viewcode-back" href="../../../apidoc/smac.facade.epils_facade.html#smac.facade.epils_facade.EPILS.get_trajectory">[docs]</a>    <span class="k">def</span> <span class="nf">get_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the trajectory (i.e., all incumbent configurations over time)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the trajectory (i.e., all incumbent configurations over time)</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        List of entries with the following fields:</span>
 <span class="sd">        &#39;train_perf&#39;, &#39;incumbent_id&#39;, &#39;incumbent&#39;,</span>
 <span class="sd">        &#39;ta_runs&#39;, &#39;ta_time_used&#39;, &#39;wallclock_time&#39;</span>
-<span class="sd">        &quot;&quot;&quot;</span>
 
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;trajectory&#39;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;SMAC was not fitted yet. Call optimize() prior &#39;</span>
                              <span class="s1">&#39;to accessing the runhistory.&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span></div>
 
 <div class="viewcode-block" id="EPILS.get_X_y"><a class="viewcode-back" href="../../../apidoc/smac.facade.epils_facade.html#smac.facade.epils_facade.EPILS.get_X_y">[docs]</a>    <span class="k">def</span> <span class="nf">get_X_y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Simple interface to obtain all data in runhistory in X, y format</span>
-
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simple interface to obtain all data in runhistory in X, y format</span>
 <span class="sd">        Uses smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()</span>
 
 <span class="sd">        Returns</span>
@@ -682,6 +692,7 @@
 <span class="sd">            vector of cost values; can include censored runs</span>
 <span class="sd">        cen: numpy.ndarray</span>
 <span class="sd">            vector of bools indicating whether the y-value is censored</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">rh2EPM</span><span class="o">.</span><span class="n">get_X_y</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">)</span></div></div>
 </pre></div>

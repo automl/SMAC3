@@ -306,7 +306,8 @@
         <span class="n">logger_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
         <span class="n">root_logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">logger_handler</span><span class="p">)</span>
         <span class="c1"># remove default handler</span>
-        <span class="n">root_logger</span><span class="o">.</span><span class="n">removeHandler</span><span class="p">(</span><span class="n">root_logger</span><span class="o">.</span><span class="n">handlers</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">root_logger</span><span class="o">.</span><span class="n">handlers</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">root_logger</span><span class="o">.</span><span class="n">removeHandler</span><span class="p">(</span><span class="n">root_logger</span><span class="o">.</span><span class="n">handlers</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
         <span class="c1"># Create defaults</span>
         <span class="n">rh</span> <span class="o">=</span> <span class="kc">None</span>
@@ -383,8 +384,11 @@
                 <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
                 <span class="n">restore_incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
                 <span class="n">run_id</span><span class="o">=</span><span class="n">main_args_</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
-                <span class="n">random_configuration_chooser</span><span class="o">=</span><span class="n">smac_args_</span><span class="o">.</span><span class="n">random_configuration_chooser</span><span class="p">,</span>
-                <span class="n">n_iterations</span><span class="o">=</span><span class="n">smac_args_</span><span class="o">.</span><span class="n">hydra_iterations</span><span class="p">)</span>
+                <span class="n">random_configuration_chooser</span><span class="o">=</span><span class="n">main_args_</span><span class="o">.</span><span class="n">random_configuration_chooser</span><span class="p">,</span>
+                <span class="n">n_iterations</span><span class="o">=</span><span class="n">main_args_</span><span class="o">.</span><span class="n">hydra_iterations</span><span class="p">,</span>
+                <span class="n">val_set</span><span class="o">=</span><span class="n">main_args_</span><span class="o">.</span><span class="n">hydra_validation</span><span class="p">,</span>
+                <span class="n">incs_per_round</span><span class="o">=</span><span class="n">main_args_</span><span class="o">.</span><span class="n">hydra_incumbents_per_round</span><span class="p">,</span>
+                <span class="n">n_optimizers</span><span class="o">=</span><span class="n">main_args_</span><span class="o">.</span><span class="n">hydra_n_optimizers</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">optimizer</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
         <span class="k">except</span> <span class="p">(</span><span class="n">TAEAbortException</span><span class="p">,</span> <span class="n">FirstRunCrashedException</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
@@ -433,6 +437,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Restored incumbent </span><span class="si">%s</span><span class="s2"> from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">,</span>
                           <span class="n">traj_path_aclib</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">incumbent</span></div></div>
+
+
+<div class="viewcode-block" id="cmd_line_call"><a class="viewcode-back" href="../../apidoc/smac.smac_cli.html#smac.smac_cli.cmd_line_call">[docs]</a><span class="k">def</span> <span class="nf">cmd_line_call</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Entry point to be installable to /user/bin</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">smac</span> <span class="o">=</span> <span class="n">SMACCLI</span><span class="p">()</span>
+    <span class="n">smac</span><span class="o">.</span><span class="n">main_cli</span><span class="p">()</span></div>
 </pre></div>
 
            </div>

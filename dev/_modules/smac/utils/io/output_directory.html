@@ -246,6 +246,7 @@
             
   <h1>Source code for smac.utils.io.output_directory</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">logging</span> <span class="k">import</span> <span class="n">Logger</span>
+<span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
@@ -254,7 +255,7 @@
 
 
 <div class="viewcode-block" id="create_output_directory"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.output_directory.html#smac.utils.io.output_directory.create_output_directory">[docs]</a><span class="k">def</span> <span class="nf">create_output_directory</span><span class="p">(</span>
-        <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
+        <span class="n">scenario</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">Scenario</span><span class="p">],</span>
         <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">logger</span><span class="p">:</span> <span class="n">Logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>

@@ -269,11 +269,11 @@
 <span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="k">import</span> <span class="n">Intensifier</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.smbo</span> <span class="k">import</span> <span class="n">SMBO</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="k">import</span> <span class="n">average_cost</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="k">import</span> <span class="n">EI</span><span class="p">,</span> <span class="n">LogEI</span><span class="p">,</span> <span class="n">AbstractAcquisitionFunction</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="k">import</span> <span class="n">EI</span><span class="p">,</span> <span class="n">AbstractAcquisitionFunction</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="k">import</span> <span class="n">InterleavedLocalAndRandomSearch</span><span class="p">,</span> \
     <span class="n">AcquisitionFunctionMaximizer</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.random_configuration_chooser</span> <span class="k">import</span> <span class="n">ChooserNoCoolDown</span><span class="p">,</span> \
-    <span class="n">ChooserLinearCoolDown</span><span class="p">,</span> <span class="n">RandomConfigurationChooser</span>
+    <span class="n">RandomConfigurationChooser</span>
 <span class="kn">from</span> <span class="nn">smac.epm.rf_with_instances</span> <span class="k">import</span> <span class="n">RandomForestWithInstances</span>
 <span class="kn">from</span> <span class="nn">smac.epm.rfr_imputator</span> <span class="k">import</span> <span class="n">RFRImputator</span>
 <span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="k">import</span> <span class="n">AbstractEPM</span>
@@ -290,7 +290,8 @@
 
 
 <div class="viewcode-block" id="SMAC"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC">[docs]</a><span class="k">class</span> <span class="nc">SMAC</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Facade to use SMAC default mode</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Facade to use SMAC default mode</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -301,10 +302,11 @@
 <span class="sd">        List with information about previous runs</span>
 <span class="sd">    trajectory : list</span>
 <span class="sd">        List of all incumbents</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
+                 <span class="n">scenario</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">Scenario</span><span class="p">],</span>
                  <span class="n">tae_runner</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">ExecuteTARun</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">]]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">runhistory</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">RunHistory</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">intensifier</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Intensifier</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -320,7 +322,8 @@
                  <span class="n">smbo_class</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">SMBO</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">run_id</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">random_configuration_chooser</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">RandomConfigurationChooser</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -372,8 +375,8 @@
 <span class="sd">            chosen.</span>
 <span class="sd">        random_configuration_chooser : ~smac.optimizer.random_configuration_chooser.RandomConfigurationChooser</span>
 <span class="sd">            How often to choose a random configuration during the intensification procedure.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
 
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -466,7 +469,7 @@
         <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
                 <span class="n">acquisition_function_optimizer</span><span class="p">,</span>
                 <span class="n">AcquisitionFunctionMaximizer</span><span class="p">,</span>
-            <span class="p">):</span>
+        <span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;Argument &#39;acquisition_function_optimizer&#39; must be of type&quot;</span>
                 <span class="s2">&quot;&#39;AcquisitionFunctionMaximizer&#39;, but is &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span>
@@ -530,8 +533,8 @@
                                       <span class="n">cutoff</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">cutoff</span><span class="p">,</span>
                                       <span class="n">deterministic</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">deterministic</span><span class="p">,</span>
                                       <span class="n">run_obj_time</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;runtime&quot;</span><span class="p">,</span>
-                                      <span class="n">always_race_against</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">()</span> \
-                                        <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">always_race_default</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                                      <span class="n">always_race_against</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">()</span>
+                                      <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">always_race_default</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
                                       <span class="n">instance_specifics</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">instance_specific</span><span class="p">,</span>
                                       <span class="n">minR</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">minR</span><span class="p">,</span>
                                       <span class="n">maxR</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">maxR</span><span class="p">,</span>
@@ -654,7 +657,8 @@
             <span class="n">rng</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">]]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">run_id</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Initialize random number generator and set run_id</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize random number generator and set run_id</span>
 
 <span class="sd">        * If rng and run_id are None, initialize a new generator and sample a run_id</span>
 <span class="sd">        * If rng is None and a run_id is given, use the run_id to initialize the rng</span>
@@ -672,6 +676,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        int</span>
 <span class="sd">        np.random.RandomState</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># initialize random number generator</span>
         <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">)):</span>
@@ -707,7 +712,8 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_random_configuration_chooser</span><span class="p">(</span><span class="n">random_configuration_chooser</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initialize random configuration chooser</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize random configuration chooser</span>
 <span class="sd">        If random_configuration_chooser is falsy, initialize with ChooserNoCoolDown(2.0)</span>
 
 <span class="sd">        Parameters</span>
@@ -717,18 +723,21 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        ChooserNoCoolDown|ChooserLinearCoolDown</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">random_configuration_chooser</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">ChooserNoCoolDown</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">random_configuration_chooser</span>
 
 <div class="viewcode-block" id="SMAC.optimize"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Optimizes the algorithm provided in scenario (given in constructor)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Optimizes the algorithm provided in scenario (given in constructor)</span>
 
 <span class="sd">        Returns</span>
-<span class="sd">        ----------</span>
+<span class="sd">        -------</span>
 <span class="sd">        incumbent : Configuration</span>
 <span class="sd">            Best found configuration</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">incumbent</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">try</span><span class="p">:</span>
@@ -738,7 +747,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">print_stats</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Final Incumbent: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_all_configs</span><span class="p">():</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Estimated cost of incumbent: </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Estimated cost of incumbent: </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">runhistory</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">traj_logger</span><span class="o">.</span><span class="n">trajectory</span>
 
@@ -748,9 +758,12 @@
                 <span class="p">)</span>
         <span class="k">return</span> <span class="n">incumbent</span></div>
 
-<div class="viewcode-block" id="SMAC.validate"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_mode</span><span class="o">=</span><span class="s1">&#39;inc&#39;</span><span class="p">,</span> <span class="n">instance_mode</span><span class="o">=</span><span class="s1">&#39;train+test&#39;</span><span class="p">,</span>
-                 <span class="n">repetitions</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_epm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;threading&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create validator-object and run validation, using</span>
+<div class="viewcode-block" id="SMAC.validate"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">config_mode</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;inc&#39;</span><span class="p">,</span>
+                 <span class="n">instance_mode</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;train+test&#39;</span><span class="p">,</span>
+                 <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_epm</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s1">&#39;threading&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create validator-object and run validation, using</span>
 <span class="sd">        scenario-information, runhistory from smbo and tae_runner from intensify</span>
 
 <span class="sd">        Parameters</span>
@@ -777,27 +790,32 @@
 <span class="sd">        -------</span>
 <span class="sd">        runhistory: RunHistory</span>
 <span class="sd">            runhistory containing all specified runs</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">config_mode</span><span class="p">,</span> <span class="n">instance_mode</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">,</span>
                                     <span class="n">use_epm</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SMAC.get_tae_runner"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC.get_tae_runner">[docs]</a>    <span class="k">def</span> <span class="nf">get_tae_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns target algorithm evaluator (TAE) object which can run the</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns target algorithm evaluator (TAE) object which can run the</span>
 <span class="sd">        target algorithm given a configuration</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        TAE: smac.tae.execute_ta_run.ExecuteTARun</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">tae_runner</span></div>
 
 <div class="viewcode-block" id="SMAC.get_runhistory"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC.get_runhistory">[docs]</a>    <span class="k">def</span> <span class="nf">get_runhistory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the runhistory (i.e., all evaluated configurations and</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the runhistory (i.e., all evaluated configurations and</span>
 <span class="sd">         the results).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        Runhistory: smac.runhistory.runhistory.RunHistory</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;runhistory&#39;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;SMAC was not fitted yet. Call optimize() prior &#39;</span>
@@ -805,21 +823,23 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span></div>
 
 <div class="viewcode-block" id="SMAC.get_trajectory"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC.get_trajectory">[docs]</a>    <span class="k">def</span> <span class="nf">get_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the trajectory (i.e., all incumbent configurations over</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the trajectory (i.e., all incumbent configurations over</span>
 <span class="sd">        time).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        Trajectory : List of :class:`~smac.utils.io.traj_logging.TrajEntry`</span>
-<span class="sd">        &quot;&quot;&quot;</span>
 
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;trajectory&#39;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;SMAC was not fitted yet. Call optimize() prior &#39;</span>
                              <span class="s1">&#39;to accessing the runhistory.&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span></div>
 
 <div class="viewcode-block" id="SMAC.get_X_y"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC.get_X_y">[docs]</a>    <span class="k">def</span> <span class="nf">get_X_y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Simple interface to obtain all data in runhistory in ``X, y`` format.</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simple interface to obtain all data in runhistory in ``X, y`` format.</span>
 
 <span class="sd">        Uses</span>
 <span class="sd">        :meth:`smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()`.</span>
@@ -832,6 +852,7 @@
 <span class="sd">            vector of cost values; can include censored runs</span>
 <span class="sd">        cen: numpy.ndarray</span>
 <span class="sd">            vector of bools indicating whether the y-value is censored</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">rh2EPM</span><span class="o">.</span><span class="n">get_X_y</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">)</span></div></div>
 </pre></div>
