@@ -17,7 +17,7 @@ from smac.tae.execute_ta_run import StatusType, BudgetExhaustedException, Capped
 from smac.utils.io.traj_logging import TrajLogger
 
 __author__ = "Katharina Eggensperger, Marius Lindauer"
-__copyright__ = "Copyright 2017, ML4AAD"
+__copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
@@ -56,6 +56,11 @@ class Intensifier(object):
     minR : int
         Minimum number of run per config (summed over all calls to
         intensify).
+    adaptive_capping_slackfactor: float
+        slack factor of adpative capping (factor * adpative cutoff)
+    min_chall: int
+        minimal number of challengers to be considered
+        (even if time_bound is exhausted earlier)
     """
 
     def __init__(self, tae_runner: ExecuteTARun, stats: Stats,
@@ -66,7 +71,9 @@ class Intensifier(object):
                  run_obj_time: bool=True,
                  always_race_against: Configuration=None,
                  run_limit: int=MAXINT,
-                 minR: int=1, maxR: int=2000):
+                 minR: int=1, maxR: int=2000,
+                 adaptive_capping_slackfactor: float=1.2,
+                 min_chall: int=2):
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
@@ -93,7 +100,7 @@ class Intensifier(object):
         self.run_obj_time = run_obj_time
         self.tae_runner = tae_runner
 
-        self.Adaptive_Capping_Slackfactor = 1.2
+        self.adaptive_capping_slackfactor = adaptive_capping_slackfactor
 
         if self.run_limit < 1:
             raise ValueError("run_limit must be > 1")
@@ -102,7 +109,7 @@ class Intensifier(object):
         self._chall_indx = 0
 
         self._min_time = 10**-5
-        self._min_chall = 2
+        self.min_chall = min_chall
 
     def intensify(self, challengers: typing.List[Configuration],
                   incumbent: Configuration,
@@ -183,15 +190,16 @@ class Intensifier(object):
                 return incumbent, inc_perf
 
             tm = time.time()
-            if self._chall_indx >= self._min_chall and self._num_run > self.run_limit:
-                self.logger.debug(
-                    "Maximum #runs for intensification reached")
-                break
-            elif self._chall_indx > 1 and tm - self.start_time - time_bound >= 0:
-                self.logger.debug("Timelimit for intensification reached ("
-                                  "used: %f sec, available: %f sec)" %
-                                  (tm - self.start_time, time_bound))
-                break
+            if self._chall_indx >= self.min_chall:
+                if self._num_run > self.run_limit:
+                    self.logger.debug(
+                        "Maximum #runs for intensification reached")
+                    break
+                elif tm - self.start_time - time_bound >= 0:
+                    self.logger.debug("Timelimit for intensification reached ("
+                                      "used: %f sec, available: %f sec)" %
+                                      (tm - self.start_time, time_bound))
+                    break
 
         # output estimated performance of incumbent
         inc_runs = run_history.get_runs_for_config(incumbent)
@@ -418,7 +426,7 @@ class Intensifier(object):
                                  instance_seed_pairs=chall_inst_seeds,
                                  run_history=run_history)
         cutoff = min(self.cutoff,
-                     inc_sum_cost * self.Adaptive_Capping_Slackfactor -
+                     inc_sum_cost * self.adaptive_capping_slackfactor -
                      chal_sum_cost
                      )
         return cutoff

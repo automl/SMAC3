@@ -13,11 +13,8 @@ import time
 import typing
 
 __author__ = "Marius Lindauer"
-__copyright__ = "Copyright 2015, ML4AAD"
+__copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
-__maintainer__ = "Marius Lindauer"
-__email__ = "lindauer@cs.uni-freiburg.de"
-__version__ = "0.0.1"
 
 in_reader = InputReader()
 parsed_scen_args = {}
@@ -433,16 +430,7 @@ class CMDReader(object):
                                default=True, type=truthy,
                                help="If true, *SMAC* will abort if the first run of "
                                     "the target algorithm crashes.")
-        smac_opts.add_argument("--always-race-default", "--always_race_default", dest='always_race_default',
-                               default=False, type=truthy,
-                               help="[dev] Race new incumbents always against default "
-                                    "configuration.")
-        smac_opts.add_argument("--intensification-percentage", "--intensification_percentage",
-                               dest='intensification_percentage',
-                               default=0.5, type=float,
-                               help="[dev] The fraction of time to be used on "
-                                    "intensification (versus choice of next "
-                                    "Configurations).")
+
         smac_opts.add_argument("--minr", "--minR", dest='minR',
                                default=1, type=int,
                                help="[dev] Minimum number of calls per configuration.")
@@ -475,6 +463,69 @@ class CMDReader(object):
         smac_opts.add_argument("--hydra-iterations", "--hydra_iterations", dest="hydra_iterations",
                                default=3, type=int,
                                help="[dev] number of hydra iterations. Only active if mode is set to Hydra")
+
+        # Hyperparameters
+        smac_opts.add_argument("--always-race-default", "--always_race_default", dest='always_race_default',
+                               default=False, type=truthy,
+                               help="[dev] Race new incumbents always against default "
+                                    "configuration.")
+        smac_opts.add_argument("--intensification-percentage", "--intensification_percentage",
+                               dest='intensification_percentage',
+                               default=0.5, type=float,
+                               help="[dev] The fraction of time to be used on "
+                                    "intensification (versus choice of next "
+                                    "Configurations).")
+
+        ## RF Hyperparameters
+        smac_opts.add_argument("--rf_num_trees","--rf-num-trees",
+                               dest='rf_num_trees',
+                               default=10, type=int,
+                               help="[dev] Number of trees in the random forest (> 1).")
+        smac_opts.add_argument("--rf_do_bootstrapping","--rf-do-bootstrapping",
+                       dest='rf_do_bootstrapping',
+                       default=True, type=bool,
+                       help="[dev] Use bootstraping in random forest.")
+        smac_opts.add_argument("--rf_ratio_features","--rf-ratio-features",
+                       dest='rf_ratio_features',
+                       default=5. / 6., type=float,
+                       help="[dev] Ratio of sampled features in each split ([0.,1.]).")
+        smac_opts.add_argument("--rf_min_samples_split","--rf-min-samples-split",
+                       dest='rf_min_samples_split',
+                       default=3, type=int,
+                       help="[dev] Minimum number of samples to split for building a tree in the random forest.")
+        smac_opts.add_argument("--rf_min_samples_leaf","--rf-min-samples-leaf",
+                       dest='rf_min_samples_leaf',
+                       default=3, type=int,
+                       help="[dev] Minimum required number of samples in each leaf of a tree in the random forest.")
+        smac_opts.add_argument("--rf_max_depth","--rf-max-depth",
+                       dest='rf_max_depth',
+                       default=20, type=int,
+                       help="[dev] Maximum depth of each tree in the random forest.")
+        ## AcquisitionOptimizer SLS
+        smac_opts.add_argument("--sls_n_steps_plateau_walk","--sls-n-steps-plateau-walk",
+               dest='sls_n_steps_plateau_walk',
+               default=10, type=int,
+               help="[dev] Maximum number of steps on plateaus during "
+                    "the optimization of the acquisition function.")
+        smac_opts.add_argument("--sls_max_steps","--sls-max-steps",
+               dest='sls_max_steps',
+               default=None, type=int,
+               help="[dev] Maximum number of local search steps in one iteration"
+                    " during the optimization of the acquisition function.")
+        ## Intensification
+        smac_opts.add_argument("--intens_adaptive_capping_slackfactor","--intens-adaptive-capping-slackfactork",
+               dest='intens_adaptive_capping_slackfactor',
+               default=1.2, type=float,
+               help="[dev] Slack factor of adpative capping (factor * adpative cutoff)."
+                    " Only active if obj is runtime."
+                    " If set to very large number it practically deactivates adaptive capping.")
+        smac_opts.add_argument("--intens_min_chall","--intens-min-chall",
+               dest='intens_min_chall',
+               default=2, type=int,
+               help="[dev] Minimal number of challengers to be considered in each intensification run (> 1)."
+                    " Set to 1 and in combination with very small intensification-percentage."
+                    " it will deactivate randomly sampled configurations"
+                    " (and hence, extrapolation of random forest will be an issue.)")
 
         self.parser.add_parser(self.smac_parser)
         self.smac_cmd_actions, self.smac_cmd_translations = CMDReader._extract_action_info(self.smac_parser._actions)
