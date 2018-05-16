@@ -20,9 +20,10 @@ from smac.facade.smac_facade import SMAC
 from smac.facade.psmac_facade import PSMAC
 from smac.utils.io.output_directory import create_output_directory
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory import DataOrigin
 from smac.optimizer.objective import average_cost
 from smac.utils.util_funcs import get_rng
+from smac.utils.constants import MAXINT
+from smac.optimizer.pSMAC import read
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2017, ML4AAD"
@@ -177,14 +178,22 @@ class Hydra(object):
                 rng=self.rng,
                 tae=self._tae if i == 0 else partial(ExecuteTARunHydra, cost_oracle=self.cost_per_inst),
                 shared_model=False,
-                validate=False,
+                validate=None,
                 n_optimizers=self.n_optimizers,
                 val_set=self.val_set,
-                n_incs=self.n_optimizers,  # return the whole portfolio
+                n_incs=self.n_optimizers,  # return all configurations (unvalidated)
                 **self.kwargs
             )
-            incs = psmac.optimize()
-            _, config_cost_per_inst = psmac.validate_incs(incs)
+            psmac.output_dir = self.output_dir
+            incs, pids = psmac.optimize()
+            mean_cost_per_conf, config_cost_per_inst = psmac.validate_incs(incs)
+            to_keep_ids = list(map(lambda x: x[0],
+                                   sorted(enumerate(mean_cost_per_conf), key=lambda y: y[1])))[:self.incs_per_round]
+            incs = incs[to_keep_ids]
+            pids = pids[to_keep_ids]
+            for pid, inc in zip(pids, incs):
+                self.logger.info('Incumbent of round %d', pid)
+                self.logger.info(inc)
 
             cur_portfolio_cost = self._update_portfolio(incs, config_cost_per_inst)
             if portfolio_cost <= cur_portfolio_cost:
@@ -198,10 +207,11 @@ class Hydra(object):
             self.tae = ExecuteTARunHydra(ta=self.scenario.ta, run_obj=self.scenario.run_obj,
                                          cost_oracle=self.cost_per_inst, tae=self._tae)
 
-            self.scenario.output_dir = os.path.join(self.top_dir, "smac3-output_%s" % (
+            self.scenario.output_dir = os.path.join(self.top_dir, "psmac3-output_%s" % (
                 datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f')))
             self.output_dir = create_output_directory(self.scenario, run_id=self.run_id, logger=self.logger)
-        self.rh.save_json(fn=os.path.join(self.top_dir, 'all_runs_runhistory.json'), save_external=True)
+        read(self.rh, os.path.join(self.top_dir, 'psmac3*', 'run_' + str(MAXINT)), self.scenario.cs, self.logger)
+        self.rh.save_json(fn=os.path.join(self.top_dir, 'all_validated_runs_runhistory.json'), save_external=True)
         with open(os.path.join(self.top_dir, 'portfolio.pkl'), 'wb') as fh:
             pickle.dump(self.portfolio, fh)
         self.logger.info("~"*120)
@@ -228,15 +238,16 @@ class Hydra(object):
 
         """
         for kept in incs:
-            self.portfolio.append(kept)
-            cost_per_inst = config_cost_per_inst[kept]
-            if self.cost_per_inst:
-                if len(self.cost_per_inst) != len(cost_per_inst):
-                    raise ValueError('Num validated Instances mismatch!')
-                for key in cost_per_inst:
-                    self.cost_per_inst[key] = min(self.cost_per_inst[key], cost_per_inst[key])
-            else:
-                self.cost_per_inst = cost_per_inst
+            if kept not in self.portfolio:
+                self.portfolio.append(kept)
+                cost_per_inst = config_cost_per_inst[kept]
+                if self.cost_per_inst:
+                    if len(self.cost_per_inst) != len(cost_per_inst):
+                        raise ValueError('Num validated Instances mismatch!')
+                    for key in cost_per_inst:
+                        self.cost_per_inst[key] = min(self.cost_per_inst[key], cost_per_inst[key])
+                else:
+                    self.cost_per_inst = cost_per_inst
 
         cur_cost = np.mean(list(self.cost_per_inst.values()))  # type: np.float
         return cur_cost

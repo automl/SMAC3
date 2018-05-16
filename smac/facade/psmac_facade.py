@@ -21,6 +21,7 @@ from smac.utils.io.output_directory import create_output_directory
 from smac.runhistory.runhistory import RunHistory
 from smac.optimizer.objective import average_cost
 from smac.utils.util_funcs import get_rng
+from smac.utils.constants import MAXINT
 
 __author__ = "Andre Biedenkapp"
 __copyright__ = "Copyright 2018, ML4AAD"
@@ -67,7 +68,7 @@ def optimize(queue: multiprocessing.Queue,
         solver.solver.runhistory.save_json(
             fn=os.path.join(solver.output_dir, "runhistory.json")
         )
-    queue.put(incumbent)  # TODO get pSMAC read to get all runhistories
+    queue.put((incumbent, rng))
     queue.close()
     return incumbent
 
@@ -96,7 +97,7 @@ class PSMAC(object):
                  run_id: int = 1,
                  tae: typing.Type[ExecuteTARun] = ExecuteTARunOld,
                  shared_model: bool = True,
-                 validate: bool = True,
+                 validate: typing.Union[bool, None] = True,
                  n_optimizers: int = 2,
                  val_set: typing.Union[typing.List[str], None] = None,
                  n_incs: int=1,
@@ -118,8 +119,9 @@ class PSMAC(object):
             Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)
         shared_model: bool
             Flag to indicate whether information is shared between SMAC runs or not
-        validate: bool
-            Flag to indicate whether to validate the found configurations
+        validate: bool / None
+            Flag to indicate whether to validate the found configurations or to use the SMAC estimates
+            None => neither and return the full portfolio
         n_incs: int
             Number of incumbents to return (n_incs <= 0 ==> all found configurations)
         val_set: typing.List[str]
@@ -147,14 +149,19 @@ class PSMAC(object):
         else:
             self.val_set = val_set
 
-    def optimize(self) -> typing.Union[Configuration, typing.List[Configuration]]:
+    def optimize(self) -> typing.Tuple[typing.Union[Configuration,
+                                                    typing.List[Configuration],
+                                                    np.ndarray],
+                                       typing.Union[int, np.ndarray]]:
         """
         Optimizes the algorithm provided in scenario (given in constructor)
 
         Returns
         -------
-        incumbent : Configuration / List[Configuration]
+        incumbent(s) : Configuration / List[Configuration] / ndarray[Configuration]
             Incumbent / Portfolio of incumbents
+        pid(s) : int / ndarray[ints]
+            Process ID(s) from which the configuration stems
 
         """
         # Setup output directory
@@ -164,6 +171,7 @@ class PSMAC(object):
             self.output_dir = create_output_directory(self.scenario, run_id=self.run_id, logger=self.logger)
             if self.shared_model:
                 self.scenario.shared_model = self.shared_model
+        if self.scenario.input_psmac_dirs is None:
             self.scenario.input_psmac_dirs = os.path.sep.join((self.scenario.output_dir, 'run_*'))
 
         scen = copy.deepcopy(self.scenario)
@@ -190,37 +198,40 @@ class PSMAC(object):
         for proc in procs:
             proc.join()
         incs = np.empty((self.n_optimizers,), dtype=Configuration)
+        pids = np.empty((self.n_optimizers,), dtype=int)
         idx = 0
         while not q.empty():
-            conf = q.get_nowait()
+            conf, pid = q.get_nowait()
             incs[idx] = conf
+            pids[idx] = pid
             idx += 1
         self.logger.info('Loading all runhistories')
         read(self.rh, self.scenario.input_psmac_dirs, self.scenario.cs, self.logger)
         q.close()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Multiprocessing part end ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
-        with open(os.path.join(self.output_dir, 'portfolio.pkl'), 'wb') as fh:
-            pickle.dump(incs, fh)
-        self.logger.info("~" * 120)
-        self.logger.info('Resulting Portfolio:')
-        for configuration in incs:
-            self.logger.info(str(configuration))
-        self.logger.info("~" * 120)
-
-        if self.validate:
+        if self.validate is True:
             mean_costs_conf, _ = self.validate_incs(incs)
-        else:
+            return self._return_selection(mean_costs_conf, incs, pids)
+        elif self.validate is False:
             mean_costs_conf, _ = self._get_mean_costs(incs, self.rh)
+            return self._return_selection(mean_costs_conf, incs, pids)
+        elif self.validate is None:
+            return incs, pids
 
+    def _return_selection(self, mean_costs_conf, incs, pids):
         to_keep_ids = list(map(lambda x: x[0],
                                sorted(enumerate(mean_costs_conf), key=lambda y: y[1])))[:self.n_incs]
         self.logger.info("~" * 120)
         self.logger.info('Best configuration(s):')
-        for inc in incs[to_keep_ids]:
+        for pid, inc in zip(pids[to_keep_ids], incs[to_keep_ids]):
+            self.logger.info('Configuration from run: %d', pid)
             self.logger.info(str(inc))
+        self.logger.info('Saving all incumbents')
+        with open(os.path.join(self.output_dir, 'portfolio.pkl'), 'wb') as fh:
+            pickle.dump(incs[to_keep_ids], fh)
 
-        return incs[to_keep_ids]
+        return incs[to_keep_ids], pids[to_keep_ids]
 
     def _get_mean_costs(self, incs, new_rh):
         config_cost_per_inst = {}
@@ -232,7 +243,7 @@ class PSMAC(object):
         return results, config_cost_per_inst
 
     def validate_incs(self, incs: np.ndarray):
-        solver = SMAC(scenario=self.scenario, tae_runner=self.tae, rng=self.rng, run_id=-1, **self.kwargs)
+        solver = SMAC(scenario=self.scenario, tae_runner=self.tae, rng=self.rng, run_id=MAXINT, **self.kwargs)
         self.logger.info('*' * 120)
         self.logger.info('Validating')
         new_rh = solver.validate(config_mode=incs,
