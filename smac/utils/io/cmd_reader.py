@@ -401,7 +401,7 @@ class CMDReader(object):
                               help="[dev] number of hydra iterations. Only active if mode is set to Hydra")
         req_opts.add_argument("--hydra_validation",
                               default='train',
-                              choices=['train', 'val10', 'val20'],
+                              choices=['train', 'val10', 'val20', 'val30', 'val40', 'val50', 'none'],
                               type=str.lower,
                               help="[dev] set to validate incumbents on. valX =>"
                                    " validation set of size training_set * 0.X")

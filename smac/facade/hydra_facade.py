@@ -4,6 +4,7 @@ import datetime
 import time
 import typing
 import copy
+from collections import defaultdict
 
 import pickle
 from functools import partial
@@ -105,6 +106,8 @@ class Hydra(object):
         self.n_optimizers = max(n_optimizers, 1)
         self.val_set = self._get_validation_set(val_set)
         self.cost_per_inst = {}
+        self.optimizer = None
+        self.portfolio_cost = None
 
     def _get_validation_set(self, val_set: str, delete: bool=True) -> typing.List[str]:
         """
@@ -125,6 +128,8 @@ class Hydra(object):
             List of instance-ids to validate on
 
         """
+        if val_set == 'none':
+            return None
         if val_set == 'train':
             return self.scenario.train_insts
         elif val_set[:3] != 'val':
@@ -172,28 +177,31 @@ class Hydra(object):
             self.logger.info("="*120)
             self.logger.info("Hydra Iteration: %d", (i + 1))
 
-            psmac = PSMAC(
+            self.optimizer = PSMAC(
                 scenario=self.scenario,
                 run_id=self.run_id,
                 rng=self.rng,
                 tae=self._tae if i == 0 else partial(ExecuteTARunHydra, cost_oracle=self.cost_per_inst),
                 shared_model=False,
-                validate=None,
+                validate=True if self.val_set else False,
                 n_optimizers=self.n_optimizers,
                 val_set=self.val_set,
                 n_incs=self.n_optimizers,  # return all configurations (unvalidated)
                 **self.kwargs
             )
-            psmac.output_dir = self.output_dir
-            incs, pids = psmac.optimize()
-            mean_cost_per_conf, config_cost_per_inst = psmac.validate_incs(incs)
-            to_keep_ids = list(map(lambda x: x[0],
-                                   sorted(enumerate(mean_cost_per_conf), key=lambda y: y[1])))[:self.incs_per_round]
+            self.optimizer.output_dir = self.output_dir
+            incs = self.optimizer.optimize()
+            cost_per_conf_v, val_ids, cost_per_conf_e, est_ids = self.optimizer.get_best_incumbents_ids(incs)
+            if self.val_set:
+                to_keep_ids = val_ids[:self.incs_per_round]
+            else:
+                to_keep_ids = est_ids[:self.incs_per_round]
+            config_cost_per_inst = {}
             incs = incs[to_keep_ids]
-            pids = pids[to_keep_ids]
-            for pid, inc in zip(pids, incs):
-                self.logger.info('Incumbent of round %d', pid)
+            self.logger.info('Kept incumbents')
+            for inc in incs:
                 self.logger.info(inc)
+                config_cost_per_inst[inc] = cost_per_conf_v[inc] if self.val_set else cost_per_conf_e[inc]
 
             cur_portfolio_cost = self._update_portfolio(incs, config_cost_per_inst)
             if portfolio_cost <= cur_portfolio_cost:
@@ -237,17 +245,32 @@ class Hydra(object):
             The current cost of the portfolio
 
         """
-        for kept in incs:
-            if kept not in self.portfolio:
+        if self.val_set:  # we have validated data
+            for kept in incs:
+                if kept not in self.portfolio:
+                    self.portfolio.append(kept)
+                    cost_per_inst = config_cost_per_inst[kept]
+                    if self.cost_per_inst:
+                        if len(self.cost_per_inst) != len(cost_per_inst):
+                            raise ValueError('Num validated Instances mismatch!')
+                        else:
+                            for key in cost_per_inst:
+                                self.cost_per_inst[key] = min(self.cost_per_inst[key], cost_per_inst[key])
+                    else:
+                        self.cost_per_inst = cost_per_inst
+            cur_cost = np.mean(list(self.cost_per_inst.values()))  # type: np.float
+        else:  # No validated data. Set the mean to the approximated mean
+            means = []  # can contain nans as not every instance was evaluated thus we should use nanmean to approximate
+            for kept in incs:
+                means.append(np.nanmean(list(self.optimizer.rh.get_instance_costs_for_config(kept).values())))
                 self.portfolio.append(kept)
-                cost_per_inst = config_cost_per_inst[kept]
-                if self.cost_per_inst:
-                    if len(self.cost_per_inst) != len(cost_per_inst):
-                        raise ValueError('Num validated Instances mismatch!')
-                    for key in cost_per_inst:
-                        self.cost_per_inst[key] = min(self.cost_per_inst[key], cost_per_inst[key])
-                else:
-                    self.cost_per_inst = cost_per_inst
+            if self.portfolio_cost:
+                new_mean = self.portfolio_cost * (len(self.portfolio) - len(incs)) / len(self.portfolio)
+                new_mean += np.nansum(means)
+            else:
+                new_mean = np.mean(means)
+            self.cost_per_inst = defaultdict(lambda: new_mean)
+            cur_cost = new_mean
 
-        cur_cost = np.mean(list(self.cost_per_inst.values()))  # type: np.float
+        self.portfolio_cost = cur_cost
         return cur_cost

@@ -97,7 +97,7 @@ class PSMAC(object):
                  run_id: int = 1,
                  tae: typing.Type[ExecuteTARun] = ExecuteTARunOld,
                  shared_model: bool = True,
-                 validate: typing.Union[bool, None] = True,
+                 validate: bool = True,
                  n_optimizers: int = 2,
                  val_set: typing.Union[typing.List[str], None] = None,
                  n_incs: int=1,
@@ -149,10 +149,7 @@ class PSMAC(object):
         else:
             self.val_set = val_set
 
-    def optimize(self) -> typing.Tuple[typing.Union[Configuration,
-                                                    typing.List[Configuration],
-                                                    np.ndarray],
-                                       typing.Union[int, np.ndarray]]:
+    def optimize(self):
         """
         Optimizes the algorithm provided in scenario (given in constructor)
 
@@ -209,29 +206,28 @@ class PSMAC(object):
         read(self.rh, self.scenario.input_psmac_dirs, self.scenario.cs, self.logger)
         q.close()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Multiprocessing part end ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+        if self.n_optimizers == self.n_incs:
+            return incs
+        else:
+            _, val_ids, _, est_ids = self.get_best_incumbents_ids(incs)
+            if val_ids:
+                return incs[val_ids]
+            return incs[est_ids]
 
+    def get_best_incumbents_ids(self, incs):
         if self.validate is True:
-            mean_costs_conf, _ = self.validate_incs(incs)
-            return self._return_selection(mean_costs_conf, incs, pids)
-        elif self.validate is False:
-            mean_costs_conf, _ = self._get_mean_costs(incs, self.rh)
-            return self._return_selection(mean_costs_conf, incs, pids)
-        elif self.validate is None:
-            return incs, pids
+            mean_costs_conf_valid, cost_per_config_valid = self.validate_incs(incs)
+            val_ids = self._return_selection(mean_costs_conf_valid)
+        else:
+            cost_per_config_valid = val_ids = None
+        mean_costs_conf_estimate, cost_per_config_estimate = self._get_mean_costs(incs, self.rh)
+        est_ids = self._return_selection(mean_costs_conf_estimate)
+        return cost_per_config_valid, val_ids, cost_per_config_estimate, est_ids
 
-    def _return_selection(self, mean_costs_conf, incs, pids):
+    def _return_selection(self, mean_costs_conf):
         to_keep_ids = list(map(lambda x: x[0],
                                sorted(enumerate(mean_costs_conf), key=lambda y: y[1])))[:self.n_incs]
-        self.logger.info("~" * 120)
-        self.logger.info('Best configuration(s):')
-        for pid, inc in zip(pids[to_keep_ids], incs[to_keep_ids]):
-            self.logger.info('Configuration from run: %d', pid)
-            self.logger.info(str(inc))
-        self.logger.info('Saving all incumbents')
-        with open(os.path.join(self.output_dir, 'portfolio.pkl'), 'wb') as fh:
-            pickle.dump(incs[to_keep_ids], fh)
-
-        return incs[to_keep_ids], pids[to_keep_ids]
+        return to_keep_ids
 
     def _get_mean_costs(self, incs, new_rh):
         config_cost_per_inst = {}
