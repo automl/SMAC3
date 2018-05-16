@@ -64,7 +64,7 @@ class TestLocalSearch(unittest.TestCase):
             dist = [euclidean(point, opt)]
             return np.array([-np.min(dist)])
 
-        l = LocalSearch(acquisition_function, self.cs, max_iterations=100000)
+        l = LocalSearch(acquisition_function, self.cs, max_steps=100000)
 
         start_point = self.cs.sample_configuration()
         acq_val_start_point = acquisition_function([start_point])
@@ -96,7 +96,7 @@ class TestLocalSearch(unittest.TestCase):
         start_point = config_space.get_default_configuration()
         _get_initial_points_patch.return_value = [start_point]
 
-        l = LocalSearch(acquisition_function, config_space, max_iterations=100000)
+        l = LocalSearch(acquisition_function, config_space, max_steps=100000)
         # To have some data in a mock runhistory
         l.runhistory = [None] * 1000
         acq_val_incumbent, incumbent = l._maximize(runhistory, None, 1)[0]

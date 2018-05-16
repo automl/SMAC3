@@ -38,7 +38,7 @@ from smac.configspace import Configuration
 
 
 __author__ = "Marius Lindauer"
-__copyright__ = "Copyright 2016, ML4AAD"
+__copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
@@ -195,7 +195,13 @@ class SMAC(object):
                                               instance_features=scenario.feature_array,
                                               seed=rng.randint(MAXINT),
                                               pca_components=scenario.PCA_DIM,
-                                              unlog_y=scenario.run_obj == "runtime")
+                                              unlog_y=scenario.run_obj == "runtime",
+                                              num_trees=scenario.rf_num_trees,
+                                              do_bootstrapping=scenario.rf_do_bootstrapping,
+                                              ratio_features=scenario.rf_ratio_features,
+                                              min_samples_split=scenario.rf_min_samples_split,
+                                              min_samples_leaf=scenario.rf_min_samples_leaf,
+                                              max_depth=scenario.rf_max_depth)
         # initial acquisition function
         if acquisition_function is None:
             acquisition_function = EI(model=model)
@@ -207,7 +213,11 @@ class SMAC(object):
         # initialize optimizer on acquisition function
         if acquisition_function_optimizer is None:
             acquisition_function_optimizer = InterleavedLocalAndRandomSearch(
-                acquisition_function, scenario.cs, np.random.RandomState(seed=rng.randint(MAXINT))
+                acquisition_function=acquisition_function,
+                config_space=scenario.cs,
+                rng=np.random.RandomState(seed=rng.randint(MAXINT)),
+                max_steps=scenario.sls_max_steps,
+                n_steps_plateau_walk=scenario.sls_n_steps_plateau_walk
             )
         elif not isinstance(
                 acquisition_function_optimizer,
@@ -280,7 +290,9 @@ class SMAC(object):
                                       if scenario.always_race_default else None,
                                       instance_specifics=scenario.instance_specific,
                                       minR=scenario.minR,
-                                      maxR=scenario.maxR)
+                                      maxR=scenario.maxR,
+                                      adaptive_capping_slackfactor=scenario.intens_adaptive_capping_slackfactor,
+                                      min_chall=scenario.intens_min_chall)
         # inject deps if necessary
         if intensifier.tae_runner is None:
             intensifier.tae_runner = tae_runner
