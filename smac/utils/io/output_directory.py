@@ -1,4 +1,5 @@
 from logging import Logger
+import typing
 
 import os
 import shutil
@@ -7,7 +8,7 @@ from smac.scenario.scenario import Scenario
 
 
 def create_output_directory(
-        scenario: Scenario,
+        scenario: typing.Type[Scenario],
         run_id: int,
         logger: Logger=None,
 ):

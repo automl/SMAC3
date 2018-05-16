@@ -293,9 +293,15 @@ class SMBO(object):
         runhistory: RunHistory
             runhistory containing all specified runs
         """
-        traj_fn = os.path.join(self.scenario.output_dir_for_this_run, "traj_aclib2.json")
-        trajectory = TrajLogger.read_traj_aclib_format(fn=traj_fn, cs=self.scenario.cs)
-        new_rh_path = os.path.join(self.scenario.output_dir_for_this_run, "validated_runhistory.json")
+        if isinstance(config_mode, str):
+            traj_fn = os.path.join(self.scenario.output_dir_for_this_run, "traj_aclib2.json")
+            trajectory = TrajLogger.read_traj_aclib_format(fn=traj_fn, cs=self.scenario.cs)
+        else:
+            trajectory = None
+        if self.scenario.output_dir_for_this_run:
+            new_rh_path = os.path.join(self.scenario.output_dir_for_this_run, "validated_runhistory.json")
+        else:
+            new_rh_path = None
 
         validator = Validator(self.scenario, trajectory, self.rng)
         if use_epm:

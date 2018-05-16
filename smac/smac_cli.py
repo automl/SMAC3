@@ -59,7 +59,8 @@ class SMACCLI(object):
         logger_handler.setFormatter(formatter)
         root_logger.addHandler(logger_handler)
         # remove default handler
-        root_logger.removeHandler(root_logger.handlers[0])
+        if len(root_logger.handlers) > 1:
+            root_logger.removeHandler(root_logger.handlers[0])
 
         # Create defaults
         rh = None
@@ -136,8 +137,11 @@ class SMACCLI(object):
                 stats=stats,
                 restore_incumbent=incumbent,
                 run_id=main_args_.seed,
-                random_configuration_chooser=smac_args_.random_configuration_chooser,
-                n_iterations=smac_args_.hydra_iterations)
+                random_configuration_chooser=main_args_.random_configuration_chooser,
+                n_iterations=main_args_.hydra_iterations,
+                val_set=main_args_.hydra_validation,
+                incs_per_round=main_args_.hydra_incumbents_per_round,
+                n_optimizers=main_args_.hydra_n_optimizers)
         try:
             optimizer.optimize()
         except (TAEAbortException, FirstRunCrashedException) as err:
@@ -186,3 +190,12 @@ class SMACCLI(object):
         self.logger.debug("Restored incumbent %s from %s", incumbent,
                           traj_path_aclib)
         return incumbent
+
+
+def cmd_line_call():
+    """
+    Entry point to be installable to /user/bin
+    :return:
+    """
+    smac = SMACCLI()
+    smac.main_cli()

@@ -21,9 +21,10 @@ def fmin_smac(func: typing.Callable,
               bounds: typing.List[typing.List[float]],
               maxfun: int=-1,
               rng: np.random.RandomState=None,
-              scenario_args: typing.Mapping[str,typing.Any]=None,
+              scenario_args: typing.Mapping[str, typing.Any]=None,
               **kwargs):
-    """ Minimize a function func using the SMAC algorithm.
+    """
+    Minimize a function func using the SMAC algorithm.
     This function is a convenience wrapper for the SMAC class.
 
     Parameters
@@ -45,7 +46,7 @@ def fmin_smac(func: typing.Callable,
     **kwargs:
         Arguments passed to the optimizer class
         See ~smac.facade.smac_facade.SMAC
-        
+
     Returns
     -------
     x : list
@@ -55,6 +56,7 @@ def fmin_smac(func: typing.Callable,
     s : :class:`smac.facade.smac_facade.SMAC`
         SMAC objects which enables the user to get
         e.g., the trajectory and runhistory.
+
     """
     # create configuration space
     cs = ConfigurationSpace()
@@ -79,10 +81,10 @@ def fmin_smac(func: typing.Callable,
         "deterministic": "true",
         "initial_incumbent": "DEFAULT",
     }
-    
+
     if scenario_args is not None:
         scenario_dict.update(scenario_args)
-    
+
     if maxfun > 0:
         scenario_dict["runcount_limit"] = maxfun
     scenario = Scenario(scenario_dict)
@@ -95,5 +97,4 @@ def fmin_smac(func: typing.Callable,
     incumbent_performance = smac.solver.runhistory.data[run_key]
     incumbent = np.array([incumbent[tmplt.format(idx + 1)]
                           for idx in range(len(bounds))], dtype=np.float)
-    return incumbent, incumbent_performance.cost, \
-           smac
+    return incumbent, incumbent_performance.cost, smac

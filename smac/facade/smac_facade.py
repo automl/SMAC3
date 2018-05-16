@@ -22,11 +22,11 @@ from smac.initial_design.multi_config_initial_design import \
 from smac.intensification.intensification import Intensifier
 from smac.optimizer.smbo import SMBO
 from smac.optimizer.objective import average_cost
-from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
+from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction
 from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
     AcquisitionFunctionMaximizer
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
-    ChooserLinearCoolDown, RandomConfigurationChooser
+    RandomConfigurationChooser
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.base_epm import AbstractEPM
@@ -43,7 +43,8 @@ __license__ = "3-clause BSD"
 
 
 class SMAC(object):
-    """Facade to use SMAC default mode
+    """
+    Facade to use SMAC default mode
 
     Attributes
     ----------
@@ -54,10 +55,11 @@ class SMAC(object):
         List with information about previous runs
     trajectory : list
         List of all incumbents
+
     """
 
     def __init__(self,
-                 scenario: Scenario,
+                 scenario: typing.Type[Scenario],
                  tae_runner: typing.Optional[typing.Union[ExecuteTARun, typing.Callable]]=None,
                  runhistory: typing.Optional[RunHistory]=None,
                  intensifier: typing.Optional[Intensifier]=None,
@@ -73,7 +75,8 @@ class SMAC(object):
                  smbo_class: typing.Optional[SMBO]=None,
                  run_id: typing.Optional[int]=None,
                  random_configuration_chooser: typing.Optional[RandomConfigurationChooser]=None):
-        """Constructor
+        """
+        Constructor
 
         Parameters
         ----------
@@ -125,8 +128,8 @@ class SMAC(object):
             chosen.
         random_configuration_chooser : ~smac.optimizer.random_configuration_chooser.RandomConfigurationChooser
             How often to choose a random configuration during the intensification procedure.
-        """
 
+        """
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
@@ -219,7 +222,7 @@ class SMAC(object):
         elif not isinstance(
                 acquisition_function_optimizer,
                 AcquisitionFunctionMaximizer,
-            ):
+        ):
             raise ValueError(
                 "Argument 'acquisition_function_optimizer' must be of type"
                 "'AcquisitionFunctionMaximizer', but is '%s'" %
@@ -283,8 +286,8 @@ class SMAC(object):
                                       cutoff=scenario.cutoff,
                                       deterministic=scenario.deterministic,
                                       run_obj_time=scenario.run_obj == "runtime",
-                                      always_race_against=scenario.cs.get_default_configuration() \
-                                        if scenario.always_race_default else None,
+                                      always_race_against=scenario.cs.get_default_configuration()
+                                      if scenario.always_race_default else None,
                                       instance_specifics=scenario.instance_specific,
                                       minR=scenario.minR,
                                       maxR=scenario.maxR,
@@ -407,7 +410,8 @@ class SMAC(object):
             rng: typing.Optional[typing.Union[int, np.random.RandomState]]=None,
             run_id: typing.Optional[int]=None,
     ) -> typing.Tuple[int, np.random.RandomState]:
-        """Initialize random number generator and set run_id
+        """
+        Initialize random number generator and set run_id
 
         * If rng and run_id are None, initialize a new generator and sample a run_id
         * If rng is None and a run_id is given, use the run_id to initialize the rng
@@ -425,6 +429,7 @@ class SMAC(object):
         -------
         int
         np.random.RandomState
+
         """
         # initialize random number generator
         if rng is not None and not isinstance(rng, (int, np.random.RandomState)):
@@ -460,7 +465,8 @@ class SMAC(object):
 
     @staticmethod
     def _get_random_configuration_chooser(random_configuration_chooser):
-        """Initialize random configuration chooser
+        """
+        Initialize random configuration chooser
         If random_configuration_chooser is falsy, initialize with ChooserNoCoolDown(2.0)
 
         Parameters
@@ -470,18 +476,21 @@ class SMAC(object):
         Returns
         -------
         ChooserNoCoolDown|ChooserLinearCoolDown
+
         """
         if not random_configuration_chooser:
             return ChooserNoCoolDown(2.0)
         return random_configuration_chooser
 
     def optimize(self):
-        """Optimizes the algorithm provided in scenario (given in constructor)
+        """
+        Optimizes the algorithm provided in scenario (given in constructor)
 
         Returns
-        ----------
+        -------
         incumbent : Configuration
             Best found configuration
+
         """
         incumbent = None
         try:
@@ -491,7 +500,8 @@ class SMAC(object):
             self.solver.stats.print_stats()
             self.logger.info("Final Incumbent: %s", self.solver.incumbent)
             if self.solver.incumbent and self.solver.incumbent in self.solver.runhistory.get_all_configs():
-                self.logger.info("Estimated cost of incumbent: %f", self.solver.runhistory.get_cost(self.solver.incumbent))
+                self.logger.info("Estimated cost of incumbent: %f",
+                                 self.solver.runhistory.get_cost(self.solver.incumbent))
             self.runhistory = self.solver.runhistory
             self.trajectory = self.solver.intensifier.traj_logger.trajectory
 
@@ -501,9 +511,12 @@ class SMAC(object):
                 )
         return incumbent
 
-    def validate(self, config_mode='inc', instance_mode='train+test',
-                 repetitions=1, use_epm=False, n_jobs=-1, backend='threading'):
-        """Create validator-object and run validation, using
+    def validate(self,
+                 config_mode: typing.Union[typing.List[Configuration], np.ndarray, str]='inc',
+                 instance_mode: typing.Union[typing.List[str], str]='train+test',
+                 repetitions: int=1, use_epm: bool=False, n_jobs: int=-1, backend: str='threading'):
+        """
+        Create validator-object and run validation, using
         scenario-information, runhistory from smbo and tae_runner from intensify
 
         Parameters
@@ -530,27 +543,32 @@ class SMAC(object):
         -------
         runhistory: RunHistory
             runhistory containing all specified runs
+
         """
         return self.solver.validate(config_mode, instance_mode, repetitions,
                                     use_epm, n_jobs, backend)
 
     def get_tae_runner(self):
-        """Returns target algorithm evaluator (TAE) object which can run the
+        """
+        Returns target algorithm evaluator (TAE) object which can run the
         target algorithm given a configuration
 
         Returns
         -------
         TAE: smac.tae.execute_ta_run.ExecuteTARun
+
         """
         return self.solver.intensifier.tae_runner
 
     def get_runhistory(self):
-        """Returns the runhistory (i.e., all evaluated configurations and
+        """
+        Returns the runhistory (i.e., all evaluated configurations and
          the results).
 
         Returns
         -------
         Runhistory: smac.runhistory.runhistory.RunHistory
+
         """
         if not hasattr(self, 'runhistory'):
             raise ValueError('SMAC was not fitted yet. Call optimize() prior '
@@ -558,21 +576,23 @@ class SMAC(object):
         return self.runhistory
 
     def get_trajectory(self):
-        """Returns the trajectory (i.e., all incumbent configurations over
+        """
+        Returns the trajectory (i.e., all incumbent configurations over
         time).
 
         Returns
         -------
         Trajectory : List of :class:`~smac.utils.io.traj_logging.TrajEntry`
-        """
 
+        """
         if not hasattr(self, 'trajectory'):
             raise ValueError('SMAC was not fitted yet. Call optimize() prior '
                              'to accessing the runhistory.')
         return self.trajectory
 
     def get_X_y(self):
-        """Simple interface to obtain all data in runhistory in ``X, y`` format.
+        """
+        Simple interface to obtain all data in runhistory in ``X, y`` format.
 
         Uses
         :meth:`smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()`.
@@ -585,5 +605,6 @@ class SMAC(object):
             vector of cost values; can include censored runs
         cen: numpy.ndarray
             vector of bools indicating whether the y-value is censored
+
         """
         return self.solver.rh2EPM.get_X_y(self.runhistory)
