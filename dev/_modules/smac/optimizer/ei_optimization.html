@@ -270,16 +270,16 @@
 
 <div class="viewcode-block" id="AcquisitionFunctionMaximizer"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer">[docs]</a><span class="k">class</span> <span class="nc">AcquisitionFunctionMaximizer</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Abstract class for acquisition maximization.</span>
-<span class="sd">    </span>
+
 <span class="sd">    In order to use this class it has to be subclassed and the method</span>
 <span class="sd">    ``_maximize`` must be implemented.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction</span>
-<span class="sd">        </span>
+
 <span class="sd">    config_space : ~smac.configspace.ConfigurationSpace</span>
-<span class="sd">    </span>
+
 <span class="sd">    rng : np.random.RandomState or int, optional</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -310,17 +310,17 @@
             <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Maximize acquisition function using ``_maximize``.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        runhistory: ~smac.runhistory.runhistory.RunHistory</span>
-<span class="sd">            runhistory object </span>
+<span class="sd">            runhistory object</span>
 <span class="sd">        stats: ~smac.stats.stats.Stats</span>
 <span class="sd">            current stats object</span>
 <span class="sd">        num_points: int</span>
 <span class="sd">            number of points to be sampled</span>
 <span class="sd">        **kwargs</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        iterable</span>
@@ -337,7 +337,7 @@
             <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;Implements acquisition function maximization.</span>
-<span class="sd">        </span>
+
 <span class="sd">        In contrast to ``maximize``, this method returns an iterable of tuples,</span>
 <span class="sd">        consisting of the acquisition function value and the configuration. This</span>
 <span class="sd">        allows to plug together different acquisition function maximizers.</span>
@@ -345,7 +345,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        runhistory: ~smac.runhistory.runhistory.RunHistory</span>
-<span class="sd">            runhistory object </span>
+<span class="sd">            runhistory object</span>
 <span class="sd">        stats: ~smac.stats.stats.Stats</span>
 <span class="sd">            current stats object</span>
 <span class="sd">        num_points: int</span>
@@ -355,7 +355,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        iterable</span>
-<span class="sd">            An iterable consistng of </span>
+<span class="sd">            An iterable consistng of</span>
 <span class="sd">            tuple(acqusition_value, :class:`smac.configspace.Configuration`).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
@@ -396,13 +396,16 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction</span>
-<span class="sd">        </span>
+
 <span class="sd">    config_space : ~smac.configspace.ConfigurationSpace</span>
-<span class="sd">    </span>
+
 <span class="sd">    rng : np.random.RandomState or int, optional</span>
 
-<span class="sd">    max_iterations: int</span>
+<span class="sd">    max_steps: int</span>
 <span class="sd">        Maximum number of iterations that the local search will perform</span>
+
+<span class="sd">    n_steps_plateau_walk: int</span>
+<span class="sd">        number of steps during a plateau walk before local search terminates</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -411,11 +414,11 @@
             <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
             <span class="n">config_space</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
             <span class="n">rng</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">max_iterations</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">max_steps</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">n_steps_plateau_walk</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">acquisition_function</span><span class="p">,</span> <span class="n">config_space</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">max_iterations</span> <span class="o">=</span> <span class="n">max_iterations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_steps</span> <span class="o">=</span> <span class="n">max_steps</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_plateau_walk</span> <span class="o">=</span> <span class="n">n_steps_plateau_walk</span>
 
     <span class="k">def</span> <span class="nf">_maximize</span><span class="p">(</span>
@@ -432,7 +435,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        runhistory: ~smac.runhistory.runhistory.RunHistory</span>
-<span class="sd">            runhistory object </span>
+<span class="sd">            runhistory object</span>
 <span class="sd">        stats: ~smac.stats.stats.Stats</span>
 <span class="sd">            current stats object</span>
 <span class="sd">        num_points: int</span>
@@ -551,8 +554,8 @@
                 <span class="n">changed_inc</span> <span class="o">=</span> <span class="kc">True</span>
 
             <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">changed_inc</span><span class="p">)</span> <span class="ow">or</span> \
-                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iterations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
-                     <span class="n">local_search_steps</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iterations</span><span class="p">):</span>
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_steps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+                     <span class="n">local_search_steps</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_steps</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Local search took </span><span class="si">%d</span><span class="s2"> steps and looked at </span><span class="si">%d</span><span class="s2"> &quot;</span>
                                   <span class="s2">&quot;configurations. Computing the acquisition &quot;</span>
                                   <span class="s2">&quot;value for one configuration took </span><span class="si">%f</span><span class="s2"> seconds&quot;</span>
@@ -570,12 +573,12 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction</span>
-<span class="sd">        </span>
+
 <span class="sd">    config_space : ~smac.configspace.ConfigurationSpace</span>
-<span class="sd">    </span>
+
 <span class="sd">    rng : np.random.RandomState or int, optional</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
     <span class="k">def</span> <span class="nf">_maximize</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
@@ -589,7 +592,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        runhistory: ~smac.runhistory.runhistory.RunHistory</span>
-<span class="sd">            runhistory object </span>
+<span class="sd">            runhistory object</span>
 <span class="sd">        stats: ~smac.stats.stats.Stats</span>
 <span class="sd">            current stats object</span>
 <span class="sd">        num_points: int</span>
@@ -598,11 +601,11 @@
 <span class="sd">            whether random configurations are sorted according to acquisition function</span>
 <span class="sd">        **kwargs</span>
 <span class="sd">            not used</span>
-<span class="sd">    </span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        iterable</span>
-<span class="sd">            An iterable consistng of </span>
+<span class="sd">            An iterable consistng of</span>
 <span class="sd">            tuple(acqusition_value, :class:`smac.configspace.Configuration`).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -623,32 +626,48 @@
 
 <div class="viewcode-block" id="InterleavedLocalAndRandomSearch"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch">[docs]</a><span class="k">class</span> <span class="nc">InterleavedLocalAndRandomSearch</span><span class="p">(</span><span class="n">AcquisitionFunctionMaximizer</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Implements SMAC&#39;s default acquisition function optimization.</span>
-<span class="sd">    </span>
-<span class="sd">    This optimizer performs local search from the previous best points </span>
-<span class="sd">    according, to the acquisition function, uses the acquisition function to </span>
-<span class="sd">    sort randomly sampled configurations and interleaves unsorted, randomly </span>
+
+<span class="sd">    This optimizer performs local search from the previous best points</span>
+<span class="sd">    according, to the acquisition function, uses the acquisition function to</span>
+<span class="sd">    sort randomly sampled configurations and interleaves unsorted, randomly</span>
 <span class="sd">    sampled configurations in between.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction</span>
-<span class="sd">        </span>
+
 <span class="sd">    config_space : ~smac.configspace.ConfigurationSpace</span>
-<span class="sd">    </span>
+
 <span class="sd">    rng : np.random.RandomState or int, optional</span>
+
+<span class="sd">    max_steps: int</span>
+<span class="sd">        [LocalSearch] Maximum number of steps that the local search will perform</span>
+
+<span class="sd">    n_steps_plateau_walk: int</span>
+<span class="sd">        [LocalSearch] number of steps during a plateau walk before local search terminates</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
             <span class="n">config_space</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
             <span class="n">rng</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">max_steps</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">n_steps_plateau_walk</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">acquisition_function</span><span class="p">,</span> <span class="n">config_space</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_search</span> <span class="o">=</span> <span class="n">RandomSearch</span><span class="p">(</span>
-            <span class="n">acquisition_function</span><span class="p">,</span> <span class="n">config_space</span><span class="p">,</span> <span class="n">rng</span>
+            <span class="n">acquisition_function</span><span class="o">=</span><span class="n">acquisition_function</span><span class="p">,</span>
+            <span class="n">config_space</span><span class="o">=</span><span class="n">config_space</span><span class="p">,</span>
+            <span class="n">rng</span><span class="o">=</span><span class="n">rng</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">local_search</span> <span class="o">=</span> <span class="n">LocalSearch</span><span class="p">(</span>
-            <span class="n">acquisition_function</span><span class="p">,</span> <span class="n">config_space</span><span class="p">,</span> <span class="n">rng</span>
+            <span class="n">acquisition_function</span><span class="o">=</span><span class="n">acquisition_function</span><span class="p">,</span>
+            <span class="n">config_space</span><span class="o">=</span><span class="n">config_space</span><span class="p">,</span>
+            <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
+            <span class="n">max_steps</span><span class="o">=</span><span class="n">max_steps</span><span class="p">,</span>
+            <span class="n">n_steps_plateau_walk</span><span class="o">=</span><span class="n">n_steps_plateau_walk</span>
         <span class="p">)</span>
 
 <div class="viewcode-block" id="InterleavedLocalAndRandomSearch.maximize"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch.maximize">[docs]</a>    <span class="k">def</span> <span class="nf">maximize</span><span class="p">(</span>
@@ -660,30 +679,30 @@
             <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Maximize acquisition function using ``_maximize``.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        runhistory: ~smac.runhistory.runhistory.RunHistory</span>
-<span class="sd">            runhistory object </span>
+<span class="sd">            runhistory object</span>
 <span class="sd">        stats: ~smac.stats.stats.Stats</span>
 <span class="sd">            current stats object</span>
 <span class="sd">        num_points: int</span>
 <span class="sd">            number of points to be sampled</span>
 <span class="sd">        random_configuration_chooser: ~smac.optimizer.random_configuration_chooser.RandomConfigurationChooser</span>
-<span class="sd">            part of the returned ChallengerList such </span>
+<span class="sd">            part of the returned ChallengerList such</span>
 <span class="sd">            that we can interleave random configurations</span>
 <span class="sd">            by a scheme defined by the random_configuration_chooser;</span>
-<span class="sd">            random_configuration_chooser.next_smbo_iteration() </span>
+<span class="sd">            random_configuration_chooser.next_smbo_iteration()</span>
 <span class="sd">            is called at the end of this function</span>
 <span class="sd">        **kwargs</span>
 <span class="sd">            passed to acquisition function</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        Iterable[Configuration]</span>
 <span class="sd">            to be concrete: ~smac.ei_optimization.ChallengerList</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="n">next_configs_by_local_search</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_search</span><span class="o">.</span><span class="n">_maximize</span><span class="p">(</span>
             <span class="n">runhistory</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
         <span class="p">)</span>
@@ -727,8 +746,8 @@
             <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
-        
-        
+
+
 <div class="viewcode-block" id="ChallengerList"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.ChallengerList">[docs]</a><span class="k">class</span> <span class="nc">ChallengerList</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Helper class to interleave random configurations in a list of challengers.</span>
 

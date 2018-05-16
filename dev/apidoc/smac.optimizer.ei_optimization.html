@@ -327,7 +327,7 @@ in each iteration which are never looked at.</p>
 
 <dl class="class">
 <dt id="smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch">
-<em class="property">class </em><code class="descclassname">smac.optimizer.ei_optimization.</code><code class="descname">InterleavedLocalAndRandomSearch</code><span class="sig-paren">(</span><em>acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>rng: Union[bool</em>, <em>mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#InterleavedLocalAndRandomSearch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.optimizer.ei_optimization.</code><code class="descname">InterleavedLocalAndRandomSearch</code><span class="sig-paren">(</span><em>acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>rng: Union[bool</em>, <em>mtrand.RandomState] = None</em>, <em>max_steps: Union[int</em>, <em>NoneType] = None</em>, <em>n_steps_plateau_walk: int = 10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#InterleavedLocalAndRandomSearch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</span></code></a></p>
 <p>Implements SMAC’s default acquisition function optimization.</p>
 <p>This optimizer performs local search from the previous best points
@@ -342,6 +342,8 @@ sampled configurations in between.</p>
 <li><strong>acquisition_function</strong> (<a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </li>
 <li><strong>config_space</strong> (<em>ConfigurationSpace</em>) – </li>
 <li><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </li>
+<li><strong>max_steps</strong> (<em>int</em>) – [LocalSearch] Maximum number of steps that the local search will perform</li>
+<li><strong>n_steps_plateau_walk</strong> (<em>int</em>) – [LocalSearch] number of steps during a plateau walk before local search terminates</li>
 </ul>
 </td>
 </tr>
@@ -382,7 +384,7 @@ is called at the end of this function</li>
 
 <dl class="class">
 <dt id="smac.optimizer.ei_optimization.LocalSearch">
-<em class="property">class </em><code class="descclassname">smac.optimizer.ei_optimization.</code><code class="descname">LocalSearch</code><span class="sig-paren">(</span><em>acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>rng: Union[bool</em>, <em>mtrand.RandomState] = None</em>, <em>max_iterations: Union[int</em>, <em>NoneType] = None</em>, <em>n_steps_plateau_walk: int = 10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#LocalSearch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.LocalSearch" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.optimizer.ei_optimization.</code><code class="descname">LocalSearch</code><span class="sig-paren">(</span><em>acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>rng: Union[bool</em>, <em>mtrand.RandomState] = None</em>, <em>max_steps: Union[int</em>, <em>NoneType] = None</em>, <em>n_steps_plateau_walk: int = 10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#LocalSearch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.LocalSearch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</span></code></a></p>
 <p>Implementation of SMAC’s local search.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -393,7 +395,8 @@ is called at the end of this function</li>
 <li><strong>acquisition_function</strong> (<a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </li>
 <li><strong>config_space</strong> (<em>ConfigurationSpace</em>) – </li>
 <li><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </li>
-<li><strong>max_iterations</strong> (<em>int</em>) – Maximum number of iterations that the local search will perform</li>
+<li><strong>max_steps</strong> (<em>int</em>) – Maximum number of iterations that the local search will perform</li>
+<li><strong>n_steps_plateau_walk</strong> (<em>int</em>) – number of steps during a plateau walk before local search terminates</li>
 </ul>
 </td>
 </tr>

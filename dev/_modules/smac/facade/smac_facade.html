@@ -285,7 +285,7 @@
 
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
-<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2016, ML4AAD&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2018, ML4AAD&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
@@ -439,7 +439,13 @@
                                               <span class="n">instance_features</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">feature_array</span><span class="p">,</span>
                                               <span class="n">seed</span><span class="o">=</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">),</span>
                                               <span class="n">pca_components</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">PCA_DIM</span><span class="p">,</span>
-                                              <span class="n">unlog_y</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;runtime&quot;</span><span class="p">)</span>
+                                              <span class="n">unlog_y</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;runtime&quot;</span><span class="p">,</span>
+                                              <span class="n">num_trees</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_num_trees</span><span class="p">,</span>
+                                              <span class="n">do_bootstrapping</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_do_bootstrapping</span><span class="p">,</span>
+                                              <span class="n">ratio_features</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_ratio_features</span><span class="p">,</span>
+                                              <span class="n">min_samples_split</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_min_samples_split</span><span class="p">,</span>
+                                              <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_min_samples_leaf</span><span class="p">,</span>
+                                              <span class="n">max_depth</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_max_depth</span><span class="p">)</span>
         <span class="c1"># initial acquisition function</span>
         <span class="k">if</span> <span class="n">acquisition_function</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">acquisition_function</span> <span class="o">=</span> <span class="n">EI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
@@ -451,7 +457,11 @@
         <span class="c1"># initialize optimizer on acquisition function</span>
         <span class="k">if</span> <span class="n">acquisition_function_optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">acquisition_function_optimizer</span> <span class="o">=</span> <span class="n">InterleavedLocalAndRandomSearch</span><span class="p">(</span>
-                <span class="n">acquisition_function</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">))</span>
+                <span class="n">acquisition_function</span><span class="o">=</span><span class="n">acquisition_function</span><span class="p">,</span>
+                <span class="n">config_space</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span>
+                <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">)),</span>
+                <span class="n">max_steps</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">sls_max_steps</span><span class="p">,</span>
+                <span class="n">n_steps_plateau_walk</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">sls_n_steps_plateau_walk</span>
             <span class="p">)</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
                 <span class="n">acquisition_function_optimizer</span><span class="p">,</span>
@@ -524,7 +534,9 @@
                                         <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">always_race_default</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
                                       <span class="n">instance_specifics</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">instance_specific</span><span class="p">,</span>
                                       <span class="n">minR</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">minR</span><span class="p">,</span>
-                                      <span class="n">maxR</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">maxR</span><span class="p">)</span>
+                                      <span class="n">maxR</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">maxR</span><span class="p">,</span>
+                                      <span class="n">adaptive_capping_slackfactor</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">intens_adaptive_capping_slackfactor</span><span class="p">,</span>
+                                      <span class="n">min_chall</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">intens_min_chall</span><span class="p">)</span>
         <span class="c1"># inject deps if necessary</span>
         <span class="k">if</span> <span class="n">intensifier</span><span class="o">.</span><span class="n">tae_runner</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">intensifier</span><span class="o">.</span><span class="n">tae_runner</span> <span class="o">=</span> <span class="n">tae_runner</span>

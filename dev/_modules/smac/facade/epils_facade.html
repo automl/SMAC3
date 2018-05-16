@@ -389,7 +389,13 @@
                     <span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
                     <span class="n">instance_features</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">feature_array</span><span class="p">,</span>
                     <span class="n">seed</span><span class="o">=</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">),</span>
-                    <span class="n">pca_components</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">PCA_DIM</span><span class="p">)</span>
+                    <span class="n">pca_components</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">PCA_DIM</span><span class="p">,</span>
+                    <span class="n">num_trees</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_num_trees</span><span class="p">,</span>
+                    <span class="n">do_bootstrapping</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_do_bootstrapping</span><span class="p">,</span>
+                    <span class="n">ratio_features</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_ratio_features</span><span class="p">,</span>
+                    <span class="n">min_samples_split</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_min_samples_split</span><span class="p">,</span>
+                    <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_min_samples_leaf</span><span class="p">,</span>
+                    <span class="n">max_depth</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_max_depth</span><span class="p">)</span>
         <span class="c1"># initial acquisition function</span>
         <span class="k">if</span> <span class="n">acquisition_function</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;runtime&quot;</span><span class="p">:</span>
@@ -402,7 +408,9 @@
 
         <span class="c1"># initialize optimizer on acquisition function</span>
         <span class="n">local_search</span> <span class="o">=</span> <span class="n">LocalSearch</span><span class="p">(</span><span class="n">acquisition_function</span><span class="p">,</span>
-                                   <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
+                                   <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span>
+                                   <span class="n">max_steps</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">sls_max_steps</span><span class="p">,</span>
+                                   <span class="n">n_steps_plateau_walk</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">sls_n_steps_plateau_walk</span><span class="p">)</span>
 
         <span class="c1"># initialize tae_runner</span>
         <span class="c1"># First case, if tae_runner is None, the target algorithm is a call</span>
@@ -463,7 +471,9 @@
                                         <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">always_race_default</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
                                       <span class="n">instance_specifics</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">instance_specific</span><span class="p">,</span>
                                       <span class="n">minR</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">minR</span><span class="p">,</span>
-                                      <span class="n">maxR</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">maxR</span><span class="p">)</span>
+                                      <span class="n">maxR</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">maxR</span><span class="p">,</span>
+                                      <span class="n">adaptive_capping_slackfactor</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">intens_adaptive_capping_slackfactor</span><span class="p">,</span>
+                                      <span class="n">min_chall</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">intens_min_chall</span><span class="p">)</span>
         <span class="c1"># inject deps if necessary</span>
         <span class="k">if</span> <span class="n">intensifier</span><span class="o">.</span><span class="n">tae_runner</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">intensifier</span><span class="o">.</span><span class="n">tae_runner</span> <span class="o">=</span> <span class="n">tae_runner</span>
@@ -661,7 +671,7 @@
 
 <div class="viewcode-block" id="EPILS.get_X_y"><a class="viewcode-back" href="../../../apidoc/smac.facade.epils_facade.html#smac.facade.epils_facade.EPILS.get_X_y">[docs]</a>    <span class="k">def</span> <span class="nf">get_X_y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Simple interface to obtain all data in runhistory in X, y format</span>
-<span class="sd">            </span>
+
 <span class="sd">        Uses smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()</span>
 
 <span class="sd">        Returns</span>

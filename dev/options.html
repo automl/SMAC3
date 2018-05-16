@@ -312,6 +312,12 @@ See the Main and SMAC Options below. Find the Scenario Options in the next secti
 <tr class="field-even field"><th class="field-name" colspan="2">input_psmac_dirs:</th></tr>
 <tr class="field-even field"><td>&#160;</td><td class="field-body">For parallel SMAC, multiple output-directories are used.</td>
 </tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">intens_adaptive_capping_slackfactork:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">Slack factor of adpative capping (factor * adpative cutoff). Only active if obj is runtime. If set to very large number it practically deactivates adaptive capping. Default: 1.2.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">intens_min_chall:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">Minimal number of challengers to be considered in each intensification run (&gt; 1). Set to 1 and in combination with very small intensification-percentage. it will deactivate randomly sampled configurations (and hence, extrapolation of random forest will be an issue.) Default: 2.</td>
+</tr>
 <tr class="field-odd field"><th class="field-name" colspan="2">intensification_percentage:</th></tr>
 <tr class="field-odd field"><td>&#160;</td><td class="field-body">The fraction of time to be used on intensification (versus choice of next Configurations). Default: 0.5.</td>
 </tr>
@@ -319,12 +325,33 @@ See the Main and SMAC Options below. Find the Scenario Options in the next secti
 </tr>
 <tr class="field-odd field"><th class="field-name">minR:</th><td class="field-body">Minimum number of calls per configuration. Default: 1.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">output_dir:</th><td class="field-body">Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2018-05-09_15:06:38_905940.</td>
+<tr class="field-even field"><th class="field-name">output_dir:</th><td class="field-body">Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2018-05-16_08:08:38_472370.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name" colspan="2">random_configuration_chooser:</th></tr>
 <tr class="field-odd field"><td>&#160;</td><td class="field-body">path to a python module containing a class`RandomConfigurationChooserImpl` implementingthe interface of <cite>RandomConfigurationChooser</cite></td>
 </tr>
+<tr class="field-even field"><th class="field-name" colspan="2">rf_do_bootstrapping:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">Use bootstraping in random forest. Default: True.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rf_max_depth:</th><td class="field-body">Maximum depth of each tree in the random forest. Default: 20.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">rf_min_samples_leaf:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">Minimum required number of samples in each leaf of a tree in the random forest. Default: 3.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">rf_min_samples_split:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">Minimum number of samples to split for building a tree in the random forest. Default: 3.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">rf_num_trees:</th><td class="field-body">Number of trees in the random forest (&gt; 1). Default: 10.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">rf_ratio_features:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">Ratio of sampled features in each split ([0.,1.]). Default: 0.8333333333333334.</td>
+</tr>
 <tr class="field-even field"><th class="field-name">shared_model:</th><td class="field-body">Whether to run SMAC in parallel mode.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">sls_max_steps:</th><td class="field-body">Maximum number of local search steps in one iteration during the optimization of the acquisition function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">sls_n_steps_plateau_walk:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">Maximum number of steps on plateaus during the optimization of the acquisition function. Default: 10.</td>
 </tr>
 </tbody>
 </table>
