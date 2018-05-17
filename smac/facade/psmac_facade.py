@@ -206,30 +206,59 @@ class PSMAC(object):
         read(self.rh, self.scenario.input_psmac_dirs, self.scenario.cs, self.logger)
         q.close()
         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Multiprocessing part end ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-        if self.n_optimizers == self.n_incs:
+        if self.n_optimizers == self.n_incs:  # no validation necessary just return all incumbents
             return incs
         else:
-            _, val_ids, _, est_ids = self.get_best_incumbents_ids(incs)
+            _, val_ids, _, est_ids = self.get_best_incumbents_ids(incs)  # determine the best incumbents
             if val_ids:
                 return incs[val_ids]
             return incs[est_ids]
 
-    def get_best_incumbents_ids(self, incs):
+    def get_best_incumbents_ids(self, incs: typing.List[Configuration]):
+        """
+        Determines the IDs and costs of the best configurations
+
+        Parameters
+        ----------
+        incs : typing.List[Configuration]
+            incumbents determined by all parallel SMAC runs
+
+        Returns
+        -------
+        Dict(Config -> Dict(inst_id (str) -> cost (float)))  (if real validation runs are performed)
+        List(ints) (indices of best configurations if validation runs are performed)
+        Dict(Config -> Dict(inst_id (str) -> cost (float)))  (if performance is estimated)
+        List(ints) (indices of best configurations if performance is estimated)
+
+        """
         if self.validate is True:
             mean_costs_conf_valid, cost_per_config_valid = self.validate_incs(incs)
-            val_ids = self._return_selection(mean_costs_conf_valid)
+            val_ids = list(map(lambda x: x[0],
+                               sorted(enumerate(mean_costs_conf_valid), key=lambda y: y[1])))[:self.n_incs]
         else:
             cost_per_config_valid = val_ids = None
         mean_costs_conf_estimate, cost_per_config_estimate = self._get_mean_costs(incs, self.rh)
-        est_ids = self._return_selection(mean_costs_conf_estimate)
+        est_ids = list(map(lambda x: x[0],
+                           sorted(enumerate(mean_costs_conf_estimate), key=lambda y: y[1])))[:self.n_incs]
         return cost_per_config_valid, val_ids, cost_per_config_estimate, est_ids
 
-    def _return_selection(self, mean_costs_conf):
-        to_keep_ids = list(map(lambda x: x[0],
-                               sorted(enumerate(mean_costs_conf), key=lambda y: y[1])))[:self.n_incs]
-        return to_keep_ids
+    def _get_mean_costs(self, incs: typing.List[Configuration], new_rh: RunHistory):
+        """
+        Compute mean cost per instance
 
-    def _get_mean_costs(self, incs, new_rh):
+        Parameters
+        ----------
+        incs : typing.List[Configuration]
+            incumbents determined by all parallel SMAC runs
+        new_rh : RunHistory
+            runhistory to determine mean performance
+
+        Returns
+        -------
+        List[float] means
+        Dict(Config -> Dict(inst_id(str) -> float))
+
+        """
         config_cost_per_inst = {}
         results = []
         for incumbent in incs:
@@ -239,6 +268,9 @@ class PSMAC(object):
         return results, config_cost_per_inst
 
     def validate_incs(self, incs: np.ndarray):
+        """
+        Validation
+        """
         solver = SMAC(scenario=self.scenario, tae_runner=self.tae, rng=self.rng, run_id=MAXINT, **self.kwargs)
         self.logger.info('*' * 120)
         self.logger.info('Validating')
