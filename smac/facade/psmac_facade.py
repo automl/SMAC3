@@ -132,7 +132,7 @@ class PSMAC(object):
             self.__module__ + "." + self.__class__.__name__)
 
         self.scenario = scenario
-        self.run_id, self.rng = get_rng(rng, run_id)
+        self.run_id, self.rng = get_rng(rng, run_id, logger=self.logger)
         self.kwargs = kwargs
         self.output_dir = None
         self.rh = RunHistory(average_cost)

@@ -22,6 +22,7 @@ from smac.stats.stats import Stats
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.tae.execute_ta_run import ExecuteTARun
 from smac.utils.io.traj_logging import TrajLogger
+from smac.utils.util_funcs import get_rng
 
 class TestSMACFacade(unittest.TestCase):
 
@@ -86,21 +87,21 @@ class TestSMACFacade(unittest.TestCase):
 
         # Check some properties
         # Check whether different seeds give different random states
-        _, rng_1 = smac._get_rng(1)
-        _, rng_2 = smac._get_rng(2)
+        _, rng_1 = get_rng(1)
+        _, rng_2 = get_rng(2)
         self.assertNotEqual(sum(rng_1.get_state()[1] - rng_2.get_state()[1]), 0)
 
         # Check whether no seeds gives different random states
-        _, rng_1 = smac._get_rng()
+        _, rng_1 = get_rng(logger=smac.logger)
         self.assertEqual(smac.logger.debug.call_count, 1)
-        _, rng_2 = smac._get_rng()
+        _, rng_2 = get_rng(logger=smac.logger)
         self.assertEqual(smac.logger.debug.call_count, 2)
 
         self.assertNotEqual(sum(rng_1.get_state()[1] - rng_2.get_state()[1]), 0)
 
         # Check whether the same int seeds give the same random states
-        _, rng_1 = smac._get_rng(1)
-        _, rng_2 = smac._get_rng(1)
+        _, rng_1 = get_rng(1)
+        _, rng_2 = get_rng(1)
         self.assertEqual(sum(rng_1.get_state()[1] - rng_2.get_state()[1]), 0)
 
         # Check all execution paths
@@ -108,40 +109,40 @@ class TestSMACFacade(unittest.TestCase):
             TypeError,
             "Argument rng accepts only arguments of type None, int or np.random.RandomState, "
             "you provided <class 'str'>.",
-            smac._get_rng,
+            get_rng,
             rng='ABC',
         )
         self.assertRaisesRegex(
             TypeError,
             "Argument run_id accepts only arguments of type None, int or np.random.RandomState, "
             "you provided <class 'str'>.",
-            smac._get_rng,
+            get_rng,
             run_id='ABC'
         )
 
-        run_id, rng_1 = smac._get_rng(rng=None, run_id=None)
+        run_id, rng_1 = get_rng(rng=None, run_id=None, logger=smac.logger)
         self.assertIsInstance(run_id, int)
         self.assertIsInstance(rng_1, np.random.RandomState)
         self.assertEqual(smac.logger.debug.call_count, 3)
 
-        run_id, rng_1 = smac._get_rng(rng=None, run_id=1)
+        run_id, rng_1 = get_rng(rng=None, run_id=1, logger=smac.logger)
         self.assertEqual(run_id, 1)
         self.assertIsInstance(rng_1, np.random.RandomState)
 
-        run_id, rng_1 = smac._get_rng(rng=1, run_id=None)
+        run_id, rng_1 = get_rng(rng=1, run_id=None, logger=smac.logger)
         self.assertEqual(run_id, 1)
         self.assertIsInstance(rng_1, np.random.RandomState)
 
-        run_id, rng_1 = smac._get_rng(rng=1, run_id=1337)
+        run_id, rng_1 = get_rng(rng=1, run_id=1337, logger=smac.logger)
         self.assertEqual(run_id, 1337)
         self.assertIsInstance(rng_1, np.random.RandomState)
 
         rs = np.random.RandomState(1)
-        run_id, rng_1 = smac._get_rng(rng=rs, run_id=None)
+        run_id, rng_1 = get_rng(rng=rs, run_id=None, logger=smac.logger)
         self.assertIsInstance(run_id, int)
         self.assertIs(rng_1, rs)
 
-        run_id, rng_1 = smac._get_rng(rng=rs, run_id=2505)
+        run_id, rng_1 = get_rng(rng=rs, run_id=2505, logger=smac.logger)
         self.assertEqual(run_id, 2505)
         self.assertIs(rng_1, rs)
 

@@ -142,10 +142,10 @@ class SMAC(object):
             # restore_incumbent is used by the CLI interface which provides a method for restoring a SMAC run given an
             # output directory. This is the default path.
             # initial random number generator
-            run_id, rng = get_rng(rng=rng, run_id=run_id)
+            run_id, rng = get_rng(rng=rng, run_id=run_id, logger=self.logger)
             self.output_dir = create_output_directory(scenario, run_id)
         elif scenario.output_dir is not None:
-            run_id, rng = get_rng(rng=rng, run_id=run_id)
+            run_id, rng = get_rng(rng=rng, run_id=run_id, logger=self.logger)
             # output-directory is created in CLI when restoring from a
             # folder. calling the function again in the facade results in two
             # folders being created: run_X and run_X.OLD. if we are

@@ -89,7 +89,7 @@ class Hydra(object):
 
         self.n_iterations = n_iterations
         self.scenario = scenario
-        self.run_id, self.rng = get_rng(rng, run_id)
+        self.run_id, self.rng = get_rng(rng, run_id, self.logger)
         self.kwargs = kwargs
         self.output_dir = None
         self.top_dir = None

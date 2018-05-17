@@ -79,7 +79,7 @@ class ROAR(SMAC):
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         # initial random number generator
-        _, rng = get_rng(rng=rng)
+        _, rng = get_rng(rng=rng, logger=self.logger)
 
         # initial conversion of runhistory into EPM data
         # since ROAR does not really use it the converted data

@@ -32,7 +32,6 @@ from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.constants import MAXINT
 from smac.utils.io.output_directory import create_output_directory
 from smac.configspace import Configuration
-from smac.utils.util_funcs import get_rng
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -128,7 +127,7 @@ class EPILS(object):
             runhistory.aggregate_func = aggregate_func
 
         # initial random number generator
-        num_run, rng = get_rng(rng=rng)
+        num_run, rng = self._get_rng(rng=rng)
 
         # reset random number generator in config space to draw different
         # random configurations with each seed given to SMAC
