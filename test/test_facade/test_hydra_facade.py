@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 import numpy as np
 
-from smac.facade.hydra_facade import Hydra, SMAC
+from smac.facade.hydra_facade import Hydra, SMAC, PSMAC
 from smac.optimizer.smbo import SMBO
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory import DataOrigin
@@ -46,6 +46,18 @@ class MockSMAC(SMAC):
         rh.add(config, smbo_calls, smbo_calls - 2, 'SAT', instance_id=str(np.random.choice(['a', 'b', 'c'])),
                seed=np.random.randint(999), origin=DataOrigin.INTERNAL)
         return rh
+
+
+class MockPSMAC(PSMAC):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def optimize(self):
+        return np.array(self.scenario.cs.sample_configuration(self.n_optimizers))
+
+    def get_best_incumbents_ids(self, incs):
+        # cost_per_conf_v, val_ids, cost_per_conf_e, est_ids = self.optimizer.get_best_incumbents_ids(incs)
+        pass
 
 
 class TestHydraFacade(unittest.TestCase):
