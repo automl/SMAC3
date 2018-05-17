@@ -43,7 +43,6 @@ class TestHydraFacade(unittest.TestCase):
 
     def setUp(self):
         self.output_dirs = []
-        print(os.path.dirname(__file__))
         fn = os.path.join(os.path.dirname(__file__), '../test_files/spear_hydra_test_scenario.txt')
         self.scenario = Scenario(fn)
 
