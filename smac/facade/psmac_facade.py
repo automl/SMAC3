@@ -138,7 +138,7 @@ class PSMAC(object):
         self.rh = RunHistory(average_cost)
         self._tae = tae
         self.tae = tae(ta=self.scenario.ta, run_obj=self.scenario.run_obj)
-        if n_optimizers <= 0:
+        if n_optimizers <= 1:
             self.logger.warning('Invalid value in %s: %d. Setting to 2', 'n_optimizers', n_optimizers)
         self.n_optimizers = max(n_optimizers, 2)
         self.validate = validate
