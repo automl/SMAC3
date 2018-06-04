@@ -1,6 +1,6 @@
 import os
 import shutil
-
+import logging
 import typing
 
 from smac.configspace import pcs_new, json, ConfigurationSpace
@@ -10,7 +10,7 @@ class OutputWriter(object):
     """Writing scenario to file."""
 
     def __init__(self):
-        pass
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__) 
 
     def write_scenario_file(self, scenario):
         """Write scenario to a file (format is compatible with input_reader).
@@ -90,8 +90,12 @@ class OutputWriter(object):
                 except shutil.SameFileError:
                     return value  # File is already in output_dir
             elif key == 'pcs_fn' and scenario.cs is not None:
-                new_path = os.path.join(scenario.output_dir_for_this_run, 'configspace.pcs')
-                self.save_configspace(scenario.cs, new_path, 'pcs_new')
+                try:
+                    new_path = os.path.join(scenario.output_dir_for_this_run, 'configspace.pcs')
+                    self.save_configspace(scenario.cs, new_path, 'pcs_new')
+                except TypeError:
+                    self.logger.warn("PCS format does not support given configuration space... "
+                                     "not written to disk")
                 json_path = os.path.join(scenario.output_dir_for_this_run, 'configspace.json')
                 self.save_configspace(scenario.cs, json_path, 'json')
             elif key == 'train_inst_fn' and scenario.train_insts != [None]:
