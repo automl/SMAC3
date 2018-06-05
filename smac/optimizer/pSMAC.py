@@ -10,6 +10,7 @@ from smac.configspace import ConfigurationSpace
 
 RUNHISTORY_FILEPATTERN = 'runhistory.json'
 RUNHISTORY_RE = r'runhistory\.json$'
+VALIDATEDRUNHISTORY_RE = r'validated_runhistory\.json$'
 
 
 def read(run_history: RunHistory,
@@ -45,7 +46,8 @@ def read(run_history: RunHistory,
     for output_directory in parsed_output_dirs:
         for file_in_output_directory in os.listdir(output_directory):
             match = re.match(RUNHISTORY_RE, file_in_output_directory)
-            if match:
+            valid_match = re.match(VALIDATEDRUNHISTORY_RE, file_in_output_directory)
+            if match or valid_match:
                 runhistory_file = os.path.join(output_directory,
                                                file_in_output_directory)
                 run_history.update_from_json(runhistory_file,
@@ -58,7 +60,7 @@ def read(run_history: RunHistory,
                 numruns_in_runhistory = new_numruns_in_runhistory
 
     difference = numruns_in_runhistory - initial_numruns_in_runhistory
-    logger.debug('Shared model mode: Finished loading new runs, found %d new '
+    logger.info('Shared model mode: Finished loading new runs, found %d new '
                  'runs.' % difference)
 
 

@@ -49,7 +49,10 @@ class ExecuteTARunHydra(ExecuteTARun):
 
         status, cost, runtime, additional_info = self.runner.run(**kwargs)
         inst = kwargs["instance"]
-        oracle_perf = self.cost_oracle.get(inst)
+        try:
+            oracle_perf = self.cost_oracle[inst]
+        except KeyError:
+            oracle_perf = None
         if oracle_perf is not None:
             if self.run_obj == "runtime":
                 self.logger.debug("Portfolio perf: %f vs %f = %f", oracle_perf, runtime, min(oracle_perf, runtime))
@@ -64,4 +67,3 @@ class ExecuteTARunHydra(ExecuteTARun):
             self.logger.error("Oracle performance missing --- should not happen")
 
         return status, cost, runtime, additional_info
-    

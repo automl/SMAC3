@@ -374,7 +374,7 @@ class CMDReader(object):
                               default=logging.INFO, choices=["INFO", "DEBUG"],
                               help="Verbosity level.")
         opt_opts.add_argument("--mode",
-                              default="SMAC", choices=["SMAC", "ROAR", "EPILS", "Hydra"],
+                              default="SMAC", choices=["SMAC", "ROAR", "EPILS", "Hydra", "PSMAC"],
                               help="Configuration mode.")
         opt_opts.add_argument("--restore-state", "--restore_state", dest="restore_state",
                               default=None,
@@ -401,18 +401,23 @@ class CMDReader(object):
                               help="[dev] number of hydra iterations. Only active if mode is set to Hydra")
         req_opts.add_argument("--hydra_validation",
                               default='train',
-                              choices=['train', 'val10', 'val20'],
+                              choices=['train', 'val10', 'val20', 'val30', 'val40', 'val50', 'none'],
                               type=str.lower,
                               help="[dev] set to validate incumbents on. valX =>"
                                    " validation set of size training_set * 0.X")
-        req_opts.add_argument("--hydra_incumbents_per_round",
+        req_opts.add_argument("--incumbents_per_round",
                               default=1,
                               type=int,
-                              help="[dev] number of configurations to keep per hydra iteration.")
-        req_opts.add_argument("--hydra_n_optimizers",
+                              help="[dev] number of configurations to keep per psmac/hydra iteration.",
+                              dest="hydra_incumbents_per_round")
+        req_opts.add_argument("--n_optimizers",
                               default=1,
                               type=int,
-                              help="[dev] number of optimizers to run in parallel per hydra iteration.")
+                              help="[dev] number of optimizers to run in parallel per psmac/hydra iteration.",
+                              dest="hydra_n_optimizers")
+        req_opts.add_argument("--psmac_validate",
+                              action="store_true",
+                              help="[dev] Validate all psmac configurations.")
 
         self.main_cmd_actions, self.main_cmd_translations = CMDReader._extract_action_info(self.parser._actions)
 

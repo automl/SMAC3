@@ -10,6 +10,7 @@ from smac.facade.smac_facade import SMAC
 from smac.facade.roar_facade import ROAR
 from smac.facade.epils_facade import EPILS
 from smac.facade.hydra_facade import Hydra
+from smac.facade.psmac_facade import PSMAC
 from smac.runhistory.runhistory import RunHistory
 from smac.stats.stats import Stats
 from smac.optimizer.objective import average_cost
@@ -142,6 +143,16 @@ class SMACCLI(object):
                 val_set=main_args_.hydra_validation,
                 incs_per_round=main_args_.hydra_incumbents_per_round,
                 n_optimizers=main_args_.hydra_n_optimizers)
+        elif main_args_.mode == "PSMAC":
+            optimizer = PSMAC(
+                scenario=scen,
+                rng=np.random.RandomState(main_args_.seed),
+                run_id=main_args_.seed,
+                shared_model=smac_args_.shared_model,
+                validate=main_args_.psmac_validate,
+                n_optimizers=main_args_.hydra_n_optimizers,
+                n_incs=main_args_.hydra_incumbents_per_round,
+            )
         try:
             optimizer.optimize()
         except (TAEAbortException, FirstRunCrashedException) as err:

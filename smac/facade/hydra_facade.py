@@ -4,9 +4,10 @@ import datetime
 import time
 import typing
 import copy
+from collections import defaultdict
 
 import pickle
-import multiprocessing
+from functools import partial
 
 import numpy as np
 
@@ -17,67 +18,17 @@ from smac.tae.execute_ta_run_hydra import ExecuteTARunOld
 from smac.tae.execute_ta_run_hydra import ExecuteTARun
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_facade import SMAC
+from smac.facade.psmac_facade import PSMAC
 from smac.utils.io.output_directory import create_output_directory
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory import DataOrigin
 from smac.optimizer.objective import average_cost
+from smac.utils.util_funcs import get_rng
 from smac.utils.constants import MAXINT
+from smac.optimizer.pSMAC import read
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2017, ML4AAD"
 __license__ = "3-clause BSD"
-
-
-def optimize(queue: multiprocessing.Queue,
-             scenario: typing.Type[Scenario],
-             tae: typing.Type[ExecuteTARun],
-             rng: typing.Union[np.random.RandomState, int],
-             output_dir: str,
-             cost_per_inst: typing.Dict[str, float],
-             **kwargs) -> Configuration:
-    """
-    Unbound method to be called in a subprocess
-
-    Parameters
-    ----------
-    queue: multiprocessing.Queue
-        incumbents (Configurations) of each SMAC call will be pushed to this queue
-    scenario: Scenario
-        smac.Scenario to initialize SMAC
-    tae: ExecuteTARun
-        Target Algorithm Runner (supports old and aclib format)
-    rng: int/np.random.RandomState
-        The randomState/seed to pass to each smac run
-    output_dir: str
-        The directory in which each smac run should write it's results
-    cost_per_inst: dict
-        maps instance to cost. Contains portfolio performance on each instance
-
-    Returns
-    -------
-    incumbent: Configuration
-        The incumbent configuration of this run
-
-    """
-    if not cost_per_inst:
-        tae = tae(ta=scenario.ta, run_obj=scenario.run_obj)
-    else:
-        tae = ExecuteTARunHydra(ta=scenario.ta, run_obj=scenario.run_obj,
-                                cost_oracle=cost_per_inst, tae=tae)
-    solver = SMAC(scenario=scenario, tae_runner=tae, rng=rng, **kwargs)
-    solver.stats.start_timing()
-    solver.stats.print_stats()
-
-    incumbent = solver.solver.run()
-    solver.stats.print_stats()
-
-    if output_dir is not None:
-        solver.solver.runhistory.save_json(
-            fn=os.path.join(solver.output_dir, "runhistory.json")
-        )
-    queue.put(incumbent)
-    queue.close()
-    return incumbent
 
 
 class Hydra(object):
@@ -138,7 +89,7 @@ class Hydra(object):
 
         self.n_iterations = n_iterations
         self.scenario = scenario
-        self.run_id, self.rng = self._get_rng(rng, run_id)
+        self.run_id, self.rng = get_rng(rng, run_id, self.logger)
         self.kwargs = kwargs
         self.output_dir = None
         self.top_dir = None
@@ -155,6 +106,8 @@ class Hydra(object):
         self.n_optimizers = max(n_optimizers, 1)
         self.val_set = self._get_validation_set(val_set)
         self.cost_per_inst = {}
+        self.optimizer = None
+        self.portfolio_cost = None
 
     def _get_validation_set(self, val_set: str, delete: bool=True) -> typing.List[str]:
         """
@@ -175,6 +128,8 @@ class Hydra(object):
             List of instance-ids to validate on
 
         """
+        if val_set == 'none':
+            return None
         if val_set == 'train':
             return self.scenario.train_insts
         elif val_set[:3] != 'val':
@@ -209,7 +164,7 @@ class Hydra(object):
         if self.output_dir is None:
             self.top_dir = "hydra-output_%s" % (
                 datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f'))
-            self.scenario.output_dir = os.path.join(self.top_dir, "smac3-output_%s" % (
+            self.scenario.output_dir = os.path.join(self.top_dir, "psmac3-output_%s" % (
                 datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f')))
             self.output_dir = create_output_directory(self.scenario, run_id=self.run_id, logger=self.logger)
 
@@ -222,37 +177,33 @@ class Hydra(object):
             self.logger.info("="*120)
             self.logger.info("Hydra Iteration: %d", (i + 1))
 
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Multiprocessing part start ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-            q = multiprocessing.Queue()
-            procs = []
-            for p in range(self.n_optimizers):
-                proc = multiprocessing.Process(target=optimize,
-                                               args=(
-                                                   q,                   # Output queue
-                                                   self.scenario,       # Scenario object
-                                                   self._tae,           # type of tae to run target with
-                                                   p,                   # process_id (used in output folder name)
-                                                   self.output_dir,     # directory to create outputs in
-                                                   self.cost_per_inst   # portfolio cost per instance
-                                               ),
-                                               kwargs=self.kwargs)
-                proc.start()
-                procs.append(proc)
-            for proc in procs:
-                proc.join()
-            incs = np.empty((self.n_optimizers, ), dtype=Configuration)
-            self.logger.info('*'*120)
-            self.logger.info('Incumbents this round:')
-            idx = 0
-            while not q.empty():
-                conf = q.get_nowait()
-                self.logger.info(conf)
-                incs[idx] = conf
-                idx += 1
-            q.close()
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Multiprocessing part end ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+            self.optimizer = PSMAC(
+                scenario=self.scenario,
+                run_id=self.run_id,
+                rng=self.rng,
+                tae=self._tae if i == 0 else partial(ExecuteTARunHydra, cost_oracle=self.cost_per_inst),
+                shared_model=False,
+                validate=True if self.val_set else False,
+                n_optimizers=self.n_optimizers,
+                val_set=self.val_set,
+                n_incs=self.n_optimizers,  # return all configurations (unvalidated)
+                **self.kwargs
+            )
+            self.optimizer.output_dir = self.output_dir
+            incs = self.optimizer.optimize()
+            cost_per_conf_v, val_ids, cost_per_conf_e, est_ids = self.optimizer.get_best_incumbents_ids(incs)
+            if self.val_set:
+                to_keep_ids = val_ids[:self.incs_per_round]
+            else:
+                to_keep_ids = est_ids[:self.incs_per_round]
+            config_cost_per_inst = {}
+            incs = incs[to_keep_ids]
+            self.logger.info('Kept incumbents')
+            for inc in incs:
+                self.logger.info(inc)
+                config_cost_per_inst[inc] = cost_per_conf_v[inc] if self.val_set else cost_per_conf_e[inc]
 
-            cur_portfolio_cost = self._update_portfolio(incs)
+            cur_portfolio_cost = self._update_portfolio(incs, config_cost_per_inst)
             if portfolio_cost <= cur_portfolio_cost:
                 self.logger.info("No further progress (%f) --- terminate hydra", portfolio_cost)
                 break
@@ -264,10 +215,11 @@ class Hydra(object):
             self.tae = ExecuteTARunHydra(ta=self.scenario.ta, run_obj=self.scenario.run_obj,
                                          cost_oracle=self.cost_per_inst, tae=self._tae)
 
-            self.scenario.output_dir = os.path.join(self.top_dir, "smac3-output_%s" % (
+            self.scenario.output_dir = os.path.join(self.top_dir, "psmac3-output_%s" % (
                 datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f')))
             self.output_dir = create_output_directory(self.scenario, run_id=self.run_id, logger=self.logger)
-        self.rh.save_json(fn=os.path.join(self.top_dir, 'all_runs_runhistory.json'), save_external=True)
+        read(self.rh, os.path.join(self.top_dir, 'psmac3*', 'run_' + str(MAXINT)), self.scenario.cs, self.logger)
+        self.rh.save_json(fn=os.path.join(self.top_dir, 'all_validated_runs_runhistory.json'), save_external=True)
         with open(os.path.join(self.top_dir, 'portfolio.pkl'), 'wb') as fh:
             pickle.dump(self.portfolio, fh)
         self.logger.info("~"*120)
@@ -278,7 +230,7 @@ class Hydra(object):
 
         return self.portfolio
 
-    def _update_portfolio(self, incs: np.ndarray) -> typing.Union[np.float, float]:
+    def _update_portfolio(self, incs: np.ndarray, config_cost_per_inst: typing.Dict) -> typing.Union[np.float, float]:
         """
         Validates all configurations (in incs) and determines which ones to add to the portfolio
 
@@ -293,98 +245,32 @@ class Hydra(object):
             The current cost of the portfolio
 
         """
-        self.logger.info('*'*120)
-        self.logger.info('Validating')
-        new_rh = self.solver.validate(config_mode=incs,
-                                      instance_mode=self.val_set,
-                                      repetitions=1,
-                                      use_epm=False,
-                                      n_jobs=self.n_optimizers)
-        self.rh.update(new_rh, origin=DataOrigin.EXTERNAL_SAME_INSTANCES)
-        self.logger.info("Number of validated runs: %d", (len(new_rh.data)))
-        self.logger.info('*'*120)
-        self.logger.info('Determining best incumbents')
-        results = []
-        config_cost_per_inst = {}
-        for incumbent in incs:
-            cost_per_inst = new_rh.get_instance_costs_for_config(config=incumbent)
-            config_cost_per_inst[incumbent] = cost_per_inst
-            results.append(np.mean(list(cost_per_inst.values())))
-        to_keep_ids = list(map(lambda x: x[0],
-                               sorted(enumerate(results), key=lambda y: y[1])))[:self.incs_per_round]
-        if len(to_keep_ids) > 1:
-            self.logger.info('Keeping incumbents of runs %s', ', '.join(map(str, to_keep_ids)))
-        else:
-            self.logger.info('Keeping incumbent of run %s', str(to_keep_ids))
-        keep_incumbents = incs[to_keep_ids]
-        for kept in keep_incumbents:
-            self.portfolio.append(kept)
-            cost_per_inst = config_cost_per_inst[kept]
-            if self.cost_per_inst:
-                if len(self.cost_per_inst) != len(cost_per_inst):
-                    raise ValueError('Num validated Instances mismatch!')
-                for key in cost_per_inst:
-                    self.cost_per_inst[key] = min(self.cost_per_inst[key], cost_per_inst[key])
+        if self.val_set:  # we have validated data
+            for kept in incs:
+                if kept not in self.portfolio:
+                    self.portfolio.append(kept)
+                    cost_per_inst = config_cost_per_inst[kept]
+                    if self.cost_per_inst:
+                        if len(self.cost_per_inst) != len(cost_per_inst):
+                            raise ValueError('Num validated Instances mismatch!')
+                        else:
+                            for key in cost_per_inst:
+                                self.cost_per_inst[key] = min(self.cost_per_inst[key], cost_per_inst[key])
+                    else:
+                        self.cost_per_inst = cost_per_inst
+            cur_cost = np.mean(list(self.cost_per_inst.values()))  # type: np.float
+        else:  # No validated data. Set the mean to the approximated mean
+            means = []  # can contain nans as not every instance was evaluated thus we should use nanmean to approximate
+            for kept in incs:
+                means.append(np.nanmean(list(self.optimizer.rh.get_instance_costs_for_config(kept).values())))
+                self.portfolio.append(kept)
+            if self.portfolio_cost:
+                new_mean = self.portfolio_cost * (len(self.portfolio) - len(incs)) / len(self.portfolio)
+                new_mean += np.nansum(means)
             else:
-                self.cost_per_inst = cost_per_inst
+                new_mean = np.mean(means)
+            self.cost_per_inst = defaultdict(lambda: new_mean)
+            cur_cost = new_mean
 
-        cur_cost = np.mean(list(self.cost_per_inst.values()))  # type: np.float
+        self.portfolio_cost = cur_cost
         return cur_cost
-
-    def _get_rng(
-            self,
-            rng: typing.Optional[typing.Union[int, np.random.RandomState]]=None,
-            run_id: typing.Optional[int]=None,
-    ) -> typing.Tuple[int, np.random.RandomState]:
-        """
-        Initialize random number generator and set run_id
-
-        * If rng and run_id are None, initialize a new generator and sample a run_id
-        * If rng is None and a run_id is given, use the run_id to initialize the rng
-        * If rng is an int, a RandomState object is created from that.
-        * If rng is RandomState, return it
-        * If only run_id is None, a run_id is sampled from the random state.
-
-        Parameters
-        ----------
-        rng : np.random.RandomState|int|None
-
-        run_id : int, optional
-
-        Returns
-        -------
-        int
-        np.random.RandomState
-
-        """
-        # initialize random number generator
-        if rng is not None and not isinstance(rng, (int, np.random.RandomState)):
-            raise TypeError('Argument rng accepts only arguments of type None, int or np.random.RandomState, '
-                            'you provided %s.' % str(type(rng)))
-        if run_id is not None and not isinstance(run_id, int):
-            raise TypeError('Argument run_id accepts only arguments of type None, int or np.random.RandomState, '
-                            'you provided %s.' % str(type(run_id)))
-
-        if rng is None and run_id is None:
-            # Case that both are None
-            self.logger.debug('No rng and no run_id given: using a random value to initialize run_id.')
-            rng = np.random.RandomState()
-            run_id = rng.randint(MAXINT)
-        elif rng is None and isinstance(run_id, int):
-            self.logger.debug('No rng and no run_id given: using run_id %d as seed.', run_id)
-            rng = np.random.RandomState(seed=run_id)
-        elif isinstance(rng, int):
-            if run_id is None:
-                run_id = rng
-            else:
-                pass
-            rng = np.random.RandomState(seed=rng)
-        elif isinstance(rng, np.random.RandomState):
-            if run_id is None:
-                run_id = rng.randint(MAXINT)
-            else:
-                pass
-        else:
-            raise ValueError('This should not happen! Please contact the developers! Arguments: rng=%s of type %s and '
-                             'run_id=% of type %s' % (rng, type(rng), run_id, type(run_id)))
-        return run_id, rng
