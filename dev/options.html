@@ -283,30 +283,31 @@ See the Main and SMAC Options below. Find the Scenario Options in the next secti
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">hydra_incumbents_per_round:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">number of configurations to keep per hydra iteration. Default: 1.</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">hydra_iterations:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">number of hydra iterations. Only active if mode is set to Hydra Default: 3.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">hydra_n_optimizers:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">number of optimizers to run in parallel per hydra iteration. Default: 1.</td>
+<tr class="field-odd field"><th class="field-name" colspan="2">hydra_iterations:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">number of hydra iterations. Only active if mode is set to Hydra Default: 3.</td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">hydra_validation:</th></tr>
 <tr class="field-even field"><td>&#160;</td><td class="field-body">set to validate incumbents on. valX =&gt; validation set of size training_set * 0.X Default: train.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">mode:</th><td class="field-body">Configuration mode. Default: SMAC.</td>
+<tr class="field-odd field"><th class="field-name" colspan="2">incumbents_per_round:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">number of configurations to keep per psmac/hydra iteration. Default: 1.</td>
 </tr>
-<tr class="field-even field"><th class="field-name" colspan="2">random_configuration_chooser:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">path to a python module containing a class <cite>RandomConfigurationChooserImpl`implementing the interface of `RandomConfigurationChooser</cite></td>
+<tr class="field-even field"><th class="field-name">mode:</th><td class="field-body">Configuration mode. Default: SMAC.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">restore_state:</th><td class="field-body">Path to directory with SMAC-files.</td>
+<tr class="field-odd field"><th class="field-name">n_optimizers:</th><td class="field-body">number of optimizers to run in parallel per psmac/hydra iteration. Default: 1.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">scenario_file:</th><td class="field-body">Scenario file in AClib format.</td>
+<tr class="field-even field"><th class="field-name">psmac_validate:</th><td class="field-body">Validate all psmac configurations.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">seed:</th><td class="field-body">Random Seed. Default: 1.</td>
+<tr class="field-odd field"><th class="field-name" colspan="2">random_configuration_chooser:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">path to a python module containing a class <cite>RandomConfigurationChooserImpl`implementing the interface of `RandomConfigurationChooser</cite></td>
 </tr>
-<tr class="field-even field"><th class="field-name">verbose_level:</th><td class="field-body">Verbosity level. Default: 20.</td>
+<tr class="field-even field"><th class="field-name">restore_state:</th><td class="field-body">Path to directory with SMAC-files.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">scenario_file:</th><td class="field-body">Scenario file in AClib format.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">seed:</th><td class="field-body">Random Seed. Default: 1.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">verbose_level:</th><td class="field-body">Verbosity level. Default: 20.</td>
 </tr>
 </tbody>
 </table>
@@ -340,7 +341,7 @@ See the Main and SMAC Options below. Find the Scenario Options in the next secti
 </tr>
 <tr class="field-odd field"><th class="field-name">minR:</th><td class="field-body">Minimum number of calls per configuration. Default: 1.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">output_dir:</th><td class="field-body">Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2018-05-16_16:15:35_041441.</td>
+<tr class="field-even field"><th class="field-name">output_dir:</th><td class="field-body">Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2018-06-05_05:02:27_571105.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name" colspan="2">random_configuration_chooser:</th></tr>
 <tr class="field-odd field"><td>&#160;</td><td class="field-body">path to a python module containing a class`RandomConfigurationChooserImpl` implementingthe interface of <cite>RandomConfigurationChooser</cite></td>

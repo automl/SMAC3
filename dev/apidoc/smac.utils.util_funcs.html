@@ -255,6 +255,39 @@
   <div class="section" id="module-smac.utils.util_funcs">
 <span id="smac-utils-util-funcs-module"></span><h1>smac.utils.util_funcs module<a class="headerlink" href="#module-smac.utils.util_funcs" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
+<dt id="smac.utils.util_funcs.get_rng">
+<code class="descclassname">smac.utils.util_funcs.</code><code class="descname">get_rng</code><span class="sig-paren">(</span><em>rng: Union[int</em>, <em>mtrand.RandomState</em>, <em>NoneType] = None</em>, <em>run_id: Union[int</em>, <em>NoneType] = None</em>, <em>logger: Union[logging.Logger</em>, <em>NoneType] = None</em><span class="sig-paren">)</span> &#x2192; Tuple[int, mtrand.RandomState]<a class="reference internal" href="../_modules/smac/utils/util_funcs.html#get_rng"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.util_funcs.get_rng" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize random number generator and set run_id</p>
+<ul class="simple">
+<li>If rng and run_id are None, initialize a new generator and sample a run_id</li>
+<li>If rng is None and a run_id is given, use the run_id to initialize the rng</li>
+<li>If rng is an int, a RandomState object is created from that.</li>
+<li>If rng is RandomState, return it</li>
+<li>If only run_id is None, a run_id is sampled from the random state.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>rng</strong> (<em>np.random.RandomState|int|None</em>) – </li>
+<li><strong>run_id</strong> (<em>int</em><em>, </em><em>optional</em>) – </li>
+<li><strong>logger</strong> (<em>logging.Logger</em><em>, </em><em>optional</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><em>int</em></li>
+<li><em>np.random.RandomState</em></li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="smac.utils.util_funcs.get_types">
 <code class="descclassname">smac.utils.util_funcs.</code><code class="descname">get_types</code><span class="sig-paren">(</span><em>config_space</em>, <em>instance_features=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/util_funcs.html#get_types"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.util_funcs.get_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>TODO</p>
