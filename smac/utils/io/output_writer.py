@@ -1,6 +1,5 @@
 import os
 import shutil
-import traceback
 import typing
 
 from smac.configspace import pcs_new, json, ConfigurationSpace
@@ -94,7 +93,7 @@ class OutputWriter(object):
                     new_path = os.path.join(scenario.output_dir_for_this_run, 'configspace.pcs')
                     self.save_configspace(scenario.cs, new_path, 'pcs_new')
                 except TypeError:
-                    self.logger.error("Could not write pcs file to disk." 
+                    self.logger.error("Could not write pcs file to disk."
                     " ConfigSpace not compatible with (new) pcs format.")
                 json_path = os.path.join(scenario.output_dir_for_this_run, 'configspace.json')
                 self.save_configspace(scenario.cs, json_path, 'json')
