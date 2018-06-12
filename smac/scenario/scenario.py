@@ -3,6 +3,8 @@ import numpy
 import copy
 import typing
 
+import numpy as np
+
 from smac.utils.io.input_reader import InputReader
 from smac.utils.io.output_writer import OutputWriter
 from smac.utils.io.cmd_reader import CMDReader
@@ -121,6 +123,11 @@ class Scenario(object):
                 self.feature_array.append(self.feature_dict[inst_])
             self.feature_array = numpy.array(self.feature_array)
             self.n_features = self.feature_array.shape[1]
+
+        if self.use_ta_time:
+            if self.algo_runs_timelimit is None or not np.isfinite(self.algo_runs_timelimit):
+                self.algo_runs_timelimit = self.wallclock_limit
+            self.wallclock_limit = np.inf
 
     def __getstate__(self):
         d = dict(self.__dict__)
