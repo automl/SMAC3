@@ -4,13 +4,13 @@ import traceback
 import typing
 
 from smac.configspace import pcs_new, json, ConfigurationSpace
-
+from smac.utils.logging import PickableLoggerAdapter
 
 class OutputWriter(object):
     """Writing scenario to file."""
 
     def __init__(self):
-        pass
+        self.logger = PickableLoggerAdapter(name=self.__module__ + "." + self.__class__.__name__)
 
     def write_scenario_file(self, scenario):
         """Write scenario to a file (format is compatible with input_reader).
@@ -94,7 +94,8 @@ class OutputWriter(object):
                     new_path = os.path.join(scenario.output_dir_for_this_run, 'configspace.pcs')
                     self.save_configspace(scenario.cs, new_path, 'pcs_new')
                 except TypeError:
-                    traceback.print_exc()
+                    self.logger.error("Could not write pcs file to disk." 
+                    " ConfigSpace not compatible with (new) pcs format.")
                 json_path = os.path.join(scenario.output_dir_for_this_run, 'configspace.json')
                 self.save_configspace(scenario.cs, json_path, 'json')
             elif key == 'train_inst_fn' and scenario.train_insts != [None]:
