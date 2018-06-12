@@ -1,5 +1,4 @@
 import logging
-import numpy
 import copy
 import typing
 
@@ -121,7 +120,7 @@ class Scenario(object):
             self.feature_array = []
             for inst_ in self.train_insts:
                 self.feature_array.append(self.feature_dict[inst_])
-            self.feature_array = numpy.array(self.feature_array)
+            self.feature_array = np.array(self.feature_array)
             self.n_features = self.feature_array.shape[1]
 
         if self.use_ta_time:
