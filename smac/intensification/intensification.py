@@ -116,7 +116,6 @@ class Intensifier(object):
         self.use_ta_time_bound = use_ta_time_bound
         self._min_time = 10**-5
         self.min_chall = min_chall
-        
 
     def intensify(self, challengers: typing.List[Configuration],
                   incumbent: Configuration,
