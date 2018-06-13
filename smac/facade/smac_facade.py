@@ -289,6 +289,7 @@ class SMAC(object):
                                       run_obj_time=scenario.run_obj == "runtime",
                                       always_race_against=scenario.cs.get_default_configuration()
                                       if scenario.always_race_default else None,
+                                      use_ta_time_bound=scenario.use_ta_time,
                                       instance_specifics=scenario.instance_specific,
                                       minR=scenario.minR,
                                       maxR=scenario.maxR,

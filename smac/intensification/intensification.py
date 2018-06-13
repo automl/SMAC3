@@ -48,6 +48,9 @@ class Intensifier(object):
     always_race_against: Configuration
         if incumbent changes race this configuration always against new incumbent;
         can sometimes prevent over-tuning
+    use_ta_time_bound: bool,
+        if true, trust time reported by the target algorithms instead of
+        measuring the wallclock time for limiting the time of intensification
     run_limit : int
         Maximum number of target algorithm runs per call to intensify.
     maxR : int
@@ -71,6 +74,7 @@ class Intensifier(object):
                  run_obj_time: bool=True,
                  always_race_against: Configuration=None,
                  run_limit: int=MAXINT,
+                 use_ta_time_bound: bool=False,
                  minR: int=1, maxR: int=2000,
                  adaptive_capping_slackfactor: float=1.2,
                  min_chall: int=2):
@@ -108,6 +112,8 @@ class Intensifier(object):
         self._num_run = 0
         self._chall_indx = 0
 
+        self._ta_time = 0
+        self.use_ta_time_bound = use_ta_time_bound
         self._min_time = 10**-5
         self.min_chall = min_chall
 
@@ -145,6 +151,7 @@ class Intensifier(object):
             empirical performance of incumbent configuration
         """
         self.start_time = time.time()
+        self._ta_time = 0
 
         if time_bound < self._min_time:
             raise ValueError("time_bound must be >= %f" %(self._min_time))
@@ -195,10 +202,15 @@ class Intensifier(object):
                     self.logger.debug(
                         "Maximum #runs for intensification reached")
                     break
-                elif tm - self.start_time - time_bound >= 0:
-                    self.logger.debug("Timelimit for intensification reached ("
-                                      "used: %f sec, available: %f sec)" %
-                                      (tm - self.start_time, time_bound))
+                if not self.use_ta_time_bound and tm - self.start_time - time_bound >= 0:
+                    self.logger.debug("Wallclock time limit for intensification reached ("
+                                        "used: %f sec, available: %f sec)" %
+                                        (tm - self.start_time, time_bound))
+                    break
+                elif self._ta_time - time_bound >= 0:
+                    self.logger.debug("TA time limit for intensification reached ("
+                                          "used: %f sec, available: %f sec)" %
+                                          (self._ta_time, time_bound))
                     break
 
         # output estimated performance of incumbent
@@ -268,7 +280,7 @@ class Intensifier(object):
                         seed=next_seed,
                         cutoff=self.cutoff,
                         instance_specific=self.instance_specifics.get(next_instance, "0"))
-
+                    self._ta_time += dur
                     self._num_run += 1
                 else:
                     self.logger.debug("No further instance-seed pairs for "
@@ -366,6 +378,7 @@ class Intensifier(object):
                         capped=(self.cutoff is not None) and
                                (cutoff < self.cutoff))
                     self._num_run += 1
+                    self._ta_time += dur
                 except CappedRunException:
                     return incumbent
 
