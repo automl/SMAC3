@@ -7,7 +7,7 @@
 :intensification_percentage: The fraction of time to be used on intensification (versus choice of next Configurations). Default: 0.5.
 :maxR: Maximum number of calls per configuration. Default: 2000.
 :minR: Minimum number of calls per configuration. Default: 1.
-:output_dir: Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2018-06-12_16:22:36_509495.
+:output_dir: Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2018-06-13_14:31:10_256747.
 :random_configuration_chooser: path to a python module containing a class`RandomConfigurationChooserImpl` implementingthe interface of `RandomConfigurationChooser`
 :rf_do_bootstrapping: Use bootstraping in random forest. Default: True.
 :rf_max_depth: Maximum depth of each tree in the random forest. Default: 20.
@@ -18,5 +18,6 @@
 :shared_model: Whether to run SMAC in parallel mode.
 :sls_max_steps: Maximum number of local search steps in one iteration during the optimization of the acquisition function.
 :sls_n_steps_plateau_walk: Maximum number of steps on plateaus during the optimization of the acquisition function. Default: 10.
+:use_ta_time: Instead of measuring SMAC's wallclock time, only consider time reported by the target algorithm (ta).
 
 
