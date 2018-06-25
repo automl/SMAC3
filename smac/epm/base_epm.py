@@ -40,15 +40,11 @@ class AbstractEPM(object):
         to var_threshold
     types : list
         If set, contains a list with feature types (cat,const) of input vector
-    unlog_y: bool
-        If the y data in the training data is log-transformed,
-        this option will undo this tranformation during predictions        
     """
 
     def __init__(self,
                  instance_features: np.ndarray=None,
-                 pca_components: float=None,
-                 unlog_y:bool=False):
+                 pca_components: float=None):
         """Constructor
 
         Parameters
@@ -59,14 +55,10 @@ class AbstractEPM(object):
         pca_components : float
             Number of components to keep when using PCA to reduce
             dimensionality of instance features. Requires to
-            set n_feats (> pca_dims).
-        unlog_y: bool
-            If the y data in the training data is log-transformed,
-            this option will undo this tranformation during predictions    
+            set n_feats (> pca_dims).    
         """
         self.instance_features = instance_features
         self.pca_components = pca_components
-        self.unlog_y = unlog_y
         
         if instance_features is not None:
             self.n_feats = instance_features.shape[1]

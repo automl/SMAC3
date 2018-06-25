@@ -22,7 +22,7 @@ from smac.initial_design.multi_config_initial_design import \
 from smac.intensification.intensification import Intensifier
 from smac.optimizer.smbo import SMBO
 from smac.optimizer.objective import average_cost
-from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction
+from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
 from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
     AcquisitionFunctionMaximizer
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
@@ -196,7 +196,7 @@ class SMAC(object):
                                               instance_features=scenario.feature_array,
                                               seed=rng.randint(MAXINT),
                                               pca_components=scenario.PCA_DIM,
-                                              unlog_y=scenario.run_obj == "runtime",
+                                              log_y=scenario.logy,
                                               num_trees=scenario.rf_num_trees,
                                               do_bootstrapping=scenario.rf_do_bootstrapping,
                                               ratio_features=scenario.rf_ratio_features,
@@ -205,7 +205,10 @@ class SMAC(object):
                                               max_depth=scenario.rf_max_depth)
         # initial acquisition function
         if acquisition_function is None:
-            acquisition_function = EI(model=model)
+            if scenario.logy:
+                acquisition_function = LogEI(model=model)
+            else:
+                acquisition_function = EI(model=model)
 
         # inject model if necessary
         if acquisition_function.model is None:
@@ -348,7 +351,7 @@ class SMAC(object):
         if runhistory2epm is None:
 
             num_params = len(scenario.cs.get_hyperparameters())
-            if scenario.run_obj == "runtime":
+            if scenario.logy:
 
                 # if we log the performance data,
                 # the RFRImputator will already get

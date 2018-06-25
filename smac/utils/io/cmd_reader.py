@@ -479,6 +479,12 @@ class CMDReader(object):
                                help="[dev] The fraction of time to be used on "
                                     "intensification (versus choice of next "
                                     "Configurations).")
+        smac_opts.add_argument("--logy",
+                               dest='logy',
+                               default=False, type=bool,
+                               help="[dev] Optimize on log10(y) transformed cost values."
+                               " All cost values have to be positive."
+                               " Automatically activated of objective is runtime.")
 
         ## RF Hyperparameters
         smac_opts.add_argument("--rf_num_trees","--rf-num-trees",

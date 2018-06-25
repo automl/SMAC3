@@ -39,6 +39,7 @@ class RandomForestWithInstances(AbstractEPM):
 
     def __init__(self, types: np.ndarray,
                  bounds: np.ndarray,
+                 log_y: bool=False,
                  num_trees: int=10,
                  do_bootstrapping: bool=True,
                  n_points_per_tree: int=-1,
@@ -63,6 +64,9 @@ class RandomForestWithInstances(AbstractEPM):
             have to pass np.array([2, 0]). Note that we count starting from 0.
         bounds : np.ndarray (D, 2)
             Specifies the bounds for continuous features.
+        log_y: bool
+            y values (passed to this RF) are expected to be log10(y) transformed;
+            this will be considered during predicting 
         num_trees : int
             The number of trees in the random forest.
         do_bootstrapping : bool
@@ -93,6 +97,7 @@ class RandomForestWithInstances(AbstractEPM):
 
         self.types = types
         self.bounds = bounds
+        self.log_y = log_y
         self.rng = regression.default_random_engine(seed)
 
         self.rf_opts = regression.forest_opts()
@@ -204,11 +209,9 @@ class RandomForestWithInstances(AbstractEPM):
                 preds_per_tree = self.rf.all_leaf_values(row_X)
                 means_per_tree = []
                 for preds in preds_per_tree:
-                    log_mean = np.mean(preds)
-                    log_var = np.var(preds)
-                    # mean of log-normal distribution:
-                    mean = 10**(log_mean + log_var/2)
-                    means_per_tree.append(mean)
+                    # within one tree, we want to use the
+                    # arithmetic mean and not the geometric mean
+                    means_per_tree.append(np.log10(np.mean(np.power(10, preds))))
                 mean = np.mean(means_per_tree) 
                 var = np.var(means_per_tree) # variance over trees as uncertainty estimate
             else:
@@ -219,3 +222,77 @@ class RandomForestWithInstances(AbstractEPM):
         vars_ = np.array(vars_)
 
         return means.reshape((-1, 1)), vars_.reshape((-1, 1))
+    
+    def predict_marginalized_over_instances(self, X: np.ndarray):
+        """Predict mean and variance marginalized over all instances.
+
+        Returns the predictive mean and variance marginalised over all
+        instances for a set of configurations.
+
+        Parameters
+        ----------
+        X : np.ndarray
+            [n_samples, n_features (config)]
+
+        Returns
+        -------
+        means : np.ndarray of shape = [n_samples, 1]
+            Predictive mean
+        vars : np.ndarray  of shape = [n_samples, 1]
+            Predictive variance
+        """
+
+        if self.instance_features is None or \
+                len(self.instance_features) == 0:
+            mean, var = self.predict(X)
+            var[var < self.var_threshold] = self.var_threshold
+            var[np.isnan(var)] = self.var_threshold
+            return mean, var
+        else:
+            n_instances = len(self.instance_features)
+
+        if len(X.shape) != 2:
+            raise ValueError(
+                'Expected 2d array, got %dd array!' % len(X.shape))
+        if X.shape[1] != self.bounds.shape[0]:
+            raise ValueError('Rows in X should have %d entries but have %d!' %
+                             (self.bounds.shape[0],
+                              X.shape[1]))
+
+        mean = np.zeros(X.shape[0])
+        var = np.zeros(X.shape[0])
+        for i, x in enumerate(X):
+            
+            # marginalize over instances
+            # 1. get all leaf values for each tree
+            preds_trees = [[] for i in range(self.rf_opts.num_trees)] 
+            
+            for feat in self.instance_features:
+                x_ = np.concatenate([x, feat])
+                preds_per_tree = self.rf.all_leaf_values(x_)
+                for tree_id, preds in enumerate(preds_per_tree):
+                    preds_trees[tree_id] += preds
+                    
+            # 2. average in each tree
+            for tree_id in range(self.rf_opts.num_trees):
+                if self.log_y:
+                    preds_trees[tree_id] = \
+                        np.log10(np.mean(np.power(10, preds_trees[tree_id])))
+                else:
+                    preds_trees[tree_id] = np.mean(preds_trees[tree_id])
+
+            # 3. compute statistics across trees
+            mean_x = np.mean(preds_trees)
+            var_x = np.var(preds_trees)
+            if var_x < self.var_threshold:
+                var_x = self.var_threshold
+                
+            var[i] = var_x
+            mean[i] = mean_x
+
+        if len(mean.shape) == 1:
+            mean = mean.reshape((-1, 1))
+        if len(var.shape) == 1:
+            var = var.reshape((-1, 1))
+
+        return mean, var
