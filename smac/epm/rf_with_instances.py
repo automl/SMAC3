@@ -205,7 +205,7 @@ class RandomForestWithInstances(AbstractEPM):
 
         means, vars_ = [], []
         for row_X in X:
-            if self.unlog_y:
+            if self.log_y:
                 preds_per_tree = self.rf.all_leaf_values(row_X)
                 means_per_tree = []
                 for preds in preds_per_tree:
