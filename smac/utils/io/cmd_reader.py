@@ -416,7 +416,7 @@ class CMDReader(object):
                               help="[dev] number of optimizers to run in parallel per psmac/hydra iteration.",
                               dest="hydra_n_optimizers")
         req_opts.add_argument("--psmac_validate",
-                              action="store_true",
+                              default=False, type=truthy,
                               help="[dev] Validate all psmac configurations.")
 
         self.main_cmd_actions, self.main_cmd_translations = CMDReader._extract_action_info(self.parser._actions)
@@ -464,7 +464,7 @@ class CMDReader(object):
                                default=3, type=int,
                                help="[dev] number of hydra iterations. Only active if mode is set to Hydra")
         smac_opts.add_argument("--use-ta-time", "--use_ta_time", dest="use_ta_time",
-                               default=False, type=bool,
+                               default=False, type=truthy,
                                help="[dev] Instead of measuring SMAC's wallclock time, "
                                "only consider time reported by the target algorithm (ta).")
 
@@ -481,7 +481,7 @@ class CMDReader(object):
                                     "Configurations).")
         smac_opts.add_argument("--logy",
                                dest='logy',
-                               default=False, type=bool,
+                               default=False, type=truthy,                      
                                help="[dev] Optimize on log10(y) transformed cost values."
                                " All cost values have to be positive."
                                " Automatically activated of objective is runtime.")
