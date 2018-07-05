@@ -188,7 +188,7 @@ class EIPS(EI):
                  **kwargs):
         r"""Computes for a given x the expected improvement as
         acquisition value.
-        :math:`EI(X) := \frac{\mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]} {np.log10(r(x))}`,
+        :math:`EI(X) := \frac{\mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]} {np.log(r(x))}`,
         with :math:`f(X^+)` as the incumbent and :math:`r(x)` as runtime.
 
         Parameters

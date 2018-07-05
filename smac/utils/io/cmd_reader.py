@@ -482,7 +482,7 @@ class CMDReader(object):
         smac_opts.add_argument("--logy",
                                dest='logy',
                                default=False, type=truthy,                      
-                               help="[dev] Optimize on log10(y) transformed cost values."
+                               help="[dev] Optimize on ln(y) transformed cost values."
                                " All cost values have to be positive."
                                " Automatically activated of objective is runtime.")
 

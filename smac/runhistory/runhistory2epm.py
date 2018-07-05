@@ -362,7 +362,7 @@ class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
                 " log cost." % (constants.MINIMAL_COST_FOR_LOG))
             y[y < constants.MINIMAL_COST_FOR_LOG] =\
                 constants.MINIMAL_COST_FOR_LOG
-        y = np.log10(y)
+        y = np.log(y)
 
         return X, y
 

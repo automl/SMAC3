@@ -356,8 +356,8 @@ class SMAC(object):
                 # if we log the performance data,
                 # the RFRImputator will already get
                 # log transform data from the runhistory
-                cutoff = np.log10(scenario.cutoff)
-                threshold = np.log10(scenario.cutoff *
+                cutoff = np.log(scenario.cutoff)
+                threshold = np.log(scenario.cutoff *
                                      scenario.par_factor)
 
                 imputor = RFRImputator(rng=rng,

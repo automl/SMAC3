@@ -65,7 +65,7 @@ class RandomForestWithInstances(AbstractEPM):
         bounds : np.ndarray (D, 2)
             Specifies the bounds for continuous features.
         log_y: bool
-            y values (passed to this RF) are expected to be log10(y) transformed;
+            y values (passed to this RF) are expected to be log(y) transformed;
             this will be considered during predicting 
         num_trees : int
             The number of trees in the random forest.
@@ -211,7 +211,7 @@ class RandomForestWithInstances(AbstractEPM):
                 for preds in preds_per_tree:
                     # within one tree, we want to use the
                     # arithmetic mean and not the geometric mean
-                    means_per_tree.append(np.log10(np.mean(np.power(10, preds))))
+                    means_per_tree.append(np.log(np.mean(np.exp(preds))))
                 mean = np.mean(means_per_tree) 
                 var = np.var(means_per_tree) # variance over trees as uncertainty estimate
             else:
@@ -277,7 +277,7 @@ class RandomForestWithInstances(AbstractEPM):
             for tree_id in range(self.rf_opts.num_trees):
                 if self.log_y:
                     preds_trees[tree_id] = \
-                        np.log10(np.mean(np.power(10, preds_trees[tree_id])))
+                        np.log(np.mean(np.exp(preds_trees[tree_id])))
                 else:
                     preds_trees[tree_id] = np.mean(preds_trees[tree_id])
 
