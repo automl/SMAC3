@@ -111,6 +111,7 @@ class RandomForestWithInstances(AbstractEPM):
         self.rf_opts.tree_opts.max_depth = max_depth
         self.rf_opts.tree_opts.epsilon_purity = eps_purity
         self.rf_opts.tree_opts.max_num_nodes = max_num_nodes
+        self.rf_opts.compute_law_of_total_variance = False
 
         self.n_points_per_tree = n_points_per_tree
         self.rf = None  # type: regression.binary_rss_forest
