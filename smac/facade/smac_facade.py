@@ -26,7 +26,7 @@ from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
 from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
     AcquisitionFunctionMaximizer
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
-    RandomConfigurationChooser
+    RandomConfigurationChooser, ChooserCosineAnnealing
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.base_epm import AbstractEPM
@@ -179,7 +179,8 @@ class SMAC(object):
             runhistory.aggregate_func = aggregate_func
 
         random_configuration_chooser = SMAC._get_random_configuration_chooser(
-            random_configuration_chooser=random_configuration_chooser)
+            random_configuration_chooser=random_configuration_chooser,
+            rng=rng)
 
         # reset random number generator in config space to draw different
         # random configurations with each seed given to SMAC
@@ -411,21 +412,29 @@ class SMAC(object):
             self.solver = smbo_class(**smbo_args)
 
     @staticmethod
-    def _get_random_configuration_chooser(random_configuration_chooser):
+    def _get_random_configuration_chooser(random_configuration_chooser:RandomConfigurationChooser, 
+                                          rng:np.random.RandomState):
         """
         Initialize random configuration chooser
         If random_configuration_chooser is falsy, initialize with ChooserNoCoolDown(2.0)
 
         Parameters
         ----------
-        random_configuration_chooser: ChooserNoCoolDown|ChooserLinearCoolDown|None
+        random_configuration_chooser: RandomConfigurationChooser
+            generator for picking random configurations
+            or configurations optimized based on acquisition function
+        rng : np.random.RandomState
+            Random number generator
 
         Returns
         -------
-        ChooserNoCoolDown|ChooserLinearCoolDown
+        RandomConfigurationChooser
 
         """
         if not random_configuration_chooser:
+            #return ChooserCosineAnnealing(prob_max=0.5, prob_min=0.001, 
+            #     restart_iteration= 10,
+            #     rng=rng)
             return ChooserNoCoolDown(2.0)
         return random_configuration_chooser
 

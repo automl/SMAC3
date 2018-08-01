@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import logging
 
+import numpy as np
 
 __author__ = "Aaron Kimmig"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -30,8 +31,10 @@ class RandomConfigurationChooser(ABC):
 class ChooserNoCoolDown(RandomConfigurationChooser):
 
     def __init__(self, modulus: float=2.0):
+        self.logger = logging.getLogger(
+            self.__module__ + "." + self.__class__.__name__)
         if modulus <= 1.0:
-            logging.warning("Using SMAC with random configurations only."
+            self.logger.warning("Using SMAC with random configurations only."
                             "ROAR is the better choice for this.")
         self.modulus = modulus
 
@@ -45,8 +48,10 @@ class ChooserNoCoolDown(RandomConfigurationChooser):
 class ChooserLinearCoolDown(RandomConfigurationChooser):
 
     def __init__(self, start_modulus: float=2.0, modulus_increment: float=0.3, end_modulus: float=float('inf')):
+        self.logger = logging.getLogger(
+            self.__module__ + "." + self.__class__.__name__)
         if start_modulus <= 1.0 and modulus_increment <= 0.0:
-            logging.warning("Using SMAC with random configurations only."
+            self.logger.warning("Using SMAC with random configurations only."
                             "ROAR is the better choice for this.")
         self.modulus = start_modulus
         self.modulus_increment = modulus_increment
@@ -63,4 +68,50 @@ class ChooserLinearCoolDown(RandomConfigurationChooser):
             self.last_iteration = iteration
             return True
         else:
+            return False
+        
+class ChooserProb(RandomConfigurationChooser):
+
+    def __init__(self, prob:float, rng:np.random.RandomState):
+        self.prob = prob
+        self.rng = rng
+
+    def next_smbo_iteration(self):
+        pass
+
+    def check(self, iteration: int):
+        if self.rng.rand() < self.prob:
+            return True
+        else:
+            return False
+
+class ChooserCosineAnnealing(RandomConfigurationChooser):
+
+    def __init__(self, prob_max:float, prob_min:float, 
+                 restart_iteration:int,
+                 rng:np.random.RandomState):
+        self.logger = logging.getLogger(
+            self.__module__ + "." + self.__class__.__name__)
+        self.prob_max = prob_max
+        self.prob_min = prob_min
+        self.restart_iteration = restart_iteration
+        self.iteration = 0
+        self.prob = prob_max
+        self.rng = rng
+
+    def next_smbo_iteration(self):
+        self.prob = self.prob_min + (0.5 *(self.prob_max - self.prob_min) * \
+                (1 + np.cos(self.iteration * np.pi / self.restart_iteration)))
+        self.logger.error("Probability for random configs: %f" %(self.prob))
+        self.iteration += 1
+        if self.iteration > self.restart_iteration:
+            self.iteration = 0
+            self.logger.error("Perform restart in next iteration!")
+
+    def check(self, iteration: int):
+        if self.rng.rand() < self.prob:
+            self.logger.error("Random Config")
+            return True
+        else:
+            self.logger.error("Acq Config")
             return False
