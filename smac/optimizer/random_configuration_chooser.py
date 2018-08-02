@@ -84,6 +84,22 @@ class ChooserProb(RandomConfigurationChooser):
             return True
         else:
             return False
+        
+class ChooserProbCoolDown(RandomConfigurationChooser):
+
+    def __init__(self, prob:float, cool_down_fac:float, rng:np.random.RandomState):
+        self.prob = prob
+        self.rng = rng
+        self.cool_down_fac = cool_down_fac
+
+    def next_smbo_iteration(self):
+        self.prob *= self.cool_down_fac
+
+    def check(self, iteration: int):
+        if self.rng.rand() < self.prob:
+            return True
+        else:
+            return False
 
 class ChooserCosineAnnealing(RandomConfigurationChooser):
 
