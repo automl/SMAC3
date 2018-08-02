@@ -38,9 +38,9 @@ class MultiConfigInitialDesign(InitialDesign):
                  traj_logger: TrajLogger,
                  runhistory: RunHistory,
                  rng: np.random.RandomState,
-                 configs: typing.List[Configuration],
                  intensifier: Intensifier,
-                 aggregate_func: typing.Callable
+                 aggregate_func: typing.Callable,
+                 configs: typing.Optional[typing.List[Configuration]]=None
                  ):
         """Constructor
 
@@ -60,14 +60,14 @@ class MultiConfigInitialDesign(InitialDesign):
             Runhistory with all target algorithm runs.
         rng: np.random.RandomState
             Random state
-        configs: typing.List[Configuration]
-            List of initial configurations.
         intensifier: Intensifier
             Intensification object to issue a racing to decide the current
             incumbent.
         aggregate_func: typing:Callable
             Function to aggregate performance of a configuration across
             instances.
+        configs: typing.Optional[typing.List[Configuration]]
+            List of initial configurations.
         """
         super().__init__(tae_runner=tae_runner,
                          scenario=scenario,
@@ -80,6 +80,13 @@ class MultiConfigInitialDesign(InitialDesign):
         self.runhistory = runhistory
         self.aggregate_func = aggregate_func
 
+    def select_configuration(self):
+        
+        if self.configs is None:
+            return self._select_configurations()
+        else:
+            return self.configs
+
     def run(self) -> Configuration:
         """Run the initial design.
 
@@ -88,7 +95,7 @@ class MultiConfigInitialDesign(InitialDesign):
         incumbent: Configuration
             Initial incumbent configuration
         """
-        configs = self.configs
+        configs = self.select_configuration()
         for config in configs:
             if config.origin is None:
                 config.origin = 'Initial design'
