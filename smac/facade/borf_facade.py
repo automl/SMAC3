@@ -4,9 +4,15 @@ import typing
 
 import numpy as np
 
+from smac.facade.smac_facade import SMAC
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
     RandomConfigurationChooser, ChooserCosineAnnealing
-from smac.facade.smac_facade import SMAC
+from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, \
+    RunHistory2EPM4LogCost, RunHistory2EPM4Cost
+from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
+from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
+    AcquisitionFunctionMaximizer
+from smac.tae.execute_ta_run import StatusType
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
@@ -18,6 +24,7 @@ class BORF(SMAC):
     Facade to use BORF default mode
     
     see smac.facade.smac_Facade for API
+    This facade overwrites option available via the SMAC facade
 
     Attributes
     ----------
@@ -38,6 +45,7 @@ class BORF(SMAC):
         """
         
         super().__init__(**kwargs)
+        self.logger.info(self.__class__)
         
         #  RF settings
         self.solver.model.rf_opts.num_trees = 10
@@ -53,6 +61,28 @@ class BORF(SMAC):
         # only 1 configuration per SMBO iteration
         self.solver.scenario.intensification_percentage = 1e-10
         self.solver.intensifier.min_chall = 1
+        
+        # optimize in log-space
+        num_params = len(self.solver.scenario.cs.get_hyperparameters())
+        self.solver.rh2EPM = RunHistory2EPM4LogCost(
+                    scenario=self.solver.scenario, num_params=num_params,
+                    success_states=[StatusType.SUCCESS, StatusType.CRASHED ],
+                    impute_censored_data=False,
+                    impute_state=None)
+        
+        # use LogEI
+        #=======================================================================
+        # self.solver.acquisition_func = LogEI(model=self.solver.model)
+        # self.solver.acq_optimizer = InterleavedLocalAndRandomSearch(
+        #         acquisition_function=self.solver.acquisition_func,
+        #         config_space=self.solver.scenario.cs,
+        #         rng=self.solver.rng,
+        #         max_steps=self.solver.scenario.sls_max_steps,
+        #         n_steps_plateau_walk=self.solver.scenario.sls_n_steps_plateau_walk
+        #     )
+        # self.solver.model.log_y = True
+        #=======================================================================
+        
         
         
     @staticmethod
