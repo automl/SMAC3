@@ -49,7 +49,6 @@ class RandomForestWithInstances(AbstractEPM):
                  max_depth: int=20,
                  eps_purity: int=1e-8,
                  max_num_nodes: int=2**20,
-                 unlog_y:bool=False,
                  seed: int=42,
                  **kwargs):
         """Constructor
@@ -87,9 +86,6 @@ class RandomForestWithInstances(AbstractEPM):
             different
         max_num_nodes : int
             The maxmimum total number of nodes in a tree
-        unlog_y: bool
-            If the y data in the training data is log-transformed,
-            this option will undo this tranformation during predictions
         seed : int
             The seed that is passed to the random_forest_run library.
         """
