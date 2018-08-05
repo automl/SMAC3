@@ -115,6 +115,15 @@ class SMACCLI(object):
                 stats=stats,
                 restore_incumbent=incumbent,
                 run_id=main_args_.seed)
+        if main_args_.mode == "BORF":
+            optimizer = BORF(
+                scenario=scen,
+                rng=np.random.RandomState(main_args_.seed),
+                runhistory=rh,
+                initial_configurations=initial_configs,
+                stats=stats,
+                restore_incumbent=incumbent,
+                run_id=main_args_.seed)
         elif main_args_.mode == "ROAR":
             optimizer = ROAR(
                 scenario=scen,
