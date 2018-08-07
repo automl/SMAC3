@@ -83,7 +83,11 @@ class BORF(SMAC):
         # self.solver.model.log_y = True
         #=======================================================================
         
-        
+        # better improve acqusition function optimization
+        # 1. increase number of sls iterations
+        self.solver.acq_optimizer.n_sls_iterations = 100
+        # 2. more randomly sampled configurations 
+        self.solver.scenario.acq_opt_challengers = 10000
         
     @staticmethod
     def _get_random_configuration_chooser(random_configuration_chooser:RandomConfigurationChooser, 

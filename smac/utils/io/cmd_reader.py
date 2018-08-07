@@ -522,6 +522,13 @@ class CMDReader(object):
                default=None, type=int,
                help="[dev] Maximum number of local search steps in one iteration"
                     " during the optimization of the acquisition function.")
+        smac_opts.add_argument("--acq_opt_challengers","--acq-opt-challengers",
+               dest='acq_opt_challengers',
+               default=5000, type=int,
+               help="[dev] Number of challengers returned by acquisition function" 
+                    " optimization. Also influences the number of randomly sampled"
+                    " configurations to optimized the acquisition function")
+    
         ## Intensification
         smac_opts.add_argument("--intens_adaptive_capping_slackfactor","--intens-adaptive-capping-slackfactork",
                dest='intens_adaptive_capping_slackfactor',

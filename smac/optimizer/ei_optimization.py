@@ -206,13 +206,10 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
         """
 
-        num_configurations_by_local_search = min(
-            len(runhistory.data), num_points,
-        )
         init_points = self._get_initial_points(
-            num_configurations_by_local_search, runhistory)
+            num_points, runhistory)
+            
         configs_acq = []
-
         # Start N local search from different random start points
         for start_point in init_points:
             acq_val, configuration = self._one_iter(
@@ -229,11 +226,11 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
         return configs_acq
 
-    def _get_initial_points(self, num_configurations_by_local_search,
-                            runhistory):
+    def _get_initial_points(self, num_points, runhistory):
+        
         if runhistory.empty():
             init_points = self.config_space.sample_configuration(
-                size=num_configurations_by_local_search)
+                size=num_points)
         else:
             # initiate local search with best configurations from previous runs
             configs_previous_runs = runhistory.get_all_configs()
@@ -241,12 +238,18 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                 configs_previous_runs)
             num_configs_local_search = int(min(
                 len(configs_previous_runs_sorted),
-                num_configurations_by_local_search)
+                num_points)
             )
             init_points = list(
                 map(lambda x: x[1],
                     configs_previous_runs_sorted[:num_configs_local_search])
             )
+            # Add random points if rh too small
+            if len(init_points) < num_points:
+                r_init_points = self.config_space.sample_configuration(
+                size=num_points-len(init_points))
+                init_points += r_init_points
+            
         return init_points
 
     def _one_iter(
@@ -399,6 +402,9 @@ class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
     n_steps_plateau_walk: int
         [LocalSearch] number of steps during a plateau walk before local search terminates
 
+    n_sls_iterations: int
+        [Local Search] number of local search iterations
+
     """
     def __init__(
             self,
@@ -406,7 +412,8 @@ class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
             config_space: ConfigurationSpace,
             rng: Union[bool, np.random.RandomState] = None,
             max_steps: Optional[int] = None,
-            n_steps_plateau_walk: int = 10
+            n_steps_plateau_walk: int = 10,
+            n_sls_iterations: int = 10
 
     ):
         super().__init__(acquisition_function, config_space, rng)
@@ -422,6 +429,7 @@ class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
             max_steps=max_steps,
             n_steps_plateau_walk=n_steps_plateau_walk
         )
+        self.n_sls_iterations = n_sls_iterations
 
     def maximize(
             self,
@@ -457,7 +465,7 @@ class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
         """
 
         next_configs_by_local_search = self.local_search._maximize(
-            runhistory, stats, 10, **kwargs
+            runhistory, stats, self.n_sls_iterations, **kwargs
         )
 
         # Get configurations sorted by EI

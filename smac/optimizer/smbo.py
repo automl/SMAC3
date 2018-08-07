@@ -260,7 +260,7 @@ class SMBO(object):
         challengers = self.acq_optimizer.maximize(
             runhistory=self.runhistory, 
             stats=self.stats, 
-            num_points=5000, 
+            num_points=self.scenario.acq_opt_challengers, 
             random_configuration_chooser=self.random_configuration_chooser
         )
         return challengers
