@@ -346,6 +346,9 @@ class Intensifier(object):
             inc_sum_cost = sum_cost(config=incumbent,
                                     instance_seed_pairs=inst_seed_pairs,
                                     run_history=run_history)
+            
+            if len(to_run) == 0:
+                self.logger.debug("No further runs for challenger available")
 
             # Line 12
             # Run challenger on all <config,seed> to run
