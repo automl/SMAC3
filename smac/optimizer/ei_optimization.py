@@ -250,7 +250,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                 size=num_points-len(init_points))
                 # weird behavior of sample_configuration
                 if num_points-len(init_points) == 1:
-                    init_points.apend(r_init_points)
+                    init_points.append(r_init_points)
                 else:
                     init_points += r_init_points
             
