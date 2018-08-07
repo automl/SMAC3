@@ -248,7 +248,11 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             if len(init_points) < num_points:
                 r_init_points = self.config_space.sample_configuration(
                 size=num_points-len(init_points))
-                init_points += r_init_points
+                # weird behavior of sample_configuration
+                if num_points-len(init_points) == 1:
+                    init_points.apend(r_init_points)
+                else:
+                    init_points += r_init_points
             
         return init_points
 
