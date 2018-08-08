@@ -47,7 +47,7 @@ class RandomForestWithInstances(AbstractEPM):
                  min_samples_split: int=3,
                  min_samples_leaf: int=3,
                  max_depth: int=20,
-                 eps_purity: int=1e-8,
+                 eps_purity: float=1e-8,
                  max_num_nodes: int=2**20,
                  seed: int=42,
                  **kwargs):
@@ -145,11 +145,11 @@ class RandomForestWithInstances(AbstractEPM):
             self.rf_opts.num_data_points_per_tree = self.n_points_per_tree
         self.rf = regression.binary_rss_forest()
         self.rf.options = self.rf_opts
-        data = self.__init_data_container(self.X, self.y)
+        data = self._init_data_container(self.X, self.y)
         self.rf.fit(data, rng=self.rng)
         return self
 
-    def __init_data_container(self, X: np.ndarray, y: np.ndarray):
+    def _init_data_container(self, X: np.ndarray, y: np.ndarray):
         """Fills a pyrfr default data container, s.t. the forest knows
         categoricals and bounds for continous data
         
