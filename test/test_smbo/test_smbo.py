@@ -60,7 +60,7 @@ class TestSMBO(unittest.TestCase):
         smbo = SMAC(self.scenario).solver
         self.assertIsInstance(smbo.model, RandomForestWithInstances)
         self.assertIsInstance(smbo.rh2EPM, RunHistory2EPM4LogCost)
-        self.assertIsInstance(smbo.acquisition_func, EI)
+        self.assertIsInstance(smbo.acquisition_func, LogEI)
 
     def test_init_only_scenario_quality(self):
         smbo = SMAC(self.scenario).solver

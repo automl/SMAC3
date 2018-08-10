@@ -58,8 +58,8 @@ class RunhistoryTest(unittest.TestCase):
             adding some rundata to RunHistory2EPM4LogCost and impute censored data
         '''
         self.imputor = RFRImputator(rng=np.random.RandomState(seed=12345),
-                                    cutoff=np.log10(self.scen.cutoff),
-                                    threshold=np.log10(
+                                    cutoff=np.log(self.scen.cutoff),
+                                    threshold=np.log(
                                         self.scen.cutoff * self.scen.par_factor),
                                     model=RandomForestWithInstances(types=self.types, bounds=self.bounds,
                                                                     instance_features=None,
@@ -92,8 +92,8 @@ class RunhistoryTest(unittest.TestCase):
         X, y = rh2epm.transform(self.rh)
         self.assertTrue(
             np.allclose(X, np.array([[0.005, 0.995], [0.995, 0.995]]), atol=0.001))
-        # log_10(20 * 10)
-        self.assertTrue(np.allclose(y, np.array([[0.], [2.301]]), atol=0.001))
+        # ln(20 * 10)
+        self.assertTrue(np.allclose(y, np.array([[0.], [5.2983]]), atol=0.001))
 
         self.rh.add(config=self.config2, cost=100, time=10,
                     status=StatusType.TIMEOUT, instance_id=1,
@@ -105,8 +105,8 @@ class RunhistoryTest(unittest.TestCase):
                                                           [0.995, 0.005],
                                                           [0.995, 0.995]]),
                                              decimal=3)
-        # both timeouts should be imputed to a PAR10
-        np.testing.assert_array_almost_equal(y, np.array([[0.], [2.301], [2.301]]),
+        
+        np.testing.assert_array_almost_equal(y, np.array([[0.], [2.727], [5.2983]]),
                                              decimal=3)
 
     def test_log_cost_without_imputation(self):
@@ -135,8 +135,8 @@ class RunhistoryTest(unittest.TestCase):
         X, y = rh2epm.transform(self.rh)
         self.assertTrue(
             np.allclose(X, np.array([[0.005, 0.995], [0.995, 0.995]]), atol=0.001))
-        # log_10(20 * 10)
-        self.assertTrue(np.allclose(y, np.array([[0.], [2.301]]), atol=0.001))
+        # ln(20 * 10)
+        self.assertTrue(np.allclose(y, np.array([[0.], [5.2983]]), atol=0.001))
 
         self.rh.add(config=self.config2, cost=100, time=10,
                     status=StatusType.TIMEOUT, instance_id=1,
@@ -148,7 +148,7 @@ class RunhistoryTest(unittest.TestCase):
         self.assertTrue(np.allclose(
             X, np.array([[0.005, 0.995], [0.995, 0.995]]), atol=0.001))
         self.assertTrue(
-            np.allclose(y, np.array([[0.], [2.301]]), atol=0.001))
+            np.allclose(y, np.array([[0.], [5.2983]]), atol=0.001))
 
     def test_cost_with_imputation(self):
         '''
@@ -190,7 +190,6 @@ class RunhistoryTest(unittest.TestCase):
         X, y = rh2epm.transform(self.rh)
         self.assertTrue(
             np.allclose(X, np.array([[0.005, 0.995], [0.995, 0.995]]), atol=0.001))
-        # log_10(20 * 10)
         self.assertTrue(np.allclose(y, np.array([[1.], [200.]]), atol=0.001))
 
         self.rh.add(config=self.config2, cost=100, time=10,
@@ -203,7 +202,7 @@ class RunhistoryTest(unittest.TestCase):
                                                           [0.995, 0.005],
                                                           [0.995, 0.995]]),
                                              decimal=3)
-        np.testing.assert_array_almost_equal(y, np.array([[1.], [16.4], [200.]]),
+        np.testing.assert_array_almost_equal(y, np.array([[1.], [11.], [200.]]),
                                              decimal=1)
 
     def test_cost_without_imputation(self):

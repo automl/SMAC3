@@ -171,6 +171,10 @@ class SMAC(object):
         else:
             self.stats = Stats(scenario)
 
+        if self.scenario.run_obj == "runtime" and not self.scenario.logy:
+            self.logger.warn("Runtime as objective automatically activates log(y) transformation")
+            self.scenario.logy = True
+
         # initialize empty runhistory
         if runhistory is None:
             runhistory = RunHistory(aggregate_func=aggregate_func)
@@ -352,7 +356,7 @@ class SMAC(object):
         if runhistory2epm is None:
 
             num_params = len(scenario.cs.get_hyperparameters())
-            if scenario.logy:
+            if scenario.run_obj == 'runtime':
 
                 # if we log the performance data,
                 # the RFRImputator will already get
