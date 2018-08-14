@@ -9,7 +9,7 @@ System Requirements
 SMAC has the following system requirements:
 
   * Linux operating system (for example Ubuntu),
-  * Python (>=3.5).
+  * Python (>=3.5.2).
   * C++ compiler (with C++11 supports) and SWIG (version 3.0 or later)
 
 To install the C++ compiler and SWIG system-wide on a linux system with apt,

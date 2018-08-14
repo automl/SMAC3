@@ -13,7 +13,7 @@ with open("smac/__version__.py") as fh:
     version = fh.readlines()[-1].split()[-1].strip("\"'")
 
 
-if sys.version_info < (3, 5):
+if sys.version_info < (3, 5, 2):
     raise ValueError('Unsupported Python version %s found. SMAC3 requires Python 3.5.2 or higher.' % sys.version_info)
 
 setuptools.setup(
