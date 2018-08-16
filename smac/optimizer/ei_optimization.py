@@ -244,15 +244,6 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                 map(lambda x: x[1],
                     configs_previous_runs_sorted[:num_configs_local_search])
             )
-            # Add random points if rh too small
-            if len(init_points) < num_points:
-                r_init_points = self.config_space.sample_configuration(
-                size=num_points-len(init_points))
-                # weird behavior of sample_configuration
-                if num_points-len(init_points) == 1:
-                    init_points.append(r_init_points)
-                else:
-                    init_points += r_init_points
             
         return init_points
 
