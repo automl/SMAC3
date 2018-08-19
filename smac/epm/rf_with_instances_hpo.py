@@ -199,11 +199,9 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
         loss = 0
         for row, lab in zip(x_test, y_test):
             m, v = rf.predict_mean_var(row)
-            nllh = -scst.norm(loc=m, scale=np.sqrt(v)).logpdf(lab)
-            if np.isfinite(nllh):
-                loss += nllh
-            else:
-                pass
+            std = max(1e-8, np.sqrt(v))
+            nllh = -scst.norm(loc=m, scale=std).logpdf(lab)
+            loss += nllh
             # m = rf.predict(row)
             # loss += np.sqrt(mean_squared_error(y_true=lab, y_pred=m))
 
