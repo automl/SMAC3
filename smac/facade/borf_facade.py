@@ -6,13 +6,17 @@ import numpy as np
 
 from smac.facade.smac_facade import SMAC
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
-    RandomConfigurationChooser, ChooserCosineAnnealing
+    RandomConfigurationChooser, ChooserCosineAnnealing, \
+    ChooserProb
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, \
     RunHistory2EPM4LogCost, RunHistory2EPM4Cost
 from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
 from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
     AcquisitionFunctionMaximizer
 from smac.tae.execute_ta_run import StatusType
+from smac.epm.rf_with_instances_hpo import RandomForestWithInstancesHPO
+from smac.utils.util_funcs import get_types
+from smac.utils.constants import MAXINT
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
@@ -47,15 +51,31 @@ class BORF(SMAC):
         super().__init__(**kwargs)
         self.logger.info(self.__class__)
         
-        #  RF settings
-        self.solver.model.rf_opts.num_trees = 10
-        self.solver.model.rf_opts.do_bootstrapping = True
+        #== static RF settings
+        self.solver.model.rf_opts.num_trees = 100
+        self.solver.model.rf_opts.do_bootstrapping = False
         self.solver.model.rf_opts.tree_opts.max_features = self.solver.model.types.shape[0]
         self.solver.model.rf_opts.tree_opts.min_samples_to_split = 2
         self.solver.model.rf_opts.tree_opts.min_samples_in_leaf = 1
         
+        # RF with HPO
+        #=======================================================================
+        # scenario = self.solver.scenario
+        # types, bounds = get_types(scenario.cs, scenario.feature_array)
+        # # TODO: We don't support instances here?
+        # model = RandomForestWithInstancesHPO(types=types,
+        #                                       bounds=bounds,
+        #                                       seed=self.solver.rng.randint(MAXINT),
+        #                                       log_y=scenario.logy)
+        # self.solver.model = model
+        #=======================================================================
+        
         # no random configurations
-        rand_chooser = ChooserNoCoolDown(10**10)
+        #rand_chooser = ChooserNoCoolDown(10**10)
+        #self.solver.random_configuration_chooser = rand_chooser
+        
+        # random configuration with given probability
+        rand_chooser = ChooserProb(prob=0.2, rng=self.solver.rng)
         self.solver.random_configuration_chooser = rand_chooser
         
         # only 1 configuration per SMBO iteration
@@ -88,32 +108,4 @@ class BORF(SMAC):
         self.solver.acq_optimizer.n_sls_iterations = 100
         # 2. more randomly sampled configurations 
         self.solver.scenario.acq_opt_challengers = 10000
-        
-    @staticmethod
-    def _get_random_configuration_chooser(random_configuration_chooser:RandomConfigurationChooser, 
-                                          rng:np.random.RandomState):
-        """
-        Initialize random configuration chooser
-        If random_configuration_chooser is falsy, initialize with ChooserNoCoolDown(2.0)
-
-        Parameters
-        ----------
-        random_configuration_chooser: RandomConfigurationChooser
-            generator for picking random configurations
-            or configurations optimized based on acquisition function
-        rng : np.random.RandomState
-            Random number generator
-
-        Returns
-        -------
-        RandomConfigurationChooser
-
-        """
-        if not random_configuration_chooser:
-            #return ChooserCosineAnnealing(prob_max=0.5, prob_min=0.001, 
-            #     restart_iteration= 10,
-            #     rng=rng)
-            return ChooserNoCoolDown(2.0)
-        return random_configuration_chooser
-
     
