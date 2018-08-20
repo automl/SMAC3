@@ -2,9 +2,10 @@ import typing
 import itertools
 
 import numpy as np
+from sobol_seq import i4_sobol_generate
 
 from ConfigSpace.configuration_space import Configuration
-from ConfigSpace.hyperparameters import Constant, NumericalHyperparameter, CategoricalHyperparameter, OrdinalHyperparameter
+from ConfigSpace.hyperparameters import FloatHyperparameter
 from ConfigSpace.util import deactivate_inactive_hyperparameters
 
 from smac.initial_design.multi_config_initial_design import \
@@ -24,8 +25,8 @@ __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class FactorialInitialDesign(MultiConfigInitialDesign):
-    """ Factorial initial design
+class SobolDesign(MultiConfigInitialDesign):
+    """ Sobol sequence design
 
     Attributes
     ----------
@@ -50,42 +51,26 @@ class FactorialInitialDesign(MultiConfigInitialDesign):
         cs = self.scenario.cs
         params = cs.get_hyperparameters()
         
-        values = [] 
-        mid = []
-        for param in params:
-            if isinstance(param, Constant):
-                v = [param.value]
-                mid.append(param.value)
-            elif isinstance(param, NumericalHyperparameter):
-                v = [param.lower, param.upper]
-                mid.append(np.average([param.lower, param.upper]))
-            elif isinstance(param, CategoricalHyperparameter):
-                v = list(param.choices)
-                mid.append(param.choices[0])
-            elif isinstance(param, OrdinalHyperparameter):
-                v = [param.sequence[0], param.sequence[-1]]
-                l = len(param.sequence)
-                mid.append(param.sequence[int(l/2)])
-            values.append(v)
-            
-        factorial_design = itertools.product(*values)
+        sobol = i4_sobol_generate(len(params), 2*len(params))
+        
+        for idx, param in enumerate(params):
+            if isinstance(param, FloatHyperparameter):
+                sobol[idx,:] = sobol[idx,:] * param.upper + param.lower
+            else:
+                raise ValueError("only FloatHyperparameters supported in LHD")
         
         self.logger.debug("Initial Design")
-        configs = [cs.get_default_configuration()]
+        configs = []
         # add middle point in space
-        conf_dict = dict([(p.name,v) for p,v in zip(params,mid)])
-        middle_conf = deactivate_inactive_hyperparameters(conf_dict, cs)
-        configs.append(middle_conf)
-        
-        # add corner points
-        for design in factorial_design:
+
+        for design in sobol:
             conf_dict = dict([(p.name,v) for p,v in zip(params,design)])
             conf = deactivate_inactive_hyperparameters(conf_dict, cs)
-            conf.origin = "Factorial Design"
+            conf.origin = "Sobol"
             configs.append(conf)
             self.logger.debug(conf)
 
-        self.logger.debug("Size of factorial design: %d" %(len(configs)))
+        self.logger.debug("Length of Sobol sequence: %d" %(len(configs)))
             
         return configs
             

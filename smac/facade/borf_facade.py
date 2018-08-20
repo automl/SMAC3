@@ -17,6 +17,9 @@ from smac.tae.execute_ta_run import StatusType
 from smac.epm.rf_with_instances_hpo import RandomForestWithInstancesHPO
 from smac.utils.util_funcs import get_types
 from smac.utils.constants import MAXINT
+from smac.initial_design.latin_hypercube_design import LHDesign
+from smac.initial_design.factorial_design import FactorialInitialDesign
+from smac.initial_design.sobol_design import SobolDesign 
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
@@ -50,6 +53,41 @@ class BORF(SMAC):
         
         super().__init__(**kwargs)
         self.logger.info(self.__class__)
+        
+        # Initial design
+        # Latin Hyper Cube
+        #=======================================================================
+        # self.solver.initial_design = LHDesign(runhistory=self.solver.runhistory,
+        #                                       intensifier=self.solver.intensifier,
+        #                                       aggregate_func=self.solver.aggregate_func,
+        #                                       tae_runner=self.solver.intensifier.tae_runner,
+        #                                       scenario=self.solver.scenario,
+        #                                       stats=self.solver.stats,
+        #                                       traj_logger=self.solver.intensifier.traj_logger,
+        #                                       rng=self.solver.rng)
+        #=======================================================================
+        # Factorial Design
+        #=======================================================================
+        # self.solver.initial_design = FactorialInitialDesign(runhistory=self.solver.runhistory,
+        #                                                   intensifier=self.solver.intensifier,
+        #                                                   aggregate_func=self.solver.aggregate_func,
+        #                                                   tae_runner=self.solver.intensifier.tae_runner,
+        #                                                   scenario=self.solver.scenario,
+        #                                                   stats=self.solver.stats,
+        #                                                   traj_logger=self.solver.intensifier.traj_logger,
+        #                                                   rng=self.solver.rng)
+        #=======================================================================
+        # Sobol Design
+        #=======================================================================
+        # self.solver.initial_design = SobolDesign(runhistory=self.solver.runhistory,
+        #                                           intensifier=self.solver.intensifier,
+        #                                           aggregate_func=self.solver.aggregate_func,
+        #                                           tae_runner=self.solver.intensifier.tae_runner,
+        #                                           scenario=self.solver.scenario,
+        #                                           stats=self.solver.stats,
+        #                                           traj_logger=self.solver.intensifier.traj_logger,
+        #                                           rng=self.solver.rng)
+        #=======================================================================
         
         #== static RF settings
         self.solver.model.rf_opts.num_trees = 100
