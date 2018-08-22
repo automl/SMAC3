@@ -90,8 +90,8 @@ class BORF(SMAC):
         #=======================================================================
         
         #== static RF settings
-        self.solver.model.rf_opts.num_trees = 100
-        self.solver.model.rf_opts.do_bootstrapping = False
+        self.solver.model.rf_opts.num_trees = 10
+        self.solver.model.rf_opts.do_bootstrapping = True
         self.solver.model.rf_opts.tree_opts.max_features = self.solver.model.types.shape[0]
         self.solver.model.rf_opts.tree_opts.min_samples_to_split = 2
         self.solver.model.rf_opts.tree_opts.min_samples_in_leaf = 1
@@ -146,4 +146,7 @@ class BORF(SMAC):
         self.solver.acq_optimizer.n_sls_iterations = 100
         # 2. more randomly sampled configurations 
         self.solver.scenario.acq_opt_challengers = 10000
+        
+        # activate predict incumbent
+        self.solver.predict_incumbent = True
     

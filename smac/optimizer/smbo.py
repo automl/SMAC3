@@ -15,7 +15,7 @@ from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
 from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer, \
     RandomSearch
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
+from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, RunHistory2EPM4LogCost
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.tae.execute_ta_run import FirstRunCrashedException
@@ -133,6 +133,9 @@ class SMBO(object):
         self._random_search = RandomSearch(
             acquisition_func, self.config_space, rng
         )
+        
+        #TODO: give proper access to this option
+        self.predict_incumbent = True
 
     def start(self):
         """Starts the Bayesian Optimization loop.
@@ -253,7 +256,7 @@ class SMBO(object):
             if self.runhistory.empty():
                 raise ValueError("Runhistory is empty and the cost value of "
                                  "the incumbent is unknown.")
-            incumbent_value = self.runhistory.get_cost(self.incumbent)
+            incumbent_value = self._get_incumbent_value()
 
         self.acquisition_func.update(model=self.model, eta=incumbent_value)
 
@@ -264,6 +267,35 @@ class SMBO(object):
             random_configuration_chooser=self.random_configuration_chooser
         )
         return challengers
+    
+    def _get_incumbent_value(self):
+        ''' get incumbent value either from runhistory
+            or from best predicted performance on configs in runhistory
+            (depends on self.predict_incumbent)"
+            
+            Return
+            ------
+            float
+        '''
+        
+        if self.predict_incumbent:
+            costs = list(map(
+                lambda config:
+                    self.model.predict_marginalized_over_instances(config.get_array().reshape((1, -1)))[0][0][0],
+                self.runhistory.get_all_configs(),
+            ))
+            incumbent_value = np.min(costs)
+            # won't need log(y) if EPM was already trained on log(y)
+            
+        else:
+            if self.runhistory.empty():
+                raise ValueError("Runhistory is empty and the cost value of "
+                                 "the incumbent is unknown.")
+            incumbent_value = self.runhistory.get_cost(self.incumbent)
+            if isinstance(self.rh2EPM,RunHistory2EPM4LogCost):
+                incumbent_value = np.log(incumbent_value)
+        
+        return incumbent_value
 
     def validate(self, config_mode='inc', instance_mode='train+test',
                  repetitions=1, use_epm=False, n_jobs=-1, backend='threading'):
