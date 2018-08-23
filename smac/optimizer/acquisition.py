@@ -316,8 +316,10 @@ class LogEI(AbstractAcquisitionFunction):
         std = np.sqrt(var_)
 
         def calculate_log_ei():
+            # don't np.log() f_min because
+            # we expect that it is already in log-space
             f_min = self.eta - self.par
-            v = (np.log(f_min) - m) / std
+            v = (f_min - m) / std
             return (f_min * norm.cdf(v)) - \
                 (np.exp(0.5 * var_ + m) * norm.cdf(v - std))
 
