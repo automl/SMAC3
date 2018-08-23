@@ -55,7 +55,7 @@ class SobolDesign(MultiConfigInitialDesign):
         
         for idx, param in enumerate(params):
             if isinstance(param, FloatHyperparameter):
-                sobol[idx,:] = sobol[idx,:] * param.upper + param.lower
+                sobol[:,idx] = sobol[:,idx] * param.upper + param.lower
             else:
                 raise ValueError("only FloatHyperparameters supported in LHD")
         
