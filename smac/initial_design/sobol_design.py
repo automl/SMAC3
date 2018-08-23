@@ -51,7 +51,7 @@ class SobolDesign(MultiConfigInitialDesign):
         cs = self.scenario.cs
         params = cs.get_hyperparameters()
         
-        sobol = i4_sobol_generate(len(params), 2*len(params))
+        sobol = i4_sobol_generate(len(params), 10*len(params))
         
         for idx, param in enumerate(params):
             if isinstance(param, FloatHyperparameter):

@@ -51,7 +51,7 @@ class LHDesign(MultiConfigInitialDesign):
         cs = self.scenario.cs
         params = cs.get_hyperparameters()
         
-        lhd = lhs(n=len(params), samples=2*len(params))
+        lhd = lhs(n=len(params), samples=10*len(params))
         
         for idx, param in enumerate(params):
             if isinstance(param, FloatHyperparameter):
