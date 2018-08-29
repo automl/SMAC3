@@ -78,8 +78,6 @@ class BORF(SMAC):
         #                                                   rng=self.solver.rng)
         #=======================================================================
         # Sobol Design
-        
-        
         self.solver.initial_design = SobolDesign(runhistory=self.solver.runhistory,
                                                   intensifier=self.solver.intensifier,
                                                   aggregate_func=self.solver.aggregate_func,
@@ -113,7 +111,7 @@ class BORF(SMAC):
         #self.solver.random_configuration_chooser = rand_chooser
         
         # random configuration with given probability
-        rand_chooser = ChooserProb(prob=0.2, rng=self.solver.rng)
+        rand_chooser = ChooserProb(prob=0.01, rng=self.solver.rng)
         self.solver.random_configuration_chooser = rand_chooser
         
         # only 1 configuration per SMBO iteration
