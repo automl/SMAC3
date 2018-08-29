@@ -78,16 +78,16 @@ class BORF(SMAC):
         #                                                   rng=self.solver.rng)
         #=======================================================================
         # Sobol Design
-        #=======================================================================
-        # self.solver.initial_design = SobolDesign(runhistory=self.solver.runhistory,
-        #                                           intensifier=self.solver.intensifier,
-        #                                           aggregate_func=self.solver.aggregate_func,
-        #                                           tae_runner=self.solver.intensifier.tae_runner,
-        #                                           scenario=self.solver.scenario,
-        #                                           stats=self.solver.stats,
-        #                                           traj_logger=self.solver.intensifier.traj_logger,
-        #                                           rng=self.solver.rng)
-        #=======================================================================
+        
+        
+        self.solver.initial_design = SobolDesign(runhistory=self.solver.runhistory,
+                                                  intensifier=self.solver.intensifier,
+                                                  aggregate_func=self.solver.aggregate_func,
+                                                  tae_runner=self.solver.intensifier.tae_runner,
+                                                  scenario=self.solver.scenario,
+                                                  stats=self.solver.stats,
+                                                  traj_logger=self.solver.intensifier.traj_logger,
+                                                  rng=self.solver.rng)
         
         #== static RF settings
         self.solver.model.rf_opts.num_trees = 10
