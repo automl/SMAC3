@@ -100,10 +100,19 @@ class MultiConfigInitialDesign(InitialDesign):
             if config.origin is None:
                 config.origin = 'Initial design'
 
-        self.traj_logger.add_entry(train_perf=2**31,
-                                   incumbent_id=1,
-                                   incumbent=configs[0])
+        # run first design 
+        # ensures that first design is part of trajectory file
+        scid = SingleConfigInitialDesign(tae_runner=self.tae_runner,
+                                         scenario=self.scenario,
+                                         stats=self.stats,
+                                         traj_logger=self.traj_logger,
+                                         rng=self.rng)
 
+        def get_config():
+            return configs[0]
+        scid._select_configuration = get_config
+        scid.run()
+        
         if len(set(configs)) > 1:
             # intensify will skip all challenger that are identical with the incumbent;
             # if <configs> has only identical configurations,
@@ -114,19 +123,5 @@ class MultiConfigInitialDesign(InitialDesign):
                                                        incumbent=configs[0],
                                                        run_history=self.runhistory,
                                                        aggregate_func=self.aggregate_func)
-
-        else:
-            self.logger.debug("All initial challengers are identical")
-            scid = SingleConfigInitialDesign(tae_runner=self.tae_runner,
-                                             scenario=self.scenario,
-                                             stats=self.stats,
-                                             traj_logger=self.traj_logger,
-                                             rng=self.rng)
-
-            def get_config():
-                return configs[0]
-            scid._select_configuration = get_config
-            scid.run()
-            inc = configs[0]
 
         return inc
