@@ -179,7 +179,7 @@ class BOGP(SMAC):
         # 1. increase number of sls iterations
         self.solver.acq_optimizer.n_sls_iterations = 100
         # 2. more randomly sampled configurations 
-        self.solver.scenario.acq_opt_challengers = 10000
+        self.solver.scenario.acq_opt_challengers = 1000
         
         # activate predict incumbent
         self.solver.predict_incumbent = True
