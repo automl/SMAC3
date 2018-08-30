@@ -67,6 +67,7 @@ class BaseModel(object):
         def func_wrapper(self, X, y, *args, **kwargs):
             assert X.shape[0] == y.shape[0]
             assert len(X.shape) == 2
+            y = y.flatten()
             assert len(y.shape) == 1
             return func(self, X, y, *args, **kwargs)
         return func_wrapper

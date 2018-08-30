@@ -59,9 +59,8 @@ class BOGP(SMAC):
             self.rng = np.random.RandomState(np.random.randint(0, 10000))
             cov_amp = 2
             _, bounds = get_types(kwargs['scenario'].cs, instance_features=None)
-            print(bounds)
-            lower = np.ndarray([int(b[0]) for b in bounds])
-            upper = np.ndarray([int(b[1]) for b in bounds])
+            lower = np.array([b[0] for b in bounds])
+            upper = np.array([b[1] for b in bounds])
             n_dims = lower.shape[0]
 
             initial_ls = np.ones([n_dims])
@@ -148,7 +147,7 @@ class BOGP(SMAC):
         #self.solver.random_configuration_chooser = rand_chooser
         
         # random configuration with given probability
-        rand_chooser = ChooserProb(prob=0.01, rng=self.solver.rng)
+        rand_chooser = ChooserProb(prob=0.2, rng=self.solver.rng)
         self.solver.random_configuration_chooser = rand_chooser
         
         # only 1 configuration per SMBO iteration
