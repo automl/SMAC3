@@ -56,7 +56,7 @@ class LHDesign(MultiConfigInitialDesign):
         
         for idx, param in enumerate(params):
             if isinstance(param, FloatHyperparameter):
-                lhd[idx,:] = lhd[idx,:] * (param.upper - param.lower) + param.lower
+                lhd[:,idx] = lhd[:,idx] * (param.upper - param.lower) + param.lower
             else:
                 raise ValueError("only FloatHyperparameters supported in LHD")
         
