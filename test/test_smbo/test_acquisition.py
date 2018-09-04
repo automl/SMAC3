@@ -81,19 +81,19 @@ class TestLogEI(unittest.TestCase):
         self.ei = LogEI(self.model)
         
     def test_1xD(self):
-        self.ei.update(model=self.model, eta=1.0)
+        self.ei.update(model=self.model, eta=5.0)
         configurations = [ConfigurationMock([1.0, 1.0, 1.0])]
         acq = self.ei(configurations)
         self.assertEqual(acq.shape, (1, 1))
-        self.assertAlmostEqual(acq[0][0], 0.056696236230553559)
+        self.assertAlmostEqual(acq[0][0], 0.5242023967071967)
         
     def test_NxD(self):
-        self.ei.update(model=self.model, eta=1.0)
-        configurations = [ConfigurationMock([0.0, 0.0, 0.0]),
+        self.ei.update(model=self.model, eta=5.0)
+        configurations = [ConfigurationMock([0.1, 0.0, 0.0]),
                           ConfigurationMock([0.1, 0.1, 0.1]),
                           ConfigurationMock([1.0, 1.0, 1.0])]
         acq = self.ei(configurations)
         self.assertEqual(acq.shape, (3, 1))
-        self.assertAlmostEqual(acq[0][0], 0.0)
-        self.assertAlmostEqual(acq[1][0], 0.069719643222631633)
-        self.assertAlmostEqual(acq[2][0], 0.056696236230553559)
+        self.assertAlmostEqual(acq[0][0], 3.9487289036239757)
+        self.assertAlmostEqual(acq[1][0], 3.838165757271717)
+        self.assertAlmostEqual(acq[2][0], 0.5242023967071967)
