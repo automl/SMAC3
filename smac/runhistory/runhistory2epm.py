@@ -366,6 +366,44 @@ class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
 
         return X, y
 
+class RunHistory2EPM4LogScaledCost(RunHistory2EPM4Cost):
+    """TODO"""
+
+    def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
+                      runhistory: RunHistory, instances: typing.List[str]=None,
+                      par_factor: int=1):
+        """Builds X,y matrices from selected runs from runhistory; transforms
+         y by using log
+
+        Parameters
+        ----------
+        run_dict: dict(RunKey -> RunValue)
+            Dictionary from RunHistory.RunKey to RunHistory.RunValue
+        runhistory: RunHistory
+            Runhistory object
+        instances: list
+            List of instances
+        par_factor: int
+            Penalization factor for censored runtime data
+
+        Returns
+        -------
+        X: np.ndarray
+        Y: np.ndarray
+        """
+        X, y = super()._build_matrix(run_dict=run_dict, runhistory=runhistory,
+                                     instances=instances, par_factor=par_factor)
+
+        if y.size > 0:
+            min_y = np.min(y) - 1 # ensure that scaled y cannot be 0
+            max_y = np.max(y)
+            # linear scaling
+            y = (y - min_y) / (max_y - min_y)
+            y = np.log(y)
+            print(y)
+
+        return X, y
+
 
 class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
     """TODO"""
