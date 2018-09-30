@@ -40,7 +40,9 @@ class MultiConfigInitialDesign(InitialDesign):
                  rng: np.random.RandomState,
                  intensifier: Intensifier,
                  aggregate_func: typing.Callable,
-                 configs: typing.Optional[typing.List[Configuration]]=None
+                 configs: typing.Optional[typing.List[Configuration]]=None,
+                 n_configs_x_params: int = 10,
+                 max_config_fracs: float = 0.25
                  ):
         """Constructor
 
@@ -68,6 +70,10 @@ class MultiConfigInitialDesign(InitialDesign):
             instances.
         configs: typing.Optional[typing.List[Configuration]]
             List of initial configurations.
+        n_configs_x_params: int
+            how many configurations will be used at most in the initial design (X*D)
+        max_config_fracs: float
+            use at most X*budget in the initial design
         """
         super().__init__(tae_runner=tae_runner,
                          scenario=scenario,
@@ -79,6 +85,10 @@ class MultiConfigInitialDesign(InitialDesign):
         self.intensifier = intensifier
         self.runhistory = runhistory
         self.aggregate_func = aggregate_func
+        
+        n_params = len(self.scenario.cs.get_hyperparameters())
+        self.init_budget = min(n_configs_x_params * n_params, 
+                          int(max_config_fracs * scenario.ta_run_limit))
 
     def select_configuration(self):
         

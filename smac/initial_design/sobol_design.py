@@ -21,7 +21,7 @@ from symbol import factor
 from statsmodels.sandbox.formula import Factor
 
 __author__ = "Marius Lindauer"
-__copyright__ = "Copyright 2016, ML4AAD"
+__copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
@@ -51,8 +51,7 @@ class SobolDesign(MultiConfigInitialDesign):
         cs = self.scenario.cs
         params = cs.get_hyperparameters()
         
-        init_budget = min(10*len(params), int(0.25* self.scenario.ta_run_limit))
-        sobol = i4_sobol_generate(len(params), init_budget)
+        sobol = i4_sobol_generate(len(params), self.init_budget)
         
         for idx, param in enumerate(params):
             if isinstance(param, FloatHyperparameter):
