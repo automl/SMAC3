@@ -400,7 +400,6 @@ class RunHistory2EPM4LogScaledCost(RunHistory2EPM4Cost):
             # linear scaling
             y = (y - min_y) / (max_y - min_y)
             y = np.log(y)
-            print(y)
 
         return X, y
 
