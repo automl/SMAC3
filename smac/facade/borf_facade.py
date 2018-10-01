@@ -9,7 +9,9 @@ from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
     RandomConfigurationChooser, ChooserCosineAnnealing, \
     ChooserProb
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, \
-    RunHistory2EPM4LogCost, RunHistory2EPM4Cost
+    RunHistory2EPM4LogCost, RunHistory2EPM4Cost, \
+    RunHistory2EPM4LogScaledCost, RunHistory2EPM4SqrtScaledCost, \
+    RunHistory2EPM4InvScaledCost, RunHistory2EPM4ScaledCost
 from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
 from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
     AcquisitionFunctionMaximizer
@@ -111,7 +113,7 @@ class BORF(SMAC):
         #self.solver.random_configuration_chooser = rand_chooser
         
         # random configuration with given probability
-        rand_chooser = ChooserProb(prob=0.01, rng=self.solver.rng)
+        rand_chooser = ChooserProb(prob=0.00, rng=self.solver.rng)
         self.solver.random_configuration_chooser = rand_chooser
         
         # only 1 configuration per SMBO iteration
