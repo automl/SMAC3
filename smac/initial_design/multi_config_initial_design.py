@@ -87,8 +87,8 @@ class MultiConfigInitialDesign(InitialDesign):
         self.aggregate_func = aggregate_func
         
         n_params = len(self.scenario.cs.get_hyperparameters())
-        self.init_budget = min(n_configs_x_params * n_params, 
-                          int(max_config_fracs * scenario.ta_run_limit))
+        self.init_budget = int(min(n_configs_x_params * n_params,
+                          (max_config_fracs * scenario.ta_run_limit)))
 
     def select_configuration(self):
         
