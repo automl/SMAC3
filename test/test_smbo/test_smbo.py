@@ -166,11 +166,16 @@ class TestSMBO(unittest.TestCase):
         def side_effect(X):
             return np.mean(X, axis=1).reshape((-1, 1))
 
+        def side_effect_predict(X):
+            m, v = np.ones((X.shape[0], 1)), None
+            return m, v
+
         smbo = SMAC(self.scenario, rng=1).solver
         smbo.incumbent = self.scenario.cs.sample_configuration()
         smbo.runhistory = RunHistory(aggregate_func=average_cost)
         smbo.runhistory.add(smbo.incumbent, 10, 10, 1)
         smbo.model = mock.Mock(spec=RandomForestWithInstances)
+        smbo.model.predict_marginalized_over_instances.side_effect = side_effect_predict
         smbo.acquisition_func._compute = mock.Mock(spec=RandomForestWithInstances)
         smbo.acquisition_func._compute.side_effect = side_effect
 
@@ -204,6 +209,10 @@ class TestSMBO(unittest.TestCase):
         def side_effect(X):
             return np.mean(X, axis=1).reshape((-1, 1))
 
+        def side_effect_predict(X):
+            m, v = np.ones((X.shape[0], 1)), None
+            return m, v
+
         smbo = SMAC(self.scenario, rng=1).solver
         smbo.incumbent = self.scenario.cs.sample_configuration()
         previous_configs = [smbo.incumbent] + [self.scenario.cs.sample_configuration() for i in range(0, 20)]
@@ -211,6 +220,7 @@ class TestSMBO(unittest.TestCase):
         for i in range(0, len(previous_configs)):
             smbo.runhistory.add(previous_configs[i], i, 10, 1)
         smbo.model = mock.Mock(spec=RandomForestWithInstances)
+        smbo.model.predict_marginalized_over_instances.side_effect = side_effect_predict
         smbo.acquisition_func._compute = mock.Mock(spec=RandomForestWithInstances)
         smbo.acquisition_func._compute.side_effect = side_effect
 
