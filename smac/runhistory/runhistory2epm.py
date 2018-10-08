@@ -395,7 +395,8 @@ class RunHistory2EPM4ScaledCost(RunHistory2EPM4Cost):
                                      instances=instances, par_factor=par_factor)
 
         if y.size > 0:
-            min_y = np.min(y) - 10**-10 # ensure that scaled y cannot be 0
+            perc = np.percentile(y, 5)
+            min_y = np.min(y) - perc # ensure that scaled y cannot be 0
             max_y = np.max(y)
             # linear scaling
             y = (y - min_y) / (max_y - min_y)
@@ -431,7 +432,8 @@ class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
                                      instances=instances, par_factor=par_factor)
 
         if y.size > 0:
-            min_y = np.min(y) - 10**-10 # ensure that scaled y cannot be 0
+            perc = np.percentile(y, 5)
+            min_y = np.min(y) - perc # ensure that scaled y cannot be 0
             max_y = np.max(y)
             # linear scaling
             y = (y - min_y) / (max_y - min_y)
@@ -468,7 +470,8 @@ class RunHistory2EPM4SqrtScaledCost(RunHistory2EPM4Cost):
                                      instances=instances, par_factor=par_factor)
 
         if y.size > 0:
-            min_y = np.min(y) - 10**-10 # ensure that scaled y cannot be 0
+            perc = np.percentile(y, 5)
+            min_y = np.min(y) - perc # ensure that scaled y cannot be 0
             max_y = np.max(y)
             # linear scaling
             y = (y - min_y) / (max_y - min_y)
@@ -505,7 +508,8 @@ class RunHistory2EPM4LogScaledCost(RunHistory2EPM4Cost):
                                      instances=instances, par_factor=par_factor)
 
         if y.size > 0:
-            min_y = np.min(y) - 10**-10 # ensure that scaled y cannot be 0
+            perc = np.percentile(y, 5)
+            min_y = np.min(y) - perc # ensure that scaled y cannot be 0
             max_y = np.max(y)
             # linear scaling
             y = (y - min_y) / (max_y - min_y)
