@@ -66,6 +66,7 @@ class BOGP(SMAC):
             initial_ls = np.ones([n_dims])
             exp_kernel = george.kernels.Matern52Kernel(initial_ls,
                                                        ndim=n_dims)
+            george.kernels.ExpKernel
             kernel = cov_amp * exp_kernel
 
             prior = DefaultPrior(len(kernel) + 1)
