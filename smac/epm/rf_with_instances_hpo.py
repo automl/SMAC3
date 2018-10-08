@@ -4,6 +4,7 @@ import logging
 from pyrfr import regression
 from sklearn.model_selection import KFold
 import scipy.stats.distributions as scst
+from smac.utils.constants import N_TREES
 
 from ConfigSpace import (
     CategoricalHyperparameter,
@@ -53,6 +54,7 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
     def __init__(self, types: np.ndarray,
                  bounds: np.ndarray,
                  log_y: bool=False,
+                 bootstrap: bool=False,
                  seed: int=42):
         """Constructor
 
@@ -96,8 +98,8 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
             types,
             bounds,
             log_y,
-            num_trees=10,
-            do_bootstrapping=True,
+            num_trees=N_TREES,
+            do_bootstrapping=bootstrap,
             n_points_per_tree=N_POINTS_PER_TREE,
             ratio_features=5/6,
             min_samples_split=3,
@@ -113,10 +115,12 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
         self.log_y = log_y
         self.rng = regression.default_random_engine(seed)
         self.rs = np.random.RandomState(seed)
+        self.bootstrap = bootstrap
 
         self.rf_opts = regression.forest_opts()
-        self.rf_opts.num_trees = 10
-        self.rf_opts.do_bootstrapping = True
+        self.rf_opts.num_trees = N_TREES
+        self.rf_opts.compute_oob_error = True
+        self.rf_opts.do_bootstrapping = self.bootstrap
         self.rf_opts.tree_opts.max_features = int(types.shape[0])
         self.rf_opts.tree_opts.min_samples_to_split = 2
         self.rf_opts.tree_opts.min_samples_in_leaf = 1
@@ -177,7 +181,7 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
         else:
             best_config = cfg.get_default_configuration()
 
-        self.rf_opts = self.set_conf(best_config, self.X.shape)
+        self.rf_opts = self.set_conf(best_config, n_features=self.X.shape[1], num_data_points=X.shape[0], n_trees=N_TREES)
         self.set_hypers(best_config)
 
         self.logger.debug("Use %s" % str(self.rf_opts))
@@ -189,7 +193,7 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
         return self
 
     def eval_rf(self, c: Configuration, x: np.ndarray, y: np.ndarray, x_test: np.ndarray, y_test: np.ndarray):
-        opts = self.set_conf(c, x.shape)
+        opts = self.set_conf(c, n_features=x.shape[1], num_data_points=x.shape[0])
         rng = regression.default_random_engine(1)
         rf = regression.binary_rss_forest()
         rf.options = opts
@@ -207,13 +211,16 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
 
         return loss
 
-    def set_conf(self, c: Configuration, x_shape: int):
+    def set_conf(self, c: Configuration, n_features: int, num_data_points: int, n_trees=None):
         rf_opts = regression.forest_opts()
-        rf_opts.num_trees = int(c["num_trees"])
+        if n_trees:
+            rf_opts.num_trees = n_trees
+        else:
+            rf_opts.num_trees = int(c["num_trees"])
         rf_opts.do_bootstrapping = c["do_bootstrapping"]
         rf_opts.tree_opts.max_num_nodes = 2 ** 20
 
-        rf_opts.tree_opts.max_features = max(1, int(np.rint(x_shape[1] * c["max_features"])))
+        rf_opts.tree_opts.max_features = max(1, int(np.rint(n_features * c["max_features"])))
         rf_opts.tree_opts.min_samples_to_split = int(
             c["min_samples_to_split"])
         rf_opts.tree_opts.min_samples_in_leaf = c["min_samples_in_leaf"]
@@ -221,9 +228,9 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
         rf_opts.tree_opts.max_num_nodes = MAX_NUM_NODES
 
         if N_POINTS_PER_TREE <= 0:
-            rf_opts.num_data_points_per_tree = self.X.shape[0]
+            rf_opts.num_data_points_per_tree = num_data_points
         else:
-            rf_opts.num_data_points_per_tree = N_POINTS_PER_TREE
+            raise ValueError()
 
         return rf_opts
 
@@ -243,11 +250,11 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
 
     def _get_configuration_space(self) -> ConfigurationSpace:
         cfg = ConfigurationSpace()
-        cfg.seed(self.seed)
+        cfg.seed(int(self.rs.randint(0, 1000)))
 
-        num_trees = Constant("num_trees", value=10)
+        num_trees = Constant("num_trees", value=N_TREES)
         # lower=10, upper=100, default_value=10, log=True)
-        bootstrap = CategoricalHyperparameter("do_bootstrapping", choices=(True,), default_value=True)
+        bootstrap = CategoricalHyperparameter("do_bootstrapping", choices=(self.bootstrap,), default_value=self.bootstrap)
         # bootstrap = CategoricalHyperparameter("do_bootstrapping", choices=(True, False), default_value=True)
         max_feats = CategoricalHyperparameter("max_features", choices=(3 / 6, 4 / 6, 5 / 6, 1), default_value=1)
         min_split = UniformIntegerHyperparameter("min_samples_to_split", lower=1, upper=10, default_value=2)

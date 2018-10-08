@@ -55,11 +55,11 @@ class AbstractEPM(object):
         pca_components : float
             Number of components to keep when using PCA to reduce
             dimensionality of instance features. Requires to
-            set n_feats (> pca_dims).    
+            set n_feats (> pca_dims).
         """
         self.instance_features = instance_features
         self.pca_components = pca_components
-        
+
         if instance_features is not None:
             self.n_feats = instance_features.shape[1]
         else:
@@ -150,7 +150,7 @@ class AbstractEPM(object):
                 X_feats = self.scaler.transform(X_feats)
                 X_feats = self.pca.transform(X_feats)
                 X = np.hstack((X[:, :self.n_params], X_feats))
-            except NotFittedError: 
+            except NotFittedError:
                 pass # PCA not fitted if only one training sample
 
         return self._predict(X)
@@ -215,10 +215,10 @@ class AbstractEPM(object):
             X_ = np.hstack(
                 (np.tile(x, (n_instances, 1)), self.instance_features))
             means, vars = self.predict(X_)
-            # VAR[1/n (X_1 + ... + X_n)] = 
-            # 1/n^2 * ( VAR(X_1) + ... + VAR(X_n)) 
-            # for independent X_1 ... X_n 
-            var_x = np.sum(vars) / (len(vars)^2)
+            # VAR[1/n (X_1 + ... + X_n)] =
+            # 1/n^2 * ( VAR(X_1) + ... + VAR(X_n))
+            # for independent X_1 ... X_n
+            var_x = np.sum(vars) / (len(vars) ** 2)
             if var_x < self.var_threshold:
                 var_x = self.var_threshold
 

@@ -5,6 +5,7 @@ from pyrfr import regression
 
 from smac.epm.base_epm import AbstractEPM
 from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.utils.constants import N_TREES
 
 __author__ = "Aaron Klein"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -25,6 +26,7 @@ class ReinterpolationRF(RandomForestWithInstances):
     def __init__(self, types: np.ndarray,
                  bounds: np.ndarray,
                  model: AbstractEPM,
+                 bootstrap: bool,
                  seed: int = 42):
         """Constructor
 
@@ -50,7 +52,7 @@ class ReinterpolationRF(RandomForestWithInstances):
             seed=1,
             pca_components=7,
             log_y=False,
-            num_trees=10,
+            num_trees=N_TREES,
             do_bootstrapping=True,
             ratio_features=1,
             min_samples_split=2,
@@ -64,8 +66,8 @@ class ReinterpolationRF(RandomForestWithInstances):
         self.rng = regression.default_random_engine(seed)
 
         self.rf_opts = regression.forest_opts()
-        self.rf_opts.num_trees = 100
-        self.rf_opts.do_bootstrapping = True
+        self.rf_opts.num_trees = N_TREES
+        self.rf_opts.do_bootstrapping = bootstrap
         self.rf_opts.tree_opts.max_features = types.shape[0]
         self.rf_opts.tree_opts.min_samples_to_split = 2
         self.rf_opts.tree_opts.min_samples_in_leaf = 1

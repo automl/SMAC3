@@ -5,6 +5,7 @@ from pyrfr import regression
 
 from smac.configspace import CategoricalHyperparameter
 from smac.epm.base_epm import AbstractEPM
+from smac.utils.constants import N_TREES
 
 
 __author__ = "Aaron Klein"
@@ -40,13 +41,13 @@ class RandomForestWithInstances(AbstractEPM):
     def __init__(self, types: np.ndarray,
                  bounds: np.ndarray,
                  log_y: bool=False,
-                 num_trees: int=10,
-                 do_bootstrapping: bool=True,
+                 num_trees: int=N_TREES,
+                 do_bootstrapping: bool=False,
                  n_points_per_tree: int=-1,
-                 ratio_features: float=5. / 6.,
-                 min_samples_split: int=3,
-                 min_samples_leaf: int=3,
-                 max_depth: int=20,
+                 ratio_features: float=1.,
+                 min_samples_split: int=2,
+                 min_samples_leaf: int=1,
+                 max_depth: int=2**20,
                  eps_purity: float=1e-8,
                  max_num_nodes: int=2**20,
                  seed: int=42,
