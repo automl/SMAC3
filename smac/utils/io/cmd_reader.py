@@ -7,7 +7,7 @@ import re
 import shlex
 import sys
 from smac.configspace import pcs, pcs_new
-from smac.utils.constants import MAXINT
+from smac.utils.constants import MAXINT, N_TREES
 from smac.utils.io.input_reader import InputReader
 import time
 import typing
@@ -489,7 +489,7 @@ class CMDReader(object):
         ## RF Hyperparameters
         smac_opts.add_argument("--rf_num_trees","--rf-num-trees",
                                dest='rf_num_trees',
-                               default=10, type=int,
+                               default=N_TREES, type=int,
                                help="[dev] Number of trees in the random forest (> 1).")
         smac_opts.add_argument("--rf_do_bootstrapping","--rf-do-bootstrapping",
                        dest='rf_do_bootstrapping',
