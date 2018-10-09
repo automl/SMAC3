@@ -161,7 +161,8 @@ class TrajLogger(object):
                       "wallclock_time": wallclock_time,
                       "evaluations": self.stats.ta_runs,
                       "cost": train_perf,
-                      "incumbent": conf
+                      "incumbent": conf,
+                      "origin": incumbent.origin
                       }
 
         with open(self.aclib_traj_fn, "a") as fp:
