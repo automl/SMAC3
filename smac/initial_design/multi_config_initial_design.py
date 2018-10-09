@@ -87,9 +87,9 @@ class MultiConfigInitialDesign(InitialDesign):
         self.aggregate_func = aggregate_func
         
         n_params = len(self.scenario.cs.get_hyperparameters())
-        self.init_budget = int(min(n_configs_x_params * n_params,
-                          (max_config_fracs * scenario.ta_run_limit)))
-
+        self.init_budget = int(max(2, min(n_configs_x_params * n_params,
+                          (max_config_fracs * scenario.ta_run_limit))))
+        
     def select_configuration(self):
         
         if self.configs is None:
@@ -117,7 +117,7 @@ class MultiConfigInitialDesign(InitialDesign):
                                          stats=self.stats,
                                          traj_logger=self.traj_logger,
                                          rng=self.rng)
-
+ 
         def get_config():
             return configs[0]
         scid._select_configuration = get_config
