@@ -410,8 +410,9 @@ class SMAC(object):
             'restore_incumbent': restore_incumbent,
             'random_configuration_chooser': random_configuration_chooser
         }
+        
         if smbo_class is None:
-            self.solver = SMBO(predict_incumbent=predict_incumbent, **smbo_args)
+            self.solver = SMBO(**smbo_args)
         else:
             self.solver = smbo_class(**smbo_args)
 
