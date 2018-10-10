@@ -68,7 +68,8 @@ class SMBO(object):
                  rng: np.random.RandomState,
                  restore_incumbent: Configuration=None,
                  random_configuration_chooser: typing.Union[
-                     ChooserNoCoolDown, ChooserLinearCoolDown]=ChooserNoCoolDown(2.0)):
+                     ChooserNoCoolDown, ChooserLinearCoolDown]=ChooserNoCoolDown(2.0),
+                 predict_incumbent: bool=True):
         """
         Interface that contains the main Bayesian optimization loop
 
@@ -109,6 +110,8 @@ class SMBO(object):
             Chooser for random configuration -- one of
             * ChooserNoCoolDown(modulus)
             * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)
+        predict_incumbent: bool
+            Use predicted performance of incumbent instead of observed performance
         """
 
         self.logger = logging.getLogger(
@@ -134,8 +137,7 @@ class SMBO(object):
             acquisition_func, self.config_space, rng
         )
         
-        #TODO: give proper access to this option
-        self.predict_incumbent = True
+        self.predict_incumbent = predict_incumbent
 
     def start(self):
         """Starts the Bayesian Optimization loop.
