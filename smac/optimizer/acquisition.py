@@ -106,7 +106,7 @@ class EI(AbstractAcquisitionFunction):
     r"""Computes for a given x the expected improvement as
     acquisition value.
 
-    :math:`EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]`,
+    :math:`EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi \} \right]`,
     with :math:`f(X^+)` as the incumbent.
     """
 
