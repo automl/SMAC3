@@ -464,7 +464,7 @@ class CMDReader(object):
                                default=3, type=int,
                                help="[dev] number of hydra iterations. Only active if mode is set to Hydra")
         smac_opts.add_argument("--use-ta-time", "--use_ta_time", dest="use_ta_time",
-                               default=False, type=bool,
+                               default=False, type=truthy,
                                help="[dev] Instead of measuring SMAC's wallclock time, "
                                "only consider time reported by the target algorithm (ta).")
 
