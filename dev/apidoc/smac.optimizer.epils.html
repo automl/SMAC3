@@ -255,7 +255,7 @@
 <span id="smac-optimizer-epils-module"></span><h1>smac.optimizer.epils module<a class="headerlink" href="#module-smac.optimizer.epils" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.optimizer.epils.EPILS_Solver">
-<em class="property">class </em><code class="descclassname">smac.optimizer.epils.</code><code class="descname">EPILS_Solver</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>stats: smac.stats.stats.Stats</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</em>, <em>intensifier: smac.intensification.intensification.Intensifier</em>, <em>aggregate_func: &lt;built-in function callable&gt;</em>, <em>num_run: int</em>, <em>model: smac.epm.rf_with_instances.RandomForestWithInstances</em>, <em>acq_optimizer: smac.optimizer.ei_optimization.LocalSearch</em>, <em>acquisition_func: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>rng: mtrand.RandomState</em>, <em>restart_prob: float = 0.01</em>, <em>pertubation_steps: int = 3</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/epils.html#EPILS_Solver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.optimizer.epils.</code><code class="descname">EPILS_Solver</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>stats: smac.stats.stats.Stats</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</em>, <em>intensifier: smac.intensification.intensification.Intensifier</em>, <em>aggregate_func: callable</em>, <em>num_run: int</em>, <em>model: smac.epm.rf_with_instances.RandomForestWithInstances</em>, <em>acq_optimizer: smac.optimizer.ei_optimization.LocalSearch</em>, <em>acquisition_func: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>rng: mtrand.RandomState</em>, <em>restart_prob: float = 0.01</em>, <em>pertubation_steps: int = 3</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/epils.html#EPILS_Solver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Interface that contains the main Bayesian optimization loop</p>
 <dl class="attribute">
@@ -336,7 +336,15 @@
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.max_neighbors">
 <code class="descname">max_neighbors</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.max_neighbors" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>int</em> – set to max(5, int(math.sqrt(len(self.config_space.get_hyperparameters()))))</p>
+<dd><p>set to max(5, int(math.sqrt(len(self.config_space.get_hyperparameters()))))</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -352,25 +360,57 @@
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.slow_race_minR">
 <code class="descname">slow_race_minR</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.slow_race_minR" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>int</em> – Set to 5</p>
+<dd><p>Set to 5</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.slow_race_adaptive_capping_factor">
 <code class="descname">slow_race_adaptive_capping_factor</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.slow_race_adaptive_capping_factor" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>int</em> – Set to 2</p>
+<dd><p>Set to 2</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.fast_race_minR">
 <code class="descname">fast_race_minR</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.fast_race_minR" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>int</em> – Set to 1</p>
+<dd><p>Set to 1</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.fast_race_adaptive_capping_factor">
 <code class="descname">fast_race_adaptive_capping_factor</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.fast_race_adaptive_capping_factor" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>float</em> – Set to 1.2</p>
+<dd><p>Set to 1.2</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <p>Constructor</p>
@@ -454,7 +494,7 @@ with an higher improvement was found.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2018, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter.
+        &copy; Copyright 2015-2018, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter
 
     </p>
   </div>
@@ -473,21 +513,14 @@ with an higher improvement was found.</p>
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'0.8.0',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
 
   
 

@@ -326,7 +326,7 @@ in each iteration which are never looked at.</p>
 
 <dl class="class">
 <dt id="smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch">
-<em class="property">class </em><code class="descclassname">smac.optimizer.ei_optimization.</code><code class="descname">InterleavedLocalAndRandomSearch</code><span class="sig-paren">(</span><em>acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>rng: Union[bool</em>, <em>mtrand.RandomState] = None</em>, <em>max_steps: Union[int</em>, <em>NoneType] = None</em>, <em>n_steps_plateau_walk: int = 10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#InterleavedLocalAndRandomSearch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.optimizer.ei_optimization.</code><code class="descname">InterleavedLocalAndRandomSearch</code><span class="sig-paren">(</span><em>acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>rng: Union[bool</em>, <em>mtrand.RandomState] = None</em>, <em>max_steps: Optional[int] = None</em>, <em>n_steps_plateau_walk: int = 10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#InterleavedLocalAndRandomSearch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</span></code></a></p>
 <p>Implements SMAC’s default acquisition function optimization.</p>
 <p>This optimizer performs local search from the previous best points
@@ -383,7 +383,7 @@ is called at the end of this function</li>
 
 <dl class="class">
 <dt id="smac.optimizer.ei_optimization.LocalSearch">
-<em class="property">class </em><code class="descclassname">smac.optimizer.ei_optimization.</code><code class="descname">LocalSearch</code><span class="sig-paren">(</span><em>acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>rng: Union[bool</em>, <em>mtrand.RandomState] = None</em>, <em>max_steps: Union[int</em>, <em>NoneType] = None</em>, <em>n_steps_plateau_walk: int = 10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#LocalSearch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.LocalSearch" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.optimizer.ei_optimization.</code><code class="descname">LocalSearch</code><span class="sig-paren">(</span><em>acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>rng: Union[bool</em>, <em>mtrand.RandomState] = None</em>, <em>max_steps: Optional[int] = None</em>, <em>n_steps_plateau_walk: int = 10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#LocalSearch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.LocalSearch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</span></code></a></p>
 <p>Implementation of SMAC’s local search.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -497,7 +497,7 @@ is called at the end of this function</li>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2018, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter.
+        &copy; Copyright 2015-2018, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter
 
     </p>
   </div>
@@ -516,21 +516,14 @@ is called at the end of this function</li>
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'0.8.0',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
 
   
 

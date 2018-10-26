@@ -275,7 +275,7 @@ Evaluates specified configurations on specified instances.</p>
 </table>
 <dl class="method">
 <dt id="smac.utils.validate.Validator.validate">
-<code class="descname">validate</code><span class="sig-paren">(</span><em>config_mode: Union[str</em>, <em>typing.List[ConfigSpace.configuration_space.Configuration]] = 'def'</em>, <em>instance_mode: Union[str</em>, <em>typing.List[str]] = 'test'</em>, <em>repetitions: int = 1</em>, <em>n_jobs: int = 1</em>, <em>backend: str = 'threading'</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory = None</em>, <em>tae: smac.tae.execute_ta_run.ExecuteTARun = None</em>, <em>output_fn: str = ''</em><span class="sig-paren">)</span> &#x2192; smac.runhistory.runhistory.RunHistory<a class="reference internal" href="../_modules/smac/utils/validate.html#Validator.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator.validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate</code><span class="sig-paren">(</span><em>config_mode: Union[str</em>, <em>List[ConfigSpace.configuration_space.Configuration]] = 'def'</em>, <em>instance_mode: Union[str</em>, <em>List[str]] = 'test'</em>, <em>repetitions: int = 1</em>, <em>n_jobs: int = 1</em>, <em>backend: str = 'threading'</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory = None</em>, <em>tae: smac.tae.execute_ta_run.ExecuteTARun = None</em>, <em>output_fn: str = ''</em><span class="sig-paren">)</span> &#x2192; smac.runhistory.runhistory.RunHistory<a class="reference internal" href="../_modules/smac/utils/validate.html#Validator.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator.validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validate configs on instances and save result in runhistory.
 If a runhistory is provided as input it is important that you run it on the same/comparable hardware.</p>
 <p>side effect: if output is specified, saves runhistory to specified
@@ -315,7 +315,7 @@ be interpreted as directory and filename will be
 
 <dl class="method">
 <dt id="smac.utils.validate.Validator.validate_epm">
-<code class="descname">validate_epm</code><span class="sig-paren">(</span><em>config_mode: Union[str</em>, <em>typing.List[ConfigSpace.configuration_space.Configuration]] = 'def'</em>, <em>instance_mode: Union[str</em>, <em>typing.List[str]] = 'test'</em>, <em>repetitions: int = 1</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory = None</em>, <em>output_fn=''</em>, <em>reuse_epm=True</em><span class="sig-paren">)</span> &#x2192; smac.runhistory.runhistory.RunHistory<a class="reference internal" href="../_modules/smac/utils/validate.html#Validator.validate_epm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator.validate_epm" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate_epm</code><span class="sig-paren">(</span><em>config_mode: Union[str</em>, <em>List[ConfigSpace.configuration_space.Configuration]] = 'def'</em>, <em>instance_mode: Union[str</em>, <em>List[str]] = 'test'</em>, <em>repetitions: int = 1</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory = None</em>, <em>output_fn=''</em>, <em>reuse_epm=True</em><span class="sig-paren">)</span> &#x2192; smac.runhistory.runhistory.RunHistory<a class="reference internal" href="../_modules/smac/utils/validate.html#Validator.validate_epm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator.validate_epm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use EPM to predict costs/runtimes for unknown config/inst-pairs.</p>
 <p>side effect: if output is specified, saves runhistory to specified
 output directory.</p>
@@ -372,7 +372,7 @@ time evaluates at cpu- or wallclock-timesteps of:
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2018, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter.
+        &copy; Copyright 2015-2018, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter
 
     </p>
   </div>
@@ -391,21 +391,14 @@ time evaluates at cpu- or wallclock-timesteps of:
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'0.8.0',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
 
   
 

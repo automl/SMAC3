@@ -255,7 +255,7 @@
 <span id="smac-runhistory-runhistory2epm-module"></span><h1>smac.runhistory.runhistory2epm module<a class="headerlink" href="#module-smac.runhistory.runhistory2epm" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM">
-<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory2epm.</code><code class="descname">AbstractRunHistory2EPM</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario, num_params: int, success_states: Union[typing.List[smac.tae.execute_ta_run.StatusType], NoneType] = None, impute_censored_data: bool = False, impute_state: Union[typing.List[smac.tae.execute_ta_run.StatusType], NoneType] = None, imputor: Union[smac.epm.base_imputor.BaseImputor, NoneType] = None, rng: Union[mtrand.RandomState, NoneType] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory2epm.</code><code class="descname">AbstractRunHistory2EPM</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>num_params: int</em>, <em>success_states: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em>impute_censored_data: bool = False</em>, <em>impute_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em>imputor: Optional[smac.epm.base_imputor.BaseImputor] = None</em>, <em>rng: Optional[mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Constructor</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -324,7 +324,7 @@ disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</p>
 
 <dl class="class">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4Cost">
-<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory2epm.</code><code class="descname">RunHistory2EPM4Cost</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario, num_params: int, success_states: Union[typing.List[smac.tae.execute_ta_run.StatusType], NoneType] = None, impute_censored_data: bool = False, impute_state: Union[typing.List[smac.tae.execute_ta_run.StatusType], NoneType] = None, imputor: Union[smac.epm.base_imputor.BaseImputor, NoneType] = None, rng: Union[mtrand.RandomState, NoneType] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4Cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory2epm.</code><code class="descname">RunHistory2EPM4Cost</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>num_params: int</em>, <em>success_states: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em>impute_censored_data: bool = False</em>, <em>impute_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em>imputor: Optional[smac.epm.base_imputor.BaseImputor] = None</em>, <em>rng: Optional[mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4Cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM" title="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</span></code></a></p>
 <p>TODO</p>
 <p>Constructor</p>
@@ -394,7 +394,7 @@ disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</p>
 
 <dl class="class">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS">
-<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory2epm.</code><code class="descname">RunHistory2EPM4EIPS</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario, num_params: int, success_states: Union[typing.List[smac.tae.execute_ta_run.StatusType], NoneType] = None, impute_censored_data: bool = False, impute_state: Union[typing.List[smac.tae.execute_ta_run.StatusType], NoneType] = None, imputor: Union[smac.epm.base_imputor.BaseImputor, NoneType] = None, rng: Union[mtrand.RandomState, NoneType] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4EIPS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory2epm.</code><code class="descname">RunHistory2EPM4EIPS</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>num_params: int</em>, <em>success_states: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em>impute_censored_data: bool = False</em>, <em>impute_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em>imputor: Optional[smac.epm.base_imputor.BaseImputor] = None</em>, <em>rng: Optional[mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4EIPS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM" title="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</span></code></a></p>
 <p>TODO</p>
 <p>Constructor</p>
@@ -464,7 +464,7 @@ disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</p>
 
 <dl class="class">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost">
-<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory2epm.</code><code class="descname">RunHistory2EPM4LogCost</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario, num_params: int, success_states: Union[typing.List[smac.tae.execute_ta_run.StatusType], NoneType] = None, impute_censored_data: bool = False, impute_state: Union[typing.List[smac.tae.execute_ta_run.StatusType], NoneType] = None, imputor: Union[smac.epm.base_imputor.BaseImputor, NoneType] = None, rng: Union[mtrand.RandomState, NoneType] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4LogCost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.runhistory.runhistory2epm.</code><code class="descname">RunHistory2EPM4LogCost</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>num_params: int</em>, <em>success_states: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em>impute_censored_data: bool = False</em>, <em>impute_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em>imputor: Optional[smac.epm.base_imputor.BaseImputor] = None</em>, <em>rng: Optional[mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4LogCost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost" title="smac.runhistory.runhistory2epm.RunHistory2EPM4Cost"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.runhistory.runhistory2epm.RunHistory2EPM4Cost</span></code></a></p>
 <p>TODO</p>
 <p>Constructor</p>
@@ -554,7 +554,7 @@ disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2018, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter.
+        &copy; Copyright 2015-2018, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter
 
     </p>
   </div>
@@ -573,21 +573,14 @@ disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</p>
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'0.8.0',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
 
   
 

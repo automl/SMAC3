@@ -255,7 +255,7 @@
 <span id="smac-epm-uncorrelated-mo-rf-with-instances-module"></span><h1>smac.epm.uncorrelated_mo_rf_with_instances module<a class="headerlink" href="#module-smac.epm.uncorrelated_mo_rf_with_instances" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances">
-<em class="property">class </em><code class="descclassname">smac.epm.uncorrelated_mo_rf_with_instances.</code><code class="descname">UncorrelatedMultiObjectiveRandomForestWithInstances</code><span class="sig-paren">(</span><em>target_names: List[str], bounds: numpy.ndarray, types: numpy.ndarray, rf_kwargs: Union[typing.Dict[str, typing.Any], NoneType] = None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/uncorrelated_mo_rf_with_instances.html#UncorrelatedMultiObjectiveRandomForestWithInstances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.epm.uncorrelated_mo_rf_with_instances.</code><code class="descname">UncorrelatedMultiObjectiveRandomForestWithInstances</code><span class="sig-paren">(</span><em>target_names: List[str], bounds: numpy.ndarray, types: numpy.ndarray, rf_kwargs: Optional[Dict[str, Any]] = None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/uncorrelated_mo_rf_with_instances.html#UncorrelatedMultiObjectiveRandomForestWithInstances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_epm.AbstractEPM</span></code></a></p>
 <p>Wrapper for the random forest to predict multiple targets.</p>
 <p>Only the a list with the target names and the types array for the
@@ -384,7 +384,7 @@ number of target names specified in the constructor.</li>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2018, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter.
+        &copy; Copyright 2015-2018, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter
 
     </p>
   </div>
@@ -403,21 +403,14 @@ number of target names specified in the constructor.</li>
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'0.8.0',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
 
   
 

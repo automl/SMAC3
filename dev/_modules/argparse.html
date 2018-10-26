@@ -571,7 +571,11 @@
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">text_width</span><span class="p">:</span>
 
                 <span class="c1"># break usage into wrappable parts</span>
-                <span class="n">part_regexp</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;\(.*?\)+|\[.*?\]+|\S+&#39;</span>
+                <span class="n">part_regexp</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">r</span><span class="s1">&#39;\(.*?\)+(?=\s|$)|&#39;</span>
+                    <span class="sa">r</span><span class="s1">&#39;\[.*?\]+(?=\s|$)|&#39;</span>
+                    <span class="sa">r</span><span class="s1">&#39;\S+&#39;</span>
+                <span class="p">)</span>
                 <span class="n">opt_usage</span> <span class="o">=</span> <span class="nb">format</span><span class="p">(</span><span class="n">optionals</span><span class="p">,</span> <span class="n">groups</span><span class="p">)</span>
                 <span class="n">pos_usage</span> <span class="o">=</span> <span class="nb">format</span><span class="p">(</span><span class="n">positionals</span><span class="p">,</span> <span class="n">groups</span><span class="p">)</span>
                 <span class="n">opt_parts</span> <span class="o">=</span> <span class="n">_re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">part_regexp</span><span class="p">,</span> <span class="n">opt_usage</span><span class="p">)</span>
@@ -2645,7 +2649,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2018, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter.
+        &copy; Copyright 2015-2018, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter
 
     </p>
   </div>
@@ -2664,21 +2668,14 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'0.8.0',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
 
   
 

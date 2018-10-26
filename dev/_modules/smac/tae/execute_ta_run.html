@@ -271,7 +271,7 @@
     <span class="n">MEMOUT</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="n">CAPPED</span> <span class="o">=</span> <span class="mi">6</span>
 
-    <span class="k">def</span> <span class="nf">enum_hook</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+<div class="viewcode-block" id="StatusType.enum_hook"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_func.StatusType.enum_hook">[docs]</a>    <span class="k">def</span> <span class="nf">enum_hook</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Hook function passed to json-deserializer as &quot;object_hook&quot;.</span>
 <span class="sd">        EnumEncoder in runhistory/runhistory.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -280,7 +280,7 @@
             <span class="n">name</span><span class="p">,</span> <span class="n">member</span> <span class="o">=</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;__enum__&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;StatusType&quot;</span><span class="p">:</span>
                 <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">globals</span><span class="p">()[</span><span class="n">name</span><span class="p">],</span> <span class="n">member</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">obj</span></div>
+        <span class="k">return</span> <span class="n">obj</span></div></div>
 
 
 <div class="viewcode-block" id="BudgetExhaustedException"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_func.BudgetExhaustedException">[docs]</a><span class="k">class</span> <span class="nc">BudgetExhaustedException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
@@ -525,7 +525,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2018, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter.
+        &copy; Copyright 2015-2018, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter
 
     </p>
   </div>
@@ -544,21 +544,14 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'0.8.0',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
 
   
 

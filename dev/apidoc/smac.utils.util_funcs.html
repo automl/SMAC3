@@ -255,7 +255,7 @@
 <span id="smac-utils-util-funcs-module"></span><h1>smac.utils.util_funcs module<a class="headerlink" href="#module-smac.utils.util_funcs" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="smac.utils.util_funcs.get_rng">
-<code class="descclassname">smac.utils.util_funcs.</code><code class="descname">get_rng</code><span class="sig-paren">(</span><em>rng: Union[int</em>, <em>mtrand.RandomState</em>, <em>NoneType] = None</em>, <em>run_id: Union[int</em>, <em>NoneType] = None</em>, <em>logger: Union[logging.Logger</em>, <em>NoneType] = None</em><span class="sig-paren">)</span> &#x2192; Tuple[int, mtrand.RandomState]<a class="reference internal" href="../_modules/smac/utils/util_funcs.html#get_rng"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.util_funcs.get_rng" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">smac.utils.util_funcs.</code><code class="descname">get_rng</code><span class="sig-paren">(</span><em>rng: Union[int</em>, <em>mtrand.RandomState</em>, <em>None] = None</em>, <em>run_id: Optional[int] = None</em>, <em>logger: Optional[logging.Logger] = None</em><span class="sig-paren">)</span> &#x2192; Tuple[int, mtrand.RandomState]<a class="reference internal" href="../_modules/smac/utils/util_funcs.html#get_rng"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.util_funcs.get_rng" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize random number generator and set run_id</p>
 <ul class="simple">
 <li>If rng and run_id are None, initialize a new generator and sample a run_id</li>
@@ -314,7 +314,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2018, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter.
+        &copy; Copyright 2015-2018, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter
 
     </p>
   </div>
@@ -333,21 +333,14 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'0.8.0',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
 
   
 

@@ -255,7 +255,7 @@
 <span id="smac-optimizer-smbo-module"></span><h1>smac.optimizer.smbo module<a class="headerlink" href="#module-smac.optimizer.smbo" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.optimizer.smbo.SMBO">
-<em class="property">class </em><code class="descclassname">smac.optimizer.smbo.</code><code class="descname">SMBO</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>stats: smac.stats.stats.Stats</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</em>, <em>intensifier: smac.intensification.intensification.Intensifier</em>, <em>aggregate_func: &lt;built-in function callable&gt;</em>, <em>num_run: int</em>, <em>model: smac.epm.rf_with_instances.RandomForestWithInstances</em>, <em>acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</em>, <em>acquisition_func: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>rng: mtrand.RandomState</em>, <em>restore_incumbent: ConfigSpace.configuration_space.Configuration = None</em>, <em>random_configuration_chooser: Union[smac.optimizer.random_configuration_chooser.ChooserNoCoolDown</em>, <em>smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown] = &lt;smac.optimizer.random_configuration_chooser.ChooserNoCoolDown object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.optimizer.smbo.</code><code class="descname">SMBO</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>stats: smac.stats.stats.Stats</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</em>, <em>intensifier: smac.intensification.intensification.Intensifier</em>, <em>aggregate_func: callable</em>, <em>num_run: int</em>, <em>model: smac.epm.rf_with_instances.RandomForestWithInstances</em>, <em>acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</em>, <em>acquisition_func: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>rng: mtrand.RandomState</em>, <em>restore_incumbent: ConfigSpace.configuration_space.Configuration = None</em>, <em>random_configuration_chooser: Union[smac.optimizer.random_configuration_chooser.ChooserNoCoolDown</em>, <em>smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown] = &lt;smac.optimizer.random_configuration_chooser.ChooserNoCoolDown object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Interface that contains the main Bayesian optimization loop</p>
 <dl class="attribute">
@@ -485,7 +485,7 @@ deterministic will be fixed to 1)</li>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2018, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter.
+        &copy; Copyright 2015-2018, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter
 
     </p>
   </div>
@@ -504,21 +504,14 @@ deterministic will be fixed to 1)</li>
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'0.8.0',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
 
   
 
