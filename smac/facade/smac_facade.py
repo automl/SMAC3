@@ -60,7 +60,7 @@ class SMAC(object):
     """
 
     def __init__(self,
-                 scenario: typing.Type[Scenario],
+                 scenario: Scenario,
                  tae_runner: typing.Optional[typing.Union[ExecuteTARun, typing.Callable]]=None,
                  runhistory: typing.Optional[RunHistory]=None,
                  intensifier: typing.Optional[Intensifier]=None,
@@ -410,14 +410,14 @@ class SMAC(object):
             'restore_incumbent': restore_incumbent,
             'random_configuration_chooser': random_configuration_chooser
         }
-        
+
         if smbo_class is None:
             self.solver = SMBO(**smbo_args)
         else:
             self.solver = smbo_class(**smbo_args)
 
     @staticmethod
-    def _get_random_configuration_chooser(random_configuration_chooser:RandomConfigurationChooser, 
+    def _get_random_configuration_chooser(random_configuration_chooser:RandomConfigurationChooser,
                                           rng:np.random.RandomState):
         """
         Initialize random configuration chooser
@@ -437,7 +437,7 @@ class SMAC(object):
 
         """
         if not random_configuration_chooser:
-            #return ChooserCosineAnnealing(prob_max=0.5, prob_min=0.001, 
+            #return ChooserCosineAnnealing(prob_max=0.5, prob_min=0.001,
             #     restart_iteration= 10,
             #     rng=rng)
             return ChooserNoCoolDown(2.0)

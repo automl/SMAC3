@@ -6,6 +6,7 @@ import unittest.mock
 
 import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
+from ConfigSpace.util import get_one_exchange_neighbourhood
 from nose.plugins.attrib import attr
 
 from smac.configspace import ConfigurationSpace
@@ -147,7 +148,17 @@ class TestSMACFacade(unittest.TestCase):
         self.assertIs(rng_1, rs)
 
     @attr('slow')
-    def test_check_deterministic_rosenbrock(self):
+    @unittest.mock.patch("smac.optimizer.ei_optimization.get_one_exchange_neighbourhood")
+    def test_check_deterministic_rosenbrock(self, patch):
+
+        # Make SMAC a bit faster
+        patch.side_effect = lambda configuration, seed: get_one_exchange_neighbourhood(
+            configuration=configuration,
+            stdev=0.05,
+            num_neighbors=2,
+            seed=seed,
+        )
+
         def rosenbrock_2d(x):
             x1 = x['x1']
             x2 = x['x2']

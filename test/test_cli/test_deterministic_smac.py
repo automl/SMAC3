@@ -8,6 +8,8 @@ from nose.plugins.attrib import attr
 from unittest import mock
 
 from smac.smac_cli import SMACCLI
+from smac.optimizer import ei_optimization
+from ConfigSpace.util import get_one_exchange_neighbourhood
 
 
 class TestDeterministicSMAC(unittest.TestCase):
@@ -34,10 +36,20 @@ class TestDeterministicSMAC(unittest.TestCase):
         os.chdir(self.current_dir)
 
     @attr('slow')
-    def test_deterministic(self):
+    @unittest.mock.patch("smac.optimizer.ei_optimization.get_one_exchange_neighbourhood")
+    def test_deterministic(self, patch):
         """
         Testing deterministic behaviour.
         """
+
+        # Make SMAC a bit faster
+        patch.side_effect = lambda configuration, seed: get_one_exchange_neighbourhood(
+            configuration=configuration,
+            stdev=0.05,
+            num_neighbors=2,
+            seed=seed,
+        )
+
         testargs = ["scripts/smac",
                     "--scenario", self.scenario_file,
                     "--verbose_level", "DEBUG",
