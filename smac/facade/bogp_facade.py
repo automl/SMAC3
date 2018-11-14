@@ -38,6 +38,10 @@ class BOGP(SMAC):
         Constructor
         see ~smac.facade.smac_facade for documentation
         """
+        scenario = kwargs['scenario']
+        if scenario.initial_incumbent not in ['LHD', 'FACTORIAL', 'SOBOL']:
+            scenario.initial_incumbent = 'SOBOL'
+        
         if kwargs.get('model') is None:
             _, self.rng = get_rng(rng=kwargs.get("rng", None), run_id=kwargs.get("run_id", None), logger=None)
 

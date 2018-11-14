@@ -30,12 +30,12 @@ class RandomConfigurationChooser(ABC):
 
 class ChooserNoCoolDown(RandomConfigurationChooser):
 
-    def __init__(self, modulus: float=2.0):
+    def __init__(self, modulus: float = 2.0):
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
         if modulus <= 1.0:
             self.logger.warning("Using SMAC with random configurations only."
-                            "ROAR is the better choice for this.")
+                                "ROAR is the better choice for this.")
         self.modulus = modulus
 
     def next_smbo_iteration(self):
@@ -47,12 +47,12 @@ class ChooserNoCoolDown(RandomConfigurationChooser):
 
 class ChooserLinearCoolDown(RandomConfigurationChooser):
 
-    def __init__(self, start_modulus: float=2.0, modulus_increment: float=0.3, end_modulus: float=float('inf')):
+    def __init__(self, start_modulus: float = 2.0, modulus_increment: float = 0.3, end_modulus: float = float('inf')):
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
         if start_modulus <= 1.0 and modulus_increment <= 0.0:
             self.logger.warning("Using SMAC with random configurations only."
-                            "ROAR is the better choice for this.")
+                                "ROAR is the better choice for this.")
         self.modulus = start_modulus
         self.modulus_increment = modulus_increment
         self.end_modulus = end_modulus
@@ -69,10 +69,11 @@ class ChooserLinearCoolDown(RandomConfigurationChooser):
             return True
         else:
             return False
-        
+
+
 class ChooserProb(RandomConfigurationChooser):
 
-    def __init__(self, prob:float, rng:np.random.RandomState):
+    def __init__(self, prob: float, rng: np.random.RandomState):
         self.prob = prob
         self.rng = rng
 
@@ -84,10 +85,11 @@ class ChooserProb(RandomConfigurationChooser):
             return True
         else:
             return False
-        
+
+
 class ChooserProbCoolDown(RandomConfigurationChooser):
 
-    def __init__(self, prob:float, cool_down_fac:float, rng:np.random.RandomState):
+    def __init__(self, prob: float, cool_down_fac: float, rng: np.random.RandomState):
         self.prob = prob
         self.rng = rng
         self.cool_down_fac = cool_down_fac
@@ -101,11 +103,12 @@ class ChooserProbCoolDown(RandomConfigurationChooser):
         else:
             return False
 
+
 class ChooserCosineAnnealing(RandomConfigurationChooser):
 
-    def __init__(self, prob_max:float, prob_min:float, 
-                 restart_iteration:int,
-                 rng:np.random.RandomState):
+    def __init__(self, prob_max: float, prob_min: float,
+                 restart_iteration: int,
+                 rng: np.random.RandomState):
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
         self.prob_max = prob_max
@@ -116,9 +119,9 @@ class ChooserCosineAnnealing(RandomConfigurationChooser):
         self.rng = rng
 
     def next_smbo_iteration(self):
-        self.prob = self.prob_min + (0.5 *(self.prob_max - self.prob_min) * \
-                (1 + np.cos(self.iteration * np.pi / self.restart_iteration)))
-        self.logger.error("Probability for random configs: %f" %(self.prob))
+        self.prob = self.prob_min + (0.5 * (self.prob_max - self.prob_min) * \
+                                     (1 + np.cos(self.iteration * np.pi / self.restart_iteration)))
+        self.logger.error("Probability for random configs: %f" % (self.prob))
         self.iteration += 1
         if self.iteration > self.restart_iteration:
             self.iteration = 0
