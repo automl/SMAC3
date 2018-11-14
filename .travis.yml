@@ -62,8 +62,18 @@ install:
   - cat requirements.txt | xargs -n 1 -L 1 pip install
   - python setup.py install
 
-# command to run tests, e.g. python setup.py test
 script:
   - ci_scripts/$TESTSUITE
 after_success:
-  - if [[ $TESTSUITE == "run_unittests.sh" ]]; then codecov; fi
+  - source ci_scripts/success.sh && source ci_scripts/create_doc.sh $TRAVIS_BRANCH "doc_result"
+
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN # set in the settings page of my repository
+  keep-hisotry: true
+  commiter-from-gh: true
+  on:
+    all_branches: true
+    condition: $doc_result = "success"
+  local_dir: doc/$TRAVIS_BRANCH
