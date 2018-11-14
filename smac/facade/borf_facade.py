@@ -56,39 +56,6 @@ class BORF(SMAC):
         super().__init__(**kwargs)
         self.logger.info(self.__class__)
         
-        # Initial design
-        # Latin Hyper Cube
-        #=======================================================================
-        # self.solver.initial_design = LHDesign(runhistory=self.solver.runhistory,
-        #                                       intensifier=self.solver.intensifier,
-        #                                       aggregate_func=self.solver.aggregate_func,
-        #                                       tae_runner=self.solver.intensifier.tae_runner,
-        #                                       scenario=self.solver.scenario,
-        #                                       stats=self.solver.stats,
-        #                                       traj_logger=self.solver.intensifier.traj_logger,
-        #                                       rng=self.solver.rng)
-        #=======================================================================
-        # Factorial Design
-        #=======================================================================
-        # self.solver.initial_design = FactorialInitialDesign(runhistory=self.solver.runhistory,
-        #                                                   intensifier=self.solver.intensifier,
-        #                                                   aggregate_func=self.solver.aggregate_func,
-        #                                                   tae_runner=self.solver.intensifier.tae_runner,
-        #                                                   scenario=self.solver.scenario,
-        #                                                   stats=self.solver.stats,
-        #                                                   traj_logger=self.solver.intensifier.traj_logger,
-        #                                                   rng=self.solver.rng)
-        #=======================================================================
-        # Sobol Design
-        self.solver.initial_design = SobolDesign(runhistory=self.solver.runhistory,
-                                                  intensifier=self.solver.intensifier,
-                                                  aggregate_func=self.solver.aggregate_func,
-                                                  tae_runner=self.solver.intensifier.tae_runner,
-                                                  scenario=self.solver.scenario,
-                                                  stats=self.solver.stats,
-                                                  traj_logger=self.solver.intensifier.traj_logger,
-                                                  rng=self.solver.rng)
-        
         #== static RF settings
         self.solver.model.rf_opts.num_trees = 10
         self.solver.model.rf_opts.do_bootstrapping = True
@@ -108,13 +75,7 @@ class BORF(SMAC):
         # self.solver.model = model
         #=======================================================================
         
-        # no random configurations
-        #rand_chooser = ChooserNoCoolDown(10**10)
-        #self.solver.random_configuration_chooser = rand_chooser
-        
-        # random configuration with given probability
-        rand_chooser = ChooserProb(prob=0.00, rng=self.solver.rng)
-        self.solver.random_configuration_chooser = rand_chooser
+        self.solver.random_configuration_chooser.prob = 0.0
         
         # only 1 configuration per SMBO iteration
         self.solver.scenario.intensification_percentage = 1e-10

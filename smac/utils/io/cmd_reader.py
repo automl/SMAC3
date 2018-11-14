@@ -543,6 +543,11 @@ class CMDReader(object):
                     " Set to 1 and in combination with very small intensification-percentage."
                     " it will deactivate randomly sampled configurations"
                     " (and hence, extrapolation of random forest will be an issue.)")
+        smac_opts.add_argument("--rand_prob","--rand-prob",
+               dest='rand_prob',
+               default=0.5, type=float,
+               help="[dev] probablity to run a random configuration"
+               " instead of configuration optimized on the acquisition function")
 
         self.parser.add_parser(self.smac_parser)
         self.smac_cmd_actions, self.smac_cmd_translations = CMDReader._extract_action_info(self.smac_parser._actions)
@@ -624,7 +629,7 @@ class CMDReader(object):
                                type=list,
                                help=SUPPRESS)  # added after parsing --features
         scen_opts.add_argument("--initial-incumbent", "--initial_incumbent", dest='initial_incumbent',
-                               default="DEFAULT", type=str, choices=['DEFAULT', 'RANDOM'],
+                               default="DEFAULT", type=str, choices=['DEFAULT', 'RANDOM', 'LHD', 'SOBOL', 'FACTORIAL'],
                                help="[dev] DEFAULT is the default from the PCS.")
         scen_opts.add_argument("--paramfile", "--param-file", "--param_file", "--pcs-fn", "--pcs_fn", dest='pcs_fn',
                                type=str, action=ReadPCSFileAction,

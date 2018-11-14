@@ -227,6 +227,14 @@ class RandomForestWithInstances(AbstractEPM):
         Returns the predictive mean and variance marginalised over all
         instances for a set of configurations.
 
+        Note
+        ----
+        This method overwrites the same method of ~smac.epm.base_epm.AbstractEPM;
+        the following method is random forest specific
+        and follows the SMAC2 implementation;
+        it requires no distribution assumption 
+        to marginalize the uncertainty estimates 
+
         Parameters
         ----------
         X : np.ndarray
@@ -246,8 +254,6 @@ class RandomForestWithInstances(AbstractEPM):
             var[var < self.var_threshold] = self.var_threshold
             var[np.isnan(var)] = self.var_threshold
             return mean, var
-        else:
-            n_instances = len(self.instance_features)
 
         if len(X.shape) != 2:
             raise ValueError(

@@ -1,9 +1,7 @@
-import abc
 import numpy as np
 
 
 class BaseModel(object):
-    __metaclass__ = abc.ABCMeta
 
     def __init__(self):
         """
@@ -12,7 +10,6 @@ class BaseModel(object):
         self.X = None
         self.y = None
 
-    @abc.abstractmethod
     def train(self, X, y):
         """
         Trains the model on the provided data.
@@ -25,7 +22,7 @@ class BaseModel(object):
         y: np.ndarray (N,)
             The corresponding target values of the input data points.
         """
-        pass
+        raise NotImplementedError()
 
     def update(self, X, y):
         """
@@ -44,7 +41,6 @@ class BaseModel(object):
         y = np.append(self.y, y, axis=0)
         self.train(X, y)
 
-    @abc.abstractmethod
     def predict(self, X_test):
         """
         Predicts for a given set of test data points the mean and variance of its target values
@@ -61,7 +57,7 @@ class BaseModel(object):
         var: ndarray (N,)
             Predictive variance of the test data points
         """
-        pass
+        raise NotImplementedError()
 
     def _check_shapes_train(func):
         def func_wrapper(self, X, y, *args, **kwargs):

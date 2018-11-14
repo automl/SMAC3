@@ -4,22 +4,31 @@ import typing
 
 import numpy as np
 
+# tae
 from smac.tae.execute_ta_run import ExecuteTARun
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.tae.execute_ta_run import StatusType
+# stats and options
 from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
+# runhistory
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, \
     RunHistory2EPM4LogCost, RunHistory2EPM4Cost
+# Initial designs
 from smac.initial_design.initial_design import InitialDesign
 from smac.initial_design.default_configuration_design import \
     DefaultConfiguration
 from smac.initial_design.random_configuration_design import RandomConfiguration
+from smac.initial_design.latin_hypercube_design import LHDesign
+from smac.initial_design.factorial_design import FactorialInitialDesign
+from smac.initial_design.sobol_design import SobolDesign 
 from smac.initial_design.multi_config_initial_design import \
     MultiConfigInitialDesign
+# intensification
 from smac.intensification.intensification import Intensifier
+# optimizer
 from smac.optimizer.smbo import SMBO
 from smac.optimizer.objective import average_cost
 from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
@@ -27,9 +36,11 @@ from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
     AcquisitionFunctionMaximizer
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
     RandomConfigurationChooser, ChooserCosineAnnealing, ChooserProb
+# epm
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.base_epm import AbstractEPM
+# utils
 from smac.utils.util_funcs import get_types
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.constants import MAXINT, N_TREES
@@ -182,9 +193,9 @@ class SMAC(object):
         if runhistory.aggregate_func is None:
             runhistory.aggregate_func = aggregate_func
 
-        random_configuration_chooser = SMAC._get_random_configuration_chooser(
-            random_configuration_chooser=random_configuration_chooser,
-            rng=rng)
+        if not random_configuration_chooser:
+            random_configuration_chooser = ChooserProb(prob=scenario.rand_prob,
+                                                       rng=rng)
 
         # reset random number generator in config space to draw different
         # random configurations with each seed given to SMAC
@@ -339,6 +350,33 @@ class SMAC(object):
                                                      stats=self.stats,
                                                      traj_logger=traj_logger,
                                                      rng=rng)
+            elif scenario.initial_incumbent == "LHD":
+                initial_design = LHDesign(runhistory=runhistory,
+                                            intensifier=intensifier,
+                                            aggregate_func=aggregate_func,
+                                            tae_runner=tae_runner,
+                                            scenario=scenario,
+                                            stats=self.stats,
+                                            traj_logger=traj_logger,
+                                            rng=rng)
+            elif scenario.initial_incumbent == "FACTORIAL":
+                initial_design = FactorialInitialDesign(runhistory=runhistory,
+                                                        intensifier=intensifier,
+                                                        aggregate_func=aggregate_func,
+                                                        tae_runner=tae_runner,
+                                                        scenario=scenario,
+                                                        stats=self.stats,
+                                                        traj_logger=traj_logger,
+                                                        rng=rng)
+            elif scenario.initial_incumbent == "SOBOL":
+                initial_design = SobolDesign(runhistory=runhistory,
+                                            intensifier=intensifier,
+                                            aggregate_func=aggregate_func,
+                                            tae_runner=tae_runner,
+                                            scenario=scenario,
+                                            stats=self.stats,
+                                            traj_logger=traj_logger,
+                                            rng=rng)
             else:
                 raise ValueError("Don't know what kind of initial_incumbent "
                                  "'%s' is" % scenario.initial_incumbent)
@@ -415,33 +453,6 @@ class SMAC(object):
             self.solver = SMBO(**smbo_args)
         else:
             self.solver = smbo_class(**smbo_args)
-
-    @staticmethod
-    def _get_random_configuration_chooser(random_configuration_chooser:RandomConfigurationChooser,
-                                          rng:np.random.RandomState):
-        """
-        Initialize random configuration chooser
-        If random_configuration_chooser is falsy, initialize with ChooserNoCoolDown(2.0)
-
-        Parameters
-        ----------
-        random_configuration_chooser: RandomConfigurationChooser
-            generator for picking random configurations
-            or configurations optimized based on acquisition function
-        rng : np.random.RandomState
-            Random number generator
-
-        Returns
-        -------
-        RandomConfigurationChooser
-
-        """
-        if not random_configuration_chooser:
-            #return ChooserCosineAnnealing(prob_max=0.5, prob_min=0.001,
-            #     restart_iteration= 10,
-            #     rng=rng)
-            return ChooserNoCoolDown(2.0)
-        return random_configuration_chooser
 
     def optimize(self):
         """

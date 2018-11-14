@@ -1,4 +1,3 @@
-
 import logging
 import george
 import emcee
@@ -93,7 +92,6 @@ class GaussianProcessMCMC(BaseModel):
         if self.normalize_input:
             # Normalize input to be in [0, 1]
             self.X, self.lower, self.upper = normalization.zero_one_normalization(X, self.lower, self.upper)
-
         else:
             self.X = X
 
