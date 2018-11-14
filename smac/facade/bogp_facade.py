@@ -1,27 +1,10 @@
-import logging
-import os
-import typing
-
 import numpy as np
 import george
 
 from smac.facade.smac_facade import SMAC
-from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
-    RandomConfigurationChooser, ChooserCosineAnnealing, \
-    ChooserProb
-from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, \
-    RunHistory2EPM4LogCost, RunHistory2EPM4Cost
-from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
-from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
-    AcquisitionFunctionMaximizer
+from smac.runhistory.runhistory2epm import RunHistory2EPM4LogCost
 from smac.tae.execute_ta_run import StatusType
-from smac.epm.rf_with_instances_hpo import RandomForestWithInstancesHPO
-from smac.utils.util_funcs import get_types
-from smac.utils.constants import MAXINT
-from smac.initial_design.latin_hypercube_design import LHDesign
-from smac.initial_design.factorial_design import FactorialInitialDesign
-from smac.initial_design.sobol_design import SobolDesign
-from smac.optimizer.default_priors import DefaultPrior
+from smac.epm.default_priors import DefaultPrior
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
 from smac.utils.util_funcs import get_types
 
@@ -53,9 +36,9 @@ class BOGP(SMAC):
     def __init__(self, model_type='gp_mcmc', **kwargs):
         """
         Constructor
-        see ~smac.facade.smac_facade for docu
+        see ~smac.facade.smac_facade for documentation
         """
-        if 'model' not in kwargs or kwargs['model'] is None:
+        if kwargs.get('model') is None:
             self.rng = np.random.RandomState(np.random.randint(0, 10000))
             cov_amp = 2
             _, bounds = get_types(kwargs['scenario'].cs, instance_features=None)

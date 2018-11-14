@@ -163,6 +163,7 @@ class TestSMBO(unittest.TestCase):
         self.assertIsInstance(x[0], Configuration)
 
     def test_choose_next_2(self):
+        # Test with a single configuration in the runhistory!
         def side_effect(X):
             return np.mean(X, axis=1).reshape((-1, 1))
 
@@ -183,29 +184,35 @@ class TestSMBO(unittest.TestCase):
         Y = smbo.rng.rand(10, 1)
 
         challengers = smbo.choose_next(X, Y)
-        x = [c for c in challengers]
+        # Convert challenger list (a generator) to a real list
+        challengers = [c for c in challengers]
 
         self.assertEqual(smbo.model.train.call_count, 1)
 
-        self.assertEqual(len(x), 9999)
+        # For each configuration it is randomly sampled whether to take it from the list of challengers or to sample it
+        # completely at random. Therefore, it is not guaranteed to obtain twice the number of configurations selected
+        # by EI.
+        self.assertEqual(len(challengers), 9913)
+        num_random_search_sorted = 0
         num_random_search = 0
         num_local_search = 0
-        for i in range(0, 2002, 2):
-            # print(x[i].origin)
-            self.assertIsInstance(x[i], Configuration)
-            if 'Random Search (sorted)' in x[i].origin:
+        for c in challengers:
+            self.assertIsInstance(c, Configuration)
+            if 'Random Search (sorted)' == c.origin:
+                num_random_search_sorted += 1
+            elif 'Random Search' == c.origin:
                 num_random_search += 1
-            elif 'Local Search' in x[i].origin:
+            elif 'Local Search' == c.origin:
                 num_local_search += 1
-        # number of local search configs has to be least 10
-        # since x can have duplicates
-        # which can be associated with the local search
-        self.assertGreaterEqual(num_local_search, 1)
-        for i in range(1, 2002, 2):
-            self.assertIsInstance(x[i], Configuration)
-            self.assertEqual(x[i].origin, 'Random Search')
+            else:
+                raise ValueError(c.origin)
+
+        self.assertEqual(num_local_search, 1)
+        self.assertEqual(num_random_search_sorted, 4999)
+        self.assertEqual(num_random_search, 4913)
 
     def test_choose_next_3(self):
+        # Test with ten configurations in the runhistory
         def side_effect(X):
             return np.mean(X, axis=1).reshape((-1, 1))
 
@@ -228,26 +235,32 @@ class TestSMBO(unittest.TestCase):
         Y = smbo.rng.rand(10, 1)
 
         challengers = smbo.choose_next(X, Y)
-        x = [c for c in challengers]
+        # Convert challenger list (a generator) to a real list
+        challengers = [c for c in challengers]
 
         self.assertEqual(smbo.model.train.call_count, 1)
-        self.assertEqual(len(x), 9999)
+
+        # For each configuration it is randomly sampled whether to take it from the list of challengers or to sample it
+        # completely at random. Therefore, it is not guaranteed to obtain twice the number of configurations selected
+        # by EI.
+        self.assertEqual(len(challengers), 9913)
+        num_random_search_sorted = 0
         num_random_search = 0
         num_local_search = 0
-        for i in range(0, 9999, 2):
-            # print(x[i].origin)
-            self.assertIsInstance(x[i], Configuration)
-            if 'Random Search (sorted)' in x[i].origin:
+        for c in challengers:
+            self.assertIsInstance(c, Configuration)
+            if 'Random Search (sorted)' == c.origin:
+                num_random_search_sorted += 1
+            elif 'Random Search' == c.origin:
                 num_random_search += 1
-            elif 'Local Search' in x[i].origin:
+            elif 'Local Search' == c.origin:
                 num_local_search += 1
-        # number of local search configs has to be least 10
-        # since x can have duplicates
-        # which can be associated with the local search
-        self.assertGreaterEqual(num_local_search, 10)
-        for i in range(1, 2020, 2):
-            self.assertIsInstance(x[i], Configuration)
-            self.assertEqual(x[i].origin, 'Random Search')
+            else:
+                raise ValueError(c.origin)
+
+        self.assertEqual(num_local_search, 10)
+        self.assertEqual(num_random_search_sorted, 4990)
+        self.assertEqual(num_random_search, 4913)
 
     @mock.patch.object(SingleConfigInitialDesign, 'run')
     def test_abort_on_initial_design(self, patch):
