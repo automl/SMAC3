@@ -73,7 +73,7 @@ class MultiConfigInitialDesign(InitialDesign):
         n_configs_x_params: int
             how many configurations will be used at most in the initial design (X*D)
         max_config_fracs: float
-            use at most X*budget in the initial design
+            use at most X*budget in the initial design. Not active if a time limit is given.
         """
         super().__init__(tae_runner=tae_runner,
                          scenario=scenario,
