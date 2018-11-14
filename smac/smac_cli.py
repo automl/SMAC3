@@ -11,6 +11,8 @@ from smac.facade.roar_facade import ROAR
 from smac.facade.epils_facade import EPILS
 from smac.facade.hydra_facade import Hydra
 from smac.facade.psmac_facade import PSMAC
+from smac.facade.borf_facade import BORF
+from smac.facade.bogp_facade import BOGP
 from smac.runhistory.runhistory import RunHistory
 from smac.stats.stats import Stats
 from smac.optimizer.objective import average_cost
@@ -115,8 +117,17 @@ class SMACCLI(object):
                 stats=stats,
                 restore_incumbent=incumbent,
                 run_id=main_args_.seed)
-        if main_args_.mode == "BORF":
+        elif main_args_.mode == "BORF":
             optimizer = BORF(
+                scenario=scen,
+                rng=np.random.RandomState(main_args_.seed),
+                runhistory=rh,
+                initial_configurations=initial_configs,
+                stats=stats,
+                restore_incumbent=incumbent,
+                run_id=main_args_.seed)
+        elif main_args_.mode == "BOGP":
+            optimizer = BOGP(
                 scenario=scen,
                 rng=np.random.RandomState(main_args_.seed),
                 runhistory=rh,

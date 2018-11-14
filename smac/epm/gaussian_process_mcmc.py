@@ -142,7 +142,7 @@ class GaussianProcessMCMC(BaseModel):
             self.hypers = sampler.chain[:, -1]
 
         else:
-            self.hypers = self.gp.kernel[:].tolist()
+            self.hypers = self.gp.kernel.get_parameter_vector().tolist()
             self.hypers.append(self.noise)
             self.hypers = [self.hypers]
 
@@ -151,7 +151,7 @@ class GaussianProcessMCMC(BaseModel):
 
             # Instantiate a GP for each hyperparameter configuration
             kernel = deepcopy(self.kernel)
-            kernel.vector = np.exp(sample[:-1])
+            kernel.set_parameter_vector(sample[:-1])
             noise = np.exp(sample[-1])
             model = GaussianProcess(kernel,
                                     normalize_output=self.normalize_output,
@@ -190,7 +190,7 @@ class GaussianProcessMCMC(BaseModel):
         # The last entry is always the noise
         sigma_2 = np.exp(theta[-1])
         # Update the kernel and compute the lnlikelihood.
-        self.gp.kernel.vector = np.exp(theta[:-1])
+        self.gp.kernel.set_parameter_vector(theta[:-1])
         
         try:
             self.gp.compute(self.X, yerr=np.sqrt(sigma_2))

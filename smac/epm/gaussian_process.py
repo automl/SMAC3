@@ -107,10 +107,10 @@ class GaussianProcess(BaseModel):
 
         if do_optimize:
             self.hypers = self.optimize()
-            self.gp.kernel.vector = self.hypers[:-1]
+            self.gp.kernel.set_parameter_vector(self.hypers[:-1])
             self.noise = np.exp(self.hypers[-1])  # sigma^2
         else:
-            self.hypers = self.gp.kernel.vector
+            self.hypers = self.gp.kernel.get_parameter_vector()
             self.hypers = np.append(self.hypers, np.log(self.noise))
 
         logger.debug("GP Hyperparameters: " + str(self.hypers))
@@ -148,7 +148,7 @@ class GaussianProcess(BaseModel):
             return 1e25
 
         # The last entry of theta is always the noise
-        self.gp.kernel.vector = theta[:-1]
+        self.gp.kernel.set_parameter_vector(theta[:-1])
         noise = np.exp(theta[-1])  # sigma^2
 
         try:
@@ -167,7 +167,7 @@ class GaussianProcess(BaseModel):
 
     def grad_nll(self, theta):
 
-        self.gp.kernel.vector = theta[:-1]
+        self.gp.kernel.set_parameter_vector(theta[:-1])
         noise = np.exp(theta[-1])
         
         self.gp.compute(self.X, yerr=np.sqrt(noise))
@@ -201,7 +201,7 @@ class GaussianProcess(BaseModel):
             Hyperparameter vector that maximizes the marginal log likelihood
         """
         # Start optimization from the previous hyperparameter configuration
-        p0 = self.gp.kernel.vector
+        p0 = self.gp.kernel.get_parameter_vector()
         p0 = np.append(p0, np.log(self.noise))
 
         if self.use_gradients:
