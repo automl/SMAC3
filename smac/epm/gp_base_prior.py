@@ -5,7 +5,7 @@ import scipy.stats as sps
 
 class BasePrior(object):
 
-    def __init__(self, rng=None):
+    def __init__(self, rng: np.random.RandomState=None):
         """
         Abstract base class to define the interface for priors
         of GP hyperparameter.
@@ -21,7 +21,7 @@ class BasePrior(object):
         else:
             self.rng = rng
 
-    def lnprob(self, theta):
+    def lnprob(self, theta: np.ndarray):
         """
         Returns the log probability of theta. Note: theta should
         be on a log scale.
@@ -38,7 +38,7 @@ class BasePrior(object):
         """
         pass
 
-    def sample_from_prior(self, n_samples):
+    def sample_from_prior(self, n_samples: int):
         """
         Returns N samples from the prior.
 
@@ -54,7 +54,7 @@ class BasePrior(object):
         """
         pass
 
-    def gradient(self, theta):
+    def gradient(self, theta: np.ndarray):
         """
         Computes the gradient of the prior with
         respect to theta.
@@ -74,7 +74,7 @@ class BasePrior(object):
 
 class TophatPrior(BasePrior):
 
-    def __init__(self, l_bound, u_bound, rng=None):
+    def __init__(self, l_bound: float, u_bound: float, rng: np.random.RandomState=None):
         """
         Tophat prior as it used in the original spearmint code.
 
@@ -97,7 +97,7 @@ class TophatPrior(BasePrior):
             raise Exception("Upper bound of Tophat prior must be greater \
             than the lower bound!")
 
-    def lnprob(self, theta):
+    def lnprob(self, theta: np.ndarray):
         """
         Returns the log probability of theta. Note: theta should
         be on a log scale.
@@ -118,7 +118,7 @@ class TophatPrior(BasePrior):
         else:
             return 0
 
-    def sample_from_prior(self, n_samples):
+    def sample_from_prior(self, n_samples: int):
         """
         Returns N samples from the prior.
 
@@ -136,7 +136,7 @@ class TophatPrior(BasePrior):
         p0 = self.min + self.rng.rand(n_samples) * (self.max - self.min)
         return p0[:, np.newaxis]
 
-    def gradient(self, theta):
+    def gradient(self, theta: np.ndarray):
         """
         Computes the gradient of the prior with
         respect to theta.
@@ -157,7 +157,7 @@ class TophatPrior(BasePrior):
 
 class HorseshoePrior(BasePrior):
 
-    def __init__(self, scale=0.1, rng=None):
+    def __init__(self, scale: float=0.1, rng: np.random.RandomState=None):
         """
         Horseshoe Prior as it is used in spearmint
 
@@ -175,7 +175,7 @@ class HorseshoePrior(BasePrior):
             self.rng = rng
         self.scale = scale
 
-    def lnprob(self, theta):
+    def lnprob(self, theta: np.ndarray):
         """
         Returns the log probability of theta. Note: theta should
         be on a log scale.
@@ -195,7 +195,7 @@ class HorseshoePrior(BasePrior):
             return np.inf
         return np.log(np.log(1 + 3.0 * (self.scale / np.exp(theta)) ** 2))
 
-    def sample_from_prior(self, n_samples):
+    def sample_from_prior(self, n_samples: int):
         """
         Returns N samples from the prior.
 
@@ -215,7 +215,7 @@ class HorseshoePrior(BasePrior):
         p0 = np.log(np.abs(self.rng.randn() * lamda * self.scale))
         return p0[:, np.newaxis]
 
-    def gradient(self, theta):
+    def gradient(self, theta: np.ndarray):
         """
         Computes the gradient of the prior with
         respect to theta.
@@ -237,7 +237,7 @@ class HorseshoePrior(BasePrior):
 
 
 class LognormalPrior(BasePrior):
-    def __init__(self, sigma, mean=0, rng=None):
+    def __init__(self, sigma: float, mean: float=0, rng: np.random.RandomState=None):
         """
         Log normal prior
 
@@ -259,7 +259,7 @@ class LognormalPrior(BasePrior):
         self.sigma = sigma
         self.mean = mean
 
-    def lnprob(self, theta):
+    def lnprob(self, theta: np.ndarray):
         """
         Returns the log probability of theta. Note: theta should
         be on a log scale.
@@ -277,7 +277,7 @@ class LognormalPrior(BasePrior):
 
         return sps.lognorm.logpdf(theta, self.sigma, loc=self.mean)
 
-    def sample_from_prior(self, n_samples):
+    def sample_from_prior(self, n_samples: int):
         """
         Returns N samples from the prior.
 
@@ -297,7 +297,7 @@ class LognormalPrior(BasePrior):
                                 size=n_samples)
         return p0[:, np.newaxis]
 
-    def gradient(self, theta):
+    def gradient(self, theta: np.ndarray):
         """
         Computes the gradient of the prior with
         respect to theta.
@@ -316,7 +316,7 @@ class LognormalPrior(BasePrior):
 
 
 class NormalPrior(BasePrior):
-    def __init__(self, sigma, mean=0, rng=None):
+    def __init__(self, sigma: float, mean: float=0, rng: np.random.RandomState=None):
         """
         Normal prior
 
@@ -338,7 +338,7 @@ class NormalPrior(BasePrior):
         self.sigma = sigma
         self.mean = mean
 
-    def lnprob(self, theta):
+    def lnprob(self, theta: np.ndarray):
         """
         Returns the pdf of theta. Note: theta should
         be on a log scale.
@@ -356,7 +356,7 @@ class NormalPrior(BasePrior):
 
         return sps.norm.pdf(theta, scale=self.sigma, loc=self.mean)
 
-    def sample_from_prior(self, n_samples):
+    def sample_from_prior(self, n_samples: int):
         """
         Returns N samples from the prior.
 
@@ -376,7 +376,7 @@ class NormalPrior(BasePrior):
                              size=n_samples)
         return p0[:, np.newaxis]
 
-    def gradient(self, theta):
+    def gradient(self, theta: np.ndarray):
         """
         Computes the gradient of the prior with
         respect to theta.

@@ -8,15 +8,17 @@ from copy import deepcopy
 from smac.epm.base_gp import BaseModel
 from smac.epm.gaussian_process import GaussianProcess
 from smac.epm import normalization
+from smac.epm.gp_base_prior import BasePrior
 
 logger = logging.getLogger(__name__)
 
 
 class GaussianProcessMCMC(BaseModel):
 
-    def __init__(self, kernel, prior=None, n_hypers=20, chain_length=2000, burnin_steps=2000,
-                 normalize_output=False, normalize_input=True,
-                 rng=None, lower=None, upper=None, noise=-8):
+    def __init__(self, kernel: george.kernels.Kernel, prior: BasePrior=None,
+                 n_hypers: int=20, chain_length: int=2000, burnin_steps: int=2000,
+                 normalize_output: bool=False, normalize_input: bool=True,
+                 rng: np.random.RandomState=None, lower: np.ndarray=None, upper: np.ndarray=None, noise: int=-8):
         """
         GaussianProcess model based on the george GP library that uses MCMC
         sampling to marginalise over the hyperparmeters. If you use this class
@@ -72,7 +74,7 @@ class GaussianProcessMCMC(BaseModel):
         self.upper = upper
 
     @BaseModel._check_shapes_train
-    def train(self, X, y, do_optimize=True, **kwargs):
+    def train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool=True, **kwargs):
         """
         Performs MCMC sampling to sample hyperparameter configurations from the
         likelihood and trains for each sample a GP on X and y
@@ -163,7 +165,7 @@ class GaussianProcessMCMC(BaseModel):
 
         self.is_trained = True
 
-    def loglikelihood(self, theta):
+    def loglikelihood(self, theta: np.ndarray):
         """
         Return the loglikelihood (+ the prior) for a hyperparameter
         configuration theta.
@@ -201,7 +203,7 @@ class GaussianProcessMCMC(BaseModel):
             return self.gp.lnlikelihood(self.y, quiet=True)
 
     @BaseModel._check_shapes_predict
-    def predict(self, X_test, **kwargs):
+    def predict(self, X_test: np.ndarray, **kwargs):
         r"""
         Returns the predictive mean and variance of the objective function
         at X average over all hyperparameter samples.

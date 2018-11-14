@@ -6,17 +6,18 @@ from scipy import optimize
 
 from smac.epm import normalization
 from smac.epm.base_gp import BaseModel
+from smac.epm.gp_base_prior import BasePrior
 
 logger = logging.getLogger(__name__)
 
 
 class GaussianProcess(BaseModel):
 
-    def __init__(self, kernel, prior=None,
-                 noise=1e-3, use_gradients=False,
-                 normalize_output=False,
-                 normalize_input=True,
-                 lower=None, upper=None, rng=None):
+    def __init__(self, kernel: george.kernels.Kernel, prior: BasePrior=None,
+                 noise: float=1e-3, use_gradients: bool=False,
+                 normalize_output: bool=False,
+                 normalize_input: bool=True,
+                 lower: bool=None, upper: bool=None, rng: np.random.RandomState=None):
         """
         Interface to the george GP library. The GP hyperparameter are obtained
         by optimizing the marginal log likelihood.
@@ -66,7 +67,7 @@ class GaussianProcess(BaseModel):
         self.upper = upper
 
     @BaseModel._check_shapes_train
-    def train(self, X, y, do_optimize=True):
+    def train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool=True):
         """
         Computes the Cholesky decomposition of the covariance of X and
         estimates the GP hyperparameters by optimizing the marginal
@@ -124,7 +125,7 @@ class GaussianProcess(BaseModel):
     def _get_noise(self):
         return self.noise
 
-    def nll(self, theta):
+    def nll(self, theta: np.ndarray) -> float:
         """
         Returns the negative marginal log likelihood (+ the prior) for
         a hyperparameter configuration theta.
@@ -163,7 +164,7 @@ class GaussianProcess(BaseModel):
         # We add a minus here because scipy is minimizing
         return -ll if np.isfinite(ll) else 1e25
 
-    def grad_nll(self, theta):
+    def _grad_nll(self, theta: np.ndarray):
 
         self.gp.kernel.set_parameter_vector(theta[:-1])
         noise = np.exp(theta[-1])
@@ -188,7 +189,7 @@ class GaussianProcess(BaseModel):
 
         return -g
 
-    def optimize(self):
+    def optimize(self) -> np.ndarray:
         """
         Optimizes the marginal log likelihood and returns the best found
         hyperparameter configuration theta.
@@ -205,7 +206,7 @@ class GaussianProcess(BaseModel):
         if self.use_gradients:
             theta, _, _ = optimize.minimize(self.nll, p0,
                                             method="BFGS",
-                                            jac=self.grad_nll)
+                                            jac=self._grad_nll)
         else:
             try:
                 results = optimize.minimize(self.nll, p0, method='L-BFGS-B')
@@ -216,7 +217,7 @@ class GaussianProcess(BaseModel):
 
         return theta
 
-    def predict_variance(self, x1, X2):
+    def predict_variance(self, x1: np.ndarray, X2: np.ndarray) -> np.ndarray:
         r"""
         Predicts the variance between a test points x1 and a set of points X2 by
            math: \sigma(X_1, X_2) = k_{X_1,X_2} - k_{X_1,X} * (K_{X,X}
@@ -246,7 +247,7 @@ class GaussianProcess(BaseModel):
         return var
 
     @BaseModel._check_shapes_predict
-    def predict(self, X_test, full_cov=False, **kwargs):
+    def predict(self, X_test: np.ndarray, full_cov: bool=False, **kwargs):
         r"""
         Returns the predictive mean and variance of the objective function at
         the given test points.
@@ -293,7 +294,7 @@ class GaussianProcess(BaseModel):
 
         return mu, var
 
-    def sample_functions(self, X_test, n_funcs=1):
+    def sample_functions(self, X_test: np.ndarray, n_funcs: int=1) -> np.ndarray:
         """
         Samples F function values from the current posterior at the N
         specified test points.
