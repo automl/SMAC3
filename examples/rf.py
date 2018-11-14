@@ -38,14 +38,14 @@ def rf_from_cfg(cfg, seed):
             per cv-fold
     """
     rfr = RandomForestRegressor(
-        n_estimators=10,  #cfg["num_trees"],
-        criterion='mse',  #cfg["criterion"],
-        min_samples_split=2,  #cfg["min_samples_to_split"],
-        min_samples_leaf=1,  #cfg["min_samples_in_leaf"],
+        n_estimators=cfg["num_trees"],
+        criterion=cfg["criterion"],
+        min_samples_split=cfg["min_samples_to_split"],
+        min_samples_leaf=cfg["min_samples_in_leaf"],
         min_weight_fraction_leaf=cfg["min_weight_frac_leaf"],
-        max_features=1,  #cfg["max_features"],
-        max_leaf_nodes=100, #cfg["max_leaf_nodes"],
-        bootstrap=True, # cfg["do_bootstrapping"],
+        max_features=cfg["max_features"],
+        max_leaf_nodes=cfg["max_leaf_nodes"],
+        bootstrap=cfg["do_bootstrapping"],
         random_state=seed)
 
     def rmse(y, y_pred):
@@ -68,21 +68,21 @@ logger.info("Running random forest example for SMAC. If you experience "
 cs = ConfigurationSpace()
 
 # We can add single hyperparameters:
-# do_bootstrapping = CategoricalHyperparameter(
-#     "do_bootstrapping", ["true", "false"], default_value="true")
-# cs.add_hyperparameter(do_bootstrapping)
+do_bootstrapping = CategoricalHyperparameter(
+    "do_bootstrapping", ["true", "false"], default_value="true")
+cs.add_hyperparameter(do_bootstrapping)
 
 # Or we can add multiple hyperparameters at once:
-# num_trees = UniformIntegerHyperparameter("num_trees", 10, 50, default_value=10)
-# max_features = UniformIntegerHyperparameter("max_features", 1, boston.data.shape[1], default_value=1)
+num_trees = UniformIntegerHyperparameter("num_trees", 10, 50, default_value=10)
+max_features = UniformIntegerHyperparameter("max_features", 1, boston.data.shape[1], default_value=1)
 min_weight_frac_leaf = UniformFloatHyperparameter("min_weight_frac_leaf", 0.0, 0.5, default_value=0.0)
-# criterion = CategoricalHyperparameter("criterion", ["mse", "mae"], default_value="mse")
-# min_samples_to_split = UniformIntegerHyperparameter("min_samples_to_split", 2, 20, default_value=2)
-# min_samples_in_leaf = UniformIntegerHyperparameter("min_samples_in_leaf", 1, 20, default_value=1)
-# max_leaf_nodes = UniformIntegerHyperparameter("max_leaf_nodes", 10, 1000, default_value=100)
+criterion = CategoricalHyperparameter("criterion", ["mse", "mae"], default_value="mse")
+min_samples_to_split = UniformIntegerHyperparameter("min_samples_to_split", 2, 20, default_value=2)
+min_samples_in_leaf = UniformIntegerHyperparameter("min_samples_in_leaf", 1, 20, default_value=1)
+max_leaf_nodes = UniformIntegerHyperparameter("max_leaf_nodes", 10, 1000, default_value=100)
 
-cs.add_hyperparameters([min_weight_frac_leaf])#[num_trees, min_weight_frac_leaf, #criterion,
-        #max_features, min_samples_to_split, min_samples_in_leaf, max_leaf_nodes])
+cs.add_hyperparameters([num_trees, min_weight_frac_leaf, criterion,
+        max_features, min_samples_to_split, min_samples_in_leaf, max_leaf_nodes])
 
 # SMAC scenario oject
 scenario = Scenario({"run_obj": "quality",   # we optimize quality (alternative runtime)
