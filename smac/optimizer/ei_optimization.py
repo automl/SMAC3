@@ -317,6 +317,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
         return acq_val_incumbent, incumbent
 
+
 class DiffOpt(AcquisitionFunctionMaximizer):
     """Get candidate solutions via DifferentialEvolutionSolvers.
 

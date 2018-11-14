@@ -4,7 +4,7 @@ import george
 from smac.facade.smac_facade import SMAC
 from smac.runhistory.runhistory2epm import RunHistory2EPM4LogCost
 from smac.tae.execute_ta_run import StatusType
-from smac.epm.default_priors import DefaultPrior
+from smac.epm.gp_default_priors import DefaultPrior
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
 from smac.utils.util_funcs import get_types, get_rng
 

@@ -1,13 +1,13 @@
 
 import numpy as np
 
-from smac.epm.base_prior import BasePrior, TophatPrior, \
+from smac.epm.gp_base_prior import BasePrior, TophatPrior, \
     LognormalPrior, HorseshoePrior
 
 
 class DefaultPrior(BasePrior):
 
-    def __init__(self, n_dims, rng=None):
+    def __init__(self, n_dims: int, rng: np.random.RandomState=None):
         if rng is None:
             self.rng = np.random.RandomState(np.random.randint(0, 10000))
         else:
@@ -25,7 +25,7 @@ class DefaultPrior(BasePrior):
         # Prior for the noise
         self.horseshoe = HorseshoePrior(scale=0.1, rng=self.rng)
 
-    def lnprob(self, theta):
+    def lnprob(self, theta: np.ndarray):
         lp = 0
         # Covariance amplitude
         lp += self.ln_prior.lnprob(theta[0])
@@ -36,7 +36,7 @@ class DefaultPrior(BasePrior):
 
         return lp
 
-    def sample_from_prior(self, n_samples):
+    def sample_from_prior(self, n_samples: int):
         p0 = np.zeros([n_samples, self.n_dims])
         # Covariance amplitude
         p0[:, 0] = self.ln_prior.sample_from_prior(n_samples)[:, 0]
@@ -48,6 +48,6 @@ class DefaultPrior(BasePrior):
         p0[:, -1] = self.horseshoe.sample_from_prior(n_samples)[:, 0]
         return p0
 
-    def gradient(self, theta):
+    def gradient(self, theta: np.ndarray):
         # TODO: Implement real gradient here
         return np.zeros([theta.shape[0]])

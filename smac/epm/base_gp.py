@@ -10,7 +10,7 @@ class BaseModel(object):
         self.X = None
         self.y = None
 
-    def train(self, X, y):
+    def train(self, X: np.ndarray, y: np.ndarray):
         """
         Trains the model on the provided data.
 
@@ -24,7 +24,7 @@ class BaseModel(object):
         """
         raise NotImplementedError()
 
-    def update(self, X, y):
+    def update(self, X: np.ndarray, y: np.ndarray):
         """
         Update the model with the new additional data. Override this function if your
         model allows to do something smarter than simple retraining
@@ -41,7 +41,7 @@ class BaseModel(object):
         y = np.append(self.y, y, axis=0)
         self.train(X, y)
 
-    def predict(self, X_test):
+    def predict(self, X_test: np.ndarray):
         """
         Predicts for a given set of test data points the mean and variance of its target values
 
@@ -59,7 +59,7 @@ class BaseModel(object):
         """
         raise NotImplementedError()
 
-    def predict_marginalized_over_instances(self, X_test, **kwargs):
+    def predict_marginalized_over_instances(self, X_test: np.ndarray, **kwargs):
         """Predict mean and variance marginalized over all instances.
 
                 Returns the predictive mean and variance marginalised over all
