@@ -21,6 +21,7 @@ from smac.stats.stats import Stats
 from smac.tae.execute_ta_run import FirstRunCrashedException
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
+from smac.configspace.util import convert_configurations_to_array
 
 
 
@@ -279,12 +280,12 @@ class SMBO(object):
             ------
             float
         '''
-        
         if self.predict_incumbent:
+            configs = convert_configurations_to_array(self.runhistory.get_all_configs())
             costs = list(map(
                 lambda config:
-                    self.model.predict_marginalized_over_instances(config.get_array().reshape((1, -1)))[0][0][0],
-                self.runhistory.get_all_configs(),
+                    self.model.predict_marginalized_over_instances(config.reshape((1, -1)))[0][0][0],
+                configs,
             ))
             incumbent_value = np.min(costs)
             # won't need log(y) if EPM was already trained on log(y)
