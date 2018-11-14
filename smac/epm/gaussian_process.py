@@ -1,4 +1,3 @@
-
 import logging
 import george
 import numpy as np
@@ -102,7 +101,6 @@ class GaussianProcess(BaseModel):
 
         # Use the empirical mean of the data as mean for the GP
         self.mean = np.mean(self.y, axis=0)
-
         self.gp = george.GP(self.kernel, mean=self.mean)
 
         if do_optimize:
@@ -123,7 +121,7 @@ class GaussianProcess(BaseModel):
 
         self.is_trained = True
 
-    def get_noise(self):
+    def _get_noise(self):
         return self.noise
 
     def nll(self, theta):
