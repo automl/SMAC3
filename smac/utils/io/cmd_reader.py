@@ -624,7 +624,7 @@ class CMDReader(object):
                                type=list,
                                help=SUPPRESS)  # added after parsing --features
         scen_opts.add_argument("--initial-incumbent", "--initial_incumbent", dest='initial_incumbent',
-                               default="DEFAULT", type=str, choices=['DEFAULT', 'RANDOM'],
+                               default="DEFAULT", type=str, choices=['DEFAULT', 'RANDOM', 'LHD', 'SOBOL', 'FACTORIAL'],
                                help="[dev] DEFAULT is the default from the PCS.")
         scen_opts.add_argument("--paramfile", "--param-file", "--param_file", "--pcs-fn", "--pcs_fn", dest='pcs_fn',
                                type=str, action=ReadPCSFileAction,
