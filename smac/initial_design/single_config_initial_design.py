@@ -1,3 +1,4 @@
+from ConfigSpace import Configuration
 import numpy as np
 
 from smac.initial_design.initial_design import InitialDesign
@@ -51,7 +52,7 @@ class SingleConfigInitialDesign(InitialDesign):
                          traj_logger=traj_logger,
                          rng=rng)
 
-    def run(self):
+    def run(self) -> Configuration:
         """Runs the initial design by calling the target algorithm
         and adding new entries to the trajectory logger.
 
@@ -86,15 +87,13 @@ class SingleConfigInitialDesign(InitialDesign):
                                                                       "0"))
         except FirstRunCrashedException as err:
             if self.scenario.abort_on_first_run_crash:
-                raise
+                raise err
             else:
-                status = StatusType.CRASHED
+                # TODO make it possible to add the failed run to the runhistory
                 if self.scenario.run_obj == "quality":
                     cost = self.scenario.cost_for_crash
                 else:
                     cost = self.scenario.cutoff * scenario.par_factor
-                runtime = 0
-                additional_info = {}
 
         self.stats.inc_changed += 1  # first incumbent
 
@@ -104,7 +103,7 @@ class SingleConfigInitialDesign(InitialDesign):
 
         return initial_incumbent
 
-    def _select_configuration(self):
+    def _select_configuration(self) -> Configuration:
         """Selects a single configuration to run
 
         Returns

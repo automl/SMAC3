@@ -1,5 +1,6 @@
 import logging
 
+from ConfigSpace import Configuration
 import numpy as np
 
 from smac.tae.execute_ta_run import ExecuteTARun
@@ -58,7 +59,7 @@ class InitialDesign(object):
         self.rng = rng
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
-    def run(self):
+    def run(self) -> Configuration:
         """Run the initial design.
 
         Returns

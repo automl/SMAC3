@@ -73,7 +73,7 @@ class MultiConfigInitialDesign(InitialDesign):
         n_configs_x_params: int
             how many configurations will be used at most in the initial design (X*D)
         max_config_fracs: float
-            use at most X*budget in the initial design
+            use at most X*budget in the initial design. Not active if a time limit is given.
         """
         super().__init__(tae_runner=tae_runner,
                          scenario=scenario,
@@ -85,13 +85,13 @@ class MultiConfigInitialDesign(InitialDesign):
         self.intensifier = intensifier
         self.runhistory = runhistory
         self.aggregate_func = aggregate_func
-        
+
         n_params = len(self.scenario.cs.get_hyperparameters())
         self.init_budget = int(max(2, min(n_configs_x_params * n_params,
                           (max_config_fracs * scenario.ta_run_limit))))
-        
-    def select_configuration(self):
-        
+
+    def select_configuration(self) -> typing.List[Configuration]:
+
         if self.configs is None:
             return self._select_configurations()
         else:
@@ -110,19 +110,19 @@ class MultiConfigInitialDesign(InitialDesign):
             if config.origin is None:
                 config.origin = 'Initial design'
 
-        # run first design 
+        # run first design
         # ensures that first design is part of trajectory file
         scid = SingleConfigInitialDesign(tae_runner=self.tae_runner,
                                          scenario=self.scenario,
                                          stats=self.stats,
                                          traj_logger=self.traj_logger,
                                          rng=self.rng)
- 
+
         def get_config():
             return configs[0]
         scid._select_configuration = get_config
         scid.run()
-        
+
         if len(set(configs)) > 1:
             # intensify will skip all challenger that are identical with the incumbent;
             # if <configs> has only identical configurations,
@@ -133,5 +133,7 @@ class MultiConfigInitialDesign(InitialDesign):
                                                        incumbent=configs[0],
                                                        run_history=self.runhistory,
                                                        aggregate_func=self.aggregate_func)
+        else:
+            raise ValueError('Cannot use a multiple configuration initial design with only a single configuration!')
 
         return inc

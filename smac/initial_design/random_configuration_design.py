@@ -1,3 +1,4 @@
+from ConfigSpace import Configuration
 import numpy as np
 
 from smac.initial_design.single_config_initial_design import\
@@ -15,8 +16,8 @@ __license__ = "3-clause BSD"
 class RandomConfiguration(SingleConfigInitialDesign):
     """ Initial design that evaluates a single random configuration
 
-    Arguments
-    ---------
+    Attributes
+    ----------
 
     """
 
@@ -50,7 +51,7 @@ class RandomConfiguration(SingleConfigInitialDesign):
                          traj_logger=traj_logger,
                          rng=rng)
 
-    def _select_configuration(self):
+    def _select_configuration(self) -> Configuration:
         """Select a random configuration.
 
         Returns

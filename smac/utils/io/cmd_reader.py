@@ -479,12 +479,14 @@ class CMDReader(object):
                                help="[dev] The fraction of time to be used on "
                                     "intensification (versus choice of next "
                                     "Configurations).")
-        smac_opts.add_argument("--logy",
-                               dest='logy',
-                               default=False, type=truthy,                      
-                               help="[dev] Optimize on ln(y) transformed cost values."
-                               " All cost values have to be positive."
-                               " Automatically activated of objective is runtime.")
+        smac_opts.add_argument("--transform_y", "--transform-y",
+                               dest='transform_y',
+                               choices=["NONE", "LOG", "LOGS", "INVS"],
+                               default="NONE",                      
+                               help="[dev] Transform all observed cost values"
+                               " via log-transformations or inverse scaling."
+                               " The subfix \"s\" indicates that SMAC scales the"
+                               " y-values accordingly to apply the transformation.")
 
         ## RF Hyperparameters
         smac_opts.add_argument("--rf_num_trees","--rf-num-trees",

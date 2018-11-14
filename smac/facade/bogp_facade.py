@@ -6,7 +6,7 @@ from smac.runhistory.runhistory2epm import RunHistory2EPM4LogCost
 from smac.tae.execute_ta_run import StatusType
 from smac.epm.gp_default_priors import DefaultPrior
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
-from smac.utils.util_funcs import get_types
+from smac.utils.util_funcs import get_types, get_rng
 
 
 __author__ = "Marius Lindauer"
@@ -41,8 +41,13 @@ class BOGP(SMAC):
         scenario = kwargs['scenario']
         if scenario.initial_incumbent not in ['LHD', 'FACTORIAL', 'SOBOL']:
             scenario.initial_incumbent = 'SOBOL'
+            
+        if scenario.transform_y is 'NONE':
+            scenario.transform_y = "LOGS"
         
         if kwargs.get('model') is None:
+            _, self.rng = get_rng(rng=kwargs.get("rng", None), run_id=kwargs.get("run_id", None), logger=None)
+
             self.rng = np.random.RandomState(np.random.randint(0, 10000))
             cov_amp = 2
             _, bounds = get_types(kwargs['scenario'].cs, instance_features=None)
@@ -86,27 +91,6 @@ class BOGP(SMAC):
         # only 1 configuration per SMBO iteration
         self.solver.scenario.intensification_percentage = 1e-10
         self.solver.intensifier.min_chall = 1
-        
-        # optimize in log-space
-        num_params = len(self.solver.scenario.cs.get_hyperparameters())
-        self.solver.rh2EPM = RunHistory2EPM4LogCost(
-                    scenario=self.solver.scenario, num_params=num_params,
-                    success_states=[StatusType.SUCCESS, StatusType.CRASHED ],
-                    impute_censored_data=False,
-                    impute_state=None)
-        
-        # use LogEI
-        #=======================================================================
-        # self.solver.acquisition_func = LogEI(model=self.solver.model)
-        # self.solver.acq_optimizer = InterleavedLocalAndRandomSearch(
-        #         acquisition_function=self.solver.acquisition_func,
-        #         config_space=self.solver.scenario.cs,
-        #         rng=self.solver.rng,
-        #         max_steps=self.solver.scenario.sls_max_steps,
-        #         n_steps_plateau_walk=self.solver.scenario.sls_n_steps_plateau_walk
-        #     )
-        # self.solver.model.log_y = True
-        #=======================================================================
         
         # better improve acqusition function optimization
         # 1. increase number of sls iterations
