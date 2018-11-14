@@ -11,7 +11,7 @@ __email__ = "kimmiga@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class RandomConfigurationChooser(metaclass=ABC):
+class RandomConfigurationChooser(ABC):
     """
     Abstract base of helper classes to configure interleaving of
     random configurations in a list of challengers.
