@@ -6,7 +6,7 @@ from smac.runhistory.runhistory2epm import RunHistory2EPM4LogCost
 from smac.tae.execute_ta_run import StatusType
 from smac.epm.default_priors import DefaultPrior
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
-from smac.utils.util_funcs import get_types
+from smac.utils.util_funcs import get_types, get_rng
 
 
 __author__ = "Marius Lindauer"
@@ -46,6 +46,8 @@ class BOGP(SMAC):
             scenario.transform_y = "LOGS"
         
         if kwargs.get('model') is None:
+            _, self.rng = get_rng(rng=kwargs.get("rng", None), run_id=kwargs.get("run_id", None), logger=None)
+
             self.rng = np.random.RandomState(np.random.randint(0, 10000))
             cov_amp = 2
             _, bounds = get_types(kwargs['scenario'].cs, instance_features=None)

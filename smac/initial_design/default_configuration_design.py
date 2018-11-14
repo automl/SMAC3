@@ -1,3 +1,4 @@
+from ConfigSpace import Configuration
 import numpy as np
 
 from smac.initial_design.single_config_initial_design import \
@@ -50,7 +51,7 @@ class DefaultConfiguration(SingleConfigInitialDesign):
                          traj_logger=traj_logger,
                          rng=rng)
 
-    def _select_configuration(self):
+    def _select_configuration(self) -> Configuration:
         """Selects the default configuration.
 
         Returns

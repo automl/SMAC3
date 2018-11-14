@@ -1,7 +1,5 @@
 import typing
-import itertools
 
-import numpy as np
 from pyDOE import lhs
 
 from ConfigSpace.configuration_space import Configuration
@@ -10,15 +8,6 @@ from ConfigSpace.util import deactivate_inactive_hyperparameters
 
 from smac.initial_design.multi_config_initial_design import \
     MultiConfigInitialDesign
-from smac.intensification.intensification import Intensifier
-
-from smac.tae.execute_ta_run import ExecuteTARun
-from smac.stats.stats import Stats
-from smac.utils.io.traj_logging import TrajLogger
-from smac.scenario.scenario import Scenario
-from smac.runhistory.runhistory import RunHistory
-from symbol import factor
-from statsmodels.sandbox.formula import Factor
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
@@ -28,7 +17,7 @@ __license__ = "3-clause BSD"
 class LHDesign(MultiConfigInitialDesign):
     """ Latin Hypercube design
 
-    Parameters
+    Attributes
     ----------
     configs : typing.List[Configuration]
         List of configurations to be evaluated
@@ -39,7 +28,7 @@ class LHDesign(MultiConfigInitialDesign):
     aggregate_func
     """
 
-    def _select_configurations(self):
+    def _select_configurations(self) -> typing.List[Configuration]:
         """Selects a single configuration to run
 
         Returns
@@ -47,18 +36,18 @@ class LHDesign(MultiConfigInitialDesign):
         config: Configuration
             initial incumbent configuration
         """
-        
+
         cs = self.scenario.cs
         params = cs.get_hyperparameters()
-        
+
         lhd = lhs(n=len(params), samples=self.init_budget)
-        
+
         for idx, param in enumerate(params):
             if isinstance(param, FloatHyperparameter):
                 lhd[:,idx] = lhd[:,idx] * (param.upper - param.lower) + param.lower
             else:
                 raise ValueError("only FloatHyperparameters supported in LHD")
-        
+
         self.logger.debug("Initial Design")
         configs = []
         # add middle point in space
@@ -71,5 +60,5 @@ class LHDesign(MultiConfigInitialDesign):
             self.logger.debug(conf)
 
         self.logger.debug("Size of lhd: %d" %(len(configs)))
-            
+
         return configs

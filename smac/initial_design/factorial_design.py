@@ -1,23 +1,14 @@
-import typing
 import itertools
-
-import numpy as np
+import typing
 
 from ConfigSpace.configuration_space import Configuration
 from ConfigSpace.hyperparameters import Constant, NumericalHyperparameter, CategoricalHyperparameter, OrdinalHyperparameter
 from ConfigSpace.util import deactivate_inactive_hyperparameters
+import numpy as np
 
 from smac.initial_design.multi_config_initial_design import \
     MultiConfigInitialDesign
-from smac.intensification.intensification import Intensifier
 
-from smac.tae.execute_ta_run import ExecuteTARun
-from smac.stats.stats import Stats
-from smac.utils.io.traj_logging import TrajLogger
-from smac.scenario.scenario import Scenario
-from smac.runhistory.runhistory import RunHistory
-from symbol import factor
-from statsmodels.sandbox.formula import Factor
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -27,7 +18,7 @@ __license__ = "3-clause BSD"
 class FactorialInitialDesign(MultiConfigInitialDesign):
     """ Factorial initial design
 
-    Parameters
+    Attributes
     ----------
     configs : typing.List[Configuration]
         List of configurations to be evaluated
@@ -38,7 +29,7 @@ class FactorialInitialDesign(MultiConfigInitialDesign):
     aggregate_func
     """
 
-    def _select_configurations(self):
+    def _select_configurations(self) -> Configuration:
         """Selects a single configuration to run
 
         Returns
@@ -46,11 +37,11 @@ class FactorialInitialDesign(MultiConfigInitialDesign):
         config: Configuration
             initial incumbent configuration
         """
-        
+
         cs = self.scenario.cs
         params = cs.get_hyperparameters()
-        
-        values = [] 
+
+        values = []
         mid = []
         for param in params:
             if isinstance(param, Constant):
@@ -67,16 +58,16 @@ class FactorialInitialDesign(MultiConfigInitialDesign):
                 l = len(param.sequence)
                 mid.append(param.sequence[int(l/2)])
             values.append(v)
-            
+
         factorial_design = itertools.product(*values)
-        
+
         self.logger.debug("Initial Design")
         configs = [cs.get_default_configuration()]
         # add middle point in space
         conf_dict = dict([(p.name,v) for p,v in zip(params,mid)])
         middle_conf = deactivate_inactive_hyperparameters(conf_dict, cs)
         configs.append(middle_conf)
-        
+
         # add corner points
         for design in factorial_design:
             conf_dict = dict([(p.name,v) for p,v in zip(params,design)])
@@ -86,5 +77,5 @@ class FactorialInitialDesign(MultiConfigInitialDesign):
             self.logger.debug(conf)
 
         self.logger.debug("Size of factorial design: %d" %(len(configs)))
-            
+
         return configs
