@@ -88,6 +88,10 @@ class BOGP(SMAC):
                                             rng=self.rng, lower=lower, upper=upper)
             kwargs['model'] = model
         super().__init__(**kwargs)
+
+        if self.solver.scenario.n_features == 0:
+            raise NotImplementedError("BOGP cannot handle instances")
+
         self.logger.info(self.__class__)
         
         self.solver.random_configuration_chooser.prob = 0.0

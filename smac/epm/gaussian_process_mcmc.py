@@ -246,11 +246,6 @@ class GaussianProcessMCMC(BaseModel):
             v[np.where((v < np.finfo(v.dtype).eps) & (v > -np.finfo(v.dtype).eps))] = 0
 
         return m, v
-    
-    def predict_marginalized_over_instances(self, X_test, **kwargs):
-        
-        m, v = self.predict(X_test, **kwargs)
-        return m.reshape(-1,1),v.reshape(-1,1)
 
     def get_incumbent(self):
         """
