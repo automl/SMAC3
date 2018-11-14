@@ -15,7 +15,8 @@ from smac.scenario.scenario import Scenario
 # runhistory
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, \
-    RunHistory2EPM4LogCost, RunHistory2EPM4Cost
+    RunHistory2EPM4LogCost, RunHistory2EPM4Cost, \
+    RunHistory2EPM4InvScaledCost, RunHistory2EPM4LogScaledCost
 # Initial designs
 from smac.initial_design.initial_design import InitialDesign
 from smac.initial_design.default_configuration_design import \
@@ -182,9 +183,9 @@ class SMAC(object):
         else:
             self.stats = Stats(scenario)
 
-        if self.scenario.run_obj == "runtime" and not self.scenario.logy:
+        if self.scenario.run_obj == "runtime" and not self.scenario.transform_y == "LOG":
             self.logger.warn("Runtime as objective automatically activates log(y) transformation")
-            self.scenario.logy = True
+            self.scenario.transform_y = "LOG"
 
         # initialize empty runhistory
         if runhistory is None:
@@ -212,7 +213,7 @@ class SMAC(object):
                                               instance_features=scenario.feature_array,
                                               seed=rng.randint(MAXINT),
                                               pca_components=scenario.PCA_DIM,
-                                              log_y=scenario.logy,
+                                              log_y=scenario.transform_y in ["LOG", "LOGS"],
                                               num_trees=scenario.rf_num_trees,
                                               do_bootstrapping=scenario.rf_do_bootstrapping,
                                               ratio_features=scenario.rf_ratio_features,
@@ -221,7 +222,7 @@ class SMAC(object):
                                               max_depth=scenario.rf_max_depth)
         # initial acquisition function
         if acquisition_function is None:
-            if scenario.logy:
+            if scenario.transform_y in ["LOG", "LOGS"]:
                 acquisition_function = LogEI(model=model)
             else:
                 acquisition_function = EI(model=model)
@@ -418,11 +419,30 @@ class SMAC(object):
                     imputor=imputor)
 
             elif scenario.run_obj == 'quality':
-                runhistory2epm = RunHistory2EPM4Cost(scenario=scenario, num_params=num_params,
-                                                     success_states=[
-                                                         StatusType.SUCCESS,
-                                                         StatusType.CRASHED],
-                                                     impute_censored_data=False, impute_state=None)
+                if scenario.transform_y == "NONE":
+                    runhistory2epm = RunHistory2EPM4Cost(scenario=scenario, num_params=num_params,
+                                                         success_states=[
+                                                             StatusType.SUCCESS,
+                                                             StatusType.CRASHED],
+                                                         impute_censored_data=False, impute_state=None)
+                elif scenario.transform_y == "LOG":
+                    runhistory2epm = RunHistory2EPM4LogCost(scenario=scenario, num_params=num_params,
+                                                         success_states=[
+                                                             StatusType.SUCCESS,
+                                                             StatusType.CRASHED],
+                                                         impute_censored_data=False, impute_state=None)
+                elif scenario.transform_y == "LOGS":
+                    runhistory2epm = RunHistory2EPM4LogScaledCost(scenario=scenario, num_params=num_params,
+                                                         success_states=[
+                                                             StatusType.SUCCESS,
+                                                             StatusType.CRASHED],
+                                                         impute_censored_data=False, impute_state=None)
+                elif scenario.transform_y == "INVS":
+                    runhistory2epm = RunHistory2EPM4InvScaledCost(scenario=scenario, num_params=num_params,
+                                                         success_states=[
+                                                             StatusType.SUCCESS,
+                                                             StatusType.CRASHED],
+                                                         impute_censored_data=False, impute_state=None)
 
             else:
                 raise ValueError('Unknown run objective: %s. Should be either '
