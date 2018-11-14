@@ -28,7 +28,7 @@ __license__ = "3-clause BSD"
 class LHDesign(MultiConfigInitialDesign):
     """ Latin Hypercube design
 
-    Attributes
+    Parameters
     ----------
     configs : typing.List[Configuration]
         List of configurations to be evaluated
@@ -73,5 +73,3 @@ class LHDesign(MultiConfigInitialDesign):
         self.logger.debug("Size of lhd: %d" %(len(configs)))
             
         return configs
-            
-        

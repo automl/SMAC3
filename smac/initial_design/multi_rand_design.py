@@ -17,9 +17,9 @@ __license__ = "3-clause BSD"
 
 
 class MultiRandDesign(MultiConfigInitialDesign):
-    """ multi random design
+    """ Initial design that evaluates multiple random configurations
 
-    Attributes
+    Parameters
     ----------
     configs : typing.List[Configuration]
         List of configurations to be evaluated

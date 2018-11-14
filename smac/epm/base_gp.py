@@ -59,6 +59,27 @@ class BaseModel(object):
         """
         raise NotImplementedError()
 
+    def predict_marginalized_over_instances(self, X_test, **kwargs):
+        """Predict mean and variance marginalized over all instances.
+
+                Returns the predictive mean and variance marginalised over all
+                instances for a set of configurations.
+
+                Parameters
+                ----------
+                X : np.ndarray
+                    [n_samples, n_features (config)]
+
+                Returns
+                -------
+                means : np.ndarray of shape = [n_samples, 1]
+                    Predictive mean
+                vars : np.ndarray  of shape = [n_samples, 1]
+                    Predictive variance
+        """
+        m, v = self.predict(X_test, **kwargs)
+        return m.reshape(-1, 1), v.reshape(-1, 1)
+
     def _check_shapes_train(func):
         def func_wrapper(self, X, y, *args, **kwargs):
             assert X.shape[0] == y.shape[0]
