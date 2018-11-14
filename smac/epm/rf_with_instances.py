@@ -18,12 +18,11 @@ __version__ = "0.0.1"
 
 class RandomForestWithInstances(AbstractEPM):
 
-    """Interface to the random forest that takes instance features
-    into account.
+    """Random forest that takes instance features into account.
 
     Attributes
     ----------
-    rf_opts :
+    rf_opts : regression.rf_opts
         Random forest hyperparameter
     n_points_per_tree : int
     rf : regression.binary_rss_forest
@@ -52,8 +51,7 @@ class RandomForestWithInstances(AbstractEPM):
                  max_num_nodes: int=2**20,
                  seed: int=42,
                  **kwargs):
-        """Constructor
-
+        """
         Parameters
         ----------
         types : np.ndarray (D)
@@ -66,7 +64,7 @@ class RandomForestWithInstances(AbstractEPM):
             Specifies the bounds for continuous features.
         log_y: bool
             y values (passed to this RF) are expected to be log(y) transformed;
-            this will be considered during predicting 
+            this will be considered during predicting
         num_trees : int
             The number of trees in the random forest.
         do_bootstrapping : bool
@@ -153,7 +151,7 @@ class RandomForestWithInstances(AbstractEPM):
     def _init_data_container(self, X: np.ndarray, y: np.ndarray):
         """Fills a pyrfr default data container, s.t. the forest knows
         categoricals and bounds for continous data
-        
+
         Parameters
         ----------
         X : np.ndarray [n_samples, n_features]
@@ -210,7 +208,7 @@ class RandomForestWithInstances(AbstractEPM):
                     # within one tree, we want to use the
                     # arithmetic mean and not the geometric mean
                     means_per_tree.append(np.log(np.mean(np.exp(preds))))
-                mean = np.mean(means_per_tree) 
+                mean = np.mean(means_per_tree)
                 var = np.var(means_per_tree) # variance over trees as uncertainty estimate
             else:
                 mean, var = self.rf.predict_mean_var(row_X)
@@ -220,7 +218,7 @@ class RandomForestWithInstances(AbstractEPM):
         vars_ = np.array(vars_)
 
         return means.reshape((-1, 1)), vars_.reshape((-1, 1))
-    
+
     def predict_marginalized_over_instances(self, X: np.ndarray):
         """Predict mean and variance marginalized over all instances.
 
@@ -232,8 +230,8 @@ class RandomForestWithInstances(AbstractEPM):
         This method overwrites the same method of ~smac.epm.base_epm.AbstractEPM;
         the following method is random forest specific
         and follows the SMAC2 implementation;
-        it requires no distribution assumption 
-        to marginalize the uncertainty estimates 
+        it requires no distribution assumption
+        to marginalize the uncertainty estimates
 
         Parameters
         ----------
@@ -266,17 +264,17 @@ class RandomForestWithInstances(AbstractEPM):
         mean = np.zeros(X.shape[0])
         var = np.zeros(X.shape[0])
         for i, x in enumerate(X):
-            
+
             # marginalize over instances
             # 1. get all leaf values for each tree
-            preds_trees = [[] for i in range(self.rf_opts.num_trees)] 
-            
+            preds_trees = [[] for i in range(self.rf_opts.num_trees)]
+
             for feat in self.instance_features:
                 x_ = np.concatenate([x, feat])
                 preds_per_tree = self.rf.all_leaf_values(x_)
                 for tree_id, preds in enumerate(preds_per_tree):
                     preds_trees[tree_id] += preds
-                    
+
             # 2. average in each tree
             for tree_id in range(self.rf_opts.num_trees):
                 if self.log_y:
@@ -290,7 +288,7 @@ class RandomForestWithInstances(AbstractEPM):
             var_x = np.var(preds_trees)
             if var_x < self.var_threshold:
                 var_x = self.var_threshold
-                
+
             var[i] = var_x
             mean[i] = mean_x
 
