@@ -1,4 +1,0 @@
-MYPYPATH=smac/
-MYPYOPTS="--ignore-missing-imports --strict"
-MYPYOPTS=$MYPYOPTION "  --disallow-any-unimported --disallow-any-expr --disallow-any-decorated --disallow-any-explicit --disallow-any-generics --disallow-any-defs "
-mypy $MYPYOPTS $MYPYPATH
