@@ -1,6 +1,6 @@
 # SMAC v3 Project
 
-Copyright (C) 2016-2018  [ML4AAD Group](http://www.ml4aad.org/)
+Copyright (C) 2016-2018  [AutoML Group](http://www.automl.org/)
 
 __Attention__: This package is a re-implementation of the original SMAC tool
 (see reference below).
@@ -103,6 +103,6 @@ See examples/
 
 # Contact
 
-SMAC3 is developed by the [ML4AAD Group of the University of Freiburg](http://www.ml4aad.org/).
+SMAC3 is developed by the [AutoML Group of the University of Freiburg](http://www.automl.org/).
 
 If you found a bug, please report to https://github.com/automl/SMAC3
