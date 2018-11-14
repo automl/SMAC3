@@ -53,9 +53,9 @@ class BOGP(SMAC):
     def __init__(self, model_type='gp_mcmc', **kwargs):
         """
         Constructor
-        see ~smac.facade.smac_facade for docu
+        see ~smac.facade.smac_facade for documentation
         """
-        if 'model' not in kwargs or kwargs['model'] is None:
+        if kwargs.get('model') is None:
             self.rng = np.random.RandomState(np.random.randint(0, 10000))
             cov_amp = 2
             _, bounds = get_types(kwargs['scenario'].cs, instance_features=None)
