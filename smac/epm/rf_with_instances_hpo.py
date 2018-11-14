@@ -1,10 +1,4 @@
-import numpy as np
 import logging
-
-from pyrfr import regression
-from sklearn.model_selection import KFold
-import scipy.stats.distributions as scst
-from smac.utils.constants import N_TREES
 
 from ConfigSpace import (
     CategoricalHyperparameter,
@@ -13,15 +7,13 @@ from ConfigSpace import (
     ConfigurationSpace,
     Configuration,
 )
+import numpy as np
+from pyrfr import regression
+from sklearn.model_selection import KFold
+import scipy.stats.distributions as scst
 
 from smac.epm.rf_with_instances import RandomForestWithInstances
-
-__author__ = "Aaron Klein"
-__copyright__ = "Copyright 2015, ML4AAD"
-__license__ = "3-clause BSD"
-__maintainer__ = "Aaron Klein"
-__email__ = "kleinaa@cs.uni-freiburg.de"
-__version__ = "0.0.1"
+from smac.utils.constants import N_TREES
 
 
 MAX_NUM_NODES = 2 ** 20
@@ -31,12 +23,11 @@ N_POINTS_PER_TREE = -1
 
 
 class RandomForestWithInstancesHPO(RandomForestWithInstances):
-    """Interface to the random forest that takes instance features
-    into account.
+    """Random forest that takes instance features into account and performs automatic hyperparameter optimization.
 
     Attributes
     ----------
-    rf_opts :
+    rf_opts : pyrfr.regression.rf_opts
         Random forest hyperparameter
     n_points_per_tree : int
     rf : regression.binary_rss_forest
@@ -51,14 +42,17 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
     logger : logging.logger
     """
 
-    def __init__(self, types: np.ndarray,
-                 bounds: np.ndarray,
-                 log_y: bool=False,
-                 bootstrap: bool=False,
-                 seed: int=42):
-        """Constructor
-
-        Parameters
+    def __init__(
+        self,
+        types: np.ndarray,
+        bounds: np.ndarray,
+        log_y: bool=False,
+        bootstrap: bool=False,
+        n_iters: int=50,
+        n_splits: int=10,
+        seed: int=42,
+    ):
+        """Parameters
         ----------
         types : np.ndarray (D)
             Specifies the number of categorical values of an input dimension where
@@ -71,26 +65,12 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
         log_y: bool
             y values (passed to this RF) are expected to be log(y) transformed;
             this will be considered during predicting
-        num_trees : int
-            The number of trees in the random forest.
-        do_bootstrapping : bool
+        bootstrap : bool
             Turns on / off bootstrapping in the random forest.
-        n_points_per_tree : int
-            Number of points per tree. If <= 0 X.shape[0] will be used
-            in _train(X, y) instead
-        ratio_features : float
-            The ratio of features that are considered for splitting.
-        min_samples_split : int
-            The minimum number of data points to perform a split.
-        min_samples_leaf : int
-            The minimum number of data points in a leaf.
-        max_depth : int
-            The maximum depth of a single tree.
-        eps_purity : float
-            The minimum difference between two target values to be considered
-            different
-        max_num_nodes : int
-            The maxmimum total number of nodes in a tree
+        n_iters : int
+            Number of iterations for random search.
+        n_splits : int
+            Number of cross-validation splits.
         seed : int
             The seed that is passed to the random_forest_run library.
         """
@@ -107,12 +87,14 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
             max_depth=MAX_DEPTH,
             eps_purity=EPSILON_IMPURITY,
             max_num_nodes=MAX_NUM_NODES,
-            seed=seed
+            seed=seed,
         )
 
         self.types = types
         self.bounds = bounds
         self.log_y = log_y
+        self.n_iters = n_iters
+        self.n_splits = n_splits
         self.rng = regression.default_random_engine(seed)
         self.rs = np.random.RandomState(seed)
         self.bootstrap = bootstrap
@@ -132,20 +114,20 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
         self.rf = None  # type: regression.binary_rss_forest
 
         # This list will be read out by save_iteration() in the solver
-        self.set_hypers(self._get_configuration_space().get_default_configuration())
+        self._set_hypers(self._get_configuration_space().get_default_configuration())
         self.seed = seed
 
         self.logger = logging.getLogger(self.__module__ + "." +
                                         self.__class__.__name__)
 
-    def _train(self, X: np.ndarray, y: np.ndarray, **kwargs):
+    def _train(self, X: np.ndarray, y: np.ndarray, **kwargs) -> 'RandomForestWithInstancesHPO':
         """Trains the random forest on X and y.
 
         Parameters
         ----------
         X : np.ndarray [n_samples, n_features (config + instance features)]
             Input data points.
-        Y : np.ndarray [n_samples, ]
+        y : np.ndarray [n_samples, ]
             The corresponding target values.
 
         Returns
@@ -162,18 +144,22 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
         best_error = None
         best_config = None
         if X.shape[0] > 3:
-            for i in range(50):
+            for i in range(self.n_iters):
                 if i == 0:
                     configuration = cfg.get_default_configuration()
                 else:
                     configuration = cfg.sample_configuration()
-                n_splits = min(X.shape[0], 10)
+                n_splits = min(X.shape[0], self.n_splits)
                 kf = KFold(n_splits=n_splits)
-                error = 0
+                error = 0.0
                 for train_index, test_index in kf.split(X):
-                    error += self.eval_rf(c=configuration,
-                                          x=X[train_index, :], y=y[train_index],
-                                          x_test=X[test_index, :], y_test=y[test_index])
+                    error += self._eval_rf(
+                        c=configuration,
+                        X=X[train_index, :],
+                        y=y[train_index],
+                        X_test=X[test_index, :],
+                        y_test=y[test_index],
+                    )
                 self.logger.debug(error)
                 if best_error is None or error < best_error:
                     best_config = configuration
@@ -181,8 +167,10 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
         else:
             best_config = cfg.get_default_configuration()
 
-        self.rf_opts = self.set_conf(best_config, n_features=self.X.shape[1], num_data_points=X.shape[0], n_trees=N_TREES)
-        self.set_hypers(best_config)
+        self.rf_opts = self._set_conf(
+            c=best_config, n_features=self.X.shape[1], num_data_points=X.shape[0],
+        )
+        self._set_hypers(best_config)
 
         self.logger.debug("Use %s" % str(self.rf_opts))
         self.rf = regression.binary_rss_forest()
@@ -192,31 +180,73 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
 
         return self
 
-    def eval_rf(self, c: Configuration, x: np.ndarray, y: np.ndarray, x_test: np.ndarray, y_test: np.ndarray):
-        opts = self.set_conf(c, n_features=x.shape[1], num_data_points=x.shape[0])
+    def _eval_rf(
+        self,
+        c: Configuration,
+        X: np.ndarray,
+        y: np.ndarray,
+        X_test: np.ndarray,
+        y_test: np.ndarray,
+    ) -> float:
+        """Evaluate random forest configuration on train/test data.
+
+        Parameters
+        ----------
+        c : Configuration
+            Random forest configuration to evaluate on the train/test data
+        X : np.ndarray [n_samples, n_features (config + instance features)]
+            Training features
+        y : np.ndarray [n_samples, ]
+            Training targets
+        X_test : np.ndarray [n_samples, n_features (config + instance features)]
+            Validation features
+        y_test : np.ndarray [n_samples, ]
+            Validation targets
+
+        Returns
+        -------
+        float
+        """
+        opts = self._set_conf(c, n_features=X.shape[1], num_data_points=X.shape[0])
         rng = regression.default_random_engine(1)
         rf = regression.binary_rss_forest()
         rf.options = opts
-        data = self._init_data_container(x, y)
+        data = self._init_data_container(X, y)
         rf.fit(data, rng=rng)
 
         loss = 0
-        for row, lab in zip(x_test, y_test):
+        for row, lab in zip(X_test, y_test):
             m, v = rf.predict_mean_var(row)
             std = max(1e-8, np.sqrt(v))
             nllh = -scst.norm(loc=m, scale=std).logpdf(lab)
             loss += nllh
-            # m = rf.predict(row)
-            # loss += np.sqrt(mean_squared_error(y_true=lab, y_pred=m))
 
         return loss
 
-    def set_conf(self, c: Configuration, n_features: int, num_data_points: int, n_trees=None):
+    def _set_conf(
+        self,
+        c: Configuration,
+        n_features: int,
+        num_data_points: int,
+    ) -> regression.forest_opts:
+        """Transform a Configuration object a forest_opts object.
+
+        Parameters
+        ----------
+        c : Configuration
+            Hyperparameter configurations
+        n_features : int
+            Number of features used to calculate the feature subset in the random forest.
+        num_data_points : int
+            Number of data points (required by the random forest).
+
+        Returns
+        -------
+        pyrfr.regression.rf_opts
+        """
+
         rf_opts = regression.forest_opts()
-        if n_trees:
-            rf_opts.num_trees = n_trees
-        else:
-            rf_opts.num_trees = int(c["num_trees"])
+        rf_opts.num_trees = c["n_trees"]
         rf_opts.do_bootstrapping = c["do_bootstrapping"]
         rf_opts.tree_opts.max_num_nodes = 2 ** 20
 
@@ -234,7 +264,14 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
 
         return rf_opts
 
-    def set_hypers(self, c: Configuration) -> None:
+    def _set_hypers(self, c: Configuration) -> None:
+        """Set hyperparameters array.
+
+        Parameters
+        ----------
+        c : Configuration
+        """
+
         self.hypers = [
             int(c["num_trees"]),
             MAX_NUM_NODES,
@@ -249,13 +286,19 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
         ]
 
     def _get_configuration_space(self) -> ConfigurationSpace:
+        """Get the configuration space for the random forest.
+
+        Returns
+        -------
+        ConfigurationSpace
+        """
         cfg = ConfigurationSpace()
         cfg.seed(int(self.rs.randint(0, 1000)))
 
         num_trees = Constant("num_trees", value=N_TREES)
-        # lower=10, upper=100, default_value=10, log=True)
-        bootstrap = CategoricalHyperparameter("do_bootstrapping", choices=(self.bootstrap,), default_value=self.bootstrap)
-        # bootstrap = CategoricalHyperparameter("do_bootstrapping", choices=(True, False), default_value=True)
+        bootstrap = CategoricalHyperparameter(
+            "do_bootstrapping", choices=(self.bootstrap,), default_value=self.bootstrap,
+        )
         max_feats = CategoricalHyperparameter("max_features", choices=(3 / 6, 4 / 6, 5 / 6, 1), default_value=1)
         min_split = UniformIntegerHyperparameter("min_samples_to_split", lower=1, upper=10, default_value=2)
         min_leavs = UniformIntegerHyperparameter("min_samples_in_leaf", lower=1, upper=10, default_value=1)
