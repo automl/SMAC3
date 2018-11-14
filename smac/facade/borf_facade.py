@@ -75,13 +75,7 @@ class BORF(SMAC):
         # self.solver.model = model
         #=======================================================================
         
-        # no random configurations
-        #rand_chooser = ChooserNoCoolDown(10**10)
-        #self.solver.random_configuration_chooser = rand_chooser
-        
-        # random configuration with given probability
-        rand_chooser = ChooserProb(prob=0.00, rng=self.solver.rng)
-        self.solver.random_configuration_chooser = rand_chooser
+        self.solver.random_configuration_chooser.prob = 0.0
         
         # only 1 configuration per SMBO iteration
         self.solver.scenario.intensification_percentage = 1e-10

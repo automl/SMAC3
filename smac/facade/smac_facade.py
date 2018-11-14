@@ -193,9 +193,9 @@ class SMAC(object):
         if runhistory.aggregate_func is None:
             runhistory.aggregate_func = aggregate_func
 
-        random_configuration_chooser = SMAC._get_random_configuration_chooser(
-            random_configuration_chooser=random_configuration_chooser,
-            rng=rng)
+        if not random_configuration_chooser:
+            random_configuration_chooser = ChooserProb(prob=scenario.rand_prob,
+                                                       rng=rng)
 
         # reset random number generator in config space to draw different
         # random configurations with each seed given to SMAC
@@ -453,33 +453,6 @@ class SMAC(object):
             self.solver = SMBO(**smbo_args)
         else:
             self.solver = smbo_class(**smbo_args)
-
-    @staticmethod
-    def _get_random_configuration_chooser(random_configuration_chooser:RandomConfigurationChooser,
-                                          rng:np.random.RandomState):
-        """
-        Initialize random configuration chooser
-        If random_configuration_chooser is falsy, initialize with ChooserNoCoolDown(2.0)
-
-        Parameters
-        ----------
-        random_configuration_chooser: RandomConfigurationChooser
-            generator for picking random configurations
-            or configurations optimized based on acquisition function
-        rng : np.random.RandomState
-            Random number generator
-
-        Returns
-        -------
-        RandomConfigurationChooser
-
-        """
-        if not random_configuration_chooser:
-            #return ChooserCosineAnnealing(prob_max=0.5, prob_min=0.001,
-            #     restart_iteration= 10,
-            #     rng=rng)
-            return ChooserNoCoolDown(2.0)
-        return random_configuration_chooser
 
     def optimize(self):
         """

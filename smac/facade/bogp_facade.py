@@ -91,13 +91,7 @@ class BOGP(SMAC):
         super().__init__(**kwargs)
         self.logger.info(self.__class__)
         
-        # no random configurations
-        #rand_chooser = ChooserNoCoolDown(10**10)
-        #self.solver.random_configuration_chooser = rand_chooser
-        
-        # random configuration with given probability
-        rand_chooser = ChooserProb(prob=0.2, rng=self.solver.rng)
-        self.solver.random_configuration_chooser = rand_chooser
+        self.solver.random_configuration_chooser.prob = 0.0
         
         # only 1 configuration per SMBO iteration
         self.solver.scenario.intensification_percentage = 1e-10

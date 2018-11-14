@@ -543,6 +543,11 @@ class CMDReader(object):
                     " Set to 1 and in combination with very small intensification-percentage."
                     " it will deactivate randomly sampled configurations"
                     " (and hence, extrapolation of random forest will be an issue.)")
+        smac_opts.add_argument("--rand_prob","--rand-prob",
+               dest='rand_prob',
+               default=0.5, type=float,
+               help="[dev] probablity to run a random configuration"
+               " instead of configuration optimized on the acquisition function")
 
         self.parser.add_parser(self.smac_parser)
         self.smac_cmd_actions, self.smac_cmd_translations = CMDReader._extract_action_info(self.smac_parser._actions)
