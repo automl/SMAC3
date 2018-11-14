@@ -28,7 +28,7 @@ __license__ = "3-clause BSD"
 class SobolDesign(MultiConfigInitialDesign):
     """ Sobol sequence design
 
-    Attributes
+    Parameters
     ----------
     configs : typing.List[Configuration]
         List of configurations to be evaluated
@@ -73,5 +73,3 @@ class SobolDesign(MultiConfigInitialDesign):
         self.logger.debug("Length of Sobol sequence: %d" %(len(configs)))
             
         return configs
-            
-        
