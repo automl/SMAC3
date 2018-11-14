@@ -15,7 +15,6 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_facade import SMAC
-from smac.facade.bogp_facade import BOGP
 
 boston = load_boston()
 
@@ -94,7 +93,7 @@ scenario = Scenario({"run_obj": "quality",   # we optimize quality (alternative 
                      })
 
 # To optimize, we pass the function to the SMAC-object
-smac = BOGP(scenario=scenario, rng=np.random.RandomState(42),
+smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
             tae_runner=rf_from_cfg)
 
 # Example call of the function with default values
