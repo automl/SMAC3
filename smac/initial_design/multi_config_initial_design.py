@@ -41,8 +41,8 @@ class MultiConfigInitialDesign(InitialDesign):
                  intensifier: Intensifier,
                  aggregate_func: typing.Callable,
                  configs: typing.Optional[typing.List[Configuration]]=None,
-                 n_configs_x_params: int = 10,
-                 max_config_fracs: float = 0.25
+                 n_configs_x_params: int=10,
+                 max_config_fracs: float=0.25
                  ):
         """Constructor
 

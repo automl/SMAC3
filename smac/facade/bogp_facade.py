@@ -72,7 +72,7 @@ class BOGP(SMAC):
             kwargs['model'] = model
         super().__init__(**kwargs)
 
-        if self.solver.scenario.n_features >= 0:
+        if self.solver.scenario.n_features > 0:
             raise NotImplementedError("BOGP cannot handle instances")
 
         self.logger.info(self.__class__)

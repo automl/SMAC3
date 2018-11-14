@@ -27,7 +27,7 @@ __license__ = "3-clause BSD"
 class FactorialInitialDesign(MultiConfigInitialDesign):
     """ Factorial initial design
 
-    Attributes
+    Parameters
     ----------
     configs : typing.List[Configuration]
         List of configurations to be evaluated
@@ -88,5 +88,3 @@ class FactorialInitialDesign(MultiConfigInitialDesign):
         self.logger.debug("Size of factorial design: %d" %(len(configs)))
             
         return configs
-            
-        
