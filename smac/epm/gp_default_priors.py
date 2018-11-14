@@ -1,7 +1,7 @@
 
 import numpy as np
 
-from smac.epm.base_prior import BasePrior, TophatPrior, \
+from smac.epm.gp_base_prior import BasePrior, TophatPrior, \
     LognormalPrior, HorseshoePrior
 
 
