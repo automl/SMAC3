@@ -4,7 +4,7 @@ import numpy as np
 
 from scipy import optimize
 
-from smac.utils import normalization
+from smac.epm import normalization
 from smac.epm.base_gp import BaseModel
 
 logger = logging.getLogger(__name__)

@@ -7,7 +7,7 @@ from copy import deepcopy
 
 from smac.epm.base_gp import BaseModel
 from smac.epm.gaussian_process import GaussianProcess
-from smac.utils import normalization
+from smac.epm import normalization
 
 logger = logging.getLogger(__name__)
 
