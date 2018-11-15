@@ -9,7 +9,8 @@ import logging
 
 from smac.utils.io.cmd_reader import CMDReader
 
-class TestArgs():
+
+class TestArgs:
 
     def __init__(self, sf, seed, mi, vl):
         self.scenario_file = sf
@@ -22,6 +23,7 @@ class TestArgs():
                 '--seed', str(self.seed),
                 '--runcount-limit', str(self.max_iterations),
                 '--verbose', self.verbose_level]
+
 
 class CMDReaderTest(unittest.TestCase):
 
@@ -53,6 +55,7 @@ class CMDReaderTest(unittest.TestCase):
         self.cr.write_smac_options_to_doc(path="test.rst")
         self.cr.write_scenario_options_to_doc(path="test.rst")
         os.remove("./test.rst")
+
 
 if __name__ == "__main__":
     unittest.main()
