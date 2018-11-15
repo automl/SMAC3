@@ -105,4 +105,6 @@ See examples/
 
 SMAC3 is developed by the [AutoML Group of the University of Freiburg](http://www.automl.org/).
 
-If you found a bug, please report to https://github.com/automl/SMAC3
+If you found a bug, please report to <https://github.com/automl/SMAC3/issues>.
+
+Our guidelines for contributing to this package can be found [here](https://github.com/automl/SMAC3/blob/master/.github/CONTRIBUTING.md)
