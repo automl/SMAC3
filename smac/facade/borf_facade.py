@@ -54,6 +54,10 @@ class BORF(SMAC):
         """
         
         scenario = kwargs['scenario']
+        
+        if scenario.initial_incumbent not in ['LHD', 'FACTORIAL', 'SOBOL']:
+            scenario.initial_incumbent = 'SOBOL'
+        
         if scenario.transform_y is 'NONE':
             scenario.transform_y = "LOGS"
         #scenario.logy = True
@@ -72,7 +76,6 @@ class BORF(SMAC):
         #=======================================================================
         # scenario = self.solver.scenario
         # types, bounds = get_types(scenario.cs, scenario.feature_array)
-        # # TODO: We don't support instances here?
         # model = RandomForestWithInstancesHPO(types=types,
         #                                       bounds=bounds,
         #                                       seed=self.solver.rng.randint(MAXINT),
