@@ -263,13 +263,27 @@ details on how to wrap your algorithm.</p>
 <p>You can also run SMAC with <code class="code docutils literal notranslate"><span class="pre">--verbose</span> <span class="pre">DEBUG</span></code> to see how <em>SMAC</em> tried to call your algorithm.</p>
 <p class="rubric">Can I restore SMAC from a previous state?</p>
 <p>Use the <a class="reference external" href="basic_usage.html#restorestate">restore-option</a>.</p>
-<p class="rubric">I discovered a bug/have criticism or ideas on <em>SMAC</em>. Where should I report to?</p>
-<p><em>SMAC</em> uses the
-<a class="reference external" href="https://github.com/automl/SMAC3/issues">GitHub issue-tracker</a> to take care
-of bugs and questions. If you experience problems with <em>SMAC</em>, try to provide
-a full error report with all the typical information (OS, version,
-console-output, minimum working example, …). This makes it a lot easier to
-reproduce the error and locate the problem.</p>
+<p class="rubric">I discovered a bug or SMAC does not behave as expected. Where should I report to?</p>
+<p>Open an issue in our issue list on GitHub. Before you report a bug, please make sure that:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Your bug hasn’t already been reported in our issue tracker</li>
+<li>You are using the latest SMAC3 version.</li>
+</ul>
+</div></blockquote>
+<p>If you found an issue, please provide us with the following information:</p>
+<blockquote>
+<div><ul class="simple">
+<li>A description of the problem</li>
+<li>An example to reproduce the problem</li>
+<li>Any information about your setup that could be helpful to resolve the bug (such as installed python packages)</li>
+<li>Feel free, to add a screenshot showing the issue</li>
+</ul>
+</div></blockquote>
+<p class="rubric">I want to contribute code or discuss a new idea. Where should I report to?</p>
+<p><em>SMAC</em> uses the <a class="reference external" href="https://github.com/automl/SMAC3/issues">GitHub issue-tracker</a> to also take care
+of questions and feedback and is the preferred location for discussing new features and ongoing work. Please also have a look at our
+<a class="reference external" href="https://github.com/automl/SMAC3/blob/master/.github/CONTRIBUTING.md">contribution guide</a>.</p>
 <p class="rubric">What is the meaning of <em>deterministic</em>?</p>
 <p>If the <em>deterministic</em> flag is set to <strong>False</strong> the target algorithm is assumed to be non-deterministic.
 To evaluate a configuration of a non-deterministic algorithm, multiple runs with different seeds will be evaluated

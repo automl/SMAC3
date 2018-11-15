@@ -249,16 +249,22 @@
             
   <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="requirements">
-<span id="id1"></span><h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
-<p>The random forest used in SMAC depends on a C++11 compatible compiler
-and on SWIG (&gt;3.0).</p>
-<p>To install both requirements system-wide on a linux system with apt,
+<div class="section" id="system-requirements">
+<span id="requirements"></span><h2>System Requirements<a class="headerlink" href="#system-requirements" title="Permalink to this headline">¶</a></h2>
+<p>SMAC has the following system requirements:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Linux operating system (for example Ubuntu),</li>
+<li>Python (&gt;=3.5.2).</li>
+<li>C++ compiler (with C++11 supports) and SWIG (version 3.0 or later)</li>
+</ul>
+</div></blockquote>
+<p>To install the C++ compiler and SWIG system-wide on a linux system with apt,
 please call:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install build-essential swig
 </pre></div>
 </div>
-<p>If you use Anaconda, you have to install both gcc and SWIG from Anaconda to
+<p>If you use Anaconda, you have to install both, gcc and SWIG, from Anaconda to
 prevent compilation errors:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda install gxx_linux-64 gcc_linux-64 swig
 </pre></div>
@@ -268,14 +274,16 @@ prevent compilation errors:</p>
 <span id="installation-pypi"></span><h2>Installation from pypi<a class="headerlink" href="#installation-from-pypi" title="Permalink to this headline">¶</a></h2>
 <p>To install SMAC3 from pypi, please use the following command on the command
 line:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install smac
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># First install all requirements</span>
+curl https://raw.githubusercontent.com/automl/smac3/master/requirements.txt <span class="p">|</span> xargs -n <span class="m">1</span> -L <span class="m">1</span> pip install
+pip install smac
 </pre></div>
 </div>
 <p>If you want to install it in the user space (e.g., because of missing
 permissions), please add the option <code class="code docutils literal notranslate"><span class="pre">--user</span></code> or create a virtualenv.</p>
 </div>
 <div class="section" id="manual-installation">
-<span id="id2"></span><h2>Manual Installation<a class="headerlink" href="#manual-installation" title="Permalink to this headline">¶</a></h2>
+<span id="id1"></span><h2>Manual Installation<a class="headerlink" href="#manual-installation" title="Permalink to this headline">¶</a></h2>
 <p>To install SMAC3 from command line, please type the following commands on the
 command line:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/automl/SMAC3
