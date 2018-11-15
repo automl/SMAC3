@@ -1,21 +1,15 @@
 import unittest
-import sys
+import unittest.mock
 
 import numpy as np
-import pyrfr.regression
 
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
-    UniformFloatHyperparameter, UniformIntegerHyperparameter, Constant, \
+    UniformFloatHyperparameter, UniformIntegerHyperparameter, \
     OrdinalHyperparameter
 
 from smac.epm.rf_with_instances import RandomForestWithInstances
 import smac
 from smac.utils.util_funcs import get_types
-
-if sys.version_info[0] == 2:
-    import mock
-else:
-    from unittest import mock
 
 
 class TestRFWithInstances(unittest.TestCase):
@@ -57,12 +51,12 @@ class TestRFWithInstances(unittest.TestCase):
                                           pca_components=2,
                                           instance_features=F)
         model.train(X, Y)
-        
+
         self.assertEqual(model.n_params, 10)
         self.assertEqual(model.n_feats, 10)
         self.assertIsNotNone(model.pca)
         self.assertIsNotNone(model.scaler)
-        
+
     def test_predict_marginalized_over_instances_wrong_X_dimensions(self):
         rs = np.random.RandomState(1)
 
@@ -76,7 +70,7 @@ class TestRFWithInstances(unittest.TestCase):
         self.assertRaisesRegexp(ValueError, "Expected 2d array, got 3d array!",
                                 model.predict_marginalized_over_instances, X)
 
-    @mock.patch.object(RandomForestWithInstances, 'predict')
+    @unittest.mock.patch.object(RandomForestWithInstances, 'predict')
     def test_predict_marginalized_over_instances_no_features(self, rf_mock):
         """The RF should fall back to the regular predict() method."""
 
@@ -104,7 +98,7 @@ class TestRFWithInstances(unittest.TestCase):
         self.assertEqual(means.shape, (20, 1))
         self.assertEqual(vars.shape, (20, 1))
 
-    @mock.patch.object(RandomForestWithInstances, 'predict')
+    @unittest.mock.patch.object(RandomForestWithInstances, 'predict')
     def test_predict_marginalized_over_instances_mocked(self, rf_mock):
         """Use mock to count the number of calls to predict()"""
 
@@ -137,7 +131,6 @@ class TestRFWithInstances(unittest.TestCase):
             self.assertEqual(vars[i], 1.e-05)
 
     def test_predict_with_actual_values(self):
-        print()
         X = np.array([
             [0., 0., 0.],
             [0., 0., 1.],
@@ -156,7 +149,6 @@ class TestRFWithInstances(unittest.TestCase):
             [100.2],
             [109.],
             [109.2]], dtype=np.float64)
-        # print(X.shape, y.shape)
         model = RandomForestWithInstances(types=np.array([0, 0, 0], dtype=np.uint),
                                           bounds=np.array([(0, np.nan), (0, np.nan), (0, np.nan)], dtype=object),
                                           instance_features=None, seed=12345,

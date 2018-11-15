@@ -1,9 +1,10 @@
+from copy import deepcopy
 import logging
+import typing
+
 import george
 import emcee
 import numpy as np
-
-from copy import deepcopy
 
 from smac.epm.base_gp import BaseModel
 from smac.epm.gaussian_process import GaussianProcess
@@ -18,7 +19,10 @@ class GaussianProcessMCMC(BaseModel):
     def __init__(self, kernel: george.kernels.Kernel, prior: BasePrior=None,
                  n_hypers: int=20, chain_length: int=2000, burnin_steps: int=2000,
                  normalize_output: bool=False, normalize_input: bool=True,
-                 rng: np.random.RandomState=None, lower: np.ndarray=None, upper: np.ndarray=None, noise: int=-8):
+                 rng: typing.Optional[np.random.RandomState]=None,
+                 lower: typing.Optional[np.ndarray]=None,
+                 upper: typing.Optional[np.ndarray]=None,
+                 noise: int=-8):
         """
         GaussianProcess model based on the george GP library that uses MCMC
         sampling to marginalise over the hyperparmeters. If you use this class
@@ -186,12 +190,12 @@ class GaussianProcessMCMC(BaseModel):
         # hyperparameters live on a log scale
         if np.any((-20 > theta) + (theta > 20)):
             return -np.inf
-            
+
         # The last entry is always the noise
         sigma_2 = np.exp(theta[-1])
         # Update the kernel and compute the lnlikelihood.
         self.gp.kernel.set_parameter_vector(theta[:-1])
-        
+
         try:
             self.gp.compute(self.X, yerr=np.sqrt(sigma_2))
         except:
@@ -231,7 +235,9 @@ class GaussianProcessMCMC(BaseModel):
         mu = np.zeros([len(self.models), X_test.shape[0]])
         var = np.zeros([len(self.models), X_test.shape[0]])
         for i, model in enumerate(self.models):
-            mu[i], var[i] = model.predict(X_test)
+            mu_tmp, var_tmp = model.predict(X_test)
+            mu[i] = mu_tmp.flatten()
+            var[i] = var_tmp.flatten()
 
         m = mu.mean(axis=0)
 
@@ -246,6 +252,11 @@ class GaussianProcessMCMC(BaseModel):
         else:
             v = np.clip(v, np.finfo(v.dtype).eps, np.inf)
             v[np.where((v < np.finfo(v.dtype).eps) & (v > -np.finfo(v.dtype).eps))] = 0
+
+        if len(m.shape) == 1:
+            m = m.reshape((-1, 1))
+        if len(v.shape) == 1:
+            v = v.reshape((-1, 1))
 
         return m, v
 

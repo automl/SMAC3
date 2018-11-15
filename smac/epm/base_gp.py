@@ -82,8 +82,13 @@ class BaseModel(object):
 
     def _check_shapes_train(func):
         def func_wrapper(self, X, y, *args, **kwargs):
-            assert X.shape[0] == y.shape[0]
-            assert len(X.shape) == 2
+            if len(X.shape) != 2:
+                raise ValueError('Expected 2d array, got %dd array!' % len(X.shape))
+            if X.shape[1] != self.lower.shape[0]:
+                raise ValueError('Rows in X should have %d entries but have %d!' %
+                                 (self.lower.shape[0], X.shape[1]))
+            if X.shape[0] != y.shape[0]:
+                raise ValueError('X.shape[0] (%s) != y.shape[0] (%s)' % (X.shape[0], y.shape[0]))
             y = y.flatten()
             assert len(y.shape) == 1
             return func(self, X, y, *args, **kwargs)
@@ -91,7 +96,11 @@ class BaseModel(object):
 
     def _check_shapes_predict(func):
         def func_wrapper(self, X, *args, **kwargs):
-            assert len(X.shape) == 2
+            if len(X.shape) != 2:
+                raise ValueError('Expected 2d array, got %dd array!' % len(X.shape))
+            if X.shape[1] != self.lower.shape[0]:
+                raise ValueError('Rows in X should have %d entries but have %d!' %
+                                 (self.lower.shape[0], X.shape[1]))
             return func(self, X, *args, **kwargs)
 
         return func_wrapper

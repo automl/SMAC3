@@ -1,7 +1,8 @@
 import logging
+import typing
+
 import george
 import numpy as np
-
 from scipy import optimize
 
 from smac.epm import normalization
@@ -17,7 +18,8 @@ class GaussianProcess(BaseModel):
                  noise: float=1e-3, use_gradients: bool=False,
                  normalize_output: bool=False,
                  normalize_input: bool=True,
-                 lower: bool=None, upper: bool=None, rng: np.random.RandomState=None):
+                 lower: typing.Optional[np.ndarray]=None, upper: typing.Optional[np.ndarray]=None,
+                 rng: typing.Optional[np.random.RandomState]=None):
         """
         Interface to the george GP library. The GP hyperparameter are obtained
         by optimizing the marginal log likelihood.
@@ -168,14 +170,14 @@ class GaussianProcess(BaseModel):
 
         self.gp.kernel.set_parameter_vector(theta[:-1])
         noise = np.exp(theta[-1])
-        
+
         self.gp.compute(self.X, yerr=np.sqrt(noise))
 
         self.gp._compute_alpha(self.y)
         K_inv = self.gp.solver.apply_inverse(np.eye(self.gp._alpha.size),
                                              in_place=True)
 
-        # The gradients of the Gram matrix, for the noise this is just 
+        # The gradients of the Gram matrix, for the noise this is just
         # the identity matrix
         Kg = self.gp.kernel.gradient(self.gp._x)
         Kg = np.concatenate((Kg, np.eye(Kg.shape[0])[:, :, None]), axis=2)
@@ -292,6 +294,11 @@ class GaussianProcess(BaseModel):
             var = np.clip(var, np.finfo(var.dtype).eps, np.inf)
             var[np.where((var < np.finfo(var.dtype).eps) & (var > -np.finfo(var.dtype).eps))] = 0
 
+        if len(mu.shape) == 1:
+            mu = mu.reshape((-1, 1))
+        if len(var.shape) == 1:
+            var = var.reshape((-1, 1))
+
         return mu, var
 
     def sample_functions(self, X_test: np.ndarray, n_funcs: int=1) -> np.ndarray:
@@ -329,7 +336,7 @@ class GaussianProcess(BaseModel):
             return funcs[None, :]
         else:
             return funcs
-        
+
     def get_incumbent(self):
         """
         Returns the best observed point and its function value
