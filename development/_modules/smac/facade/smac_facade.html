@@ -1,0 +1,900 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>smac.facade.smac_facade &mdash; SMAC 0.9.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> SMAC
+          
+
+          
+            
+            <img src="../../../_static/SMAC3.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.9.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../manual.html">Manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../basic_usage.html">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../options.html">Options and file formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tae.html">Target Algorithm Evaluator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../psmac.html">Parallel SMAC (pSMAC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../validation.html">Validation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.configspace.html">smac.configspace package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.configspace.util.html">smac.configspace.util module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.epm.html">smac.epm package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.base_epm.html">smac.epm.base_epm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.base_imputor.html">smac.epm.base_imputor module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.facade.html">smac.facade package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.epils_facade.html">smac.facade.epils_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_facade.html">smac.facade.smac_facade module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.initial_design.html">smac.initial_design package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.initial_design.default_configuration_design.html">smac.initial_design.default_configuration_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.initial_design.initial_design.html">smac.initial_design.initial_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.initial_design.multi_config_initial_design.html">smac.initial_design.multi_config_initial_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.initial_design.random_configuration_design.html">smac.initial_design.random_configuration_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.initial_design.single_config_initial_design.html">smac.initial_design.single_config_initial_design module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.runhistory.html">smac.runhistory package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.runhistory.runhistory.html">smac.runhistory.runhistory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.runhistory.runhistory2epm.html">smac.runhistory.runhistory2epm module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.scenario.html">smac.scenario package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.scenario.scenario.html">smac.scenario.scenario module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.stats.html">smac.stats package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.stats.stats.html">smac.stats.stats module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.tae.html">smac.tae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.utils.html">smac.utils package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.io.html">smac.utils.io package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.utils.io.cmd_reader.html">smac.utils.io.cmd_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.utils.io.input_reader.html">smac.utils.io.input_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.utils.io.output_directory.html">smac.utils.io.output_directory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.utils.io.output_writer.html">smac.utils.io.output_writer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.utils.io.traj_logging.html">smac.utils.io.traj_logging module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.constants.html">smac.utils.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.logging.html">smac.utils.logging module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.util_funcs.html">smac.utils.util_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.validate.html">smac.utils.validate module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.smac_cli.html">smac.smac_cli module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../faq.html">F.A.Q.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SMAC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>smac.facade.smac_facade</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for smac.facade.smac_facade</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># tae</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">ExecuteTARun</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_old</span> <span class="k">import</span> <span class="n">ExecuteTARunOld</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_func</span> <span class="k">import</span> <span class="n">ExecuteTAFuncDict</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">StatusType</span>
+<span class="c1"># stats and options</span>
+<span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="k">import</span> <span class="n">Stats</span>
+<span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
+<span class="c1"># runhistory</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="k">import</span> <span class="n">AbstractRunHistory2EPM</span><span class="p">,</span> \
+    <span class="n">RunHistory2EPM4LogCost</span><span class="p">,</span> <span class="n">RunHistory2EPM4Cost</span><span class="p">,</span> \
+    <span class="n">RunHistory2EPM4InvScaledCost</span><span class="p">,</span> <span class="n">RunHistory2EPM4LogScaledCost</span>
+<span class="c1"># Initial designs</span>
+<span class="kn">from</span> <span class="nn">smac.initial_design.initial_design</span> <span class="k">import</span> <span class="n">InitialDesign</span>
+<span class="kn">from</span> <span class="nn">smac.initial_design.default_configuration_design</span> <span class="k">import</span> \
+    <span class="n">DefaultConfiguration</span>
+<span class="kn">from</span> <span class="nn">smac.initial_design.random_configuration_design</span> <span class="k">import</span> <span class="n">RandomConfiguration</span>
+<span class="kn">from</span> <span class="nn">smac.initial_design.latin_hypercube_design</span> <span class="k">import</span> <span class="n">LHDesign</span>
+<span class="kn">from</span> <span class="nn">smac.initial_design.factorial_design</span> <span class="k">import</span> <span class="n">FactorialInitialDesign</span>
+<span class="kn">from</span> <span class="nn">smac.initial_design.sobol_design</span> <span class="k">import</span> <span class="n">SobolDesign</span> 
+<span class="kn">from</span> <span class="nn">smac.initial_design.multi_config_initial_design</span> <span class="k">import</span> \
+    <span class="n">MultiConfigInitialDesign</span>
+<span class="c1"># intensification</span>
+<span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="k">import</span> <span class="n">Intensifier</span>
+<span class="c1"># optimizer</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.smbo</span> <span class="k">import</span> <span class="n">SMBO</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="k">import</span> <span class="n">average_cost</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="k">import</span> <span class="n">EI</span><span class="p">,</span> <span class="n">LogEI</span><span class="p">,</span> <span class="n">AbstractAcquisitionFunction</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="k">import</span> <span class="n">InterleavedLocalAndRandomSearch</span><span class="p">,</span> \
+    <span class="n">AcquisitionFunctionMaximizer</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.random_configuration_chooser</span> <span class="k">import</span> <span class="n">ChooserNoCoolDown</span><span class="p">,</span> \
+    <span class="n">RandomConfigurationChooser</span><span class="p">,</span> <span class="n">ChooserCosineAnnealing</span><span class="p">,</span> <span class="n">ChooserProb</span>
+<span class="c1"># epm</span>
+<span class="kn">from</span> <span class="nn">smac.epm.rf_with_instances</span> <span class="k">import</span> <span class="n">RandomForestWithInstances</span>
+<span class="kn">from</span> <span class="nn">smac.epm.rfr_imputator</span> <span class="k">import</span> <span class="n">RFRImputator</span>
+<span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="k">import</span> <span class="n">AbstractEPM</span>
+<span class="c1"># utils</span>
+<span class="kn">from</span> <span class="nn">smac.utils.util_funcs</span> <span class="k">import</span> <span class="n">get_types</span>
+<span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="k">import</span> <span class="n">TrajLogger</span>
+<span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="k">import</span> <span class="n">MAXINT</span><span class="p">,</span> <span class="n">N_TREES</span>
+<span class="kn">from</span> <span class="nn">smac.utils.util_funcs</span> <span class="k">import</span> <span class="n">get_rng</span>
+<span class="kn">from</span> <span class="nn">smac.utils.io.output_directory</span> <span class="k">import</span> <span class="n">create_output_directory</span>
+<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">Configuration</span>
+
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2018, ML4AAD&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
+
+
+<div class="viewcode-block" id="SMAC"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC">[docs]</a><span class="k">class</span> <span class="nc">SMAC</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Facade to use SMAC default mode</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    logger</span>
+<span class="sd">    stats : Stats</span>
+<span class="sd">    solver : SMBO</span>
+<span class="sd">    runhistory : RunHistory</span>
+<span class="sd">        List with information about previous runs</span>
+<span class="sd">    trajectory : list</span>
+<span class="sd">        List of all incumbents</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
+                 <span class="n">tae_runner</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">ExecuteTARun</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">]]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">runhistory</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">RunHistory</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">intensifier</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Intensifier</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">AbstractAcquisitionFunction</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">acquisition_function_optimizer</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">AcquisitionFunctionMaximizer</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">model</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">AbstractEPM</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">runhistory2epm</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">AbstractRunHistory2EPM</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">initial_design</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">InitialDesign</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">initial_configurations</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">stats</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Stats</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">restore_incumbent</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">rng</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">smbo_class</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">SMBO</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">run_id</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">random_configuration_chooser</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">RandomConfigurationChooser</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        scenario : ~smac.scenario.scenario.Scenario</span>
+<span class="sd">            Scenario object</span>
+<span class="sd">        tae_runner : ~smac.tae.execute_ta_run.ExecuteTARun or callable</span>
+<span class="sd">            Callable or implementation of</span>
+<span class="sd">            :class:`~smac.tae.execute_ta_run.ExecuteTARun`. In case a</span>
+<span class="sd">            callable is passed it will be wrapped by</span>
+<span class="sd">            :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.</span>
+<span class="sd">            If not set, it will be initialized with the</span>
+<span class="sd">            :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.</span>
+<span class="sd">        runhistory : RunHistory</span>
+<span class="sd">            runhistory to store all algorithm runs</span>
+<span class="sd">        intensifier : Intensifier</span>
+<span class="sd">            intensification object to issue a racing to decide the current</span>
+<span class="sd">            incumbent</span>
+<span class="sd">        acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction</span>
+<span class="sd">            Object that implements the :class:`~smac.optimizer.acquisition.AbstractAcquisitionFunction`.</span>
+<span class="sd">            Will use :class:`~smac.optimizer.acquisition.EI` if not set.</span>
+<span class="sd">        acquisition_function_optimizer : ~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</span>
+<span class="sd">            Object that implements the :class:`~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer`.</span>
+<span class="sd">            Will use :class:`smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch` if not set.</span>
+<span class="sd">        model : AbstractEPM</span>
+<span class="sd">            Model that implements train() and predict(). Will use a</span>
+<span class="sd">            :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` if not set.</span>
+<span class="sd">        runhistory2epm : ~smac.runhistory.runhistory2epm.RunHistory2EMP</span>
+<span class="sd">            Object that implements the AbstractRunHistory2EPM. If None,</span>
+<span class="sd">            will use :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4Cost`</span>
+<span class="sd">            if objective is cost or</span>
+<span class="sd">            :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost`</span>
+<span class="sd">            if objective is runtime.</span>
+<span class="sd">        initial_design : InitialDesign</span>
+<span class="sd">            initial sampling design</span>
+<span class="sd">        initial_configurations : typing.List[Configuration]</span>
+<span class="sd">            list of initial configurations for initial design --</span>
+<span class="sd">            cannot be used together with initial_design</span>
+<span class="sd">        stats : Stats</span>
+<span class="sd">            optional stats object</span>
+<span class="sd">        rng : np.random.RandomState</span>
+<span class="sd">            Random number generator</span>
+<span class="sd">        restore_incumbent : Configuration</span>
+<span class="sd">            incumbent used if restoring to previous state</span>
+<span class="sd">        smbo_class : ~smac.optimizer.smbo.SMBO</span>
+<span class="sd">            Class implementing the SMBO interface which will be used to</span>
+<span class="sd">            instantiate the optimizer class.</span>
+<span class="sd">        run_id : int (optional)</span>
+<span class="sd">            Run ID will be used as subfolder for output_dir. If no ``run_id`` is given, a random ``run_id`` will be</span>
+<span class="sd">            chosen.</span>
+<span class="sd">        random_configuration_chooser : ~smac.optimizer.random_configuration_chooser.RandomConfigurationChooser</span>
+<span class="sd">            How often to choose a random configuration during the intensification procedure.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="n">aggregate_func</span> <span class="o">=</span> <span class="n">average_cost</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span> <span class="o">=</span> <span class="n">scenario</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">restore_incumbent</span><span class="p">:</span>
+            <span class="c1"># restore_incumbent is used by the CLI interface which provides a method for restoring a SMAC run given an</span>
+            <span class="c1"># output directory. This is the default path.</span>
+            <span class="c1"># initial random number generator</span>
+            <span class="n">run_id</span><span class="p">,</span> <span class="n">rng</span> <span class="o">=</span> <span class="n">get_rng</span><span class="p">(</span><span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">create_output_directory</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">run_id</span><span class="p">,</span> <span class="n">rng</span> <span class="o">=</span> <span class="n">get_rng</span><span class="p">(</span><span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+            <span class="c1"># output-directory is created in CLI when restoring from a</span>
+            <span class="c1"># folder. calling the function again in the facade results in two</span>
+            <span class="c1"># folders being created: run_X and run_X.OLD. if we are</span>
+            <span class="c1"># restoring, the output-folder exists already and we omit creating it,</span>
+            <span class="c1"># but set the self-output_dir to the dir.</span>
+            <span class="c1"># necessary because we want to write traj to new output-dir in CLI.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">scenario</span><span class="o">.</span><span class="n">deterministic</span> <span class="ow">is</span> <span class="kc">True</span>
+            <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="s1">&#39;tuner_timeout&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s1">&#39;quality&#39;</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Optimizing a deterministic scenario for &#39;</span>
+                             <span class="s1">&#39;quality without a tuner timeout - will make &#39;</span>
+                             <span class="s1">&#39;SMAC deterministic!&#39;</span><span class="p">)</span>
+            <span class="n">scenario</span><span class="o">.</span><span class="n">intensification_percentage</span> <span class="o">=</span> <span class="mf">1e-10</span>
+        <span class="n">scenario</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+
+        <span class="c1"># initialize stats object</span>
+        <span class="k">if</span> <span class="n">stats</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="n">stats</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="n">Stats</span><span class="p">(</span><span class="n">scenario</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;runtime&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="o">==</span> <span class="s2">&quot;LOG&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Runtime as objective automatically activates log(y) transformation&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="o">=</span> <span class="s2">&quot;LOG&quot;</span>
+
+        <span class="c1"># initialize empty runhistory</span>
+        <span class="k">if</span> <span class="n">runhistory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">runhistory</span> <span class="o">=</span> <span class="n">RunHistory</span><span class="p">(</span><span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">)</span>
+        <span class="c1"># inject aggr_func if necessary</span>
+        <span class="k">if</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">aggregate_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">runhistory</span><span class="o">.</span><span class="n">aggregate_func</span> <span class="o">=</span> <span class="n">aggregate_func</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">random_configuration_chooser</span><span class="p">:</span>
+            <span class="n">random_configuration_chooser</span> <span class="o">=</span> <span class="n">ChooserProb</span><span class="p">(</span><span class="n">prob</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">rand_prob</span><span class="p">,</span>
+                                                       <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+
+        <span class="c1"># reset random number generator in config space to draw different</span>
+        <span class="c1"># random configurations with each seed given to SMAC</span>
+        <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">))</span>
+
+        <span class="c1"># initial Trajectory Logger</span>
+        <span class="n">traj_logger</span> <span class="o">=</span> <span class="n">TrajLogger</span><span class="p">(</span><span class="n">output_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">)</span>
+
+        <span class="c1"># initial EPM</span>
+        <span class="n">types</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">get_types</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">feature_array</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">RandomForestWithInstances</span><span class="p">(</span><span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">,</span>
+                                              <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
+                                              <span class="n">instance_features</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">feature_array</span><span class="p">,</span>
+                                              <span class="n">seed</span><span class="o">=</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">),</span>
+                                              <span class="n">pca_components</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">PCA_DIM</span><span class="p">,</span>
+                                              <span class="n">log_y</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;LOG&quot;</span><span class="p">,</span> <span class="s2">&quot;LOGS&quot;</span><span class="p">],</span>
+                                              <span class="n">num_trees</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_num_trees</span><span class="p">,</span>
+                                              <span class="n">do_bootstrapping</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_do_bootstrapping</span><span class="p">,</span>
+                                              <span class="n">ratio_features</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_ratio_features</span><span class="p">,</span>
+                                              <span class="n">min_samples_split</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_min_samples_split</span><span class="p">,</span>
+                                              <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_min_samples_leaf</span><span class="p">,</span>
+                                              <span class="n">max_depth</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_max_depth</span><span class="p">)</span>
+        <span class="c1"># initial acquisition function</span>
+        <span class="k">if</span> <span class="n">acquisition_function</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;LOG&quot;</span><span class="p">,</span> <span class="s2">&quot;LOGS&quot;</span><span class="p">]:</span>
+                <span class="n">acquisition_function</span> <span class="o">=</span> <span class="n">LogEI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">acquisition_function</span> <span class="o">=</span> <span class="n">EI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
+
+        <span class="c1"># inject model if necessary</span>
+        <span class="k">if</span> <span class="n">acquisition_function</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">acquisition_function</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+
+        <span class="c1"># initialize optimizer on acquisition function</span>
+        <span class="k">if</span> <span class="n">acquisition_function_optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">acquisition_function_optimizer</span> <span class="o">=</span> <span class="n">InterleavedLocalAndRandomSearch</span><span class="p">(</span>
+                <span class="n">acquisition_function</span><span class="o">=</span><span class="n">acquisition_function</span><span class="p">,</span>
+                <span class="n">config_space</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span>
+                <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">)),</span>
+                <span class="n">max_steps</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">sls_max_steps</span><span class="p">,</span>
+                <span class="n">n_steps_plateau_walk</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">sls_n_steps_plateau_walk</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">acquisition_function_optimizer</span><span class="p">,</span>
+                <span class="n">AcquisitionFunctionMaximizer</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Argument &#39;acquisition_function_optimizer&#39; must be of type&quot;</span>
+                <span class="s2">&quot;&#39;AcquisitionFunctionMaximizer&#39;, but is &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span>
+                <span class="nb">type</span><span class="p">(</span><span class="n">acquisition_function_optimizer</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="c1"># initialize tae_runner</span>
+        <span class="c1"># First case, if tae_runner is None, the target algorithm is a call</span>
+        <span class="c1"># string in the scenario file</span>
+        <span class="k">if</span> <span class="n">tae_runner</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">tae_runner</span> <span class="o">=</span> <span class="n">ExecuteTARunOld</span><span class="p">(</span><span class="n">ta</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">ta</span><span class="p">,</span>
+                                         <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+                                         <span class="n">run_obj</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span><span class="p">,</span>
+                                         <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
+                                         <span class="n">par_factor</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">par_factor</span><span class="p">,</span>
+                                         <span class="n">cost_for_crash</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">cost_for_crash</span><span class="p">,</span>
+                                         <span class="n">abort_on_first_run_crash</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span><span class="p">)</span>
+        <span class="c1"># Second case, the tae_runner is a function to be optimized</span>
+        <span class="k">elif</span> <span class="n">callable</span><span class="p">(</span><span class="n">tae_runner</span><span class="p">):</span>
+            <span class="n">tae_runner</span> <span class="o">=</span> <span class="n">ExecuteTAFuncDict</span><span class="p">(</span><span class="n">ta</span><span class="o">=</span><span class="n">tae_runner</span><span class="p">,</span>
+                                           <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+                                           <span class="n">run_obj</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span><span class="p">,</span>
+                                           <span class="n">memory_limit</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">memory_limit</span><span class="p">,</span>
+                                           <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
+                                           <span class="n">par_factor</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">par_factor</span><span class="p">,</span>
+                                           <span class="n">cost_for_crash</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">cost_for_crash</span><span class="p">,</span>
+                                           <span class="n">abort_on_first_run_crash</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span><span class="p">)</span>
+        <span class="c1"># Third case, if it is an ExecuteTaRun we can simply use the</span>
+        <span class="c1"># instance. Otherwise, the next check raises an exception</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tae_runner</span><span class="p">,</span> <span class="n">ExecuteTARun</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Argument &#39;tae_runner&#39; is </span><span class="si">%s</span><span class="s2">, but must be &quot;</span>
+                            <span class="s2">&quot;either a callable or an instance of &quot;</span>
+                            <span class="s2">&quot;ExecuteTaRun. Passing &#39;None&#39; will result in the &quot;</span>
+                            <span class="s2">&quot;creation of target algorithm runner based on the &quot;</span>
+                            <span class="s2">&quot;call string in the scenario file.&quot;</span>
+                            <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">tae_runner</span><span class="p">))</span>
+
+        <span class="c1"># Check that overall objective and tae objective are the same</span>
+        <span class="k">if</span> <span class="n">tae_runner</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">!=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Objective for the target algorithm runner and &quot;</span>
+                             <span class="s2">&quot;the scenario must be the same, but are &#39;</span><span class="si">%s</span><span class="s2">&#39; and &quot;</span>
+                             <span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tae_runner</span><span class="o">.</span><span class="n">run_obj</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span><span class="p">))</span>
+
+        <span class="c1"># inject stats if necessary</span>
+        <span class="k">if</span> <span class="n">tae_runner</span><span class="o">.</span><span class="n">stats</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">tae_runner</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span>
+        <span class="c1"># inject runhistory if necessary</span>
+        <span class="k">if</span> <span class="n">tae_runner</span><span class="o">.</span><span class="n">runhistory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">tae_runner</span><span class="o">.</span><span class="n">runhistory</span> <span class="o">=</span> <span class="n">runhistory</span>
+        <span class="c1"># inject cost_for_crash</span>
+        <span class="k">if</span> <span class="n">tae_runner</span><span class="o">.</span><span class="n">crash_cost</span> <span class="o">!=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cost_for_crash</span><span class="p">:</span>
+            <span class="n">tae_runner</span><span class="o">.</span><span class="n">crash_cost</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cost_for_crash</span>
+
+        <span class="c1"># initialize intensification</span>
+        <span class="k">if</span> <span class="n">intensifier</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">intensifier</span> <span class="o">=</span> <span class="n">Intensifier</span><span class="p">(</span><span class="n">tae_runner</span><span class="o">=</span><span class="n">tae_runner</span><span class="p">,</span>
+                                      <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+                                      <span class="n">traj_logger</span><span class="o">=</span><span class="n">traj_logger</span><span class="p">,</span>
+                                      <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
+                                      <span class="n">instances</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">train_insts</span><span class="p">,</span>
+                                      <span class="n">cutoff</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">cutoff</span><span class="p">,</span>
+                                      <span class="n">deterministic</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">deterministic</span><span class="p">,</span>
+                                      <span class="n">run_obj_time</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;runtime&quot;</span><span class="p">,</span>
+                                      <span class="n">always_race_against</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">()</span>
+                                      <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">always_race_default</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                                      <span class="n">use_ta_time_bound</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">use_ta_time</span><span class="p">,</span>
+                                      <span class="n">instance_specifics</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">instance_specific</span><span class="p">,</span>
+                                      <span class="n">minR</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">minR</span><span class="p">,</span>
+                                      <span class="n">maxR</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">maxR</span><span class="p">,</span>
+                                      <span class="n">adaptive_capping_slackfactor</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">intens_adaptive_capping_slackfactor</span><span class="p">,</span>
+                                      <span class="n">min_chall</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">intens_min_chall</span><span class="p">)</span>
+        <span class="c1"># inject deps if necessary</span>
+        <span class="k">if</span> <span class="n">intensifier</span><span class="o">.</span><span class="n">tae_runner</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">intensifier</span><span class="o">.</span><span class="n">tae_runner</span> <span class="o">=</span> <span class="n">tae_runner</span>
+        <span class="k">if</span> <span class="n">intensifier</span><span class="o">.</span><span class="n">stats</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">intensifier</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span>
+        <span class="k">if</span> <span class="n">intensifier</span><span class="o">.</span><span class="n">traj_logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">intensifier</span><span class="o">.</span><span class="n">traj_logger</span> <span class="o">=</span> <span class="n">traj_logger</span>
+
+        <span class="c1"># initial design</span>
+        <span class="k">if</span> <span class="n">initial_design</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">initial_configurations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Either use initial_design or initial_configurations; but not both&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">initial_configurations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">initial_design</span> <span class="o">=</span> <span class="n">MultiConfigInitialDesign</span><span class="p">(</span><span class="n">tae_runner</span><span class="o">=</span><span class="n">tae_runner</span><span class="p">,</span>
+                                                      <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
+                                                      <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+                                                      <span class="n">traj_logger</span><span class="o">=</span><span class="n">traj_logger</span><span class="p">,</span>
+                                                      <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
+                                                      <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
+                                                      <span class="n">configs</span><span class="o">=</span><span class="n">initial_configurations</span><span class="p">,</span>
+                                                      <span class="n">intensifier</span><span class="o">=</span><span class="n">intensifier</span><span class="p">,</span>
+                                                      <span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">initial_design</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_incumbent</span> <span class="o">==</span> <span class="s2">&quot;DEFAULT&quot;</span><span class="p">:</span>
+                <span class="n">initial_design</span> <span class="o">=</span> <span class="n">DefaultConfiguration</span><span class="p">(</span><span class="n">tae_runner</span><span class="o">=</span><span class="n">tae_runner</span><span class="p">,</span>
+                                                      <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
+                                                      <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+                                                      <span class="n">traj_logger</span><span class="o">=</span><span class="n">traj_logger</span><span class="p">,</span>
+                                                      <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_incumbent</span> <span class="o">==</span> <span class="s2">&quot;RANDOM&quot;</span><span class="p">:</span>
+                <span class="n">initial_design</span> <span class="o">=</span> <span class="n">RandomConfiguration</span><span class="p">(</span><span class="n">tae_runner</span><span class="o">=</span><span class="n">tae_runner</span><span class="p">,</span>
+                                                     <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
+                                                     <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+                                                     <span class="n">traj_logger</span><span class="o">=</span><span class="n">traj_logger</span><span class="p">,</span>
+                                                     <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_incumbent</span> <span class="o">==</span> <span class="s2">&quot;LHD&quot;</span><span class="p">:</span>
+                <span class="n">initial_design</span> <span class="o">=</span> <span class="n">LHDesign</span><span class="p">(</span><span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
+                                            <span class="n">intensifier</span><span class="o">=</span><span class="n">intensifier</span><span class="p">,</span>
+                                            <span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">,</span>
+                                            <span class="n">tae_runner</span><span class="o">=</span><span class="n">tae_runner</span><span class="p">,</span>
+                                            <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
+                                            <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+                                            <span class="n">traj_logger</span><span class="o">=</span><span class="n">traj_logger</span><span class="p">,</span>
+                                            <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_incumbent</span> <span class="o">==</span> <span class="s2">&quot;FACTORIAL&quot;</span><span class="p">:</span>
+                <span class="n">initial_design</span> <span class="o">=</span> <span class="n">FactorialInitialDesign</span><span class="p">(</span><span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
+                                                        <span class="n">intensifier</span><span class="o">=</span><span class="n">intensifier</span><span class="p">,</span>
+                                                        <span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">,</span>
+                                                        <span class="n">tae_runner</span><span class="o">=</span><span class="n">tae_runner</span><span class="p">,</span>
+                                                        <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
+                                                        <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+                                                        <span class="n">traj_logger</span><span class="o">=</span><span class="n">traj_logger</span><span class="p">,</span>
+                                                        <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_incumbent</span> <span class="o">==</span> <span class="s2">&quot;SOBOL&quot;</span><span class="p">:</span>
+                <span class="n">initial_design</span> <span class="o">=</span> <span class="n">SobolDesign</span><span class="p">(</span><span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
+                                            <span class="n">intensifier</span><span class="o">=</span><span class="n">intensifier</span><span class="p">,</span>
+                                            <span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">,</span>
+                                            <span class="n">tae_runner</span><span class="o">=</span><span class="n">tae_runner</span><span class="p">,</span>
+                                            <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
+                                            <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+                                            <span class="n">traj_logger</span><span class="o">=</span><span class="n">traj_logger</span><span class="p">,</span>
+                                            <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Don&#39;t know what kind of initial_incumbent &quot;</span>
+                                 <span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39; is&quot;</span> <span class="o">%</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_incumbent</span><span class="p">)</span>
+        <span class="c1"># inject deps if necessary</span>
+        <span class="k">if</span> <span class="n">initial_design</span><span class="o">.</span><span class="n">tae_runner</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">initial_design</span><span class="o">.</span><span class="n">tae_runner</span> <span class="o">=</span> <span class="n">tae_runner</span>
+        <span class="k">if</span> <span class="n">initial_design</span><span class="o">.</span><span class="n">scenario</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">initial_design</span><span class="o">.</span><span class="n">scenario</span> <span class="o">=</span> <span class="n">scenario</span>
+        <span class="k">if</span> <span class="n">initial_design</span><span class="o">.</span><span class="n">stats</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">initial_design</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span>
+        <span class="k">if</span> <span class="n">initial_design</span><span class="o">.</span><span class="n">traj_logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">initial_design</span><span class="o">.</span><span class="n">traj_logger</span> <span class="o">=</span> <span class="n">traj_logger</span>
+
+        <span class="c1"># initial conversion of runhistory into EPM data</span>
+        <span class="k">if</span> <span class="n">runhistory2epm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="n">num_params</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s1">&#39;runtime&#39;</span><span class="p">:</span>
+
+                <span class="c1"># if we log the performance data,</span>
+                <span class="c1"># the RFRImputator will already get</span>
+                <span class="c1"># log transform data from the runhistory</span>
+                <span class="n">cutoff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cutoff</span><span class="p">)</span>
+                <span class="n">threshold</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cutoff</span> <span class="o">*</span>
+                                     <span class="n">scenario</span><span class="o">.</span><span class="n">par_factor</span><span class="p">)</span>
+
+                <span class="n">imputor</span> <span class="o">=</span> <span class="n">RFRImputator</span><span class="p">(</span><span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
+                                       <span class="n">cutoff</span><span class="o">=</span><span class="n">cutoff</span><span class="p">,</span>
+                                       <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span>
+                                       <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+                                       <span class="n">change_threshold</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+                                       <span class="n">max_iter</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+                <span class="n">runhistory2epm</span> <span class="o">=</span> <span class="n">RunHistory2EPM4LogCost</span><span class="p">(</span>
+                    <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">num_params</span><span class="o">=</span><span class="n">num_params</span><span class="p">,</span>
+                    <span class="n">success_states</span><span class="o">=</span><span class="p">[</span><span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span> <span class="p">],</span>
+                    <span class="n">impute_censored_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">impute_state</span><span class="o">=</span><span class="p">[</span><span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span><span class="p">,</span> <span class="p">],</span>
+                    <span class="n">imputor</span><span class="o">=</span><span class="n">imputor</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s1">&#39;quality&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="o">==</span> <span class="s2">&quot;NONE&quot;</span><span class="p">:</span>
+                    <span class="n">runhistory2epm</span> <span class="o">=</span> <span class="n">RunHistory2EPM4Cost</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">num_params</span><span class="o">=</span><span class="n">num_params</span><span class="p">,</span>
+                                                         <span class="n">success_states</span><span class="o">=</span><span class="p">[</span>
+                                                             <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span>
+                                                             <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">],</span>
+                                                         <span class="n">impute_censored_data</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">impute_state</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="o">==</span> <span class="s2">&quot;LOG&quot;</span><span class="p">:</span>
+                    <span class="n">runhistory2epm</span> <span class="o">=</span> <span class="n">RunHistory2EPM4LogCost</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">num_params</span><span class="o">=</span><span class="n">num_params</span><span class="p">,</span>
+                                                         <span class="n">success_states</span><span class="o">=</span><span class="p">[</span>
+                                                             <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span>
+                                                             <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">],</span>
+                                                         <span class="n">impute_censored_data</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">impute_state</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="o">==</span> <span class="s2">&quot;LOGS&quot;</span><span class="p">:</span>
+                    <span class="n">runhistory2epm</span> <span class="o">=</span> <span class="n">RunHistory2EPM4LogScaledCost</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">num_params</span><span class="o">=</span><span class="n">num_params</span><span class="p">,</span>
+                                                         <span class="n">success_states</span><span class="o">=</span><span class="p">[</span>
+                                                             <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span>
+                                                             <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">],</span>
+                                                         <span class="n">impute_censored_data</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">impute_state</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="o">==</span> <span class="s2">&quot;INVS&quot;</span><span class="p">:</span>
+                    <span class="n">runhistory2epm</span> <span class="o">=</span> <span class="n">RunHistory2EPM4InvScaledCost</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">num_params</span><span class="o">=</span><span class="n">num_params</span><span class="p">,</span>
+                                                         <span class="n">success_states</span><span class="o">=</span><span class="p">[</span>
+                                                             <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span>
+                                                             <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">],</span>
+                                                         <span class="n">impute_censored_data</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">impute_state</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown run objective: </span><span class="si">%s</span><span class="s1">. Should be either &#39;</span>
+                                 <span class="s1">&#39;quality or runtime.&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span><span class="p">)</span>
+
+        <span class="c1"># inject scenario if necessary:</span>
+        <span class="k">if</span> <span class="n">runhistory2epm</span><span class="o">.</span><span class="n">scenario</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">runhistory2epm</span><span class="o">.</span><span class="n">scenario</span> <span class="o">=</span> <span class="n">scenario</span>
+
+        <span class="n">smbo_args</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;scenario&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="p">,</span>
+            <span class="s1">&#39;stats&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+            <span class="s1">&#39;initial_design&#39;</span><span class="p">:</span> <span class="n">initial_design</span><span class="p">,</span>
+            <span class="s1">&#39;runhistory&#39;</span><span class="p">:</span> <span class="n">runhistory</span><span class="p">,</span>
+            <span class="s1">&#39;runhistory2epm&#39;</span><span class="p">:</span> <span class="n">runhistory2epm</span><span class="p">,</span>
+            <span class="s1">&#39;intensifier&#39;</span><span class="p">:</span> <span class="n">intensifier</span><span class="p">,</span>
+            <span class="s1">&#39;aggregate_func&#39;</span><span class="p">:</span> <span class="n">aggregate_func</span><span class="p">,</span>
+            <span class="s1">&#39;num_run&#39;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">,</span>
+            <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="n">model</span><span class="p">,</span>
+            <span class="s1">&#39;acq_optimizer&#39;</span><span class="p">:</span> <span class="n">acquisition_function_optimizer</span><span class="p">,</span>
+            <span class="s1">&#39;acquisition_func&#39;</span><span class="p">:</span> <span class="n">acquisition_function</span><span class="p">,</span>
+            <span class="s1">&#39;rng&#39;</span><span class="p">:</span> <span class="n">rng</span><span class="p">,</span>
+            <span class="s1">&#39;restore_incumbent&#39;</span><span class="p">:</span> <span class="n">restore_incumbent</span><span class="p">,</span>
+            <span class="s1">&#39;random_configuration_chooser&#39;</span><span class="p">:</span> <span class="n">random_configuration_chooser</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">smbo_class</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">SMBO</span><span class="p">(</span><span class="o">**</span><span class="n">smbo_args</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">smbo_class</span><span class="p">(</span><span class="o">**</span><span class="n">smbo_args</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SMAC.optimize"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Optimizes the algorithm provided in scenario (given in constructor)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        incumbent : Configuration</span>
+<span class="sd">            Best found configuration</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">incumbent</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">print_stats</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Final Incumbent: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_all_configs</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Estimated cost of incumbent: </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">runhistory</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">traj_logger</span><span class="o">.</span><span class="n">trajectory</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">save_json</span><span class="p">(</span>
+                    <span class="n">fn</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;runhistory.json&quot;</span><span class="p">)</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="n">incumbent</span></div>
+
+<div class="viewcode-block" id="SMAC.validate"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">config_mode</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;inc&#39;</span><span class="p">,</span>
+                 <span class="n">instance_mode</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;train+test&#39;</span><span class="p">,</span>
+                 <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_epm</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s1">&#39;threading&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create validator-object and run validation, using</span>
+<span class="sd">        scenario-information, runhistory from smbo and tae_runner from intensify</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config_mode: str or list&lt;Configuration&gt;</span>
+<span class="sd">            string or directly a list of Configuration</span>
+<span class="sd">            str from [def, inc, def+inc, wallclock_time, cpu_time, all]</span>
+<span class="sd">            time evaluates at cpu- or wallclock-timesteps of:</span>
+<span class="sd">            [max_time/2^0, max_time/2^1, max_time/2^3, ..., default]</span>
+<span class="sd">            with max_time being the highest recorded time</span>
+<span class="sd">        instance_mode: string</span>
+<span class="sd">            what instances to use for validation, from [train, test, train+test]</span>
+<span class="sd">        repetitions: int</span>
+<span class="sd">            number of repetitions in nondeterministic algorithms (in</span>
+<span class="sd">            deterministic will be fixed to 1)</span>
+<span class="sd">        use_epm: bool</span>
+<span class="sd">            whether to use an EPM instead of evaluating all runs with the TAE</span>
+<span class="sd">        n_jobs: int</span>
+<span class="sd">            number of parallel processes used by joblib</span>
+<span class="sd">        backend: string</span>
+<span class="sd">            what backend to be used by joblib</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        runhistory: RunHistory</span>
+<span class="sd">            runhistory containing all specified runs</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">config_mode</span><span class="p">,</span> <span class="n">instance_mode</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">,</span>
+                                    <span class="n">use_epm</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SMAC.get_tae_runner"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC.get_tae_runner">[docs]</a>    <span class="k">def</span> <span class="nf">get_tae_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns target algorithm evaluator (TAE) object which can run the</span>
+<span class="sd">        target algorithm given a configuration</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        TAE: smac.tae.execute_ta_run.ExecuteTARun</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">tae_runner</span></div>
+
+<div class="viewcode-block" id="SMAC.get_runhistory"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC.get_runhistory">[docs]</a>    <span class="k">def</span> <span class="nf">get_runhistory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the runhistory (i.e., all evaluated configurations and</span>
+<span class="sd">         the results).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Runhistory: smac.runhistory.runhistory.RunHistory</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;runhistory&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;SMAC was not fitted yet. Call optimize() prior &#39;</span>
+                             <span class="s1">&#39;to accessing the runhistory.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span></div>
+
+<div class="viewcode-block" id="SMAC.get_trajectory"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC.get_trajectory">[docs]</a>    <span class="k">def</span> <span class="nf">get_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the trajectory (i.e., all incumbent configurations over</span>
+<span class="sd">        time).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Trajectory : List of :class:`~smac.utils.io.traj_logging.TrajEntry`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;trajectory&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;SMAC was not fitted yet. Call optimize() prior &#39;</span>
+                             <span class="s1">&#39;to accessing the runhistory.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span></div>
+
+<div class="viewcode-block" id="SMAC.get_X_y"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_facade.html#smac.facade.roar_facade.SMAC.get_X_y">[docs]</a>    <span class="k">def</span> <span class="nf">get_X_y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simple interface to obtain all data in runhistory in ``X, y`` format.</span>
+
+<span class="sd">        Uses</span>
+<span class="sd">        :meth:`smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        X: numpy.ndarray</span>
+<span class="sd">            matrix of all configurations (+ instance features)</span>
+<span class="sd">        y: numpy.ndarray</span>
+<span class="sd">            vector of cost values; can include censored runs</span>
+<span class="sd">        cen: numpy.ndarray</span>
+<span class="sd">            vector of bools indicating whether the y-value is censored</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">rh2EPM</span><span class="o">.</span><span class="n">get_X_y</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015-2018, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
