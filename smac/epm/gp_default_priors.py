@@ -8,6 +8,13 @@ from smac.epm.gp_base_prior import BasePrior, TophatPrior, \
 class DefaultPrior(BasePrior):
 
     def __init__(self, n_dims: int, rng: np.random.RandomState=None):
+        """
+        This class is a verbatim copy of the implementation of RoBO:
+
+        Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
+        RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
+        In: NIPS 2017 Bayesian Optimization Workshop
+        """
         if rng is None:
             self.rng = np.random.RandomState(np.random.randint(0, 10000))
         else:

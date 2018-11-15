@@ -13,6 +13,45 @@ logger = logging.getLogger(__name__)
 
 
 class GaussianProcess(BaseModel):
+    """
+    Gaussian process model.
+
+    The GP hyperparameterŝ are obtained by optimizing the marginal log likelihood.
+
+    This code is based on the implementation of RoBO:
+
+    Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
+    RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
+    In: NIPS 2017 Bayesian Optimization Workshop
+
+    Parameters
+    ----------
+    types : np.ndarray (D)
+        Specifies the number of categorical values of an input dimension where
+        the i-th entry corresponds to the i-th input dimension. Let's say we
+        have 2 dimension where the first dimension consists of 3 different
+        categorical choices and the second dimension is continuous than we
+        have to pass np.array([2, 0]). Note that we count starting from 0.
+    bounds : list
+        Specifies the bounds for continuous features.
+    kernel : george kernel object
+        Specifies the kernel that is used for all Gaussian Process
+    prior : prior object
+        Defines a prior for the hyperparameters of the GP. Make sure that
+        it implements the Prior interface.
+    noise : float
+        Noise term that is added to the diagonal of the covariance matrix
+        for the Cholesky decomposition.
+    use_gradients : bool
+        Use gradient information to optimize the negative log likelihood
+    normalize_output : bool
+        Zero mean unit variance normalization of the output values
+    normalize_input : bool
+        Normalize all inputs to be in [0, 1]. This is important to define good priors for the
+        length scales.
+    rng: np.random.RandomState
+        Random number generator
+    """
 
     def __init__(
         self,
@@ -26,42 +65,7 @@ class GaussianProcess(BaseModel):
         normalize_input: bool=True,
         rng: typing.Optional[np.random.RandomState]=None,
     ):
-        """
-        Interface to the george GP library. The GP hyperparameter are obtained
-        by optimizing the marginal log likelihood.
 
-        Parameters
-        ----------
-        types : np.ndarray (D)
-            Specifies the number of categorical values of an input dimension where
-            the i-th entry corresponds to the i-th input dimension. Let's say we
-            have 2 dimension where the first dimension consists of 3 different
-            categorical choices and the second dimension is continuous than we
-            have to pass np.array([2, 0]). Note that we count starting from 0.
-        bounds : list
-            Specifies the bounds for continuous features.
-        kernel : george kernel object
-            Specifies the kernel that is used for all Gaussian Process
-        prior : prior object
-            Defines a prior for the hyperparameters of the GP. Make sure that
-            it implements the Prior interface.
-        noise : float
-            Noise term that is added to the diagonal of the covariance matrix
-            for the Cholesky decomposition.
-        use_gradients : bool
-            Use gradient information to optimize the negative log likelihood
-        lower : np.array(D,)
-            Lower bound of the input space which is used for the input space normalization
-        upper : np.array(D,)
-            Upper bound of the input space which is used for the input space normalization
-        normalize_output : bool
-            Zero mean unit variance normalization of the output values
-        normalize_input : bool
-            Normalize all inputs to be in [0, 1]. This is important to define good priors for the
-            length scales.
-        rng: np.random.RandomState
-            Random number generator
-        """
         super().__init__(types=types, bounds=bounds)
 
         if rng is None:

@@ -31,13 +31,28 @@ class GaussianProcessMCMC(BaseModel):
         noise: int=-8,
     ):
         """
-        GaussianProcess model based on the george GP library that uses MCMC
-        sampling to marginalise over the hyperparmeters. If you use this class
-        make sure that you also use the IntegratedAcqusition function to
+        Gaussian process model.
+
+        The GP hyperparameters are integrated out by MCMC. If you use this class
+        make sure that you also use an integrated acquisition function to
         integrate over the GP's hyperparameter as proposed by Snoek et al.
+
+        This code is based on the implementation of RoBO:
+
+        Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
+        RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
+        In: NIPS 2017 Bayesian Optimization Workshop
 
         Parameters
         ----------
+        types : np.ndarray (D)
+            Specifies the number of categorical values of an input dimension where
+            the i-th entry corresponds to the i-th input dimension. Let's say we
+            have 2 dimension where the first dimension consists of 3 different
+            categorical choices and the second dimension is continuous than we
+            have to pass np.array([2, 0]). Note that we count starting from 0.
+        bounds : list
+            Specifies the bounds for continuous features.
         kernel : george kernel object
             Specifies the kernel that is used for all Gaussian Process
         prior : prior object
@@ -52,14 +67,18 @@ class GaussianProcessMCMC(BaseModel):
             The length of the MCMC chain. We start n_hypers walker for
             chain_length steps and we use the last sample
             in the chain as a hyperparameter sample.
-        lower : np.array(D,)
-            Lower bound of the input space which is used for the input space normalization
-        upper : np.array(D,)
-            Upper bound of the input space which is used for the input space normalization
         burnin_steps : int
             The number of burnin steps before the actual MCMC sampling starts.
+        normalize_output : bool
+            Zero mean unit variance normalization of the output values
+        normalize_input : bool
+            Normalize all inputs to be in [0, 1]. This is important to define good priors for the
+            length scales.
         rng: np.random.RandomState
             Random number generator
+        noise : float
+            Noise term that is added to the diagonal of the covariance matrix
+            for the Cholesky decomposition.
         """
         super().__init__(types=types, bounds=bounds)
 
