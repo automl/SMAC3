@@ -17,7 +17,7 @@ matrix:
     - os: linux
       env: TESTSUITE=run_unittests.sh PYTHON_VERSION="3.6" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
     - os: linux
-      env: TESTSUITE=run_unittests.sh PYTHON_VERSION="3.7" COVERAGE="true" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
+      env: TESTSUITE=run_unittests.sh PYTHON_VERSION="3.7" COVERAGE="true" DOCPUSH="true" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
     # Other tests (mypy, examples, flake8...)
     - os: linux
       env: TESTSUITE=run_mypy.sh PYTHON_VERSION="3.6" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
@@ -71,7 +71,7 @@ deploy:
   provider: pages
   skip-cleanup: true
   github-token: $GITHUB_TOKEN # set in the settings page of my repository
-  keep-hisotry: true
+  keep-history: true
   commiter-from-gh: true
   on:
     all_branches: true
