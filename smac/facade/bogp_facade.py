@@ -47,9 +47,7 @@ class BOGP(SMAC):
             _, rng = get_rng(rng=kwargs.get("rng", None), run_id=kwargs.get("run_id", None), logger=None)
 
             cov_amp = 2
-            _, bounds = get_types(kwargs['scenario'].cs, instance_features=None)
-            lower = np.array([b[0] for b in bounds])
-            upper = np.array([b[1] for b in bounds])
+            types, bounds = get_types(kwargs['scenario'].cs, instance_features=None)
             n_dims = lower.shape[0]
 
             initial_ls = np.ones([n_dims])
@@ -63,17 +61,28 @@ class BOGP(SMAC):
                 n_hypers += 1
 
             if model_type == "gp":
-                model = GaussianProcess(kernel, prior=prior, rng=rng,
-                                        normalize_output=False, normalize_input=True,
-                                        lower=lower, upper=upper)
+                model = GaussianProcess(
+                    types=types,
+                    bounds=bounds,
+                    kernel=kernel,
+                    prior=prior,
+                    rng=rng,
+                    normalize_output=True,
+                    normalize_input=True,
+                )
             elif model_type == "gp_mcmc":
-                model = GaussianProcessMCMC(kernel, prior=prior,
-                                            n_hypers=n_hypers,
-                                            chain_length=200,
-                                            burnin_steps=100,
-                                            normalize_input=True,
-                                            normalize_output=True,
-                                            rng=rng, lower=lower, upper=upper)
+                model = GaussianProcessMCMC(
+                    types=types,
+                    bounds=bounds,
+                    kernel=kernel,
+                    prior=prior,
+                    n_hypers=n_hypers,
+                    chain_length=200,
+                    burnin_steps=100,
+                    normalize_input=True,
+                    normalize_output=True,
+                    rng=rng,
+                )
             kwargs['model'] = model
         super().__init__(**kwargs)
 

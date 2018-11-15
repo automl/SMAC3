@@ -25,9 +25,14 @@ def get_gp(n_dimensions, rs, noise=1e-3):
     if n_hypers % 2 == 1:
         n_hypers += 1
 
-    model = GaussianProcess(kernel, prior=prior, rng=rs, noise=noise,
-                            normalize_output=False, normalize_input=True,
-                            lower=lower, upper=upper)
+    bounds = [(0, 1) for _ in range(n_dimensions)]
+    types = np.zeros(n_dimensions)
+
+    model = GaussianProcess(
+        bounds=bounds, types=types, kernel=kernel,
+        prior=prior, rng=rs, noise=noise,
+        normalize_output=False, normalize_input=True,
+    )
     return model
 
 
@@ -102,13 +107,13 @@ class TestGP(unittest.TestCase):
 
         # Regression test that performance does not drastically decrease in the near future
         y_hat, mu_hat = model.predict(np.array([[10, 10, 10]]))
-        self.assertAlmostEqual(y_hat[0][0], 181.16231293)
-        self.assertAlmostEqual(mu_hat[0][0], 1.72650022)
+        self.assertAlmostEqual(y_hat[0][0], 54.61250000002053)
+        self.assertAlmostEqual(mu_hat[0][0], 2.0)
 
     def test_gp_on_sklearn_data(self):
         X, y = sklearn.datasets.load_boston(return_X_y=True)
         # Normalize such that the bounds in get_gp (10) hold
-        X = X / X.max(axis=0) * 10
+        X = X / X.max(axis=0)
         rs = np.random.RandomState(1)
         model = get_gp(X.shape[1], rs)
         cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=5)

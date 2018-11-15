@@ -14,18 +14,32 @@ logger = logging.getLogger(__name__)
 
 class GaussianProcess(BaseModel):
 
-    def __init__(self, kernel: george.kernels.Kernel, prior: BasePrior=None,
-                 noise: float=1e-3, use_gradients: bool=False,
-                 normalize_output: bool=False,
-                 normalize_input: bool=True,
-                 lower: typing.Optional[np.ndarray]=None, upper: typing.Optional[np.ndarray]=None,
-                 rng: typing.Optional[np.random.RandomState]=None):
+    def __init__(
+        self,
+        types: np.ndarray,
+        bounds: typing.List[typing.Tuple[float, float]],
+        kernel: george.kernels.Kernel,
+        prior: BasePrior=None,
+        noise: float=1e-3,
+        use_gradients: bool=False,
+        normalize_output: bool=False,
+        normalize_input: bool=True,
+        rng: typing.Optional[np.random.RandomState]=None,
+    ):
         """
         Interface to the george GP library. The GP hyperparameter are obtained
         by optimizing the marginal log likelihood.
 
         Parameters
         ----------
+        types : np.ndarray (D)
+            Specifies the number of categorical values of an input dimension where
+            the i-th entry corresponds to the i-th input dimension. Let's say we
+            have 2 dimension where the first dimension consists of 3 different
+            categorical choices and the second dimension is continuous than we
+            have to pass np.array([2, 0]). Note that we count starting from 0.
+        bounds : list
+            Specifies the bounds for continuous features.
         kernel : george kernel object
             Specifies the kernel that is used for all Gaussian Process
         prior : prior object
@@ -48,7 +62,7 @@ class GaussianProcess(BaseModel):
         rng: np.random.RandomState
             Random number generator
         """
-
+        super().__init__(types=types, bounds=bounds)
 
         if rng is None:
             self.rng = np.random.RandomState(np.random.randint(0, 10000))
@@ -67,12 +81,7 @@ class GaussianProcess(BaseModel):
         self.hypers = []
         self.is_trained = False
 
-        self.lower = lower
-        self.upper = upper
-
-        super().__init__()
-
-    def train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool=True):
+    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool=True):
         """
         Computes the Cholesky decomposition of the covariance of X and
         estimates the GP hyperparameters by optimizing the marginal
@@ -96,6 +105,11 @@ class GaussianProcess(BaseModel):
             self.X, self.lower, self.upper = normalization.zero_one_normalization(X, self.lower, self.upper)
         else:
             self.X = X
+
+        if len(y.shape) > 1:
+            y = y.flatten()
+            if len(y) != len(X):
+                raise ValueError('Shape mismatch: %s vs %s' % (y.shape, X.shape))
 
         if self.normalize_output:
             # Normalize output to have zero mean and unit standard deviation

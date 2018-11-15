@@ -12,8 +12,6 @@ from smac.epm.gp_default_priors import DefaultPrior
 
 def get_gp(n_dimensions, rs, noise=-8):
     cov_amp = 2
-    lower = np.array([0 for _ in range(n_dimensions)])
-    upper = np.array([10 for _ in range(n_dimensions)])
 
     initial_ls = np.ones([n_dimensions])
     exp_kernel = george.kernels.Matern52Kernel(initial_ls, ndim=n_dimensions)
@@ -25,13 +23,21 @@ def get_gp(n_dimensions, rs, noise=-8):
     if n_hypers % 2 == 1:
         n_hypers += 1
 
-    model = GaussianProcessMCMC(kernel, prior=prior,
-                                n_hypers=n_hypers,
-                                chain_length=20,
-                                burnin_steps=100,
-                                normalize_input=True,
-                                normalize_output=True,
-                                rng=rs, lower=lower, upper=upper, noise=noise)
+    bounds = [(0, 1) for _ in range(n_dimensions)]
+    types = np.zeros(n_dimensions)
+
+    model = GaussianProcessMCMC(
+        types=types,
+        bounds=bounds,
+        kernel=kernel,
+        prior=prior,
+        n_hypers=n_hypers,
+        chain_length=20,
+        burnin_steps=100,
+        normalize_input=True,
+        normalize_output=True,
+        rng=rs, noise=noise,
+    )
     return model
 
 
@@ -108,12 +114,13 @@ class TestGPMCMC(unittest.TestCase):
         # Regression test that performance does not drastically decrease in the near future
         y_hat, var_hat = model.predict(np.array([[10, 10, 10]]))
         self.assertAlmostEqual(y_hat[0][0], 57.13539025800291)
+        # Massive variance due to internally used law of total variances
         self.assertLessEqual(var_hat[0][0], 209545.77612470588)
 
     def test_gp_on_sklearn_data(self):
         X, y = sklearn.datasets.load_boston(return_X_y=True)
-        # Normalize such that the bounds in get_gp (10) hold
-        X = X / X.max(axis=0) * 10
+        # Normalize such that the bounds in get_gp hold
+        X = X / X.max(axis=0)
         rs = np.random.RandomState(1)
         model = get_gp(X.shape[1], rs)
         cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)

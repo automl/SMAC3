@@ -16,13 +16,20 @@ logger = logging.getLogger(__name__)
 
 class GaussianProcessMCMC(BaseModel):
 
-    def __init__(self, kernel: george.kernels.Kernel, prior: BasePrior=None,
-                 n_hypers: int=20, chain_length: int=2000, burnin_steps: int=2000,
-                 normalize_output: bool=False, normalize_input: bool=True,
-                 rng: typing.Optional[np.random.RandomState]=None,
-                 lower: typing.Optional[np.ndarray]=None,
-                 upper: typing.Optional[np.ndarray]=None,
-                 noise: int=-8):
+    def __init__(
+        self,
+        types: np.ndarray,
+        bounds: typing.List[typing.Tuple[float, float]],
+        kernel: george.kernels.Kernel,
+        prior: BasePrior=None,
+        n_hypers: int=20,
+        chain_length: int=2000,
+        burnin_steps: int=2000,
+        normalize_output: bool=False,
+        normalize_input: bool=True,
+        rng: typing.Optional[np.random.RandomState]=None,
+        noise: int=-8,
+    ):
         """
         GaussianProcess model based on the george GP library that uses MCMC
         sampling to marginalise over the hyperparmeters. If you use this class
@@ -54,6 +61,7 @@ class GaussianProcessMCMC(BaseModel):
         rng: np.random.RandomState
             Random number generator
         """
+        super().__init__(types=types, bounds=bounds)
 
         if rng is None:
             self.rng = np.random.RandomState(np.random.randint(0, 10000))
@@ -74,12 +82,7 @@ class GaussianProcessMCMC(BaseModel):
         self.y = None
         self.is_trained = False
 
-        self.lower = lower
-        self.upper = upper
-
-        super().__init__()
-
-    def train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool=True):
+    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool=True):
         """
         Performs MCMC sampling to sample hyperparameter configurations from the
         likelihood and trains for each sample a GP on X and y
@@ -101,6 +104,11 @@ class GaussianProcessMCMC(BaseModel):
             self.X, self.lower, self.upper = normalization.zero_one_normalization(X, self.lower, self.upper)
         else:
             self.X = X
+
+        if len(y.shape) > 1:
+            y = y.flatten()
+            if len(y) != len(X):
+                raise ValueError('Shape mismatch: %s vs %s' % (y.shape, X.shape))
 
         if self.normalize_output:
             # Normalize output to have zero mean and unit standard deviation
@@ -158,14 +166,16 @@ class GaussianProcessMCMC(BaseModel):
             kernel = deepcopy(self.kernel)
             kernel.set_parameter_vector(sample[:-1])
             noise = np.exp(sample[-1])
-            model = GaussianProcess(kernel,
-                                    normalize_output=self.normalize_output,
-                                    normalize_input=self.normalize_input,
-                                    noise=noise,
-                                    lower=self.lower,
-                                    upper=self.upper,
-                                    rng=self.rng)
-            model.train(X, y, do_optimize=False)
+            model = GaussianProcess(
+                types=self.types,
+                bounds=self.bounds,
+                kernel=kernel,
+                normalize_output=self.normalize_output,
+                normalize_input=self.normalize_input,
+                noise=noise,
+                rng=self.rng,
+            )
+            model._train(X, y, do_optimize=False)
             self.models.append(model)
 
         self.is_trained = True

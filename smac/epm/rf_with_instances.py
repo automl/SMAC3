@@ -38,7 +38,7 @@ class RandomForestWithInstances(AbstractEPM):
     """
 
     def __init__(self, types: np.ndarray,
-                 bounds: list,
+                 bounds: typing.List[typing.Tuple[float, float]],
                  log_y: bool=False,
                  num_trees: int=N_TREES,
                  do_bootstrapping: bool=True,
@@ -60,7 +60,7 @@ class RandomForestWithInstances(AbstractEPM):
             have 2 dimension where the first dimension consists of 3 different
             categorical choices and the second dimension is continuous than we
             have to pass np.array([2, 0]). Note that we count starting from 0.
-        bounds : np.ndarray (D, 2)
+        bounds : list
             Specifies the bounds for continuous features.
         log_y: bool
             y values (passed to this RF) are expected to be log(y) transformed;

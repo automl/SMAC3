@@ -17,8 +17,10 @@ class TestRFWithInstances(unittest.TestCase):
     def test_predict_wrong_X_dimensions(self):
         rs = np.random.RandomState(1)
 
-        model = RandomForestWithInstances(np.zeros((10,), dtype=np.uint), bounds=np.array(
-            list(map(lambda x: (0, 10), range(10))), dtype=object))
+        model = RandomForestWithInstances(
+            types=np.zeros((10,), dtype=np.uint),
+            bounds=list(map(lambda x: (0, 10), range(10))),
+        )
         X = rs.rand(10)
         self.assertRaisesRegexp(ValueError, "Expected 2d array, got 1d array!",
                                 model.predict, X)
@@ -35,8 +37,10 @@ class TestRFWithInstances(unittest.TestCase):
         rs = np.random.RandomState(1)
         X = rs.rand(20, 10)
         Y = rs.rand(10, 1)
-        model = RandomForestWithInstances(np.zeros((10,), dtype=np.uint), bounds=np.array(
-                list(map(lambda x: (0, 10), range(10))), dtype=object))
+        model = RandomForestWithInstances(
+            types=np.zeros((10,), dtype=np.uint),
+            bounds=list(map(lambda x: (0, 10), range(10))),
+        )
         model.train(X[:10], Y[:10])
         m_hat, v_hat = model.predict(X[10:])
         self.assertEqual(m_hat.shape, (10, 1))
@@ -47,10 +51,12 @@ class TestRFWithInstances(unittest.TestCase):
         X = rs.rand(20, 20)
         F = rs.rand(10, 10)
         Y = rs.rand(20, 1)
-        model = RandomForestWithInstances(np.zeros((20,), dtype=np.uint),
-                                          np.array(list(map(lambda x: (0, 10), range(10))), dtype=object),
-                                          pca_components=2,
-                                          instance_features=F)
+        model = RandomForestWithInstances(
+            types=np.zeros((20,), dtype=np.uint),
+            bounds=list(map(lambda x: (0, 10), range(10))), dtype=object,
+            pca_components=2,
+            instance_features=F,
+        )
         model.train(X, Y)
 
         self.assertEqual(model.n_params, 10)
@@ -194,7 +200,10 @@ class TestRFWithInstances(unittest.TestCase):
             [0., 1., 1., 4., 0., 0., 0.]], dtype=np.float64)
         y = np.array([0, 1, 2, 3], dtype=np.float64)
 
-        model.train(np.vstack((X, X, X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y, y, y)))
+        X_train = np.vstack((X, X, X, X, X, X, X, X, X, X))
+        y_train = np.vstack((y, y, y, y, y, y, y, y, y, y))
+
+        model.train(X_train, y_train.reshape((-1, 1)))
         mean, _ = model.predict(X)
         for idx, m in enumerate(mean):
             self.assertAlmostEqual(y[idx], m, 0.05)

@@ -46,7 +46,7 @@ class AbstractEPM(object):
 
     def __init__(self,
                  types: np.ndarray,
-                 bounds: list,
+                 bounds: typing.List[typing.Tuple[float, float]],
                  instance_features: np.ndarray=None,
                  pca_components: float=None,
                  ):
@@ -54,6 +54,14 @@ class AbstractEPM(object):
 
         Parameters
         ----------
+        types : np.ndarray (D)
+            Specifies the number of categorical values of an input dimension where
+            the i-th entry corresponds to the i-th input dimension. Let's say we
+            have 2 dimension where the first dimension consists of 3 different
+            categorical choices and the second dimension is continuous than we
+            have to pass np.array([2, 0]). Note that we count starting from 0.
+        bounds : list
+            Specifies the bounds for continuous features.
         instance_features : np.ndarray (I, K)
             Contains the K dimensional instance features
             of the I different instances
@@ -104,8 +112,8 @@ class AbstractEPM(object):
             raise ValueError('Expected 2d array, got %dd array!' % len(X.shape))
         if X.shape[1] != len(self.types):
             raise ValueError('Feature mismatch: X should have %d features, but has %d' % (X.shape[1], len(self.types)))
-        if X.shape[0] != y.shape[0]:
-            raise ValueError('X.shape[0] (%s) != y.shape[0] (%s)' % (X.shape[0], y.shape[0]))
+        if X.shape[0] != Y.shape[0]:
+            raise ValueError('X.shape[0] (%s) != y.shape[0] (%s)' % (X.shape[0], Y.shape[0]))
 
         self.n_params = X.shape[1] - self.n_feats
 
