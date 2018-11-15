@@ -48,7 +48,7 @@ class BOGP(SMAC):
 
             cov_amp = 2
             types, bounds = get_types(kwargs['scenario'].cs, instance_features=None)
-            n_dims = lower.shape[0]
+            n_dims = len(types)
 
             initial_ls = np.ones([n_dims])
             exp_kernel = george.kernels.Matern52Kernel(initial_ls, ndim=n_dims)
