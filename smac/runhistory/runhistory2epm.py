@@ -399,6 +399,9 @@ class RunHistory2EPM4ScaledCost(RunHistory2EPM4Cost):
             min_y = 2 * np.min(y) - perc # ensure that scaled y cannot be 0
             max_y = np.max(y)
             # linear scaling
+            if min_y == max_y:
+                # prevent diving by zero
+                min_y *= 1 - 10**-101
             y = (y - min_y) / (max_y - min_y)
 
         return X, y
@@ -436,6 +439,9 @@ class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
             min_y = 2 * np.min(y) - perc # ensure that scaled y cannot be 0
             max_y = np.max(y)
             # linear scaling
+            if min_y == max_y:
+                # prevent diving by zero
+                min_y *= 1 - 10**-10
             y = (y - min_y) / (max_y - min_y)
             y = 1 - 1/y
 
@@ -474,6 +480,9 @@ class RunHistory2EPM4SqrtScaledCost(RunHistory2EPM4Cost):
             min_y = 2 * np.min(y) - perc # ensure that scaled y cannot be 0
             max_y = np.max(y)
             # linear scaling
+            if min_y == max_y:
+                # prevent diving by zero
+                min_y *= 1 - 10**-10
             y = (y - min_y) / (max_y - min_y)
             y = np.sqrt(y)
 
@@ -512,6 +521,9 @@ class RunHistory2EPM4LogScaledCost(RunHistory2EPM4Cost):
             min_y = 2 * np.min(y) - perc # ensure that scaled y cannot be 0
             max_y = np.max(y)
             # linear scaling
+            if min_y == max_y:
+                # prevent diving by zero
+                min_y *= 1 - 10**-10
             y = (y - min_y) / (max_y - min_y)
             y = np.log(y)
 
