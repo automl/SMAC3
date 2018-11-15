@@ -12,8 +12,6 @@ from smac.epm.gp_default_priors import DefaultPrior
 
 def get_gp(n_dimensions, rs, noise=1e-3):
     cov_amp = 2
-    lower = np.array([0 for _ in range(n_dimensions)])
-    upper = np.array([10 for _ in range(n_dimensions)])
 
     initial_ls = np.ones([n_dimensions])
     exp_kernel = george.kernels.Matern52Kernel(initial_ls, ndim=n_dimensions)
@@ -25,7 +23,7 @@ def get_gp(n_dimensions, rs, noise=1e-3):
     if n_hypers % 2 == 1:
         n_hypers += 1
 
-    bounds = [(0, 1) for _ in range(n_dimensions)]
+    bounds = [(0., 1.) for _ in range(n_dimensions)]
     types = np.zeros(n_dimensions)
 
     model = GaussianProcess(

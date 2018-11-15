@@ -53,7 +53,7 @@ class TestRFWithInstances(unittest.TestCase):
         Y = rs.rand(20, 1)
         model = RandomForestWithInstances(
             types=np.zeros((20,), dtype=np.uint),
-            bounds=list(map(lambda x: (0, 10), range(10))), dtype=object,
+            bounds=list(map(lambda x: (0, 10), range(10))),
             pca_components=2,
             instance_features=F,
         )
