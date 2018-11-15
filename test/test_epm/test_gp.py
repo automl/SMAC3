@@ -114,9 +114,9 @@ class TestGP(unittest.TestCase):
         X = X / X.max(axis=0)
         rs = np.random.RandomState(1)
         model = get_gp(X.shape[1], rs)
-        cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=5)
+        cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
 
-        maes = [10.431999356564946, 9.8519332981337, 8.892338685046003, 9.49003322935004, 9.616151647679148]
+        maes = [10.109955737245306468, 9.553761121008572789]
 
         for i, (train_split, test_split) in enumerate(cv.split(X, y)):
             X_train = X[train_split]

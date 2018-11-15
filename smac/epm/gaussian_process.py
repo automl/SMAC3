@@ -22,7 +22,7 @@ class GaussianProcess(BaseModel):
         prior: BasePrior=None,
         noise: float=1e-3,
         use_gradients: bool=False,
-        normalize_output: bool=False,
+        normalize_output: bool=True,
         normalize_input: bool=True,
         rng: typing.Optional[np.random.RandomState]=None,
     ):
@@ -130,8 +130,6 @@ class GaussianProcess(BaseModel):
         else:
             self.hypers = self.gp.kernel.get_parameter_vector()
             self.hypers = np.append(self.hypers, np.log(self.noise))
-
-        logger.debug("GP Hyperparameters: " + str(self.hypers))
 
         try:
             self.gp.compute(self.X, yerr=np.sqrt(self.noise))

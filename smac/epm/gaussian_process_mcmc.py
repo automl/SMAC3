@@ -25,7 +25,7 @@ class GaussianProcessMCMC(BaseModel):
         n_hypers: int=20,
         chain_length: int=2000,
         burnin_steps: int=2000,
-        normalize_output: bool=False,
+        normalize_output: bool=True,
         normalize_input: bool=True,
         rng: typing.Optional[np.random.RandomState]=None,
         noise: int=-8,
