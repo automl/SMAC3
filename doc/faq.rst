@@ -24,14 +24,25 @@ You can also run SMAC with :code:`--verbose DEBUG` to see how *SMAC* tried to ca
 
 Use the `restore-option <basic_usage.html#restorestate>`_.
 
-.. rubric:: I discovered a bug/have criticism or ideas on *SMAC*. Where should I report to?
+.. rubric:: I discovered a bug or SMAC does not behave as expected. Where should I report to?
 
-*SMAC* uses the
-`GitHub issue-tracker <https://github.com/automl/SMAC3/issues>`_ to take care
-of bugs and questions. If you experience problems with *SMAC*, try to provide
-a full error report with all the typical information (OS, version,
-console-output, minimum working example, ...). This makes it a lot easier to
-reproduce the error and locate the problem.
+Open an issue in our issue list on GitHub. Before you report a bug, please make sure that:
+
+  * Your bug hasn't already been reported in our issue tracker
+  * You are using the latest SMAC3 version.
+
+If you found an issue, please provide us with the following information:
+
+  * A description of the problem
+  * An example to reproduce the problem
+  * Any information about your setup that could be helpful to resolve the bug (such as installed python packages)
+  * Feel free, to add a screenshot showing the issue
+
+.. rubric:: I want to contribute code or discuss a new idea. Where should I report to?
+
+*SMAC* uses the `GitHub issue-tracker <https://github.com/automl/SMAC3/issues>`_ to also take care
+of questions and feedback and is the preferred location for discussing new features and ongoing work. Please also have a look at our
+`contribution guide <https://github.com/automl/SMAC3/blob/master/.github/CONTRIBUTING.md>`_.
 
 .. rubric:: What is the meaning of *deterministic*?
 
@@ -40,7 +51,6 @@ To evaluate a configuration of a non-deterministic algorithm, multiple runs with
 to determine the performance of that configuration on one instance.
 Deterministic algorithms don't depend on seeds, thus requiring only one evaluation of a configuration on an instance
 to evaluate the performance on that instance. Nevertheless the default seed 0 is still passed to the target algorithm.
-
 
 .. rubric:: **Glossary**
 
