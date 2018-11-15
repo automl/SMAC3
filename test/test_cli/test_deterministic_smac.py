@@ -77,3 +77,48 @@ class TestDeterministicSMAC(unittest.TestCase):
         h3 = json.load(open(self.output_dir_3 + '/run_2/runhistory.json'))
         self.assertEqual(h1, h2)
         self.assertNotEqual(h1, h3)
+
+    def test_modes(self):
+        """
+        Test if different modes are accepted
+        """
+        testargs = ["scripts/smac",
+                    "--scenario", self.scenario_file,
+                    "--verbose_level", "DEBUG",
+                    "--seed", "2",
+                    "--random_configuration_chooser", "test/test_cli/random_configuration_chooser_impl.py",
+                    "--output_dir", self.output_dir_3,
+                    "--mode", 'SMAC']
+        cli = SMACCLI()
+        with mock.patch("smac.smac_cli.SMAC") as MSMAC:
+            MSMAC.return_value.optimize.return_value = True
+            cli.main_cli(testargs[1:])
+            MSMAC.assert_called_once()
+
+        testargs[-1] = 'BOGP'
+        cli = SMACCLI()
+        with mock.patch("smac.smac_cli.BOGP") as MSMAC:
+            MSMAC.return_value.optimize.return_value = True
+            cli.main_cli(testargs[1:])
+            MSMAC.assert_called_once()
+
+        testargs[-1] = 'BORF'
+        cli = SMACCLI()
+        with mock.patch("smac.smac_cli.BORF") as MSMAC:
+            MSMAC.return_value.optimize.return_value = True
+            cli.main_cli(testargs[1:])
+            MSMAC.assert_called_once()
+
+        testargs[-1] = 'Hydra'
+        cli = SMACCLI()
+        with mock.patch("smac.smac_cli.Hydra") as MSMAC:
+            MSMAC.return_value.optimize.return_value = True
+            cli.main_cli(testargs[1:])
+            MSMAC.assert_called_once()
+
+        testargs[-1] = 'PSMAC'
+        cli = SMACCLI()
+        with mock.patch("smac.smac_cli.PSMAC") as MSMAC:
+            MSMAC.return_value.optimize.return_value = True
+            cli.main_cli(testargs[1:])
+            MSMAC.assert_called_once()

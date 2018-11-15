@@ -8,6 +8,10 @@ __email__ = "kimmiga@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
+"""
+This class is used to test in test_deterministic_smac if the CLI accepts
+custom Random Conf choosers.
+"""
 class RandomConfigurationChooserImpl(ChooserNoCoolDown):
     """
     Implementation of helper class to configure interleaving of
