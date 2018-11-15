@@ -71,7 +71,7 @@ deploy:
   provider: pages
   skip-cleanup: true
   github-token: $GITHUB_TOKEN # set in the settings page of my repository
-  keep-hisotry: true
+  keep-history: true
   commiter-from-gh: true
   on:
     all_branches: true
