@@ -3,19 +3,23 @@ Installation
 
 .. _requirements:
 
-Requirements
+System Requirements
 ------------
-The random forest used in SMAC depends on a C++11 compatible compiler
-and on SWIG (>3.0).
 
-To install both requirements system-wide on a linux system with apt, 
+SMAC has the following system requirements:
+
+  * Linux operating system (for example Ubuntu),
+  * Python (>=3.5.2).
+  * C++ compiler (with C++11 supports) and SWIG (version 3.0 or later)
+
+To install the C++ compiler and SWIG system-wide on a linux system with apt,
 please call:
 
 .. code-block:: bash
 
     sudo apt-get install build-essential swig
 
-If you use Anaconda, you have to install both gcc and SWIG from Anaconda to
+If you use Anaconda, you have to install both, gcc and SWIG, from Anaconda to
 prevent compilation errors:
 
 .. code-block:: bash
@@ -31,6 +35,8 @@ line:
 
 .. code-block:: bash
 
+    # First install all requirements
+    curl https://raw.githubusercontent.com/automl/smac3/master/requirements.txt | xargs -n 1 -L 1 pip install
     pip install smac
     
 If you want to install it in the user space (e.g., because of missing
