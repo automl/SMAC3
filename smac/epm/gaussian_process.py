@@ -49,6 +49,7 @@ class GaussianProcess(BaseModel):
             Random number generator
         """
 
+
         if rng is None:
             self.rng = np.random.RandomState(np.random.randint(0, 10000))
         else:
@@ -65,10 +66,12 @@ class GaussianProcess(BaseModel):
         self.y = None
         self.hypers = []
         self.is_trained = False
+
         self.lower = lower
         self.upper = upper
 
-    @BaseModel._check_shapes_train
+        super().__init__()
+
     def train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool=True):
         """
         Computes the Cholesky decomposition of the covariance of X and
@@ -107,7 +110,7 @@ class GaussianProcess(BaseModel):
         self.gp = george.GP(self.kernel, mean=self.mean)
 
         if do_optimize:
-            self.hypers = self.optimize()
+            self.hypers = self._optimize()
             self.gp.kernel.set_parameter_vector(self.hypers[:-1])
             self.noise = np.exp(self.hypers[-1])  # sigma^2
         else:
@@ -127,7 +130,7 @@ class GaussianProcess(BaseModel):
     def _get_noise(self):
         return self.noise
 
-    def nll(self, theta: np.ndarray) -> float:
+    def _nll(self, theta: np.ndarray) -> float:
         """
         Returns the negative marginal log likelihood (+ the prior) for
         a hyperparameter configuration theta.
@@ -191,7 +194,7 @@ class GaussianProcess(BaseModel):
 
         return -g
 
-    def optimize(self) -> np.ndarray:
+    def _optimize(self) -> np.ndarray:
         """
         Optimizes the marginal log likelihood and returns the best found
         hyperparameter configuration theta.
@@ -206,12 +209,12 @@ class GaussianProcess(BaseModel):
         p0 = np.append(p0, np.log(self.noise))
 
         if self.use_gradients:
-            theta, _, _ = optimize.minimize(self.nll, p0,
+            theta, _, _ = optimize.minimize(self._nll, p0,
                                             method="BFGS",
                                             jac=self._grad_nll)
         else:
             try:
-                results = optimize.minimize(self.nll, p0, method='L-BFGS-B')
+                results = optimize.minimize(self._nll, p0, method='L-BFGS-B')
                 theta = results.x
             except ValueError:
                 logging.error("Could not find a valid hyperparameter configuration! Use initial configuration")
@@ -219,37 +222,7 @@ class GaussianProcess(BaseModel):
 
         return theta
 
-    def predict_variance(self, x1: np.ndarray, X2: np.ndarray) -> np.ndarray:
-        r"""
-        Predicts the variance between a test points x1 and a set of points X2 by
-           math: \sigma(X_1, X_2) = k_{X_1,X_2} - k_{X_1,X} * (K_{X,X}
-                       + \sigma^2*\mathds{I})^-1 * k_{X,X_2})
-
-        Parameters
-        ----------
-        x1: np.ndarray (1, D)
-            First test point
-        X2: np.ndarray (N, D)
-            Set of test point
-        Returns
-        ----------
-        np.array(N, 1)
-            predictive variance between x1 and X2
-
-        """
-
-        if not self.is_trained:
-            raise Exception('Model has to be trained first!')
-
-        x_ = np.concatenate((x1, X2))
-        _, var = self.predict(x_, full_cov=True)
-
-        var = var[-1, :-1, np.newaxis]
-
-        return var
-
-    @BaseModel._check_shapes_predict
-    def predict(self, X_test: np.ndarray, full_cov: bool=False, **kwargs):
+    def _predict(self, X_test: np.ndarray, full_cov: bool=False):
         r"""
         Returns the predictive mean and variance of the objective function at
         the given test points.
@@ -294,11 +267,6 @@ class GaussianProcess(BaseModel):
             var = np.clip(var, np.finfo(var.dtype).eps, np.inf)
             var[np.where((var < np.finfo(var.dtype).eps) & (var > -np.finfo(var.dtype).eps))] = 0
 
-        if len(mu.shape) == 1:
-            mu = mu.reshape((-1, 1))
-        if len(var.shape) == 1:
-            var = var.reshape((-1, 1))
-
         return mu, var
 
     def sample_functions(self, X_test: np.ndarray, n_funcs: int=1) -> np.ndarray:
@@ -336,23 +304,3 @@ class GaussianProcess(BaseModel):
             return funcs[None, :]
         else:
             return funcs
-
-    def get_incumbent(self):
-        """
-        Returns the best observed point and its function value
-
-        Returns
-        ----------
-        incumbent: ndarray (D,)
-            current incumbent
-        incumbent_value: ndarray (N,)
-            the observed value of the incumbent
-        """
-        inc, inc_value = super(GaussianProcess, self).get_incumbent()
-        if self.normalize_input:
-            inc = normalization.zero_one_unnormalization(inc, self.lower, self.upper)
-
-        if self.normalize_output:
-            inc_value = normalization.zero_mean_unit_var_unnormalization(inc_value, self.y_mean, self.y_std)
-
-        return inc, inc_value

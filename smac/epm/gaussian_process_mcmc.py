@@ -77,8 +77,9 @@ class GaussianProcessMCMC(BaseModel):
         self.lower = lower
         self.upper = upper
 
-    @BaseModel._check_shapes_train
-    def train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool=True, **kwargs):
+        super().__init__()
+
+    def train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool=True):
         """
         Performs MCMC sampling to sample hyperparameter configurations from the
         likelihood and trains for each sample a GP on X and y
@@ -117,7 +118,7 @@ class GaussianProcessMCMC(BaseModel):
             # We have one walker for each hyperparameter configuration
             sampler = emcee.EnsembleSampler(self.n_hypers,
                                             len(self.kernel) + 1,
-                                            self.loglikelihood)
+                                            self._loglikelihood)
             sampler.random_state = self.rng.get_state()
             # Do a burn-in in the first iteration
             if not self.burned:
@@ -169,7 +170,7 @@ class GaussianProcessMCMC(BaseModel):
 
         self.is_trained = True
 
-    def loglikelihood(self, theta: np.ndarray):
+    def _loglikelihood(self, theta: np.ndarray):
         """
         Return the loglikelihood (+ the prior) for a hyperparameter
         configuration theta.
@@ -206,8 +207,7 @@ class GaussianProcessMCMC(BaseModel):
         else:
             return self.gp.lnlikelihood(self.y, quiet=True)
 
-    @BaseModel._check_shapes_predict
-    def predict(self, X_test: np.ndarray, **kwargs):
+    def _predict(self, X_test: np.ndarray):
         r"""
         Returns the predictive mean and variance of the objective function
         at X average over all hyperparameter samples.
@@ -253,29 +253,4 @@ class GaussianProcessMCMC(BaseModel):
             v = np.clip(v, np.finfo(v.dtype).eps, np.inf)
             v[np.where((v < np.finfo(v.dtype).eps) & (v > -np.finfo(v.dtype).eps))] = 0
 
-        if len(m.shape) == 1:
-            m = m.reshape((-1, 1))
-        if len(v.shape) == 1:
-            v = v.reshape((-1, 1))
-
         return m, v
-
-    def get_incumbent(self):
-        """
-        Returns the best observed point and its function value
-
-        Returns
-        ----------
-        incumbent: ndarray (D,)
-            current incumbent
-        incumbent_value: ndarray (N,)
-            the observed value of the incumbent
-        """
-        inc, inc_value = super(GaussianProcessMCMC, self).get_incumbent()
-        if self.normalize_input:
-            inc = normalization.zero_one_unnormalization(inc, self.lower, self.upper)
-
-        if self.normalize_output:
-            inc_value = normalization.zero_mean_unit_var_unnormalization(inc_value, self.y_mean, self.y_std)
-
-        return inc, inc_value

@@ -9,6 +9,7 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
 
 from smac.epm.rf_with_instances import RandomForestWithInstances
 import smac
+import smac.configspace
 from smac.utils.util_funcs import get_types
 
 
@@ -166,17 +167,13 @@ class TestRFWithInstances(unittest.TestCase):
 
     def test_with_ordinal(self):
         cs = smac.configspace.ConfigurationSpace()
-        a = cs.add_hyperparameter(CategoricalHyperparameter('a', [0, 1],
-                                                            default_value=0))
-        b = cs.add_hyperparameter(OrdinalHyperparameter('b', [0, 1],
-                                                        default_value=1))
-        b = cs.add_hyperparameter(UniformFloatHyperparameter('c', lower=0., upper=1.,
-                                                             default_value=1))
-        b = cs.add_hyperparameter(UniformIntegerHyperparameter('d', lower=0, upper=10,
-                                                               default_value=1))
+        a = cs.add_hyperparameter(CategoricalHyperparameter('a', [0, 1], default_value=0))
+        b = cs.add_hyperparameter(OrdinalHyperparameter('b', [0, 1], default_value=1))
+        b = cs.add_hyperparameter(UniformFloatHyperparameter('c', lower=0., upper=1., default_value=1))
+        b = cs.add_hyperparameter(UniformIntegerHyperparameter('d', lower=0, upper=10, default_value=1))
         cs.seed(1)
 
-        feat_array = np.array([0,0,0]).reshape(1, -1)
+        feat_array = np.array([0, 0, 0]).reshape(1, -1)
         types, bounds = get_types(cs, feat_array)
         model = RandomForestWithInstances(types=types, bounds=bounds,
                                           instance_features=feat_array,
@@ -191,10 +188,10 @@ class TestRFWithInstances(unittest.TestCase):
         self.assertEqual(bounds[3][0], 0.)
         self.assertEqual(bounds[3][1], 1.)
         X = np.array([
-            [0., 0., 0., 0., 0, 0, 0],
-            [0., 0., 1., 0., 0, 0, 0],
-            [0., 1., 0., 9., 0, 0, 0],
-            [0., 1., 1., 4., 0, 0, 0]], dtype=np.float64)
+            [0., 0., 0., 0., 0., 0., 0.],
+            [0., 0., 1., 0., 0., 0., 0.],
+            [0., 1., 0., 9., 0., 0., 0.],
+            [0., 1., 1., 4., 0., 0., 0.]], dtype=np.float64)
         y = np.array([0, 1, 2, 3], dtype=np.float64)
 
         model.train(np.vstack((X, X, X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y, y, y)))

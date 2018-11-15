@@ -120,7 +120,7 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
         self.logger = logging.getLogger(self.__module__ + "." +
                                         self.__class__.__name__)
 
-    def _train(self, X: np.ndarray, y: np.ndarray, **kwargs) -> 'RandomForestWithInstancesHPO':
+    def _train(self, X: np.ndarray, y: np.ndarray) -> 'RandomForestWithInstancesHPO':
         """Trains the random forest on X and y.
 
         Parameters

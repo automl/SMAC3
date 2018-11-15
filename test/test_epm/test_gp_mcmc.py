@@ -127,5 +127,5 @@ class TestGPMCMC(unittest.TestCase):
             y_test = y[test_split]
             model.train(X_train, y_train)
             y_hat, mu_hat = model.predict(X_test)
-            mae = np.mean(np.abs(y_hat - y_test))
+            mae = np.mean(np.abs(y_hat - y_test), dtype=np.float128)
             self.assertAlmostEqual(mae, maes[i])

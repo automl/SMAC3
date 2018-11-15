@@ -1,3 +1,5 @@
+import typing
+
 import numpy as np
 
 from sklearn.decomposition import PCA
@@ -43,8 +45,11 @@ class AbstractEPM(object):
     """
 
     def __init__(self,
+                 types: np.ndarray,
+                 bounds: list,
                  instance_features: np.ndarray=None,
-                 pca_components: float=None):
+                 pca_components: float=None,
+                 ):
         """Constructor
 
         Parameters
@@ -76,7 +81,10 @@ class AbstractEPM(object):
         # Never use a lower variance than this
         self.var_threshold = 10 ** -5
 
-    def train(self, X: np.ndarray, Y: np.ndarray, **kwargs):
+        self.bounds = bounds
+        self.types = types
+
+    def train(self, X: np.ndarray, Y: np.ndarray) -> 'AbstractEPM':
         """Trains the EPM on X and Y.
 
         Parameters
@@ -91,6 +99,13 @@ class AbstractEPM(object):
         -------
         self : AbstractEPM
         """
+
+        if len(X.shape) != 2:
+            raise ValueError('Expected 2d array, got %dd array!' % len(X.shape))
+        if X.shape[1] != len(self.types):
+            raise ValueError('Feature mismatch: X should have %d features, but has %d' % (X.shape[1], len(self.types)))
+        if X.shape[0] != y.shape[0]:
+            raise ValueError('X.shape[0] (%s) != y.shape[0] (%s)' % (X.shape[0], y.shape[0]))
 
         self.n_params = X.shape[1] - self.n_feats
 
@@ -111,7 +126,7 @@ class AbstractEPM(object):
                                       dtype=np.uint)
         return self._train(X, Y)
 
-    def _train(self, X: np.ndarray, Y: np.ndarray, **kwargs):
+    def _train(self, X: np.ndarray, Y: np.ndarray) -> 'AbstractEPM':
         """Trains the random forest on X and y.
 
         Parameters
@@ -128,7 +143,7 @@ class AbstractEPM(object):
         """
         raise NotImplementedError
 
-    def predict(self, X: np.ndarray):
+    def predict(self, X: np.ndarray) -> typing.Tuple[np.ndarray, np.ndarray]:
         """
         Predict means and variances for given X.
 
@@ -144,6 +159,11 @@ class AbstractEPM(object):
         vars : np.ndarray  of shape = [n_samples, n_objectives]
             Predictive variance
         """
+        if len(X.shape) != 2:
+            raise ValueError('Expected 2d array, got %dd array!' % len(X.shape))
+        if X.shape[1] != len(self.types):
+            raise ValueError('Rows in X should have %d entries but have %d!' % (len(self.types), X.shape[1]))
+
         if self.pca:
             try:
                 X_feats = X[:, -self.n_feats:]
@@ -153,9 +173,16 @@ class AbstractEPM(object):
             except NotFittedError:
                 pass # PCA not fitted if only one training sample
 
-        return self._predict(X)
+        mean, var = self._predict(X)
 
-    def _predict(self, X: np.ndarray):
+        if len(mean.shape) == 1:
+            mean = mean.reshape((-1, 1))
+        if len(var.shape) == 1:
+            var = var.reshape((-1, 1))
+
+        return mean, var
+
+    def _predict(self, X: np.ndarray) -> typing.Tuple[np.ndarray, np.ndarray]:
         """
         Predict means and variances for given X.
 
@@ -173,7 +200,7 @@ class AbstractEPM(object):
         """
         raise NotImplementedError()
 
-    def predict_marginalized_over_instances(self, X: np.ndarray):
+    def predict_marginalized_over_instances(self, X: np.ndarray) -> typing.Tuple[np.ndarray, np.ndarray]:
         """Predict mean and variance marginalized over all instances.
 
         Returns the predictive mean and variance marginalised over all
@@ -192,6 +219,11 @@ class AbstractEPM(object):
             Predictive variance
         """
 
+        if len(X.shape) != 2:
+            raise ValueError('Expected 2d array, got %dd array!' % len(X.shape))
+        if X.shape[1] != len(self.types):
+            raise ValueError('Rows in X should have %d entries but have %d!' % (len(self.types), X.shape[1]))
+
         if self.instance_features is None or \
                 len(self.instance_features) == 0:
             mean, var = self.predict(X)
@@ -200,14 +232,6 @@ class AbstractEPM(object):
             return mean, var
         else:
             n_instances = len(self.instance_features)
-
-        if len(X.shape) != 2:
-            raise ValueError(
-                'Expected 2d array, got %dd array!' % len(X.shape))
-        if X.shape[1] != self.bounds.shape[0]:
-            raise ValueError('Rows in X should have %d entries but have %d!' %
-                             (self.bounds.shape[0],
-                              X.shape[1]))
 
         mean = np.zeros(X.shape[0])
         var = np.zeros(X.shape[0])
