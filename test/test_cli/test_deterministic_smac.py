@@ -93,32 +93,46 @@ class TestDeterministicSMAC(unittest.TestCase):
         with mock.patch("smac.smac_cli.SMAC") as MSMAC:
             MSMAC.return_value.optimize.return_value = True
             cli.main_cli(testargs[1:])
-            MSMAC.assert_called_once()
+            MSMAC.assert_called_once_with(
+                initial_configurations=None, restore_incumbent=None, run_id=2,
+                runhistory=None, stats=None, scenario=mock.ANY, rng=mock.ANY)
 
         testargs[-1] = 'BOGP'
         cli = SMACCLI()
         with mock.patch("smac.smac_cli.BOGP") as MSMAC:
             MSMAC.return_value.optimize.return_value = True
             cli.main_cli(testargs[1:])
-            MSMAC.assert_called_once()
+            MSMAC.assert_called_once_with(
+                initial_configurations=None, restore_incumbent=None, run_id=2,
+                runhistory=None, stats=None, scenario=mock.ANY, rng=mock.ANY)
 
         testargs[-1] = 'BORF'
         cli = SMACCLI()
         with mock.patch("smac.smac_cli.BORF") as MSMAC:
             MSMAC.return_value.optimize.return_value = True
             cli.main_cli(testargs[1:])
-            MSMAC.assert_called_once()
+            MSMAC.assert_called_once_with(
+                initial_configurations=None, restore_incumbent=None, run_id=2,
+                runhistory=None, stats=None, scenario=mock.ANY, rng=mock.ANY)
 
         testargs[-1] = 'Hydra'
         cli = SMACCLI()
         with mock.patch("smac.smac_cli.Hydra") as MSMAC:
             MSMAC.return_value.optimize.return_value = True
             cli.main_cli(testargs[1:])
-            MSMAC.assert_called_once()
+            MSMAC.assert_called_once_with(
+                initial_configurations=None, restore_incumbent=None, run_id=2,
+                incs_per_round=1, n_iterations=3,
+                n_optimizers=1, random_configuration_chooser=mock.ANY,
+                runhistory=None, stats=None, scenario=mock.ANY, rng=mock.ANY, val_set='train'
+            )
 
         testargs[-1] = 'PSMAC'
         cli = SMACCLI()
         with mock.patch("smac.smac_cli.PSMAC") as MSMAC:
             MSMAC.return_value.optimize.return_value = True
             cli.main_cli(testargs[1:])
-            MSMAC.assert_called_once()
+            MSMAC.assert_called_once_with(
+                run_id=2, scenario=mock.ANY, rng=mock.ANY,
+                n_incs=1, n_optimizers=1, shared_model=False, validate=False
+            )
