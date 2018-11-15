@@ -95,7 +95,7 @@ class AbstractEPM(object):
         self.n_params = X.shape[1] - self.n_feats
 
         # reduce dimensionality of features of larger than PCA_DIM
-        if self.pca and X.shape[0] > 1:
+        if self.pca and X.shape[0] > self.pca.n_components:
             X_feats = X[:, -self.n_feats:]
             # scale features
             X_feats = self.scaler.fit_transform(X_feats)
