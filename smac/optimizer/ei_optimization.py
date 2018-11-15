@@ -206,13 +206,10 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
         """
 
-        num_configurations_by_local_search = min(
-            len(runhistory.data), num_points,
-        )
         init_points = self._get_initial_points(
-            num_configurations_by_local_search, runhistory)
+            num_points, runhistory)
+            
         configs_acq = []
-
         # Start N local search from different random start points
         for start_point in init_points:
             acq_val, configuration = self._one_iter(
@@ -229,11 +226,11 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
         return configs_acq
 
-    def _get_initial_points(self, num_configurations_by_local_search,
-                            runhistory):
+    def _get_initial_points(self, num_points, runhistory):
+        
         if runhistory.empty():
             init_points = self.config_space.sample_configuration(
-                size=num_configurations_by_local_search)
+                size=num_points)
         else:
             # initiate local search with best configurations from previous runs
             configs_previous_runs = runhistory.get_all_configs()
@@ -241,12 +238,13 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                 configs_previous_runs)
             num_configs_local_search = int(min(
                 len(configs_previous_runs_sorted),
-                num_configurations_by_local_search)
+                num_points)
             )
             init_points = list(
                 map(lambda x: x[1],
                     configs_previous_runs_sorted[:num_configs_local_search])
             )
+            
         return init_points
 
     def _one_iter(
@@ -319,6 +317,74 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
         return acq_val_incumbent, incumbent
 
+
+class DiffOpt(AcquisitionFunctionMaximizer):
+    """Get candidate solutions via DifferentialEvolutionSolvers.
+
+    Parameters
+    ----------
+    acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction
+
+    config_space : ~smac.configspace.ConfigurationSpace
+
+    rng : np.random.RandomState or int, optional
+    """
+
+    def _maximize(
+            self,
+            runhistory: RunHistory,
+            stats: Stats,
+            num_points: int,
+            _sorted: bool=False,
+            **kwargs
+    ) -> List[Tuple[float, Configuration]]:
+        """DifferentialEvolutionSolver
+
+        Parameters
+        ----------
+        runhistory: ~smac.runhistory.runhistory.RunHistory
+            runhistory object
+        stats: ~smac.stats.stats.Stats
+            current stats object
+        num_points: int
+            number of points to be sampled
+        _sorted: bool
+            whether random configurations are sorted according to acquisition function
+        **kwargs
+            not used
+
+        Returns
+        -------
+        iterable
+            An iterable consistng of
+            tuple(acqusition_value, :class:`smac.configspace.Configuration`).
+        """
+
+
+        from scipy.optimize._differentialevolution import DifferentialEvolutionSolver
+        configs = []
+
+        def func(x):
+            return -self.acquisition_function([Configuration(self.config_space, vector=x)])
+
+        ds = DifferentialEvolutionSolver(func, bounds=[[0, 1], [0, 1]], args=(),
+                                    strategy='best1bin', maxiter=1000,
+                                    popsize=50, tol=0.01,
+                                    mutation=(0.5, 1),
+                                    recombination=0.7,
+                                    seed=self.rng.randint(1000), polish=True,
+                                    callback=None,
+                                    disp=False, init='latinhypercube', atol=0)
+
+        rval = ds.solve()
+        for pop, val in zip(ds.population, ds.population_energies):
+            rc = Configuration(self.config_space, vector=pop)
+            rc.origin = 'DifferentialEvolution'
+            configs.append((-val, rc))
+
+        configs.sort(key=lambda t: t[0])
+        configs.reverse()
+        return configs
 
 class RandomSearch(AcquisitionFunctionMaximizer):
     """Get candidate solutions via random sampling of configurations.
@@ -399,6 +465,9 @@ class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
     n_steps_plateau_walk: int
         [LocalSearch] number of steps during a plateau walk before local search terminates
 
+    n_sls_iterations: int
+        [Local Search] number of local search iterations
+
     """
     def __init__(
             self,
@@ -406,7 +475,8 @@ class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
             config_space: ConfigurationSpace,
             rng: Union[bool, np.random.RandomState] = None,
             max_steps: Optional[int] = None,
-            n_steps_plateau_walk: int = 10
+            n_steps_plateau_walk: int = 10,
+            n_sls_iterations: int = 10
 
     ):
         super().__init__(acquisition_function, config_space, rng)
@@ -422,6 +492,15 @@ class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
             max_steps=max_steps,
             n_steps_plateau_walk=n_steps_plateau_walk
         )
+        self.n_sls_iterations = n_sls_iterations
+
+        #=======================================================================
+        # self.local_search = DiffOpt(
+        #     acquisition_function=acquisition_function,
+        #     config_space=config_space,
+        #     rng=rng
+        # )
+        #=======================================================================
 
     def maximize(
             self,
@@ -457,7 +536,7 @@ class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
         """
 
         next_configs_by_local_search = self.local_search._maximize(
-            runhistory, stats, 10, **kwargs
+            runhistory, stats, self.n_sls_iterations, **kwargs
         )
 
         # Get configurations sorted by EI

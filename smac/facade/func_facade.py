@@ -3,7 +3,7 @@ import typing
 
 import numpy as np
 
-from smac.facade.smac_facade import SMAC
+from smac.facade.borf_facade import BORF
 from smac.scenario.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.runhistory.runhistory import RunKey
@@ -24,8 +24,9 @@ def fmin_smac(func: typing.Callable,
               scenario_args: typing.Mapping[str, typing.Any]=None,
               **kwargs):
     """
-    Minimize a function func using the SMAC algorithm.
-    This function is a convenience wrapper for the SMAC class.
+    Minimize a function func using the BORF facade
+    (i.e., a modified version of SMAC).
+    This function is a convenience wrapper for the BORF class.
 
     Parameters
     ----------
@@ -89,7 +90,7 @@ def fmin_smac(func: typing.Callable,
         scenario_dict["runcount_limit"] = maxfun
     scenario = Scenario(scenario_dict)
 
-    smac = SMAC(scenario=scenario, tae_runner=ta, rng=rng, **kwargs)
+    smac = BORF(scenario=scenario, tae_runner=ta, rng=rng, **kwargs)
     smac.logger = logging.getLogger(smac.__module__ + "." + smac.__class__.__name__)
     incumbent = smac.optimize()
     config_id = smac.solver.runhistory.config_ids[incumbent]

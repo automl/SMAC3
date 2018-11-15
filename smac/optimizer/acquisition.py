@@ -106,7 +106,7 @@ class EI(AbstractAcquisitionFunction):
     r"""Computes for a given x the expected improvement as
     acquisition value.
 
-    :math:`EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]`,
+    :math:`EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi \} \right]`,
     with :math:`f(X^+)` as the incumbent.
     """
 
@@ -188,7 +188,7 @@ class EIPS(EI):
                  **kwargs):
         r"""Computes for a given x the expected improvement as
         acquisition value.
-        :math:`EI(X) := \frac{\mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]} {np.log10(r(x))}`,
+        :math:`EI(X) := \frac{\mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]} {np.log(r(x))}`,
         with :math:`f(X^+)` as the incumbent and :math:`r(x)` as runtime.
 
         Parameters
@@ -316,9 +316,10 @@ class LogEI(AbstractAcquisitionFunction):
         std = np.sqrt(var_)
 
         def calculate_log_ei():
+            # we expect that f_min is in log-space
             f_min = self.eta - self.par
-            v = (np.log(f_min) - m) / std
-            return (f_min * norm.cdf(v)) - \
+            v = (f_min - m) / std
+            return (np.exp(f_min) * norm.cdf(v)) - \
                 (np.exp(0.5 * var_ + m) * norm.cdf(v - std))
 
         if np.any(std == 0.0):
