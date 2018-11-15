@@ -100,6 +100,9 @@ class Scenario(object):
         self.feature_array = None
 
         self.instance_specific = {}
+        
+        if self.run_obj == "runtime":
+            self.logy = True
 
         def extract_instance_specific(instance_list):
             insts = []

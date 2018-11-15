@@ -110,25 +110,25 @@ class RunHistory(object):
         # By having the data in a deterministic order we can do useful tests
         # when we serialize the data and can assume it's still in the same
         # order as it was added.
-        self.data = collections.OrderedDict()  # type: typing.Dict[RunKey: RunValue]
+        self.data = collections.OrderedDict()  # type: typing.Dict[RunKey, RunValue]
 
         # for fast access, we have also an unordered data structure
         # to get all instance seed pairs of a configuration
-        self._configid_to_inst_seed = {}  # type: typing.Dict[int: InstSeedKey]
+        self._configid_to_inst_seed = {}  # type: typing.Dict[int, InstSeedKey]
 
-        self.config_ids = {}  # type: typing.Dict[Configuration: int]
-        self.ids_config = {}  # type: typing.Dict[int: Configuration]
+        self.config_ids = {}  # type: typing.Dict[Configuration, int]
+        self.ids_config = {}  # type: typing.Dict[int, Configuration]
         self._n_id = 0
 
         # Stores cost for each configuration ID
-        self.cost_per_config = {}  # type: typing.Dict[int: float]
+        self.cost_per_config = {}  # type: typing.Dict[int, float]
         # runs_per_config maps the configuration ID to the number of runs for that configuration
         # and is necessary for computing the moving average
-        self.runs_per_config = {}  # type: typing.Dict[int: int]
+        self.runs_per_config = {}  # type: typing.Dict[int, int]
 
         # Store whether a datapoint is "external", which means it was read from
         # a JSON file. Can be chosen to not be written to disk
-        self.external = {}  # type: typing.Dict[RunKey: DataOrigin]
+        self.external = {}  # type: typing.Dict[RunKey, DataOrigin]
 
         self.aggregate_func = aggregate_func
         self.overwrite_existing_runs = overwrite_existing_runs
@@ -296,10 +296,10 @@ class RunHistory(object):
         """
         config_id = self.config_ids.get(config)
         return self._configid_to_inst_seed.get(config_id, [])
-    
+
     def get_instance_costs_for_config(self, config: Configuration):
         """
-            Returns the average cost per instance (across seeds) 
+            Returns the average cost per instance (across seeds)
             for a configuration
             Parameters
             ----------
@@ -320,7 +320,7 @@ class RunHistory(object):
             cost_per_inst[inst].append(vkey.cost)
         cost_per_inst = dict([(inst, np.mean(costs)) for inst, costs in cost_per_inst.items()])
         return cost_per_inst
-        
+
 
     def get_all_configs(self):
         """Return all configurations in this RunHistory object

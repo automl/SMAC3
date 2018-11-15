@@ -163,6 +163,10 @@ class TrajLogger(object):
                       "cost": train_perf,
                       "incumbent": conf
                       }
+        try:
+            traj_entry["origin"] = incumbent.origin
+        except AttributeError:
+            traj_entry["origin"] = "UNKNOWN"
 
         with open(self.aclib_traj_fn, "a") as fp:
             json.dump(traj_entry, fp)

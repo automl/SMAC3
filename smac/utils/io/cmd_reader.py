@@ -7,7 +7,7 @@ import re
 import shlex
 import sys
 from smac.configspace import pcs, pcs_new
-from smac.utils.constants import MAXINT
+from smac.utils.constants import MAXINT, N_TREES
 from smac.utils.io.input_reader import InputReader
 import time
 import typing
@@ -374,7 +374,7 @@ class CMDReader(object):
                               default=logging.INFO, choices=["INFO", "DEBUG"],
                               help="Verbosity level.")
         opt_opts.add_argument("--mode",
-                              default="SMAC", choices=["SMAC", "ROAR", "EPILS", "Hydra", "PSMAC"],
+                              default="SMAC", choices=["SMAC", "ROAR", "EPILS", "Hydra", "PSMAC", "BORF", "BOGP"],
                               help="Configuration mode.")
         opt_opts.add_argument("--restore-state", "--restore_state", dest="restore_state",
                               default=None,
@@ -416,7 +416,7 @@ class CMDReader(object):
                               help="[dev] number of optimizers to run in parallel per psmac/hydra iteration.",
                               dest="hydra_n_optimizers")
         req_opts.add_argument("--psmac_validate",
-                              action="store_true",
+                              default=False, type=truthy,
                               help="[dev] Validate all psmac configurations.")
 
         self.main_cmd_actions, self.main_cmd_translations = CMDReader._extract_action_info(self.parser._actions)
@@ -464,7 +464,7 @@ class CMDReader(object):
                                default=3, type=int,
                                help="[dev] number of hydra iterations. Only active if mode is set to Hydra")
         smac_opts.add_argument("--use-ta-time", "--use_ta_time", dest="use_ta_time",
-                               default=False, type=bool,
+                               default=False, type=truthy,
                                help="[dev] Instead of measuring SMAC's wallclock time, "
                                "only consider time reported by the target algorithm (ta).")
 
@@ -479,11 +479,19 @@ class CMDReader(object):
                                help="[dev] The fraction of time to be used on "
                                     "intensification (versus choice of next "
                                     "Configurations).")
+        smac_opts.add_argument("--transform_y", "--transform-y",
+                               dest='transform_y',
+                               choices=["NONE", "LOG", "LOGS", "INVS"],
+                               default="NONE",                      
+                               help="[dev] Transform all observed cost values"
+                               " via log-transformations or inverse scaling."
+                               " The subfix \"s\" indicates that SMAC scales the"
+                               " y-values accordingly to apply the transformation.")
 
         ## RF Hyperparameters
         smac_opts.add_argument("--rf_num_trees","--rf-num-trees",
                                dest='rf_num_trees',
-                               default=10, type=int,
+                               default=N_TREES, type=int,
                                help="[dev] Number of trees in the random forest (> 1).")
         smac_opts.add_argument("--rf_do_bootstrapping","--rf-do-bootstrapping",
                        dest='rf_do_bootstrapping',
@@ -516,6 +524,13 @@ class CMDReader(object):
                default=None, type=int,
                help="[dev] Maximum number of local search steps in one iteration"
                     " during the optimization of the acquisition function.")
+        smac_opts.add_argument("--acq_opt_challengers","--acq-opt-challengers",
+               dest='acq_opt_challengers',
+               default=5000, type=int,
+               help="[dev] Number of challengers returned by acquisition function" 
+                    " optimization. Also influences the number of randomly sampled"
+                    " configurations to optimized the acquisition function")
+    
         ## Intensification
         smac_opts.add_argument("--intens_adaptive_capping_slackfactor","--intens-adaptive-capping-slackfactork",
                dest='intens_adaptive_capping_slackfactor',
@@ -530,6 +545,11 @@ class CMDReader(object):
                     " Set to 1 and in combination with very small intensification-percentage."
                     " it will deactivate randomly sampled configurations"
                     " (and hence, extrapolation of random forest will be an issue.)")
+        smac_opts.add_argument("--rand_prob","--rand-prob",
+               dest='rand_prob',
+               default=0.5, type=float,
+               help="[dev] probablity to run a random configuration"
+               " instead of configuration optimized on the acquisition function")
 
         self.parser.add_parser(self.smac_parser)
         self.smac_cmd_actions, self.smac_cmd_translations = CMDReader._extract_action_info(self.smac_parser._actions)
@@ -611,7 +631,7 @@ class CMDReader(object):
                                type=list,
                                help=SUPPRESS)  # added after parsing --features
         scen_opts.add_argument("--initial-incumbent", "--initial_incumbent", dest='initial_incumbent',
-                               default="DEFAULT", type=str, choices=['DEFAULT', 'RANDOM'],
+                               default="DEFAULT", type=str, choices=['DEFAULT', 'RANDOM', 'LHD', 'SOBOL', 'FACTORIAL'],
                                help="[dev] DEFAULT is the default from the PCS.")
         scen_opts.add_argument("--paramfile", "--param-file", "--param_file", "--pcs-fn", "--pcs_fn", dest='pcs_fn',
                                type=str, action=ReadPCSFileAction,

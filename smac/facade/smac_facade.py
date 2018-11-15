@@ -4,35 +4,47 @@ import typing
 
 import numpy as np
 
+# tae
 from smac.tae.execute_ta_run import ExecuteTARun
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.tae.execute_ta_run import StatusType
+# stats and options
 from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
+# runhistory
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, \
-    RunHistory2EPM4LogCost, RunHistory2EPM4Cost
+    RunHistory2EPM4LogCost, RunHistory2EPM4Cost, \
+    RunHistory2EPM4InvScaledCost, RunHistory2EPM4LogScaledCost
+# Initial designs
 from smac.initial_design.initial_design import InitialDesign
 from smac.initial_design.default_configuration_design import \
     DefaultConfiguration
 from smac.initial_design.random_configuration_design import RandomConfiguration
+from smac.initial_design.latin_hypercube_design import LHDesign
+from smac.initial_design.factorial_design import FactorialInitialDesign
+from smac.initial_design.sobol_design import SobolDesign 
 from smac.initial_design.multi_config_initial_design import \
     MultiConfigInitialDesign
+# intensification
 from smac.intensification.intensification import Intensifier
+# optimizer
 from smac.optimizer.smbo import SMBO
 from smac.optimizer.objective import average_cost
-from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction
+from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
 from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
     AcquisitionFunctionMaximizer
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
-    RandomConfigurationChooser
+    RandomConfigurationChooser, ChooserCosineAnnealing, ChooserProb
+# epm
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.base_epm import AbstractEPM
+# utils
 from smac.utils.util_funcs import get_types
 from smac.utils.io.traj_logging import TrajLogger
-from smac.utils.constants import MAXINT
+from smac.utils.constants import MAXINT, N_TREES
 from smac.utils.util_funcs import get_rng
 from smac.utils.io.output_directory import create_output_directory
 from smac.configspace import Configuration
@@ -60,7 +72,7 @@ class SMAC(object):
     """
 
     def __init__(self,
-                 scenario: typing.Type[Scenario],
+                 scenario: Scenario,
                  tae_runner: typing.Optional[typing.Union[ExecuteTARun, typing.Callable]]=None,
                  runhistory: typing.Optional[RunHistory]=None,
                  intensifier: typing.Optional[Intensifier]=None,
@@ -171,6 +183,10 @@ class SMAC(object):
         else:
             self.stats = Stats(scenario)
 
+        if self.scenario.run_obj == "runtime" and not self.scenario.transform_y == "LOG":
+            self.logger.warn("Runtime as objective automatically activates log(y) transformation")
+            self.scenario.transform_y = "LOG"
+
         # initialize empty runhistory
         if runhistory is None:
             runhistory = RunHistory(aggregate_func=aggregate_func)
@@ -178,8 +194,9 @@ class SMAC(object):
         if runhistory.aggregate_func is None:
             runhistory.aggregate_func = aggregate_func
 
-        random_configuration_chooser = SMAC._get_random_configuration_chooser(
-            random_configuration_chooser=random_configuration_chooser)
+        if not random_configuration_chooser:
+            random_configuration_chooser = ChooserProb(prob=scenario.rand_prob,
+                                                       rng=rng)
 
         # reset random number generator in config space to draw different
         # random configurations with each seed given to SMAC
@@ -196,7 +213,7 @@ class SMAC(object):
                                               instance_features=scenario.feature_array,
                                               seed=rng.randint(MAXINT),
                                               pca_components=scenario.PCA_DIM,
-                                              unlog_y=scenario.run_obj == "runtime",
+                                              log_y=scenario.transform_y in ["LOG", "LOGS"],
                                               num_trees=scenario.rf_num_trees,
                                               do_bootstrapping=scenario.rf_do_bootstrapping,
                                               ratio_features=scenario.rf_ratio_features,
@@ -205,7 +222,10 @@ class SMAC(object):
                                               max_depth=scenario.rf_max_depth)
         # initial acquisition function
         if acquisition_function is None:
-            acquisition_function = EI(model=model)
+            if scenario.transform_y in ["LOG", "LOGS"]:
+                acquisition_function = LogEI(model=model)
+            else:
+                acquisition_function = EI(model=model)
 
         # inject model if necessary
         if acquisition_function.model is None:
@@ -331,6 +351,33 @@ class SMAC(object):
                                                      stats=self.stats,
                                                      traj_logger=traj_logger,
                                                      rng=rng)
+            elif scenario.initial_incumbent == "LHD":
+                initial_design = LHDesign(runhistory=runhistory,
+                                            intensifier=intensifier,
+                                            aggregate_func=aggregate_func,
+                                            tae_runner=tae_runner,
+                                            scenario=scenario,
+                                            stats=self.stats,
+                                            traj_logger=traj_logger,
+                                            rng=rng)
+            elif scenario.initial_incumbent == "FACTORIAL":
+                initial_design = FactorialInitialDesign(runhistory=runhistory,
+                                                        intensifier=intensifier,
+                                                        aggregate_func=aggregate_func,
+                                                        tae_runner=tae_runner,
+                                                        scenario=scenario,
+                                                        stats=self.stats,
+                                                        traj_logger=traj_logger,
+                                                        rng=rng)
+            elif scenario.initial_incumbent == "SOBOL":
+                initial_design = SobolDesign(runhistory=runhistory,
+                                            intensifier=intensifier,
+                                            aggregate_func=aggregate_func,
+                                            tae_runner=tae_runner,
+                                            scenario=scenario,
+                                            stats=self.stats,
+                                            traj_logger=traj_logger,
+                                            rng=rng)
             else:
                 raise ValueError("Don't know what kind of initial_incumbent "
                                  "'%s' is" % scenario.initial_incumbent)
@@ -348,13 +395,13 @@ class SMAC(object):
         if runhistory2epm is None:
 
             num_params = len(scenario.cs.get_hyperparameters())
-            if scenario.run_obj == "runtime":
+            if scenario.run_obj == 'runtime':
 
                 # if we log the performance data,
                 # the RFRImputator will already get
                 # log transform data from the runhistory
-                cutoff = np.log10(scenario.cutoff)
-                threshold = np.log10(scenario.cutoff *
+                cutoff = np.log(scenario.cutoff)
+                threshold = np.log(scenario.cutoff *
                                      scenario.par_factor)
 
                 imputor = RFRImputator(rng=rng,
@@ -372,11 +419,30 @@ class SMAC(object):
                     imputor=imputor)
 
             elif scenario.run_obj == 'quality':
-                runhistory2epm = RunHistory2EPM4Cost(scenario=scenario, num_params=num_params,
-                                                     success_states=[
-                                                         StatusType.SUCCESS,
-                                                         StatusType.CRASHED],
-                                                     impute_censored_data=False, impute_state=None)
+                if scenario.transform_y == "NONE":
+                    runhistory2epm = RunHistory2EPM4Cost(scenario=scenario, num_params=num_params,
+                                                         success_states=[
+                                                             StatusType.SUCCESS,
+                                                             StatusType.CRASHED],
+                                                         impute_censored_data=False, impute_state=None)
+                elif scenario.transform_y == "LOG":
+                    runhistory2epm = RunHistory2EPM4LogCost(scenario=scenario, num_params=num_params,
+                                                         success_states=[
+                                                             StatusType.SUCCESS,
+                                                             StatusType.CRASHED],
+                                                         impute_censored_data=False, impute_state=None)
+                elif scenario.transform_y == "LOGS":
+                    runhistory2epm = RunHistory2EPM4LogScaledCost(scenario=scenario, num_params=num_params,
+                                                         success_states=[
+                                                             StatusType.SUCCESS,
+                                                             StatusType.CRASHED],
+                                                         impute_censored_data=False, impute_state=None)
+                elif scenario.transform_y == "INVS":
+                    runhistory2epm = RunHistory2EPM4InvScaledCost(scenario=scenario, num_params=num_params,
+                                                         success_states=[
+                                                             StatusType.SUCCESS,
+                                                             StatusType.CRASHED],
+                                                         impute_censored_data=False, impute_state=None)
 
             else:
                 raise ValueError('Unknown run objective: %s. Should be either '
@@ -402,29 +468,11 @@ class SMAC(object):
             'restore_incumbent': restore_incumbent,
             'random_configuration_chooser': random_configuration_chooser
         }
+
         if smbo_class is None:
             self.solver = SMBO(**smbo_args)
         else:
             self.solver = smbo_class(**smbo_args)
-
-    @staticmethod
-    def _get_random_configuration_chooser(random_configuration_chooser):
-        """
-        Initialize random configuration chooser
-        If random_configuration_chooser is falsy, initialize with ChooserNoCoolDown(2.0)
-
-        Parameters
-        ----------
-        random_configuration_chooser: ChooserNoCoolDown|ChooserLinearCoolDown|None
-
-        Returns
-        -------
-        ChooserNoCoolDown|ChooserLinearCoolDown
-
-        """
-        if not random_configuration_chooser:
-            return ChooserNoCoolDown(2.0)
-        return random_configuration_chooser
 
     def optimize(self):
         """

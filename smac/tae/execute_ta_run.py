@@ -174,8 +174,6 @@ class ExecuteTARun(object):
         # update SMAC stats
         self.stats.ta_runs += 1
         self.stats.ta_time_used += float(runtime)
-        if self.runhistory:
-            self.stats.n_configs = len(self.runhistory.config_ids)
 
         # Catch NaN or inf.
         if (self.run_obj == 'runtime' and not np.isfinite(runtime) or
@@ -218,6 +216,7 @@ class ExecuteTARun(object):
                                 cost=cost, time=runtime, status=status,
                                 instance_id=instance, seed=seed,
                                 additional_info=additional_info)
+            self.stats.n_configs = len(self.runhistory.config_ids)
 
         if status == StatusType.CAPPED:
             raise CappedRunException("")

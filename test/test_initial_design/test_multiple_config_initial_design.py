@@ -46,7 +46,7 @@ class TestMultiInitialDesign(unittest.TestCase):
                              intensifier=intensifier, aggregate_func=average_cost)
 
         inc = dc.run()
-        self.assertTrue(stats.ta_runs==2)
-        self.assertTrue(len(rh.data)==2)
+        self.assertTrue(stats.ta_runs==4)  # two runs per config
+        self.assertTrue(len(rh.data)==4)  # two runs per config
         self.assertTrue(rh.get_cost(inc) == 4)
 

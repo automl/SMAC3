@@ -1,13 +1,28 @@
 language: python
 
+sudo: false
+
+env:
+  global:
+  - OPENBLAS_NUM_THREADS=1
+  - OMP_NUM_THREADS=1
+  - MKL_NUM_THREADS=1
+
 matrix:
 
   include:
-  - os: linux
-    env: PYTHON_VERSION="3.5" COVERAGE="true" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
-  - os: linux
-    env: PYTHON_VERSION="3.6" COVERAGE="true" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
-
+    # Unit tests
+    - os: linux
+      env: TESTSUITE=run_unittests.sh PYTHON_VERSION="3.5" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
+    - os: linux
+      env: TESTSUITE=run_unittests.sh PYTHON_VERSION="3.6" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
+    - os: linux
+      env: TESTSUITE=run_unittests.sh PYTHON_VERSION="3.7" COVERAGE="true" DOCPUSH="true" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
+    # Other tests (mypy, examples, flake8...)
+    - os: linux
+      env: TESTSUITE=run_mypy.sh PYTHON_VERSION="3.6" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
+    - os: linux
+      env: TESTSUITE=run_examples.sh PYTHON_VERSION="3.6" MINICONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
   # Disable OSX building because it takes too long and hinders progress
   # Set language to generic to not break travis-ci
   # https://github.com/travis-ci/travis-ci/issues/2312#issuecomment-195620855
@@ -25,9 +40,11 @@ matrix:
 cache:
   directories:
     - $HOME/.cache/pip
+    - $HOME/download
   pip: true
 
-sudo: false
+git:
+  depth: 5
 
 before_cache:
   - rm -f $HOME/.cache/pip/log/debug.log
@@ -41,13 +58,22 @@ before_install:
   - source activate testenv
 
 install:
-  - pip install pep8 codecov
+  - pip install pep8 codecov mypy flake8
   - cat requirements.txt | xargs -n 1 -L 1 pip install
   - python setup.py install
 
-# command to run tests, e.g. python setup.py test
 script:
-  - echo Testing revision $(git rev-parse HEAD) ...
-  - make test && bash scripts/test_no_files_left.sh
+  - ci_scripts/$TESTSUITE
 after_success:
-  - codecov
+  - source ci_scripts/success.sh && source ci_scripts/create_doc.sh $TRAVIS_BRANCH "doc_result"
+
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN # set in the settings page of my repository
+  keep-history: true
+  commiter-from-gh: true
+  on:
+    all_branches: true
+    condition: $doc_result = "success"
+  local_dir: doc/$TRAVIS_BRANCH
