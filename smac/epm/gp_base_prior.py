@@ -10,6 +10,12 @@ class BasePrior(object):
         Abstract base class to define the interface for priors
         of GP hyperparameter.
 
+        This class is a verbatim copy of the implementation of RoBO:
+
+        Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
+        RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
+        In: NIPS 2017 Bayesian Optimization Workshop
+
         Parameters
         ----------
         rng: np.random.RandomState
@@ -77,6 +83,12 @@ class TophatPrior(BasePrior):
     def __init__(self, l_bound: float, u_bound: float, rng: np.random.RandomState=None):
         """
         Tophat prior as it used in the original spearmint code.
+
+        This class is a verbatim copy of the implementation of RoBO:
+
+        Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
+        RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
+        In: NIPS 2017 Bayesian Optimization Workshop
 
         Parameters
         ----------
@@ -161,6 +173,12 @@ class HorseshoePrior(BasePrior):
         """
         Horseshoe Prior as it is used in spearmint
 
+        This class is a verbatim copy of the implementation of RoBO:
+
+        Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
+        RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
+        In: NIPS 2017 Bayesian Optimization Workshop
+
         Parameters
         ----------
         scale: float
@@ -241,6 +259,12 @@ class LognormalPrior(BasePrior):
         """
         Log normal prior
 
+        This class is a verbatim copy of the implementation of RoBO:
+
+        Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
+        RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
+        In: NIPS 2017 Bayesian Optimization Workshop
+
         Parameters
         ----------
         sigma: float
@@ -319,6 +343,12 @@ class NormalPrior(BasePrior):
     def __init__(self, sigma: float, mean: float=0, rng: np.random.RandomState=None):
         """
         Normal prior
+
+        This class is a verbatim copy of the implementation of RoBO:
+
+        Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
+        RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
+        In: NIPS 2017 Bayesian Optimization Workshop
 
         Parameters
         ----------

@@ -1,7 +1,8 @@
 import logging
+import typing
+
 import george
 import numpy as np
-
 from scipy import optimize
 
 from smac.epm import normalization
@@ -12,40 +13,60 @@ logger = logging.getLogger(__name__)
 
 
 class GaussianProcess(BaseModel):
+    """
+    Gaussian process model.
 
-    def __init__(self, kernel: george.kernels.Kernel, prior: BasePrior=None,
-                 noise: float=1e-3, use_gradients: bool=False,
-                 normalize_output: bool=False,
-                 normalize_input: bool=True,
-                 lower: bool=None, upper: bool=None, rng: np.random.RandomState=None):
-        """
-        Interface to the george GP library. The GP hyperparameter are obtained
-        by optimizing the marginal log likelihood.
+    The GP hyperparameterŝ are obtained by optimizing the marginal log likelihood.
 
-        Parameters
-        ----------
-        kernel : george kernel object
-            Specifies the kernel that is used for all Gaussian Process
-        prior : prior object
-            Defines a prior for the hyperparameters of the GP. Make sure that
-            it implements the Prior interface.
-        noise : float
-            Noise term that is added to the diagonal of the covariance matrix
-            for the Cholesky decomposition.
-        use_gradients : bool
-            Use gradient information to optimize the negative log likelihood
-        lower : np.array(D,)
-            Lower bound of the input space which is used for the input space normalization
-        upper : np.array(D,)
-            Upper bound of the input space which is used for the input space normalization
-        normalize_output : bool
-            Zero mean unit variance normalization of the output values
-        normalize_input : bool
-            Normalize all inputs to be in [0, 1]. This is important to define good priors for the
-            length scales.
-        rng: np.random.RandomState
-            Random number generator
-        """
+    This code is based on the implementation of RoBO:
+
+    Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
+    RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
+    In: NIPS 2017 Bayesian Optimization Workshop
+
+    Parameters
+    ----------
+    types : np.ndarray (D)
+        Specifies the number of categorical values of an input dimension where
+        the i-th entry corresponds to the i-th input dimension. Let's say we
+        have 2 dimension where the first dimension consists of 3 different
+        categorical choices and the second dimension is continuous than we
+        have to pass np.array([2, 0]). Note that we count starting from 0.
+    bounds : list
+        Specifies the bounds for continuous features.
+    kernel : george kernel object
+        Specifies the kernel that is used for all Gaussian Process
+    prior : prior object
+        Defines a prior for the hyperparameters of the GP. Make sure that
+        it implements the Prior interface.
+    noise : float
+        Noise term that is added to the diagonal of the covariance matrix
+        for the Cholesky decomposition.
+    use_gradients : bool
+        Use gradient information to optimize the negative log likelihood
+    normalize_output : bool
+        Zero mean unit variance normalization of the output values
+    normalize_input : bool
+        Normalize all inputs to be in [0, 1]. This is important to define good priors for the
+        length scales.
+    rng: np.random.RandomState
+        Random number generator
+    """
+
+    def __init__(
+        self,
+        types: np.ndarray,
+        bounds: typing.List[typing.Tuple[float, float]],
+        kernel: george.kernels.Kernel,
+        prior: BasePrior=None,
+        noise: float=1e-3,
+        use_gradients: bool=False,
+        normalize_output: bool=True,
+        normalize_input: bool=True,
+        rng: typing.Optional[np.random.RandomState]=None,
+    ):
+
+        super().__init__(types=types, bounds=bounds)
 
         if rng is None:
             self.rng = np.random.RandomState(np.random.randint(0, 10000))
@@ -63,11 +84,8 @@ class GaussianProcess(BaseModel):
         self.y = None
         self.hypers = []
         self.is_trained = False
-        self.lower = lower
-        self.upper = upper
 
-    @BaseModel._check_shapes_train
-    def train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool=True):
+    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool=True):
         """
         Computes the Cholesky decomposition of the covariance of X and
         estimates the GP hyperparameters by optimizing the marginal
@@ -92,6 +110,11 @@ class GaussianProcess(BaseModel):
         else:
             self.X = X
 
+        if len(y.shape) > 1:
+            y = y.flatten()
+            if len(y) != len(X):
+                raise ValueError('Shape mismatch: %s vs %s' % (y.shape, X.shape))
+
         if self.normalize_output:
             # Normalize output to have zero mean and unit standard deviation
             self.y, self.y_mean, self.y_std = normalization.zero_mean_unit_var_normalization(y)
@@ -105,14 +128,12 @@ class GaussianProcess(BaseModel):
         self.gp = george.GP(self.kernel, mean=self.mean)
 
         if do_optimize:
-            self.hypers = self.optimize()
+            self.hypers = self._optimize()
             self.gp.kernel.set_parameter_vector(self.hypers[:-1])
             self.noise = np.exp(self.hypers[-1])  # sigma^2
         else:
             self.hypers = self.gp.kernel.get_parameter_vector()
             self.hypers = np.append(self.hypers, np.log(self.noise))
-
-        logger.debug("GP Hyperparameters: " + str(self.hypers))
 
         try:
             self.gp.compute(self.X, yerr=np.sqrt(self.noise))
@@ -125,7 +146,7 @@ class GaussianProcess(BaseModel):
     def _get_noise(self):
         return self.noise
 
-    def nll(self, theta: np.ndarray) -> float:
+    def _nll(self, theta: np.ndarray) -> float:
         """
         Returns the negative marginal log likelihood (+ the prior) for
         a hyperparameter configuration theta.
@@ -168,14 +189,14 @@ class GaussianProcess(BaseModel):
 
         self.gp.kernel.set_parameter_vector(theta[:-1])
         noise = np.exp(theta[-1])
-        
+
         self.gp.compute(self.X, yerr=np.sqrt(noise))
 
         self.gp._compute_alpha(self.y)
         K_inv = self.gp.solver.apply_inverse(np.eye(self.gp._alpha.size),
                                              in_place=True)
 
-        # The gradients of the Gram matrix, for the noise this is just 
+        # The gradients of the Gram matrix, for the noise this is just
         # the identity matrix
         Kg = self.gp.kernel.gradient(self.gp._x)
         Kg = np.concatenate((Kg, np.eye(Kg.shape[0])[:, :, None]), axis=2)
@@ -189,7 +210,7 @@ class GaussianProcess(BaseModel):
 
         return -g
 
-    def optimize(self) -> np.ndarray:
+    def _optimize(self) -> np.ndarray:
         """
         Optimizes the marginal log likelihood and returns the best found
         hyperparameter configuration theta.
@@ -204,12 +225,12 @@ class GaussianProcess(BaseModel):
         p0 = np.append(p0, np.log(self.noise))
 
         if self.use_gradients:
-            theta, _, _ = optimize.minimize(self.nll, p0,
+            theta, _, _ = optimize.minimize(self._nll, p0,
                                             method="BFGS",
                                             jac=self._grad_nll)
         else:
             try:
-                results = optimize.minimize(self.nll, p0, method='L-BFGS-B')
+                results = optimize.minimize(self._nll, p0, method='L-BFGS-B')
                 theta = results.x
             except ValueError:
                 logging.error("Could not find a valid hyperparameter configuration! Use initial configuration")
@@ -217,37 +238,7 @@ class GaussianProcess(BaseModel):
 
         return theta
 
-    def predict_variance(self, x1: np.ndarray, X2: np.ndarray) -> np.ndarray:
-        r"""
-        Predicts the variance between a test points x1 and a set of points X2 by
-           math: \sigma(X_1, X_2) = k_{X_1,X_2} - k_{X_1,X} * (K_{X,X}
-                       + \sigma^2*\mathds{I})^-1 * k_{X,X_2})
-
-        Parameters
-        ----------
-        x1: np.ndarray (1, D)
-            First test point
-        X2: np.ndarray (N, D)
-            Set of test point
-        Returns
-        ----------
-        np.array(N, 1)
-            predictive variance between x1 and X2
-
-        """
-
-        if not self.is_trained:
-            raise Exception('Model has to be trained first!')
-
-        x_ = np.concatenate((x1, X2))
-        _, var = self.predict(x_, full_cov=True)
-
-        var = var[-1, :-1, np.newaxis]
-
-        return var
-
-    @BaseModel._check_shapes_predict
-    def predict(self, X_test: np.ndarray, full_cov: bool=False, **kwargs):
+    def _predict(self, X_test: np.ndarray, full_cov: bool=False):
         r"""
         Returns the predictive mean and variance of the objective function at
         the given test points.
@@ -329,23 +320,3 @@ class GaussianProcess(BaseModel):
             return funcs[None, :]
         else:
             return funcs
-        
-    def get_incumbent(self):
-        """
-        Returns the best observed point and its function value
-
-        Returns
-        ----------
-        incumbent: ndarray (D,)
-            current incumbent
-        incumbent_value: ndarray (N,)
-            the observed value of the incumbent
-        """
-        inc, inc_value = super(GaussianProcess, self).get_incumbent()
-        if self.normalize_input:
-            inc = normalization.zero_one_unnormalization(inc, self.lower, self.upper)
-
-        if self.normalize_output:
-            inc_value = normalization.zero_mean_unit_var_unnormalization(inc_value, self.y_mean, self.y_std)
-
-        return inc, inc_value

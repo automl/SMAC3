@@ -1,9 +1,9 @@
-import numpy as np
 import logging
+import typing
 
+import numpy as np
 from pyrfr import regression
 
-from smac.configspace import CategoricalHyperparameter
 from smac.epm.base_epm import AbstractEPM
 from smac.utils.constants import N_TREES
 
@@ -31,14 +31,14 @@ class RandomForestWithInstances(AbstractEPM):
         List of random forest hyperparameters
     unlog_y: bool
     seed : int
-    types : list
+    types : np.ndarray
     bounds : list
     rng : np.random.RandomState
     logger : logging.logger
     """
 
     def __init__(self, types: np.ndarray,
-                 bounds: np.ndarray,
+                 bounds: typing.List[typing.Tuple[float, float]],
                  log_y: bool=False,
                  num_trees: int=N_TREES,
                  do_bootstrapping: bool=True,
@@ -60,7 +60,7 @@ class RandomForestWithInstances(AbstractEPM):
             have 2 dimension where the first dimension consists of 3 different
             categorical choices and the second dimension is continuous than we
             have to pass np.array([2, 0]). Note that we count starting from 0.
-        bounds : np.ndarray (D, 2)
+        bounds : list
             Specifies the bounds for continuous features.
         log_y: bool
             y values (passed to this RF) are expected to be log(y) transformed;
@@ -88,10 +88,8 @@ class RandomForestWithInstances(AbstractEPM):
         seed : int
             The seed that is passed to the random_forest_run library.
         """
-        super().__init__(**kwargs)
+        super().__init__(types, bounds, **kwargs)
 
-        self.types = types
-        self.bounds = bounds
         self.log_y = log_y
         self.rng = regression.default_random_engine(seed)
 
@@ -120,7 +118,7 @@ class RandomForestWithInstances(AbstractEPM):
         self.logger = logging.getLogger(self.__module__ + "." +
                                         self.__class__.__name__)
 
-    def _train(self, X: np.ndarray, y: np.ndarray, **kwargs):
+    def _train(self, X: np.ndarray, y: np.ndarray):
         """Trains the random forest on X and y.
 
         Parameters
@@ -177,7 +175,7 @@ class RandomForestWithInstances(AbstractEPM):
             data.add_data_point(row_X, row_y)
         return data
 
-    def _predict(self, X: np.ndarray):
+    def _predict(self, X: np.ndarray) -> typing.Tuple[np.ndarray, np.ndarray]:
         """Predict means and variances for given X.
 
         Parameters
@@ -196,8 +194,7 @@ class RandomForestWithInstances(AbstractEPM):
             raise ValueError(
                 'Expected 2d array, got %dd array!' % len(X.shape))
         if X.shape[1] != self.types.shape[0]:
-            raise ValueError('Rows in X should have %d entries but have %d!' %
-                             (self.types.shape[0], X.shape[1]))
+            raise ValueError('Rows in X should have %d entries but have %d!' % (self.types.shape[0], X.shape[1]))
 
         means, vars_ = [], []
         for row_X in X:

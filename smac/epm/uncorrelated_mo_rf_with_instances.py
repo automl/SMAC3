@@ -25,7 +25,7 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
     def __init__(
             self,
             target_names: List[str],
-            bounds: np.ndarray,
+            bounds: List[float],
             types: np.ndarray,
             rf_kwargs: Optional[Dict[str, Any]]=None,
             **kwargs
@@ -47,10 +47,10 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
         kwargs
             See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
         """
-        super().__init__(**kwargs)
+        super().__init__(bounds=bounds, types=types, **kwargs)
         if rf_kwargs is None:
             rf_kwargs = {}
-        
+
         self.target_names = target_names
         self.num_targets = len(self.target_names)
         self.estimators = [RandomForestWithInstances(types, bounds, **rf_kwargs)

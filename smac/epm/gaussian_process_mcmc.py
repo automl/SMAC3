@@ -1,9 +1,10 @@
+from copy import deepcopy
 import logging
+import typing
+
 import george
 import emcee
 import numpy as np
-
-from copy import deepcopy
 
 from smac.epm.base_gp import BaseModel
 from smac.epm.gaussian_process import GaussianProcess
@@ -15,18 +16,43 @@ logger = logging.getLogger(__name__)
 
 class GaussianProcessMCMC(BaseModel):
 
-    def __init__(self, kernel: george.kernels.Kernel, prior: BasePrior=None,
-                 n_hypers: int=20, chain_length: int=2000, burnin_steps: int=2000,
-                 normalize_output: bool=False, normalize_input: bool=True,
-                 rng: np.random.RandomState=None, lower: np.ndarray=None, upper: np.ndarray=None, noise: int=-8):
+    def __init__(
+        self,
+        types: np.ndarray,
+        bounds: typing.List[typing.Tuple[float, float]],
+        kernel: george.kernels.Kernel,
+        prior: BasePrior=None,
+        n_hypers: int=20,
+        chain_length: int=2000,
+        burnin_steps: int=2000,
+        normalize_output: bool=True,
+        normalize_input: bool=True,
+        rng: typing.Optional[np.random.RandomState]=None,
+        noise: int=-8,
+    ):
         """
-        GaussianProcess model based on the george GP library that uses MCMC
-        sampling to marginalise over the hyperparmeters. If you use this class
-        make sure that you also use the IntegratedAcqusition function to
+        Gaussian process model.
+
+        The GP hyperparameters are integrated out by MCMC. If you use this class
+        make sure that you also use an integrated acquisition function to
         integrate over the GP's hyperparameter as proposed by Snoek et al.
+
+        This code is based on the implementation of RoBO:
+
+        Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
+        RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
+        In: NIPS 2017 Bayesian Optimization Workshop
 
         Parameters
         ----------
+        types : np.ndarray (D)
+            Specifies the number of categorical values of an input dimension where
+            the i-th entry corresponds to the i-th input dimension. Let's say we
+            have 2 dimension where the first dimension consists of 3 different
+            categorical choices and the second dimension is continuous than we
+            have to pass np.array([2, 0]). Note that we count starting from 0.
+        bounds : list
+            Specifies the bounds for continuous features.
         kernel : george kernel object
             Specifies the kernel that is used for all Gaussian Process
         prior : prior object
@@ -41,15 +67,20 @@ class GaussianProcessMCMC(BaseModel):
             The length of the MCMC chain. We start n_hypers walker for
             chain_length steps and we use the last sample
             in the chain as a hyperparameter sample.
-        lower : np.array(D,)
-            Lower bound of the input space which is used for the input space normalization
-        upper : np.array(D,)
-            Upper bound of the input space which is used for the input space normalization
         burnin_steps : int
             The number of burnin steps before the actual MCMC sampling starts.
+        normalize_output : bool
+            Zero mean unit variance normalization of the output values
+        normalize_input : bool
+            Normalize all inputs to be in [0, 1]. This is important to define good priors for the
+            length scales.
         rng: np.random.RandomState
             Random number generator
+        noise : float
+            Noise term that is added to the diagonal of the covariance matrix
+            for the Cholesky decomposition.
         """
+        super().__init__(types=types, bounds=bounds)
 
         if rng is None:
             self.rng = np.random.RandomState(np.random.randint(0, 10000))
@@ -70,11 +101,7 @@ class GaussianProcessMCMC(BaseModel):
         self.y = None
         self.is_trained = False
 
-        self.lower = lower
-        self.upper = upper
-
-    @BaseModel._check_shapes_train
-    def train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool=True, **kwargs):
+    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool=True):
         """
         Performs MCMC sampling to sample hyperparameter configurations from the
         likelihood and trains for each sample a GP on X and y
@@ -97,6 +124,11 @@ class GaussianProcessMCMC(BaseModel):
         else:
             self.X = X
 
+        if len(y.shape) > 1:
+            y = y.flatten()
+            if len(y) != len(X):
+                raise ValueError('Shape mismatch: %s vs %s' % (y.shape, X.shape))
+
         if self.normalize_output:
             # Normalize output to have zero mean and unit standard deviation
             self.y, self.y_mean, self.y_std = normalization.zero_mean_unit_var_normalization(y)
@@ -113,7 +145,7 @@ class GaussianProcessMCMC(BaseModel):
             # We have one walker for each hyperparameter configuration
             sampler = emcee.EnsembleSampler(self.n_hypers,
                                             len(self.kernel) + 1,
-                                            self.loglikelihood)
+                                            self._loglikelihood)
             sampler.random_state = self.rng.get_state()
             # Do a burn-in in the first iteration
             if not self.burned:
@@ -153,19 +185,21 @@ class GaussianProcessMCMC(BaseModel):
             kernel = deepcopy(self.kernel)
             kernel.set_parameter_vector(sample[:-1])
             noise = np.exp(sample[-1])
-            model = GaussianProcess(kernel,
-                                    normalize_output=self.normalize_output,
-                                    normalize_input=self.normalize_input,
-                                    noise=noise,
-                                    lower=self.lower,
-                                    upper=self.upper,
-                                    rng=self.rng)
-            model.train(X, y, do_optimize=False)
+            model = GaussianProcess(
+                types=self.types,
+                bounds=self.bounds,
+                kernel=kernel,
+                normalize_output=self.normalize_output,
+                normalize_input=self.normalize_input,
+                noise=noise,
+                rng=self.rng,
+            )
+            model._train(X, y, do_optimize=False)
             self.models.append(model)
 
         self.is_trained = True
 
-    def loglikelihood(self, theta: np.ndarray):
+    def _loglikelihood(self, theta: np.ndarray):
         """
         Return the loglikelihood (+ the prior) for a hyperparameter
         configuration theta.
@@ -186,12 +220,12 @@ class GaussianProcessMCMC(BaseModel):
         # hyperparameters live on a log scale
         if np.any((-20 > theta) + (theta > 20)):
             return -np.inf
-            
+
         # The last entry is always the noise
         sigma_2 = np.exp(theta[-1])
         # Update the kernel and compute the lnlikelihood.
         self.gp.kernel.set_parameter_vector(theta[:-1])
-        
+
         try:
             self.gp.compute(self.X, yerr=np.sqrt(sigma_2))
         except:
@@ -202,8 +236,7 @@ class GaussianProcessMCMC(BaseModel):
         else:
             return self.gp.lnlikelihood(self.y, quiet=True)
 
-    @BaseModel._check_shapes_predict
-    def predict(self, X_test: np.ndarray, **kwargs):
+    def _predict(self, X_test: np.ndarray):
         r"""
         Returns the predictive mean and variance of the objective function
         at X average over all hyperparameter samples.
@@ -231,7 +264,9 @@ class GaussianProcessMCMC(BaseModel):
         mu = np.zeros([len(self.models), X_test.shape[0]])
         var = np.zeros([len(self.models), X_test.shape[0]])
         for i, model in enumerate(self.models):
-            mu[i], var[i] = model.predict(X_test)
+            mu_tmp, var_tmp = model.predict(X_test)
+            mu[i] = mu_tmp.flatten()
+            var[i] = var_tmp.flatten()
 
         m = mu.mean(axis=0)
 
@@ -248,23 +283,3 @@ class GaussianProcessMCMC(BaseModel):
             v[np.where((v < np.finfo(v.dtype).eps) & (v > -np.finfo(v.dtype).eps))] = 0
 
         return m, v
-
-    def get_incumbent(self):
-        """
-        Returns the best observed point and its function value
-
-        Returns
-        ----------
-        incumbent: ndarray (D,)
-            current incumbent
-        incumbent_value: ndarray (N,)
-            the observed value of the incumbent
-        """
-        inc, inc_value = super(GaussianProcessMCMC, self).get_incumbent()
-        if self.normalize_input:
-            inc = normalization.zero_one_unnormalization(inc, self.lower, self.upper)
-
-        if self.normalize_output:
-            inc_value = normalization.zero_mean_unit_var_unnormalization(inc_value, self.y_mean, self.y_std)
-
-        return inc, inc_value

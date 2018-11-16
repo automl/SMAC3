@@ -1,4 +1,5 @@
 import logging
+import typing
 
 from ConfigSpace import (
     CategoricalHyperparameter,
@@ -45,7 +46,7 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
     def __init__(
         self,
         types: np.ndarray,
-        bounds: np.ndarray,
+        bounds: typing.List[typing.Tuple[float, float]],
         log_y: bool=False,
         bootstrap: bool=False,
         n_iters: int=50,
@@ -120,7 +121,7 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
         self.logger = logging.getLogger(self.__module__ + "." +
                                         self.__class__.__name__)
 
-    def _train(self, X: np.ndarray, y: np.ndarray, **kwargs) -> 'RandomForestWithInstancesHPO':
+    def _train(self, X: np.ndarray, y: np.ndarray) -> 'RandomForestWithInstancesHPO':
         """Trains the random forest on X and y.
 
         Parameters
@@ -246,7 +247,7 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
         """
 
         rf_opts = regression.forest_opts()
-        rf_opts.num_trees = c["n_trees"]
+        rf_opts.num_trees = c["num_trees"]
         rf_opts.do_bootstrapping = c["do_bootstrapping"]
         rf_opts.tree_opts.max_num_nodes = 2 ** 20
 
