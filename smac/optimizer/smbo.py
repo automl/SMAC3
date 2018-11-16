@@ -1,11 +1,8 @@
 import os
-import itertools
 import logging
 import numpy as np
-import random
 import time
 import typing
-import math
 
 from smac.configspace import Configuration
 from smac.epm.rf_with_instances import RandomForestWithInstances
@@ -13,15 +10,18 @@ from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.optimizer import pSMAC
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
-from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
-    AcquisitionFunctionMaximizer, RandomSearch
+from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
+    ChooserLinearCoolDown
+from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer, \
+    RandomSearch
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
+from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, RunHistory2EPM4LogCost
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.tae.execute_ta_run import FirstRunCrashedException
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
+from smac.configspace.util import convert_configurations_to_array
 
 
 
@@ -51,6 +51,7 @@ class SMBO(object):
     acq_optimizer
     acquisition_func
     rng
+    random_configuration_chooser
     """
 
     def __init__(self,
@@ -66,7 +67,10 @@ class SMBO(object):
                  acq_optimizer: AcquisitionFunctionMaximizer,
                  acquisition_func: AbstractAcquisitionFunction,
                  rng: np.random.RandomState,
-                 restore_incumbent: Configuration=None):
+                 restore_incumbent: Configuration=None,
+                 random_configuration_chooser: typing.Union[
+                     ChooserNoCoolDown, ChooserLinearCoolDown]=ChooserNoCoolDown(2.0),
+                 predict_incumbent: bool=True):
         """
         Interface that contains the main Bayesian optimization loop
 
@@ -103,6 +107,12 @@ class SMBO(object):
             incumbent to be used from the start. ONLY used to restore states.
         rng: np.random.RandomState
             Random number generator
+        random_configuration_chooser
+            Chooser for random configuration -- one of
+            * ChooserNoCoolDown(modulus)
+            * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)
+        predict_incumbent: bool
+            Use predicted performance of incumbent instead of observed performance
         """
 
         self.logger = logging.getLogger(
@@ -122,10 +132,13 @@ class SMBO(object):
         self.acq_optimizer = acq_optimizer
         self.acquisition_func = acquisition_func
         self.rng = rng
+        self.random_configuration_chooser = random_configuration_chooser
 
         self._random_search = RandomSearch(
             acquisition_func, self.config_space, rng
         )
+        
+        self.predict_incumbent = predict_incumbent
 
     def start(self):
         """Starts the Bayesian Optimization loop.
@@ -134,11 +147,8 @@ class SMBO(object):
         self.stats.start_timing()
         # Initialization, depends on input
         if self.stats.ta_runs == 0 and self.incumbent is None:
-            try:
-                self.incumbent = self.initial_design.run()
-            except FirstRunCrashedException as err:
-                if self.scenario.abort_on_first_run_crash:
-                    raise
+            self.incumbent = self.initial_design.run()
+
         elif self.stats.ta_runs > 0 and self.incumbent is None:
             raise ValueError("According to stats there have been runs performed, "
                              "but the optimizer cannot detect an incumbent. Did "
@@ -153,6 +163,10 @@ class SMBO(object):
                              "incumbent %s", self.incumbent)
             self.logger.info("State restored with following budget:")
             self.stats.print_stats()
+
+        # To be on the safe side -> never return "None" as incumbent
+        if not self.incumbent:
+            self.incumbent = self.scenario.cs.get_default_configuration()
 
     def run(self):
         """Runs the Bayesian optimization loop
@@ -193,7 +207,8 @@ class SMBO(object):
 
             if self.scenario.shared_model:
                 pSMAC.write(run_history=self.runhistory,
-                            output_directory=self.scenario.output_dir_for_this_run)
+                            output_directory=self.scenario.output_dir_for_this_run,
+                            logger=self.logger)
 
             logging.debug("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
                 self.stats.get_remaing_time_budget(),
@@ -244,14 +259,46 @@ class SMBO(object):
             if self.runhistory.empty():
                 raise ValueError("Runhistory is empty and the cost value of "
                                  "the incumbent is unknown.")
-            incumbent_value = self.runhistory.get_cost(self.incumbent)
+            incumbent_value = self._get_incumbent_value()
 
         self.acquisition_func.update(model=self.model, eta=incumbent_value)
 
         challengers = self.acq_optimizer.maximize(
-            self.runhistory, self.stats, 5000
+            runhistory=self.runhistory, 
+            stats=self.stats, 
+            num_points=self.scenario.acq_opt_challengers, 
+            random_configuration_chooser=self.random_configuration_chooser
         )
         return challengers
+    
+    def _get_incumbent_value(self):
+        ''' get incumbent value either from runhistory
+            or from best predicted performance on configs in runhistory
+            (depends on self.predict_incumbent)"
+            
+            Return
+            ------
+            float
+        '''
+        if self.predict_incumbent:
+            configs = convert_configurations_to_array(self.runhistory.get_all_configs())
+            costs = list(map(
+                lambda config:
+                    self.model.predict_marginalized_over_instances(config.reshape((1, -1)))[0][0][0],
+                configs,
+            ))
+            incumbent_value = np.min(costs)
+            # won't need log(y) if EPM was already trained on log(y)
+            
+        else:
+            if self.runhistory.empty():
+                raise ValueError("Runhistory is empty and the cost value of "
+                                 "the incumbent is unknown.")
+            incumbent_value = self.runhistory.get_cost(self.incumbent)
+            if isinstance(self.rh2EPM,RunHistory2EPM4LogCost):
+                incumbent_value = np.log(incumbent_value)
+        
+        return incumbent_value
 
     def validate(self, config_mode='inc', instance_mode='train+test',
                  repetitions=1, use_epm=False, n_jobs=-1, backend='threading'):
@@ -281,9 +328,15 @@ class SMBO(object):
         runhistory: RunHistory
             runhistory containing all specified runs
         """
-        traj_fn = os.path.join(self.scenario.output_dir_for_this_run, "traj_aclib2.json")
-        trajectory = TrajLogger.read_traj_aclib_format(fn=traj_fn, cs=self.scenario.cs)
-        new_rh_path = os.path.join(self.scenario.output_dir_for_this_run, "validated_runhistory.json")
+        if isinstance(config_mode, str):
+            traj_fn = os.path.join(self.scenario.output_dir_for_this_run, "traj_aclib2.json")
+            trajectory = TrajLogger.read_traj_aclib_format(fn=traj_fn, cs=self.scenario.cs)
+        else:
+            trajectory = None
+        if self.scenario.output_dir_for_this_run:
+            new_rh_path = os.path.join(self.scenario.output_dir_for_this_run, "validated_runhistory.json")
+        else:
+            new_rh_path = None
 
         validator = Validator(self.scenario, trajectory, self.rng)
         if use_epm:
@@ -291,12 +344,12 @@ class SMBO(object):
                                             instance_mode=instance_mode,
                                             repetitions=repetitions,
                                             runhistory=self.runhistory,
-                                            output=new_rh_path)
+                                            output_fn=new_rh_path)
         else:
             new_rh = validator.validate(config_mode, instance_mode, repetitions,
                                         n_jobs, backend, self.runhistory,
                                         self.intensifier.tae_runner,
-                                        output=new_rh_path)
+                                        output_fn=new_rh_path)
         return new_rh
 
     def _get_timebound_for_intensification(self, time_spent):

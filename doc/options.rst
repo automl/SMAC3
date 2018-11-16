@@ -16,6 +16,22 @@ Optional:
     * Instance_- and feature_-files, that list the instances and features to
       optimize upon.
 
+.. _smac_options:
+
+SMAC Options
+~~~~~~~~~~~~
+The basic command line options are described in `Basic Usage <basic_usage.html#commandline>`_.
+The options are separated into three groups, *Main Options*, *SMAC Options* and *Scenario Options*.
+See the Main and SMAC Options below. Find the Scenario Options in the next section.
+
+Main Options:
+
+.. include:: main_options.rst
+
+SMAC Options:
+
+.. include:: smac_options.rst
+
 .. _scenario:
 
 Scenario
@@ -23,6 +39,7 @@ Scenario
 The scenario-object (:class:`smac.scenario.scenario.Scenario`) is used to configure *SMAC* and can be constructed either by providing an actual
 scenario-object (see `SVM-example <quickstart.html#using-smac-in-python-svm>`_), or by specifing the options in a
 scenario file (see `SPEAR example <quickstart.html#spear-example>`_).
+
 The format of the scenario file is one option per line:
 
 .. code-block:: bash
@@ -35,9 +52,13 @@ For boolean options "1" or "true" both evaluate to True.
 The following assumes that the scenario is created via a scenario-file. If it is
 generated within custom code, you might not need *algo* or *paramfile*.
 
-Options:
+Scenario Options:
 
 .. include:: scenario_options.rst
+
+These options are also available as command line switches: Prepend two "-" and replace each "_" by "-",
+e.g. "wallclock_limit" becomes "--wallclock-limit". The options on the command line overwrite the values
+given in the scenario file.
 
 .. _paramcs:
 
@@ -46,6 +67,8 @@ Parameter Configuration Space (PCS)
 The Parameter Configuration Space (PCS) defines the legal ranges of the
 parameters to be optimized and their default values. In the examples-folder you
 can find several examples for PCS-files. Generally, the format is:
+
+To define parameters and their ranges, the following format is supported:
 
 .. code-block:: bash
 
@@ -56,13 +79,28 @@ can find several examples for PCS-files. Generally, the format is:
         parameter_name real [min_value, max_value] [default value]
         parameter_name real [min_value, max_value] [default value] log
 
+The trailing "log" indicates that SMAC should sample from the defined ranges
+on a log scale.
+
+Furthermore, conditional dependencies can be expressed. That is useful if
+a parameter activates sub-parameters. For example, only if a certain heuristic
+is used, the heuristic's parameter are active and otherwise SMAC can ignore these.
+
+.. code-block:: bash
+
         # Conditionals:
         child_name | condition [&&,||] condition ...
 
-        # Condition Operators: 
+        # Condition Operators:
         # parent_x [<, >] parent_x_value (if parameter type is ordinal, integer or real)
         # parent_x [==,!=] parent_x_value (if parameter type is categorical, ordinal or integer)
         # parent_x in {parent_x_value1, parent_x_value2,...}
+
+Forbidden constraints allow for specifications of forbidden combinations of
+parameter values. Please note that SMAC uses a simple rejection sampling
+strategy. Therefore, SMAC cannot handle efficiently highly constrained spaces.
+
+.. code-block:: bash
 
         # Forbiddens:
         {parameter_name_1=value_1, ..., parameter_name_N=value_N}

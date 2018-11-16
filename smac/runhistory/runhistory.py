@@ -1,11 +1,13 @@
 import collections
 from enum import Enum
 import json
-import numpy as np
 import typing
+
+import numpy as np
 
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.tae.execute_ta_run import StatusType
+from smac.utils.logging import PickableLoggerAdapter
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -18,8 +20,10 @@ __version__ = "0.0.1"
 RunKey = collections.namedtuple(
     'RunKey', ['config_id', 'instance_id', 'seed'])
 
+
 InstSeedKey = collections.namedtuple(
     'InstSeedKey', ['instance', 'seed'])
+
 
 RunValue = collections.namedtuple(
     'RunValue', ['cost', 'time', 'status', 'additional_info'])
@@ -42,17 +46,17 @@ class DataOrigin(Enum):
 
     """
     Definition of how data in the runhistory is used.
-    
-    * ``INTERNAL``: internal data which was gathered during the current 
-      optimization run. It will be saved to disk, used for building EPMs and 
+
+    * ``INTERNAL``: internal data which was gathered during the current
+      optimization run. It will be saved to disk, used for building EPMs and
       during intensify.
     * ``EXTERNAL_SAME_INSTANCES``: external data, which was gathered by running
-       another program on the same instances as the current optimization run 
-       runs on (for example pSMAC). It will not be saved to disk, but used both 
+       another program on the same instances as the current optimization run
+       runs on (for example pSMAC). It will not be saved to disk, but used both
        for EPM building and during intensify.
     * ``EXTERNAL_DIFFERENT_INSTANCES``: external data, which was gathered on a
-       different instance set as the one currently used, but due to having the 
-       same instance features can still provide useful information. Will not be 
+       different instance set as the one currently used, but due to having the
+       same instance features can still provide useful information. Will not be
        saved to disk and only used for EPM building.
     """
     INTERNAL = 1
@@ -83,10 +87,11 @@ class RunHistory(object):
     overwrite_existing_runs
     """
 
-    def __init__(self, 
-                 aggregate_func: typing.Callable,
-                 overwrite_existing_runs: bool=False
-                 ):
+    def __init__(
+        self,
+        aggregate_func: typing.Callable,
+        overwrite_existing_runs: bool=False
+    ) -> None:
         """Constructor
 
         Parameters
@@ -98,26 +103,32 @@ class RunHistory(object):
             algorithm-instance-seed were measured
             multiple times
         """
+        self.logger = PickableLoggerAdapter(
+            self.__module__ + "." + self.__class__.__name__
+        )
+
         # By having the data in a deterministic order we can do useful tests
         # when we serialize the data and can assume it's still in the same
         # order as it was added.
-        self.data = collections.OrderedDict()
+        self.data = collections.OrderedDict()  # type: typing.Dict[RunKey, RunValue]
 
         # for fast access, we have also an unordered data structure
         # to get all instance seed pairs of a configuration
-        self._configid_to_inst_seed = {}
+        self._configid_to_inst_seed = {}  # type: typing.Dict[int, InstSeedKey]
 
-        self.config_ids = {}  # config -> id
-        self.ids_config = {}  # id -> config
+        self.config_ids = {}  # type: typing.Dict[Configuration, int]
+        self.ids_config = {}  # type: typing.Dict[int, Configuration]
         self._n_id = 0
 
-        self.cost_per_config = {}  # config_id -> cost
-        # runs_per_config is necessary for computing the moving average
-        self.runs_per_config = {}  # config_id -> number of runs
+        # Stores cost for each configuration ID
+        self.cost_per_config = {}  # type: typing.Dict[int, float]
+        # runs_per_config maps the configuration ID to the number of runs for that configuration
+        # and is necessary for computing the moving average
+        self.runs_per_config = {}  # type: typing.Dict[int, int]
 
         # Store whether a datapoint is "external", which means it was read from
         # a JSON file. Can be chosen to not be written to disk
-        self.external = {}  # RunKey -> DataOrigin
+        self.external = {}  # type: typing.Dict[RunKey, DataOrigin]
 
         self.aggregate_func = aggregate_func
         self.overwrite_existing_runs = overwrite_existing_runs
@@ -286,6 +297,31 @@ class RunHistory(object):
         config_id = self.config_ids.get(config)
         return self._configid_to_inst_seed.get(config_id, [])
 
+    def get_instance_costs_for_config(self, config: Configuration):
+        """
+            Returns the average cost per instance (across seeds)
+            for a configuration
+            Parameters
+            ----------
+            config : Configuration from ConfigSpace
+                Parameter configuration
+
+            Returns
+            -------
+            cost_per_inst: dict<instance name<str>, cost<float>>
+        """
+        config_id = self.config_ids.get(config)
+        runs_ = self._configid_to_inst_seed.get(config_id, [])
+        cost_per_inst = {}
+        for inst, seed in runs_:
+            cost_per_inst[inst] = cost_per_inst.get(inst,[])
+            rkey = RunKey(config_id, inst, seed)
+            vkey = self.data[rkey]
+            cost_per_inst[inst].append(vkey.cost)
+        cost_per_inst = dict([(inst, np.mean(costs)) for inst, costs in cost_per_inst.items()])
+        return cost_per_inst
+
+
     def get_all_configs(self):
         """Return all configurations in this RunHistory object
 
@@ -317,7 +353,6 @@ class RunHistory(object):
         save_external : bool
             Whether to save external data in the runhistory file.
         """
-
         data = [([int(k.config_id),
                   str(k.instance_id) if k.instance_id is not None else None,
                   int(k.seed)], list(v))
@@ -327,10 +362,15 @@ class RunHistory(object):
         configs = {id_: conf.get_dictionary()
                    for id_, conf in self.ids_config.items()
                    if id_ in config_ids_to_serialize}
+        config_origins = {id_: conf.origin
+                          for id_, conf in self.ids_config.items()
+                          if (id_ in config_ids_to_serialize and
+                              conf.origin is not None)}
 
         with open(fn, "w") as fp:
             json.dump({"data": data,
-                       "configs": configs}, fp, cls=EnumEncoder)
+                       "config_origins": config_origins,
+                       "configs": configs}, fp, cls=EnumEncoder, indent=2)
 
     def load_json(self, fn: str, cs: ConfigurationSpace):
         """Load and runhistory in json representation from disk.
@@ -344,11 +384,25 @@ class RunHistory(object):
         cs : ConfigSpace
             instance of configuration space
         """
-        with open(fn) as fp:
-            all_data = json.load(fp, object_hook=StatusType.enum_hook)
+        try:
+            with open(fn) as fp:
+                all_data = json.load(fp, object_hook=StatusType.enum_hook)
+        except Exception as e:
+            self.logger.warning(
+                'Encountered exception %s while reading runhistory from %s. '
+                'Not adding any runs!',
+                e,
+                fn,
+            )
+            return
 
-        self.ids_config = {int(id_): Configuration(cs, values=values)
-                           for id_, values in all_data["configs"].items()}
+        config_origins = all_data.get("config_origins", {})
+
+        self.ids_config = {
+            int(id_): Configuration(
+                cs, values=values, origin=config_origins.get(id_, None)
+            ) for id_, values in all_data["configs"].items()
+        }
 
         self.config_ids = {config: id_ for id_, config in self.ids_config.items()}
 

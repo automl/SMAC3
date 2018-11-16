@@ -36,6 +36,7 @@ class TestUncorrelatedMultiObjectiveWrapper(unittest.TestCase):
         self.assertEqual(m.shape, (10, 2))
         self.assertEqual(v.shape, (10, 2))
 
+    # We need to track how often the base model was called!
     @mock.patch.object(RandomForestWithInstances, 'predict')
     def test_predict_mocked(self, rf_mock):
         class SideEffect(object):

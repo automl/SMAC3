@@ -4,7 +4,7 @@ import inspect
 
 import numpy as np
 from sklearn.metrics import make_scorer
-from sklearn.cross_validation import cross_val_score
+from sklearn.model_selection import cross_val_score
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.datasets import load_boston
 

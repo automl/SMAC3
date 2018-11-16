@@ -1,17 +1,15 @@
 import os
 import shutil
-
 import typing
-from ConfigSpace import ConfigurationSpace
 
-from smac.configspace import pcs_new as pcs
-
+from smac.configspace import pcs_new, json, ConfigurationSpace
+from smac.utils.logging import PickableLoggerAdapter
 
 class OutputWriter(object):
     """Writing scenario to file."""
 
     def __init__(self):
-        pass
+        self.logger = PickableLoggerAdapter(name=self.__module__ + "." + self.__class__.__name__)
 
     def write_scenario_file(self, scenario):
         """Write scenario to a file (format is compatible with input_reader).
@@ -36,22 +34,24 @@ class OutputWriter(object):
         # Create output-dir if necessary
         if not os.path.isdir(scenario.output_dir_for_this_run):
             scenario.logger.debug("Output directory does not exist! Will be "
-                              "created.")
+                                  "created.")
             try:
                 os.makedirs(scenario.output_dir_for_this_run)
             except OSError:
+                scenario.logger.debug("Could not make output directory.", exc_info=1)
                 raise OSError("Could not make output directory: "
                               "{}.".format(scenario.output_dir_for_this_run))
 
         # options_dest2name maps scenario._arguments from dest -> name
         options_dest2name = {(scenario._arguments[v]['dest'] if
-            scenario._arguments[v]['dest'] else v) : v for v in scenario._arguments}
+            scenario._arguments[v]['dest'] else v) : v.lstrip('-').replace('-', '_') for v in scenario._arguments}
 
         # Write all options into "output_dir/scenario.txt"
         path = os.path.join(scenario.output_dir_for_this_run, "scenario.txt")
         scenario.logger.debug("Writing scenario-file to {}.".format(path))
         with open(path, 'w') as fh:
             for key in options_dest2name:
+                key = key.lstrip('-').replace('-', '_')
                 new_value = self._parse_argument(scenario, key, getattr(scenario, key))
                 if new_value is not None:
                     fh.write("{} = {}\n".format(options_dest2name[key], new_value))
@@ -89,8 +89,14 @@ class OutputWriter(object):
                 except shutil.SameFileError:
                     return value  # File is already in output_dir
             elif key == 'pcs_fn' and scenario.cs is not None:
-                new_path = os.path.join(scenario.output_dir_for_this_run, "configspace.pcs")
-                self.write_pcs_file(scenario.cs, new_path)
+                try:
+                    new_path = os.path.join(scenario.output_dir_for_this_run, 'configspace.pcs')
+                    self.save_configspace(scenario.cs, new_path, 'pcs_new')
+                except TypeError:
+                    self.logger.error("Could not write pcs file to disk."
+                    " ConfigSpace not compatible with (new) pcs format.")
+                json_path = os.path.join(scenario.output_dir_for_this_run, 'configspace.json')
+                self.save_configspace(scenario.cs, json_path, 'json')
             elif key == 'train_inst_fn' and scenario.train_insts != [None]:
                 new_path = os.path.join(scenario.output_dir_for_this_run, 'train_insts.txt')
                 self.write_inst_file(scenario.train_insts, new_path)
@@ -146,15 +152,29 @@ class OutputWriter(object):
         with open(fn, 'w') as fh:
             fh.write(header + "".join(body))
 
-    def write_pcs_file(self, cs: ConfigurationSpace, fn: str):
+    def save_configspace(self, cs: ConfigurationSpace, fn: str, output_format: str):
         """Writing ConfigSpace to file.
 
         Parameters
         ----------
-            cs: ConfigurationSpace
-                 Config-space to be written
-            fn: string
-                 Output-file-path
+            cs : ConfigurationSpace
+                Config-space to be written
+            fn : str
+                Output-file-path
+            output_format : str
+                Output format of the configuration space file. Currently,
+                ``json`` and ``pcs_new`` are supported.
         """
-        with open(fn, 'w') as fh:
-            fh.write(pcs.write(cs))
+        writers = {
+            'pcs_new': pcs_new.write,
+            'json': json.write
+        }
+        writer = writers.get(output_format)
+        if writer:
+            with open(fn, 'w') as fh:
+                fh.write(writer(cs))
+        else:
+            raise ValueError(
+                "Configuration space output format %s not supported. "
+                "Please choose one of %s" % set(writers.keys())
+            )

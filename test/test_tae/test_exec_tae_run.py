@@ -43,7 +43,7 @@ class TaeTest(unittest.TestCase):
         # Set time-limit negative in scenario-options to trigger exception
         scen = Scenario(scenario={'wallclock_limit': -1, 'cs': ConfigurationSpace(),
                                   'run_obj': 'quality',
-                                  'output_dir': ''}, cmd_args=None)
+                                  'output_dir': ''}, cmd_options=None)
         stats = Stats(scen)
         stats.start_timing()
         eta = ExecuteTARun(
@@ -63,7 +63,7 @@ class TaeTest(unittest.TestCase):
 
         scen = Scenario(scenario={'cs': ConfigurationSpace(),
                                   'run_obj': 'quality',
-                                  'output_dir': ''}, cmd_args=None)
+                                  'output_dir': ''}, cmd_options=None)
         stats = Stats(scen)
         stats.start_timing()
         eta = ExecuteTARun(ta=lambda *args: None, stats=stats)
@@ -81,10 +81,11 @@ class TaeTest(unittest.TestCase):
 
         scen = Scenario(scenario={'cs': ConfigurationSpace(),
                                   'run_obj': 'quality',
-                                  'output_dir': ''}, cmd_args=None)
+                                  'output_dir': ''}, cmd_options=None)
         stats = Stats(scen)
         stats.start_timing()
-        eta = ExecuteTARun(ta=lambda *args: None, stats=stats, run_obj="quality")
+        eta = ExecuteTARun(ta=lambda *args: None, stats=stats,
+                           run_obj="quality", abort_on_first_run_crash=True)
 
         self.assertRaises(
             FirstRunCrashedException, eta.start, config={}, instance=1)
@@ -97,7 +98,7 @@ class TaeTest(unittest.TestCase):
         def get_tae(obj):
             """ Create ExecuteTARun-object for testing. """
             scen = Scenario(scenario={'cs': ConfigurationSpace(), 'run_obj': obj,
-                                      'cutoff_time': '10'}, cmd_args=None)
+                                      'cutoff_time': '10'}, cmd_options=None)
             stats = Stats(scen)
             stats.start_timing()
             # Add first run to not trigger FirstRunCrashedException
@@ -146,7 +147,7 @@ class TaeTest(unittest.TestCase):
         '''
         # Patch run-function for custom-return
         scen = Scenario(scenario={'cs': ConfigurationSpace(),
-                                  'run_obj': 'quality'}, cmd_args=None)
+                                  'run_obj': 'quality'}, cmd_options=None)
         stats = Stats(scen)
         stats.start_timing()
         stats.ta_runs += 1

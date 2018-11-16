@@ -1,0 +1,33 @@
+strictness: medium       # default strictness
+test-warnings: false     # inspect unittests
+doc-warnings: true       # inspect docstrings
+
+ignore-paths:            # ignore the docs folder
+  - docs
+  - ci_scripts
+  - examples
+
+pep8:
+  disable:
+    - N802               # ignore pep8 naming (func name should be lowercase i.e. get_X_y())
+    - N806               # ignore pep8 naming (func arg should be lowercase i.e. X_pred)
+  options:
+    max-line-length: 120
+
+pep257:
+  disable:
+    - D203               # 1 blank line required before class docstring (conflicts with D211 [no blanks allowed])
+    - D212               # Multi-line docstring summary should start at the first line(conflicts with D213 [first line])
+
+pylint:
+  disable:
+    - R0913              # ignore pylint too-many-arguments
+    - R0916              # ignore pylint too-many-boolean-expressions
+    - R0902              # ignore pylint too-many-instance-attributes
+    - R0914              # ignore pylint too-many-locals
+    - R0915              # ignore pylint too-many-statements
+  options:
+    max-line-length: 120
+
+mccabe:                  # disable complexity analysis
+  run: false

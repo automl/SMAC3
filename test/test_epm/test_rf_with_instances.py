@@ -1,29 +1,26 @@
 import unittest
-import sys
+import unittest.mock
 
 import numpy as np
-import pyrfr.regression
 
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
-    UniformFloatHyperparameter, UniformIntegerHyperparameter, Constant, \
+    UniformFloatHyperparameter, UniformIntegerHyperparameter, \
     OrdinalHyperparameter
 
 from smac.epm.rf_with_instances import RandomForestWithInstances
 import smac
+import smac.configspace
 from smac.utils.util_funcs import get_types
-
-if sys.version_info[0] == 2:
-    import mock
-else:
-    from unittest import mock
 
 
 class TestRFWithInstances(unittest.TestCase):
     def test_predict_wrong_X_dimensions(self):
         rs = np.random.RandomState(1)
 
-        model = RandomForestWithInstances(np.zeros((10,), dtype=np.uint), bounds=np.array(
-            list(map(lambda x: (0, 10), range(10))), dtype=object))
+        model = RandomForestWithInstances(
+            types=np.zeros((10,), dtype=np.uint),
+            bounds=list(map(lambda x: (0, 10), range(10))),
+        )
         X = rs.rand(10)
         self.assertRaisesRegexp(ValueError, "Expected 2d array, got 1d array!",
                                 model.predict, X)
@@ -40,8 +37,10 @@ class TestRFWithInstances(unittest.TestCase):
         rs = np.random.RandomState(1)
         X = rs.rand(20, 10)
         Y = rs.rand(10, 1)
-        model = RandomForestWithInstances(np.zeros((10,), dtype=np.uint), bounds=np.array(
-                list(map(lambda x: (0, 10), range(10))), dtype=object))
+        model = RandomForestWithInstances(
+            types=np.zeros((10,), dtype=np.uint),
+            bounds=list(map(lambda x: (0, 10), range(10))),
+        )
         model.train(X[:10], Y[:10])
         m_hat, v_hat = model.predict(X[10:])
         self.assertEqual(m_hat.shape, (10, 1))
@@ -52,17 +51,19 @@ class TestRFWithInstances(unittest.TestCase):
         X = rs.rand(20, 20)
         F = rs.rand(10, 10)
         Y = rs.rand(20, 1)
-        model = RandomForestWithInstances(np.zeros((20,), dtype=np.uint),
-                                          np.array(list(map(lambda x: (0, 10), range(10))), dtype=object),
-                                          pca_components=2,
-                                          instance_features=F)
+        model = RandomForestWithInstances(
+            types=np.zeros((20,), dtype=np.uint),
+            bounds=list(map(lambda x: (0, 10), range(10))),
+            pca_components=2,
+            instance_features=F,
+        )
         model.train(X, Y)
-        
+
         self.assertEqual(model.n_params, 10)
         self.assertEqual(model.n_feats, 10)
         self.assertIsNotNone(model.pca)
         self.assertIsNotNone(model.scaler)
-        
+
     def test_predict_marginalized_over_instances_wrong_X_dimensions(self):
         rs = np.random.RandomState(1)
 
@@ -76,7 +77,7 @@ class TestRFWithInstances(unittest.TestCase):
         self.assertRaisesRegexp(ValueError, "Expected 2d array, got 3d array!",
                                 model.predict_marginalized_over_instances, X)
 
-    @mock.patch.object(RandomForestWithInstances, 'predict')
+    @unittest.mock.patch.object(RandomForestWithInstances, 'predict')
     def test_predict_marginalized_over_instances_no_features(self, rf_mock):
         """The RF should fall back to the regular predict() method."""
 
@@ -104,7 +105,7 @@ class TestRFWithInstances(unittest.TestCase):
         self.assertEqual(means.shape, (20, 1))
         self.assertEqual(vars.shape, (20, 1))
 
-    @mock.patch.object(RandomForestWithInstances, 'predict')
+    @unittest.mock.patch.object(RandomForestWithInstances, 'predict')
     def test_predict_marginalized_over_instances_mocked(self, rf_mock):
         """Use mock to count the number of calls to predict()"""
 
@@ -123,16 +124,20 @@ class TestRFWithInstances(unittest.TestCase):
         model = RandomForestWithInstances(np.zeros((15,), dtype=np.uint),
                                           instance_features=F,
                                           bounds=np.array(list(map(lambda x: (0, 10), range(10))), dtype=object))
+        X = rs.rand(20, 10)
+        F = rs.rand(10, 5)
+        Y = rs.randint(1, size=(len(X) * len(F), 1)) * 1.
+        X_ = rs.rand(200, 15)
+        model.train(X_, Y)
         means, vars = model.predict_marginalized_over_instances(rs.rand(11, 10))
-        self.assertEqual(rf_mock.call_count, 11)
+        self.assertEqual(rf_mock.call_count, 0)  # expected to be 0 as the predict is replaced by manual unloggin the trees
         self.assertEqual(means.shape, (11, 1))
         self.assertEqual(vars.shape, (11, 1))
         for i in range(11):
-            self.assertEqual(means[i], 4.5)
-            self.assertEqual(vars[i], 4.5)
+            self.assertEqual(means[i], 0.)
+            self.assertEqual(vars[i], 1.e-05)
 
     def test_predict_with_actual_values(self):
-        print()
         X = np.array([
             [0., 0., 0.],
             [0., 0., 1.],
@@ -151,7 +156,6 @@ class TestRFWithInstances(unittest.TestCase):
             [100.2],
             [109.],
             [109.2]], dtype=np.float64)
-        # print(X.shape, y.shape)
         model = RandomForestWithInstances(types=np.array([0, 0, 0], dtype=np.uint),
                                           bounds=np.array([(0, np.nan), (0, np.nan), (0, np.nan)], dtype=object),
                                           instance_features=None, seed=12345,
@@ -169,17 +173,13 @@ class TestRFWithInstances(unittest.TestCase):
 
     def test_with_ordinal(self):
         cs = smac.configspace.ConfigurationSpace()
-        a = cs.add_hyperparameter(CategoricalHyperparameter('a', [0, 1],
-                                                            default_value=0))
-        b = cs.add_hyperparameter(OrdinalHyperparameter('b', [0, 1],
-                                                        default_value=1))
-        b = cs.add_hyperparameter(UniformFloatHyperparameter('c', lower=0., upper=1.,
-                                                             default_value=1))
-        b = cs.add_hyperparameter(UniformIntegerHyperparameter('d', lower=0, upper=10,
-                                                               default_value=1))
+        a = cs.add_hyperparameter(CategoricalHyperparameter('a', [0, 1], default_value=0))
+        b = cs.add_hyperparameter(OrdinalHyperparameter('b', [0, 1], default_value=1))
+        b = cs.add_hyperparameter(UniformFloatHyperparameter('c', lower=0., upper=1., default_value=1))
+        b = cs.add_hyperparameter(UniformIntegerHyperparameter('d', lower=0, upper=10, default_value=1))
         cs.seed(1)
 
-        feat_array = np.array([0,0,0]).reshape(1, -1)
+        feat_array = np.array([0, 0, 0]).reshape(1, -1)
         types, bounds = get_types(cs, feat_array)
         model = RandomForestWithInstances(types=types, bounds=bounds,
                                           instance_features=feat_array,
@@ -194,13 +194,16 @@ class TestRFWithInstances(unittest.TestCase):
         self.assertEqual(bounds[3][0], 0.)
         self.assertEqual(bounds[3][1], 1.)
         X = np.array([
-            [0., 0., 0., 0., 0, 0, 0],
-            [0., 0., 1., 0., 0, 0, 0],
-            [0., 1., 0., 9., 0, 0, 0],
-            [0., 1., 1., 4., 0, 0, 0]], dtype=np.float64)
+            [0., 0., 0., 0., 0., 0., 0.],
+            [0., 0., 1., 0., 0., 0., 0.],
+            [0., 1., 0., 9., 0., 0., 0.],
+            [0., 1., 1., 4., 0., 0., 0.]], dtype=np.float64)
         y = np.array([0, 1, 2, 3], dtype=np.float64)
 
-        model.train(np.vstack((X, X, X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y, y, y)))
+        X_train = np.vstack((X, X, X, X, X, X, X, X, X, X))
+        y_train = np.vstack((y, y, y, y, y, y, y, y, y, y))
+
+        model.train(X_train, y_train.reshape((-1, 1)))
         mean, _ = model.predict(X)
         for idx, m in enumerate(mean):
             self.assertAlmostEqual(y[idx], m, 0.05)

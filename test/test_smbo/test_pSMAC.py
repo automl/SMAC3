@@ -2,6 +2,7 @@ import json
 import os
 import shutil
 import unittest
+import logging
 
 from smac.runhistory.runhistory import RunHistory, RunKey, DataOrigin
 from smac.utils import test_helpers
@@ -39,6 +40,7 @@ class TestPSMAC(unittest.TestCase):
                   '"StatusType.SUCCESS"}, null]], ' \
                   '[[4, null, 1], [1, 1, {"__enum__": ' \
                   '"StatusType.SUCCESS"}, null]]],' \
+                  '"config_origins": {},' \
                   '"configs": {' \
                   '"4": {"x": -2.2060968293349363, "y": 5.183410905645716}, ' \
                   '"3": {"x": -2.7986616377433045, "y": 1.385078921531967}, ' \
@@ -74,7 +76,16 @@ class TestPSMAC(unittest.TestCase):
         run_history.add(config_5, 1, 1, StatusType.SUCCESS, seed=1,
                         origin=DataOrigin.EXTERNAL_SAME_INSTANCES)
 
-        pSMAC.write(run_history, self.tmp_dir)
+        logger = logging.getLogger("Test")
+        pSMAC.write(run_history, self.tmp_dir, logger=logger)
+        r_size = len(run_history.data)
+        pSMAC.read(run_history=run_history, 
+                   output_dirs=[self.tmp_dir], 
+                   configuration_space=configuration_space, 
+                   logger=logger)
+        self.assertEqual(r_size, len(run_history.data), 
+                         "Runhistory should be the same and not changed after reading")
+        
 
         output_filename = os.path.join(self.tmp_dir, 'runhistory.json')
         self.assertTrue(os.path.exists(output_filename))
@@ -83,7 +94,7 @@ class TestPSMAC(unittest.TestCase):
         with open(output_filename) as fh:
             output = json.load(fh, object_hook=StatusType.enum_hook)
         self.assertEqual(output, fixture)
-
+        
     def test_load(self):
         configuration_space = test_helpers.get_branin_config_space()
 

@@ -2,9 +2,12 @@ from contextlib import suppress
 import os
 import shutil
 import unittest
+import unittest.mock
 
 import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
+from ConfigSpace.util import get_one_exchange_neighbourhood
+from nose.plugins.attrib import attr
 
 from smac.configspace import ConfigurationSpace
 
@@ -20,6 +23,7 @@ from smac.stats.stats import Stats
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.tae.execute_ta_run import ExecuteTARun
 from smac.utils.io.traj_logging import TrajLogger
+from smac.utils.util_funcs import get_rng
 
 class TestSMACFacade(unittest.TestCase):
 
@@ -27,12 +31,16 @@ class TestSMACFacade(unittest.TestCase):
         self.cs = ConfigurationSpace()
         self.scenario = Scenario({'cs': self.cs, 'run_obj': 'quality',
                                   'output_dir': ''})
+        self.output_dirs = []
 
     def tearDown(self):
         for i in range(20):
             with suppress(Exception):
                 dirname = 'run_1' + ('.OLD' * i)
                 shutil.rmtree(dirname)
+        for output_dir in self.output_dirs:
+            if output_dir:
+                shutil.rmtree(output_dir, ignore_errors=True)
 
     def test_inject_stats_and_runhistory_object_to_TAE(self):
         ta = ExecuteTAFuncDict(lambda x: x**2)
@@ -53,61 +61,104 @@ class TestSMACFacade(unittest.TestCase):
         self.assertIs(smac.solver.intensifier.tae_runner.ta, target_algorithm)
 
     def test_pass_invalid_tae_runner(self):
-        self.assertRaisesRegexp(TypeError, "Argument 'tae_runner' is <class "
-                                           "'int'>, but must be either a "
-                                           "callable or an instance of "
-                                           "ExecuteTaRun.",
-                                SMAC, tae_runner=1, scenario=self.scenario)
+        self.assertRaisesRegex(
+            TypeError,
+            "Argument 'tae_runner' is <class 'int'>, but must be either a callable or an instance of ExecuteTaRun.",
+            SMAC,
+            tae_runner=1,
+            scenario=self.scenario,
+        )
 
     def test_pass_tae_runner_objective(self):
-        tae = ExecuteTAFuncDict(lambda: 1,
-                                run_obj='runtime')
-        self.assertRaisesRegexp(ValueError, "Objective for the target algorithm"
-                                            " runner and the scenario must be "
-                                            "the same, but are 'runtime' and "
-                                            "'quality'",
-                                SMAC, tae_runner=tae, scenario=self.scenario)
+        tae = ExecuteTAFuncDict(lambda: 1, run_obj='runtime')
+        self.assertRaisesRegex(
+            ValueError,
+            "Objective for the target algorithm runner and the scenario must be the same, but are 'runtime' and "
+            "'quality'",
+            SMAC,
+            tae_runner=tae,
+            scenario=self.scenario,
+        )
 
-    def test_check_random_states(self):
-        ta = ExecuteTAFuncDict(lambda x: x**2)
+    @unittest.mock.patch.object(SMAC, '__init__')
+    def test_check_random_states(self, patch):
+        patch.return_value = None
+        smac = SMAC()
+        smac.logger = unittest.mock.MagicMock()
 
-        # Get state immediately or it will change with the next calltest_check_random_states
-
+        # Check some properties
         # Check whether different seeds give different random states
-        S1 = SMAC(tae_runner=ta, scenario=self.scenario, rng=1)
-        S1 = S1.solver.scenario.cs.random
+        _, rng_1 = get_rng(1)
+        _, rng_2 = get_rng(2)
+        self.assertNotEqual(sum(rng_1.get_state()[1] - rng_2.get_state()[1]), 0)
 
-        S2 = SMAC(tae_runner=ta, scenario=self.scenario, rng=2)
-        S2 = S2.solver.scenario.cs.random
-        self.assertNotEqual(sum(S1.get_state()[1] - S2.get_state()[1]), 0)
+        # Check whether no seeds gives different random states
+        _, rng_1 = get_rng(logger=smac.logger)
+        self.assertEqual(smac.logger.debug.call_count, 1)
+        _, rng_2 = get_rng(logger=smac.logger)
+        self.assertEqual(smac.logger.debug.call_count, 2)
 
-        # Check whether no seeds give the same random states (use default seed)
-        S1 = SMAC(tae_runner=ta, scenario=self.scenario)
-        S1 = S1.solver.scenario.cs.random
+        self.assertNotEqual(sum(rng_1.get_state()[1] - rng_2.get_state()[1]), 0)
 
-        S2 = SMAC(tae_runner=ta, scenario=self.scenario)
-        S2 = S2.solver.scenario.cs.random
-        self.assertEqual(sum(S1.get_state()[1] - S2.get_state()[1]), 0)
+        # Check whether the same int seeds give the same random states
+        _, rng_1 = get_rng(1)
+        _, rng_2 = get_rng(1)
+        self.assertEqual(sum(rng_1.get_state()[1] - rng_2.get_state()[1]), 0)
 
-        # Check whether the same seeds give the same random states
-        S1 = SMAC(tae_runner=ta, scenario=self.scenario, rng=1)
-        S1 = S1.solver.scenario.cs.random
+        # Check all execution paths
+        self.assertRaisesRegex(
+            TypeError,
+            "Argument rng accepts only arguments of type None, int or np.random.RandomState, "
+            "you provided <class 'str'>.",
+            get_rng,
+            rng='ABC',
+        )
+        self.assertRaisesRegex(
+            TypeError,
+            "Argument run_id accepts only arguments of type None, int or np.random.RandomState, "
+            "you provided <class 'str'>.",
+            get_rng,
+            run_id='ABC'
+        )
 
-        S2 = SMAC(tae_runner=ta, scenario=self.scenario, rng=1)
-        S2 = S2.solver.scenario.cs.random
-        self.assertEqual(sum(S1.get_state()[1] - S2.get_state()[1]), 0)
+        run_id, rng_1 = get_rng(rng=None, run_id=None, logger=smac.logger)
+        self.assertIsInstance(run_id, int)
+        self.assertIsInstance(rng_1, np.random.RandomState)
+        self.assertEqual(smac.logger.debug.call_count, 3)
 
-        # Check whether the same RandomStates give the same random states
-        S1 = SMAC(tae_runner=ta, scenario=self.scenario,
-                  rng=np.random.RandomState(1))
-        S1 = S1.solver.scenario.cs.random
+        run_id, rng_1 = get_rng(rng=None, run_id=1, logger=smac.logger)
+        self.assertEqual(run_id, 1)
+        self.assertIsInstance(rng_1, np.random.RandomState)
 
-        S2 = SMAC(tae_runner=ta, scenario=self.scenario,
-                  rng=np.random.RandomState(1))
-        S2 = S2.solver.scenario.cs.random
-        self.assertEqual(sum(S1.get_state()[1] - S2.get_state()[1]), 0)
+        run_id, rng_1 = get_rng(rng=1, run_id=None, logger=smac.logger)
+        self.assertEqual(run_id, 1)
+        self.assertIsInstance(rng_1, np.random.RandomState)
 
-    def test_check_deterministic_rosenbrock(self):
+        run_id, rng_1 = get_rng(rng=1, run_id=1337, logger=smac.logger)
+        self.assertEqual(run_id, 1337)
+        self.assertIsInstance(rng_1, np.random.RandomState)
+
+        rs = np.random.RandomState(1)
+        run_id, rng_1 = get_rng(rng=rs, run_id=None, logger=smac.logger)
+        self.assertIsInstance(run_id, int)
+        self.assertIs(rng_1, rs)
+
+        run_id, rng_1 = get_rng(rng=rs, run_id=2505, logger=smac.logger)
+        self.assertEqual(run_id, 2505)
+        self.assertIs(rng_1, rs)
+
+    @attr('slow')
+    @unittest.mock.patch("smac.optimizer.ei_optimization.get_one_exchange_neighbourhood")
+    def test_check_deterministic_rosenbrock(self, patch):
+
+        # Make SMAC a bit faster
+        patch.side_effect = lambda configuration, seed: get_one_exchange_neighbourhood(
+            configuration=configuration,
+            stdev=0.05,
+            num_neighbors=2,
+            seed=seed,
+        )
+
         def rosenbrock_2d(x):
             x1 = x['x1']
             x2 = x['x2']
@@ -130,12 +181,14 @@ class TestSMACFacade(unittest.TestCase):
             smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
                         tae_runner=rosenbrock_2d)
             incumbent = smac.optimize()
-            return incumbent
+            return incumbent, smac.scenario.output_dir
 
-        i1 = opt_rosenbrock()
+        i1, output_dir = opt_rosenbrock()
+        self.output_dirs.append(output_dir)
         x1_1 = i1.get('x1')
         x2_1 = i1.get('x2')
-        i2 = opt_rosenbrock()
+        i2, output_dir = opt_rosenbrock()
+        self.output_dirs.append(output_dir)
         x1_2 = i2.get('x1')
         x2_2 = i2.get('x2')
         self.assertAlmostEqual(x1_1, x1_2)
@@ -211,6 +264,7 @@ class TestSMACFacade(unittest.TestCase):
             'cs': ConfigurationSpace()
         }
         scen1 = Scenario(test_scenario_dict)
+        self.output_dirs.append(scen1.output_dir)
         smac = SMAC(scenario=scen1, run_id=1)
 
         self.assertEqual(smac.output_dir, os.path.join(
@@ -235,3 +289,15 @@ class TestSMACFacade(unittest.TestCase):
         # This is done by teardown!
         #shutil.rmtree(smac.output_dir)
         shutil.rmtree(smac4.output_dir)
+
+    def test_no_output(self):
+        """ Test whether a scenario with "" as output really does not create an
+        output. """
+        test_scenario_dict = {
+            'output_dir': '',
+            'run_obj': 'quality',
+            'cs': ConfigurationSpace()
+        }
+        scen1 = Scenario(test_scenario_dict)
+        smac = SMAC(scenario=scen1, run_id=1)
+        self.assertFalse(os.path.isdir(smac.output_dir))

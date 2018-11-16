@@ -33,14 +33,14 @@ from smac.utils.constants import MAXINT
 from smac.utils.io.output_directory import create_output_directory
 from smac.configspace import Configuration
 
-
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 
 
 class EPILS(object):
-    """Facade to use EPILS mode
+    """
+    Facade to use EPILS mode
 
     Attributes
     ----------
@@ -48,6 +48,43 @@ class EPILS(object):
     stats : Stats
     solver : EPILS_Solver
         Optimizer object, see :class:`~smac.optimizer.epils.EPILS_Solver`
+
+    Parameters
+    ----------
+    scenario: smac.scenario.scenario.Scenario
+        Scenario object
+    tae_runner: ExecuteTARun or callable
+        Callable or implementation of :class:`ExecuteTaRun`. In case a
+        callable is passed it will be wrapped by tae.ExecuteTaFunc().
+        If not set, tae_runner will be initialized with
+        the tae.ExecuteTARunOld()
+    runhistory: RunHistory
+        runhistory to store all algorithm runs
+    intensifier: Intensifier
+        intensification object to issue a racing to decide the current
+        incumbent
+    acquisition_function : AcquisitionFunction
+        Object that implements the AbstractAcquisitionFunction. Will use
+        EI if not set.
+    model : AbstractEPM
+        Model that implements train() and predict(). Will use a
+        RandomForest if not set.
+    runhistory2epm : RunHistory2EMP
+        Object that implements the AbstractRunHistory2EPM. If None,
+        will use RunHistory2EPM4Cost if objective is cost or
+        RunHistory2EPM4LogCost if objective is runtime.
+    initial_design: InitialDesign
+        initial sampling design
+    initial_configurations: typing.List[Configuration]
+        list of initial configurations for initial design --
+        cannot be used together with initial_design
+    stats: Stats
+        optional stats object
+    rng: np.random.RandomState
+        Random number generator
+    run_id: int, (default: 1)
+        Run ID will be used as subfolder for output_dir.
+
     """
 
     def __init__(self,
@@ -55,58 +92,23 @@ class EPILS(object):
                  # TODO: once we drop python3.4 add type hint
                  # typing.Union[ExecuteTARun, callable]
                  tae_runner=None,
-                 runhistory: RunHistory=None,
-                 intensifier: Intensifier=None,
-                 acquisition_function: AbstractAcquisitionFunction=None,
-                 model: AbstractEPM=None,
-                 runhistory2epm: AbstractRunHistory2EPM=None,
-                 initial_design: InitialDesign=None,
-                 initial_configurations: typing.List[Configuration]=None,
-                 stats: Stats=None,
-                 rng: np.random.RandomState=None,
-                 run_id: int=1):
-        """Constructor
-
-        Parameters
-        ----------
-        scenario: smac.scenario.scenario.Scenario
-            Scenario object
-        tae_runner: ExecuteTARun or callable
-            Callable or implementation of :class:`ExecuteTaRun`. In case a
-            callable is passed it will be wrapped by tae.ExecuteTaFunc().
-            If not set, tae_runner will be initialized with
-            the tae.ExecuteTARunOld()
-        runhistory: RunHistory
-            runhistory to store all algorithm runs
-        intensifier: Intensifier
-            intensification object to issue a racing to decide the current
-            incumbent
-        acquisition_function : AcquisitionFunction
-            Object that implements the AbstractAcquisitionFunction. Will use
-            EI if not set.
-        model : AbstractEPM
-            Model that implements train() and predict(). Will use a
-            RandomForest if not set.
-        runhistory2epm : RunHistory2EMP
-            Object that implements the AbstractRunHistory2EPM. If None,
-            will use RunHistory2EPM4Cost if objective is cost or
-            RunHistory2EPM4LogCost if objective is runtime.
-        initial_design: InitialDesign
-            initial sampling design
-        initial_configurations: typing.List[Configuration]
-            list of initial configurations for initial design --
-            cannot be used together with initial_design
-        stats: Stats
-            optional stats object
-        rng: np.random.RandomState
-            Random number generator
-        run_id: int, (default: 1)
-            Run ID will be used as subfolder for output_dir.
-        """
+                 runhistory: RunHistory = None,
+                 intensifier: Intensifier = None,
+                 acquisition_function: AbstractAcquisitionFunction = None,
+                 model: AbstractEPM = None,
+                 runhistory2epm: AbstractRunHistory2EPM = None,
+                 initial_design: InitialDesign = None,
+                 initial_configurations: typing.List[Configuration] = None,
+                 stats: Stats = None,
+                 rng: np.random.RandomState = None,
+                 run_id: int = 1):
+        """Constructor"""
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
         aggregate_func = average_cost
+        self.runhistory = None
+        self.trajectory = None
 
         # initialize stats object
         if stats:
@@ -142,7 +144,13 @@ class EPILS(object):
                     types=types, bounds=bounds,
                     instance_features=scenario.feature_array,
                     seed=rng.randint(MAXINT),
-                    pca_components=scenario.PCA_DIM)
+                    pca_components=scenario.PCA_DIM,
+                    num_trees=scenario.rf_num_trees,
+                    do_bootstrapping=scenario.rf_do_bootstrapping,
+                    ratio_features=scenario.rf_ratio_features,
+                    min_samples_split=scenario.rf_min_samples_split,
+                    min_samples_leaf=scenario.rf_min_samples_leaf,
+                    max_depth=scenario.rf_max_depth)
         # initial acquisition function
         if acquisition_function is None:
             if scenario.run_obj == "runtime":
@@ -155,7 +163,9 @@ class EPILS(object):
 
         # initialize optimizer on acquisition function
         local_search = LocalSearch(acquisition_function,
-                                   scenario.cs)
+                                   scenario.cs,
+                                   max_steps=scenario.sls_max_steps,
+                                   n_steps_plateau_walk=scenario.sls_n_steps_plateau_walk)
 
         # initialize tae_runner
         # First case, if tae_runner is None, the target algorithm is a call
@@ -212,11 +222,13 @@ class EPILS(object):
                                       cutoff=scenario.cutoff,
                                       deterministic=scenario.deterministic,
                                       run_obj_time=scenario.run_obj == "runtime",
-                                      always_race_against=scenario.cs.get_default_configuration() \
-                                        if scenario.always_race_default else None,
+                                      always_race_against=scenario.cs.get_default_configuration()
+                                      if scenario.always_race_default else None,
                                       instance_specifics=scenario.instance_specific,
                                       minR=scenario.minR,
-                                      maxR=scenario.maxR)
+                                      maxR=scenario.maxR,
+                                      adaptive_capping_slackfactor=scenario.intens_adaptive_capping_slackfactor,
+                                      min_chall=scenario.intens_min_chall)
         # inject deps if necessary
         if intensifier.tae_runner is None:
             intensifier.tae_runner = tae_runner
@@ -275,8 +287,8 @@ class EPILS(object):
                 # if we log the performance data,
                 # the RFRImputator will already get
                 # log transform data from the runhistory
-                cutoff = np.log10(scenario.cutoff)
-                threshold = np.log10(scenario.cutoff *
+                cutoff = np.log(scenario.cutoff)
+                threshold = np.log(scenario.cutoff *
                                      scenario.par_factor)
 
                 imputor = RFRImputator(rng=rng,
@@ -321,7 +333,8 @@ class EPILS(object):
                                    rng=rng)
 
     def _get_rng(self, rng):
-        """Initialize random number generator
+        """
+        Initialize random number generator
 
         If rng is None, initialize a new generator
         If rng is Int, create RandomState from that
@@ -334,8 +347,8 @@ class EPILS(object):
         Returns
         -------
         int, np.random.RandomState
-        """
 
+        """
         # initialize random number generator
         if rng is None:
             self.logger.debug('no rng given, using default seed of 1')
@@ -353,18 +366,20 @@ class EPILS(object):
         return num_run, rng
 
     def optimize(self):
-        """Optimizes the algorithm provided in scenario (given in constructor)
+        """
+        Optimizes the algorithm provided in scenario (given in constructor)
 
         Returns
-        ----------
+        -------
         incumbent
+
         """
         incumbent = None
         try:
             incumbent = self.solver.run()
         finally:
             self.solver.stats.print_stats()
-            self.logger.info("Final Incumbent: %s" % (self.solver.incumbent))
+            self.logger.info("Final Incumbent: %s", self.solver.incumbent)
             self.runhistory = self.solver.runhistory
             self.trajectory = self.solver.intensifier.traj_logger.trajectory
 
@@ -375,22 +390,26 @@ class EPILS(object):
         return incumbent
 
     def get_tae_runner(self):
-        """Returns target algorithm evaluator (TAE) object which can run the
+        """
+        Returns target algorithm evaluator (TAE) object which can run the
         target algorithm given a configuration
 
         Returns
         -------
         smac.tae.execute_ta_run.ExecuteTARun
+
         """
         return self.solver.intensifier.tae_runner
 
     def get_runhistory(self):
-        """Returns the runhistory (i.e., all evaluated configurations and
+        """
+        Returns the runhistory (i.e., all evaluated configurations and
         the results)
 
         Returns
         -------
         smac.runhistory.runhistory.RunHistory
+
         """
         if not hasattr(self, 'runhistory'):
             raise ValueError('SMAC was not fitted yet. Call optimize() prior '
@@ -398,23 +417,24 @@ class EPILS(object):
         return self.runhistory
 
     def get_trajectory(self):
-        """Returns the trajectory (i.e., all incumbent configurations over time)
+        """
+        Returns the trajectory (i.e., all incumbent configurations over time)
 
         Returns
         -------
         List of entries with the following fields:
         'train_perf', 'incumbent_id', 'incumbent',
         'ta_runs', 'ta_time_used', 'wallclock_time'
-        """
 
+        """
         if not hasattr(self, 'trajectory'):
             raise ValueError('SMAC was not fitted yet. Call optimize() prior '
                              'to accessing the runhistory.')
         return self.trajectory
 
     def get_X_y(self):
-        """Simple interface to obtain all data in runhistory in X, y format
-            
+        """
+        Simple interface to obtain all data in runhistory in X, y format
         Uses smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()
 
         Returns
@@ -425,5 +445,6 @@ class EPILS(object):
             vector of cost values; can include censored runs
         cen: numpy.ndarray
             vector of bools indicating whether the y-value is censored
+
         """
         return self.solver.rh2EPM.get_X_y(self.runhistory)

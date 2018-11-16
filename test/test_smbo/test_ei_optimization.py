@@ -64,8 +64,7 @@ class TestLocalSearch(unittest.TestCase):
             dist = [euclidean(point, opt)]
             return np.array([-np.min(dist)])
 
-        l = LocalSearch(acquisition_function, self.cs, epsilon=1e-10,
-                        max_iterations=100000)
+        l = LocalSearch(acquisition_function, self.cs, max_steps=100000)
 
         start_point = self.cs.sample_configuration()
         acq_val_start_point = acquisition_function([start_point])
@@ -77,14 +76,15 @@ class TestLocalSearch(unittest.TestCase):
         self.assertLessEqual(acq_val_start_point, acq_val_incumbent)
 
     @unittest.mock.patch.object(LocalSearch, '_get_initial_points')
-    @unittest.mock.patch.object(LocalSearch, '_calculate_num_points')
     def test_local_search_2(
             self,
-            _calculate_num_points_patch,
             _get_initial_points_patch,
     ):
         pcs_file = os.path.join(self.test_files_dir, "test_local_search.pcs")
         seed = np.random.randint(1, 100000)
+
+        runhistory = unittest.mock.Mock()
+        runhistory.data = [None] * 1000
 
         with open(pcs_file) as fh:
             config_space = pcs.read(fh.readlines())
@@ -94,12 +94,12 @@ class TestLocalSearch(unittest.TestCase):
             return np.array([np.count_nonzero(point[0].get_array())])
 
         start_point = config_space.get_default_configuration()
-        _calculate_num_points_patch.return_value = 1
         _get_initial_points_patch.return_value = [start_point]
 
-        l = LocalSearch(acquisition_function, config_space, epsilon=0.01,
-                        max_iterations=100000)
-        acq_val_incumbent, incumbent = l._maximize(None, None, 10)[0]
+        l = LocalSearch(acquisition_function, config_space, max_steps=100000)
+        # To have some data in a mock runhistory
+        l.runhistory = [None] * 1000
+        acq_val_incumbent, incumbent = l._maximize(runhistory, None, 1)[0]
 
         np.testing.assert_allclose(
             incumbent.get_array(),
@@ -108,10 +108,8 @@ class TestLocalSearch(unittest.TestCase):
 
     @unittest.mock.patch.object(LocalSearch, '_one_iter')
     @unittest.mock.patch.object(LocalSearch, '_get_initial_points')
-    @unittest.mock.patch.object(LocalSearch, '_calculate_num_points')
     def test_get_next_by_local_search(
             self,
-            _calculate_num_points_patch,
             _get_initial_points_patch,
             patch
     ):
@@ -129,12 +127,15 @@ class TestLocalSearch(unittest.TestCase):
         cs = test_helpers.get_branin_config_space()
         rand_confs = cs.sample_configuration(size=9)
         _get_initial_points_patch.return_value = rand_confs
-        _calculate_num_points_patch.return_value = 9
         acq_func = EI(None)
 
         ls = LocalSearch(acq_func, cs)
 
-        rval = ls._maximize(None, None, 9)
+        # To have some data in a mock runhistory
+        runhistory = unittest.mock.Mock()
+        runhistory.data = [None] * 1000
+
+        rval = ls._maximize(runhistory, None, 9)
         self.assertEqual(len(rval), 9)
         self.assertEqual(patch.call_count, 9)
         for i in range(9):
@@ -146,8 +147,7 @@ class TestLocalSearch(unittest.TestCase):
         # With known incumbent
         patch.side_effect = SideEffect()
         _get_initial_points_patch.return_value = ['Incumbent'] + rand_confs
-        _calculate_num_points_patch.return_value = 10
-        rval = ls._maximize(None, None, 10)
+        rval = ls._maximize(runhistory, None, 10)
         self.assertEqual(len(rval), 10)
         self.assertEqual(patch.call_count, 19)
         # Only the first local search in each iteration starts from the

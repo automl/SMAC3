@@ -15,7 +15,7 @@ from smac.runhistory.runhistory import RunHistory, RunKey, StatusType
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
-from smac.tae.execute_ta_run import ExecuteTARun, StatusType
+from smac.tae.execute_ta_run import ExecuteTARun
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.utils.constants import MAXINT
 from smac.utils.util_funcs import get_types
@@ -45,15 +45,17 @@ def _unbound_tae_starter(tae, *args, **kwargs):
     """
     return tae.start(*args, **kwargs)
 
-Run = namedtuple('Run', 'config inst seed inst_specs')
+_Run = namedtuple('Run', 'config inst seed inst_specs')
 
 class Validator(object):
     """
     Validator for the output of SMAC-scenarios.
-    evaluates specified configurations on specified instances.
+    Evaluates specified configurations on specified instances.
     """
 
-    def __init__(self, scenario: Scenario, trajectory: list,
+    def __init__(self,
+                 scenario: Scenario,
+                 trajectory: list,
                  rng: Union[np.random.RandomState, int]=None):
         """
         Construct Validator for given scenario and trajectory.
@@ -117,28 +119,28 @@ class Validator(object):
     def validate(self,
                  config_mode:Union[str, typing.List[Configuration]]='def',
                  instance_mode:Union[str, typing.List[str]]='test',
-                 repetitions:int=1, n_jobs:int=1, backend:str='threading',
-                 runhistory:RunHistory=None, tae:ExecuteTARun=None,
+                 repetitions:int=1,
+                 n_jobs:int=1,
+                 backend:str='threading',
+                 runhistory:RunHistory=None,
+                 tae:ExecuteTARun=None,
                  output_fn:str="",
                  ) -> RunHistory:
         """
         Validate configs on instances and save result in runhistory.
+        If a runhistory is provided as input it is important that you run it on the same/comparable hardware.
 
         side effect: if output is specified, saves runhistory to specified
         output directory.
 
         Parameters
         ----------
-        output_fn: str
-            path to runhistory to be saved. if the suffix is not '.json', will
-            be interpreted as directory and filename will be
-            'validated_runhistory.json'
         config_mode: str or list<Configuration>
-            string or directly a list of Configuration
-            str from [def, inc, def+inc, wallclock_time, cpu_time, all]
-                time evaluates at cpu- or wallclock-timesteps of:
-                [max_time/2^0, max_time/2^1, max_time/2^3, ..., default]
-                with max_time being the highest recorded time
+            string or directly a list of Configuration.
+            string from [def, inc, def+inc, wallclock_time, cpu_time, all].
+            time evaluates at cpu- or wallclock-timesteps of:
+            [max_time/2^0, max_time/2^1, max_time/2^3, ..., default]
+            with max_time being the highest recorded time
         instance_mode: str or list<str>
             what instances to use for validation, either from
             [train, test, train+test] or directly a list of instances
@@ -152,6 +154,10 @@ class Validator(object):
             optional, RunHistory-object to reuse runs
         tae: ExecuteTARun
             tae to be used. if None, will initialize ExecuteTARunOld
+        output_fn: str
+            path to runhistory to be saved. if the suffix is not '.json', will
+            be interpreted as directory and filename will be
+            'validated_runhistory.json'
 
         Returns
         -------
@@ -163,7 +169,7 @@ class Validator(object):
                           config_mode, instance_mode, repetitions, n_jobs, backend)
 
         # Get all runs to be evaluated as list
-        runs, validated_rh = self.get_runs(config_mode, instance_mode, repetitions, runhistory)
+        runs, validated_rh = self._get_runs(config_mode, instance_mode, repetitions, runhistory)
 
         # Create new Stats without limits
         inf_scen = Scenario({'run_obj':self.scen.run_obj,
@@ -202,7 +208,7 @@ class Validator(object):
             self._save_results(validated_rh, output_fn, backup_fn="validated_runhistory.json")
         return validated_rh
 
-    def _validate_parallel(self, tae: ExecuteTARun, runs: typing.List[Run],
+    def _validate_parallel(self, tae: ExecuteTARun, runs: typing.List[_Run],
                            n_jobs:int, backend:str):
         """
         Validate runs with joblibs Parallel-interface
@@ -211,9 +217,9 @@ class Validator(object):
         ----------
         tae: ExecuteTARun
             tae to be used for validation
-        runs: list<Run>
-            list with Run-objects
-            [Run(config=CONFIG1,inst=INSTANCE1,seed=SEED1,inst_specs=INST_SPECIFICS1), ...]
+        runs: list<_Run>
+            list with _Run-objects
+            [_Run(config=CONFIG1,inst=INSTANCE1,seed=SEED1,inst_specs=INST_SPECIFICS1), ...]
         n_jobs: int
             number of cpus to use for validation (-1 to use all)
         backend: str
@@ -236,8 +242,10 @@ class Validator(object):
     def validate_epm(self,
                      config_mode:Union[str, typing.List[Configuration]]='def',
                      instance_mode:Union[str, typing.List[str]]='test',
-                     repetitions:int=1, runhistory:RunHistory=None,
-                     output_fn="", reuse_epm=True,
+                     repetitions:int=1,
+                     runhistory:RunHistory=None,
+                     output_fn="",
+                     reuse_epm=True,
                      ) -> RunHistory:
         """
         Use EPM to predict costs/runtimes for unknown config/inst-pairs.
@@ -252,11 +260,9 @@ class Validator(object):
             be interpreted as directory and filename will be
             'validated_runhistory_EPM.json'
         config_mode: str or list<Configuration>
-            string or directly a list of Configuration
-            str from [def, inc, def+inc, wallclock_time, cpu_time, all]
-                time evaluates at cpu- or wallclock-timesteps of:
-                [max_time/2^0, max_time/2^1, max_time/2^3, ..., default]
-                with max_time being the highest recorded time
+            string or directly a list of Configuration, string from [def, inc, def+inc, wallclock_time, cpu_time, all].
+            time evaluates at cpu- or wallclock-timesteps of:
+            [max_time/2^0, max_time/2^1, max_time/2^3, ..., default] with max_time being the highest recorded time
         instance_mode: str or list<str>
             what instances to use for validation, either from
             [train, test, train+test] or directly a list of instances
@@ -283,7 +289,6 @@ class Validator(object):
                                                  instance_features=self.scen.feature_array,
                                                  seed=self.rng.randint(MAXINT),
                                                  ratio_features=1.0)
-            logging.warning('validate_1__test_rng__' + str(self.rng.randint(MAXINT)))
             # Use imputor if objective is runtime
             imputor = None
             impute_state = None
@@ -309,14 +314,15 @@ class Validator(object):
             self.epm.train(X, y)
 
         # Predict desired runs
-        runs, rh_epm = self.get_runs(config_mode, instance_mode, repetitions, runhistory)
-        try:
-            feature_array_size = len(self.scen.cs.get_hyperparameters()) + self.scen.feature_array.shape[1]
-        except AttributeError:
-            feature_array_size = len(self.scen.cs.get_hyperparameters())
+        runs, rh_epm = self._get_runs(config_mode, instance_mode, repetitions, runhistory)
+
+        feature_array_size = len(self.scen.cs.get_hyperparameters())
+        if self.scen.feature_array is not None:
+            feature_array_size += self.scen.feature_array.shape[1]
+
         X_pred = np.empty((len(runs), feature_array_size))
         for idx, run in enumerate(runs):
-            if hasattr(self.scen, "feature_dict") and run.inst != None:
+            if self.scen.feature_array is not None and run.inst is not None:
                 X_pred[idx] = np.hstack([convert_configurations_to_array([run.config])[0],
                                          self.scen.feature_dict[run.inst]])
             else:
@@ -341,10 +347,12 @@ class Validator(object):
             self._save_results(rh_epm, output_fn, backup_fn="validated_runhistory_EPM.json")
         return rh_epm
 
-    def get_runs(self, configs: Union[str, typing.List[Configuration]],
-                 insts: Union[str, typing.List[str]], repetitions: int=1,
+    def _get_runs(self,
+                 configs: Union[str, typing.List[Configuration]],
+                 insts: Union[str, typing.List[str]],
+                 repetitions: int=1,
                  runhistory: RunHistory=None,
-                 ) -> typing.Tuple[typing.List[Run], RunHistory]:
+                 ) -> typing.Tuple[typing.List[_Run], RunHistory]:
         """
         Generate list of SMAC-TAE runs to be executed. This means
         combinations of configs with all instances on a certain number of seeds.
@@ -369,10 +377,10 @@ class Validator(object):
 
         Returns
         -------
-        runs: list<Run>
-            list with Runs
-            [Run(config=CONFIG1,inst=INSTANCE1,seed=SEED1,inst_specs=INST_SPECIFICS1),
-             Run(config=CONFIG2,inst=INSTANCE2,seed=SEED2,inst_specs=INST_SPECIFICS2),
+        runs: list<_Run>
+            list with _Runs
+            [_Run(config=CONFIG1,inst=INSTANCE1,seed=SEED1,inst_specs=INST_SPECIFICS1),
+             _Run(config=CONFIG2,inst=INSTANCE2,seed=SEED2,inst_specs=INST_SPECIFICS2),
              ...]
         """
         # Get relevant configurations and instances
@@ -382,7 +390,7 @@ class Validator(object):
             insts = self._get_instances(insts)
 
         # If no instances are given, fix the instances to one "None" instance
-        if len(insts) == 0:
+        if not insts:
             insts = [None]
         # If algorithm is deterministic, fix repetitions to 1
         if self.scen.deterministic and repetitions != 1:
@@ -409,28 +417,30 @@ class Validator(object):
                     # Choose seed based on most often evaluated inst-seed-pair
                     seed, configs_evaluated = inst_seed_config[i].pop(0)
                     # Delete inst if all seeds are used
-                    if len(inst_seed_config[i]) == 0:
+                    if not inst_seed_config[i]:
                         inst_seed_config.pop(i)
                     # Add runs to runhistory
-                    for c in configs_evaluated:
+                    for c in configs_evaluated[:]:
                         runkey = RunKey(runhistory.config_ids[c], i, seed)
                         cost, time, status, additional_info = runhistory.data[runkey]
+                        if status in [StatusType.CRASHED, StatusType.ABORT, StatusType.CAPPED]:
+                            # Not properly executed target algorithm runs should be repeated
+                            configs_evaluated.remove(c)
+                            continue
                         new_rh.add(c, cost, time, status, instance_id=i,
                                    seed=seed, additional_info=additional_info)
                         runs_from_rh += 1
                 else:
                     # If no runhistory or no entries for instance, get new seed
                     seed = self.rng.randint(MAXINT)
-                    logging.warning('validate_2__test_rng__' + str(self.rng.randint(MAXINT)))
-                    # if self.scen.deterministic:
-                    #     seed = 0
+
                 # We now have a seed and add all configs that are not already
                 # evaluated on that seed to the runs-list. This way, we
                 # guarantee the same inst-seed-pairs for all configs.
                 for config in [c for c in configs if not c in configs_evaluated]:
                     # Only use specifics if specific exists, else use string "0"
                     specs = self.scen.instance_specific[i] if i and i in self.scen.instance_specific else "0"
-                    runs.append(Run(config=config,
+                    runs.append(_Run(config=config,
                                     inst=i,
                                     seed=seed,
                                     inst_specs=specs))
@@ -445,7 +455,7 @@ class Validator(object):
     def _process_runhistory(self, configs:typing.List[Configuration],
                             insts:typing.List[str], runhistory:RunHistory):
         """
-        Processes runhistory from self.get_runs by extracting already evaluated
+        Processes runhistory from self._get_runs by extracting already evaluated
         (relevant) config-inst-seed tuples.
 
         Parameters
@@ -490,7 +500,7 @@ class Validator(object):
                     inst_seed_config[inst] = {seed : [config]}
 
             inst_seed_config = {i :
-                                sorted([(seed, tuple(inst_seed_config[i][seed]))
+                                sorted([(seed, list(inst_seed_config[i][seed]))
                                         for seed in inst_seed_config[i]],
                                        key=lambda x: len(x[1]))
                                 for i in inst_seed_config}

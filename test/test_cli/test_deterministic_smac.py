@@ -8,6 +8,8 @@ from nose.plugins.attrib import attr
 from unittest import mock
 
 from smac.smac_cli import SMACCLI
+from smac.optimizer import ei_optimization
+from ConfigSpace.util import get_one_exchange_neighbourhood
 
 
 class TestDeterministicSMAC(unittest.TestCase):
@@ -25,6 +27,8 @@ class TestDeterministicSMAC(unittest.TestCase):
         self.scenario_file = "test/test_files/test_deterministic_scenario.txt"
         self.output_dirs = [self.output_dir_1, self.output_dir_2, self.output_dir_3]
 
+        self.maxDiff = None
+
     def tearDown(self):
         for output_dir in self.output_dirs:
             if output_dir:
@@ -32,34 +36,103 @@ class TestDeterministicSMAC(unittest.TestCase):
         os.chdir(self.current_dir)
 
     @attr('slow')
-    def test_deterministic(self):
+    @unittest.mock.patch("smac.optimizer.ei_optimization.get_one_exchange_neighbourhood")
+    def test_deterministic(self, patch):
         """
         Testing deterministic behaviour.
         """
+
+        # Make SMAC a bit faster
+        patch.side_effect = lambda configuration, seed: get_one_exchange_neighbourhood(
+            configuration=configuration,
+            stdev=0.05,
+            num_neighbors=2,
+            seed=seed,
+        )
+
         testargs = ["scripts/smac",
                     "--scenario", self.scenario_file,
                     "--verbose_level", "DEBUG",
                     "--seed", "1",
+                    "--random_configuration_chooser", "test/test_cli/random_configuration_chooser_impl.py",
                     "--output_dir", self.output_dir_1]
-        with mock.patch.object(sys, 'argv', testargs):
-            SMACCLI().main_cli()
+        SMACCLI().main_cli(testargs[1:])
         testargs = ["scripts/smac",
                     "--scenario", self.scenario_file,
                     "--verbose_level", "DEBUG",
                     "--seed", "1",
+                    "--random_configuration_chooser", "test/test_cli/random_configuration_chooser_impl.py",
                     "--output_dir", self.output_dir_2]
-        with mock.patch.object(sys, 'argv', testargs):
-            SMACCLI().main_cli()
+        SMACCLI().main_cli(testargs[1:])
         testargs = ["scripts/smac",
                     "--scenario", self.scenario_file,
                     "--verbose_level", "DEBUG",
                     "--seed", "2",
+                    "--random_configuration_chooser", "test/test_cli/random_configuration_chooser_impl.py",
                     "--output_dir", self.output_dir_3]
-        with mock.patch.object(sys, 'argv', testargs):
-            SMACCLI().main_cli()
+        SMACCLI().main_cli(testargs[1:])
         # compare trajectories in output_dir_{1,2,3}
         h1 = json.load(open(self.output_dir_1 + '/run_1/runhistory.json'))
         h2 = json.load(open(self.output_dir_2 + '/run_1/runhistory.json'))
         h3 = json.load(open(self.output_dir_3 + '/run_2/runhistory.json'))
         self.assertEqual(h1, h2)
         self.assertNotEqual(h1, h3)
+
+    def test_modes(self):
+        """
+        Test if different modes are accepted
+        """
+        testargs = ["scripts/smac",
+                    "--scenario", self.scenario_file,
+                    "--verbose_level", "DEBUG",
+                    "--seed", "2",
+                    "--random_configuration_chooser", "test/test_cli/random_configuration_chooser_impl.py",
+                    "--output_dir", self.output_dir_3,
+                    "--mode", 'SMAC']
+        cli = SMACCLI()
+        with mock.patch("smac.smac_cli.SMAC") as MSMAC:
+            MSMAC.return_value.optimize.return_value = True
+            cli.main_cli(testargs[1:])
+            MSMAC.assert_called_once_with(
+                initial_configurations=None, restore_incumbent=None, run_id=2,
+                runhistory=None, stats=None, scenario=mock.ANY, rng=mock.ANY)
+
+        testargs[-1] = 'BOGP'
+        cli = SMACCLI()
+        with mock.patch("smac.smac_cli.BOGP") as MSMAC:
+            MSMAC.return_value.optimize.return_value = True
+            cli.main_cli(testargs[1:])
+            MSMAC.assert_called_once_with(
+                initial_configurations=None, restore_incumbent=None, run_id=2,
+                runhistory=None, stats=None, scenario=mock.ANY, rng=mock.ANY)
+
+        testargs[-1] = 'BORF'
+        cli = SMACCLI()
+        with mock.patch("smac.smac_cli.BORF") as MSMAC:
+            MSMAC.return_value.optimize.return_value = True
+            cli.main_cli(testargs[1:])
+            MSMAC.assert_called_once_with(
+                initial_configurations=None, restore_incumbent=None, run_id=2,
+                runhistory=None, stats=None, scenario=mock.ANY, rng=mock.ANY)
+
+        testargs[-1] = 'Hydra'
+        cli = SMACCLI()
+        with mock.patch("smac.smac_cli.Hydra") as MSMAC:
+            MSMAC.return_value.optimize.return_value = True
+            cli.main_cli(testargs[1:])
+            MSMAC.assert_called_once_with(
+                initial_configurations=None, restore_incumbent=None, run_id=2,
+                incs_per_round=1, n_iterations=3,
+                n_optimizers=1, random_configuration_chooser=mock.ANY,
+                runhistory=None, stats=None, scenario=mock.ANY, rng=mock.ANY, val_set='train'
+            )
+
+        testargs[-1] = 'PSMAC'
+        cli = SMACCLI()
+        with mock.patch("smac.smac_cli.PSMAC") as MSMAC:
+            MSMAC.return_value.optimize.return_value = True
+            cli.main_cli(testargs[1:])
+            MSMAC.assert_called_once_with(
+                run_id=2, scenario=mock.ANY, rng=mock.ANY,
+                n_incs=1, n_optimizers=1, shared_model=False, validate=False
+            )

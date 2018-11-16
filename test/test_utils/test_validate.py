@@ -1,7 +1,9 @@
 import sys
 import os
 import unittest
+from nose.plugins.attrib import attr
 import logging
+import shutil
 
 import numpy as np
 
@@ -12,13 +14,19 @@ from smac.runhistory.runhistory import RunHistory
 from smac.stats.stats import Stats
 from smac.optimizer.objective import average_cost
 from smac.utils.io.traj_logging import TrajLogger
-from smac.utils.validate import Validator, Run
+from smac.utils.validate import Validator, _Run
 
 from unittest import mock
 
 class ValidationTest(unittest.TestCase):
 
     def setUp(self):
+        base_directory = os.path.split(__file__)[0]
+        base_directory = os.path.abspath(
+            os.path.join(base_directory, '..', '..'))
+        self.current_dir = os.getcwd()
+        os.chdir(base_directory)
+
         logging.basicConfig()
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.logger.setLevel(logging.DEBUG)
@@ -35,12 +43,28 @@ class ValidationTest(unittest.TestCase):
                              '4':np.array((1, 2, 3)),
                              '5':np.array((1, 2, 3))}
         self.output_rh = 'test/test_files/validation/'
-        scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
+        scen = Scenario(self.scen_fn, cmd_options={'run_obj': 'quality'})
         self.trajectory = TrajLogger.read_traj_aclib_format(
             fn='test/test_files/validation/test_validation_traj.json', cs=scen.cs)
+        self.output_dirs = [self.output_rh + 'test']
+        self.output_files = [self.output_rh + 'validated_runhistory_EPM.json', self.output_rh + 'validated_runhistory.json']
+
+        self.maxDiff = None
+
+    def tearDown(self):
+        for output_dir in self.output_dirs:
+            if output_dir:
+                shutil.rmtree(output_dir, ignore_errors=True)
+        for output_file in self.output_files:
+            if output_file:
+                try:
+                    os.remove(output_file)
+                except FileNotFoundError as e:
+                    pass
+        os.chdir(self.current_dir)
 
     def test_rng(self):
-        scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
+        scen = Scenario(self.scen_fn, cmd_options={'run_obj': 'quality'})
         validator = Validator(scen, self.trajectory, 42)
         self.assertTrue(isinstance(validator.rng, np.random.RandomState))
         validator = Validator(scen, self.trajectory)
@@ -49,14 +73,14 @@ class ValidationTest(unittest.TestCase):
         self.assertTrue(isinstance(validator.rng, np.random.RandomState))
 
     def test_nonexisting_output(self):
-        scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
+        scen = Scenario(self.scen_fn, cmd_options={'run_obj': 'quality'})
         validator = Validator(scen, self.trajectory)
         path = "test/test_files/validation/test/nonexisting/output"
         validator.validate(output_fn=path)
         self.assertTrue(os.path.exists(path))
 
     def test_pass_tae(self):
-        scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
+        scen = Scenario(self.scen_fn, cmd_options={'run_obj': 'quality'})
         tae = ExecuteTARunOld(ta=scen.ta)
         validator = Validator(scen, self.trajectory)
         with mock.patch.object(Validator, "_validate_parallel",
@@ -64,7 +88,7 @@ class ValidationTest(unittest.TestCase):
             self.assertEqual(1, len(validator.validate(tae=tae).data))
 
     def test_no_rh_epm(self):
-        scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
+        scen = Scenario(self.scen_fn, cmd_options={'run_obj': 'quality'})
         scen.feature_array = None
         validator = Validator(scen, self.trajectory)
         self.assertRaises(ValueError, validator.validate_epm)
@@ -72,7 +96,7 @@ class ValidationTest(unittest.TestCase):
     def test_epm_reuse_rf(self):
         """ if no runhistory is passed to epm, but there was a model trained
         before, that model should be reused! (if reuse_epm flag is set) """
-        scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
+        scen = Scenario(self.scen_fn, cmd_options={'run_obj': 'quality'})
         scen.feature_array = None
         validator = Validator(scen, self.trajectory)
         old_rh = RunHistory(average_cost)
@@ -87,7 +111,7 @@ class ValidationTest(unittest.TestCase):
         self.assertRaises(ValueError, validator.validate_epm, reuse_epm=False)
 
     def test_no_feature_dict(self):
-        scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
+        scen = Scenario(self.scen_fn, cmd_options={'run_obj': 'quality'})
         scen.feature_array = None
         validator = Validator(scen, self.trajectory)
         old_rh = RunHistory(average_cost)
@@ -97,7 +121,7 @@ class ValidationTest(unittest.TestCase):
         validator.validate_epm(runhistory=old_rh)
 
     def test_get_configs(self):
-        scen = Scenario(self.scen_fn, cmd_args={'run_obj':'quality'})
+        scen = Scenario(self.scen_fn, cmd_options={'run_obj': 'quality'})
         validator = Validator(scen, self.trajectory, self.rng)
         self.assertEqual(1, len(validator._get_configs("def")))
         self.assertEqual(1, len(validator._get_configs("inc")))
@@ -114,61 +138,92 @@ class ValidationTest(unittest.TestCase):
         self.assertRaises(ValueError, validator._get_configs, "notanoption")
         self.assertRaises(ValueError, validator._get_instances, "notanoption")
 
+    def test_get_runs_capped(self):
+        ''' test if capped, crashed and aborted runs are ignored
+            during rh-recovery '''
+        scen = Scenario(self.scen_fn,
+                        cmd_options={'run_obj':'quality',
+                                     'instances' : ['0']})
+
+        validator = Validator(scen, self.trajectory, self.rng)
+
+        # Get runhistory
+        old_configs = ['config1', 'config2', 'config3',
+                       'config4', 'config5', 'config6']
+        old_rh = RunHistory(average_cost)
+        old_rh.add('config1', 1, 1, StatusType.SUCCESS, instance_id='0', seed=0)
+        old_rh.add('config2', 1, 1, StatusType.TIMEOUT, instance_id='0', seed=0)
+        old_rh.add('config3', 1, 1, StatusType.CRASHED, instance_id='0', seed=0)
+        old_rh.add('config4', 1, 1, StatusType.ABORT, instance_id='0', seed=0)
+        old_rh.add('config5', 1, 1, StatusType.MEMOUT, instance_id='0', seed=0)
+        old_rh.add('config6', 1, 1, StatusType.CAPPED, instance_id='0', seed=0)
+
+        # Get multiple configs
+        expected = [_Run(inst_specs='0', seed=0, inst='0', config='config3'),
+                    _Run(inst_specs='0', seed=0, inst='0', config='config4'),
+                    _Run(inst_specs='0', seed=0, inst='0', config='config6')]
+
+        runs = validator._get_runs(old_configs, ['0'], repetitions=1, runhistory=old_rh)
+        self.assertEqual(runs[0], expected)
+
     def test_get_runs(self):
         ''' test if the runs are generated as expected '''
         scen = Scenario(self.scen_fn,
-                        cmd_args={'run_obj':'quality',
-                                  'instances' : self.train_insts,
-                                  'test_instances': self.test_insts})
+                        cmd_options={'run_obj': 'quality',
+                                     'train_insts' : self.train_insts,
+                                     'test_insts': self.test_insts})
         scen.instance_specific = self.inst_specs
 
         validator = Validator(scen, self.trajectory, self.rng)
         # Get multiple configs
-        expected = [Run(inst_specs='three', seed=1608637542, inst='3', config='config1'),
-                    Run(inst_specs='three', seed=1608637542, inst='3', config='config2'),
-                    Run(inst_specs='three', seed=1935803228, inst='3', config='config1'),
-                    Run(inst_specs='three', seed=1935803228, inst='3', config='config2'),
-                    Run(inst_specs='four',  seed=996406378, inst='4', config='config1'),
-                    Run(inst_specs='four',  seed=996406378, inst='4', config='config2'),
-                    Run(inst_specs='four',  seed=423734972,  inst='4', config='config1'),
-                    Run(inst_specs='four',  seed=423734972,  inst='4', config='config2'),
-                    Run(inst_specs='five',  seed=670094950,  inst='5', config='config1'),
-                    Run(inst_specs='five',  seed=670094950,  inst='5', config='config2'),
-                    Run(inst_specs='five',  seed=669991378, inst='5', config='config1'),
-                    Run(inst_specs='five',  seed=669991378, inst='5', config='config2')]
+        self.maxDiff=None
+        expected = [_Run(config='config1', inst='3', seed=1608637542, inst_specs='three'),
+                    _Run(config='config2', inst='3', seed=1608637542, inst_specs='three'),
+                    _Run(config='config1', inst='3', seed=1273642419, inst_specs='three'),
+                    _Run(config='config2', inst='3', seed=1273642419, inst_specs='three'),
+                    _Run(config='config1', inst='4', seed=1935803228, inst_specs='four'),
+                    _Run(config='config2', inst='4', seed=1935803228, inst_specs='four'),
+                    _Run(config='config1', inst='4', seed=787846414, inst_specs='four'),
+                    _Run(config='config2', inst='4', seed=787846414, inst_specs='four'),
+                    _Run(config='config1', inst='5', seed=996406378, inst_specs='five'),
+                    _Run(config='config2', inst='5', seed=996406378, inst_specs='five'),
+                    _Run(config='config1', inst='5', seed=1201263687, inst_specs='five'),
+                    _Run(config='config2', inst='5', seed=1201263687, inst_specs='five')]
 
-        runs = validator.get_runs(['config1', 'config2'], scen.test_insts, repetitions=2)
+        runs = validator._get_runs(['config1', 'config2'], scen.test_insts, repetitions=2)
         self.assertEqual(runs[0], expected)
 
         # Only train
-        expected = [Run(inst_specs='null', seed=249467210,  inst='0', config='config1'),
-                    Run(inst_specs='null', seed=1572714583,  inst='0', config='config1'),
-                    Run(inst_specs='one',  seed=434285667,  inst='1', config='config1'),
-                    Run(inst_specs='one',  seed=893664919, inst='1', config='config1'),
-                    Run(inst_specs='two',  seed=88409749,  inst='2', config='config1'),
-                    Run(inst_specs='two',  seed=2018247425,  inst='2', config='config1')]
+        expected = [_Run(config='config1', inst='0', seed=423734972, inst_specs='null'),
+                    _Run(config='config1', inst='0', seed=415968276, inst_specs='null'),
+                    _Run(config='config1', inst='1', seed=670094950, inst_specs='one'),
+                    _Run(config='config1', inst='1', seed=1914837113, inst_specs='one'),
+                    _Run(config='config1', inst='2', seed=669991378, inst_specs='two'),
+                    _Run(config='config1', inst='2', seed=429389014, inst_specs='two')]
 
-        runs = validator.get_runs(['config1'], scen.train_insts, repetitions=2)
+        runs = validator._get_runs(['config1'], scen.train_insts, repetitions=2)
         self.assertEqual(runs[0], expected)
 
         # Test and train
-        expected = [Run(inst='0', seed=1427830251,  config='config1', inst_specs='null' ),
-                    Run(inst='1', seed=911989541, config='config1', inst_specs='one'  ),
-                    Run(inst='2', seed=780932287, config='config1', inst_specs='two'  ),
-                    Run(inst='3', seed=787716372, config='config1', inst_specs='three'),
-                    Run(inst='4', seed=1306710475,  config='config1', inst_specs='four' ),
-                    Run(inst='5', seed=106328085,  config='config1', inst_specs='five' )]
+        expected = [_Run(config='config1', inst='0', seed=249467210, inst_specs='null'),
+                    _Run(config='config1', inst='1', seed=1972458954, inst_specs='one'),
+                    _Run(config='config1', inst='2', seed=1572714583, inst_specs='two'),
+                    _Run(config='config1', inst='3', seed=1433267572, inst_specs='three'),
+                    _Run(config='config1', inst='4', seed=434285667, inst_specs='four'),
+                    _Run(config='config1', inst='5', seed=613608295, inst_specs='five')]
+
         insts = self.train_insts
         insts.extend(self.test_insts)
-        runs = validator.get_runs(['config1'], insts, repetitions=1)
+        runs = validator._get_runs(['config1'], insts, repetitions=1)
         self.assertEqual(runs[0], expected)
 
+    @attr('slow')
     def test_validate(self):
         ''' test validation '''
         scen = Scenario(self.scen_fn,
-                        cmd_args={'run_obj':'quality',
-                                  'instances' : self.train_insts,
-                                  'test_instances': self.test_insts})
+                        cmd_options={'run_obj': 'quality',
+                                  'train_insts' : self.train_insts,
+                                  'test_insts': self.test_insts})
         scen.instance_specific = self.inst_specs
         validator = Validator(scen, self.trajectory, self.rng)
         # Test basic usage
@@ -192,10 +247,11 @@ class ValidationTest(unittest.TestCase):
         self.assertEqual(len(rh.get_all_configs()), 1)
         self.assertEqual(len(rh.get_runs_for_config(rh.get_all_configs()[0])), 9)
 
+    @attr('slow')
     def test_validate_no_insts(self):
         ''' no instances '''
         scen = Scenario(self.scen_fn,
-                        cmd_args={'run_obj':'quality'})
+                        cmd_options={'run_obj': 'quality'})
         validator = Validator(scen, self.trajectory, self.rng)
         rh = validator.validate(config_mode='def+inc', instance_mode='train',
                                 repetitions=3, output_fn=self.output_rh)
@@ -203,11 +259,12 @@ class ValidationTest(unittest.TestCase):
         self.assertEqual(sum([len(rh.get_runs_for_config(c)) for c in
                               rh.get_all_configs()]), 6)
 
+    @attr('slow')
     def test_validate_deterministic(self):
         ''' deterministic ta '''
         scen = Scenario(self.scen_fn,
-                        cmd_args={'run_obj':'quality',
-                                  'instances' : self.train_insts,
+                        cmd_options={'run_obj': 'quality',
+                                  'train_insts' : self.train_insts,
                                   'deterministic': True})
         scen.instance_specific = self.inst_specs
         validator = Validator(scen, self.trajectory, self.rng)
@@ -217,19 +274,20 @@ class ValidationTest(unittest.TestCase):
         self.assertEqual(sum([len(rh.get_runs_for_config(c)) for c in
                               rh.get_all_configs()]), 6)
 
+    @attr('slow')
     def test_parallel(self):
         ''' test parallel '''
         scen = Scenario(self.scen_fn,
-                        cmd_args={'run_obj':'quality'})
+                        cmd_options={'run_obj': 'quality'})
         validator = Validator(scen, self.trajectory, self.rng)
         validator.validate(config_mode='all', instance_mode='train+test', n_jobs=-1)
 
     def test_passed_runhistory(self):
         ''' test if passed runhistory is in resulting runhistory '''
         scen = Scenario(self.scen_fn,
-                        cmd_args={'run_obj':'quality',
-                                  'instances' : self.train_insts,
-                                  'test_instances': self.test_insts})
+                        cmd_options={'run_obj': 'quality',
+                                  'train_insts' : self.train_insts,
+                                  'test_insts': self.test_insts})
         scen.instance_specific = self.inst_specs
         validator = Validator(scen, self.trajectory, self.rng)
         # Add a few runs and check, if they are correctly processed
@@ -243,9 +301,9 @@ class ValidationTest(unittest.TestCase):
 
         configs = validator._get_configs('all')
         insts = validator._get_instances('train')
-        runs_w_rh = validator.get_runs(configs, insts, repetitions=2,
+        runs_w_rh = validator._get_runs(configs, insts, repetitions=2,
                                        runhistory=old_rh)
-        runs_wo_rh = validator.get_runs(configs, insts, repetitions=2)
+        runs_wo_rh = validator._get_runs(configs, insts, repetitions=2)
         self.assertEqual(len(runs_w_rh[0]), len(runs_wo_rh[0]) - 4)
         self.assertEqual(len(runs_w_rh[1].data), 4)
         self.assertEqual(len(runs_wo_rh[1].data), 0)
@@ -253,8 +311,8 @@ class ValidationTest(unittest.TestCase):
     def test_passed_runhistory_deterministic(self):
         ''' test if passed runhistory is in resulting runhistory '''
         scen = Scenario(self.scen_fn,
-                        cmd_args={'run_obj':'quality',
-                                  'instances' : self.train_insts,
+                        cmd_options={'run_obj': 'quality',
+                                  'train_insts' : self.train_insts,
                                   'deterministic' : True})
         scen.instance_specific = self.inst_specs
         validator = Validator(scen, self.trajectory, self.rng)
@@ -266,9 +324,9 @@ class ValidationTest(unittest.TestCase):
 
         configs = validator._get_configs('all')
         insts = validator._get_instances('train')
-        runs_w_rh = validator.get_runs(configs, insts, repetitions=2,
+        runs_w_rh = validator._get_runs(configs, insts, repetitions=2,
                                        runhistory=old_rh)
-        runs_wo_rh = validator.get_runs(configs, insts, repetitions=2)
+        runs_wo_rh = validator._get_runs(configs, insts, repetitions=2)
         self.assertEqual(len(runs_w_rh[0]), len(runs_wo_rh[0]) - 4)
         self.assertEqual(len(runs_w_rh[1].data), 4)
         self.assertEqual(len(runs_wo_rh[1].data), 0)
@@ -276,7 +334,7 @@ class ValidationTest(unittest.TestCase):
     def test_passed_runhistory_no_insts(self):
         ''' test passed runhistory, without instances '''
         scen = Scenario(self.scen_fn,
-                        cmd_args={'run_obj':'quality'})
+                        cmd_options={'run_obj': 'quality'})
         scen.instance_specific = self.inst_specs
         validator = Validator(scen, self.trajectory, self.rng)
         # Add a few runs and check, if they are correctly processed
@@ -287,9 +345,9 @@ class ValidationTest(unittest.TestCase):
 
         configs = validator._get_configs('all')
         insts = validator._get_instances('train')
-        runs_w_rh = validator.get_runs(configs, insts, repetitions=2,
+        runs_w_rh = validator._get_runs(configs, insts, repetitions=2,
                                        runhistory=old_rh)
-        runs_wo_rh = validator.get_runs(configs, insts, repetitions=2)
+        runs_wo_rh = validator._get_runs(configs, insts, repetitions=2)
         self.assertEqual(len(runs_w_rh[0]), len(runs_wo_rh[0]) - 4)
         self.assertEqual(len(runs_w_rh[1].data), 4)
         self.assertEqual(len(runs_wo_rh[1].data), 0)
@@ -297,9 +355,9 @@ class ValidationTest(unittest.TestCase):
     def test_validate_epm(self):
         ''' test using epm to validate '''
         scen = Scenario(self.scen_fn,
-                        cmd_args={'run_obj':'quality',
-                                  'instances' : self.train_insts,
-                                  'test_instances': self.test_insts,
+                        cmd_options={'run_obj': 'quality',
+                                  'train_insts' : self.train_insts,
+                                  'test_insts': self.test_insts,
                                   'features': self.feature_dict})
         scen.instance_specific = self.inst_specs
         validator = Validator(scen, self.trajectory, self.rng)
@@ -313,11 +371,33 @@ class ValidationTest(unittest.TestCase):
 
     def test_objective_runtime(self):
         ''' test if everything is ok with objective runtime (imputing!) '''
-        scen = Scenario(self.scen_fn, cmd_args={'run_obj' : 'runtime',
-                                                'cutoff_time' : 5})
+        scen = Scenario(self.scen_fn, cmd_options={'run_obj' : 'runtime',
+                                                   'cutoff_time' : 5})
         validator = Validator(scen, self.trajectory, self.rng)
         old_configs = [entry["incumbent"] for entry in self.trajectory]
         old_rh = RunHistory(average_cost)
         for config in old_configs[:int(len(old_configs)/2)]:
             old_rh.add(config, 1, 1, StatusType.SUCCESS, instance_id='0')
         validator.validate_epm('all', 'train', 1, old_rh)
+
+    def test_inst_no_feat(self):
+        ''' test if scenarios are treated correctly if no features are
+        specified.'''
+        scen = Scenario(self.scen_fn,
+                        cmd_options={'run_obj': 'quality',
+                                  'train_insts' : self.train_insts,
+                                  'test_insts': self.test_insts})
+        self.assertTrue(scen.feature_array is None)
+        self.assertEqual(len(scen.feature_dict), 0)
+
+        scen.instance_specific = self.inst_specs
+        validator = Validator(scen, self.trajectory, self.rng)
+        # Add a few runs and check, if they are correctly processed
+        old_configs = [entry["incumbent"] for entry in self.trajectory]
+        old_rh = RunHistory(average_cost)
+        for config in old_configs[:int(len(old_configs)/2)]:
+            old_rh.add(config, 1, 1, StatusType.SUCCESS, instance_id='0',
+                       seed=127)
+        rh = validator.validate_epm('all', 'train+test', 1, old_rh)
+        self.assertEqual(len(old_rh.get_all_configs()), 4)
+        self.assertEqual(len(rh.get_all_configs()), 10)

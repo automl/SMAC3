@@ -10,6 +10,7 @@ smac\.facade package
 
 .. toctree::
 
+   smac.facade.epils_facade
    smac.facade.func_facade
    smac.facade.roar_facade
    smac.facade.smac_facade

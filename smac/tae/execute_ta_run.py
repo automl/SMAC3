@@ -81,7 +81,8 @@ class ExecuteTARun(object):
 
     def __init__(self, ta, stats=None, runhistory=None,
                  run_obj: str="runtime", par_factor: int=1,
-                 cost_for_crash: float=float(MAXINT)):
+                 cost_for_crash: float=float(MAXINT),
+                 abort_on_first_run_crash: bool=True):
         """Constructor
 
         Parameters
@@ -99,6 +100,8 @@ class ExecuteTARun(object):
         crash_cost : float
             cost that is used in case of crashed runs (including runs
             that returned NaN or inf)
+        abort_on_first_run_crash: bool
+            if true and first run crashes, raise FirstRunCrashedException
         """
         self.ta = ta
         self.stats = stats
@@ -107,6 +110,7 @@ class ExecuteTARun(object):
 
         self.par_factor = par_factor
         self.crash_cost = cost_for_crash
+        self.abort_on_first_run_crash = abort_on_first_run_crash
 
         self.logger = logging.getLogger(
             self.__module__ + '.' + self.__class__.__name__)
@@ -212,16 +216,17 @@ class ExecuteTARun(object):
                                 cost=cost, time=runtime, status=status,
                                 instance_id=instance, seed=seed,
                                 additional_info=additional_info)
+            self.stats.n_configs = len(self.runhistory.config_ids)
 
         if status == StatusType.CAPPED:
             raise CappedRunException("")
-        
-        if self.stats.ta_runs == 1 and status == StatusType.CRASHED:
+
+        if self.abort_on_first_run_crash and self.stats.ta_runs == 1 and status == StatusType.CRASHED:
             raise FirstRunCrashedException("First run crashed, abort. "
                                            "Please check your setup -- "
                                            "we assume that your default"
                                            "configuration does not crashes. "
-                                           "(To deactivate this exception," 
+                                           "(To deactivate this exception,"
                                            " use the SMAC scenario option "
                                            "'abort_on_first_run_crash')")
 

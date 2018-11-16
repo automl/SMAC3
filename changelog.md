@@ -1,3 +1,39 @@
+# 0.9
+
+## Major changes
+* ADD multiple optional initial designs: LHC, Factorial Design, Sobol
+* ADD fmin interface know uses BORF facade (should perform much better on continuous, low-dimensional functions)
+* ADD Hydra (see "Hydra: Automatically Configuring Algorithms for Portfolio-Based Selection" by Xu et al)
+* MAINT Not every second configuration is randomly drawn, but SMAC samples configurations randomly with a given probability (default: 0.5)
+* MAINT parsing of options
+
+## Interface changes
+* ADD two new interfaces to optimize low dimensional continuous functions (w/o instances, docs missing)
+  * BORF facade: Initial design + Tuned RF
+  * BOGP interface: Initial design + GP 
+* ADD options to control acquisition function optimization
+* ADD option to transform function values (log, inverse w/ and w/o scaling)
+* ADD option to set initial design
+
+## Minor changes
+* ADD output of estimated cost of final incumbent
+* ADD explanation of "deterministic" option in documentation
+* ADD save configspace as json
+* ADD random forest with automated HPO (not activated by default)
+* ADD optional linear cooldown for interleaving random configurations (not active by default)
+* MAINT Maximal cutoff time of pynisher set to UINT16
+* MAINT make SMAC deterministic if function is deterministic, the budget is limited and the run objective is quality
+* MAINT SLS on acquisition function (plateau walks)
+* MAINT README
+* FIX abort-on-first-run-crash
+* FIX pSMAC input directory parsing
+* FIX fmin interface with more than 10 parameters
+* FIX no output directory if set to '' (empty string)
+* FIX use `np.log` instead of `np.log10`
+* FIX No longer use law of total variance for uncertainty prediction for RFs as EPM, but only variance over trees (no variance in trees)
+* FIX Marginalize over instances inside of each tree of the forest leads to better uncertainty estimates (motivated by the original SMAC implementation)
+
+
 # 0.8
 
 ## Major changes

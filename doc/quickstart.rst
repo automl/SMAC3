@@ -42,12 +42,13 @@ And run the f_min-function:
    :lineno-match:
 
 This way, you can optimize a blackbox-function with minimal effort. However, to
-use all of *SMACs* capability, a scenario_ object should be used.
+use all of *SMAC's* capability, a scenario_ object should be used.
 
 Command line
 ~~~~~~~~~~~~
-There are a wrapper ``cmdline_wrapper.py``, a scenario-file ``scenario.txt`` and a
-PCS-file ``param_config_space.pcs`` in the branin-folder.
+A more evolved example can be found in ``examples/branin/``. In this directory you can find
+a wrapper ``cmdline_wrapper.py``, a scenario-file ``scenario.txt``, and a
+*PCS*-file ``param_config_space.pcs``.
 To run the example scenario, change into the root directory of *SMAC* and type the following commands:
 
 .. code-block:: bash
@@ -55,11 +56,11 @@ To run the example scenario, change into the root directory of *SMAC* and type t
     cd examples/branin
     python ../../scripts/smac --scenario scenario.txt
 
-The python command runs *SMAC* with the specified scenario. The scenario file contains the following lines:
+The Python command runs *SMAC* with the specified scenario. The scenario file consists of the following lines:
 
     .. literalinclude:: ../examples/branin/scenario.txt
 
-The **algo** parameter specifies how *SMAC* can call the function or evaluate an algorithm that *SMAC* is optimizing.
+The **algo** parameter specifies how *SMAC* calls the target algorithm to be optimized.
 This is further explained in the chapter about the `Target Algorithm Evaluator (TAE) <tae.html>`_.
 An algorithm call by *SMAC* is of the following format:
 
@@ -110,7 +111,7 @@ results of the algorithm in a specific format:
           x1, Value: 9.556406137303922
           x2, Value: 2.429138598022513
 
-Furthermore a folder containing *SMACs* trajectory and the runhistory will be created in the branin folder.
+Furthermore, *SMACs* trajectory and runhistory will be stored in ``branin/``.
 
 
 .. _svm-example:
@@ -118,7 +119,7 @@ Furthermore a folder containing *SMACs* trajectory and the runhistory will be cr
 Using *SMAC* in Python: SVM
 ---------------------------
 To explain the use of *SMAC* within Python, let's look at a real-world example,
-optimizing a Support Vector Machine (SVM) on the widely known `IRIS-dataset
+optimizing the hyperparameters of a Support Vector Machine (SVM) trained on the widely known `IRIS-dataset
 <https://en.wikipedia.org/wiki/Iris_flower_data_set>`_.
 This example is located in :code:`examples/svm.py`.
 
@@ -129,12 +130,11 @@ To use *SMAC* directly with Python, we first import the necessary modules
    :lineno-match:
    
 We import the `SVM from Scikit-Learn <http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html>`_, 
-the ConfigurationSpace with different types of parameters and objects we need
-from *SMAC*.
-The ConfigurationSpace is used to define the parameters we want to optimize as well as 
-their domains. The parametertypes are floats, integers and categorical parameters.
+ different hyperparameter types, the ConfigurationSpace, and the objects we need from *SMAC*.
+The ConfigurationSpace is used to define the hyperparameters we want to optimize as well as
+their domains. Possible hyperparameter types are floats, integers and categorical parameters.
 
-We optimize a SVM with the parameters *kernel*, *C*, *gamma*, *coef0*, *degree* and *shrinking*, which
+We optimize a SVM with the hyperparameters *kernel*, *C*, *gamma*, *coef0*, *degree* and *shrinking*, which
 are further explained in the documentation of sklearn. Note that modifying *C* can
 quickly lead to overfitting, which is why we use cross-validation to evaluate
 the configuration.
@@ -153,9 +153,9 @@ once, by passing them in a list.
    :lines: 67-70
    :lineno-match:
 
-Not every kernel uses all the parameters. The sklearn-implementation of the SVM accepts all parameters we are optimizing, but ignores all those incompatible with the chosen kernel.
-We can reflect this in optimization using **conditions** to deactivate parameters that are irrelevant to the current kernel.
-Deactivated parameters are not considered during optimization, limiting the search-space to reasonable configurations.
+Not every kernel uses all the parameters. The sklearn-implementation of the SVM accepts all hyperparameters we want to optimize, but ignores all those incompatible with the chosen kernel.
+We can reflect this in optimization using **conditions** to deactivate hyperparameters that are irrelevant to the current kernel.
+Deactivated hyperparameters are not considered during optimization, limiting the search-space to reasonable configurations.
 This way human knowledge about the problem is introduced.
 
 .. literalinclude:: ../examples/svm.py
@@ -163,7 +163,7 @@ This way human knowledge about the problem is introduced.
    :lineno-match:
 
 Conditions can be used for various reasons. The `gamma`-hyperparameter for
-example can be set to "auto" or to a fixed float-value. We introduce a parameter
+example can be set to "auto" or to a fixed float-value. We introduce a hyperparameters
 that is only activated if `gamma` is not set to "auto".
 
 .. literalinclude:: ../examples/svm.py
@@ -242,7 +242,9 @@ instances, but we include the code so it is easily applicable for any usecase.
 
 Spear-QCP
 ---------
-For this example we use *SMAC* to optimize the SAT solver `Spear <http://www.domagoj-babic.com/index.php/ResearchProjects/Spear>`_ on a small subset of the QCP-dataset.
+For this example we use *SMAC* to optimize the runtime required by the SAT solver `Spear <http://www.domagoj-babic.com/index.php/ResearchProjects/Spear>`_
+to solve a small subset of the QCP-dataset.
+
 In *SMACs* root-directory type:
 
 .. code-block:: bash
@@ -281,7 +283,7 @@ In this folder you see the following files and directories:
 
         This specifies the wrapper that *SMAC* executes with a pre-specified syntax in order to evaluate the algorithm to be optimized.
         This wrapper script takes an instantiation of the parameters as input, runs the algorithm with these parameters, and returns
-        the error of the algorithm; since every algorithm has a different input and output format, this wrapper acts as an interface between the
+        the cost of running the algorithm; since every algorithm has a different input and output format, this wrapper acts as an interface between the
         algorithm and *SMAC*, which executes the wrapper through a command line call.
 
         An example call would look something like this:
@@ -300,7 +302,7 @@ In this folder you see the following files and directories:
 
         This parameter specifies which pcs-file to use and where it is located.
 
-        The pcs-file specifies the Parameter Configuration Space file, which lists the algorithm's parameters, their domains, and default values (one per line)
+        The PCS-file specifies the Parameter Configuration Space file, which lists the algorithm's parameters, their domains, and default values (one per line)
 
         In this example we are dealing with 26 parameters of which 12 are categorical and 14 are continuous. Out of these 26
         parameters, 9 parameters are conditionals (they are only active if their parent parameter takes on a certain value).
@@ -343,34 +345,34 @@ After *SMAC* finished the configuration process you'll get some final statistics
 
 .. code-block:: bash
 
-	INFO:	##########################################################
-	INFO:	Statistics:
-	INFO:	#Incumbent changed: 2
-	INFO:	#Target algorithm runs: 17 / inf
-	INFO:	Used wallclock time: 35.38 / 30.00 sec 
-	INFO:	Used target algorithm runtime: 20.10 / inf sec
-	INFO:	##########################################################
-	INFO:	Final Incumbent: Configuration:
-	  sp-clause-activity-inc, Value: 0.9846527087294622
-	  sp-clause-decay, Value: 1.1630090545101102
-	  sp-clause-del-heur, Value: '0'
-	  sp-first-restart, Value: 30
-	  sp-learned-clause-sort-heur, Value: '10'
-	  sp-learned-clauses-inc, Value: 1.2739749314202675
-	  sp-learned-size-factor, Value: 0.8355014264152971
-	  sp-orig-clause-sort-heur, Value: '1'
-	  sp-phase-dec-heur, Value: '0'
-	  sp-rand-phase-dec-freq, Value: '0.01'
-	  sp-rand-phase-scaling, Value: 0.3488055907688382
-	  sp-rand-var-dec-freq, Value: '0.05'
-	  sp-rand-var-dec-scaling, Value: 0.46427056372562864
-	  sp-resolution, Value: '0'
-	  sp-restart-inc, Value: 1.7510945705535836
-	  sp-update-dec-queue, Value: '1'
-	  sp-use-pure-literal-rule, Value: '0'
-	  sp-var-activity-inc, Value: 0.9000377944957962
-	  sp-var-dec-heur, Value: '14'
-	  sp-variable-decay, Value: 1.8292433459523076
+   INFO:    ##########################################################
+   INFO:    Statistics:
+   INFO:    #Incumbent changed: 2
+   INFO:    #Target algorithm runs: 17 / inf
+   INFO:    Used wallclock time: 35.38 / 30.00 sec
+   INFO:    Used target algorithm runtime: 20.10 / inf sec
+   INFO:    ##########################################################
+   INFO:    Final Incumbent: Configuration:
+     sp-clause-activity-inc, Value: 0.9846527087294622
+     sp-clause-decay, Value: 1.1630090545101102
+     sp-clause-del-heur, Value: '0'
+     sp-first-restart, Value: 30
+     sp-learned-clause-sort-heur, Value: '10'
+     sp-learned-clauses-inc, Value: 1.2739749314202675
+     sp-learned-size-factor, Value: 0.8355014264152971
+     sp-orig-clause-sort-heur, Value: '1'
+     sp-phase-dec-heur, Value: '0'
+     sp-rand-phase-dec-freq, Value: '0.01'
+     sp-rand-phase-scaling, Value: 0.3488055907688382
+     sp-rand-var-dec-freq, Value: '0.05'
+     sp-rand-var-dec-scaling, Value: 0.46427056372562864
+     sp-resolution, Value: '0'
+     sp-restart-inc, Value: 1.7510945705535836
+     sp-update-dec-queue, Value: '1'
+     sp-use-pure-literal-rule, Value: '0'
+     sp-var-activity-inc, Value: 0.9000377944957962
+     sp-var-dec-heur, Value: '14'
+     sp-variable-decay, Value: 1.8292433459523076
 
 
 
@@ -381,3 +383,29 @@ The directory in which you invoked *SMAC* now contains a new folder called **SMA
 The .json file contains the information about the target algorithms *SMAC* just executed. In this file you can see the *status* of the algorithm run, *misc*, the *instance* on which the algorithm was evaluated, which *seed* was used, how much *time* the algorithm needed and with which *configuration* the algorithm was run.
 In the folder *SMAC* generates a file for the runhistory, and two files for the trajectory.
 
+
+.. _hydra-example:
+
+Hydra on Spear-QCP
+------------------
+
+For this example we use *Hydra* to build a portfolio on the same example data presented in `Spear-QCP`__.
+Hydra is a portfolio builder that aims to build a portfolio by iteratively adding complementary configurations to the
+already existing portfolio. To select these complementary configurations *Hydra* compares new configurations to the
+portfolio and only considers configurations that improve the portfolio performance.
+In the first iteration Hydra runs standard *SMAC* to determine a well performing configuration
+across all instances as a starting point for the portfolio. In following iterations *Hydra* adds one configuration that
+improves the portfolio performance.
+
+__ spear-example_
+
+To run Hydra for three iterations you can run the following code in the spear-qcp example folder.
+
+ ``python ../../scripts/smac --scenario scenario.txt --verbose DEBUG --mode Hydra --hydra_iterations 3``
+
+As the individual SMAC scenario takes 30 seconds to run Hydra will run for ~90 seconds on this example.
+You will see the same output to the terminal as with standard SMAC. In the folder where you executed the above command,
+you will find a *hydra-output-yyy-mm-dd_hh:mm:ss_xyz* folder. This folder contains the results of all three performed
+SMAC runs, as well as the resulting portfolio (as pkl file).
+
+The resulting portfolio can be used with any algorithm selector such as `AutoFolio <https://github.com/mlindauer/AutoFolio>`_

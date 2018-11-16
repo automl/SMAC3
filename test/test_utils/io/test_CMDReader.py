@@ -9,13 +9,21 @@ import logging
 
 from smac.utils.io.cmd_reader import CMDReader
 
-class TestArgs():
+
+class TestArgs:
 
     def __init__(self, sf, seed, mi, vl):
         self.scenario_file = sf
         self.seed = seed
         self.max_iterations = mi
         self.verbose_level = vl
+
+    def cmdline(self):
+        return ['--scenario-file', self.scenario_file,
+                '--seed', str(self.seed),
+                '--runcount-limit', str(self.max_iterations),
+                '--verbose', self.verbose_level]
+
 
 class CMDReaderTest(unittest.TestCase):
 
@@ -35,12 +43,19 @@ class CMDReaderTest(unittest.TestCase):
 
     def test_check_args_exception(self):  # Tests if the Exception is correctly raised
         targs = TestArgs('.', 1234, 2, 'DEBUG')
-        with self.assertRaises(ValueError):
-            self.cr._check_args(targs)
+        with self.assertRaises(SystemExit):
+            self.cr.read_cmd(targs.cmdline())
 
     def test_check_args(self):  # Tests if no Exception is raised
         targs = TestArgs('test/test_files/scenario_test/scenario.txt', 1234, 2, 'DEBUG')
-        self.cr._check_args(targs)
+        self.cr.read_cmd(targs.cmdline())
+
+    def test_doc_files(self):
+        self.cr.write_main_options_to_doc(path="test.rst")
+        self.cr.write_smac_options_to_doc(path="test.rst")
+        self.cr.write_scenario_options_to_doc(path="test.rst")
+        os.remove("./test.rst")
+
 
 if __name__ == "__main__":
     unittest.main()

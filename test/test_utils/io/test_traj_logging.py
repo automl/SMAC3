@@ -35,11 +35,20 @@ class TrajLoggerTest(unittest.TestCase):
 
     def test_init(self):
         scen = Scenario(scenario={'run_obj': 'quality', 'cs': self.cs,
-                                  'output_dir': ''}, cmd_args=None)
+                                  'output_dir': ''})
         stats = Stats(scen)
         TrajLogger(output_dir='./tmp_test_folder', stats=stats)
         self.assertFalse(os.path.exists('smac3-output'))
         self.assertTrue(os.path.exists('tmp_test_folder'))
+
+    def test_oserror(self):
+        scen = Scenario(scenario={'run_obj': 'quality', 'cs': self.cs,
+                                  'output_dir': ''})
+        stats = Stats(scen)
+        # test OSError
+        with patch('os.makedirs') as osMock:
+            osMock.side_effect = OSError()
+            self.assertRaises(OSError, TrajLogger, output_dir='./tmp_test_folder', stats=stats)
 
     @patch('smac.stats.stats.Stats')
     def test_add_entry(self, mock_stats):
@@ -148,10 +157,12 @@ class TrajLoggerTest(unittest.TestCase):
         self.assertTrue("param_a='0.5'" in json_dicts[0]['incumbent'])
 
     def tearDown(self):
-        os.remove('tmp_test_folder/traj_old.csv')
+        if os.path.exists('tmp_test_folder/traj_old.csv'):
+            os.remove('tmp_test_folder/traj_old.csv')
         if os.path.exists('tmp_test_folder/traj_aclib2.json'):
             os.remove('tmp_test_folder/traj_aclib2.json')
-        os.rmdir('tmp_test_folder')
+        if os.path.exists('tmp_test_folder'):
+            os.rmdir('tmp_test_folder')
 
 if __name__ == "__main__":
     unittest.main()
