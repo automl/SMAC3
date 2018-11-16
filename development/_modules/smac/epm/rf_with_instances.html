@@ -244,12 +244,12 @@
            <div itemprop="articleBody">
             
   <h1>Source code for smac.epm.rf_with_instances</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">logging</span>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">typing</span>
 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pyrfr</span> <span class="k">import</span> <span class="n">regression</span>
 
-<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">CategoricalHyperparameter</span>
 <span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="k">import</span> <span class="n">AbstractEPM</span>
 <span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="k">import</span> <span class="n">N_TREES</span>
 
@@ -277,14 +277,14 @@
 <span class="sd">        List of random forest hyperparameters</span>
 <span class="sd">    unlog_y: bool</span>
 <span class="sd">    seed : int</span>
-<span class="sd">    types : list</span>
+<span class="sd">    types : np.ndarray</span>
 <span class="sd">    bounds : list</span>
 <span class="sd">    rng : np.random.RandomState</span>
 <span class="sd">    logger : logging.logger</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">types</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-                 <span class="n">bounds</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">bounds</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
                  <span class="n">log_y</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">num_trees</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="n">N_TREES</span><span class="p">,</span>
                  <span class="n">do_bootstrapping</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -306,7 +306,7 @@
 <span class="sd">            have 2 dimension where the first dimension consists of 3 different</span>
 <span class="sd">            categorical choices and the second dimension is continuous than we</span>
 <span class="sd">            have to pass np.array([2, 0]). Note that we count starting from 0.</span>
-<span class="sd">        bounds : np.ndarray (D, 2)</span>
+<span class="sd">        bounds : list</span>
 <span class="sd">            Specifies the bounds for continuous features.</span>
 <span class="sd">        log_y: bool</span>
 <span class="sd">            y values (passed to this RF) are expected to be log(y) transformed;</span>
@@ -334,10 +334,8 @@
 <span class="sd">        seed : int</span>
 <span class="sd">            The seed that is passed to the random_forest_run library.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">types</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">types</span> <span class="o">=</span> <span class="n">types</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="n">bounds</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log_y</span> <span class="o">=</span> <span class="n">log_y</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">regression</span><span class="o">.</span><span class="n">default_random_engine</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
 
@@ -366,7 +364,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span>
                                         <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Trains the random forest on X and y.</span>
 
 <span class="sd">        Parameters</span>
@@ -423,7 +421,7 @@
             <span class="n">data</span><span class="o">.</span><span class="n">add_data_point</span><span class="p">(</span><span class="n">row_X</span><span class="p">,</span> <span class="n">row_y</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">data</span>
 
-    <span class="k">def</span> <span class="nf">_predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Predict means and variances for given X.</span>
 
 <span class="sd">        Parameters</span>
@@ -442,8 +440,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s1">&#39;Expected 2d array, got </span><span class="si">%d</span><span class="s1">d array!&#39;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Rows in X should have </span><span class="si">%d</span><span class="s1"> entries but have </span><span class="si">%d</span><span class="s1">!&#39;</span> <span class="o">%</span>
-                             <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Rows in X should have </span><span class="si">%d</span><span class="s1"> entries but have </span><span class="si">%d</span><span class="s1">!&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
         <span class="n">means</span><span class="p">,</span> <span class="n">vars_</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">row_X</span> <span class="ow">in</span> <span class="n">X</span><span class="p">:</span>

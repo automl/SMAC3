@@ -295,7 +295,7 @@
 </table>
 <dl class="method">
 <dt id="smac.epm.random_epm.RandomEPM.predict">
-<code class="descname">predict</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.random_epm.RandomEPM.predict" title="Permalink to this definition">¶</a></dt>
+<code class="descname">predict</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="headerlink" href="#smac.epm.random_epm.RandomEPM.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict means and variances for given X.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -315,7 +315,7 @@
 
 <dl class="method">
 <dt id="smac.epm.random_epm.RandomEPM.predict_marginalized_over_instances">
-<code class="descname">predict_marginalized_over_instances</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.random_epm.RandomEPM.predict_marginalized_over_instances" title="Permalink to this definition">¶</a></dt>
+<code class="descname">predict_marginalized_over_instances</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="headerlink" href="#smac.epm.random_epm.RandomEPM.predict_marginalized_over_instances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict mean and variance marginalized over all instances.</p>
 <p>Returns the predictive mean and variance marginalised over all
 instances for a set of configurations.</p>
@@ -337,7 +337,7 @@ instances for a set of configurations.</p>
 
 <dl class="method">
 <dt id="smac.epm.random_epm.RandomEPM.train">
-<code class="descname">train</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em>, <em>Y: numpy.ndarray</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.random_epm.RandomEPM.train" title="Permalink to this definition">¶</a></dt>
+<code class="descname">train</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em>, <em>Y: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; smac.epm.base_epm.AbstractEPM<a class="headerlink" href="#smac.epm.random_epm.RandomEPM.train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Trains the EPM on X and Y.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

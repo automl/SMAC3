@@ -255,7 +255,7 @@
 <span id="smac-epm-uncorrelated-mo-rf-with-instances-module"></span><h1>smac.epm.uncorrelated_mo_rf_with_instances module<a class="headerlink" href="#module-smac.epm.uncorrelated_mo_rf_with_instances" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances">
-<em class="property">class </em><code class="descclassname">smac.epm.uncorrelated_mo_rf_with_instances.</code><code class="descname">UncorrelatedMultiObjectiveRandomForestWithInstances</code><span class="sig-paren">(</span><em>target_names: List[str], bounds: numpy.ndarray, types: numpy.ndarray, rf_kwargs: Optional[Dict[str, Any]] = None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/uncorrelated_mo_rf_with_instances.html#UncorrelatedMultiObjectiveRandomForestWithInstances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.epm.uncorrelated_mo_rf_with_instances.</code><code class="descname">UncorrelatedMultiObjectiveRandomForestWithInstances</code><span class="sig-paren">(</span><em>target_names: List[str], bounds: List[float], types: numpy.ndarray, rf_kwargs: Optional[Dict[str, Any]] = None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/uncorrelated_mo_rf_with_instances.html#UncorrelatedMultiObjectiveRandomForestWithInstances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_epm.AbstractEPM</span></code></a></p>
 <p>Wrapper for the random forest to predict multiple targets.</p>
 <p>Only the a list with the target names and the types array for the
@@ -295,7 +295,7 @@ of the list will be <code class="docutils literal notranslate"><span class="pre"
 </table>
 <dl class="method">
 <dt id="smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.predict">
-<code class="descname">predict</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.predict" title="Permalink to this definition">¶</a></dt>
+<code class="descname">predict</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict means and variances for given X.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -337,7 +337,7 @@ instances for a set of configurations.</p>
 
 <dl class="method">
 <dt id="smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.train">
-<code class="descname">train</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em>, <em>Y: numpy.ndarray</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.train" title="Permalink to this definition">¶</a></dt>
+<code class="descname">train</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em>, <em>Y: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; smac.epm.base_epm.AbstractEPM<a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Trains the EPM on X and Y.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

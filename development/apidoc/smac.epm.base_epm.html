@@ -255,7 +255,7 @@
 <span id="smac-epm-base-epm-module"></span><h1>smac.epm.base_epm module<a class="headerlink" href="#module-smac.epm.base_epm" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.epm.base_epm.AbstractEPM">
-<em class="property">class </em><code class="descclassname">smac.epm.base_epm.</code><code class="descname">AbstractEPM</code><span class="sig-paren">(</span><em>instance_features: numpy.ndarray = None</em>, <em>pca_components: float = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.epm.base_epm.</code><code class="descname">AbstractEPM</code><span class="sig-paren">(</span><em>types: numpy.ndarray, bounds: List[Tuple[float, float]], instance_features: numpy.ndarray = None, pca_components: float = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Abstract implementation of the EPM API.</p>
 <p><strong>Note:</strong> The input dimensionality of Y for training and the output dimensions
@@ -382,6 +382,12 @@ to var_threshold</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>types</strong> (<em>np.ndarray</em><em> (</em><em>D</em><em>)</em>) – Specifies the number of categorical values of an input dimension where
+the i-th entry corresponds to the i-th input dimension. Let’s say we
+have 2 dimension where the first dimension consists of 3 different
+categorical choices and the second dimension is continuous than we
+have to pass np.array([2, 0]). Note that we count starting from 0.</li>
+<li><strong>bounds</strong> (<em>list</em>) – Specifies the bounds for continuous features.</li>
 <li><strong>instance_features</strong> (<em>np.ndarray</em><em> (</em><em>I</em><em>, </em><em>K</em><em>)</em>) – Contains the K dimensional instance features
 of the I different instances</li>
 <li><strong>pca_components</strong> (<em>float</em>) – Number of components to keep when using PCA to reduce
@@ -394,7 +400,7 @@ set n_feats (&gt; pca_dims).</li>
 </table>
 <dl class="method">
 <dt id="smac.epm.base_epm.AbstractEPM.predict">
-<code class="descname">predict</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.predict" title="Permalink to this definition">¶</a></dt>
+<code class="descname">predict</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict means and variances for given X.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -414,7 +420,7 @@ set n_feats (&gt; pca_dims).</li>
 
 <dl class="method">
 <dt id="smac.epm.base_epm.AbstractEPM.predict_marginalized_over_instances">
-<code class="descname">predict_marginalized_over_instances</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM.predict_marginalized_over_instances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.predict_marginalized_over_instances" title="Permalink to this definition">¶</a></dt>
+<code class="descname">predict_marginalized_over_instances</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM.predict_marginalized_over_instances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.predict_marginalized_over_instances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict mean and variance marginalized over all instances.</p>
 <p>Returns the predictive mean and variance marginalised over all
 instances for a set of configurations.</p>
@@ -436,7 +442,7 @@ instances for a set of configurations.</p>
 
 <dl class="method">
 <dt id="smac.epm.base_epm.AbstractEPM.train">
-<code class="descname">train</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em>, <em>Y: numpy.ndarray</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.train" title="Permalink to this definition">¶</a></dt>
+<code class="descname">train</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em>, <em>Y: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; smac.epm.base_epm.AbstractEPM<a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Trains the EPM on X and Y.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
