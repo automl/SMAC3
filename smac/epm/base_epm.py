@@ -91,6 +91,8 @@ class AbstractEPM(object):
 
         self.bounds = bounds
         self.types = types
+        # Initial types array which is used to reset the type array at every call to train()
+        self._initial_types = types.copy()
 
     def train(self, X: np.ndarray, Y: np.ndarray) -> 'AbstractEPM':
         """Trains the EPM on X and Y.
@@ -107,6 +109,7 @@ class AbstractEPM(object):
         -------
         self : AbstractEPM
         """
+        self.types = self._initial_types.copy()
 
         if len(X.shape) != 2:
             raise ValueError('Expected 2d array, got %dd array!' % len(X.shape))
@@ -130,8 +133,11 @@ class AbstractEPM(object):
                 # for RF, adapt types list
                 # if X_feats.shape[0] < self.pca, X_feats.shape[1] ==
                 # X_feats.shape[0]
-                self.types = np.array(np.hstack((self.types[:self.n_params], np.zeros((X_feats.shape[1])))),
-                                      dtype=np.uint)
+                self.types = np.array(
+                    np.hstack((self.types[:self.n_params], np.zeros((X_feats.shape[1])))),
+                    dtype=np.uint,
+                )
+
         return self._train(X, Y)
 
     def _train(self, X: np.ndarray, Y: np.ndarray) -> 'AbstractEPM':
@@ -169,8 +175,8 @@ class AbstractEPM(object):
         """
         if len(X.shape) != 2:
             raise ValueError('Expected 2d array, got %dd array!' % len(X.shape))
-        if X.shape[1] != len(self.types):
-            raise ValueError('Rows in X should have %d entries but have %d!' % (len(self.types), X.shape[1]))
+        if X.shape[1] != len(self._initial_types):
+            raise ValueError('Rows in X should have %d entries but have %d!' % (len(self._initial_types), X.shape[1]))
 
         if self.pca:
             try:
@@ -179,7 +185,10 @@ class AbstractEPM(object):
                 X_feats = self.pca.transform(X_feats)
                 X = np.hstack((X[:, :self.n_params], X_feats))
             except NotFittedError:
-                pass # PCA not fitted if only one training sample
+                pass  # PCA not fitted if only one training sample
+
+        if X.shape[1] != len(self.types):
+            raise ValueError('Rows in X should have %d entries but have %d!' % (len(self.types), X.shape[1]))
 
         mean, var = self._predict(X)
 
