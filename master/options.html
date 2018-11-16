@@ -1,0 +1,581 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Options and file formats &mdash; SMAC 0.9.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Target Algorithm Evaluator" href="tae.html" />
+    <link rel="prev" title="Basic Usage" href="basic_usage.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SMAC
+          
+
+          
+            
+            <img src="_static/SMAC3.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.9.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="manual.html">Manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="basic_usage.html">Basic Usage</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Options and file formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tae.html">Target Algorithm Evaluator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="psmac.html">Parallel SMAC (pSMAC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="validation.html">Validation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.configspace.html">smac.configspace package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.configspace.util.html">smac.configspace.util module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.epm.html">smac.epm package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.base_epm.html">smac.epm.base_epm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.base_imputor.html">smac.epm.base_imputor module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.facade.html">smac.facade package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.epils_facade.html">smac.facade.epils_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_facade.html">smac.facade.smac_facade module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.initial_design.html">smac.initial_design package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.initial_design.default_configuration_design.html">smac.initial_design.default_configuration_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.initial_design.initial_design.html">smac.initial_design.initial_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.initial_design.multi_config_initial_design.html">smac.initial_design.multi_config_initial_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.initial_design.random_configuration_design.html">smac.initial_design.random_configuration_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.initial_design.single_config_initial_design.html">smac.initial_design.single_config_initial_design module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.runhistory.html">smac.runhistory package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.runhistory.runhistory.html">smac.runhistory.runhistory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.runhistory.runhistory2epm.html">smac.runhistory.runhistory2epm module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.scenario.html">smac.scenario package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.scenario.scenario.html">smac.scenario.scenario module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.stats.html">smac.stats package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.stats.stats.html">smac.stats.stats module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.tae.html">smac.tae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.utils.html">smac.utils package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.io.html">smac.utils.io package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.cmd_reader.html">smac.utils.io.cmd_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.input_reader.html">smac.utils.io.input_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.output_directory.html">smac.utils.io.output_directory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.output_writer.html">smac.utils.io.output_writer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="apidoc/smac.utils.io.traj_logging.html">smac.utils.io.traj_logging module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.constants.html">smac.utils.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.logging.html">smac.utils.logging module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.util_funcs.html">smac.utils.util_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.validate.html">smac.utils.validate module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/smac.smac_cli.html">smac.smac_cli module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">F.A.Q.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SMAC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="manual.html">Manual</a> &raquo;</li>
+        
+      <li>Options and file formats</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/options.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="options-and-file-formats">
+<h1>Options and file formats<a class="headerlink" href="#options-and-file-formats" title="Permalink to this headline">¶</a></h1>
+<p>In the optimization-process of <em>SMAC</em>, there are several ways to configure the
+options:</p>
+<dl class="docutils">
+<dt>Mandatory:</dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="basic_usage.html#commandline">Commandline</a>-options, with which <em>SMAC</em> is called directly (not needed if
+<em>SMAC</em> is used within Python).</li>
+<li>Scenario-options, that are specified via a Scenario-object. Either directly
+in the Python-code or by using a <a class="reference internal" href="#scenario">scenario</a>-file.</li>
+<li>A Parameter Configuration Space (<a class="reference external" href="options.html#paramcs">PCS</a>), that provides the legal ranges of
+parameters to optimize, their types (e.g. int or float) and their default
+values.</li>
+</ul>
+</dd>
+<dt>Optional:</dt>
+<dd><ul class="first last simple">
+<li><a class="reference internal" href="#instance">Instance</a>- and <a class="reference internal" href="#feature">feature</a>-files, that list the instances and features to
+optimize upon.</li>
+</ul>
+</dd>
+</dl>
+<div class="section" id="smac-options">
+<span id="id1"></span><h2>SMAC Options<a class="headerlink" href="#smac-options" title="Permalink to this headline">¶</a></h2>
+<p>The basic command line options are described in <a class="reference external" href="basic_usage.html#commandline">Basic Usage</a>.
+The options are separated into three groups, <em>Main Options</em>, <em>SMAC Options</em> and <em>Scenario Options</em>.
+See the Main and SMAC Options below. Find the Scenario Options in the next section.</p>
+<p>Main Options:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">hydra_iterations:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">number of hydra iterations. Only active if mode is set to Hydra Default: 3.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">hydra_validation:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">set to validate incumbents on. valX =&gt; validation set of size training_set * 0.X Default: train.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">incumbents_per_round:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">number of configurations to keep per psmac/hydra iteration. Default: 1.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">mode:</th><td class="field-body">Configuration mode. Default: SMAC.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">n_optimizers:</th><td class="field-body">number of optimizers to run in parallel per psmac/hydra iteration. Default: 1.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">psmac_validate:</th><td class="field-body">Validate all psmac configurations.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">random_configuration_chooser:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">path to a python module containing a class <cite>RandomConfigurationChooserImpl`implementing the interface of `RandomConfigurationChooser</cite></td>
+</tr>
+<tr class="field-even field"><th class="field-name">restore_state:</th><td class="field-body">Path to directory with SMAC-files.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">scenario_file:</th><td class="field-body">Scenario file in AClib format.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">seed:</th><td class="field-body">Random Seed. Default: 1.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">verbose_level:</th><td class="field-body">Verbosity level. Default: 20.</td>
+</tr>
+</tbody>
+</table>
+<p>SMAC Options:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">abort_on_first_run_crash:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">If true, <em>SMAC</em> will abort if the first run of the target algorithm crashes. Default: True.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">acq_opt_challengers:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">Number of challengers returned by acquisition function optimization. Also influences the number of randomly sampled configurations to optimized the acquisition function Default: 5000.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">always_race_default:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">Race new incumbents always against default configuration.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">hydra_iterations:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">number of hydra iterations. Only active if mode is set to Hydra Default: 3.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">input_psmac_dirs:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">For parallel SMAC, multiple output-directories are used.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">intens_adaptive_capping_slackfactork:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">Slack factor of adpative capping (factor * adpative cutoff). Only active if obj is runtime. If set to very large number it practically deactivates adaptive capping. Default: 1.2.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">intens_min_chall:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">Minimal number of challengers to be considered in each intensification run (&gt; 1). Set to 1 and in combination with very small intensification-percentage. it will deactivate randomly sampled configurations (and hence, extrapolation of random forest will be an issue.) Default: 2.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">intensification_percentage:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">The fraction of time to be used on intensification (versus choice of next Configurations). Default: 0.5.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">maxR:</th><td class="field-body">Maximum number of calls per configuration. Default: 2000.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">minR:</th><td class="field-body">Minimum number of calls per configuration. Default: 1.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">output_dir:</th><td class="field-body">Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2018-11-16_12:09:01_757222.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">rand_prob:</th><td class="field-body">probablity to run a random configuration instead of configuration optimized on the acquisition function Default: 0.5.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">random_configuration_chooser:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">path to a python module containing a class`RandomConfigurationChooserImpl` implementingthe interface of <cite>RandomConfigurationChooser</cite></td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">rf_do_bootstrapping:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">Use bootstraping in random forest. Default: True.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rf_max_depth:</th><td class="field-body">Maximum depth of each tree in the random forest. Default: 20.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">rf_min_samples_leaf:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">Minimum required number of samples in each leaf of a tree in the random forest. Default: 3.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">rf_min_samples_split:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">Minimum number of samples to split for building a tree in the random forest. Default: 3.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">rf_num_trees:</th><td class="field-body">Number of trees in the random forest (&gt; 1). Default: 10.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">rf_ratio_features:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">Ratio of sampled features in each split ([0.,1.]). Default: 0.8333333333333334.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">shared_model:</th><td class="field-body">Whether to run SMAC in parallel mode.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">sls_max_steps:</th><td class="field-body">Maximum number of local search steps in one iteration during the optimization of the acquisition function.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">sls_n_steps_plateau_walk:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">Maximum number of steps on plateaus during the optimization of the acquisition function. Default: 10.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">transform_y:</th><td class="field-body">Transform all observed cost values via log-transformations or inverse scaling. The subfix “s” indicates that SMAC scales the y-values accordingly to apply the transformation. Default: NONE.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">use_ta_time:</th><td class="field-body">Instead of measuring SMAC’s wallclock time, only consider time reported by the target algorithm (ta).</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="scenario">
+<span id="id2"></span><h2>Scenario<a class="headerlink" href="#scenario" title="Permalink to this headline">¶</a></h2>
+<p>The scenario-object (<a class="reference internal" href="apidoc/smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.scenario.scenario.Scenario</span></code></a>) is used to configure <em>SMAC</em> and can be constructed either by providing an actual
+scenario-object (see <a class="reference external" href="quickstart.html#using-smac-in-python-svm">SVM-example</a>), or by specifing the options in a
+scenario file (see <a class="reference external" href="quickstart.html#spear-example">SPEAR example</a>).</p>
+<p>The format of the scenario file is one option per line:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">OPTION1</span> <span class="o">=</span> VALUE1
+<span class="nv">OPTION2</span> <span class="o">=</span> VALUE2
+...
+</pre></div>
+</div>
+<p>For boolean options “1” or “true” both evaluate to True.
+The following assumes that the scenario is created via a scenario-file. If it is
+generated within custom code, you might not need <em>algo</em> or <em>paramfile</em>.</p>
+<p>Scenario Options:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">algo_runs_timelimit:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">Maximum amount of CPU-time used for optimization. Default: inf.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">always_race_default:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">Race new incumbents always against default configuration.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">cost_for_crash:</th><td class="field-body">Defines the cost-value for crashed runs on scenarios with quality as run-obj. Default: 2147483647.0.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">cutoff:</th><td class="field-body">Maximum runtime, after which the target algorithm is cancelled. <strong>Required if *run_obj* is runtime.</strong></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">deterministic:</th><td class="field-body">If true, the optimization process will be repeatable.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">execdir:</th><td class="field-body">Specifies the path to the execution-directory. Default: ..</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">feature_fn:</th><td class="field-body">Specifies the file with the instance-features.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">initial_incumbent:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">DEFAULT is the default from the PCS. Default: DEFAULT.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">memory_limit:</th><td class="field-body">Maximum available memory the target algorithm can occupy before being cancelled in MB.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">overall_obj:</th><td class="field-body">PARX, where X is an integer defining the penalty imposed on timeouts (i.e. runtimes that exceed the <em>cutoff-time</em>). Default: par10.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">pcs_fn:</th><td class="field-body">Specifies the path to the PCS-file.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">run_obj:</th><td class="field-body">Defines what metric to optimize. When optimizing runtime, <em>cutoff_time</em> is required as well.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">ta:</th><td class="field-body">Specifies the target algorithm call that <em>SMAC</em> will optimize. Interpreted as a bash-command.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">ta_run_limit:</th><td class="field-body">Maximum number of algorithm-calls during optimization. Default: inf.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">test_inst_fn:</th><td class="field-body">Specifies the file with the test-instances.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">train_inst_fn:</th><td class="field-body">Specifies the file with the training-instances.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">wallclock_limit:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">Maximum amount of wallclock-time used for optimization. Default: inf.</td>
+</tr>
+</tbody>
+</table>
+<p>These options are also available as command line switches: Prepend two “-” and replace each “_” by “-“,
+e.g. “wallclock_limit” becomes “–wallclock-limit”. The options on the command line overwrite the values
+given in the scenario file.</p>
+</div>
+<div class="section" id="parameter-configuration-space-pcs">
+<span id="paramcs"></span><h2>Parameter Configuration Space (PCS)<a class="headerlink" href="#parameter-configuration-space-pcs" title="Permalink to this headline">¶</a></h2>
+<p>The Parameter Configuration Space (PCS) defines the legal ranges of the
+parameters to be optimized and their default values. In the examples-folder you
+can find several examples for PCS-files. Generally, the format is:</p>
+<p>To define parameters and their ranges, the following format is supported:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>parameter_name categorical <span class="o">{</span>value_1, ..., value_N<span class="o">}</span> <span class="o">[</span>default value<span class="o">]</span>
+parameter_name ordinal <span class="o">{</span>value_1, ..., value_N<span class="o">}</span> <span class="o">[</span>default value<span class="o">]</span>
+parameter_name integer <span class="o">[</span>min_value, max_value<span class="o">]</span> <span class="o">[</span>default value<span class="o">]</span>
+parameter_name integer <span class="o">[</span>min_value, max_value<span class="o">]</span> <span class="o">[</span>default value<span class="o">]</span> log
+parameter_name real <span class="o">[</span>min_value, max_value<span class="o">]</span> <span class="o">[</span>default value<span class="o">]</span>
+parameter_name real <span class="o">[</span>min_value, max_value<span class="o">]</span> <span class="o">[</span>default value<span class="o">]</span> log
+</pre></div>
+</div>
+<p>The trailing “log” indicates that SMAC should sample from the defined ranges
+on a log scale.</p>
+<p>Furthermore, conditional dependencies can be expressed. That is useful if
+a parameter activates sub-parameters. For example, only if a certain heuristic
+is used, the heuristic’s parameter are active and otherwise SMAC can ignore these.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Conditionals:</span>
+child_name <span class="p">|</span> condition <span class="o">[&amp;&amp;</span>,<span class="o">||]</span> condition ...
+
+<span class="c1"># Condition Operators:</span>
+<span class="c1"># parent_x [&lt;, &gt;] parent_x_value (if parameter type is ordinal, integer or real)</span>
+<span class="c1"># parent_x [==,!=] parent_x_value (if parameter type is categorical, ordinal or integer)</span>
+<span class="c1"># parent_x in {parent_x_value1, parent_x_value2,...}</span>
+</pre></div>
+</div>
+<p>Forbidden constraints allow for specifications of forbidden combinations of
+parameter values. Please note that SMAC uses a simple rejection sampling
+strategy. Therefore, SMAC cannot handle efficiently highly constrained spaces.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Forbiddens:</span>
+<span class="o">{</span><span class="nv">parameter_name_1</span><span class="o">=</span>value_1, ..., <span class="nv">parameter_name_N</span><span class="o">=</span>value_N<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="instances-and-features">
+<span id="feature"></span><span id="instance"></span><h2>Instances and Features<a class="headerlink" href="#instances-and-features" title="Permalink to this headline">¶</a></h2>
+<p>To specify instances and features, simply provide text-files in the following
+format and provide the paths to the instances in the <a class="reference internal" href="#scenario">scenario</a>.</p>
+<p>Instance-files are text-files with one instance per line. If you want to use
+training- and test-sets, separate files are expected.</p>
+<p>Feature-files are files following the comma-separated-value-format, as can also be
+seen in the <a class="reference external" href="quickstart.html#spear-qcp">SPEAR-example</a>:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="31%" />
+<col width="31%" />
+<col width="31%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">instance</th>
+<th class="head">name of feature 1</th>
+<th class="head">name of feature 2</th>
+<th class="head">…</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>name of instance 1</td>
+<td>value of feature 1</td>
+<td>value of feature 2</td>
+<td>…</td>
+</tr>
+<tr class="row-odd"><td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="tae.html" class="btn btn-neutral float-right" title="Target Algorithm Evaluator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="basic_usage.html" class="btn btn-neutral" title="Basic Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015-2018, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
