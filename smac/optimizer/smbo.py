@@ -11,11 +11,11 @@ from smac.configspace.util import convert_configurations_to_array
 from smac.epm.base_epm import AbstractEPM
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.gp_default_priors import DefaultPrior
-from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
+from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.optimizer import pSMAC
-from smac.optimizer.acquisition import AbstractAcquisitionFunction, EI
+from smac.optimizer.acquisition import AbstractAcquisitionFunction, EI, LogEI
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
     ChooserLinearCoolDown
 from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer, \
@@ -462,5 +462,13 @@ class SMBO(object):
         if conf["acq_func"] == "EI":
             acq = EI(model=model,
                      par=conf["par_ei"] if conf.get("par_ei") is not None else 0)
+        elif conf["acq_func"] == "UCB":
+            pass
+        elif conf["acq_func"] == "PI":
+            pass
+        elif conf["acq_func"] == "LogEI":
+            # par value should be in log-space
+            acq = LogEI(model=model,
+                        par=conf["par_ei"] if conf.get("par_ei") is not None else 0)
         
         return acq, model

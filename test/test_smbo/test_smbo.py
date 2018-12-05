@@ -9,6 +9,7 @@ import numpy as np
 from ConfigSpace import Configuration
 
 from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
 from smac.epm.uncorrelated_mo_rf_with_instances import \
     UncorrelatedMultiObjectiveRandomForestWithInstances
 from smac.facade.smac_facade import SMAC
@@ -24,6 +25,7 @@ from smac.utils import test_helpers
 from smac.utils.util_funcs import get_types
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
+
 
 
 class ConfigurationMock(object):
@@ -336,8 +338,14 @@ class TestSMBO(unittest.TestCase):
         conf = {"model":"RF", "acq_func":"EI"}
         acqf, model = smbo._component_builder(conf)
         
+        self.assertTrue(isinstance(acqf, EI))
+        self.assertTrue(isinstance(model, RandomForestWithInstances))
+        
         conf = {"model":"GP", "acq_func":"EI"}
         acqf, model = smbo._component_builder(conf)
+        
+        self.assertTrue(isinstance(acqf, EI))
+        self.assertTrue(isinstance(model, GaussianProcessMCMC))
 
 if __name__ == "__main__":
     unittest.main()
