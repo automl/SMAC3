@@ -3,7 +3,7 @@ import unittest.mock
 
 import numpy as np
 
-from smac.optimizer.acquisition import EI, LogEI, EIPS, PI
+from smac.optimizer.acquisition import EI, LogEI, EIPS, PI, LCB
 
 
 class ConfigurationMock(object):
@@ -150,3 +150,27 @@ class TestPI(unittest.TestCase):
         self.assertAlmostEqual(acq[0][0], 1.0)
         self.assertAlmostEqual(acq[1][0], 0.99778673707104)
         self.assertAlmostEqual(acq[2][0], 0.5)
+
+
+class TestLCB(unittest.TestCase):
+    def setUp(self):
+        self.model = MockModel()
+        self.ei = LCB(self.model)
+
+    def test_1xD(self):
+        self.ei.update(model=self.model, eta=1.0, par=0.5)
+        configurations = [ConfigurationMock([.5, .5, .5])]
+        acq = self.ei(configurations)
+        self.assertEqual(acq.shape, (1, 1))
+        self.assertAlmostEqual(acq[0][0], -0.1464466094067262)
+
+    def test_NxD(self):
+        self.ei.update(model=self.model, eta=1.0, par=.5)
+        configurations = ([ConfigurationMock([0.0001, 0.0001, 0.0001]),
+                           ConfigurationMock([0.1, 0.1, 0.1]),
+                           ConfigurationMock([1.0, 1.0, 1.0])])
+        acq = self.ei(configurations)
+        self.assertEqual(acq.shape, (3, 1))
+        self.assertAlmostEqual(acq[0][0], 0.0049)
+        self.assertAlmostEqual(acq[1][0], 0.058113883008418965)
+        self.assertAlmostEqual(acq[2][0], -0.5)

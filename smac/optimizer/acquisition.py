@@ -387,3 +387,45 @@ class PI(AbstractAcquisitionFunction):
         m, var_ = self.model.predict_marginalized_over_instances(X)
         std = np.sqrt(var_)
         return norm.cdf((self.eta - m - self.par) / std)
+
+
+class LCB(AbstractAcquisitionFunction):
+    def __init__(self,
+                 model: AbstractEPM,
+                 par: float=0.0):
+
+        r"""Computes the lower confidence bound for a given x over the best so far value as
+        acquisition value.
+
+        Parameters
+        ----------
+        model : AbstractEPM
+            A model that implements at least
+                 - predict_marginalized_over_instances(X)
+        par : float, default=0.0
+            Controls the balance between exploration and exploitation of the
+            acquisition function.
+        """
+        super(LCB, self).__init__(model)
+        self.long_name = 'Lower Confidence Bound'
+        self.par = par
+        self.eta = None  # to be compatible with the existing update calls in SMBO
+
+    def _compute(self, X: np.ndarray):
+        """Computes the LCB value.
+
+        Parameters
+        ----------
+        X: np.ndarray(N, D)
+           Points to evaluate PI. N is the number of points and D the dimension for the points
+
+        Returns
+        -------
+        np.ndarray(N,1)
+            Expected Improvement of X
+        """
+        if len(X.shape) == 1:
+            X = X[:, np.newaxis]
+        m, var_ = self.model.predict_marginalized_over_instances(X)
+        std = np.sqrt(var_)
+        return -(m - self.par*std)
