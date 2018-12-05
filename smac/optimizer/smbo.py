@@ -200,11 +200,15 @@ class SMBO(object):
 
             start_time = time.time()
 
+            model_configurations = self._get_acm_cs().sample_configuration(10)
+            model_configurations = set(model_configurations)
+            combinations = [self._component_builder(conf) for conf in model_configurations]
             _, self.acquisition_func = adaptive_component_selection(
                 runhistory=self.runhistory,
                 runhistory2EPM=self.rh2EPM,
                 default_model=self.model,
                 default_acquisition_function=self.acquisition_func,
+                combinations=combinations,
             )
 
             X, Y = self.rh2EPM.transform(runhistory=self.runhistory)
@@ -401,3 +405,124 @@ class SMBO(object):
                           "intensification: %.4f (%.2f)" %
                           (total_time, time_spent, (1 - frac_intensify), time_left, frac_intensify))
         return time_left
+
+    def _component_builder(self, conf: typing.Union[Configuration, dict]) \
+            -> typing.Tuple[AbstractAcquisitionFunction, AbstractEPM]:
+        """
+            builds new Acquisition function object
+            and EPM object and returns these
+
+            Parameters
+            ----------
+            conf: typing.Union[Configuration, dict]
+                configuration specificing "model" and "acq_func"
+
+            Returns
+            -------
+            typing.Tuple[AbstractAcquisitionFunction, AbstractEPM]
+
+        """
+        types, bounds = get_types(self.config_space, instance_features=self.scenario.feature_array)
+        conf = conf.get_dictionary()
+        if conf["model"] == "RF":
+            model = RandomForestWithInstances(
+                types=types,
+                bounds=bounds,
+                instance_features=self.scenario.feature_array,
+                seed=self.rng.randint(MAXINT),
+                pca_components=conf.get("pca_dim", self.scenario.PCA_DIM),
+                log_y=conf.get("log_y", self.scenario.transform_y in ["LOG", "LOGS"]),
+                num_trees=conf.get("num_trees", self.scenario.rf_num_trees),
+                do_bootstrapping=conf.get("do_bootstrapping", self.scenario.rf_do_bootstrapping),
+                ratio_features=conf.get("ratio_features", self.scenario.rf_ratio_features),
+                min_samples_split=int(conf.get("min_samples_to_split", self.scenario.rf_min_samples_split)),
+                min_samples_leaf=int(conf.get("min_samples_in_leaf", self.scenario.rf_min_samples_leaf)),
+                max_depth=int(conf.get("max_depth", self.scenario.rf_max_depth)),
+            )
+
+        elif conf["model"] == "GP":
+            cov_amp = 2
+            n_dims = len(types)
+            initial_ls = np.ones([n_dims])
+            exp_kernel = george.kernels.Matern52Kernel(initial_ls, ndim=n_dims)
+            kernel = cov_amp * exp_kernel
+            prior = DefaultPrior(len(kernel) + 1, rng=self.rng)
+            n_hypers = 3 * len(kernel)
+            if n_hypers % 2 == 1:
+                n_hypers += 1
+            model = GaussianProcessMCMC(
+                types=types,
+                bounds=bounds,
+                kernel=kernel,
+                prior=prior,
+                n_hypers=n_hypers,
+                chain_length=200,
+                burnin_steps=100,
+                normalize_input=True,
+                normalize_output=True,
+                rng=self.rng,
+            )
+
+        if conf["acq_func"] == "EI":
+            acq = EI(model=model,
+                     par=conf.get("par_ei", 0))
+        elif conf["acq_func"] == "LCB":
+            acq = LCB(model=model,
+                      par=conf.get("par_lcb", 0))
+        elif conf["acq_func"] == "PI":
+            acq = PI(model=model,
+                     par=conf.get("par_pi", 0))
+        elif conf["acq_func"] == "LogEI":
+            # par value should be in log-space
+            acq = LogEI(model=model,
+                        par=conf.get("par_logei", 0))
+
+        return model, acq
+
+    def _get_acm_cs(self):
+        """
+            returns a configuration space
+            designed for querying ~smac.optimizer.smbo._component_builder
+
+            Returns
+            -------
+                ConfigurationSpace
+        """
+
+        cs = ConfigurationSpace()
+        cs.seed(self.rng.randint(0, 2 ** 20))
+
+        model = CategoricalHyperparameter("model", choices=("RF",))  # "GP"))
+
+        num_trees = Constant("num_trees", value=10)
+        bootstrap = CategoricalHyperparameter("do_bootstrapping", choices=(True, False), default_value=True)
+        ratio_features = CategoricalHyperparameter("ratio_features", choices=(3 / 6, 4 / 6, 5 / 6, 1), default_value=1)
+        min_split = UniformIntegerHyperparameter("min_samples_to_split", lower=1, upper=10, default_value=2)
+        min_leaves = UniformIntegerHyperparameter("min_samples_in_leaf", lower=1, upper=10, default_value=1)
+
+        cs.add_hyperparameters([model, num_trees, bootstrap, ratio_features, min_split, min_leaves])
+
+        inc_num_trees = InCondition(num_trees, model, ["RF"])
+        inc_bootstrap = InCondition(bootstrap, model, ["RF"])
+        inc_ratio_features = InCondition(ratio_features, model, ["RF"])
+        inc_min_split = InCondition(min_split, model, ["RF"])
+        inc_min_leavs = InCondition(min_leaves, model, ["RF"])
+
+        cs.add_conditions([inc_num_trees, inc_bootstrap, inc_ratio_features, inc_min_split, inc_min_leavs])
+
+        acq = CategoricalHyperparameter("acq_func", choices=("EI", "LCB", "PI", "LogEI"))
+        par_ei = UniformFloatHyperparameter("par_ei", lower=-10, upper=10)
+        par_pi = UniformFloatHyperparameter("par_pi", lower=-10, upper=10)
+        par_logei = UniformFloatHyperparameter("par_logei", lower=0.001, upper=100, log=True)
+        par_lcb = UniformFloatHyperparameter("par_lcb", lower=0.0001, upper=0.9999)
+
+        cs.add_hyperparameters([acq, par_ei, par_pi, par_logei, par_lcb])
+
+        inc_par_ei = InCondition(par_ei, acq, ["EI"])
+        inc_par_pi = InCondition(par_pi, acq, ["PI"])
+        inc_par_logei = InCondition(par_logei, acq, ["LogEI"])
+        inc_par_lcb = InCondition(par_lcb, acq, ["LCB"])
+
+        cs.add_conditions([inc_par_ei, inc_par_pi, inc_par_logei, inc_par_lcb])
+
+        return cs

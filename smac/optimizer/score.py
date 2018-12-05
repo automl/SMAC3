@@ -1,4 +1,4 @@
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List, Tuple
 
 from ConfigSpace import Configuration, ConfigurationSpace
 import numpy as np
@@ -151,6 +151,7 @@ class TwoStepLookbackBOLossFunction:
         y_train = np.concatenate((y_train, y_.reshape((1, 1))), axis=0)
 
         # Second iteration of Bayesian optimization
+        # TODO only update the model here (important for a GP to only sample the hyperparameters once)
         model.train(X_train, y_train)
         acq.update(model=model, eta=np.min(y_train), num_data=len(X_train))
         configs = [Configuration(config_space, vector=x) for x in X_test]
@@ -169,6 +170,7 @@ def adaptive_component_selection(
     runhistory2EPM: AbstractRunHistory2EPM,
     default_model: AbstractEPM,
     default_acquisition_function: AbstractAcquisitionFunction,
+    combinations: List[Tuple[AbstractEPM, AbstractAcquisitionFunction]],
     loss_function: Optional[LossFunction] = None,
     sampling_based: bool = True,
     min_test_size: int = 5,
@@ -187,6 +189,8 @@ def adaptive_component_selection(
     default_model : AbstractEPM
 
     default_acquisition_function : AbstractAcquisitionFunction
+
+    combinations : list
 
     loss_function : LossFunction
         Uses the ``SpearmanLossFunction`` if no loss function is given.
@@ -216,25 +220,6 @@ def adaptive_component_selection(
     X, y = runhistory2EPM.transform(runhistory)
     test_size = max(min_test_size, int(len(X) * test_fraction))
 
-    ei = LogEI(par=0.0, model=default_model)
-    ei2 = LogEI(par=0.1, model=default_model)
-    ei3 = LogEI(par=1.0, model=default_model)
-    ei4 = LogEI(par=-0.1, model=default_model)
-    ei5 = LogEI(par=-1, model=default_model)
-    lcb = LCB(model=default_model)
-    pi = PI(model=default_model)
-
-    combinations = [
-        (default_model, ei),
-        (default_model, ei2),
-        (default_model, ei3),
-        (default_model, ei4),
-        (default_model, ei5),
-        (RandomEPM(np.random.RandomState(1), types=default_model.types.copy(), bounds=default_model.bounds), ei),
-        (default_model, lcb),
-        (default_model, pi),
-    ]
-
     combination_losses = []
     for model, acq in combinations:
         losses = []
@@ -259,7 +244,10 @@ def adaptive_component_selection(
     if sampling_based:
         wins = np.zeros((len(combinations), ))
         for cl in np.array(combination_losses).transpose():
-            wins[np.argmin(cl)] += 1
+            try:
+                wins[np.nanargmin(cl)] += 1
+            except ValueError:
+                continue
         wins = wins / np.sum(wins)
         choice = np.random.choice(len(combinations), p=wins)
     else:
