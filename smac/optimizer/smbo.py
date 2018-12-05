@@ -6,10 +6,12 @@ import typing
 
 from smac.configspace import Configuration
 from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.epm.gp_default_priors import DefaultPrior
+from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.optimizer import pSMAC
-from smac.optimizer.acquisition import AbstractAcquisitionFunction
+from smac.optimizer.acquisition import AbstractAcquisitionFunction, EI
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
     ChooserLinearCoolDown
 from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer, \
@@ -352,7 +354,7 @@ class SMBO(object):
                                         output_fn=new_rh_path)
         return new_rh
 
-    def _get_timebound_for_intensification(self, time_spent):
+    def _get_timebound_for_intensification(self, time_spent:float):
         """Calculate time left for intensify from the time spent on
         choosing challengers using the fraction of time intended for
         intensification (which is specified in
@@ -378,3 +380,83 @@ class SMBO(object):
                           "intensification: %.4f (%.2f)" %
                           (total_time, time_spent, (1 - frac_intensify), time_left, frac_intensify))
         return time_left
+    
+    def _component_builder(self, conf:typing.Union[Configuration, dict]) \
+        -> typing.Tuple[AbstractAcquisitionFunction, AbstractEPM]:
+        """
+            builds new Acquisition function object
+            and EPM object and returns these
+            
+            Parameters
+            ----------
+            conf: typing.Union[Configuration, dict]
+                configuration specificing "model" and "acq_func"
+                
+            Returns
+            -------
+            typing.Tuple[AbstractAcquisitionFunction, AbstractEPM]
+            
+        """
+        types, bounds = get_types(self.config_space, instance_features=self.scenario.feature_array)
+        
+        if conf["model"] == "RF":
+            model = RandomForestWithInstances(types=types,
+                                              bounds=bounds,
+                                              instance_features=scenario.feature_array,
+                                              seed=rng.randint(MAXINT),
+                                              pca_components=conf["pca_dim"] 
+                                                if conf.get("pca_dim") is not None 
+                                                else self.scenario.PCA_DIM,
+                                              log_y=conf["log_y"] 
+                                                if conf.get("log_y") is not None
+                                                else self.scenario.transform_y in ["LOG", "LOGS"],
+                                              num_trees=conf["num_trees"] 
+                                                if conf.get("num_trees") is not None
+                                                else self.scenario.rf_num_trees,
+                                              do_bootstrapping=conf["do_bootstrapping"]
+                                              if conf.get("do_bootstrapping") is not None
+                                              else self.scenario.rf_do_bootstrapping,
+                                              ratio_features=conf["ratio_features"]
+                                              if conf.get("ratio_features") is not None
+                                              else self.scenario.rf_ratio_features,
+                                              min_samples_split=conf["min_samples_split"]
+                                              if conf.get("min_samples_split") is not None
+                                              else self.scenario.rf_min_samples_split,
+                                              min_samples_leaf=conf["min_samples_leaf"]
+                                              if conf.get("min_samples_leaf") is not None
+                                              else self.scenario.rf_min_samples_leaf,
+                                              max_depth=conf["max_depth"] 
+                                              if conf.get("max_depth")
+                                              else scenario.rf_max_depth)
+        elif conf["model"] == "GP":
+            cov_amp = 2
+            n_dims = len(types)
+
+            initial_ls = np.ones([n_dims])
+            exp_kernel = george.kernels.Matern52Kernel(initial_ls, ndim=n_dims)
+            kernel = cov_amp * exp_kernel
+
+            prior = DefaultPrior(len(kernel) + 1, rng=self.rng)
+
+            n_hypers = 3 * len(kernel)
+            if n_hypers % 2 == 1:
+                n_hypers += 1
+
+            model = GaussianProcessMCMC(
+                types=types,
+                bounds=bounds,
+                kernel=kernel,
+                prior=prior,
+                n_hypers=n_hypers,
+                chain_length=200,
+                burnin_steps=100,
+                normalize_input=True,
+                normalize_output=True,
+                rng=self.rng,
+            )
+            
+        if conf["acq_func"] == "EI":
+            acq = EI(model=model,
+                     par=conf["par_ei"] if conf.get("par_ei") is not None else 0)
+        
+        return acq, model
