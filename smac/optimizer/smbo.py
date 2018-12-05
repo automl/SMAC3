@@ -261,7 +261,7 @@ class SMBO(object):
                                  "the incumbent is unknown.")
             incumbent_value = self._get_incumbent_value()
 
-        self.acquisition_func.update(model=self.model, eta=incumbent_value)
+        self.acquisition_func.update(model=self.model, eta=incumbent_value, num_data=len(self.runhistory.data))
 
         challengers = self.acq_optimizer.maximize(
             runhistory=self.runhistory, 

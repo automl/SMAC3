@@ -403,6 +403,8 @@ class LCB(AbstractAcquisitionFunction):
 
         :math:`LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})`
 
+        Returns -LCB(X) as the acquisition_function optimizer maximizes the acquisition value.
+
         Parameters
         ----------
         model : AbstractEPM
