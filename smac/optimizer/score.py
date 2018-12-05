@@ -8,7 +8,7 @@ from sklearn.model_selection import ShuffleSplit
 
 from smac.epm.base_epm import AbstractEPM
 from smac.epm.random_epm import RandomEPM
-from smac.optimizer.acquisition import AbstractAcquisitionFunction, EI, LogEI
+from smac.optimizer.acquisition import AbstractAcquisitionFunction, EI, LogEI, LCB, PI
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 
@@ -20,7 +20,7 @@ def spearman(X, acq, model, runhistory2EPM, test_indices, train_indices, y):
     y_test = y[test_indices]
 
     model.train(X_train, y_train)
-    acq.update(model=model, eta=np.min(y_train))
+    acq.update(model=model, eta=np.min(y_train), num_data=len(X_train))
     configs = [Configuration(runhistory2EPM.scenario.cs, vector=x) for x in X_test]
     acquivals = acq(configurations=configs).flatten()
     return 1 - spearmanr(y_test, -acquivals)[0]
@@ -34,7 +34,7 @@ def two_step_lookback_bo(X, acq, model, runhistory2EPM, test_indices, train_indi
 
     losses_for_split = []
     model.train(X_train, y_train)
-    acq.update(model=model, eta=np.min(y_train))
+    acq.update(model=model, eta=np.min(y_train), num_data=len(X_train))
     configs = [Configuration(runhistory2EPM.scenario.cs, vector=x) for x in X_test]
     acquivals = acq(configurations=configs).flatten()
     argmax = np.nanargmax(acquivals)
@@ -46,7 +46,7 @@ def two_step_lookback_bo(X, acq, model, runhistory2EPM, test_indices, train_indi
     X_train = np.concatenate((X_train, x.reshape((1, -1))), axis=0)
     y_train = np.concatenate((y_train, y_.reshape((1, 1))), axis=0)
     model.train(X_train, y_train)
-    acq.update(model=model, eta=np.min(y_train))
+    acq.update(model=model, eta=np.min(y_train), num_data=len(X_train))
     configs = [Configuration(runhistory2EPM.scenario.cs, vector=x) for x in X_test]
     acquivals = acq(configurations=configs).flatten()
     argmax = np.nanargmax(acquivals)
@@ -76,6 +76,8 @@ def great_new_selection_function(
     ei3 = LogEI(par=1.0, model=default_model)
     ei4 = LogEI(par=-0.1, model=default_model)
     ei5 = LogEI(par=-1, model=default_model)
+    lcb = LCB(model=default_model)
+    pi = PI(model=default_model)
 
     combinations = [
         (default_model, ei),
@@ -83,7 +85,9 @@ def great_new_selection_function(
         (default_model, ei3),
         (default_model, ei4),
         (default_model, ei5),
-        (RandomEPM(np.random.RandomState(1), types=default_model.types.copy(), bounds=default_model.bounds), ei)
+        (RandomEPM(np.random.RandomState(1), types=default_model.types.copy(), bounds=default_model.bounds), ei),
+        (default_model, lcb),
+        (default_model, pi),
     ]
 
     combination_losses = []
