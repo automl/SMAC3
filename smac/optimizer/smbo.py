@@ -4,7 +4,11 @@ import numpy as np
 import time
 import typing
 
+import george
+
 from smac.configspace import Configuration
+from smac.configspace.util import convert_configurations_to_array
+from smac.epm.base_epm import AbstractEPM
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.gp_default_priors import DefaultPrior
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
@@ -23,8 +27,8 @@ from smac.stats.stats import Stats
 from smac.tae.execute_ta_run import FirstRunCrashedException
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
-from smac.configspace.util import convert_configurations_to_array
-
+from smac.utils.util_funcs import get_types
+from smac.utils.constants import MAXINT
 
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
@@ -402,8 +406,8 @@ class SMBO(object):
         if conf["model"] == "RF":
             model = RandomForestWithInstances(types=types,
                                               bounds=bounds,
-                                              instance_features=scenario.feature_array,
-                                              seed=rng.randint(MAXINT),
+                                              instance_features=self.scenario.feature_array,
+                                              seed=self.rng.randint(MAXINT),
                                               pca_components=conf["pca_dim"] 
                                                 if conf.get("pca_dim") is not None 
                                                 else self.scenario.PCA_DIM,
@@ -427,7 +431,7 @@ class SMBO(object):
                                               else self.scenario.rf_min_samples_leaf,
                                               max_depth=conf["max_depth"] 
                                               if conf.get("max_depth")
-                                              else scenario.rf_max_depth)
+                                              else self.scenario.rf_max_depth)
         elif conf["model"] == "GP":
             cov_amp = 2
             n_dims = len(types)

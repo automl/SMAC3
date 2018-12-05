@@ -330,6 +330,14 @@ class TestSMBO(unittest.TestCase):
             smbo.start()
             self.assertEqual(smbo.incumbent, smbo.scenario.cs.get_default_configuration())
 
+    def test_comp_builder(self):
+        seed = 42
+        smbo = SMAC(self.scenario, rng=seed).solver
+        conf = {"model":"RF", "acq_func":"EI"}
+        acqf, model = smbo._component_builder(conf)
+        
+        conf = {"model":"GP", "acq_func":"EI"}
+        acqf, model = smbo._component_builder(conf)
 
 if __name__ == "__main__":
     unittest.main()
