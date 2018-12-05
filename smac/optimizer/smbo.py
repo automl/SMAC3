@@ -415,7 +415,7 @@ class SMBO(object):
                   pca_components=conf.get("pca_dim", self.scenario.PCA_DIM),
                   log_y=conf.get("log_y", self.scenario.transform_y in ["LOG", "LOGS"]),
                   num_trees=conf.get("num_trees", self.scenario.rf_num_trees), 
-                  do_bootstrapping=conf.get("do_bootstrapping",self.scenario.rf_do_bootstrapping),  
+                  do_bootstrapping=conf.get("do_bootstrapping", self.scenario.rf_do_bootstrapping),  
                   ratio_features=conf.get("ratio_features", self.scenario.rf_ratio_features),
                   min_samples_split=conf.get("min_samples_split", self.scenario.rf_min_samples_split),
                   min_samples_leaf=conf.get("min_samples_leaf", self.scenario.rf_min_samples_leaf),
