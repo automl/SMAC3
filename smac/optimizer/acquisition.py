@@ -347,7 +347,7 @@ class PI(AbstractAcquisitionFunction):
                  model: AbstractEPM,
                  par: float=0.0):
 
-        r"""Computes the probability of improvement for a given x over the best so far value as
+        """Computes the probability of improvement for a given x over the best so far value as
         acquisition value.
 
         Parameters
@@ -394,7 +394,7 @@ class LCB(AbstractAcquisitionFunction):
                  model: AbstractEPM,
                  par: float=0.0):
 
-        r"""Computes the lower confidence bound for a given x over the best so far value as
+        """Computes the lower confidence bound for a given x over the best so far value as
         acquisition value.
 
         Parameters
