@@ -6,7 +6,9 @@ import typing
 
 import george
 
-from smac.configspace import Configuration
+from smac.configspace import ConfigurationSpace, Configuration, Constant,\
+     CategoricalHyperparameter, UniformFloatHyperparameter, \
+     UniformIntegerHyperparameter, InCondition
 from smac.configspace.util import convert_configurations_to_array
 from smac.epm.base_epm import AbstractEPM
 from smac.epm.rf_with_instances import RandomForestWithInstances
@@ -472,3 +474,50 @@ class SMBO(object):
                         par=conf["par_ei"] if conf.get("par_ei") is not None else 0)
         
         return acq, model
+    
+    def _get_acm_cs(self):
+        """
+            returns a configuration space 
+            designed for querying ~smac.optimizer.smbo._component_builder
+            
+            Returns
+            ------- 
+                ConfigurationSpace
+        """
+        
+        cs = ConfigurationSpace()
+        
+        model = CategoricalHyperparameter("model", choices=("RF", "GP"))
+        
+        num_trees = Constant("num_trees", value=10)
+        bootstrap = CategoricalHyperparameter("do_bootstrapping", choices=(True, False), default_value=True)
+        ratio_features = CategoricalHyperparameter("ratio_features", choices=(3 / 6, 4 / 6, 5 / 6, 1), default_value=1)
+        min_split = UniformIntegerHyperparameter("min_samples_to_split", lower=1, upper=10, default_value=2)
+        min_leavs = UniformIntegerHyperparameter("min_samples_in_leaf", lower=1, upper=10, default_value=1)
+        
+        cs.add_hyperparameters([model, num_trees, bootstrap, ratio_features, min_split, min_leavs])
+        
+        inc_num_trees = InCondition(num_trees, model, ["RF"])
+        inc_bootstrap = InCondition(bootstrap, model, ["RF"])
+        inc_ratio_features = InCondition(ratio_features, model,["RF"])
+        inc_min_split = InCondition(min_split, model, ["RF"])
+        inc_min_leavs = InCondition(min_leavs, model, ["RF"])
+        
+        cs.add_conditions([inc_num_trees, inc_bootstrap, inc_ratio_features, inc_min_split, inc_min_leavs])
+        
+        acq  = CategoricalHyperparameter("acq_func", choices=("EI", "UCB", "PI", "LogEI"))
+        par_ei = UniformFloatHyperparameter("par_ei", lower=-10, upper=10)
+        par_pi = UniformFloatHyperparameter("par_pi", lower=-10, upper=10)
+        par_logei = UniformFloatHyperparameter("par_logei", lower=0.001, upper=100, log=True)
+        par_ucb = UniformFloatHyperparameter("par_ucb", lower=0, upper=1)
+        
+        cs.add_hyperparameters([acq, par_ei, par_pi, par_logei, par_ucb])
+        
+        inc_par_ei = InCondition(par_ei, acq, ["EI"])
+        inc_par_pi = InCondition(par_pi, acq, ["PI"])
+        inc_par_logei = InCondition(par_logei, acq, ["LogEI"])
+        inc_par_ucb = InCondition(par_ucb, acq, ["UCB"])
+        
+        cs.add_conditions([inc_par_ei, inc_par_pi, inc_par_logei, inc_par_ucb])
+        
+        return cs

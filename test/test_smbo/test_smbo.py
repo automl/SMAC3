@@ -346,6 +346,11 @@ class TestSMBO(unittest.TestCase):
         
         self.assertTrue(isinstance(acqf, EI))
         self.assertTrue(isinstance(model, GaussianProcessMCMC))
+        
+    def test_smbo_cs(self):
+        seed = 42
+        smbo = SMAC(self.scenario, rng=seed).solver
+        cs = smbo._get_acm_cs()
 
 if __name__ == "__main__":
     unittest.main()
