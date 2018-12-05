@@ -475,6 +475,7 @@ class SMBO(object):
         """
         
         cs = ConfigurationSpace()
+        cs.seed(self.rng.randint(0,2**20))
         
         model = CategoricalHyperparameter("model", choices=("RF", "GP"))
         
@@ -482,15 +483,15 @@ class SMBO(object):
         bootstrap = CategoricalHyperparameter("do_bootstrapping", choices=(True, False), default_value=True)
         ratio_features = CategoricalHyperparameter("ratio_features", choices=(3 / 6, 4 / 6, 5 / 6, 1), default_value=1)
         min_split = UniformIntegerHyperparameter("min_samples_to_split", lower=1, upper=10, default_value=2)
-        min_leavs = UniformIntegerHyperparameter("min_samples_in_leaf", lower=1, upper=10, default_value=1)
+        min_leaves = UniformIntegerHyperparameter("min_samples_in_leaf", lower=1, upper=10, default_value=1)
         
-        cs.add_hyperparameters([model, num_trees, bootstrap, ratio_features, min_split, min_leavs])
+        cs.add_hyperparameters([model, num_trees, bootstrap, ratio_features, min_split, min_leaves])
         
         inc_num_trees = InCondition(num_trees, model, ["RF"])
         inc_bootstrap = InCondition(bootstrap, model, ["RF"])
-        inc_ratio_features = InCondition(ratio_features, model,["RF"])
+        inc_ratio_features = InCondition(ratio_features, model, ["RF"])
         inc_min_split = InCondition(min_split, model, ["RF"])
-        inc_min_leavs = InCondition(min_leavs, model, ["RF"])
+        inc_min_leavs = InCondition(min_leaves, model, ["RF"])
         
         cs.add_conditions([inc_num_trees, inc_bootstrap, inc_ratio_features, inc_min_split, inc_min_leavs])
         

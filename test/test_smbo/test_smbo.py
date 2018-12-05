@@ -351,6 +351,14 @@ class TestSMBO(unittest.TestCase):
         seed = 42
         smbo = SMAC(self.scenario, rng=seed).solver
         cs = smbo._get_acm_cs()
+        
+    def test_cs_comp_builder(self):
+        seed = 42
+        smbo = SMAC(self.scenario, rng=seed).solver
+        cs = smbo._get_acm_cs()
+        conf = cs.sample_configuration()
+
+        acqf, model = smbo._component_builder(conf)
 
 if __name__ == "__main__":
     unittest.main()
