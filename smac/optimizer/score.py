@@ -1,6 +1,6 @@
 from typing import Tuple, Optional
 
-from ConfigSpace import Configuration
+from ConfigSpace import Configuration, ConfigurationSpace
 import numpy as np
 from scipy.stats import spearmanr
 # TODO replace by group shuffle split to take instances into account?
@@ -30,7 +30,7 @@ class LossFunction:
 
     model : AbstractEPM
 
-    runhistory : RunHistory
+    config_space : ConfigurationSpace
 
     Returns
     -------
@@ -45,7 +45,7 @@ class LossFunction:
         y_test: np.ndarray,
         acq: AbstractAcquisitionFunction,
         model: AbstractEPM,
-        runhistory: RunHistory,
+        config_space: ConfigurationSpace,
     ) -> float:
 
         raise NotImplementedError()
@@ -70,7 +70,7 @@ class SpearmanLossFunction:
 
     model : AbstractEPM
 
-    runhistory : RunHistory
+    config_space : ConfigurationSpace
 
     Returns
     -------
@@ -85,12 +85,12 @@ class SpearmanLossFunction:
         y_test: np.ndarray,
         acq: AbstractAcquisitionFunction,
         model: AbstractEPM,
-        runhistory: RunHistory,
+        config_space: ConfigurationSpace,
     ):
 
         model.train(X_train, y_train)
         acq.update(model=model, eta=np.min(y_train), num_data=len(X_train))
-        configs = [Configuration(runhistory.scenario.cs, vector=x) for x in X_test]
+        configs = [Configuration(config_space, vector=x) for x in X_test]
         acquivals = acq(configurations=configs).flatten()
         return 1 - spearmanr(y_test, -acquivals)[0]
 
@@ -114,7 +114,7 @@ class TwoStepLookbackBOLossFunction:
 
     model : AbstractEPM
 
-    runhistory : RunHistory
+    config_space : ConfigurationSpace
 
     Returns
     -------
@@ -129,7 +129,7 @@ class TwoStepLookbackBOLossFunction:
         y_test: np.ndarray,
         acq: AbstractAcquisitionFunction,
         model: AbstractEPM,
-        runhistory: RunHistory,
+        config_space: ConfigurationSpace,
     ):
 
         losses_for_split = []
@@ -137,7 +137,7 @@ class TwoStepLookbackBOLossFunction:
         # First iteration of Bayesian optimization
         model.train(X_train, y_train)
         acq.update(model=model, eta=np.min(y_train), num_data=len(X_train))
-        configs = [Configuration(runhistory.scenario.cs, vector=x) for x in X_test]
+        configs = [Configuration(config_space, vector=x) for x in X_test]
         acquivals = acq(configurations=configs).flatten()
 
         # Query test data and move queried data point to training data
@@ -153,7 +153,7 @@ class TwoStepLookbackBOLossFunction:
         # Second iteration of Bayesian optimization
         model.train(X_train, y_train)
         acq.update(model=model, eta=np.min(y_train), num_data=len(X_train))
-        configs = [Configuration(runhistory.scenario.cs, vector=x) for x in X_test]
+        configs = [Configuration(config_space, vector=x) for x in X_test]
         acquivals = acq(configurations=configs).flatten()
 
         # Query test data
@@ -247,7 +247,7 @@ def adaptive_component_selection(
 
             loss = loss_function(
                 X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test,
-                acq=acq, model=model, runhistory=runhistory,
+                acq=acq, model=model, config_space=runhistory2EPM.scenario.cs,
             )
             losses.append(loss)
 
