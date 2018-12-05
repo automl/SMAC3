@@ -499,7 +499,7 @@ class SMBO(object):
         par_ei = UniformFloatHyperparameter("par_ei", lower=-10, upper=10)
         par_pi = UniformFloatHyperparameter("par_pi", lower=-10, upper=10)
         par_logei = UniformFloatHyperparameter("par_logei", lower=0.001, upper=100, log=True)
-        par_lcb = UniformFloatHyperparameter("par_lcb", lower=0, upper=1)
+        par_lcb = UniformFloatHyperparameter("par_lcb", lower=0.0001, upper=0.9999)
         
         cs.add_hyperparameters([acq, par_ei, par_pi, par_logei, par_lcb])
         
