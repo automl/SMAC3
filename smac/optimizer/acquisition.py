@@ -392,7 +392,7 @@ class PI(AbstractAcquisitionFunction):
 class LCB(AbstractAcquisitionFunction):
     def __init__(self,
                  model: AbstractEPM,
-                 par: float=0.0):
+                 par: float=1.0):
 
         """Computes the lower confidence bound for a given x over the best so far value as
         acquisition value.
@@ -410,6 +410,7 @@ class LCB(AbstractAcquisitionFunction):
         self.long_name = 'Lower Confidence Bound'
         self.par = par
         self.eta = None  # to be compatible with the existing update calls in SMBO
+        self.num_data = None
 
     def _compute(self, X: np.ndarray):
         """Computes the LCB value.
@@ -417,15 +418,20 @@ class LCB(AbstractAcquisitionFunction):
         Parameters
         ----------
         X: np.ndarray(N, D)
-           Points to evaluate PI. N is the number of points and D the dimension for the points
+           Points to evaluate LCB. N is the number of points and D the dimension for the points
 
         Returns
         -------
         np.ndarray(N,1)
             Expected Improvement of X
         """
+        if self.num_data is None:
+            raise ValueError('No current number of Datapoints specified. Call update('
+                             'num_data=<int>) to inform the acquisition function '
+                             'about the number of datapoints.')
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
         m, var_ = self.model.predict_marginalized_over_instances(X)
         std = np.sqrt(var_)
-        return -(m - self.par*std)
+        beta = 2*np.log((X.shape[1] * self.num_data**2)/self.par)
+        return -(m - np.sqrt(beta)*std)
