@@ -17,7 +17,8 @@ from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.optimizer import pSMAC
-from smac.optimizer.acquisition import AbstractAcquisitionFunction, EI, LogEI
+from smac.optimizer.acquisition import AbstractAcquisitionFunction, EI, LogEI,\
+    LCB, PI
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
     ChooserLinearCoolDown
 from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer, \
@@ -450,10 +451,12 @@ class SMBO(object):
         if conf["acq_func"] == "EI":
             acq = EI(model=model,
                      par=conf.get("par_ei", 0))
-        elif conf["acq_func"] == "UCB":
-            pass
+        elif conf["acq_func"] == "LCB":
+            acq = LCB(model=model,
+                par=conf.get("par_lcb", 0))
         elif conf["acq_func"] == "PI":
-            pass
+            acq = PI(model=model,
+                     par=conf.get("par_pi", 0))
         elif conf["acq_func"] == "LogEI":
             # par value should be in log-space
             acq = LogEI(model=model,
@@ -491,19 +494,19 @@ class SMBO(object):
         
         cs.add_conditions([inc_num_trees, inc_bootstrap, inc_ratio_features, inc_min_split, inc_min_leavs])
         
-        acq  = CategoricalHyperparameter("acq_func", choices=("EI", "UCB", "PI", "LogEI"))
+        acq  = CategoricalHyperparameter("acq_func", choices=("EI", "LCB", "PI", "LogEI"))
         par_ei = UniformFloatHyperparameter("par_ei", lower=-10, upper=10)
         par_pi = UniformFloatHyperparameter("par_pi", lower=-10, upper=10)
         par_logei = UniformFloatHyperparameter("par_logei", lower=0.001, upper=100, log=True)
-        par_ucb = UniformFloatHyperparameter("par_ucb", lower=0, upper=1)
+        par_lcb = UniformFloatHyperparameter("par_lcb", lower=0, upper=1)
         
-        cs.add_hyperparameters([acq, par_ei, par_pi, par_logei, par_ucb])
+        cs.add_hyperparameters([acq, par_ei, par_pi, par_logei, par_lcb])
         
         inc_par_ei = InCondition(par_ei, acq, ["EI"])
         inc_par_pi = InCondition(par_pi, acq, ["PI"])
         inc_par_logei = InCondition(par_logei, acq, ["LogEI"])
-        inc_par_ucb = InCondition(par_ucb, acq, ["UCB"])
+        inc_par_lcb = InCondition(par_lcb, acq, ["LCB"])
         
-        cs.add_conditions([inc_par_ei, inc_par_pi, inc_par_logei, inc_par_ucb])
+        cs.add_conditions([inc_par_ei, inc_par_pi, inc_par_logei, inc_par_lcb])
         
         return cs
