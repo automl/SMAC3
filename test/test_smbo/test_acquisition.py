@@ -3,7 +3,7 @@ import unittest.mock
 
 import numpy as np
 
-from smac.optimizer.acquisition import EI, LogEI, EIPS
+from smac.optimizer.acquisition import EI, LogEI, EIPS, PI, LCB
 
 
 class ConfigurationMock(object):
@@ -126,3 +126,74 @@ class TestLogEI(unittest.TestCase):
         self.assertAlmostEqual(acq[0][0], 1.6670107375002425)
         self.assertAlmostEqual(acq[1][0], 1.5570607606556273)
         self.assertAlmostEqual(acq[2][0], 0.6480973967332011)
+
+
+class TestPI(unittest.TestCase):
+    def setUp(self):
+        self.model = MockModel()
+        self.ei = PI(self.model)
+
+    def test_1xD(self):
+        self.ei.update(model=self.model, eta=1.0)
+        configurations = [ConfigurationMock([.5, .5, .5])]
+        acq = self.ei(configurations)
+        self.assertEqual(acq.shape, (1, 1))
+        self.assertAlmostEqual(acq[0][0], 0.7602499389065233)
+
+    def test_1xD_zero(self):
+        self.ei.update(model=self.model, eta=1.0)
+        configurations = [ConfigurationMock([100, 100, 100])]
+        acq = self.ei(configurations)
+        self.assertEqual(acq.shape, (1, 1))
+        self.assertAlmostEqual(acq[0][0], 0)
+
+    def test_NxD(self):
+        self.ei.update(model=self.model, eta=1.0)
+        configurations = ([ConfigurationMock([0.0001, 0.0001, 0.0001]),
+                           ConfigurationMock([0.1, 0.1, 0.1]),
+                           ConfigurationMock([1.0, 1.0, 1.0])])
+        acq = self.ei(configurations)
+        self.assertEqual(acq.shape, (3, 1))
+        self.assertAlmostEqual(acq[0][0], 1.0)
+        self.assertAlmostEqual(acq[1][0], 0.99778673707104)
+        self.assertAlmostEqual(acq[2][0], 0.5)
+
+
+class TestLCB(unittest.TestCase):
+    def setUp(self):
+        self.model = MockModel()
+        self.ei = LCB(self.model)
+
+    def test_1xD(self):
+        self.ei.update(model=self.model, eta=1.0, par=1, num_data=3)
+        configurations = [ConfigurationMock([.5, .5, .5])]
+        acq = self.ei(configurations)
+        self.assertEqual(acq.shape, (1, 1))
+        self.assertAlmostEqual(acq[0][0], 1.315443985917585)
+        self.ei.update(model=self.model, eta=1.0, par=1, num_data=100)
+        configurations = [ConfigurationMock([.5, .5, .5])]
+        acq = self.ei(configurations)
+        self.assertEqual(acq.shape, (1, 1))
+        self.assertAlmostEqual(acq[0][0], 2.7107557771721433)
+
+    def test_1xD_no_improvement_vs_improvement(self):
+        self.ei.update(model=self.model, par=1, num_data=1)
+        configurations = [ConfigurationMock([100, 100])]
+        acq = self.ei(configurations)
+        self.assertEqual(acq.shape, (1, 1))
+        self.assertAlmostEqual(acq[0][0], -88.22589977)
+        configurations = [ConfigurationMock([0.001, 0.001])]
+        acq = self.ei(configurations)
+        self.assertEqual(acq.shape, (1, 1))
+        self.assertAlmostEqual(acq[0][0], 0.03623297)
+
+    def test_NxD(self):
+        self.ei.update(model=self.model, eta=1.0, num_data=100)
+        configurations = ([ConfigurationMock([0.0001, 0.0001, 0.0001]),
+                           ConfigurationMock([0.1, 0.1, 0.1]),
+                           ConfigurationMock([1.0, 1.0, 1.0])])
+        acq = self.ei(configurations)
+        self.assertEqual(acq.shape, (3, 1))
+        self.assertAlmostEqual(acq[0][0], 0.045306943655446116)
+        self.assertAlmostEqual(acq[1][0], 1.3358936353814157)
+        self.assertAlmostEqual(acq[2][0], 3.5406943655446117)
