@@ -399,6 +399,55 @@ respective attributes for the acquisition function object.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="smac.optimizer.acquisition.LCB">
+<em class="property">class </em><code class="descclassname">smac.optimizer.acquisition.</code><code class="descname">LCB</code><span class="sig-paren">(</span><em>model: smac.epm.base_epm.AbstractEPM</em>, <em>par: float = 1.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#LCB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.LCB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.acquisition.AbstractAcquisitionFunction</span></code></a></p>
+<p>Computes the lower confidence bound for a given x over the best so far value as
+acquisition value.</p>
+<p><span class="math notranslate nohighlight">\(LCB(X) = \mu(\mathbf{X}) - \sqrt(eta_t)\sigma(\mathbf{X})\)</span></p>
+<p>Returns -LCB(X) as the acquisition_function optimizer maximizes the acquisition value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>model</strong> (<a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><em>AbstractEPM</em></a>) – <dl class="docutils">
+<dt>A model that implements at least</dt>
+<dd><ul class="first last">
+<li>predict_marginalized_over_instances(X)</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><strong>par</strong> (<em>float</em><em>, </em><em>default=0.0</em>) – Controls the balance between exploration and exploitation of the
+acquisition function.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="smac.optimizer.acquisition.LCB.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.optimizer.acquisition.LCB.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the acquisition functions values.</p>
+<p>This method will be called if the model is updated. E.g.
+entropy search uses it to update its approximation of P(x=x_min),
+EI uses it to update the current fmin.</p>
+<p>The default implementation takes all keyword arguments and sets the
+respective attributes for the acquisition function object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>kwargs</strong> – </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="smac.optimizer.acquisition.LogEI">
 <em class="property">class </em><code class="descclassname">smac.optimizer.acquisition.</code><code class="descname">LogEI</code><span class="sig-paren">(</span><em>model: smac.epm.base_epm.AbstractEPM</em>, <em>par: float = 0.0</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#LogEI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.LogEI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.acquisition.AbstractAcquisitionFunction</span></code></a></p>
@@ -427,6 +476,55 @@ acquisition function.</li>
 <dl class="method">
 <dt id="smac.optimizer.acquisition.LogEI.update">
 <code class="descname">update</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.optimizer.acquisition.LogEI.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the acquisition functions values.</p>
+<p>This method will be called if the model is updated. E.g.
+entropy search uses it to update its approximation of P(x=x_min),
+EI uses it to update the current fmin.</p>
+<p>The default implementation takes all keyword arguments and sets the
+respective attributes for the acquisition function object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>kwargs</strong> – </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="smac.optimizer.acquisition.PI">
+<em class="property">class </em><code class="descclassname">smac.optimizer.acquisition.</code><code class="descname">PI</code><span class="sig-paren">(</span><em>model: smac.epm.base_epm.AbstractEPM</em>, <em>par: float = 0.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#PI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.PI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.acquisition.AbstractAcquisitionFunction</span></code></a></p>
+<dl class="docutils">
+<dt>Computes the probability of improvement for a given x over the best so far value as</dt>
+<dd><p class="first">acquisition value.</p>
+<p class="last">:math:<a href="#id1"><span class="problematic" id="id2">`</span></a>P(f_{t+1}(mathbf{X})geq f(mathbf{X^+})) :=
+Phi(</p>
+</dd>
+<dt>rac{mu(mathbf{X}) - f(mathbf{X^+})}{sigma(mathbf{X})})`,</dt>
+<dd><p class="first">with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the incumbent and <span class="math notranslate nohighlight">\(\Phi\)</span> the cdf of the standard normal</p>
+<dl class="last docutils">
+<dt>model <span class="classifier-delimiter">:</span> <span class="classifier">AbstractEPM</span></dt>
+<dd><dl class="first last docutils">
+<dt>A model that implements at least</dt>
+<dd><ul class="first last simple">
+<li>predict_marginalized_over_instances(X)</li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>par <span class="classifier-delimiter">:</span> <span class="classifier">float, default=0.0</span></dt>
+<dd>Controls the balance between exploration and exploitation of the
+acquisition function.</dd>
+</dl>
+</dd>
+</dl>
+<dl class="method">
+<dt id="smac.optimizer.acquisition.PI.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.optimizer.acquisition.PI.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the acquisition functions values.</p>
 <p>This method will be called if the model is updated. E.g.
 entropy search uses it to update its approximation of P(x=x_min),
