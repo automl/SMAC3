@@ -350,6 +350,10 @@ class PI(AbstractAcquisitionFunction):
         """Computes the probability of improvement for a given x over the best so far value as
         acquisition value.
 
+        :math:`P(f_{t+1}(\mathbf{X})\geq f(\mathbf{X^+})) :=
+        \Phi(\frac{\mu(\mathbf{X}) - f(\mathbf{X^+})}{\sigma(\mathbf{X})})`,
+        with :math:`f(X^+)` as the incumbent and :math:`\Phi` the cdf of the standard normal
+
         Parameters
         ----------
         model : AbstractEPM
@@ -397,6 +401,8 @@ class LCB(AbstractAcquisitionFunction):
         """Computes the lower confidence bound for a given x over the best so far value as
         acquisition value.
 
+        :math:`LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})`
+
         Parameters
         ----------
         model : AbstractEPM
@@ -433,5 +439,5 @@ class LCB(AbstractAcquisitionFunction):
             X = X[:, np.newaxis]
         m, var_ = self.model.predict_marginalized_over_instances(X)
         std = np.sqrt(var_)
-        beta = 2*np.log((X.shape[1] * self.num_data**2)/self.par)
+        beta = 2*np.log((X.shape[1] * self.num_data**2) / self.par)
         return -(m - np.sqrt(beta)*std)

@@ -140,6 +140,13 @@ class TestPI(unittest.TestCase):
         self.assertEqual(acq.shape, (1, 1))
         self.assertAlmostEqual(acq[0][0], 0.7602499389065233)
 
+    def test_1xD_zero(self):
+        self.ei.update(model=self.model, eta=1.0)
+        configurations = [ConfigurationMock([100, 100, 100])]
+        acq = self.ei(configurations)
+        self.assertEqual(acq.shape, (1, 1))
+        self.assertAlmostEqual(acq[0][0], 0)
+
     def test_NxD(self):
         self.ei.update(model=self.model, eta=1.0)
         configurations = ([ConfigurationMock([0.0001, 0.0001, 0.0001]),
@@ -168,6 +175,17 @@ class TestLCB(unittest.TestCase):
         acq = self.ei(configurations)
         self.assertEqual(acq.shape, (1, 1))
         self.assertAlmostEqual(acq[0][0], 2.7107557771721433)
+
+    def test_1xD_no_improvement_vs_improvement(self):
+        self.ei.update(model=self.model, par=1, num_data=1)
+        configurations = [ConfigurationMock([100, 100])]
+        acq = self.ei(configurations)
+        self.assertEqual(acq.shape, (1, 1))
+        self.assertAlmostEqual(acq[0][0], -88.22589977)
+        configurations = [ConfigurationMock([0.001, 0.001])]
+        acq = self.ei(configurations)
+        self.assertEqual(acq.shape, (1, 1))
+        self.assertAlmostEqual(acq[0][0], 0.03623297)
 
     def test_NxD(self):
         self.ei.update(model=self.model, eta=1.0, num_data=100)
