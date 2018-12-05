@@ -33,7 +33,7 @@ from smac.utils.validate import Validator
 from smac.utils.util_funcs import get_types
 from smac.utils.constants import MAXINT
 from smac.configspace.util import convert_configurations_to_array
-from smac.optimizer.score import great_new_selection_function
+from smac.optimizer.score import adaptive_component_selection
 
 
 
@@ -200,7 +200,7 @@ class SMBO(object):
 
             start_time = time.time()
 
-            _, self.acquisition_func = great_new_selection_function(
+            _, self.acquisition_func = adaptive_component_selection(
                 runhistory=self.runhistory,
                 runhistory2EPM=self.rh2EPM,
                 default_model=self.model,
