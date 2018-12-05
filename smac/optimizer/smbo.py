@@ -410,30 +410,14 @@ class SMBO(object):
                                               bounds=bounds,
                                               instance_features=self.scenario.feature_array,
                                               seed=self.rng.randint(MAXINT),
-                                              pca_components=conf["pca_dim"] 
-                                                if conf.get("pca_dim") is not None 
-                                                else self.scenario.PCA_DIM,
-                                              log_y=conf["log_y"] 
-                                                if conf.get("log_y") is not None
-                                                else self.scenario.transform_y in ["LOG", "LOGS"],
-                                              num_trees=conf["num_trees"] 
-                                                if conf.get("num_trees") is not None
-                                                else self.scenario.rf_num_trees,
-                                              do_bootstrapping=conf["do_bootstrapping"]
-                                              if conf.get("do_bootstrapping") is not None
-                                              else self.scenario.rf_do_bootstrapping,
-                                              ratio_features=conf["ratio_features"]
-                                              if conf.get("ratio_features") is not None
-                                              else self.scenario.rf_ratio_features,
-                                              min_samples_split=conf["min_samples_split"]
-                                              if conf.get("min_samples_split") is not None
-                                              else self.scenario.rf_min_samples_split,
-                                              min_samples_leaf=conf["min_samples_leaf"]
-                                              if conf.get("min_samples_leaf") is not None
-                                              else self.scenario.rf_min_samples_leaf,
-                                              max_depth=conf["max_depth"] 
-                                              if conf.get("max_depth")
-                                              else self.scenario.rf_max_depth)
+                                              pca_components=conf.get("pca_dim", self.scenario.PCA_DIM),
+                                              log_y=conf.get("log_y", self.scenario.transform_y in ["LOG", "LOGS"]),
+                                              num_trees=conf.get("num_trees", self.scenario.rf_num_trees), 
+                                              do_bootstrapping=conf.get("do_bootstrapping",self.scenario.rf_do_bootstrapping),  
+                                              ratio_features=conf.get("ratio_features", self.scenario.rf_ratio_features),
+                                              min_samples_split=conf.get("min_samples_split", self.scenario.rf_min_samples_split),
+                                              min_samples_leaf=conf.get("min_samples_leaf", self.scenario.rf_min_samples_leaf),
+                                              max_depth=conf.get("max_depth", self.scenario.rf_max_depth))
         elif conf["model"] == "GP":
             cov_amp = 2
             n_dims = len(types)
@@ -463,7 +447,7 @@ class SMBO(object):
             
         if conf["acq_func"] == "EI":
             acq = EI(model=model,
-                     par=conf["par_ei"] if conf.get("par_ei") is not None else 0)
+                     par=conf.get("par_ei", 0))
         elif conf["acq_func"] == "UCB":
             pass
         elif conf["acq_func"] == "PI":
@@ -471,7 +455,7 @@ class SMBO(object):
         elif conf["acq_func"] == "LogEI":
             # par value should be in log-space
             acq = LogEI(model=model,
-                        par=conf["par_ei"] if conf.get("par_ei") is not None else 0)
+                        par=conf.get("par_logei", 0))
         
         return acq, model
     
