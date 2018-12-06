@@ -1,4 +1,4 @@
-from typing import Union, Optional, Tuple
+from typing import Dict, Optional, Tuple
 
 from ConfigSpace import (
     Configuration,
@@ -288,7 +288,7 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
         model_configurations = self._get_acm_cs().sample_configuration(self.n_random_configurations)
         model_configurations = list(set(model_configurations))
         # TODO remember old combinations of models and acquisition functions!
-        combinations = [self._component_builder(conf) for conf in model_configurations]
+        combinations = [self._component_builder(conf.get_dictionary()) for conf in model_configurations]
         # Add random search
         random_model = RandomEPM(
             rng=self.rng,
@@ -352,7 +352,7 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
 
         return combinations[choice][0], combinations[choice][1]
 
-    def _component_builder(self, conf: Union[Configuration, dict]) -> Tuple[AbstractEPM, AbstractAcquisitionFunction]:
+    def _component_builder(self, conf: Dict) -> Tuple[AbstractEPM, AbstractAcquisitionFunction]:
         """
             builds new Acquisition function object
             and EPM object and returns these
@@ -368,7 +368,6 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
 
         """
         types, bounds = get_types(self.config_space, instance_features=self.scenario.feature_array)
-        conf = conf.get_dictionary()
         if conf["model"] == "RF":
             model = RandomForestWithInstances(
                 types=types,
