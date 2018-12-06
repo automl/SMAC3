@@ -66,7 +66,7 @@ class LossFunction:
         raise NotImplementedError()
 
 
-class SpearmanLossFunction:
+class SpearmanLossFunction(LossFunction):
     """Computes the spearman rank coefficient between the test data and the acquisition function values.
 
     The returned loss is the negative spearman rank coefficient.
@@ -110,7 +110,7 @@ class SpearmanLossFunction:
         return 1 - spearmanr(y_test, -acquivals)[0]
 
 
-class TwoStepLookbackBOLossFunction:
+class TwoStepLookbackBOLossFunction(LossFunction):
     """Perform two steps of Bayesian optimization on the test data.
 
     The returned loss is the minimum of the two points selected by Bayesian optimization.
@@ -180,7 +180,7 @@ class TwoStepLookbackBOLossFunction:
         return np.min(losses_for_split)
 
 
-class AdaptiveComponentSelection:
+class AbstractComponentSelection:
 
     def __init__(
         self,
@@ -198,13 +198,56 @@ class AdaptiveComponentSelection:
         runhistory2epm: AbstractRunHistory2EPM,
         default_model: AbstractEPM,
         default_acquisition_function: AbstractAcquisitionFunction,
+    ) -> Tuple[AbstractEPM, AbstractAcquisitionFunction]:
+        raise NotImplementedError()
+
+
+class DefaultComponentSelection(AbstractComponentSelection):
+
+    def select(
+        self,
+        runhistory: RunHistory,
+        runhistory2epm: AbstractRunHistory2EPM,
+        default_model: AbstractEPM,
+        default_acquisition_function: AbstractAcquisitionFunction,
+    ) -> Tuple[AbstractEPM, AbstractAcquisitionFunction]:
+
+        return default_model, default_acquisition_function
+
+
+class AdaptiveComponentSelection(AbstractComponentSelection):
+
+    def __init__(
+        self,
+        rng: np.random.RandomState,
+        config_space: ConfigurationSpace,
+        scenario: Scenario,
         loss_function: Optional[LossFunction] = None,
         sampling_based: bool = True,
         min_test_size: int = 5,
         test_fraction: float = 0.2,
         min_runhistory_length: int = 10,
-        n_splits: int = 50,
+        n_splits: int = 200,
         n_random_configurations: int = 50,
+    ):
+        self.rng = rng
+        self.config_space = config_space
+        self.scenario = scenario
+        self.loss_function = loss_function
+        self.sampling_based = sampling_based
+        self.min_test_size = min_test_size
+        self.test_fraction = test_fraction
+        self.min_runhistory_length = min_runhistory_length
+        self.n_splits = n_splits
+        self.n_random_configurations = n_random_configurations
+
+    def select(
+        self,
+        runhistory: RunHistory,
+        runhistory2epm: AbstractRunHistory2EPM,
+        default_model: AbstractEPM,
+        default_acquisition_function: AbstractAcquisitionFunction,
+
     ) -> Tuple[AbstractEPM, AbstractAcquisitionFunction]:
         """Select a model and an acquisition function given the runhistory data.
 
@@ -239,11 +282,11 @@ class AdaptiveComponentSelection:
         AbstractAcquisitionFunction
         """
 
-        if len(runhistory.data) < min_runhistory_length:
+        if len(runhistory.data) < self.min_runhistory_length:
             return default_model, default_acquisition_function
 
-        model_configurations = self._get_acm_cs().sample_configuration(n_random_configurations)
-        model_configurations = set(model_configurations)
+        model_configurations = self._get_acm_cs().sample_configuration(self.n_random_configurations)
+        model_configurations = list(set(model_configurations))
         # TODO remember old combinations of models and acquisition functions!
         combinations = [self._component_builder(conf) for conf in model_configurations]
         # Add random search
@@ -254,14 +297,16 @@ class AdaptiveComponentSelection:
         )
         combinations.append((random_model, EI(model=random_model)))
 
-        if loss_function is None:
+        if self.loss_function is None:
             loss_function = SpearmanLossFunction()
+        else:
+            loss_function = self.loss_function
 
         X, y = runhistory2epm.transform(runhistory)
-        test_size = max(min_test_size, int(len(X) * test_fraction))
+        test_size = max(self.min_test_size, int(len(X) * self.test_fraction))
 
         combination_losses = []
-        splitter = ShuffleSplit(n_splits=n_splits, test_size=test_size, random_state=1)
+        splitter = ShuffleSplit(n_splits=self.n_splits, test_size=test_size, random_state=1)
         for train_indices, test_indices in splitter.split(X, y):
 
             X_train = X[train_indices]
@@ -279,7 +324,7 @@ class AdaptiveComponentSelection:
             combination_losses.append(losses)
 
         combination_losses = np.array(combination_losses)
-        if sampling_based:
+        if self.sampling_based:
             wins = np.zeros((len(combinations), ))
             for cl in combination_losses:
                 try:

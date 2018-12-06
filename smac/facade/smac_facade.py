@@ -24,12 +24,13 @@ from smac.initial_design.default_configuration_design import \
 from smac.initial_design.random_configuration_design import RandomConfiguration
 from smac.initial_design.latin_hypercube_design import LHDesign
 from smac.initial_design.factorial_design import FactorialInitialDesign
-from smac.initial_design.sobol_design import SobolDesign 
+from smac.initial_design.sobol_design import SobolDesign
 from smac.initial_design.multi_config_initial_design import \
     MultiConfigInitialDesign
 # intensification
 from smac.intensification.intensification import Intensifier
 # optimizer
+from smac.optimizer.adaptive_component_selection import AdaptiveComponentSelection
 from smac.optimizer.smbo import SMBO
 from smac.optimizer.objective import average_cost
 from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
@@ -87,7 +88,8 @@ class SMAC(object):
                  rng: typing.Optional[typing.Union[np.random.RandomState, int]]=None,
                  smbo_class: typing.Optional[SMBO]=None,
                  run_id: typing.Optional[int]=None,
-                 random_configuration_chooser: typing.Optional[RandomConfigurationChooser]=None):
+                 random_configuration_chooser: typing.Optional[RandomConfigurationChooser]=None,
+                 adaptive_component_selection: typing.Optional[AdaptiveComponentSelection] = None):
         """
         Constructor
 
@@ -141,7 +143,8 @@ class SMAC(object):
             chosen.
         random_configuration_chooser : ~smac.optimizer.random_configuration_chooser.RandomConfigurationChooser
             How often to choose a random configuration during the intensification procedure.
-
+        adaptive_component_selection : smac.optimizer.adaptive_component_selection.AbstractComponentSelection
+            TODO
         """
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
@@ -466,7 +469,8 @@ class SMAC(object):
             'acquisition_func': acquisition_function,
             'rng': rng,
             'restore_incumbent': restore_incumbent,
-            'random_configuration_chooser': random_configuration_chooser
+            'random_configuration_chooser': random_configuration_chooser,
+            'adaptive_component_selection': adaptive_component_selection,
         }
 
         if smbo_class is None:

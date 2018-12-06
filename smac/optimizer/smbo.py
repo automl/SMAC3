@@ -14,6 +14,7 @@ from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
     ChooserLinearCoolDown
 from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer, \
     RandomSearch
+from smac.optimizer.adaptive_component_selection import AbstractComponentSelection, DefaultComponentSelection
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, RunHistory2EPM4LogCost
 from smac.scenario.scenario import Scenario
@@ -21,7 +22,7 @@ from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
 from smac.configspace.util import convert_configurations_to_array
-from smac.optimizer.score import AdaptiveComponentSelection
+from smac.optimizer.adaptive_component_selection import AdaptiveComponentSelection
 
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
@@ -69,7 +70,8 @@ class SMBO(object):
                  restore_incumbent: Configuration=None,
                  random_configuration_chooser: typing.Union[
                      ChooserNoCoolDown, ChooserLinearCoolDown]=ChooserNoCoolDown(2.0),
-                 predict_incumbent: bool=True):
+                 predict_incumbent: bool=True,
+                 adaptive_component_selection: typing.Optional[AbstractComponentSelection] = None):
         """
         Interface that contains the main Bayesian optimization loop
 
@@ -112,6 +114,8 @@ class SMBO(object):
             * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)
         predict_incumbent: bool
             Use predicted performance of incumbent instead of observed performance
+        adaptive_component_selection : AbstractComponentSelection
+            Adaptive component selection module. Will use a pass-through selection module if not specified.
         """
 
         self.logger = logging.getLogger(
@@ -138,6 +142,14 @@ class SMBO(object):
         )
 
         self.predict_incumbent = predict_incumbent
+        if adaptive_component_selection is None:
+            self.adaptive_component_selection = DefaultComponentSelection(
+                rng=self.rng,
+                config_space=self.config_space,
+                scenario=self.scenario,
+            )
+        else:
+            self.adaptive_component_selection = adaptive_component_selection
 
     def start(self):
         """Starts the Bayesian Optimization loop.
@@ -188,11 +200,7 @@ class SMBO(object):
             start_time = time.time()
 
             # TODO re-enable the default SMAC mode!
-            _, self.acquisition_func = AdaptiveComponentSelection(
-                rng=self.rng,
-                config_space=self.config_space,
-                scenario=self.scenario,
-            ).select(
+            _, self.acquisition_func = self.adaptive_component_selection.select(
                 runhistory=self.runhistory,
                 runhistory2epm=self.rh2EPM,
                 default_model=self.model,
