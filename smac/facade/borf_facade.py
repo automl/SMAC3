@@ -16,6 +16,7 @@ from smac.optimizer.adaptive_component_selection import (
     AdaptiveComponentSelection,
     TwoStepLookbackBOLossFunction,
     DefaultComponentSelection,
+    SpearmanLossFunction
 )
 from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
 from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
@@ -106,11 +107,50 @@ class BORF(SMAC):
 
         # TODO @Marius
         # Here you need to adapt the adaptive_component_selection code!
+       
+        #=======================================================================
+        # self.solver.adaptive_component_selection = AdaptiveComponentSelection(
+        #     rng=self.solver.rng,
+        #     config_space=self.solver.config_space,
+        #     scenario=self.solver.scenario,
+        #     loss_function=TwoStepLookbackBOLossFunction(),
+        #     n_splits=200,
+        #     n_random_configurations=30,
+        #     sampling_based=True
+        # )
+        #=======================================================================
+        
+        #=======================================================================
+        # self.solver.adaptive_component_selection = AdaptiveComponentSelection(
+        #     rng=self.solver.rng,
+        #     config_space=self.solver.config_space,
+        #     scenario=self.solver.scenario,
+        #     loss_function=SpearmanLossFunction(),
+        #     n_splits=200,
+        #     n_random_configurations=30,
+        #     sampling_based=True
+        # )
+        #=======================================================================
+
+
+        #=======================================================================
+        # self.solver.adaptive_component_selection = AdaptiveComponentSelection(
+        #     rng=self.solver.rng,
+        #     config_space=self.solver.config_space,
+        #     scenario=self.solver.scenario,
+        #     loss_function=TwoStepLookbackBOLossFunction(),
+        #     n_splits=200,
+        #     n_random_configurations=30,
+        #     sampling_based=False
+        # )
+        #=======================================================================
+        
         self.solver.adaptive_component_selection = AdaptiveComponentSelection(
             rng=self.solver.rng,
             config_space=self.solver.config_space,
             scenario=self.solver.scenario,
-            loss_function=TwoStepLookbackBOLossFunction(),
+            loss_function=SpearmanLossFunction(),
             n_splits=200,
             n_random_configurations=30,
+            sampling_based=False
         )

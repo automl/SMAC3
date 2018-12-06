@@ -28,7 +28,7 @@ from smac.scenario.scenario import Scenario
 from smac.utils.util_funcs import get_types
 
 
-class LossFunction:
+class LossFunction(object):
     """Abstract loss function for internal model and acquisition function maximization.
 
     Paramaters
@@ -180,7 +180,7 @@ class TwoStepLookbackBOLossFunction(LossFunction):
         return np.min(losses_for_split)
 
 
-class AbstractComponentSelection:
+class AbstractComponentSelection(object):
 
     def __init__(
         self,
@@ -227,7 +227,7 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
         min_test_size: int = 5,
         test_fraction: float = 0.2,
         min_runhistory_length: int = 10,
-        n_splits: int = 200,
+        n_splits: int = 20,
         n_random_configurations: int = 50,
     ):
         self.rng = rng
@@ -350,6 +350,7 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
             assert len(combination_losses) == len(combinations)
             choice = np.nanargmin(combination_losses)
 
+        print("Adaptive Selection: %s, %s" %(combinations[choice][0], combinations[choice][1]))
         return combinations[choice][0], combinations[choice][1]
 
     def _component_builder(self, conf: Dict) -> Tuple[AbstractEPM, AbstractAcquisitionFunction]:
@@ -413,7 +414,7 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
         if conf["acq_func"] == "EI":
             acq = EI(model=model, par=conf.get("par_ei", 0))
         elif conf["acq_func"] == "LCB":
-            acq = LCB(model=model, par=conf.get("par_lcb", 0))
+            acq = LCB(model=model, par=conf.get("par_lcb", 1))
         elif conf["acq_func"] == "PI":
             acq = PI(model=model, par=conf.get("par_pi", 0))
         elif conf["acq_func"] == "LogEI":
@@ -426,47 +427,101 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
 
     def _get_acm_cs(self) -> ConfigurationSpace:
         """returns a configuration space designed for querying ~smac.optimizer.smbo._component_builder
-
+ 
         Returns
         -------
         ConfigurationSpace
         """
-
+ 
         cs = ConfigurationSpace()
         cs.seed(self.rng.randint(0, 2 ** 20))
-
+ 
         # Temporarily disable the GP
         model = CategoricalHyperparameter("model", choices=("RF",))  # "GP"))
-
+ 
         num_trees = Constant("num_trees", value=10)
         bootstrap = CategoricalHyperparameter("do_bootstrapping", choices=(True, False), default_value=True)
         ratio_features = CategoricalHyperparameter("ratio_features", choices=(3 / 6, 4 / 6, 5 / 6, 1), default_value=1)
         min_split = UniformIntegerHyperparameter("min_samples_to_split", lower=2, upper=10, default_value=2)
         min_leaves = UniformIntegerHyperparameter("min_samples_in_leaf", lower=1, upper=10, default_value=1)
-
+ 
         cs.add_hyperparameters([model, num_trees, bootstrap, ratio_features, min_split, min_leaves])
-
+ 
         inc_num_trees = InCondition(num_trees, model, ["RF"])
         inc_bootstrap = InCondition(bootstrap, model, ["RF"])
         inc_ratio_features = InCondition(ratio_features, model, ["RF"])
         inc_min_split = InCondition(min_split, model, ["RF"])
         inc_min_leavs = InCondition(min_leaves, model, ["RF"])
-
+ 
         cs.add_conditions([inc_num_trees, inc_bootstrap, inc_ratio_features, inc_min_split, inc_min_leavs])
-
+ 
         acq = CategoricalHyperparameter("acq_func", choices=("EI", "LCB", "PI", "LogEI"))
         par_ei = UniformFloatHyperparameter("par_ei", lower=-10, upper=10)
         par_pi = UniformFloatHyperparameter("par_pi", lower=-10, upper=10)
-        par_logei = UniformFloatHyperparameter("par_logei", lower=0.001, upper=100, log=True)
+        par_logei = UniformFloatHyperparameter("par_logei", lower=0.001, upper=10, log=True)
         par_lcb = UniformFloatHyperparameter("par_lcb", lower=0.0001, upper=0.9999)
-
+ 
         cs.add_hyperparameters([acq, par_ei, par_pi, par_logei, par_lcb])
-
+ 
         inc_par_ei = InCondition(par_ei, acq, ["EI"])
         inc_par_pi = InCondition(par_pi, acq, ["PI"])
         inc_par_logei = InCondition(par_logei, acq, ["LogEI"])
         inc_par_lcb = InCondition(par_lcb, acq, ["LCB"])
-
+ 
         cs.add_conditions([inc_par_ei, inc_par_pi, inc_par_logei, inc_par_lcb])
-
+ 
         return cs
+    
+#===============================================================================
+#     def _get_acm_cs(self) -> ConfigurationSpace:
+#         """returns a configuration space designed for querying ~smac.optimizer.smbo._component_builder
+# 
+#         Returns
+#         -------
+#         ConfigurationSpace
+#         """
+# 
+#         cs = ConfigurationSpace()
+#         cs.seed(self.rng.randint(0, 2 ** 20))
+# 
+#         model = CategoricalHyperparameter("model", choices=("RF","GP")) 
+#         ratio_features = CategoricalHyperparameter("ratio_features", choices=[1], default_value=1)
+#         acq = CategoricalHyperparameter("acq_func", choices=("EI", "LCB", "PI", "LogEI"))
+#         cs.add_hyperparameters([model,acq,ratio_features])
+# 
+#         return cs
+#===============================================================================
+    
+ #==============================================================================
+ #    def _get_acm_cs(self) -> ConfigurationSpace:
+ #        """returns a configuration space designed for querying ~smac.optimizer.smbo._component_builder
+ # 
+ #        Returns
+ #        -------
+ #        ConfigurationSpace
+ #        """
+ # 
+ #        cs = ConfigurationSpace()
+ #        cs.seed(self.rng.randint(0, 2 ** 20))
+ # 
+ #        model = CategoricalHyperparameter("model", choices=("RF",))  # "GP"))
+ #        ratio_features = CategoricalHyperparameter("ratio_features", choices=[1], default_value=1)
+ #        cs.add_hyperparameters([model,ratio_features])
+ # 
+ #        acq = CategoricalHyperparameter("acq_func", choices=("EI", "LCB", "PI", "LogEI"))
+ #        par_ei = UniformFloatHyperparameter("par_ei", lower=-10, upper=10)
+ #        par_pi = UniformFloatHyperparameter("par_pi", lower=-10, upper=10)
+ #        par_logei = UniformFloatHyperparameter("par_logei", lower=0.001, upper=10, log=True)
+ #        par_lcb = UniformFloatHyperparameter("par_lcb", lower=0.0001, upper=0.9999)
+ #  
+ #        cs.add_hyperparameters([acq, par_ei, par_pi, par_logei, par_lcb])
+ #  
+ #        inc_par_ei = InCondition(par_ei, acq, ["EI"])
+ #        inc_par_pi = InCondition(par_pi, acq, ["PI"])
+ #        inc_par_logei = InCondition(par_logei, acq, ["LogEI"])
+ #        inc_par_lcb = InCondition(par_lcb, acq, ["LCB"])
+ #  
+ #        cs.add_conditions([inc_par_ei, inc_par_pi, inc_par_logei, inc_par_lcb])
+ # 
+ #        return cs
+ #==============================================================================

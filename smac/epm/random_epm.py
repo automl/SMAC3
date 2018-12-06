@@ -31,6 +31,7 @@ class RandomEPM(AbstractEPM):
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.rng = rng
+        self.long_name = "Random EPM"
 
     def _train(self, X: np.ndarray, Y: np.ndarray, **kwargs):
         """
@@ -50,7 +51,7 @@ class RandomEPM(AbstractEPM):
         if not isinstance(Y, np.ndarray):
             raise NotImplementedError("Y has to be of type np.ndarray")
 
-        self.logger.debug("(Pseudo) Fit model to data")
+        #self.logger.debug("(Pseudo) Fit model to data")
 
     def _predict(self, X: np.ndarray):
         """

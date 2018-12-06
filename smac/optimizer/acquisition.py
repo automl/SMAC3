@@ -127,7 +127,7 @@ class EI(AbstractAcquisitionFunction):
         """
 
         super(EI, self).__init__(model)
-        self.long_name = 'Expected Improvement'
+        self.long_name = 'Expected Improvement (par: %f)' %(par)
         self.par = par
         self.eta = None
 
@@ -285,7 +285,7 @@ class LogEI(AbstractAcquisitionFunction):
             acquisition function.
         """
         super(LogEI, self).__init__(model)
-        self.long_name = 'Expected Improvement'
+        self.long_name = 'Expected Improvement (par: %f)' %(par)
         self.par = par
         self.eta = None
 
@@ -364,7 +364,7 @@ class PI(AbstractAcquisitionFunction):
             acquisition function.
         """
         super(PI, self).__init__(model)
-        self.long_name = 'Probability of Improvement'
+        self.long_name = 'Probability of Improvement (par: %f)' %(par)
         self.par = par
         self.eta = None
 
@@ -415,7 +415,7 @@ class LCB(AbstractAcquisitionFunction):
             acquisition function.
         """
         super(LCB, self).__init__(model)
-        self.long_name = 'Lower Confidence Bound'
+        self.long_name = 'Lower Confidence Bound (par:%f)' %(par)
         self.par = par
         self.eta = None  # to be compatible with the existing update calls in SMBO
         self.num_data = None

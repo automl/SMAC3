@@ -101,6 +101,9 @@ class GaussianProcessMCMC(BaseModel):
         self.y = None
         self.is_trained = False
 
+    def __str__(self):
+        return type(self).__name__ 
+
     def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool=True):
         """
         Performs MCMC sampling to sample hyperparameter configurations from the
