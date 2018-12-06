@@ -195,7 +195,7 @@ class AdaptiveComponentSelection:
     def select(
         self,
         runhistory: RunHistory,
-        runhistory2EPM: AbstractRunHistory2EPM,
+        runhistory2epm: AbstractRunHistory2EPM,
         default_model: AbstractEPM,
         default_acquisition_function: AbstractAcquisitionFunction,
         loss_function: Optional[LossFunction] = None,
@@ -204,6 +204,7 @@ class AdaptiveComponentSelection:
         test_fraction: float = 0.2,
         min_runhistory_length: int = 10,
         n_splits: int = 50,
+        n_random_configurations: int = 50,
     ) -> Tuple[AbstractEPM, AbstractAcquisitionFunction]:
         """Select a model and an acquisition function given the runhistory data.
 
@@ -211,7 +212,7 @@ class AdaptiveComponentSelection:
         ----------
         runhistory : RunHistory
 
-        runhistory2EPM : AbstractRunHistory2EPM
+        runhistory2epm : AbstractRunHistory2EPM
 
         default_model : AbstractEPM
 
@@ -229,6 +230,8 @@ class AdaptiveComponentSelection:
 
         n_splits : int
 
+        n_random_configurations : int
+
         Returns
         -------
         AbstractEPM
@@ -239,8 +242,9 @@ class AdaptiveComponentSelection:
         if len(runhistory.data) < min_runhistory_length:
             return default_model, default_acquisition_function
 
-        model_configurations = self._get_acm_cs().sample_configuration(50)
+        model_configurations = self._get_acm_cs().sample_configuration(n_random_configurations)
         model_configurations = set(model_configurations)
+        # TODO remember old combinations of models and acquisition functions!
         combinations = [self._component_builder(conf) for conf in model_configurations]
         # Add random search
         random_model = RandomEPM(
@@ -253,42 +257,43 @@ class AdaptiveComponentSelection:
         if loss_function is None:
             loss_function = SpearmanLossFunction()
 
-        X, y = runhistory2EPM.transform(runhistory)
+        X, y = runhistory2epm.transform(runhistory)
         test_size = max(min_test_size, int(len(X) * test_fraction))
 
-        # TODO remember old combinations of models and acquisition functions!
         combination_losses = []
-        for model, acq in combinations:
-            losses = []
-            splitter = ShuffleSplit(n_splits=n_splits, test_size=test_size, random_state=1)
-            for train_indices, test_indices in splitter.split(X, y):
-                X_train = X[train_indices]
-                y_train = y[train_indices]
-                X_test = X[test_indices]
-                y_test = y[test_indices]
+        splitter = ShuffleSplit(n_splits=n_splits, test_size=test_size, random_state=1)
+        for train_indices, test_indices in splitter.split(X, y):
 
+            X_train = X[train_indices]
+            y_train = y[train_indices]
+            X_test = X[test_indices]
+            y_test = y[test_indices]
+
+            losses = []
+            for model, acq in combinations:
                 loss = loss_function(
-                    X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test,
-                    acq=acq, model=model, config_space=runhistory2EPM.scenario.cs,
+                    X_train=X_train.copy(), y_train=y_train.copy(), X_test=X_test.copy(), y_test=y_test.copy(),
+                    acq=acq, model=model, config_space=runhistory2epm.scenario.cs,
                 )
                 losses.append(loss)
+            combination_losses.append(losses)
 
-            if sampling_based:
-                combination_losses.append(losses)
-            else:
-                # TODO don't use the mean but the gap to the best observed on this train/test split
-                combination_losses.append(np.mean(losses))
-
+        combination_losses = np.array(combination_losses)
         if sampling_based:
             wins = np.zeros((len(combinations), ))
-            for cl in np.array(combination_losses).transpose():
+            for cl in combination_losses:
                 try:
                     wins[np.nanargmin(cl)] += 1
                 except ValueError:
                     continue
             wins = wins / np.sum(wins)
             choice = np.random.choice(len(combinations), p=wins)
+            print(wins, choice)
         else:
+            # Transform the losses into a per-split regret
+            combination_losses = combination_losses - np.nanmin(combination_losses, axis=0).reshape((1, -1))
+            combination_losses = np.nanmean(combination_losses, axis=0)
+            assert len(combination_losses) == len(combinations)
             choice = np.nanargmin(combination_losses)
 
         return combinations[choice][0], combinations[choice][1]
@@ -317,6 +322,7 @@ class AdaptiveComponentSelection:
                 instance_features=self.scenario.feature_array,
                 seed=self.rng.randint(MAXINT),
                 pca_components=conf.get("pca_dim", self.scenario.PCA_DIM),
+                # TODO add log-space to the inner hyperparameter sampling procedure
                 log_y=conf.get("log_y", self.scenario.transform_y in ["LOG", "LOGS"]),
                 num_trees=conf.get("num_trees", self.scenario.rf_num_trees),
                 do_bootstrapping=conf.get("do_bootstrapping", self.scenario.rf_do_bootstrapping),
@@ -348,36 +354,35 @@ class AdaptiveComponentSelection:
                 normalize_output=True,
                 rng=self.rng,
             )
+        else:
+            raise ValueError(conf['model'])
 
         if conf["acq_func"] == "EI":
-            acq = EI(model=model,
-                     par=conf.get("par_ei", 0))
+            acq = EI(model=model, par=conf.get("par_ei", 0))
         elif conf["acq_func"] == "LCB":
-            acq = LCB(model=model,
-                      par=conf.get("par_lcb", 0))
+            acq = LCB(model=model, par=conf.get("par_lcb", 0))
         elif conf["acq_func"] == "PI":
-            acq = PI(model=model,
-                     par=conf.get("par_pi", 0))
+            acq = PI(model=model, par=conf.get("par_pi", 0))
         elif conf["acq_func"] == "LogEI":
             # par value should be in log-space
-            acq = LogEI(model=model,
-                        par=conf.get("par_logei", 0))
+            acq = LogEI(model=model, par=conf.get("par_logei", 0))
+        else:
+            raise ValueError(conf['acq_func'])
 
         return model, acq
 
-    def _get_acm_cs(self):
-        """
-            returns a configuration space
-            designed for querying ~smac.optimizer.smbo._component_builder
+    def _get_acm_cs(self) -> ConfigurationSpace:
+        """returns a configuration space designed for querying ~smac.optimizer.smbo._component_builder
 
-            Returns
-            -------
-                ConfigurationSpace
+        Returns
+        -------
+        ConfigurationSpace
         """
 
         cs = ConfigurationSpace()
         cs.seed(self.rng.randint(0, 2 ** 20))
 
+        # Temporarily disable the GP
         model = CategoricalHyperparameter("model", choices=("RF",))  # "GP"))
 
         num_trees = Constant("num_trees", value=10)

@@ -187,13 +187,14 @@ class SMBO(object):
 
             start_time = time.time()
 
+            # TODO re-enable the default SMAC mode!
             _, self.acquisition_func = AdaptiveComponentSelection(
                 rng=self.rng,
                 config_space=self.config_space,
                 scenario=self.scenario,
             ).select(
                 runhistory=self.runhistory,
-                runhistory2EPM=self.rh2EPM,
+                runhistory2epm=self.rh2EPM,
                 default_model=self.model,
                 default_acquisition_function=self.acquisition_func,
             )
@@ -272,6 +273,7 @@ class SMBO(object):
                                  "the incumbent is unknown.")
             incumbent_value = self._get_incumbent_value()
 
+        # TODO fix the acquisition function maximizer interface by passing the acquisition function at call time
         self.acquisition_func.update(model=self.model, eta=incumbent_value, num_data=len(self.runhistory.data))
         self.acq_optimizer.acquisition_function = self.acquisition_func
         self.acq_optimizer.random_search.acquisition_function = self.acquisition_func
