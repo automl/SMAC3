@@ -328,12 +328,21 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
             wins = np.zeros((len(combinations), ))
             for cl in combination_losses:
                 try:
-                    wins[np.nanargmin(cl)] += 1
+                    min_value = np.nanmin(cl)
+                    minima = min_value == cl
+                    minima_indices = np.where(minima)[0]
+                    if len(minima_indices) == len(cl):
+                        # This split is not informative -> ignore it
+                        continue
+                    for midx in minima_indices:
+                        wins[midx] += 1 / len(minima_indices)
+                # In case the whole row is empty (i.e. full of NaNs)
                 except ValueError:
                     continue
+            if np.sum(wins) == 0:
+                wins[-1] += 1
             wins = wins / np.sum(wins)
-            choice = np.random.choice(len(combinations), p=wins)
-            print(wins, choice)
+            choice = self.rng.choice(len(combinations), p=wins)
         else:
             # Transform the losses into a per-split regret
             combination_losses = combination_losses - np.nanmin(combination_losses, axis=0).reshape((1, -1))
@@ -433,7 +442,7 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
         num_trees = Constant("num_trees", value=10)
         bootstrap = CategoricalHyperparameter("do_bootstrapping", choices=(True, False), default_value=True)
         ratio_features = CategoricalHyperparameter("ratio_features", choices=(3 / 6, 4 / 6, 5 / 6, 1), default_value=1)
-        min_split = UniformIntegerHyperparameter("min_samples_to_split", lower=1, upper=10, default_value=2)
+        min_split = UniformIntegerHyperparameter("min_samples_to_split", lower=2, upper=10, default_value=2)
         min_leaves = UniformIntegerHyperparameter("min_samples_in_leaf", lower=1, upper=10, default_value=1)
 
         cs.add_hyperparameters([model, num_trees, bootstrap, ratio_features, min_split, min_leaves])

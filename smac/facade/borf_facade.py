@@ -111,6 +111,6 @@ class BORF(SMAC):
             config_space=self.solver.config_space,
             scenario=self.solver.scenario,
             loss_function=TwoStepLookbackBOLossFunction(),
-            n_splits=100,
-            n_random_configurations=20,
+            n_splits=200,
+            n_random_configurations=30,
         )
