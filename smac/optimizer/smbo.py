@@ -284,8 +284,13 @@ class SMBO(object):
         # TODO fix the acquisition function maximizer interface by passing the acquisition function at call time
         self.acquisition_func.update(model=self.model, eta=incumbent_value, num_data=len(self.runhistory.data))
         self.acq_optimizer.acquisition_function = self.acquisition_func
-        self.acq_optimizer.random_search.acquisition_function = self.acquisition_func
-        self.acq_optimizer.local_search.acquisition_function = self.acquisition_func
+        try:
+            self.acq_optimizer.random_search.acquisition_function = self.acquisition_func
+            self.acq_optimizer.local_search.acquisition_function = self.acquisition_func
+        except AttributeError:
+            # won't work for RandomSearch in ROAR
+            pass
+        
 
         challengers = self.acq_optimizer.maximize(
             runhistory=self.runhistory,
