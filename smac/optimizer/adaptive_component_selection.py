@@ -23,10 +23,13 @@ from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
 from smac.epm.gp_default_priors import DefaultPrior
 from smac.optimizer.acquisition import AbstractAcquisitionFunction, EI, LogEI, LCB, PI
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
+from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, \
+    RunHistory2EPM4LogCost, RunHistory2EPM4Cost, \
+    RunHistory2EPM4LogScaledCost, RunHistory2EPM4SqrtScaledCost, \
+    RunHistory2EPM4InvScaledCost, RunHistory2EPM4ScaledCost
 from smac.scenario.scenario import Scenario
 from smac.utils.util_funcs import get_types
-
+from smac.tae.execute_ta_run import StatusType
 
 class LossFunction(object):
     """Abstract loss function for internal model and acquisition function maximization.
@@ -286,6 +289,9 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
             return default_model, default_acquisition_function
 
         model_configurations = self._get_acm_cs().sample_configuration(self.n_random_configurations)
+        # Always consider default
+        model_configurations.append(self._get_acm_cs().get_default_configuration())
+        # Remove duplicates
         model_configurations = list(set(model_configurations))
         # TODO remember old combinations of models and acquisition functions!
         combinations = [self._component_builder(conf.get_dictionary()) for conf in model_configurations]
@@ -295,7 +301,13 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
             types=default_model.types.copy(),
             bounds=default_model.bounds,
         )
-        combinations.append((random_model, EI(model=random_model)))
+        
+        combinations.append((random_model, EI(model=random_model),
+                             RunHistory2EPM4Cost(scenario=self.scenario, 
+                                num_params=len(self.scenario.cs.get_hyperparameters()), 
+                                success_states=[StatusType.SUCCESS, StatusType.CRASHED], 
+                                impute_censored_data=False, 
+                                impute_state=None)))
 
         if self.loss_function is None:
             loss_function = SpearmanLossFunction()
@@ -308,14 +320,15 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
         combination_losses = []
         splitter = ShuffleSplit(n_splits=self.n_splits, test_size=test_size, random_state=1)
         for train_indices, test_indices in splitter.split(X, y):
-
-            X_train = X[train_indices]
-            y_train = y[train_indices]
-            X_test = X[test_indices]
-            y_test = y[test_indices]
-
+            
             losses = []
-            for model, acq in combinations:
+            for model, acq, rh2epm in combinations:
+                X, y = rh2epm.transform(runhistory)
+                X_train = X[train_indices]
+                y_train = y[train_indices]
+                X_test = X[test_indices]
+                y_test = y[test_indices]
+                
                 loss = loss_function(
                     X_train=X_train.copy(), y_train=y_train.copy(), X_test=X_test.copy(), y_test=y_test.copy(),
                     acq=acq, model=model, config_space=runhistory2epm.scenario.cs,
@@ -333,6 +346,7 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
                     minima_indices = np.where(minima)[0]
                     if len(minima_indices) == len(cl):
                         # This split is not informative -> ignore it
+                        print("FAIL")
                         continue
                     for midx in minima_indices:
                         wins[midx] += 1 / len(minima_indices)
@@ -341,6 +355,7 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
                     continue
             if np.sum(wins) == 0:
                 wins[-1] += 1
+            print(wins)
             wins = wins / np.sum(wins)
             choice = self.rng.choice(len(combinations), p=wins)
         else:
@@ -350,10 +365,12 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
             assert len(combination_losses) == len(combinations)
             choice = np.nanargmin(combination_losses)
 
-        print("Adaptive Selection: %s, %s" %(combinations[choice][0], combinations[choice][1]))
-        return combinations[choice][0], combinations[choice][1]
+        print("Adaptive Selection: %s, %s, %s" %(combinations[choice][0], combinations[choice][1], combinations[choice][2]))
+        return combinations[choice][0], combinations[choice][1], combinations[choice][2]
 
-    def _component_builder(self, conf: Dict) -> Tuple[AbstractEPM, AbstractAcquisitionFunction]:
+    def _component_builder(self, conf: Dict) -> Tuple[AbstractEPM, 
+                                                      AbstractAcquisitionFunction,
+                                                      AbstractRunHistory2EPM]:
         """
             builds new Acquisition function object
             and EPM object and returns these
@@ -361,11 +378,13 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
             Parameters
             ----------
             conf: typing.Union[Configuration, dict]
-                configuration specificing "model" and "acq_func"
+                configuration specifying "model", "acq_func" and "y_transform"
 
             Returns
             -------
-            typing.Tuple[AbstractAcquisitionFunction, AbstractEPM]
+            typing.Tuple[AbstractAcquisitionFunction, 
+                        AbstractEPM,
+                        AbstractRunHistory2EPM]
 
         """
         types, bounds = get_types(self.config_space, instance_features=self.scenario.feature_array)
@@ -423,8 +442,81 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
         else:
             raise ValueError(conf['acq_func'])
 
-        return model, acq
+        num_params = len(self.scenario.cs.get_hyperparameters())
+        success_states = [StatusType.SUCCESS, StatusType.CRASHED]
+        #TODO: only designed for black box problems without instances
+        if conf["y_transform"] == "y":
+            rh2epm = RunHistory2EPM4Cost(scenario=self.scenario, 
+                                num_params=num_params, 
+                                success_states=success_states, 
+                                impute_censored_data=False, 
+                                impute_state=None)
+        elif conf["y_transform"] == "log_scaled":
+            rh2epm = RunHistory2EPM4LogScaledCost(scenario=self.scenario, 
+                                num_params=num_params, 
+                                success_states=success_states, 
+                                impute_censored_data=False, 
+                                impute_state=None)
+        elif conf["y_transform"] == "inv_scaled":
+            rh2epm = RunHistory2EPM4InvScaledCost(scenario=self.scenario, 
+                                num_params=num_params, 
+                                success_states=success_states, 
+                                impute_censored_data=False, 
+                                impute_state=None)
+        else:
+            raise ValueError(conf["y_transform"])
+        
+        return model, acq, rh2epm
 
+ #==============================================================================
+ #    def _get_acm_cs(self) -> ConfigurationSpace:
+ #        """returns a configuration space designed for querying ~smac.optimizer.smbo._component_builder
+ # 
+ #        Returns
+ #        -------
+ #        ConfigurationSpace
+ #        """
+ # 
+ #        cs = ConfigurationSpace()
+ #        cs.seed(self.rng.randint(0, 2 ** 20))
+ # 
+ #        # Temporarily disable the GP
+ #        model = CategoricalHyperparameter("model", choices=("RF",))  # "GP"))
+ # 
+ #        num_trees = Constant("num_trees", value=10)
+ #        bootstrap = CategoricalHyperparameter("do_bootstrapping", choices=(True, False), default_value=True)
+ #        ratio_features = CategoricalHyperparameter("ratio_features", choices=(3 / 6, 4 / 6, 5 / 6, 1), default_value=1)
+ #        min_split = UniformIntegerHyperparameter("min_samples_to_split", lower=2, upper=10, default_value=2)
+ #        min_leaves = UniformIntegerHyperparameter("min_samples_in_leaf", lower=1, upper=10, default_value=1)
+ # 
+ #        cs.add_hyperparameters([model, num_trees, bootstrap, ratio_features, min_split, min_leaves])
+ # 
+ #        inc_num_trees = InCondition(num_trees, model, ["RF"])
+ #        inc_bootstrap = InCondition(bootstrap, model, ["RF"])
+ #        inc_ratio_features = InCondition(ratio_features, model, ["RF"])
+ #        inc_min_split = InCondition(min_split, model, ["RF"])
+ #        inc_min_leavs = InCondition(min_leaves, model, ["RF"])
+ # 
+ #        cs.add_conditions([inc_num_trees, inc_bootstrap, inc_ratio_features, inc_min_split, inc_min_leavs])
+ # 
+ #        acq = CategoricalHyperparameter("acq_func", choices=("EI", "LCB", "PI", "LogEI"))
+ #        par_ei = UniformFloatHyperparameter("par_ei", lower=-10, upper=10)
+ #        par_pi = UniformFloatHyperparameter("par_pi", lower=-10, upper=10)
+ #        par_logei = UniformFloatHyperparameter("par_logei", lower=0.001, upper=10, log=True)
+ #        par_lcb = UniformFloatHyperparameter("par_lcb", lower=0.0001, upper=0.9999)
+ # 
+ #        cs.add_hyperparameters([acq, par_ei, par_pi, par_logei, par_lcb])
+ # 
+ #        inc_par_ei = InCondition(par_ei, acq, ["EI"])
+ #        inc_par_pi = InCondition(par_pi, acq, ["PI"])
+ #        inc_par_logei = InCondition(par_logei, acq, ["LogEI"])
+ #        inc_par_lcb = InCondition(par_lcb, acq, ["LCB"])
+ # 
+ #        cs.add_conditions([inc_par_ei, inc_par_pi, inc_par_logei, inc_par_lcb])
+ # 
+ #        return cs
+ #==============================================================================
+    
     def _get_acm_cs(self) -> ConfigurationSpace:
         """returns a configuration space designed for querying ~smac.optimizer.smbo._component_builder
  
@@ -436,61 +528,25 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
         cs = ConfigurationSpace()
         cs.seed(self.rng.randint(0, 2 ** 20))
  
-        # Temporarily disable the GP
-        model = CategoricalHyperparameter("model", choices=("RF",))  # "GP"))
- 
-        num_trees = Constant("num_trees", value=10)
+        # EPM
+        model = CategoricalHyperparameter("model", choices=["RF"], default_value="RF")#,"GP")) 
+        ratio_features = CategoricalHyperparameter("ratio_features", choices=[1], default_value=1)
         bootstrap = CategoricalHyperparameter("do_bootstrapping", choices=(True, False), default_value=True)
-        ratio_features = CategoricalHyperparameter("ratio_features", choices=(3 / 6, 4 / 6, 5 / 6, 1), default_value=1)
-        min_split = UniformIntegerHyperparameter("min_samples_to_split", lower=2, upper=10, default_value=2)
-        min_leaves = UniformIntegerHyperparameter("min_samples_in_leaf", lower=1, upper=10, default_value=1)
+        
+        # Acquisition
+        acq = CategoricalHyperparameter("acq_func", 
+                                        choices=("EI", "LCB", "PI", "LogEI"), 
+                                        default_value="EI")
  
-        cs.add_hyperparameters([model, num_trees, bootstrap, ratio_features, min_split, min_leaves])
+        # y_transform
+        y_trans = CategoricalHyperparameter("y_transform", 
+                                            choices=["y","log_scaled", "inv_scaled"],
+                                            default_value="log_scaled")
+        
+        cs.add_hyperparameters([model, acq, ratio_features, bootstrap, y_trans])
  
-        inc_num_trees = InCondition(num_trees, model, ["RF"])
-        inc_bootstrap = InCondition(bootstrap, model, ["RF"])
-        inc_ratio_features = InCondition(ratio_features, model, ["RF"])
-        inc_min_split = InCondition(min_split, model, ["RF"])
-        inc_min_leavs = InCondition(min_leaves, model, ["RF"])
- 
-        cs.add_conditions([inc_num_trees, inc_bootstrap, inc_ratio_features, inc_min_split, inc_min_leavs])
- 
-        acq = CategoricalHyperparameter("acq_func", choices=("EI", "LCB", "PI", "LogEI"))
-        par_ei = UniformFloatHyperparameter("par_ei", lower=-10, upper=10)
-        par_pi = UniformFloatHyperparameter("par_pi", lower=-10, upper=10)
-        par_logei = UniformFloatHyperparameter("par_logei", lower=0.001, upper=10, log=True)
-        par_lcb = UniformFloatHyperparameter("par_lcb", lower=0.0001, upper=0.9999)
- 
-        cs.add_hyperparameters([acq, par_ei, par_pi, par_logei, par_lcb])
- 
-        inc_par_ei = InCondition(par_ei, acq, ["EI"])
-        inc_par_pi = InCondition(par_pi, acq, ["PI"])
-        inc_par_logei = InCondition(par_logei, acq, ["LogEI"])
-        inc_par_lcb = InCondition(par_lcb, acq, ["LCB"])
- 
-        cs.add_conditions([inc_par_ei, inc_par_pi, inc_par_logei, inc_par_lcb])
  
         return cs
-    
-#===============================================================================
-#     def _get_acm_cs(self) -> ConfigurationSpace:
-#         """returns a configuration space designed for querying ~smac.optimizer.smbo._component_builder
-# 
-#         Returns
-#         -------
-#         ConfigurationSpace
-#         """
-# 
-#         cs = ConfigurationSpace()
-#         cs.seed(self.rng.randint(0, 2 ** 20))
-# 
-#         model = CategoricalHyperparameter("model", choices=("RF","GP")) 
-#         ratio_features = CategoricalHyperparameter("ratio_features", choices=[1], default_value=1)
-#         acq = CategoricalHyperparameter("acq_func", choices=("EI", "LCB", "PI", "LogEI"))
-#         cs.add_hyperparameters([model,acq,ratio_features])
-# 
-#         return cs
-#===============================================================================
     
  #==============================================================================
  #    def _get_acm_cs(self) -> ConfigurationSpace:

@@ -275,7 +275,10 @@ class AbstractRunHistory2EPM(object):
 
 
 class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
-    """TODO"""
+    """ Converts a runhistory into X,y"""
+
+    def __str__(self):
+        return "rh2epm:Cost"
 
     def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
                       runhistory: RunHistory, instances: typing.List[str]=None,
@@ -328,7 +331,11 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
 
 
 class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
-    """TODO"""
+    """ Converts a runhistory into X,y 
+    by transforming y into log(y)"""
+
+    def __str__(self):
+        return "rh2epm:LogCost"
 
     def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
                       runhistory: RunHistory, instances: typing.List[str]=None,
@@ -367,7 +374,11 @@ class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
         return X, y
 
 class RunHistory2EPM4ScaledCost(RunHistory2EPM4Cost):
-    """TODO"""
+    """ Converts a runhistory into X,y 
+    by scaling y into [5%quantile(y),1]"""
+
+    def __str__(self):
+        return "rh2epm:ScaledCost"
 
     def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
                       runhistory: RunHistory, instances: typing.List[str]=None,
@@ -407,7 +418,12 @@ class RunHistory2EPM4ScaledCost(RunHistory2EPM4Cost):
         return X, y
 
 class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
-    """TODO"""
+    """ Converts a runhistory into X,y 
+    by using a inv(y) transformation after scaling
+    y into [5%quantile(y),1]"""
+
+    def __str__(self):
+        return "rh2epm:InvScaledCost"
 
     def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
                       runhistory: RunHistory, instances: typing.List[str]=None,
@@ -448,7 +464,13 @@ class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
         return X, y
     
 class RunHistory2EPM4SqrtScaledCost(RunHistory2EPM4Cost):
-    """TODO"""
+    """ Converts a runhistory into X,y 
+    by using a sqrt(y) transformation after scaling
+    y into [5%quantile(y),1]"""
+
+    def __str__(self):
+        return "rh2epm:SqrtScaledCost"
+
 
     def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
                       runhistory: RunHistory, instances: typing.List[str]=None,
@@ -489,7 +511,13 @@ class RunHistory2EPM4SqrtScaledCost(RunHistory2EPM4Cost):
         return X, y
 
 class RunHistory2EPM4LogScaledCost(RunHistory2EPM4Cost):
-    """TODO"""
+    """ Converts a runhistory into X,y 
+    by using a log(y) transformation after scaling
+    y into [5%quantile(y),1]"""
+
+    def __str__(self):
+        return "rh2epm:LogScaledCost"
+
 
     def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
                       runhistory: RunHistory, instances: typing.List[str]=None,
@@ -532,7 +560,7 @@ class RunHistory2EPM4LogScaledCost(RunHistory2EPM4Cost):
 
 class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
     """TODO"""
-
+    
     def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
                       runhistory: RunHistory, instances: typing.List[str]=None,
                       par_factor: int=1):
