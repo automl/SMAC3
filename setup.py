@@ -1,8 +1,6 @@
 import setuptools
 import sys
 
-import smac
-
 
 with open('requirements.txt') as fh:
     requirements = fh.read()
@@ -18,7 +16,6 @@ if sys.version_info < (3, 5, 2):
 setuptools.setup(
     name="smac",
     version=version,
-    author=smac.AUTHORS,
     author_email="fh@cs.uni-freiburg.de",
     description=("SMAC3, a Python implementation of 'Sequential Model-based "
                  "Algorithm Configuration'."),
