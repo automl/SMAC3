@@ -355,14 +355,14 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
                     continue
             if np.sum(wins) == 0:
                 wins[-1] += 1
-            print(wins)
             wins = wins / np.sum(wins)
             choice = self.rng.choice(len(combinations), p=wins)
         else:
-            # Transform the losses into a per-split regret
             combination_losses = np.nanmean(combination_losses, axis=0)
             assert len(combination_losses) == len(combinations)
             choice = np.nanargmin(combination_losses)
+            for l, c in zip(combination_losses,combinations):
+                print(l,list(map(str,c)))
 
         print("Adaptive Selection: %s, %s, %s" %(combinations[choice][0], combinations[choice][1], combinations[choice][2]))
         return combinations[choice][0], combinations[choice][1], combinations[choice][2]
@@ -432,7 +432,7 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
         if conf["acq_func"] == "EI":
             acq = EI(model=model, par=conf.get("par_ei", 0))
         elif conf["acq_func"] == "LCB":
-            acq = LCB(model=model, par=conf.get("par_lcb", 1))
+            acq = LCB(model=model, par=conf.get("par_lcb", 0.05))
         elif conf["acq_func"] == "PI":
             acq = PI(model=model, par=conf.get("par_pi", 0))
         elif conf["acq_func"] == "LogEI":
@@ -529,19 +529,20 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
  
         # EPM
         model = CategoricalHyperparameter("model", choices=["RF"], default_value="RF")#,"GP")) 
-        ratio_features = CategoricalHyperparameter("ratio_features", choices=[1], default_value=1)
-        bootstrap = CategoricalHyperparameter("do_bootstrapping", choices=(True, False), default_value=True)
+        ratio_features = CategoricalHyperparameter("ratio_features", choices=[1.], default_value=1.)
+        bootstrap = CategoricalHyperparameter("do_bootstrapping", choices=[True, False])#, False), default_value=True)
         min_split = Constant("min_samples_to_split", value=2)
         min_leaves = Constant("min_samples_in_leaf", value=1)
         
         # Acquisition
         acq = CategoricalHyperparameter("acq_func", 
-                                        choices=("EI", "LCB", "PI", "LogEI"), 
+                                        choices=["EI", "LCB", "PI"],# "LogEI"), 
                                         default_value="EI")
  
         # y_transform
         y_trans = CategoricalHyperparameter("y_transform", 
-                                            choices=["y","log_scaled", "inv_scaled"],
+                                            #choices=["y","log_scaled", "inv_scaled"],
+                                            choices=["log_scaled","y"],
                                             default_value="log_scaled")
         
         cs.add_hyperparameters([model, acq, ratio_features, bootstrap, y_trans, min_split, min_leaves])
