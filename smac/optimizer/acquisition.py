@@ -396,7 +396,7 @@ class PI(AbstractAcquisitionFunction):
 class LCB(AbstractAcquisitionFunction):
     def __init__(self,
                  model: AbstractEPM,
-                 par: float=1.0):
+                 par: float=0.05):
 
         """Computes the lower confidence bound for a given x over the best so far value as
         acquisition value.
