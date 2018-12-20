@@ -177,7 +177,7 @@ class TwoStepLookbackBOLossFunction(LossFunction):
 
         # Query test data
         argmax = np.nanargmax(acquivals)
-        y_ = y_test[argmax]
+        y_ = y_test[argmax] - np.min(y_test)
 
         losses_for_split.append(y_)
         return np.min(losses_for_split)
@@ -360,7 +360,6 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
             choice = self.rng.choice(len(combinations), p=wins)
         else:
             # Transform the losses into a per-split regret
-            combination_losses = combination_losses - np.nanmin(combination_losses, axis=1).reshape((-1, 1))
             combination_losses = np.nanmean(combination_losses, axis=0)
             assert len(combination_losses) == len(combinations)
             choice = np.nanargmin(combination_losses)
