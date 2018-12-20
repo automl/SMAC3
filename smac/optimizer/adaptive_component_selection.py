@@ -532,6 +532,8 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
         model = CategoricalHyperparameter("model", choices=["RF"], default_value="RF")#,"GP")) 
         ratio_features = CategoricalHyperparameter("ratio_features", choices=[1], default_value=1)
         bootstrap = CategoricalHyperparameter("do_bootstrapping", choices=(True, False), default_value=True)
+        min_split = Constant("min_samples_to_split", value=2)
+        min_leaves = Constant("min_samples_in_leaf", value=1)
         
         # Acquisition
         acq = CategoricalHyperparameter("acq_func", 
@@ -543,8 +545,7 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
                                             choices=["y","log_scaled", "inv_scaled"],
                                             default_value="log_scaled")
         
-        cs.add_hyperparameters([model, acq, ratio_features, bootstrap, y_trans])
- 
+        cs.add_hyperparameters([model, acq, ratio_features, bootstrap, y_trans, min_split, min_leaves])
  
         return cs
     
