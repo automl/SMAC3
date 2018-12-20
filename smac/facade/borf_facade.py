@@ -150,7 +150,7 @@ class BORF(SMAC):
             config_space=self.solver.config_space,
             scenario=self.solver.scenario,
             loss_function=SpearmanLossFunction(),
-            n_splits=200,
-            n_random_configurations=30,
+            n_splits=100,
+            n_random_configurations=1000,
             sampling_based=False
         )
