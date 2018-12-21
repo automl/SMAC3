@@ -564,14 +564,15 @@ class AdaptiveComponentSelection(AbstractComponentSelection):
  
         # EPM
         model = CategoricalHyperparameter("model", choices=["RF"], default_value="RF")#,"GP")) 
-        ratio_features = CategoricalHyperparameter("ratio_features", choices=[1.], default_value=1.)
         bootstrap = CategoricalHyperparameter("do_bootstrapping", choices=[True, False])#, False), default_value=True)
-        min_split = Constant("min_samples_to_split", value=2)
-        min_leaves = Constant("min_samples_in_leaf", value=1)
+        num_trees = Constant("num_trees", value=10)
+        ratio_features = CategoricalHyperparameter("ratio_features", choices=(3 / 6, 4 / 6, 5 / 6, 1), default_value=1)
+        min_split = UniformIntegerHyperparameter("min_samples_to_split", lower=2, upper=10, default_value=2)
+        min_leaves = UniformIntegerHyperparameter("min_samples_in_leaf", lower=1, upper=10, default_value=1)
         
         # Acquisition
         acq = CategoricalHyperparameter("acq_func", 
-                                        choices=["EI", "LCB", "PI"],# "LogEI"), 
+                                        choices=["EI"],# "LCB", "PI"],# "LogEI"), 
                                         default_value="EI")
  
         # y_transform
