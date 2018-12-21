@@ -16,7 +16,8 @@ from smac.optimizer.adaptive_component_selection import (
     AdaptiveComponentSelection,
     TwoStepLookbackBOLossFunction,
     DefaultComponentSelection,
-    SpearmanLossFunction
+    SpearmanLossFunction,
+    RandomLossFunction
 )
 from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
 from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \

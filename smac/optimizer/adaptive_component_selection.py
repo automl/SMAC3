@@ -111,7 +111,42 @@ class SpearmanLossFunction(LossFunction):
         configs = [Configuration(config_space, vector=x) for x in X_test]
         acquivals = acq(configurations=configs).flatten()
         return 1 - spearmanr(y_test, -acquivals)[0]
+    
+class RandomLossFunction(LossFunction):
+    """Computes random loss function (as a baseline)
 
+    Paramaters
+    ----------
+    X_train : np.ndarray
+
+    y_train : np.ndarray
+
+    X_test : np.ndarray
+
+    y_test : np.ndarray
+
+    acq : AbstractAcquisitionFunction
+
+    model : AbstractEPM
+
+    config_space : ConfigurationSpace
+
+    Returns
+    -------
+    float
+    """
+
+    def __call__(
+        self,
+        X_train: np.ndarray,
+        y_train: np.ndarray,
+        X_test: np.ndarray,
+        y_test: np.ndarray,
+        acq: AbstractAcquisitionFunction,
+        model: AbstractEPM,
+        config_space: ConfigurationSpace,
+    ):
+        return np.random.rand()
 
 class TwoStepLookbackBOLossFunction(LossFunction):
     """Perform two steps of Bayesian optimization on the test data.
