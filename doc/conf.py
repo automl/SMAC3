@@ -62,8 +62,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'SMAC'
-copyright = '2015-%s, %s' % (datetime.datetime.now().year, smac.AUTHORS)
-author = smac.AUTHORS
+copyright = '2015-%s, %s' % (datetime.datetime.now().year, smac.__author__)
+author = smac.__author__
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -243,7 +243,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  (master_doc, 'SMAC3.tex', u'SMAC3 Documentation', smac.AUTHORS, 'manual'),
+  (master_doc, 'SMAC3.tex', u'SMAC3 Documentation', smac.__author__, 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
