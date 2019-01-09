@@ -7,6 +7,7 @@ import re
 import shlex
 import sys
 from smac.configspace import pcs, pcs_new
+from smac.configspace import json as pcs_json
 from smac.utils.constants import MAXINT, N_TREES
 from smac.utils.io.input_reader import InputReader
 import time
@@ -133,13 +134,18 @@ class ReadPCSFileAction(Action):
         fn = values
         if fn:
             if os.path.isfile(fn):
+                # Three possible formats: json, pcs and pcs_new. We prefer json.
                 with open(fn) as fp:
-                    pcs_str = fp.readlines()
-                    try:
-                        parsed_scen_args["cs"] = pcs.read(pcs_str)
-                    except:
-                        logger.debug("Could not parse pcs file with old format; trying new format ...")
-                        parsed_scen_args["cs"] = pcs_new.read(pcs_str)
+                    if fn.endswith('.json'):
+                        parsed_scen_args['cs'] = pcs_json.read(fp.read())
+                        logger.debug("Loading pcs as json from: %s", fn)
+                    else:
+                        pcs_str = fp.readlines()
+                        try:
+                            parsed_scen_args["cs"] = pcs.read(pcs_str)
+                        except:
+                            logger.debug("Could not parse pcs file with old format; trying new format ...")
+                            parsed_scen_args["cs"] = pcs_new.read(pcs_str)
                     parsed_scen_args["cs"].seed(42)
             else:
                 parser.exit(1, "Could not find pcs file: {}".format(fn))
