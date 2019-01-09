@@ -3,7 +3,7 @@ import sys
 
 from smac.utils import dependencies
 
-__version__ = '0.9.0'
+__version__ = '0.9.0.dev'
 __author__ = 'Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter'
 
 __MANDATORY_PACKAGES__ = """
