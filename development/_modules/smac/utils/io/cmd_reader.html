@@ -253,6 +253,7 @@
 <span class="kn">import</span> <span class="nn">shlex</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">pcs</span><span class="p">,</span> <span class="n">pcs_new</span>
+<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">json</span> <span class="k">as</span> <span class="n">pcs_json</span>
 <span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="k">import</span> <span class="n">MAXINT</span><span class="p">,</span> <span class="n">N_TREES</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.input_reader</span> <span class="k">import</span> <span class="n">InputReader</span>
 <span class="kn">import</span> <span class="nn">time</span>
@@ -379,13 +380,18 @@
         <span class="n">fn</span> <span class="o">=</span> <span class="n">values</span>
         <span class="k">if</span> <span class="n">fn</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+                <span class="c1"># Three possible formats: json, pcs and pcs_new. We prefer json.</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
-                    <span class="n">pcs_str</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="n">parsed_scen_args</span><span class="p">[</span><span class="s2">&quot;cs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pcs</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">pcs_str</span><span class="p">)</span>
-                    <span class="k">except</span><span class="p">:</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Could not parse pcs file with old format; trying new format ...&quot;</span><span class="p">)</span>
-                        <span class="n">parsed_scen_args</span><span class="p">[</span><span class="s2">&quot;cs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pcs_new</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">pcs_str</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">fn</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.json&#39;</span><span class="p">):</span>
+                        <span class="n">parsed_scen_args</span><span class="p">[</span><span class="s1">&#39;cs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pcs_json</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Loading pcs as json from: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">pcs_str</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">parsed_scen_args</span><span class="p">[</span><span class="s2">&quot;cs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pcs</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">pcs_str</span><span class="p">)</span>
+                        <span class="k">except</span><span class="p">:</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Could not parse pcs file with old format; trying new format ...&quot;</span><span class="p">)</span>
+                            <span class="n">parsed_scen_args</span><span class="p">[</span><span class="s2">&quot;cs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pcs_new</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">pcs_str</span><span class="p">)</span>
                     <span class="n">parsed_scen_args</span><span class="p">[</span><span class="s2">&quot;cs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">parser</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Could not find pcs file: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fn</span><span class="p">))</span>
