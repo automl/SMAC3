@@ -85,18 +85,24 @@ class OutputWriter(object):
             # Copy if file exists, else write to new file
             if value is not None and os.path.isfile(value):
                 try:
-                    return shutil.copy(value, scenario.output_dir_for_this_run)
+                    new_path = shutil.copy(value, scenario.output_dir_for_this_run)
                 except shutil.SameFileError:
-                    return value  # File is already in output_dir
+                    new_path = value  # File is already in output_dir
+                # For .pcs-file, also save with the same basename as json and use json-path!
+                if key == 'pcs_fn' and scenario.cs is not None and value.endswith('.pcs'):
+                    file_name = os.path.splitext(os.path.basename(value))[0]
+                    new_path = os.path.join(scenario.output_dir_for_this_run, file_name + '.json')
+                    self.save_configspace(scenario.cs, new_path, 'json')
+                    scenario.logger.debug("Setting the pcs_fn-attr of written scenario from %s to %s", value, new_path)
             elif key == 'pcs_fn' and scenario.cs is not None:
                 try:
-                    new_path = os.path.join(scenario.output_dir_for_this_run, 'configspace.pcs')
-                    self.save_configspace(scenario.cs, new_path, 'pcs_new')
+                    pcs_path = os.path.join(scenario.output_dir_for_this_run, 'configspace.pcs')
+                    self.save_configspace(scenario.cs, pcs_path, 'pcs_new')
                 except TypeError:
                     self.logger.error("Could not write pcs file to disk."
                     " ConfigSpace not compatible with (new) pcs format.")
-                json_path = os.path.join(scenario.output_dir_for_this_run, 'configspace.json')
-                self.save_configspace(scenario.cs, json_path, 'json')
+                new_path = os.path.join(scenario.output_dir_for_this_run, 'configspace.json')
+                self.save_configspace(scenario.cs, new_path, 'json')
             elif key == 'train_inst_fn' and scenario.train_insts != [None]:
                 new_path = os.path.join(scenario.output_dir_for_this_run, 'train_insts.txt')
                 self.write_inst_file(scenario.train_insts, new_path)

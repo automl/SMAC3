@@ -215,7 +215,7 @@ class ScenarioTest(unittest.TestCase):
                 name = dest if dest else name  # if 'dest' is None, use 'name'
                 if name in ["pcs_fn", "train_inst_fn", "test_inst_fn",
                             "feature_fn", "output_dir"]:
-                    continue  # Those values are changed upon logging
+                    continue  # Those values are allowed to change when writing to disk
                 elif name == 'cs':
                     # Using repr because of cs-bug
                     # (https://github.com/automl/ConfigSpace/issues/25)
@@ -242,6 +242,10 @@ class ScenarioTest(unittest.TestCase):
         path = os.path.join(scenario.output_dir, 'scenario.txt')
         scenario_reloaded = Scenario(path)
         check_scen_eq(scenario, scenario_reloaded)
+        # Test whether json is the default pcs_fn
+        self.assertTrue(os.path.exists(os.path.join(scenario.output_dir, 'param.pcs')))
+        self.assertTrue(os.path.exists(os.path.join(scenario.output_dir, 'param.json')))
+        self.assertEqual(scenario_reloaded.pcs_fn, os.path.join(scenario.output_dir, 'param.json'))
 
         # Now create new scenario without filepaths
         self.test_scenario_dict.update({
@@ -254,6 +258,10 @@ class ScenarioTest(unittest.TestCase):
         scenario_no_fn = Scenario(self.test_scenario_dict)
         scenario_reloaded = Scenario(path)
         check_scen_eq(scenario_no_fn, scenario_reloaded)
+        # Test whether json is the default pcs_fn
+        self.assertTrue(os.path.exists(os.path.join(scenario.output_dir, 'param.pcs')))
+        self.assertTrue(os.path.exists(os.path.join(scenario.output_dir, 'param.json')))
+        self.assertEqual(scenario_reloaded.pcs_fn, os.path.join(scenario.output_dir, 'param.json'))
 
     @mock.patch.object(os, 'makedirs')
     @mock.patch.object(os.path, 'isdir')

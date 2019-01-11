@@ -7,7 +7,6 @@ psutil
 pynisher>=0.4.1
 ConfigSpace>=0.4.6,<0.5
 scikit-learn>=0.18.0
-typing
 pyrfr>=0.5.0
 sphinx
 sphinx_rtd_theme

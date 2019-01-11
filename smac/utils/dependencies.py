@@ -8,7 +8,6 @@ RE_PATTERN = re.compile(
     r'^(?P<name>[\w\-]+)%s?(,%s)?$' % (SUBPATTERN % (1, 1), SUBPATTERN % (2, 2)))
 
 
-
 def verify_packages(packages):
     if not packages:
         return
@@ -22,9 +21,12 @@ def verify_packages(packages):
         match = RE_PATTERN.match(package)
         if match:
             name = match.group('name')
-            operation = match.group('operation1')
-            version = match.group('version1')
-            _verify_package(name, operation, version)
+            for group_id in range(1, 3):
+                if "operation%d" % group_id in match.groupdict():
+                    operation = match.group('operation%d' % group_id)
+                    version = match.group('version%d' % group_id)
+                    _verify_package(name, operation, version)
+
         else:
             raise ValueError('Unable to read requirement: %s' % package)
 
@@ -45,13 +47,17 @@ def _verify_package(name, operation, version):
 
     required_version = LooseVersion(version)
 
-
     if operation == '==':
         check = required_version == installed_version
     elif operation == '>':
         check = installed_version > required_version
+    elif operation == '<':
+        check = installed_version < required_version
     elif operation == '>=':
         check = installed_version > required_version or \
+                installed_version == required_version
+    elif operation == '<=':
+        check = installed_version < required_version or \
                 installed_version == required_version
     else:
         raise NotImplementedError(
