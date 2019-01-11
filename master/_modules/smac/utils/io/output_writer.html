@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.utils.io.output_writer &mdash; SMAC 0.9.0 documentation</title>
+  <title>smac.utils.io.output_writer &mdash; SMAC 0.10.0 documentation</title>
   
 
   
@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.9.0
+                0.10.0
               </div>
             
           
@@ -331,18 +331,24 @@
             <span class="c1"># Copy if file exists, else write to new file</span>
             <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">)</span>
+                    <span class="n">new_path</span> <span class="o">=</span> <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">)</span>
                 <span class="k">except</span> <span class="n">shutil</span><span class="o">.</span><span class="n">SameFileError</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">value</span>  <span class="c1"># File is already in output_dir</span>
+                    <span class="n">new_path</span> <span class="o">=</span> <span class="n">value</span>  <span class="c1"># File is already in output_dir</span>
+                <span class="c1"># For .pcs-file, also save with the same basename as json and use json-path!</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;pcs_fn&#39;</span> <span class="ow">and</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.pcs&#39;</span><span class="p">):</span>
+                    <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">value</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">new_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">,</span> <span class="n">file_name</span> <span class="o">+</span> <span class="s1">&#39;.json&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">save_configspace</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span> <span class="n">new_path</span><span class="p">,</span> <span class="s1">&#39;json&#39;</span><span class="p">)</span>
+                    <span class="n">scenario</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Setting the pcs_fn-attr of written scenario from </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">new_path</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;pcs_fn&#39;</span> <span class="ow">and</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">new_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">,</span> <span class="s1">&#39;configspace.pcs&#39;</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">save_configspace</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span> <span class="n">new_path</span><span class="p">,</span> <span class="s1">&#39;pcs_new&#39;</span><span class="p">)</span>
+                    <span class="n">pcs_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">,</span> <span class="s1">&#39;configspace.pcs&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">save_configspace</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span> <span class="n">pcs_path</span><span class="p">,</span> <span class="s1">&#39;pcs_new&#39;</span><span class="p">)</span>
                 <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not write pcs file to disk.&quot;</span>
                     <span class="s2">&quot; ConfigSpace not compatible with (new) pcs format.&quot;</span><span class="p">)</span>
-                <span class="n">json_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">,</span> <span class="s1">&#39;configspace.json&#39;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">save_configspace</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span> <span class="n">json_path</span><span class="p">,</span> <span class="s1">&#39;json&#39;</span><span class="p">)</span>
+                <span class="n">new_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">,</span> <span class="s1">&#39;configspace.json&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">save_configspace</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span> <span class="n">new_path</span><span class="p">,</span> <span class="s1">&#39;json&#39;</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;train_inst_fn&#39;</span> <span class="ow">and</span> <span class="n">scenario</span><span class="o">.</span><span class="n">train_insts</span> <span class="o">!=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]:</span>
                 <span class="n">new_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">,</span> <span class="s1">&#39;train_insts.txt&#39;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">write_inst_file</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">train_insts</span><span class="p">,</span> <span class="n">new_path</span><span class="p">)</span>
@@ -436,7 +442,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
 
     </p>
   </div>
