@@ -1,3 +1,17 @@
+# 0.9.1
+
+## Major changes
+
+* ADD further acquisition functions: PI and LCB
+* SMAC can now be installed without installing all its dependencies
+* Simplify setup.py by moving most thing to setup.cfg
+
+## Bug fixes
+
+* RM typing as requirement
+* FIX import of authors in setup.py
+* MAINT use json-file as standard pcs format for internal logging 
+
 # 0.9
 
 ## Major changes
