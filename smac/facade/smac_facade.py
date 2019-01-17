@@ -77,6 +77,7 @@ class SMAC(object):
                  runhistory: typing.Optional[RunHistory]=None,
                  intensifier: typing.Optional[Intensifier]=None,
                  acquisition_function: typing.Optional[AbstractAcquisitionFunction]=None,
+                 acquisition_function_kwargs: typing.Optional[typing.DefaultDict]={},
                  acquisition_function_optimizer: typing.Optional[AcquisitionFunctionMaximizer]=None,
                  model: typing.Optional[AbstractEPM]=None,
                  runhistory2epm: typing.Optional[AbstractRunHistory2EPM]=None,
@@ -108,8 +109,10 @@ class SMAC(object):
             intensification object to issue a racing to decide the current
             incumbent
         acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction
-            Object that implements the :class:`~smac.optimizer.acquisition.AbstractAcquisitionFunction`.
-            Will use :class:`~smac.optimizer.acquisition.EI` if not set.
+            Class that implements the :class:`~smac.optimizer.acquisition.AbstractAcquisitionFunction`.
+            Will use :class:`~smac.optimizer.acquisition.EI` or :class:`~smac.optimizer.acquisition.LogEI` if not set.
+        acquisition_function_kwargs : dict
+            dictionary to pass specific arguments to ~acquisition_function
         acquisition_function_optimizer : ~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
             Object that implements the :class:`~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer`.
             Will use :class:`smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch` if not set.
@@ -226,6 +229,9 @@ class SMAC(object):
                 acquisition_function = LogEI(model=model)
             else:
                 acquisition_function = EI(model=model)
+        else:
+            acquisition_function_kwargs["model"] = model
+            acquisition_function = acquisition_function(**acquisition_function_kwargs)
 
         # inject model if necessary
         if acquisition_function.model is None:
