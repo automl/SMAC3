@@ -381,7 +381,7 @@ class SMAC(object):
             intensifier = Intensifier(**intensifier_def_kwargs)
         elif inspect.isclass(intensifier):
             intensifier = intensifier(**intensifier_def_kwargs)
-        elif isinstance(intensifier, intensifier):
+        elif isinstance(intensifier, Intensifier):
             if intensifier.tae_runner is None:
                 intensifier.tae_runner = tae_runner
             if intensifier.stats is None:
@@ -443,12 +443,11 @@ class SMAC(object):
         # the RFRImputator will already get
         # log transform data from the runhistory
         if scenario.transform_y in ["LOG", "LOGS"]:
-            cutoff = np.log(scenario.cutoff)
-            threshold = np.log(scenario.cutoff *
-                             scenario.par_factor)
+            cutoff = np.log(np.nanmin([np.inf, np.float_(scenario.cutoff)]))
+            threshold = cutoff + np.log(scenario.par_factor)
         else:
-            cutoff = scenario.cutoff
-            threshold = np.nanmin([np.inf, np.float_(scenario.cutoff)]) * scenario.par_factor
+            cutoff = np.nanmin([np.inf, np.float_(scenario.cutoff)])
+            threshold = cutoff * scenario.par_factor
         num_params = len(scenario.cs.get_hyperparameters())
         imputor = RFRImputator(rng=rng,
                                cutoff=cutoff,
