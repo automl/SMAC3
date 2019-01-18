@@ -6,12 +6,14 @@ import os
 import re
 import shlex
 import sys
+import time
+import typing
+import numpy as np
+
 from smac.configspace import pcs, pcs_new
 from smac.configspace import json as pcs_json
 from smac.utils.constants import MAXINT, N_TREES
 from smac.utils.io.input_reader import InputReader
-import time
-import typing
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"

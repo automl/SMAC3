@@ -26,7 +26,8 @@ class RandomConfiguration(SingleConfigInitialDesign):
                  scenario: Scenario,
                  stats: Stats,
                  traj_logger: TrajLogger,
-                 rng: np.random.RandomState
+                 rng: np.random.RandomState,
+                 **kwargs
                  ):
         """Constructor
 

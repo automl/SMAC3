@@ -42,7 +42,8 @@ class MultiConfigInitialDesign(InitialDesign):
                  aggregate_func: typing.Callable,
                  configs: typing.Optional[typing.List[Configuration]]=None,
                  n_configs_x_params: int=10,
-                 max_config_fracs: float=0.25
+                 max_config_fracs: float=0.25,
+                 **kwargs
                  ):
         """Constructor
 
@@ -89,6 +90,7 @@ class MultiConfigInitialDesign(InitialDesign):
         n_params = len(self.scenario.cs.get_hyperparameters())
         self.init_budget = int(max(2, min(n_configs_x_params * n_params,
                           (max_config_fracs * scenario.ta_run_limit))))
+        self.logger.info("Running initial design for %d configurations" %(self.init_budget))
 
     def select_configuration(self) -> typing.List[Configuration]:
 

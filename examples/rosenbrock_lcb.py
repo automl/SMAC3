@@ -9,6 +9,9 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_facade import SMAC
 from smac.optimizer.acquisition import LCB
+from smac.initial_design.latin_hypercube_design import LHDesign
+from smac import initial_design
+from smac.runhistory.runhistory2epm import RunHistory2EPM4InvScaledCost
 
 def rosenbrock_2d(x):
     """ The 2 dimensional Rosenbrock function as a toy model
@@ -24,13 +27,11 @@ def rosenbrock_2d(x):
     val = 100. * (x2 - x1 ** 2.) ** 2. + (1 - x1) ** 2.
     return val
 
-#logger = logging.getLogger("SVMExample")
 logging.basicConfig(level=logging.INFO)  # logging.DEBUG for debug output
 
 # Build Configuration Space which defines all parameters and their ranges
 cs = ConfigurationSpace()
 
-# We define a few possible types of SVM-kernels and add them as "kernel" to our cs
 x0 = UniformFloatHyperparameter("x0", -5, 5, default_value=-3)
 x1 = UniformFloatHyperparameter("x1", -5, 5, default_value=-4)
 cs.add_hyperparameters([x0,x1])
@@ -51,7 +52,18 @@ print("Default Value: %.2f" % (def_value))
 print("Optimizing! Depending on your machine, this might take a few minutes.")
 smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
         tae_runner=rosenbrock_2d,
+        initial_design=LHDesign,
+        initial_design_kwargs={'n_configs_x_params':4,
+                               'max_config_fracs':1.0},
+        runhistory2epm=RunHistory2EPM4InvScaledCost,
+        model_kwargs={'num_trees': 42},
+        acquisition_function_optimizer_kwargs={'max_steps':100},
         acquisition_function=LCB,
-        acquisition_function_kwargs={'par':100000})
+        acquisition_function_kwargs={'par':0.01}
+        )
+
+#smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
+#        tae_runner=rosenbrock_2d,
+#        acquisition_function=smac.solver.acquisition_func)
 
 smac.optimize()
