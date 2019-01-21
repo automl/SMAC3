@@ -257,6 +257,7 @@ class SMAC(object):
         model_def_kwargs = {
             'types':types,
             'bounds':bounds,
+            'instance_features':scenario.feature_array,
             'seed':rng.randint(MAXINT),
             'pca_components':scenario.PCA_DIM,
             'log_y':scenario.transform_y in ["LOG", "LOGS"],
