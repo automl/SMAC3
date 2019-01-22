@@ -1,5 +1,7 @@
 import typing
 
+import numpy as np
+
 from pyDOE import lhs
 
 from ConfigSpace.configuration_space import Configuration
@@ -39,6 +41,9 @@ class LHDesign(MultiConfigInitialDesign):
 
         cs = self.scenario.cs
         params = cs.get_hyperparameters()
+
+        # manual seeding of lhd design
+        np.random.seed(self.rng.randint(1,2*20))
 
         lhd = lhs(n=len(params), samples=self.init_budget)
 
