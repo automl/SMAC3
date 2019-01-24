@@ -23,21 +23,22 @@ from smac.initial_design.default_configuration_design import DefaultConfiguratio
 from smac.runhistory.runhistory2epm import RunHistory2EPM4InvScaledCost, \
 RunHistory2EPM4LogScaledCost, RunHistory2EPM4Cost
 
-def wrapper(x, **kwargs):
-    return benchmark.objective_function(x)['function_value']
-
-def run_smac(smac_config):
-
-    # TODO: treat it as non-deterministic
+def run_smac(smac_config, instance="Branin", seed=12345):
+    
+    def wrapper(x, **kwargs):
+        return benchmark.objective_function(x)['function_value']
+    
+    # get problem instance
+    benchmark_name = instance
+    module = importlib.import_module(HPOLIB_SYNTH_FUNCTIONS[benchmark_name])
+    benchmark = getattr(module, benchmark_name)(rng=seed)
+    num_function_evals = benchmark.get_meta_information()['num_function_evals']
+    cs = benchmark.get_configuration_space()
+    cs.random = np.random.RandomState(seed=seed)
+    print("Run SMAC on %s with seed %d" %(benchmark.get_meta_information()["name"], seed))
 
     print(smac_config)
     # Build Configuration Space which defines all parameters and their ranges
-    cs = ConfigurationSpace()
-    
-    x0 = UniformFloatHyperparameter("x0", -5, 5, default_value=-3)
-    x1 = UniformFloatHyperparameter("x1", -5, 5, default_value=-4)
-    cs.add_hyperparameters([x0,x1])
-    
     
     # Scenario object
     scenario = Scenario({"run_obj": "quality",   # we optimize quality (alternatively runtime)
@@ -59,7 +60,7 @@ def run_smac(smac_config):
     # Optimize, using a SMAC-object
     print("Optimizing! Depending on your machine, this might take a few minutes.")
     smac = SMAC(scenario=scenario, 
-                rng=np.random.RandomState(42),
+                rng=np.random.RandomState(seed),
                 tae_runner=wrapper,
                 initial_design=init_design[smac_config['init_design']],
                 initial_design_kwargs={'n_configs_x_params':smac_config['n_configs_x_params'],
@@ -97,13 +98,14 @@ def run_smac(smac_config):
     
     traj = smac.get_trajectory()
     
+    f_opt = benchmark.get_meta_information()['f_opt']
     t_last = 0
     c_last = 0
     auc = 0
     for id_, t_entry in enumerate(traj):
         if id_ == 0: # skip first dummy entry
             continue
-        c = np.log10(t_entry.train_perf)
+        c = np.log10(t_entry.train_perf - f_opt)
         t = t_entry.ta_runs
         auc += (t - t_last) * c_last
         t_last = t
@@ -129,17 +131,6 @@ HPOLIB_SYNTH_FUNCTIONS = {
     "SinOne": "hpolib.benchmarks.synthetic_functions.sin_one",
     "SinTwo": "hpolib.benchmarks.synthetic_functions.sin_two"
 }
-
-benchmark_name = "Branin"
-seed = 42
-module = importlib.import_module(HPOLIB_SYNTH_FUNCTIONS[benchmark_name])
-benchmark = getattr(module, benchmark_name)(rng=1)
-print("Run SMAC on %s with seed %d" %(benchmark.get_meta_information()["name"], seed))
-
-cs = benchmark.get_configuration_space()
-cs.random = np.random.RandomState(seed=seed)
-
-num_function_evals = benchmark.get_meta_information()['num_function_evals']
 
 logging.basicConfig(level=logging.INFO)  # logging.DEBUG for debug output
 
@@ -183,11 +174,13 @@ cs.add_hyperparameters([rand_prob])
 
 #def_value = run_smac(cs.get_default_configuration())
 
+functions = ["Branin","Camelback"]
 # Scenario object
 scenario = Scenario({"run_obj": "quality",   # we optimize quality (alternatively runtime)
-                     "runcount-limit": 10,  # maximum function evaluations
+                     "runcount-limit": 20,  # maximum function evaluations
                      "cs": cs,               # configuration space
-                     "deterministic": "true"
+                     "deterministic": False,
+                     "instances": [[f,""] for f in functions]
                      })
 
 # Optimize, using a SMAC-object
