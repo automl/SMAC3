@@ -47,23 +47,32 @@ def run_smac(smac_config):
                          "output_dir": None
                          })
     
+    # string translations
+    acq = {"LCB": LCB, "EI": EI, "PI": PI}
+    r2e = {"InvScaled(y)": RunHistory2EPM4InvScaledCost, 
+           "LogScaled(y)": RunHistory2EPM4LogScaledCost,
+           "y": RunHistory2EPM4Cost}
+    init_design = {"LHD": LHDesign,
+                   "Sobol": SobolDesign, 
+                   "Default": DefaultConfiguration}
+    
     # Optimize, using a SMAC-object
     print("Optimizing! Depending on your machine, this might take a few minutes.")
     smac = SMAC(scenario=scenario, 
                 rng=np.random.RandomState(42),
                 tae_runner=wrapper,
-                initial_design=smac_config['init_design'],
+                initial_design=init_design[smac_config['init_design']],
                 initial_design_kwargs={'n_configs_x_params':smac_config['n_configs_x_params'],
                                        'max_config_fracs':1.0},
                 random_configuration_chooser_kwargs={'prob': smac_config['rand_prob']},
-                runhistory2epm=smac_config['y_trans'],
+                runhistory2epm=r2e[smac_config['y_trans']],
                 model_kwargs={'num_trees': smac_config['num_trees'],
                               'log_y': smac_config['log_y'],
                               'do_bootstrapping': smac_config['do_bootstrapping'],
                               'ratio_features': smac_config['ratio_features'],
                               'min_samples_split': smac_config['min_samples_split'],
                               'min_samples_leaf': smac_config['min_samples_leaf']},
-                acquisition_function=smac_config['acq_func'],
+                acquisition_function=acq[smac_config['acq_func']],
                 acquisition_function_kwargs={'par':smac_config['par'] if smac_config['par'] is not None else smac_config['lcb_par']}
             )
     
@@ -146,23 +155,23 @@ min_samples_leaf = UniformIntegerHyperparameter("min_samples_leaf", 1, 100, defa
 cs.add_hyperparameters([num_trees, log_y, do_bootstrapping, ratio_features, min_samples_split, min_samples_leaf])
 
 # acquisition function
-acq_func = CategoricalHyperparameter("acq_func", [LCB, EI, PI], default_value=EI)
+acq_func = CategoricalHyperparameter("acq_func", ["LCB", "EI", "PI"], default_value="EI")
 lcb_par = UniformFloatHyperparameter("lcb_par", 10**-5, 10**5, default_value=0.1, log=True)
 par = UniformFloatHyperparameter("par", 0, 10, default_value=0)
 cs.add_hyperparameters([acq_func, lcb_par, par])
 
-use_lcb_par = InCondition(child=lcb_par, parent=acq_func, values=[LCB])
-use_par = InCondition(child=par, parent=acq_func, values=[EI, PI])
+use_lcb_par = InCondition(child=lcb_par, parent=acq_func, values=["LCB"])
+use_par = InCondition(child=par, parent=acq_func, values=["EI", "PI"])
 cs.add_conditions([use_lcb_par, use_par])
 
 # y transformation
 y_trans = CategoricalHyperparameter("y_trans", 
-                                    [RunHistory2EPM4InvScaledCost, RunHistory2EPM4LogScaledCost, RunHistory2EPM4Cost], 
-                                    default_value=RunHistory2EPM4LogScaledCost)
+                                    ["InvScaled(y)", "LogScaled(y)", "y"], 
+                                    default_value="LogScaled(y)")
 cs.add_hyperparameters([y_trans])
 
 # initial design
-init_design = CategoricalHyperparameter("init_design", [LHDesign, SobolDesign, DefaultConfiguration], default_value=SobolDesign)
+init_design = CategoricalHyperparameter("init_design", ["LHD", "Sobol", "Default"], default_value="Sobol")
 n_configs_x_params = UniformIntegerHyperparameter("n_configs_x_params", 0, 20, default_value=10)
 cs.add_hyperparameters([init_design, n_configs_x_params])
 
@@ -174,10 +183,9 @@ cs.add_hyperparameters([rand_prob])
 
 # Scenario object
 scenario = Scenario({"run_obj": "quality",   # we optimize quality (alternatively runtime)
-                     "runcount-limit": 100,  # maximum function evaluations
+                     "runcount-limit": 10,  # maximum function evaluations
                      "cs": cs,               # configuration space
-                     "deterministic": "true",
-                     "output_dir": None
+                     "deterministic": "true"
                      })
 
 # Optimize, using a SMAC-object
@@ -185,7 +193,6 @@ smac = SMAC(scenario=scenario,
         rng=np.random.RandomState(42),
         tae_runner=run_smac,
         )
-smac.output_dir = None
 
 meta_inc  = smac.optimize()
 run_smac(meta_inc)
