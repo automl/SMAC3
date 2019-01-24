@@ -236,8 +236,7 @@ class SMAC(object):
            }
         rand_conf_chooser_kwargs.update(random_configuration_chooser_kwargs)
         if random_configuration_chooser is None:
-            random_configuration_chooser = ChooserProb(prob=scenario.rand_prob,
-                                                       rng=rng)
+            random_configuration_chooser = ChooserProb(**rand_conf_chooser_kwargs)
         elif inspect.isclass(random_configuration_chooser):
             random_configuration_chooser = random_configuration_chooser(**rand_conf_chooser_kwargs)
         elif not isinstance(random_configuration_chooser, RandomConfigurationChooser):
@@ -306,7 +305,7 @@ class SMAC(object):
                                                 **acq_func_opt_kwargs)
         elif inspect.isclass(acquisition_function_optimizer):
             acquisition_function_optimizer = \
-                acquisition_function_optimizer(**acq_def_kwargs)
+                acquisition_function_optimizer(**acq_func_opt_kwargs)
         elif not isinstance(
                 acquisition_function_optimizer,
                 AcquisitionFunctionMaximizer,
