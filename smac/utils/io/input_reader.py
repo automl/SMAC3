@@ -173,7 +173,7 @@ class InputReader(object):
                 instances[tmp[0]] = np.array(tmp[1:], dtype=np.double)
         return [f.strip() for f in lines[0].rstrip("\n").split(",")[1:]], instances
 
-    def read_pcs_file(self, fn: str):
+    def read_pcs_file(self, fn: str, logger=None):
         """Encapsulates generating configuration space object.
         Automatically detects whether the cs is saved in json, pcs or pcs_new.
 
@@ -186,13 +186,18 @@ class InputReader(object):
         -------
             ConfigSpace: ConfigSpace
         """
+        # Three possible formats: json, pcs and pcs_new. We prefer json.
         with open(fn) as fp:
             if fn.endswith('.json'):
                 cs = pcs_json.read(fp.read())
+                if logger:
+                    logger.debug("Loading pcs as json from: %s", fn)
             else:
                 pcs_str = fp.readlines()
                 try:
                     cs = pcs.read(pcs_str)
-                except:
+                except NotImplementedError:
+                    if logger:
+                        logger.debug("Could not parse pcs file with old format; trying new format ...")
                     cs = pcs_new.read(pcs_str)
         return cs

@@ -62,19 +62,29 @@ class InputReaderTest(unittest.TestCase):
         hyp = UniformFloatHyperparameter('A', 0.0, 1.0, default_value=0.5)
         cs.add_hyperparameters([hyp])
 
-        # pcs_new
         output_writer = OutputWriter()
         input_reader = InputReader()
 
+        # pcs_new
         output_writer.save_configspace(cs, self.pcs_fn, 'pcs_new')
         restored_cs = input_reader.read_pcs_file(self.pcs_fn)
         self.assertEqual(cs, restored_cs)
+        restored_cs = input_reader.read_pcs_file(self.pcs_fn, self.logger)
+        self.assertEqual(cs, restored_cs)
 
+        # json
         output_writer.save_configspace(cs, self.json_fn, 'json')
         restored_cs = input_reader.read_pcs_file(self.json_fn)
         self.assertEqual(cs, restored_cs)
+        restored_cs = input_reader.read_pcs_file(self.json_fn, self.logger)
+        self.assertEqual(cs, restored_cs)
 
+        # pcs
         with open(self.pcs_fn, 'w') as fh:
             fh.write(pcs.write(cs))
         restored_cs = input_reader.read_pcs_file(self.pcs_fn)
+        self.assertEqual(cs, restored_cs)
+        restored_cs = input_reader.read_pcs_file(self.pcs_fn)
+        self.assertEqual(cs, restored_cs)
+        restored_cs = input_reader.read_pcs_file(self.pcs_fn, self.logger)
         self.assertEqual(cs, restored_cs)
