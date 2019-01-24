@@ -66,6 +66,7 @@ def run_smac(smac_config):
                                        'max_config_fracs':1.0},
                 random_configuration_chooser_kwargs={'prob': smac_config['rand_prob']},
                 runhistory2epm=r2e[smac_config['y_trans']],
+                runhistory2epm_kwargs={'scale_perc': smac_config['scale_perc']},
                 model_kwargs={'num_trees': smac_config['num_trees'],
                               'log_y': smac_config['log_y'],
                               'do_bootstrapping': smac_config['do_bootstrapping'],
@@ -168,7 +169,8 @@ cs.add_conditions([use_lcb_par, use_par])
 y_trans = CategoricalHyperparameter("y_trans", 
                                     ["InvScaled(y)", "LogScaled(y)", "y"], 
                                     default_value="LogScaled(y)")
-cs.add_hyperparameters([y_trans])
+scale_perc = UniformIntegerHyperparameter("scale_perc", 1, 50, default_value=5, log=True)
+cs.add_hyperparameters([y_trans, scale_perc])
 
 # initial design
 init_design = CategoricalHyperparameter("init_design", ["LHD", "Sobol", "Default"], default_value="Sobol")

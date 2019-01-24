@@ -50,6 +50,7 @@ class AbstractRunHistory2EPM(object):
         impute_censored_data: bool=False,
         impute_state: typing.Optional[typing.List[StatusType]]=None,
         imputor: typing.Optional[BaseImputor]=None,
+        scale_perc: int=5,
         rng: typing.Optional[np.random.RandomState]=None,
     ) -> None:
         """Constructor
@@ -71,6 +72,9 @@ class AbstractRunHistory2EPM(object):
             List of states that mark censored data (such as StatusType.TIMEOUT)
             in combination with runtime < cutoff_time
             If None, set to [StatusType.CAPPED, ]
+        scale_perc: int
+            scaled y-transformation use a percentile to estimate distance to optimum;
+            only used by some subclasses of AbstractRunHistory2EPM
         rng : numpy.random.RandomState
             only used for reshuffling data after imputation
         """
@@ -82,6 +86,7 @@ class AbstractRunHistory2EPM(object):
         self.scenario = scenario
         self.rng = rng
         self.num_params = num_params
+        self.scale_perc = scale_perc
 
         # Configuration
         self.success_states = success_states
@@ -395,7 +400,7 @@ class RunHistory2EPM4ScaledCost(RunHistory2EPM4Cost):
                                      instances=instances, par_factor=par_factor)
 
         if y.size > 0:
-            perc = np.percentile(y, 5)
+            perc = np.percentile(y, self.scale_perc)
             min_y = 2 * np.min(y) - perc # ensure that scaled y cannot be 0
             max_y = np.max(y)
             # linear scaling
@@ -435,7 +440,7 @@ class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
                                      instances=instances, par_factor=par_factor)
 
         if y.size > 0:
-            perc = np.percentile(y, 5)
+            perc = np.percentile(y, self.scale_perc)
             min_y = 2 * np.min(y) - perc # ensure that scaled y cannot be 0
             max_y = np.max(y)
             # linear scaling
@@ -476,7 +481,7 @@ class RunHistory2EPM4SqrtScaledCost(RunHistory2EPM4Cost):
                                      instances=instances, par_factor=par_factor)
 
         if y.size > 0:
-            perc = np.percentile(y, 5)
+            perc = np.percentile(y, self.scale_perc)
             min_y = 2 * np.min(y) - perc # ensure that scaled y cannot be 0
             max_y = np.max(y)
             # linear scaling
@@ -517,7 +522,7 @@ class RunHistory2EPM4LogScaledCost(RunHistory2EPM4Cost):
                                      instances=instances, par_factor=par_factor)
 
         if y.size > 0:
-            perc = np.percentile(y, 5) 
+            perc = np.percentile(y, self.scale_perc) 
             min_y = 2 * np.min(y) - perc # ensure that scaled y cannot be 0
             max_y = np.max(y)
             # linear scaling

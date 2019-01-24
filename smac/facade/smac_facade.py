@@ -462,7 +462,8 @@ class SMAC(object):
             'success_states':[StatusType.SUCCESS, ],
             'impute_censored_data':True,
             'impute_state':[StatusType.CAPPED, ],
-            'imputor':imputor
+            'imputor':imputor,
+            'scale_perc' : 5
             }
         if scenario.run_obj == 'quality':
             r2e_def_kwargs.update({'success_states':[StatusType.SUCCESS,
