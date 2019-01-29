@@ -11,8 +11,7 @@ import numpy as np
 
 from smac.configspace import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
-from smac.configspace import pcs, pcs_new
-from smac.configspace import json as pcs_json
+from smac.configspace import pcs
 from smac.utils.io.input_reader import InputReader
 from smac.utils.io.output_writer import OutputWriter
 
@@ -40,7 +39,7 @@ class InputReaderTest(unittest.TestCase):
             if output_file:
                 try:
                     os.remove(output_file)
-                except FileNotFoundError as e:
+                except FileNotFoundError:
                     pass
 
         os.chdir(self.current_dir)
@@ -57,7 +56,7 @@ class InputReaderTest(unittest.TestCase):
             self.assertEqual(feats_original[i], list(feats[1][i]))
 
     def test_save_load_configspace(self):
-        """ Check if inputreader can load different config-spaces """
+        """Check if inputreader can load different config-spaces"""
         cs = ConfigurationSpace()
         hyp = UniformFloatHyperparameter('A', 0.0, 1.0, default_value=0.5)
         cs.add_hyperparameters([hyp])
