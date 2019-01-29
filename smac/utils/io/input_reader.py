@@ -174,7 +174,7 @@ class InputReader(object):
         return [f.strip() for f in lines[0].rstrip("\n").split(",")[1:]], instances
 
     @staticmethod
-    def read_pcs_file(self, fn: str, logger=None):
+    def read_pcs_file(fn: str, logger=None):
         """Encapsulates generating configuration space object from file.
 
         Automatically detects whether the cs is saved in json, pcs or pcs_new.
