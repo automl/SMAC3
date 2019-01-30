@@ -233,8 +233,8 @@ class SMAC(object):
                 runhistory.aggregate_func = aggregate_func
 
         rand_conf_chooser_kwargs = {
-           'prob':scenario.rand_prob,
-           'rng':rng
+           'prob': scenario.rand_prob,
+           'rng': rng
            }
         if random_configuration_chooser_kwargs is not None:
             rand_conf_chooser_kwargs.update(random_configuration_chooser_kwargs)
@@ -257,18 +257,18 @@ class SMAC(object):
         # initial EPM
         types, bounds = get_types(scenario.cs, scenario.feature_array)
         model_def_kwargs = {
-            'types':types,
-            'bounds':bounds,
-            'instance_features':scenario.feature_array,
-            'seed':rng.randint(MAXINT),
-            'pca_components':scenario.PCA_DIM,
-            'log_y':scenario.transform_y in ["LOG", "LOGS"],
-            'num_trees':scenario.rf_num_trees,
-            'do_bootstrapping':scenario.rf_do_bootstrapping,
-            'ratio_features':scenario.rf_ratio_features,
-            'min_samples_split':scenario.rf_min_samples_split,
-            'min_samples_leaf':scenario.rf_min_samples_leaf,
-            'max_depth':scenario.rf_max_depth
+            'types': types,
+            'bounds': bounds,
+            'instance_features': scenario.feature_array,
+            'seed': rng.randint(MAXINT),
+            'pca_components': scenario.PCA_DIM,
+            'log_y': scenario.transform_y in ["LOG", "LOGS"],
+            'num_trees': scenario.rf_num_trees,
+            'do_bootstrapping': scenario.rf_do_bootstrapping,
+            'ratio_features': scenario.rf_ratio_features,
+            'min_samples_split': scenario.rf_min_samples_split,
+            'min_samples_leaf': scenario.rf_min_samples_leaf,
+            'max_depth': scenario.rf_max_depth
             }
         if model_kwargs is not None:
             model_def_kwargs.update(model_kwargs)
@@ -298,11 +298,11 @@ class SMAC(object):
 
         # initialize optimizer on acquisition function
         acq_func_opt_kwargs = {
-            'acquisition_function':acquisition_function,
-            'config_space':scenario.cs,
-            'rng':np.random.RandomState(seed=rng.randint(MAXINT)),
-            'max_steps':scenario.sls_max_steps,
-            'n_steps_plateau_walk':scenario.sls_n_steps_plateau_walk
+            'acquisition_function': acquisition_function,
+            'config_space': scenario.cs,
+            'rng': np.random.RandomState(seed=rng.randint(MAXINT)),
+            'max_steps': scenario.sls_max_steps,
+            'n_steps_plateau_walk': scenario.sls_n_steps_plateau_walk
             }
         if acquisition_function_optimizer_kwargs is not None:
             acq_func_opt_kwargs.update(acquisition_function_optimizer_kwargs)
@@ -326,12 +326,12 @@ class SMAC(object):
         # First case, if tae_runner is None, the target algorithm is a call
         # string in the scenario file
         tae_def_kwargs = {
-            'stats':self.stats,
-            'run_obj':scenario.run_obj,
-            'runhistory':runhistory,
-            'par_factor':scenario.par_factor,
-            'cost_for_crash':scenario.cost_for_crash,
-            'abort_on_first_run_crash':scenario.abort_on_first_run_crash
+            'stats': self.stats,
+            'run_obj': scenario.run_obj,
+            'runhistory': runhistory,
+            'par_factor': scenario.par_factor,
+            'cost_for_crash': scenario.cost_for_crash,
+            'abort_on_first_run_crash': scenario.abort_on_first_run_crash
             }
         if tae_runner_kwargs is not None:
             tae_def_kwargs.update(tae_runner_kwargs)
@@ -366,22 +366,22 @@ class SMAC(object):
 
         # initialize intensification
         intensifier_def_kwargs = {
-            'tae_runner':tae_runner,
-            'stats':self.stats,
-            'traj_logger':traj_logger,
-            'rng':rng,
-            'instances':scenario.train_insts,
-            'cutoff':scenario.cutoff,
-            'deterministic':scenario.deterministic,
-            'run_obj_time':scenario.run_obj == "runtime",
-            'always_race_against':scenario.cs.get_default_configuration()
+            'tae_runner': tae_runner,
+            'stats': self.stats,
+            'traj_logger': traj_logger,
+            'rng': rng,
+            'instances': scenario.train_insts,
+            'cutoff': scenario.cutoff,
+            'deterministic': scenario.deterministic,
+            'run_obj_time': scenario.run_obj == "runtime",
+            'always_race_against': scenario.cs.get_default_configuration()
                                    if scenario.always_race_default else None,
-            'use_ta_time_bound':scenario.use_ta_time,
-            'instance_specifics':scenario.instance_specific,
-            'minR':scenario.minR,
-            'maxR':scenario.maxR,
-            'adaptive_capping_slackfactor':scenario.intens_adaptive_capping_slackfactor,
-            'min_chall':scenario.intens_min_chall
+            'use_ta_time_bound': scenario.use_ta_time,
+            'instance_specifics': scenario.instance_specific,
+            'minR': scenario.minR,
+            'maxR': scenario.maxR,
+            'adaptive_capping_slackfactor': scenario.intens_adaptive_capping_slackfactor,
+            'min_chall': scenario.intens_min_chall
             }
         if intensifier_kwargs is not None:
             intensifier_def_kwargs.update(intensifier_kwargs)
@@ -404,15 +404,15 @@ class SMAC(object):
                 "Either use initial_design or initial_configurations; but not both")
 
         init_design_def_kwargs = {
-            'tae_runner':tae_runner,
-            'scenario':scenario,
-            'stats':self.stats,
-            'traj_logger':traj_logger,
-            'runhistory':runhistory,
-            'rng':rng,
-            'configs':initial_configurations,
-            'intensifier':intensifier,
-            'aggregate_func':aggregate_func,
+            'tae_runner': tae_runner,
+            'scenario': scenario,
+            'stats': self.stats,
+            'traj_logger': traj_logger,
+            'runhistory': runhistory,
+            'rng': rng,
+            'configs': initial_configurations,
+            'intensifier': intensifier,
+            'aggregate_func': aggregate_func,
             'n_configs_x_params': 10,
             'max_config_fracs': 0.25
             }
@@ -466,17 +466,17 @@ class SMAC(object):
                                max_iter=2)        
 
         r2e_def_kwargs = {
-            'scenario':scenario, 
-            'num_params':num_params,
-            'success_states':[StatusType.SUCCESS, ],
-            'impute_censored_data':True,
-            'impute_state':[StatusType.CAPPED, ],
-            'imputor':imputor,
+            'scenario': scenario, 
+            'num_params': num_params,
+            'success_states': [StatusType.SUCCESS, ],
+            'impute_censored_data': True,
+            'impute_state': [StatusType.CAPPED, ],
+            'imputor': imputor,
             'scale_perc' : 5
             }
         if scenario.run_obj == 'quality':
-            r2e_def_kwargs.update({'success_states':[StatusType.SUCCESS,
-                                                    StatusType.CRASHED],
+            r2e_def_kwargs.update({'success_states': [StatusType.SUCCESS,
+                                                      StatusType.CRASHED],
                                   'impute_censored_data': False,
                                   'impute_state': None})
         if runhistory2epm_kwargs is not None:
