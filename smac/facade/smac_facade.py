@@ -76,21 +76,21 @@ class SMAC(object):
     def __init__(self,
                  scenario: Scenario,
                  tae_runner: typing.Optional[typing.Union[ExecuteTARun, typing.Callable]]=None,
-                 tae_runner_kwargs : dict={},
+                 tae_runner_kwargs : typing.Optional[dict]=None,
                  runhistory: typing.Optional[RunHistory]=None,
-                 runhistory_kwargs: dict={},
+                 runhistory_kwargs: typing.Optional[dict]=None,
                  intensifier: typing.Optional[Intensifier]=None,
-                 intensifier_kwargs: dict={},
+                 intensifier_kwargs: typing.Optional[dict]=None,
                  acquisition_function: typing.Optional[AbstractAcquisitionFunction]=None,
-                 acquisition_function_kwargs: typing.Optional[typing.DefaultDict]={},
+                 acquisition_function_kwargs: typing.Optional[dict]=None,
                  acquisition_function_optimizer: typing.Optional[AcquisitionFunctionMaximizer]=None,
-                 acquisition_function_optimizer_kwargs: dict={},
+                 acquisition_function_optimizer_kwargs:typing.Optional[dict]=None,
                  model: typing.Optional[AbstractEPM]=None,
-                 model_kwargs: typing.Optional[dict]={},
+                 model_kwargs: typing.Optional[dict]=None,
                  runhistory2epm: typing.Optional[AbstractRunHistory2EPM]=None,
-                 runhistory2epm_kwargs: dict={},
+                 runhistory2epm_kwargs: typing.Optional[dict]=None,
                  initial_design: typing.Optional[InitialDesign]=None,
-                 initial_design_kwargs: dict={},
+                 initial_design_kwargs: typing.Optional[dict]=None,
                  initial_configurations: typing.Optional[typing.List[Configuration]]=None,
                  stats: typing.Optional[Stats]=None,
                  restore_incumbent: typing.Optional[Configuration]=None,
@@ -98,7 +98,8 @@ class SMAC(object):
                  smbo_class: typing.Optional[SMBO]=None,
                  run_id: typing.Optional[int]=None,
                  random_configuration_chooser: typing.Optional[RandomConfigurationChooser]=None,
-                 random_configuration_chooser_kwargs: dict={}):
+                 random_configuration_chooser_kwargs: typing.Optional[dict]=None
+                 ):
         """
         Constructor
 
@@ -113,34 +114,34 @@ class SMAC(object):
             :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.
             If not set, it will be initialized with the
             :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.
-        tae_runner_kwargs:
+        tae_runner_kwargs: typing.Optional[dict]
             arguments passed to constructor of '~tae_runner'
         runhistory : RunHistory
             runhistory to store all algorithm runs
-        runhistory_kwargs : RunHistory
+        runhistory_kwargs : typing.Optional[dict]
             arguments passed to constructor of runhistory.
             We strongly advise against changing the aggregation function,
             since it will break some code assumption
         intensifier : Intensifier
             intensification object to issue a racing to decide the current
             incumbent
-        intensifier_kwargs: dict
+        intensifier_kwargs: typing.Optional[dict]
             arguments passed to the constructor of '~intensifier'
         acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction
             Class or object that implements the :class:`~smac.optimizer.acquisition.AbstractAcquisitionFunction`.
             Will use :class:`~smac.optimizer.acquisition.EI` or :class:`~smac.optimizer.acquisition.LogEI` if not set.
             `~acquisition_function_kwargs` is passed to the class constructor.
-        acquisition_function_kwargs : dict
+        acquisition_function_kwargs : typing.Optional[dict]
             dictionary to pass specific arguments to ~acquisition_function
         acquisition_function_optimizer : ~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
             Object that implements the :class:`~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer`.
             Will use :class:`smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch` if not set.
-        acquisition_function_optimizer_kwargs: dict
+        acquisition_function_optimizer_kwargs: typing.Optional[dict]
             Arguments passed to constructor of '~acquisition_function_optimizer'
         model : AbstractEPM
             Model that implements train() and predict(). Will use a
             :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` if not set.
-        model_kwargs : dict
+        model_kwargs : typing.Optional[dict]
             Arguments passed to constructor of '~model'
         runhistory2epm : ~smac.runhistory.runhistory2epm.RunHistory2EMP
             Object that implements the AbstractRunHistory2EPM. If None,
@@ -148,11 +149,11 @@ class SMAC(object):
             if objective is cost or
             :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost`
             if objective is runtime.
-        runhistory2epm_kwargs: dict
+        runhistory2epm_kwargs: typing.Optional[dict]
             Arguments passed to the constructor of '~runhistory2epm' 
         initial_design : InitialDesign
             initial sampling design
-        initial_design_kwargs: dict
+        initial_design_kwargs: typing.Optional[dict]
             arguments passed to constructor of `~initial_design' 
         initial_configurations : typing.List[Configuration]
             list of initial configurations for initial design --
@@ -171,7 +172,7 @@ class SMAC(object):
             chosen.
         random_configuration_chooser : ~smac.optimizer.random_configuration_chooser.RandomConfigurationChooser
             How often to choose a random configuration during the intensification procedure.
-        random_configuration_chooser_kwargs : dict
+        random_configuration_chooser_kwargs : typing.Optional[dict]
             arguments of constructor for '~random_configuration_chooser'
 
         """
@@ -221,7 +222,8 @@ class SMAC(object):
 
         # initialize empty runhistory
         runhistory_def_kwargs = {'aggregate_func': aggregate_func}
-        runhistory_def_kwargs.update(runhistory_kwargs)
+        if runhistory_kwargs is not None:
+            runhistory_def_kwargs.update(runhistory_kwargs)
         if runhistory is None:
             runhistory = RunHistory(**runhistory_def_kwargs)
         elif inspect.isclass(runhistory):
@@ -234,7 +236,8 @@ class SMAC(object):
            'prob':scenario.rand_prob,
            'rng':rng
            }
-        rand_conf_chooser_kwargs.update(random_configuration_chooser_kwargs)
+        if random_configuration_chooser_kwargs is not None:
+            rand_conf_chooser_kwargs.update(random_configuration_chooser_kwargs)
         if random_configuration_chooser is None:
             random_configuration_chooser = ChooserProb(**rand_conf_chooser_kwargs)
         elif inspect.isclass(random_configuration_chooser):
@@ -267,7 +270,8 @@ class SMAC(object):
             'min_samples_leaf':scenario.rf_min_samples_leaf,
             'max_depth':scenario.rf_max_depth
             }
-        model_def_kwargs.update(model_kwargs)
+        if model_kwargs is not None:
+            model_def_kwargs.update(model_kwargs)
         if model is None:
             model = RandomForestWithInstances(**model_def_kwargs)
         elif inspect.isclass(model):
@@ -277,7 +281,8 @@ class SMAC(object):
             
         # initial acquisition function
         acq_def_kwargs = {'model': model}
-        acq_def_kwargs.update(acquisition_function_kwargs)
+        if acquisition_function_kwargs is not None:
+            acq_def_kwargs.update(acquisition_function_kwargs)
         if acquisition_function is None:
             if scenario.transform_y in ["LOG", "LOGS"]:
                 acquisition_function = LogEI(**acq_def_kwargs)
@@ -299,7 +304,8 @@ class SMAC(object):
             'max_steps':scenario.sls_max_steps,
             'n_steps_plateau_walk':scenario.sls_n_steps_plateau_walk
             }
-        acq_func_opt_kwargs.update(acquisition_function_optimizer_kwargs)
+        if acquisition_function_optimizer_kwargs is not None:
+            acq_func_opt_kwargs.update(acquisition_function_optimizer_kwargs)
         if acquisition_function_optimizer is None:
             acquisition_function_optimizer = InterleavedLocalAndRandomSearch(
                                                 **acq_func_opt_kwargs)
@@ -327,7 +333,8 @@ class SMAC(object):
             'cost_for_crash':scenario.cost_for_crash,
             'abort_on_first_run_crash':scenario.abort_on_first_run_crash
             }
-        tae_def_kwargs.update(tae_runner_kwargs)
+        if tae_runner_kwargs is not None:
+            tae_def_kwargs.update(tae_runner_kwargs)
         if tae_runner is None:
             tae_def_kwargs['ta']=scenario.ta
             tae_runner = ExecuteTARunOld(**tae_def_kwargs)
@@ -376,7 +383,8 @@ class SMAC(object):
             'adaptive_capping_slackfactor':scenario.intens_adaptive_capping_slackfactor,
             'min_chall':scenario.intens_min_chall
             }
-        intensifier_def_kwargs.update(intensifier_kwargs)
+        if intensifier_kwargs is not None:
+            intensifier_def_kwargs.update(intensifier_kwargs)
         if intensifier is None:
             intensifier = Intensifier(**intensifier_def_kwargs)
         elif inspect.isclass(intensifier):
@@ -408,7 +416,8 @@ class SMAC(object):
             'n_configs_x_params': 10,
             'max_config_fracs': 0.25
             }
-        init_design_def_kwargs.update(initial_design_kwargs)
+        if initial_design_kwargs is not None: 
+            init_design_def_kwargs.update(initial_design_kwargs)
         if initial_configurations is not None:
             initial_design = MultiConfigInitialDesign(**init_design_def_kwargs)
         elif initial_design is None:
@@ -470,7 +479,8 @@ class SMAC(object):
                                                     StatusType.CRASHED],
                                   'impute_censored_data': False,
                                   'impute_state': None})
-        r2e_def_kwargs.update(runhistory2epm_kwargs)
+        if runhistory2epm_kwargs is not None:
+            r2e_def_kwargs.update(runhistory2epm_kwargs)
         if runhistory2epm is None:
             if scenario.run_obj == 'runtime':
                 runhistory2epm = RunHistory2EPM4LogCost(**r2e_def_kwargs)
