@@ -1,4 +1,5 @@
 import logging
+
 import numpy as np
 
 # Import ConfigSpace and different types of parameters
@@ -10,7 +11,6 @@ from smac.scenario.scenario import Scenario
 from smac.facade.smac_facade import SMAC
 from smac.optimizer.acquisition import LCB
 from smac.initial_design.latin_hypercube_design import LHDesign
-from smac import initial_design
 from smac.runhistory.runhistory2epm import RunHistory2EPM4InvScaledCost
 
 def rosenbrock_2d(x):
@@ -61,9 +61,5 @@ smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
         acquisition_function=LCB,
         acquisition_function_kwargs={'par':0.01}
         )
-
-#smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
-#        tae_runner=rosenbrock_2d,
-#        acquisition_function=smac.solver.acquisition_func)
 
 smac.optimize()

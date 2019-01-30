@@ -347,6 +347,7 @@ class SMAC(object):
             if tae_runner.runhistory is None:
                 tae_runner.runhistory = runhistory
             if tae_runner.crash_cost != scenario.cost_for_crash:
+                self.logger.warn("Overwriting tae.crash_cost by scenario.cost_for_crash")
                 tae_runner.crash_cost = scenario.cost_for_crash
         else:
             raise TypeError("Argument 'tae_runner' is %s, but must be "
