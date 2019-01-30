@@ -76,7 +76,7 @@ class SMAC(object):
     def __init__(self,
                  scenario: Scenario,
                  tae_runner: typing.Optional[typing.Union[ExecuteTARun, typing.Callable]]=None,
-                 tae_runner_kwargs : typing.Optional[dict]=None,
+                 tae_runner_kwargs: typing.Optional[dict]=None,
                  runhistory: typing.Optional[RunHistory]=None,
                  runhistory_kwargs: typing.Optional[dict]=None,
                  intensifier: typing.Optional[Intensifier]=None,
