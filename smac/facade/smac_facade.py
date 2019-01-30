@@ -51,7 +51,6 @@ from smac.utils.io.output_directory import create_output_directory
 from smac.configspace import Configuration
 from smac.optimizer import random_configuration_chooser
 
-
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
@@ -245,7 +244,6 @@ class SMAC(object):
         elif not isinstance(random_configuration_chooser, RandomConfigurationChooser):
             raise ValueError("random_configuration_chooser has to be"
                              " a class or object of RandomConfigurationChooser")
-            
 
         # reset random number generator in config space to draw different
         # random configurations with each seed given to SMAC
@@ -276,8 +274,8 @@ class SMAC(object):
             model = RandomForestWithInstances(**model_def_kwargs)
         elif inspect.isclass(model):
             model = model(**model_def_kwargs)
-        #TODO since not all our models implement the AbstractEPM,
-        #no check of object done here
+        # TODO since not all our models implement the AbstractEPM,
+        # no check of object done here
             
         # initial acquisition function
         acq_def_kwargs = {'model': model}
@@ -318,7 +316,7 @@ class SMAC(object):
         ):
             raise TypeError(
                 "Argument 'acquisition_function_optimizer' must be of type"
-                "'AcquisitionFunctionMaximizer', but is '%s'" %
+                "'AcquisitionFunctionMaximizer', but is '%s'" % 
                 type(acquisition_function_optimizer)
             )
 
@@ -336,10 +334,10 @@ class SMAC(object):
         if tae_runner_kwargs is not None:
             tae_def_kwargs.update(tae_runner_kwargs)
         if tae_runner is None:
-            tae_def_kwargs['ta']=scenario.ta
+            tae_def_kwargs['ta'] = scenario.ta
             tae_runner = ExecuteTARunOld(**tae_def_kwargs)
         elif callable(tae_runner):
-            tae_def_kwargs['ta']=tae_runner
+            tae_def_kwargs['ta'] = tae_runner
             tae_runner = ExecuteTAFuncDict(**tae_def_kwargs)
         elif inspect.isclass(tae_runner):
             tae_runner = tae_runner(**tae_def_kwargs)
@@ -396,7 +394,7 @@ class SMAC(object):
                 intensifier.stats = self.stats
             if intensifier.traj_logger is None:
                 intensifier.traj_logger = traj_logger
-        #TODO: no further check since we have no abstract intensifier
+        # TODO: no further check since we have no abstract intensifier
 
         # initial design
         if initial_design is not None and initial_configurations is not None:
@@ -436,7 +434,7 @@ class SMAC(object):
                                  "'%s' is" % scenario.initial_incumbent)
         elif inspect.isclass(initial_design):
             initial_design = initial_design(**init_design_def_kwargs)
-        elif isinstance(initial_design,InitialDesign):
+        elif isinstance(initial_design, InitialDesign):
             if initial_design.tae_runner is None:
                 initial_design.tae_runner = tae_runner
             if initial_design.scenario is None:
@@ -466,7 +464,7 @@ class SMAC(object):
                                max_iter=2)        
 
         r2e_def_kwargs = {
-            'scenario': scenario, 
+            'scenario': scenario,
             'num_params': num_params,
             'success_states': [StatusType.SUCCESS, ],
             'impute_censored_data': True,
