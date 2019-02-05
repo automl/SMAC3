@@ -12,13 +12,14 @@ from nose.plugins.attrib import attr
 from smac.configspace import ConfigurationSpace
 
 from smac.epm.base_epm import AbstractEPM
+from smac.epm.uncorrelated_mo_rf_with_instances import UncorrelatedMultiObjectiveRandomForestWithInstances
 from smac.facade.smac_facade import SMAC
 from smac.initial_design.default_configuration_design import DefaultConfiguration
 from smac.intensification.intensification import Intensifier
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
+from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, RunHistory2EPM4EIPS
 from smac.scenario.scenario import Scenario
-from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction
+from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction, EIPS
 from smac.stats.stats import Stats
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.tae.execute_ta_run import ExecuteTARun
@@ -216,10 +217,13 @@ class TestSMACFacade(unittest.TestCase):
                                   rng=np.random.RandomState(),
                                   instances=None)
         init_design = DefaultConfiguration(tae_runner=None,
-                                           scenario=None,
+                                           scenario=self.scenario,
                                            stats=None,
                                            traj_logger=None,
-                                           rng=np.random.RandomState())
+                                           rng=np.random.RandomState(),
+                                           runhistory=rh,
+                                           intensifier=intensifier,
+                                           aggregate_func=None)
         rh2epm = RunHistory2EPM4Cost(scenario=self.scenario, num_params=0)
         rh2epm.scenario = None
 
@@ -230,7 +234,6 @@ class TestSMACFacade(unittest.TestCase):
         self.assertIsNone(intensifier.stats)
         self.assertIsNone(intensifier.traj_logger)
         self.assertIsNone(init_design.tae_runner)
-        self.assertIsNone(init_design.scenario)
         self.assertIsNone(init_design.stats)
         self.assertIsNone(init_design.traj_logger)
         self.assertIsNone(rh2epm.scenario)
@@ -255,6 +258,25 @@ class TestSMACFacade(unittest.TestCase):
         self.assertIsInstance(init_design.stats, Stats)
         self.assertIsInstance(init_design.traj_logger, TrajLogger)
         self.assertIsInstance(rh2epm.scenario, Scenario)
+        self.assertIsInstance(ta.runhistory, RunHistory)
+        self.assertIsInstance(ta.stats, Stats),
+        self.assertIsInstance(ta.crash_cost, float)
+
+    def test_init_EIPS_as_arguments(self):
+        # TODO add more tests here!
+        for objective in ['runtime', 'quality']:
+            self.scenario.run_obj = objective
+            smbo = SMAC(
+                self.scenario,
+                model=UncorrelatedMultiObjectiveRandomForestWithInstances,
+                model_kwargs={'target_names': ['a', 'b']},
+                acquisition_function=EIPS,
+                runhistory2epm=RunHistory2EPM4EIPS,
+            ).solver
+            self.assertIsInstance(smbo.model, UncorrelatedMultiObjectiveRandomForestWithInstances)
+            self.assertIsInstance(smbo.acquisition_func, EIPS)
+            self.assertIsInstance(smbo.acquisition_func.model, UncorrelatedMultiObjectiveRandomForestWithInstances)
+            self.assertIsInstance(smbo.rh2EPM, RunHistory2EPM4EIPS)
 
     def test_output_structure(self):
         """Test whether output-dir is moved correctly."""

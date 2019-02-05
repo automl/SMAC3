@@ -47,6 +47,7 @@ class AbstractEPM(object):
     def __init__(self,
                  types: np.ndarray,
                  bounds: typing.List[typing.Tuple[float, float]],
+                 seed: int,
                  instance_features: np.ndarray=None,
                  pca_components: float=None,
                  ):
@@ -62,6 +63,8 @@ class AbstractEPM(object):
             have to pass np.array([2, 0]). Note that we count starting from 0.
         bounds : list
             Specifies the bounds for continuous features.
+        seed : int
+            The seed that is passed to the model library.
         instance_features : np.ndarray (I, K)
             Contains the K dimensional instance features
             of the I different instances
@@ -70,6 +73,7 @@ class AbstractEPM(object):
             dimensionality of instance features. Requires to
             set n_feats (> pca_dims).
         """
+        self.seed = seed
         self.instance_features = instance_features
         self.pca_components = pca_components
 

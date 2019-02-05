@@ -3,7 +3,7 @@ import numpy as np
 from smac.epm.base_epm import AbstractEPM
 from smac.epm.rf_with_instances import RandomForestWithInstances
 
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 
 
 class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
@@ -25,8 +25,9 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
     def __init__(
             self,
             target_names: List[str],
-            bounds: List[float],
+            bounds: List[Tuple[float, float]],
             types: np.ndarray,
+            seed: int,
             rf_kwargs: Optional[Dict[str, Any]]=None,
             **kwargs
     ):
@@ -47,7 +48,7 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
         kwargs
             See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
         """
-        super().__init__(bounds=bounds, types=types, **kwargs)
+        super().__init__(bounds=bounds, types=types, seed=seed, **kwargs)
         if rf_kwargs is None:
             rf_kwargs = {}
 

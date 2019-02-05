@@ -14,11 +14,8 @@ from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, \
     RunHistory2EPM4LogCost, RunHistory2EPM4Cost
 from smac.initial_design.initial_design import InitialDesign
-from smac.initial_design.default_configuration_design import \
-    DefaultConfiguration
-from smac.initial_design.random_configuration_design import RandomConfiguration
-from smac.initial_design.multi_config_initial_design import \
-    MultiConfigInitialDesign
+from smac.initial_design.default_configuration_design import DefaultConfiguration
+from smac.initial_design.random_configuration_design import RandomConfigurations
 from smac.intensification.intensification import Intensifier
 from smac.optimizer.epils import EPILS_Solver
 from smac.optimizer.objective import average_cost
@@ -243,28 +240,36 @@ class EPILS(object):
                 "Either use initial_design or initial_configurations; but not both")
 
         if initial_configurations is not None:
-            initial_design = MultiConfigInitialDesign(tae_runner=tae_runner,
-                                                      scenario=scenario,
-                                                      stats=self.stats,
-                                                      traj_logger=traj_logger,
-                                                      runhistory=runhistory,
-                                                      rng=rng,
-                                                      configs=initial_configurations,
-                                                      intensifier=intensifier,
-                                                      aggregate_func=aggregate_func)
+            initial_design = InitialDesign(tae_runner=tae_runner,
+                                           scenario=scenario,
+                                           stats=self.stats,
+                                           traj_logger=traj_logger,
+                                           runhistory=runhistory,
+                                           rng=rng,
+                                           configs=initial_configurations,
+                                           intensifier=intensifier,
+                                           aggregate_func=aggregate_func)
         elif initial_design is None:
             if scenario.initial_incumbent == "DEFAULT":
                 initial_design = DefaultConfiguration(tae_runner=tae_runner,
                                                       scenario=scenario,
                                                       stats=self.stats,
                                                       traj_logger=traj_logger,
-                                                      rng=rng)
+                                                      runhistory=runhistory,
+                                                      rng=rng,
+                                                      intensifier=intensifier,
+                                                      aggregate_func=aggregate_func,
+                                                      max_config_fracs=0.0)
             elif scenario.initial_incumbent == "RANDOM":
-                initial_design = RandomConfiguration(tae_runner=tae_runner,
-                                                     scenario=scenario,
-                                                     stats=self.stats,
-                                                     traj_logger=traj_logger,
-                                                     rng=rng)
+                initial_design = RandomConfigurations(tae_runner=tae_runner,
+                                                      scenario=scenario,
+                                                      stats=self.stats,
+                                                      traj_logger=traj_logger,
+                                                      runhistory=runhistory,
+                                                      rng=rng,
+                                                      intensifier=intensifier,
+                                                      aggregate_func=aggregate_func,
+                                                      max_config_fracs=0.0)
             else:
                 raise ValueError("Don't know what kind of initial_incumbent "
                                  "'%s' is" % scenario.initial_incumbent)

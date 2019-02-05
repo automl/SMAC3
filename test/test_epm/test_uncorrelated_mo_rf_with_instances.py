@@ -21,10 +21,11 @@ class TestUncorrelatedMultiObjectiveWrapper(unittest.TestCase):
         model = UncorrelatedMultiObjectiveRandomForestWithInstances(
             ['cost', 'ln(runtime)'],
             types=np.zeros((10, ), dtype=np.uint),
-            bounds=np.array([
+            bounds=[
                 (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan),
                 (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan)
-            ], dtype=object),
+            ],
+            seed=1,
             rf_kwargs={'seed': 1},
             pca_components=5
         )
@@ -57,10 +58,11 @@ class TestUncorrelatedMultiObjectiveWrapper(unittest.TestCase):
         model = UncorrelatedMultiObjectiveRandomForestWithInstances(
             ['cost', 'ln(runtime)', 'foo'],
             types=np.zeros((10,), dtype=np.uint),
-            bounds=np.array([
+            bounds=[
                 (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan),
                 (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan)
-            ], dtype=object),
+            ],
+            seed=1,
         )
 
         model.train(X[:10], Y[:10])

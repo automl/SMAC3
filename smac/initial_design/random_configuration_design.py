@@ -1,58 +1,20 @@
-from ConfigSpace import Configuration
-import numpy as np
+from typing import List
 
-from smac.initial_design.single_config_initial_design import\
-    SingleConfigInitialDesign
-from smac.tae.execute_ta_run import ExecuteTARun
-from smac.stats.stats import Stats
-from smac.utils.io.traj_logging import TrajLogger
-from smac.scenario.scenario import Scenario
+from ConfigSpace import Configuration
+
+from smac.initial_design.initial_design import InitialDesign
+
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class RandomConfiguration(SingleConfigInitialDesign):
-    """ Initial design that evaluates a single random configuration
+class RandomConfigurations(InitialDesign):
+    """ Initial design that evaluates random configurations."""
 
-    Attributes
-    ----------
 
-    """
-
-    def __init__(self,
-                 tae_runner: ExecuteTARun,
-                 scenario: Scenario,
-                 stats: Stats,
-                 traj_logger: TrajLogger,
-                 rng: np.random.RandomState,
-                 **kwargs
-                 ):
-        """Constructor
-
-        Parameters
-        ----------
-        tae_runner: ExecuteTARun
-            Target algorithm execution object.
-        scenario: Scenario
-            Scenario with all meta information (including configuration space).
-        stats: Stats
-            Statistics of experiments; needed in case initial design already
-            exhausts the budget.
-        traj_logger: TrajLogger
-            Trajectory logging to add new incumbents found by the initial
-            design.
-        rng: np.random.RandomState
-            Random state
-        """
-        super().__init__(tae_runner=tae_runner,
-                         scenario=scenario,
-                         stats=stats,
-                         traj_logger=traj_logger,
-                         rng=rng)
-
-    def _select_configuration(self) -> Configuration:
+    def _select_configurations(self) -> List[Configuration]:
         """Select a random configuration.
 
         Returns
@@ -60,6 +22,9 @@ class RandomConfiguration(SingleConfigInitialDesign):
         config: Configuration()
             Initial incumbent configuration
         """
-        config = self.scenario.cs.sample_configuration()
-        config.origin = 'Random initial design.'
-        return config
+        configs = self.scenario.cs.sample_configuration(size=self.init_budget)
+        if self.init_budget == 1:
+            configs = [configs]
+        for config in configs:
+            config.origin = 'Random initial design.'
+        return configs

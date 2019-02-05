@@ -7,7 +7,7 @@ from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
 class TestRandomConfigurationChooser(unittest.TestCase):
 
     def test_no_cool_down(self):
-        c = ChooserNoCoolDown(modulus=3.0)
+        c = ChooserNoCoolDown(rng=None, modulus=3.0)
         self.assertFalse(c.check(1))
         self.assertFalse(c.check(2))
         self.assertTrue(c.check(3))
@@ -23,7 +23,7 @@ class TestRandomConfigurationChooser(unittest.TestCase):
         self.assertFalse(c.check(5))
         self.assertTrue(c.check(6))
         self.assertTrue(c.check(30))
-        c = ChooserNoCoolDown(modulus=1.0)
+        c = ChooserNoCoolDown(rng=None, modulus=1.0)
         self.assertTrue(c.check(1))
         self.assertTrue(c.check(2))
         c.next_smbo_iteration()
@@ -31,7 +31,7 @@ class TestRandomConfigurationChooser(unittest.TestCase):
         self.assertTrue(c.check(2))
 
     def test_linear_cool_down(self):
-        c = ChooserLinearCoolDown(2.0, 1.0, 4.0)
+        c = ChooserLinearCoolDown(None, 2.0, 1.0, 4.0)
         self.assertFalse(c.check(1))
         self.assertTrue(c.check(2))
         self.assertFalse(c.check(3))

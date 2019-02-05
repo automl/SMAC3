@@ -167,8 +167,8 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             acquisition_function: AbstractAcquisitionFunction,
             config_space: ConfigurationSpace,
             rng: Union[bool, np.random.RandomState] = None,
-            max_steps: Optional[int]=None,
-            n_steps_plateau_walk: int=10,
+            max_steps: Optional[int] = None,
+            n_steps_plateau_walk: int = 10,
     ):
         super().__init__(acquisition_function, config_space, rng)
         self.max_steps = max_steps
@@ -208,7 +208,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
         init_points = self._get_initial_points(
             num_points, runhistory)
-            
+
         configs_acq = []
         # Start N local search from different random start points
         for start_point in init_points:
@@ -227,7 +227,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
         return configs_acq
 
     def _get_initial_points(self, num_points, runhistory):
-        
+
         if runhistory.empty():
             init_points = self.config_space.sample_configuration(
                 size=num_points)
@@ -244,7 +244,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                 map(lambda x: x[1],
                     configs_previous_runs_sorted[:num_configs_local_search])
             )
-            
+
         return init_points
 
     def _one_iter(

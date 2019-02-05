@@ -22,12 +22,11 @@ from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, \
 from smac.initial_design.initial_design import InitialDesign
 from smac.initial_design.default_configuration_design import \
     DefaultConfiguration
-from smac.initial_design.random_configuration_design import RandomConfiguration
+from smac.initial_design.random_configuration_design import RandomConfigurations
 from smac.initial_design.latin_hypercube_design import LHDesign
 from smac.initial_design.factorial_design import FactorialInitialDesign
 from smac.initial_design.sobol_design import SobolDesign
-from smac.initial_design.multi_config_initial_design import \
-    MultiConfigInitialDesign
+
 # intensification
 from smac.intensification.intensification import Intensifier
 # optimizer
@@ -201,11 +200,11 @@ class SMAC(object):
             and getattr(scenario, 'tuner_timeout', None) is None
             and scenario.run_obj == 'quality'
         ):
-            self.logger.info('Optimizing a deterministic scenario for '
-                             'quality without a tuner timeout - will make '
-                             'SMAC deterministic!')
-            # TODO change the intensification kdefault kwargs
+            self.logger.info('Optimizing a deterministic scenario for quality without a tuner timeout - will make '
+                             'SMAC deterministic and only evaluate one configuration per iteration!')
             scenario.intensification_percentage = 1e-10
+            scenario.min_chall = 1
+
         scenario.write()
 
         # initialize stats object
@@ -231,15 +230,17 @@ class SMAC(object):
                 runhistory.aggregate_func = aggregate_func
 
         rand_conf_chooser_kwargs = {
-           'prob': scenario.rand_prob,
            'rng': rng
-           }
+        }
         if random_configuration_chooser_kwargs is not None:
             rand_conf_chooser_kwargs.update(random_configuration_chooser_kwargs)
         if random_configuration_chooser is None:
+            if 'prob' not in rand_conf_chooser_kwargs:
+                rand_conf_chooser_kwargs['prob'] = scenario.rand_prob
             random_configuration_chooser = ChooserProb(**rand_conf_chooser_kwargs)
         elif inspect.isclass(random_configuration_chooser):
             random_configuration_chooser = random_configuration_chooser(**rand_conf_chooser_kwargs)
+        # TODO this cannot be passed as an instance?
         elif not isinstance(random_configuration_chooser, RandomConfigurationChooser):
             raise ValueError("random_configuration_chooser has to be"
                              " a class or object of RandomConfigurationChooser")
@@ -259,22 +260,29 @@ class SMAC(object):
             'instance_features': scenario.feature_array,
             'seed': rng.randint(MAXINT),
             'pca_components': scenario.PCA_DIM,
-            'log_y': scenario.transform_y in ["LOG", "LOGS"],
-            'num_trees': scenario.rf_num_trees,
-            'do_bootstrapping': scenario.rf_do_bootstrapping,
-            'ratio_features': scenario.rf_ratio_features,
-            'min_samples_split': scenario.rf_min_samples_split,
-            'min_samples_leaf': scenario.rf_min_samples_leaf,
-            'max_depth': scenario.rf_max_depth
-            }
+        }
         if model_kwargs is not None:
             model_def_kwargs.update(model_kwargs)
         if model is None:
+            for key, value in {
+                'log_y': scenario.transform_y in ["LOG", "LOGS"],
+                'num_trees': scenario.rf_num_trees,
+                'do_bootstrapping': scenario.rf_do_bootstrapping,
+                'ratio_features': scenario.rf_ratio_features,
+                'min_samples_split': scenario.rf_min_samples_split,
+                'min_samples_leaf': scenario.rf_min_samples_leaf,
+                'max_depth': scenario.rf_max_depth,
+            }.items():
+                if key not in model_def_kwargs:
+                    model_def_kwargs[key] = value
             model = RandomForestWithInstances(**model_def_kwargs)
         elif inspect.isclass(model):
             model = model(**model_def_kwargs)
-        # TODO since not all our models implement the AbstractEPM,
-        # no check of object done here
+        elif isinstance(model, AbstractEPM):
+            # TODO do I need to inject something here?
+            pass
+        else:
+            raise TypeError(type(model))
 
         # initial acquisition function
         acq_def_kwargs = {'model': model}
@@ -298,26 +306,32 @@ class SMAC(object):
             'acquisition_function': acquisition_function,
             'config_space': scenario.cs,
             'rng': np.random.RandomState(seed=rng.randint(MAXINT)),
-            'max_steps': scenario.sls_max_steps,
-            'n_steps_plateau_walk': scenario.sls_n_steps_plateau_walk
             }
         if acquisition_function_optimizer_kwargs is not None:
             acq_func_opt_kwargs.update(acquisition_function_optimizer_kwargs)
         if acquisition_function_optimizer is None:
-            acquisition_function_optimizer = InterleavedLocalAndRandomSearch(
-                                                **acq_func_opt_kwargs)
+            for key, value in {
+                'max_steps': scenario.sls_max_steps,
+                'n_steps_plateau_walk': scenario.sls_n_steps_plateau_walk,
+            }.items():
+                if key not in acq_func_opt_kwargs:
+                    acq_func_opt_kwargs[key] = value
+            acquisition_function_optimizer = InterleavedLocalAndRandomSearch(**acq_func_opt_kwargs)
         elif inspect.isclass(acquisition_function_optimizer):
             acquisition_function_optimizer = \
                 acquisition_function_optimizer(**acq_func_opt_kwargs)
         elif not isinstance(
-                acquisition_function_optimizer,
-                AcquisitionFunctionMaximizer,
+            acquisition_function_optimizer,
+            AcquisitionFunctionMaximizer,
         ):
             raise TypeError(
                 "Argument 'acquisition_function_optimizer' must be of type"
                 "'AcquisitionFunctionMaximizer', but is '%s'" %
                 type(acquisition_function_optimizer)
             )
+        else:
+            # TODO nothing to inject here?
+            pass
 
         # initialize tae_runner
         # First case, if tae_runner is None, the target algorithm is a call
@@ -394,7 +408,8 @@ class SMAC(object):
                 intensifier.stats = self.stats
             if intensifier.traj_logger is None:
                 intensifier.traj_logger = traj_logger
-        # TODO: no further check since we have no abstract intensifier
+        else:
+            raise NotImplementedError()
 
         # initial design
         if initial_design is not None and initial_configurations is not None:
@@ -417,12 +432,14 @@ class SMAC(object):
         if initial_design_kwargs is not None:
             init_design_def_kwargs.update(initial_design_kwargs)
         if initial_configurations is not None:
-            initial_design = MultiConfigInitialDesign(**init_design_def_kwargs)
+            initial_design = InitialDesign(**init_design_def_kwargs)
         elif initial_design is None:
             if scenario.initial_incumbent == "DEFAULT":
+                init_design_def_kwargs['max_config_fracs'] = 0.0
                 initial_design = DefaultConfiguration(**init_design_def_kwargs)
             elif scenario.initial_incumbent == "RANDOM":
-                initial_design = RandomConfiguration(**init_design_def_kwargs)
+                init_design_def_kwargs['max_config_fracs'] = 0.0
+                initial_design = RandomConfigurations(**init_design_def_kwargs)
             elif scenario.initial_incumbent == "LHD":
                 initial_design = LHDesign(**init_design_def_kwargs)
             elif scenario.initial_incumbent == "FACTORIAL":
