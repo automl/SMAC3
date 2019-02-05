@@ -18,9 +18,9 @@ __license__ = "3-clause BSD"
 
 def fmin_smac(func: typing.Callable,
               x0: typing.List[float],
-              bounds: typing.List[typing.List[float]],
-              maxfun: int=-1,
-              rng: np.random.RandomState=None,
+              bounds: typing.List[typing.Iterable[float, float]],
+              maxfun: int = -1,
+              rng: typing.Union[np.random.RandomState, int] = None,
               scenario_args: typing.Mapping[str, typing.Any]=None,
               **kwargs):
     """
