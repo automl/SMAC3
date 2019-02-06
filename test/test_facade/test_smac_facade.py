@@ -43,13 +43,8 @@ class TestSMACFacade(unittest.TestCase):
             if output_dir:
                 shutil.rmtree(output_dir, ignore_errors=True)
 
-    def test_inject_stats_and_runhistory_object_to_TAE(self):
-        ta = ExecuteTAFuncDict(lambda x: x**2)
-        self.assertIsNone(ta.stats)
-        self.assertIsNone(ta.runhistory)
-        SMAC(tae_runner=ta, scenario=self.scenario)
-        self.assertIsInstance(ta.stats, Stats)
-        self.assertIsInstance(ta.runhistory, RunHistory)
+    ####################################################################################################################
+    # Test that the objects are constructed correctly
 
     def test_pass_callable(self):
         # Check that SMAC accepts a callable as target algorithm and that it is
@@ -64,22 +59,55 @@ class TestSMACFacade(unittest.TestCase):
     def test_pass_invalid_tae_runner(self):
         self.assertRaisesRegex(
             TypeError,
-            "Argument 'tae_runner' is <class 'int'>, but must be either a callable or an instance of ExecuteTaRun.",
+            "Argument 'tae_runner' is <class 'int'>, but must be either None, a callable or an "
+            "object implementing ExecuteTaRun.",
             SMAC,
             tae_runner=1,
             scenario=self.scenario,
         )
 
     def test_pass_tae_runner_objective(self):
-        tae = ExecuteTAFuncDict(lambda: 1, run_obj='runtime')
         self.assertRaisesRegex(
             ValueError,
             "Objective for the target algorithm runner and the scenario must be the same, but are 'runtime' and "
             "'quality'",
             SMAC,
-            tae_runner=tae,
+            tae_runner=lambda: 1,
+            tae_runner_kwargs={'run_obj': 'runtime'},
             scenario=self.scenario,
         )
+
+    def test_init_EIPS_as_arguments(self):
+        # TODO add more tests here!
+        for objective in ['runtime', 'quality']:
+            self.scenario.run_obj = objective
+            smbo = SMAC(
+                self.scenario,
+                model=UncorrelatedMultiObjectiveRandomForestWithInstances,
+                model_kwargs={'target_names': ['a', 'b']},
+                acquisition_function=EIPS,
+                runhistory2epm=RunHistory2EPM4EIPS,
+            ).solver
+            self.assertIsInstance(smbo.model, UncorrelatedMultiObjectiveRandomForestWithInstances)
+            self.assertIsInstance(smbo.acquisition_func, EIPS)
+            self.assertIsInstance(smbo.acquisition_func.model, UncorrelatedMultiObjectiveRandomForestWithInstances)
+            self.assertIsInstance(smbo.rh2EPM, RunHistory2EPM4EIPS)
+
+    def test_construct_runhistory(self):
+        fixture = 'dummy'
+
+        smbo = SMAC(self.scenario)
+        self.assertIsInstance(smbo.solver.runhistory, RunHistory)
+        smbo = SMAC(self.scenario, runhistory_kwargs={'aggregate_func': fixture})
+        self.assertEqual(smbo.solver.runhistory.aggregate_func, fixture)
+        smbo = SMAC(self.scenario, runhistory=RunHistory)
+        self.assertIsInstance(smbo.solver.runhistory, RunHistory)
+        rh = RunHistory(aggregate_func=None)
+        smbo = SMAC(self.scenario, runhistory=rh)
+        self.assertIsNotNone(smbo.solver.runhistory.aggregate_func)
+
+    ####################################################################################################################
+    # Other tests...
 
     @unittest.mock.patch.object(SMAC, '__init__')
     def test_check_random_states(self, patch):
@@ -196,87 +224,16 @@ class TestSMACFacade(unittest.TestCase):
         self.assertAlmostEqual(x2_1, x2_2)
 
     def test_get_runhistory_and_trajectory_and_tae_runner(self):
-        ta = ExecuteTAFuncDict(lambda x: x ** 2)
-        smac = SMAC(tae_runner=ta, scenario=self.scenario)
+        def func(x):
+            return x ** 2
+        smac = SMAC(tae_runner=func, scenario=self.scenario)
         self.assertRaises(ValueError, smac.get_runhistory)
         self.assertRaises(ValueError, smac.get_trajectory)
         smac.trajectory = 'dummy'
         self.assertEqual(smac.get_trajectory(), 'dummy')
         smac.runhistory = 'dummy'
         self.assertEqual(smac.get_runhistory(), 'dummy')
-        self.assertEqual(smac.get_tae_runner(), ta)
-
-    def test_inject_dependencies(self):
-        # initialize objects with missing dependencies
-        ta = ExecuteTAFuncDict(lambda x: x ** 2)
-        rh = RunHistory(aggregate_func=None)
-        acqu_func = EI(model=None)
-        intensifier = Intensifier(tae_runner=None,
-                                  stats=None,
-                                  traj_logger=None,
-                                  rng=np.random.RandomState(),
-                                  instances=None)
-        init_design = DefaultConfiguration(tae_runner=None,
-                                           scenario=self.scenario,
-                                           stats=None,
-                                           traj_logger=None,
-                                           rng=np.random.RandomState(),
-                                           runhistory=rh,
-                                           intensifier=intensifier,
-                                           aggregate_func=None)
-        rh2epm = RunHistory2EPM4Cost(scenario=self.scenario, num_params=0)
-        rh2epm.scenario = None
-
-        # assert missing dependencies
-        self.assertIsNone(rh.aggregate_func)
-        self.assertIsNone(acqu_func.model)
-        self.assertIsNone(intensifier.tae_runner)
-        self.assertIsNone(intensifier.stats)
-        self.assertIsNone(intensifier.traj_logger)
-        self.assertIsNone(init_design.tae_runner)
-        self.assertIsNone(init_design.stats)
-        self.assertIsNone(init_design.traj_logger)
-        self.assertIsNone(rh2epm.scenario)
-
-        # initialize smac-object
-        SMAC(scenario=self.scenario,
-             tae_runner=ta,
-             runhistory=rh,
-             intensifier=intensifier,
-             acquisition_function=acqu_func,
-             runhistory2epm=rh2epm,
-             initial_design=init_design)
-
-        # assert that missing dependencies are injected
-        self.assertIsNotNone(rh.aggregate_func, AbstractAcquisitionFunction)
-        self.assertIsInstance(acqu_func.model, AbstractEPM)
-        self.assertIsInstance(intensifier.tae_runner, ExecuteTARun)
-        self.assertIsInstance(intensifier.stats, Stats)
-        self.assertIsInstance(intensifier.traj_logger, TrajLogger)
-        self.assertIsInstance(init_design.tae_runner, ExecuteTARun)
-        self.assertIsInstance(init_design.scenario, Scenario)
-        self.assertIsInstance(init_design.stats, Stats)
-        self.assertIsInstance(init_design.traj_logger, TrajLogger)
-        self.assertIsInstance(rh2epm.scenario, Scenario)
-        self.assertIsInstance(ta.runhistory, RunHistory)
-        self.assertIsInstance(ta.stats, Stats),
-        self.assertIsInstance(ta.crash_cost, float)
-
-    def test_init_EIPS_as_arguments(self):
-        # TODO add more tests here!
-        for objective in ['runtime', 'quality']:
-            self.scenario.run_obj = objective
-            smbo = SMAC(
-                self.scenario,
-                model=UncorrelatedMultiObjectiveRandomForestWithInstances,
-                model_kwargs={'target_names': ['a', 'b']},
-                acquisition_function=EIPS,
-                runhistory2epm=RunHistory2EPM4EIPS,
-            ).solver
-            self.assertIsInstance(smbo.model, UncorrelatedMultiObjectiveRandomForestWithInstances)
-            self.assertIsInstance(smbo.acquisition_func, EIPS)
-            self.assertIsInstance(smbo.acquisition_func.model, UncorrelatedMultiObjectiveRandomForestWithInstances)
-            self.assertIsInstance(smbo.rh2EPM, RunHistory2EPM4EIPS)
+        self.assertEqual(smac.get_tae_runner().ta, func)
 
     def test_output_structure(self):
         """Test whether output-dir is moved correctly."""

@@ -1,3 +1,4 @@
+import logging
 import typing
 
 import numpy as np
@@ -97,6 +98,8 @@ class AbstractEPM(object):
         self.types = types
         # Initial types array which is used to reset the type array at every call to train()
         self._initial_types = types.copy()
+
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
     def train(self, X: np.ndarray, Y: np.ndarray) -> 'AbstractEPM':
         """Trains the EPM on X and Y.

@@ -20,17 +20,10 @@ class RandomEPM(AbstractEPM):
     rng : np.random.RandomState
     """
 
-    def __init__(self, rng: np.random.RandomState, **kwargs):
-        """Constructor
+    def __init__(self, **kwargs):
 
-        Parameters
-        ----------
-        rng: np.random.RandomState
-        """
         super().__init__(**kwargs)
-
-        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
-        self.rng = rng
+        self.rng = np.random.RandomState(self.seed)
 
     def _train(self, X: np.ndarray, Y: np.ndarray, **kwargs):
         """

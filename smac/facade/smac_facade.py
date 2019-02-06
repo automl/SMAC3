@@ -295,11 +295,12 @@ class SMAC(object):
                 acquisition_function = EI(**acq_def_kwargs)
         elif inspect.isclass(acquisition_function):
             acquisition_function = acquisition_function(**acq_def_kwargs)
-        elif isinstance(acquisition_function, AbstractAcquisitionFunction):
-            if acquisition_function.model is None:
-                acquisition_function.model = acq_def_kwargs['model']
         else:
-            raise TypeError("acquisition_function has to be a class or an instance of AbstractAcquisitionFunction")
+            raise TypeError(
+                "Argument acquisition_function must be None or an object implementing the "
+                "AbstractAcquisitionFunction, not %s."
+                % type(acquisition_function)
+            )
 
         # initialize optimizer on acquisition function
         acq_func_opt_kwargs = {
@@ -318,20 +319,13 @@ class SMAC(object):
                     acq_func_opt_kwargs[key] = value
             acquisition_function_optimizer = InterleavedLocalAndRandomSearch(**acq_func_opt_kwargs)
         elif inspect.isclass(acquisition_function_optimizer):
-            acquisition_function_optimizer = \
-                acquisition_function_optimizer(**acq_func_opt_kwargs)
-        elif not isinstance(
-            acquisition_function_optimizer,
-            AcquisitionFunctionMaximizer,
-        ):
+            acquisition_function_optimizer = acquisition_function_optimizer(**acq_func_opt_kwargs)
+        else:
             raise TypeError(
-                "Argument 'acquisition_function_optimizer' must be of type"
-                "'AcquisitionFunctionMaximizer', but is '%s'" %
+                "Argument acquisition_function_optimizer must be None or an object implementing the "
+                "AcquisitionFunctionMaximizer, but is '%s'" %
                 type(acquisition_function_optimizer)
             )
-        else:
-            # TODO nothing to inject here?
-            pass
 
         # initialize tae_runner
         # First case, if tae_runner is None, the target algorithm is a call
@@ -349,22 +343,14 @@ class SMAC(object):
         if tae_runner is None:
             tae_def_kwargs['ta'] = scenario.ta
             tae_runner = ExecuteTARunOld(**tae_def_kwargs)
+        elif inspect.isclass(tae_runner):
+            tae_runner = tae_runner(**tae_def_kwargs)
         elif callable(tae_runner):
             tae_def_kwargs['ta'] = tae_runner
             tae_runner = ExecuteTAFuncDict(**tae_def_kwargs)
-        elif inspect.isclass(tae_runner):
-            tae_runner = tae_runner(**tae_def_kwargs)
-        elif isinstance(tae_runner, ExecuteTARun):
-            if tae_runner.stats is None:
-                tae_runner.stats = self.stats
-            if tae_runner.runhistory is None:
-                tae_runner.runhistory = runhistory
-            if tae_runner.crash_cost != scenario.cost_for_crash:
-                self.logger.warning("Overwriting tae.crash_cost by scenario.cost_for_crash")
-                tae_runner.crash_cost = scenario.cost_for_crash
         else:
             raise TypeError("Argument 'tae_runner' is %s, but must be "
-                            "either a callable or an instance of "
+                            "either None, a callable or an object implementing "
                             "ExecuteTaRun. Passing 'None' will result in the "
                             "creation of target algorithm runner based on the "
                             "call string in the scenario file."
@@ -401,15 +387,11 @@ class SMAC(object):
             intensifier = Intensifier(**intensifier_def_kwargs)
         elif inspect.isclass(intensifier):
             intensifier = intensifier(**intensifier_def_kwargs)
-        elif isinstance(intensifier, Intensifier):
-            if intensifier.tae_runner is None:
-                intensifier.tae_runner = tae_runner
-            if intensifier.stats is None:
-                intensifier.stats = self.stats
-            if intensifier.traj_logger is None:
-                intensifier.traj_logger = traj_logger
         else:
-            raise NotImplementedError()
+            raise TypeError(
+                "Argument intensifier must be None or an object implementing the Intensifier, but is '%s'" %
+                type(intensifier)
+            )
 
         # initial design
         if initial_design is not None and initial_configurations is not None:
@@ -451,17 +433,11 @@ class SMAC(object):
                                  "'%s' is" % scenario.initial_incumbent)
         elif inspect.isclass(initial_design):
             initial_design = initial_design(**init_design_def_kwargs)
-        elif isinstance(initial_design, InitialDesign):
-            if initial_design.tae_runner is None:
-                initial_design.tae_runner = tae_runner
-            if initial_design.scenario is None:
-                initial_design.scenario = scenario
-            if initial_design.stats is None:
-                initial_design.stats = self.stats
-            if initial_design.traj_logger is None:
-                initial_design.traj_logger = traj_logger
         else:
-            raise TypeError('initial_design has be a class or object of InitialDesign')
+            raise TypeError(
+                "Argument initial_design must be None or an object implementing the InitialDesign, but is '%s'" %
+                type(initial_design)
+            )
 
         # if we log the performance data,
         # the RFRImputator will already get
@@ -515,13 +491,10 @@ class SMAC(object):
         elif inspect.isclass(runhistory2epm):
             runhistory2epm = runhistory2epm(**r2e_def_kwargs)
         else:
-            # inject scenario if necessary:
-            if runhistory2epm.scenario is None:
-                runhistory2epm.scenario = scenario
-            if runhistory2epm.imputor is None:
-                runhistory2epm.imputor = imputor
-            if runhistory2epm.num_params is None:
-                runhistory2epm.imputor = num_params
+            raise TypeError(
+                "Argument runhistory2epm must be None or an object implementing the RunHistory2EPM, but is '%s'" %
+                type(runhistory2epm)
+            )
 
         smbo_args = {
             'scenario': scenario,
