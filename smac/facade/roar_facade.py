@@ -8,14 +8,12 @@ from smac.epm.random_epm import RandomEPM
 from smac.facade.smac_facade import SMAC
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.intensification import Intensifier
-from smac.optimizer.objective import average_cost
 from smac.optimizer.ei_optimization import RandomSearch
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
 from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
-from smac.tae.execute_ta_run import StatusType, ExecuteTARun
-from smac.utils.util_funcs import get_rng
+from smac.tae.execute_ta_run import ExecuteTARun
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"

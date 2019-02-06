@@ -75,17 +75,17 @@ class SMAC(object):
                  tae_runner_kwargs: Optional[dict] = None,
                  runhistory: Optional[Union[Type[RunHistory], RunHistory]] = None,
                  runhistory_kwargs: Optional[dict] = None,
-                 intensifier: Optional[Union[Type[Intensifier], Intensifier]] = None,
+                 intensifier: Optional[Type[Intensifier]] = None,
                  intensifier_kwargs: Optional[dict] = None,
-                 acquisition_function: Optional[Union[Type[AbstractAcquisitionFunction], AbstractAcquisitionFunction]] = None,
+                 acquisition_function: Optional[Type[AbstractAcquisitionFunction]] = None,
                  acquisition_function_kwargs: Optional[dict] = None,
-                 acquisition_function_optimizer: Optional[Union[Type[AcquisitionFunctionMaximizer], AcquisitionFunctionMaximizer]] = None,
+                 acquisition_function_optimizer: Optional[Type[AcquisitionFunctionMaximizer]] = None,
                  acquisition_function_optimizer_kwargs: Optional[dict] = None,
-                 model: Optional[Union[Type[AbstractEPM], AbstractEPM]] = None,
+                 model: Optional[Type[AbstractEPM]] = None,
                  model_kwargs: Optional[dict] = None,
-                 runhistory2epm: Optional[Union[Type[AbstractRunHistory2EPM], AbstractRunHistory2EPM]] = None,
+                 runhistory2epm: Optional[Type[AbstractRunHistory2EPM]] = None,
                  runhistory2epm_kwargs: Optional[dict] = None,
-                 initial_design: Optional[Union[Type[InitialDesign], InitialDesign]] = None,
+                 initial_design: Optional[Type[InitialDesign]] = None,
                  initial_design_kwargs: Optional[dict] = None,
                  initial_configurations: Optional[List[Configuration]] = None,
                  stats: Optional[Stats] = None,
@@ -93,7 +93,7 @@ class SMAC(object):
                  rng: Optional[Union[np.random.RandomState, int]] = None,
                  smbo_class: Optional[SMBO] = None,
                  run_id: Optional[int] = None,
-                 random_configuration_chooser: Optional[Union[Type[RandomConfigurationChooser], RandomConfigurationChooser]] = None,
+                 random_configuration_chooser: Optional[Type[RandomConfigurationChooser]] = None,
                  random_configuration_chooser_kwargs: Optional[dict] = None
                  ):
         """
@@ -240,7 +240,6 @@ class SMAC(object):
             random_configuration_chooser = ChooserProb(**rand_conf_chooser_kwargs)
         elif inspect.isclass(random_configuration_chooser):
             random_configuration_chooser = random_configuration_chooser(**rand_conf_chooser_kwargs)
-        # TODO this cannot be passed as an instance?
         elif not isinstance(random_configuration_chooser, RandomConfigurationChooser):
             raise ValueError("random_configuration_chooser has to be"
                              " a class or object of RandomConfigurationChooser")
@@ -278,9 +277,6 @@ class SMAC(object):
             model = RandomForestWithInstances(**model_def_kwargs)
         elif inspect.isclass(model):
             model = model(**model_def_kwargs)
-        elif isinstance(model, AbstractEPM):
-            # TODO do I need to inject something here?
-            pass
         else:
             raise TypeError(type(model))
 

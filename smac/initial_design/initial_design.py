@@ -19,7 +19,7 @@ __license__ = "3-clause BSD"
 
 
 class InitialDesign:
-    """ Base class for initial design strategies that evaluates multiple configurations
+    """Base class for initial design strategies that evaluates multiple configurations
 
     Attributes
     ----------
@@ -135,14 +135,13 @@ class InitialDesign:
         return inc
 
     def _run_first_configuration(self, initial_incumbent, scenario):
-        """Runs the initial design by calling the target algorithm
-                and adding new entries to the trajectory logger.
+        """Runs the initial design by calling the target algorithm and adding new entries to the trajectory logger.
 
-                Returns
-                -------
-                incumbent: Configuration
-                    Initial incumbent configuration
-                """
+        Returns
+        -------
+        incumbent: Configuration
+            Initial incumbent configuration
+        """
         if initial_incumbent.origin is None:
             initial_incumbent.origin = 'Initial design'
 
@@ -159,7 +158,7 @@ class InitialDesign:
             initial_seed = self.rng.randint(0, constants.MAXINT)
 
         try:
-            status, cost, runtime, additional_info = self.tae_runner.start(
+            status, cost, runtime, _ = self.tae_runner.start(
                 initial_incumbent,
                 instance=rand_inst,
                 cutoff=self.scenario.cutoff,

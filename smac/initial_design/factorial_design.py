@@ -15,7 +15,7 @@ __license__ = "3-clause BSD"
 
 
 class FactorialInitialDesign(InitialDesign):
-    """ Factorial initial design
+    """Factorial initial design
 
     Attributes
     ----------

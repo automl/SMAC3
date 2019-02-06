@@ -16,7 +16,7 @@ __license__ = "3-clause BSD"
 
 
 class LHDesign(InitialDesign):
-    """ Latin Hypercube design
+    """Latin Hypercube design
 
     Attributes
     ----------

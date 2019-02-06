@@ -11,8 +11,7 @@ __license__ = "3-clause BSD"
 
 
 class RandomConfigurations(InitialDesign):
-    """ Initial design that evaluates random configurations."""
-
+    """Initial design that evaluates random configurations."""
 
     def _select_configurations(self) -> List[Configuration]:
         """Select a random configuration.
@@ -22,6 +21,7 @@ class RandomConfigurations(InitialDesign):
         config: Configuration()
             Initial incumbent configuration
         """
+
         configs = self.scenario.cs.sample_configuration(size=self.init_budget)
         if self.init_budget == 1:
             configs = [configs]

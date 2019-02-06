@@ -11,10 +11,11 @@ __license__ = "3-clause BSD"
 
 
 class DefaultConfiguration(InitialDesign):
-    """ Initial design that evaluates default configuration"""
 
+    """Initial design that evaluates default configuration"""
 
     def _select_configurations(self) -> List[Configuration]:
+
         """Selects the default configuration.
 
         Returns
@@ -22,6 +23,7 @@ class DefaultConfiguration(InitialDesign):
         config: Configuration
             Initial incumbent configuration.
         """
+
         config = self.scenario.cs.get_default_configuration()
         config.origin = 'Default'
         return [config]
