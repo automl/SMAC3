@@ -55,10 +55,10 @@ class BORF(SMAC):
         """
 
         scenario = kwargs['scenario']
-        
+
         if scenario.initial_incumbent not in ['LHD', 'FACTORIAL', 'SOBOL']:
             scenario.initial_incumbent = 'SOBOL'
-        
+
         if scenario.transform_y is 'NONE':
             scenario.transform_y = "LOGS"
 
@@ -68,8 +68,8 @@ class BORF(SMAC):
         kwargs['intensifier_kwargs'] = intensifier_kwargs
         scenario.intensification_percentage = 1e-10
 
-        model = RandomForestWithInstances
-        kwargs['model'] = model
+        model_class = RandomForestWithInstances
+        kwargs['model'] = model_class
 
         # == static RF settings
         model_kwargs = kwargs.get('model_kwargs', dict())

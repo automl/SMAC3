@@ -21,7 +21,7 @@ def fmin_smac(func: typing.Callable,
               bounds: typing.List[typing.Iterable[float]],
               maxfun: int = -1,
               rng: typing.Union[np.random.RandomState, int] = None,
-              scenario_args: typing.Mapping[str, typing.Any]=None,
+              scenario_args: typing.Mapping[str, typing.Any] = None,
               **kwargs):
     """
     Minimize a function func using the BORF facade

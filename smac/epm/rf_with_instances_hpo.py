@@ -47,11 +47,11 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
         self,
         types: np.ndarray,
         bounds: typing.List[typing.Tuple[float, float]],
-        seed: int = 42,
-        log_y: bool=False,
-        bootstrap: bool=False,
-        n_iters: int=50,
-        n_splits: int=10,
+        seed: int,
+        log_y: bool = False,
+        bootstrap: bool = False,
+        n_iters: int = 50,
+        n_splits: int = 10,
     ):
         """Parameters
         ----------

@@ -117,7 +117,7 @@ class SMAC(object):
         runhistory_kwargs : Optional[dict]
             arguments passed to constructor of runhistory.
             We strongly advise against changing the aggregation function,
-            since it will break some code assumption
+            since it will break some code assumptions
         intensifier : Intensifier
             intensification object to issue a racing to decide the current
             incumbent
@@ -302,7 +302,7 @@ class SMAC(object):
         acq_func_opt_kwargs = {
             'acquisition_function': acquisition_function,
             'config_space': scenario.cs,
-            'rng': np.random.RandomState(seed=rng.randint(MAXINT)),
+            'rng': self.rng,
             }
         if acquisition_function_optimizer_kwargs is not None:
             acq_func_opt_kwargs.update(acquisition_function_optimizer_kwargs)
@@ -545,10 +545,10 @@ class SMAC(object):
 
     def validate(self,
                  config_mode: Union[List[Configuration], np.ndarray, str] = 'inc',
-                 instance_mode: Union[List[str], str]='train+test',
+                 instance_mode: Union[List[str], str] = 'train+test',
                  repetitions: int = 1,
                  use_epm: bool = False,
-                 n_jobs: int=-1, backend:
+                 n_jobs: int = -1, backend:
                  str = 'threading'):
         """
         Create validator-object and run validation, using

@@ -40,7 +40,7 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
             self,
             acquisition_function: AbstractAcquisitionFunction,
             config_space: ConfigurationSpace,
-            rng: Union[bool, np.random.RandomState]=None
+            rng: Union[bool, np.random.RandomState] = None
     ):
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__

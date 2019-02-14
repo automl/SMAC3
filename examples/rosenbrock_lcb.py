@@ -19,7 +19,7 @@ def rosenbrock_2d(x):
     often serves as a toy problem. It can be defined for arbitrary
     dimensions. The minimium is always at x_i = 1 with a function value of
     zero. All input parameters are continuous. The search domain for
-    all x's is the interval [-5, 5].
+    all x's is the interval [-5, 10].
     """
     x1 = x["x0"]
     x2 = x["x1"]
@@ -31,6 +31,9 @@ logging.basicConfig(level=logging.INFO)  # logging.DEBUG for debug output
 
 # Build Configuration Space which defines all parameters and their ranges
 cs = ConfigurationSpace()
+x0 = UniformFloatHyperparameter("x0", -5, 10, default_value=-3)
+x1 = UniformFloatHyperparameter("x1", -5, 10, default_value=-4)
+cs.add_hyperparameters([x0, x1])
 
 x0 = UniformFloatHyperparameter("x0", -5, 5, default_value=-3)
 x1 = UniformFloatHyperparameter("x1", -5, 5, default_value=-4)

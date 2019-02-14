@@ -39,7 +39,7 @@ class RandomForestWithInstances(AbstractEPM):
 
     def __init__(self, types: np.ndarray,
                  bounds: typing.List[typing.Tuple[float, float]],
-                 seed: int = 42,
+                 seed: int,
                  log_y: bool=False,
                  num_trees: int=N_TREES,
                  do_bootstrapping: bool=True,
