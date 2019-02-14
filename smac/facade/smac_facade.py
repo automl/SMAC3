@@ -302,7 +302,7 @@ class SMAC(object):
         acq_func_opt_kwargs = {
             'acquisition_function': acquisition_function,
             'config_space': scenario.cs,
-            'rng': self.rng,
+            'rng': rng,
             }
         if acquisition_function_optimizer_kwargs is not None:
             acq_func_opt_kwargs.update(acquisition_function_optimizer_kwargs)

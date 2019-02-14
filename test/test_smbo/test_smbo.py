@@ -174,7 +174,7 @@ class TestSMBO(unittest.TestCase):
         # For each configuration it is randomly sampled whether to take it from the list of challengers or to sample it
         # completely at random. Therefore, it is not guaranteed to obtain twice the number of configurations selected
         # by EI.
-        self.assertEqual(len(challengers), 9971)
+        self.assertEqual(len(challengers), 9929)
         num_random_search_sorted = 0
         num_random_search = 0
         num_local_search = 0
@@ -191,7 +191,7 @@ class TestSMBO(unittest.TestCase):
 
         self.assertEqual(num_local_search, 1)
         self.assertEqual(num_random_search_sorted, 4999)
-        self.assertEqual(num_random_search, 4971)
+        self.assertEqual(num_random_search, 4929)
 
     def test_choose_next_3(self):
         # Test with ten configurations in the runhistory
@@ -225,7 +225,7 @@ class TestSMBO(unittest.TestCase):
         # For each configuration it is randomly sampled whether to take it from the list of challengers or to sample it
         # completely at random. Therefore, it is not guaranteed to obtain twice the number of configurations selected
         # by EI.
-        self.assertEqual(len(challengers), 9971)
+        self.assertEqual(len(challengers), 9929)
         num_random_search_sorted = 0
         num_random_search = 0
         num_local_search = 0
@@ -242,7 +242,7 @@ class TestSMBO(unittest.TestCase):
 
         self.assertEqual(num_local_search, 10)
         self.assertEqual(num_random_search_sorted, 4990)
-        self.assertEqual(num_random_search, 4971)
+        self.assertEqual(num_random_search, 4929)
 
     @mock.patch.object(InitialDesign, 'run')
     def test_abort_on_initial_design(self, patch):

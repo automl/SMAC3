@@ -19,7 +19,7 @@ class TestUncorrelatedMultiObjectiveWrapper(unittest.TestCase):
         X = rs.rand(20, 10)
         Y = rs.rand(10, 2)
         model = UncorrelatedMultiObjectiveRandomForestWithInstances(
-            ['cost', 'ln(runtime)'],
+            target_names=['cost', 'ln(runtime)'],
             types=np.zeros((10, ), dtype=np.uint),
             bounds=[
                 (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan),
@@ -27,7 +27,7 @@ class TestUncorrelatedMultiObjectiveWrapper(unittest.TestCase):
             ],
             seed=1,
             rf_kwargs={'seed': 1},
-            pca_components=5
+            pca_components=5,
         )
         self.assertEqual(model.estimators[0].seed, 1)
         self.assertEqual(model.estimators[1].seed, 1)

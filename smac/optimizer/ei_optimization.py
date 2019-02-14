@@ -282,7 +282,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             neighbors = []
             for neighbor in all_neighbors:
                 s_time = time.time()
-                acq_val = self.acquisition_function([neighbor], **kwargs)
+                acq_val = self.acquisition_function([neighbor], **kwargs)[0]
                 neighbors_looked_at += 1
                 time_n.append(time.time() - s_time)
 

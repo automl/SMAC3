@@ -252,9 +252,9 @@ class RandomForestWithInstances(AbstractEPM):
         if len(X.shape) != 2:
             raise ValueError(
                 'Expected 2d array, got %dd array!' % len(X.shape))
-        if X.shape[1] != self.bounds.shape[0]:
+        if X.shape[1] != len(self.bounds):
             raise ValueError('Rows in X should have %d entries but have %d!' %
-                             (self.bounds.shape[0],
+                             (len(self.bounds),
                               X.shape[1]))
 
         mean = np.zeros(X.shape[0])

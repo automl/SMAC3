@@ -20,6 +20,7 @@ class TestRFWithInstances(unittest.TestCase):
         model = RandomForestWithInstances(
             types=np.zeros((10,), dtype=np.uint),
             bounds=list(map(lambda x: (0, 10), range(10))),
+            seed=1,
         )
         X = rs.rand(10)
         self.assertRaisesRegexp(ValueError, "Expected 2d array, got 1d array!",
@@ -40,6 +41,7 @@ class TestRFWithInstances(unittest.TestCase):
         model = RandomForestWithInstances(
             types=np.zeros((10,), dtype=np.uint),
             bounds=list(map(lambda x: (0, 10), range(10))),
+            seed=1,
         )
         model.train(X[:10], Y[:10])
         m_hat, v_hat = model.predict(X[10:])
@@ -54,6 +56,7 @@ class TestRFWithInstances(unittest.TestCase):
         model = RandomForestWithInstances(
             types=np.zeros((20,), dtype=np.uint),
             bounds=list(map(lambda x: (0, 10), range(10))),
+            seed=1,
             pca_components=2,
             instance_features=F,
         )
@@ -67,9 +70,12 @@ class TestRFWithInstances(unittest.TestCase):
     def test_predict_marginalized_over_instances_wrong_X_dimensions(self):
         rs = np.random.RandomState(1)
 
-        model = RandomForestWithInstances(np.zeros((10,), dtype=np.uint),
-                                          instance_features=rs.rand(10, 2),
-                                          bounds=np.array(list(map(lambda x: (0, 10), range(10))), dtype=object))
+        model = RandomForestWithInstances(
+            types=np.zeros((10,), dtype=np.uint),
+            instance_features=rs.rand(10, 2),
+            seed=1,
+            bounds=list(map(lambda x: (0, 10), range(10))),
+        )
         X = rs.rand(10)
         self.assertRaisesRegexp(ValueError, "Expected 2d array, got 1d array!",
                                 model.predict_marginalized_over_instances, X)
@@ -84,8 +90,11 @@ class TestRFWithInstances(unittest.TestCase):
         rs = np.random.RandomState(1)
         X = rs.rand(20, 10)
         Y = rs.rand(10, 1)
-        model = RandomForestWithInstances(np.zeros((10,), dtype=np.uint), bounds=np.array(
-            list(map(lambda x: (0, 10), range(10))), dtype=object))
+        model = RandomForestWithInstances(
+            types=np.zeros((10,), dtype=np.uint),
+            bounds=list(map(lambda x: (0, 10), range(10))),
+            seed=1,
+        )
         model.train(X[:10], Y[:10])
         model.predict(X[10:])
         self.assertEqual(rf_mock.call_count, 1)
@@ -97,9 +106,12 @@ class TestRFWithInstances(unittest.TestCase):
         Y = rs.rand(len(X) * len(F), 1)
         X_ = rs.rand(200, 15)
 
-        model = RandomForestWithInstances(np.zeros((15,), dtype=np.uint),
-                                          instance_features=F,
-                                          bounds=np.array(list(map(lambda x: (0, 10), range(10))), dtype=object))
+        model = RandomForestWithInstances(
+            types=np.zeros((15,), dtype=np.uint),
+            instance_features=F,
+            bounds=list(map(lambda x: (0, 10), range(10))),
+            seed=1,
+        )
         model.train(X_, Y)
         means, vars = model.predict_marginalized_over_instances(X)
         self.assertEqual(means.shape, (20, 1))
@@ -121,9 +133,12 @@ class TestRFWithInstances(unittest.TestCase):
         rs = np.random.RandomState(1)
         F = rs.rand(10, 5)
 
-        model = RandomForestWithInstances(np.zeros((15,), dtype=np.uint),
-                                          instance_features=F,
-                                          bounds=np.array(list(map(lambda x: (0, 10), range(10))), dtype=object))
+        model = RandomForestWithInstances(
+            types=np.zeros((15,), dtype=np.uint),
+            instance_features=F,
+            bounds=list(map(lambda x: (0, 10), range(10))),
+            seed=1,
+        )
         X = rs.rand(20, 10)
         F = rs.rand(10, 5)
         Y = rs.randint(1, size=(len(X) * len(F), 1)) * 1.
@@ -157,7 +172,7 @@ class TestRFWithInstances(unittest.TestCase):
             [109.],
             [109.2]], dtype=np.float64)
         model = RandomForestWithInstances(types=np.array([0, 0, 0], dtype=np.uint),
-                                          bounds=np.array([(0, np.nan), (0, np.nan), (0, np.nan)], dtype=object),
+                                          bounds=[(0, np.nan), (0, np.nan), (0, np.nan)],
                                           instance_features=None, seed=12345,
                                           ratio_features=1.0)
         model.train(np.vstack((X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y)))
