@@ -336,6 +336,8 @@ class SMAC(object):
             }
         if tae_runner_kwargs is not None:
             tae_def_kwargs.update(tae_runner_kwargs)
+        if 'ta' not in tae_def_kwargs:
+            tae_def_kwargs['ta'] = scenario.ta
         if tae_runner is None:
             tae_def_kwargs['ta'] = scenario.ta
             tae_runner = ExecuteTARunOld(**tae_def_kwargs)

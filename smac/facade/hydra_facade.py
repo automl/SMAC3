@@ -97,7 +97,6 @@ class Hydra(object):
         self.portfolio = None
         self.rh = RunHistory(average_cost)
         self._tae = tae
-        self.tae = tae(ta=self.scenario.ta, run_obj=self.scenario.run_obj)
         if incs_per_round <= 0:
             self.logger.warning('Invalid value in %s: %d. Setting to 1', 'incs_per_round', incs_per_round)
         self.incs_per_round = max(incs_per_round, 1)
@@ -172,7 +171,7 @@ class Hydra(object):
         scen.output_dir_for_this_run = None
         scen.output_dir = None
         # parent process SMAC only used for validation purposes
-        self.solver = SMAC(scenario=scen, tae_runner=self.tae, rng=self.rng, run_id=self.run_id, **self.kwargs)
+        self.solver = SMAC(scenario=scen, tae_runner=self._tae, rng=self.rng, run_id=self.run_id, **self.kwargs)
         for i in range(self.n_iterations):
             self.logger.info("="*120)
             self.logger.info("Hydra Iteration: %d", (i + 1))
