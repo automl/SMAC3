@@ -63,6 +63,7 @@ class TestUncorrelatedMultiObjectiveWrapper(unittest.TestCase):
                 (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan)
             ],
             seed=1,
+            rf_kwargs={'seed': 1},
         )
 
         model.train(X[:10], Y[:10])

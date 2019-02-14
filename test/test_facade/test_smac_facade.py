@@ -12,14 +12,26 @@ from nose.plugins.attrib import attr
 from smac.configspace import ConfigurationSpace
 
 from smac.epm.base_epm import AbstractEPM
+from smac.epm.random_epm import RandomEPM
+from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.uncorrelated_mo_rf_with_instances import UncorrelatedMultiObjectiveRandomForestWithInstances
 from smac.facade.smac_facade import SMAC
 from smac.initial_design.default_configuration_design import DefaultConfiguration
+from smac.initial_design.initial_design import InitialDesign
+from smac.initial_design.random_configuration_design import RandomConfigurations
+from smac.initial_design.latin_hypercube_design import LHDesign
+from smac.initial_design.factorial_design import FactorialInitialDesign
+from smac.initial_design.sobol_design import SobolDesign
 from smac.intensification.intensification import Intensifier
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, RunHistory2EPM4EIPS
 from smac.scenario.scenario import Scenario
-from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction, EIPS
+from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction, EIPS, LCB
+from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, LocalSearch
+from smac.optimizer.random_configuration_chooser import (
+    ChooserCosineAnnealing,
+    ChooserProb,
+)
 from smac.stats.stats import Stats
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.tae.execute_ta_run import ExecuteTARun
@@ -77,22 +89,6 @@ class TestSMACFacade(unittest.TestCase):
             scenario=self.scenario,
         )
 
-    def test_init_EIPS_as_arguments(self):
-        # TODO add more tests here!
-        for objective in ['runtime', 'quality']:
-            self.scenario.run_obj = objective
-            smbo = SMAC(
-                self.scenario,
-                model=UncorrelatedMultiObjectiveRandomForestWithInstances,
-                model_kwargs={'target_names': ['a', 'b']},
-                acquisition_function=EIPS,
-                runhistory2epm=RunHistory2EPM4EIPS,
-            ).solver
-            self.assertIsInstance(smbo.model, UncorrelatedMultiObjectiveRandomForestWithInstances)
-            self.assertIsInstance(smbo.acquisition_func, EIPS)
-            self.assertIsInstance(smbo.acquisition_func.model, UncorrelatedMultiObjectiveRandomForestWithInstances)
-            self.assertIsInstance(smbo.rh2EPM, RunHistory2EPM4EIPS)
-
     def test_construct_runhistory(self):
         fixture = 'dummy'
 
@@ -105,6 +101,138 @@ class TestSMACFacade(unittest.TestCase):
         rh = RunHistory(aggregate_func=None)
         smbo = SMAC(self.scenario, runhistory=rh)
         self.assertIsNotNone(smbo.solver.runhistory.aggregate_func)
+
+    def test_construct_random_configuration_chooser(self):
+        rng = np.random.RandomState(42)
+        smbo = SMAC(self.scenario)
+        self.assertIsInstance(smbo.solver.random_configuration_chooser, ChooserProb)
+        self.assertIsNot(smbo.solver.random_configuration_chooser, rng)
+        smbo = SMAC(self.scenario, rng=rng)
+        self.assertIsInstance(smbo.solver.random_configuration_chooser, ChooserProb)
+        self.assertIs(smbo.solver.random_configuration_chooser.rng, rng)
+        smbo = SMAC(self.scenario, random_configuration_chooser_kwargs={'rng': rng})
+        self.assertIsInstance(smbo.solver.random_configuration_chooser, ChooserProb)
+        self.assertIs(smbo.solver.random_configuration_chooser.rng, rng)
+        smbo = SMAC(self.scenario, random_configuration_chooser_kwargs={'prob': 0.1})
+        self.assertIsInstance(smbo.solver.random_configuration_chooser, ChooserProb)
+        self.assertEqual(smbo.solver.random_configuration_chooser.prob, 0.1)
+        smbo = SMAC(
+            self.scenario,
+            random_configuration_chooser=ChooserCosineAnnealing,
+            random_configuration_chooser_kwargs={'prob_max': 1, 'prob_min': 0.1, 'restart_iteration': 10},
+        )
+        self.assertIsInstance(smbo.solver.random_configuration_chooser, ChooserCosineAnnealing)
+        # Check for construction failure on wrong argument
+        with self.assertRaisesRegex(Exception, 'got an unexpected keyword argument'):
+            SMAC(self.scenario, random_configuration_chooser_kwargs={'dummy': 0.1})
+
+    def test_construct_epm(self):
+        rng = np.random.RandomState(42)
+        smbo = SMAC(self.scenario)
+        self.assertIsInstance(smbo.solver.model, RandomForestWithInstances)
+        smbo = SMAC(self.scenario, rng=rng)
+        self.assertIsInstance(smbo.solver.model, RandomForestWithInstances)
+        self.assertEqual(smbo.solver.model.seed, 1935803228)
+        smbo = SMAC(self.scenario, model_kwargs={'seed': 2})
+        self.assertIsInstance(smbo.solver.model, RandomForestWithInstances)
+        self.assertEqual(smbo.solver.model.seed, 2)
+        smbo = SMAC(self.scenario, model_kwargs={'num_trees': 20})
+        self.assertIsInstance(smbo.solver.model, RandomForestWithInstances)
+        self.assertEqual(smbo.solver.model.rf_opts.num_trees, 20)
+        smbo = SMAC(self.scenario, model=RandomEPM, model_kwargs={'seed': 2})
+        self.assertIsInstance(smbo.solver.model, RandomEPM)
+        self.assertEqual(smbo.solver.model.seed, 2)
+        # Check for construction failure on wrong argument
+        with self.assertRaisesRegex(Exception, 'got an unexpected keyword argument'):
+            SMAC(self.scenario, model_kwargs={'dummy': 0.1})
+
+    def test_construct_acquisition_function(self):
+        rng = np.random.RandomState(42)
+        smbo = SMAC(self.scenario)
+        self.assertIsInstance(smbo.solver.acquisition_func, EI)
+        smbo = SMAC(self.scenario, rng=rng)
+        self.assertIsInstance(smbo.solver.acquisition_func.model, RandomForestWithInstances)
+        self.assertEqual(smbo.solver.acquisition_func.model.seed, 1935803228)
+        smbo = SMAC(self.scenario, acquisition_function_kwargs={'par': 17})
+        self.assertIsInstance(smbo.solver.acquisition_func, EI)
+        self.assertEqual(smbo.solver.acquisition_func.par, 17)
+        smbo = SMAC(self.scenario, acquisition_function=LCB, acquisition_function_kwargs={'par': 19})
+        self.assertIsInstance(smbo.solver.acquisition_func, LCB)
+        self.assertEqual(smbo.solver.acquisition_func.par, 19)
+        # Check for construction failure on wrong argument
+        with self.assertRaisesRegex(Exception, 'got an unexpected keyword argument'):
+            SMAC(self.scenario, acquisition_function_kwargs={'dummy': 0.1})
+
+    def test_construct_intensifier(self):
+
+        class DummyIntensifier(Intensifier):
+            pass
+
+        rng = np.random.RandomState(42)
+        smbo = SMAC(self.scenario)
+        self.assertIsInstance(smbo.solver.intensifier, Intensifier)
+        self.assertIsNot(smbo.solver.intensifier.rs, rng)
+        smbo = SMAC(self.scenario, rng=rng)
+        self.assertIsInstance(smbo.solver.intensifier, Intensifier)
+        self.assertIs(smbo.solver.intensifier.rs, rng)
+        smbo = SMAC(self.scenario, intensifier_kwargs={'maxR': 987})
+        self.assertEqual(smbo.solver.intensifier.maxR, 987)
+        smbo = SMAC(
+            self.scenario, intensifier=DummyIntensifier, intensifier_kwargs={'maxR': 987},
+        )
+        self.assertIsInstance(smbo.solver.intensifier, DummyIntensifier)
+        self.assertEqual(smbo.solver.intensifier.maxR, 987)
+        # Check for construction failure on wrong argument
+        with self.assertRaisesRegex(Exception, 'got an unexpected keyword argument'):
+            SMAC(self.scenario, intensifier_kwargs={'dummy': 0.1})
+
+    def test_construct_initial_design(self):
+
+        rng = np.random.RandomState(42)
+        smbo = SMAC(self.scenario)
+        self.assertIsInstance(smbo.solver.initial_design, DefaultConfiguration)
+        self.assertIsNot(smbo.solver.intensifier.rs, rng)
+        smbo = SMAC(self.scenario, rng=rng)
+        self.assertIsInstance(smbo.solver.intensifier, Intensifier)
+        self.assertIs(smbo.solver.intensifier.rs, rng)
+        smbo = SMAC(self.scenario, intensifier_kwargs={'maxR': 987})
+        self.assertEqual(smbo.solver.intensifier.maxR, 987)
+        smbo = SMAC(
+            self.scenario,
+            initial_design=InitialDesign,
+            initial_design_kwargs={'configs': 'dummy'},
+        )
+        self.assertIsInstance(smbo.solver.initial_design, InitialDesign)
+        self.assertEqual(smbo.solver.initial_design.configs, 'dummy')
+        # Check for construction failure on wrong argument
+        with self.assertRaisesRegex(Exception, 'got an unexpected keyword argument'):
+            SMAC(self.scenario, intensifier_kwargs={'dummy': 0.1})
+
+        for initial_incumbent_string, expected_instance in (
+            ("DEFAULT", DefaultConfiguration),
+            ("RANDOM", RandomConfigurations),
+            ("LHD", LHDesign),
+            ("FACTORIAL", FactorialInitialDesign),
+            ("SOBOL", SobolDesign),
+        ):
+            self.scenario.initial_incumbent = initial_incumbent_string
+            smbo = SMAC(self.scenario)
+            self.assertIsInstance(smbo.solver.initial_design, expected_instance)
+
+    def test_init_EIPS_as_arguments(self):
+        for objective in ['runtime', 'quality']:
+            self.scenario.run_obj = objective
+            smbo = SMAC(
+                self.scenario,
+                model=UncorrelatedMultiObjectiveRandomForestWithInstances,
+                model_kwargs={'target_names': ['a', 'b'], 'rf_kwargs': {'seed': 1}},
+                acquisition_function=EIPS,
+                runhistory2epm=RunHistory2EPM4EIPS,
+            ).solver
+            self.assertIsInstance(smbo.model, UncorrelatedMultiObjectiveRandomForestWithInstances)
+            self.assertIsInstance(smbo.acquisition_func, EIPS)
+            self.assertIsInstance(smbo.acquisition_func.model, UncorrelatedMultiObjectiveRandomForestWithInstances)
+            self.assertIsInstance(smbo.rh2EPM, RunHistory2EPM4EIPS)
 
     ####################################################################################################################
     # Other tests...

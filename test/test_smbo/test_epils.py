@@ -83,11 +83,11 @@ class TestSMBO(unittest.TestCase):
             self.scenario.run_obj = objective
             types, bounds = get_types(self.scenario.cs, None)
             umrfwi = UncorrelatedMultiObjectiveRandomForestWithInstances(
-                ['cost', 'runtime'], types, bounds, seed=1)
+                ['cost', 'runtime'], types, bounds, seed=1, rf_kwargs={'seed': 1},)
             eips = EIPS(umrfwi)
             rh2EPM = RunHistory2EPM4EIPS(self.scenario, 2)
             epils = EPILS(self.scenario, model=umrfwi, acquisition_function=eips,
-                        runhistory2epm=rh2EPM).solver
+                          runhistory2epm=rh2EPM).solver
             self.assertIs(umrfwi, epils.model)
             self.assertIs(eips, epils.acquisition_func)
             self.assertIs(rh2EPM, epils.rh2EPM)
