@@ -58,6 +58,7 @@ class Hydra(object):
                  rng: typing.Optional[typing.Union[np.random.RandomState, int]]=None,
                  run_id: int=1,
                  tae: typing.Type[ExecuteTARun]=ExecuteTARunOld,
+                 tae_kwargs: typing.Union[dict, None] = None,
                  **kwargs):
         """
         Constructor
@@ -82,6 +83,8 @@ class Hydra(object):
             run_id for this hydra run
         tae: ExecuteTARun
             Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)
+        tae_kwargs: Optional[dict]
+            arguments passed to constructor of '~tae'
 
         """
         self.logger = logging.getLogger(
@@ -97,6 +100,7 @@ class Hydra(object):
         self.portfolio = None
         self.rh = RunHistory(average_cost)
         self._tae = tae
+        self._tae_kwargs = tae_kwargs
         if incs_per_round <= 0:
             self.logger.warning('Invalid value in %s: %d. Setting to 1', 'incs_per_round', incs_per_round)
         self.incs_per_round = max(incs_per_round, 1)
@@ -176,11 +180,22 @@ class Hydra(object):
             self.logger.info("="*120)
             self.logger.info("Hydra Iteration: %d", (i + 1))
 
+            if i == 0:
+                tae = self._tae
+                tae_kwargs = self._tae_kwargs
+            else:
+                tae = ExecuteTARunHydra
+                if self._tae_kwargs:
+                    tae_kwargs = self._tae_kwargs
+                else:
+                    tae_kwargs = {}
+                tae_kwargs['cost_oracle'] = self.cost_per_inst
             self.optimizer = PSMAC(
                 scenario=self.scenario,
                 run_id=self.run_id,
                 rng=self.rng,
-                tae=self._tae if i == 0 else partial(ExecuteTARunHydra, cost_oracle=self.cost_per_inst),
+                tae=tae,
+                tae_kwargs=tae_kwargs,
                 shared_model=False,
                 validate=True if self.val_set else False,
                 n_optimizers=self.n_optimizers,
@@ -209,10 +224,6 @@ class Hydra(object):
             else:
                 portfolio_cost = cur_portfolio_cost
                 self.logger.info("Current pertfolio cost: %f", portfolio_cost)
-
-            # modify TAE such that it return oracle performance
-            self.tae = ExecuteTARunHydra(ta=self.scenario.ta, run_obj=self.scenario.run_obj,
-                                         cost_oracle=self.cost_per_inst, tae=self._tae)
 
             self.scenario.output_dir = os.path.join(self.top_dir, "psmac3-output_%s" % (
                 datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f')))
