@@ -8,10 +8,7 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 # Import SMAC-utilities
 from smac.scenario.scenario import Scenario
-from smac.facade.smac_facade import SMAC
-from smac.optimizer.acquisition import LCB
-from smac.initial_design.latin_hypercube_design import LHDesign
-from smac.runhistory.runhistory2epm import RunHistory2EPM4InvScaledCost
+from smac.facade.bogp_facade import BOGP
 
 def rosenbrock_2d(x):
     """ The 2 dimensional Rosenbrock function as a toy model
@@ -49,16 +46,7 @@ print("Default Value: %.2f" % (def_value))
 
 # Optimize, using a SMAC-object
 print("Optimizing! Depending on your machine, this might take a few minutes.")
-smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
-        tae_runner=rosenbrock_2d,
-        initial_design=LHDesign,
-        initial_design_kwargs={'n_configs_x_params':4,
-                               'max_config_fracs':1.0},
-        runhistory2epm=RunHistory2EPM4InvScaledCost,
-        model_kwargs={'num_trees': 42},
-        acquisition_function_optimizer_kwargs={'max_steps':100},
-        acquisition_function=LCB,
-        acquisition_function_kwargs={'par':0.01}
-        )
+smac = BOGP(scenario=scenario, rng=np.random.RandomState(42),
+        tae_runner=rosenbrock_2d )
 
 smac.optimize()

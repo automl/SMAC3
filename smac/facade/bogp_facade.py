@@ -5,6 +5,8 @@ from smac.facade.smac_facade import SMAC
 from smac.epm.gp_default_priors import DefaultPrior
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
 from smac.utils.util_funcs import get_types, get_rng
+from smac.initial_design.sobol_design import SobolDesign
+from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
 
 
 __author__ = "Marius Lindauer"
@@ -37,11 +39,14 @@ class BOGP(SMAC):
         see ~smac.facade.smac_facade for documentation
         """
         scenario = kwargs['scenario']
-        if scenario.initial_incumbent not in ['LHD', 'FACTORIAL', 'SOBOL']:
-            scenario.initial_incumbent = 'SOBOL'
 
-        if scenario.transform_y is 'NONE':
-            scenario.transform_y = "LOGS"
+        kwargs['initial_design'] = kwargs.get('initial_design', SobolDesign)
+        kwargs['runhistory2epm'] = kwargs.get('runhistory2epm', RunHistory2EPM4LogScaledCost)
+
+        init_kwargs = kwargs.get('initial_design_kwargs', dict())
+        init_kwargs['n_configs_x_params'] = init_kwargs.get('n_configs_x_params', 10)
+        init_kwargs['max_config_fracs'] = init_kwargs.get('max_config_fracs', 0.25)
+        kwargs['initial_design_kwargs'] = init_kwargs
 
         if kwargs.get('model') is None:
             _, rng = get_rng(rng=kwargs.get("rng", None), run_id=kwargs.get("run_id", None), logger=None)
@@ -61,29 +66,29 @@ class BOGP(SMAC):
                 n_hypers += 1
 
             if model_type == "gp":
-                model = GaussianProcess(
-                    types=types,
-                    bounds=bounds,
-                    kernel=kernel,
-                    prior=prior,
-                    rng=rng,
-                    normalize_output=True,
-                    normalize_input=True,
-                )
+                model_class = GaussianProcess
+                kwargs['model'] = model_class
+                model_kwargs = kwargs.get('model_kwargs', dict())
+                model_kwargs['kernel'] = kernel
+                model_kwargs['prior'] = prior
+                model_kwargs['normalize_input'] = True
+                model_kwargs['normalize_output'] = True
+                model_kwargs['normalize_input'] = True
+                model_kwargs['seed'] = rng.randint(0, 2 ** 20)
             elif model_type == "gp_mcmc":
-                model = GaussianProcessMCMC(
-                    types=types,
-                    bounds=bounds,
-                    kernel=kernel,
-                    prior=prior,
-                    n_hypers=n_hypers,
-                    chain_length=200,
-                    burnin_steps=100,
-                    normalize_input=True,
-                    normalize_output=True,
-                    rng=rng,
-                )
-            kwargs['model'] = model
+                model_class = GaussianProcessMCMC
+                kwargs['model'] = model_class
+                model_kwargs = kwargs.get('model_kwargs', dict())
+                model_kwargs['kernel'] = kernel
+                model_kwargs['prior'] = prior
+                model_kwargs['n_hypers'] = n_hypers
+                model_kwargs['chain_length'] = 200
+                model_kwargs['burnin_steps'] = 100
+                model_kwargs['normalize_input'] = True
+                model_kwargs['normalize_output'] = True
+                model_kwargs['seed'] = rng.randint(0, 2**20)
+            kwargs['model_kwargs'] = model_kwargs
+
         super().__init__(**kwargs)
 
         if self.solver.scenario.n_features > 0:
@@ -91,11 +96,16 @@ class BOGP(SMAC):
 
         self.logger.info(self.__class__)
 
-        self.solver.random_configuration_chooser.prob = 0.0
+        # assumes random chooser for random configs
+        random_config_chooser_kwargs = kwargs.get('random_configuration_chooser_kwargs', dict())
+        random_config_chooser_kwargs['prob'] = random_config_chooser_kwargs.get('prob', 0.0)
+        kwargs['random_configuration_chooser_kwargs'] = random_config_chooser_kwargs
 
         # only 1 configuration per SMBO iteration
-        self.solver.scenario.intensification_percentage = 1e-10
-        self.solver.intensifier.min_chall = 1
+        intensifier_kwargs = kwargs.get('intensifier_kwargs', dict())
+        intensifier_kwargs['min_chall'] = 1
+        kwargs['intensifier_kwargs'] = intensifier_kwargs
+        scenario.intensification_percentage = 1e-10
 
         # better improve acqusition function optimization
         # 1. increase number of sls iterations

@@ -278,7 +278,8 @@ class SMAC(object):
         elif inspect.isclass(model):
             model = model(**model_def_kwargs)
         else:
-            raise TypeError(type(model))
+            raise TypeError(
+                "Model not recognized: %s" %(type(model)))
 
         # initial acquisition function
         acq_def_kwargs = {'model': model}
@@ -406,8 +407,8 @@ class SMAC(object):
             'configs': initial_configurations,
             'intensifier': intensifier,
             'aggregate_func': aggregate_func,
-            'n_configs_x_params': 10,
-            'max_config_fracs': 0.25
+            'n_configs_x_params': 0,
+            'max_config_fracs': 0.0
             }
         if initial_design_kwargs is not None:
             init_design_def_kwargs.update(initial_design_kwargs)

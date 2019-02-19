@@ -29,6 +29,7 @@ class GaussianProcessMCMC(BaseModel):
         normalize_output: bool=True,
         normalize_input: bool=True,
         noise: int=-8,
+        **kwargs
     ):
         """
         Gaussian process model.
@@ -82,7 +83,7 @@ class GaussianProcessMCMC(BaseModel):
             Noise term that is added to the diagonal of the covariance matrix
             for the Cholesky decomposition.
         """
-        super().__init__(types=types, bounds=bounds, seed=seed)
+        super().__init__(types=types, bounds=bounds, seed=seed, **kwargs)
 
         self.kernel = kernel
         self.prior = prior

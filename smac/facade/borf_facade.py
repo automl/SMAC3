@@ -1,27 +1,7 @@
-import logging
-import os
-import typing
-
-import numpy as np
-
 from smac.facade.smac_facade import SMAC
-from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
-    RandomConfigurationChooser, ChooserCosineAnnealing, \
-    ChooserProb
-from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, \
-    RunHistory2EPM4LogCost, RunHistory2EPM4Cost, \
-    RunHistory2EPM4LogScaledCost, RunHistory2EPM4SqrtScaledCost, \
-    RunHistory2EPM4InvScaledCost, RunHistory2EPM4ScaledCost
-from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
-from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
-    AcquisitionFunctionMaximizer
-from smac.tae.execute_ta_run import StatusType
+from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
+from smac.optimizer.acquisition import LogEI
 from smac.epm.rf_with_instances import RandomForestWithInstances
-from smac.epm.rf_with_instances_hpo import RandomForestWithInstancesHPO
-from smac.utils.util_funcs import get_types
-from smac.utils.constants import MAXINT
-from smac.initial_design.latin_hypercube_design import LHDesign
-from smac.initial_design.factorial_design import FactorialInitialDesign
 from smac.initial_design.sobol_design import SobolDesign
 
 __author__ = "Marius Lindauer"
@@ -56,11 +36,13 @@ class BORF(SMAC):
 
         scenario = kwargs['scenario']
 
-        if scenario.initial_incumbent not in ['LHD', 'FACTORIAL', 'SOBOL']:
-            scenario.initial_incumbent = 'SOBOL'
+        kwargs['initial_design'] = kwargs.get('initial_design', SobolDesign)
+        kwargs['runhistory2epm'] = kwargs.get('runhistory2epm', RunHistory2EPM4LogScaledCost)
 
-        if scenario.transform_y is 'NONE':
-            scenario.transform_y = "LOGS"
+        init_kwargs = kwargs.get('initial_design_kwargs', dict())
+        init_kwargs['n_configs_x_params'] = init_kwargs.get('n_configs_x_params', 10)
+        init_kwargs['max_config_fracs'] = init_kwargs.get('max_config_fracs', 0.25)
+        kwargs['initial_design_kwargs'] = init_kwargs
 
         # only 1 configuration per SMBO iteration
         intensifier_kwargs = kwargs.get('intensifier_kwargs', dict())
@@ -73,22 +55,22 @@ class BORF(SMAC):
 
         # == static RF settings
         model_kwargs = kwargs.get('model_kwargs', dict())
-        model_kwargs['num_trees'] = 10
-        model_kwargs['do_bootstrapping'] = True
-        model_kwargs['ratio_features'] = 1.0
-        model_kwargs['min_samples_split'] = 2
-        model_kwargs['min_samples_leaf'] = 1
-        model_kwargs['log_y'] = True
+        model_kwargs['num_trees'] = model_kwargs.get('num_trees', 10)
+        model_kwargs['do_bootstrapping'] = model_kwargs.get('do_bootstrapping', True)
+        model_kwargs['ratio_features'] = model_kwargs.get('ratio_features', 1.0)
+        model_kwargs['min_samples_split'] = model_kwargs.get('min_samples_split', 2)
+        model_kwargs['min_samples_leaf'] = model_kwargs.get('min_samples_leaf', 1)
+        model_kwargs['log_y'] = model_kwargs.get('log_y', True)
         kwargs['model_kwargs'] = model_kwargs
 
         # == Acquisition function
-        kwargs['acquisition_function'] = LogEI
+        kwargs['acquisition_function'] = kwargs.get('acquisition_function', LogEI)
 
-        kwargs['runhistory2epm'] = RunHistory2EPM4LogScaledCost
+        kwargs['runhistory2epm'] = kwargs.get('runhistory2epm', RunHistory2EPM4LogScaledCost)
 
         # assumes random chooser for random configs
         random_config_chooser_kwargs = kwargs.get('random_configuration_chooser_kwargs', dict())
-        random_config_chooser_kwargs['prob'] = 0.0
+        random_config_chooser_kwargs['prob'] = random_config_chooser_kwargs.get('prob', 0.0)
         kwargs['random_configuration_chooser_kwargs'] = random_config_chooser_kwargs
 
         # better improve acquisition function optimization
