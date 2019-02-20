@@ -46,7 +46,10 @@ print("Default Value: %.2f" % (def_value))
 
 # Optimize, using a SMAC-object
 print("Optimizing! Depending on your machine, this might take a few minutes.")
-smac = BOGP(scenario=scenario, rng=np.random.RandomState(42),
-        tae_runner=rosenbrock_2d )
+smac = BOGP(
+    scenario=scenario,
+    rng=np.random.RandomState(42),
+    tae_runner=rosenbrock_2d,
+)
 
 smac.optimize()

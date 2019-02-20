@@ -89,17 +89,15 @@ class BOGP(SMAC):
                 model_kwargs['seed'] = rng.randint(0, 2**20)
             kwargs['model_kwargs'] = model_kwargs
 
-        super().__init__(**kwargs)
+        if kwargs.get('random_configuration_chooser') is None:
+            random_config_chooser_kwargs = kwargs.get('random_configuration_chooser_kwargs', dict())
+            random_config_chooser_kwargs['prob'] = random_config_chooser_kwargs.get('prob', 0.0)
+            kwargs['random_configuration_chooser_kwargs'] = random_config_chooser_kwargs
 
-        if self.solver.scenario.n_features > 0:
-            raise NotImplementedError("BOGP cannot handle instances")
-
-        self.logger.info(self.__class__)
-
-        # assumes random chooser for random configs
-        random_config_chooser_kwargs = kwargs.get('random_configuration_chooser_kwargs', dict())
-        random_config_chooser_kwargs['prob'] = random_config_chooser_kwargs.get('prob', 0.0)
-        kwargs['random_configuration_chooser_kwargs'] = random_config_chooser_kwargs
+        if kwargs.get('acquisition_function_optimizer') is None:
+            acquisition_function_optimizer_kwargs = kwargs.get('acquisition_function_optimizer_kwargs', dict())
+            acquisition_function_optimizer_kwargs['n_sls_iterations'] = 100
+            kwargs['acquisition_function_optimizer_kwargs'] = acquisition_function_optimizer_kwargs
 
         # only 1 configuration per SMBO iteration
         intensifier_kwargs = kwargs.get('intensifier_kwargs', dict())
@@ -107,11 +105,13 @@ class BOGP(SMAC):
         kwargs['intensifier_kwargs'] = intensifier_kwargs
         scenario.intensification_percentage = 1e-10
 
-        # better improve acqusition function optimization
-        # 1. increase number of sls iterations
-        self.solver.acq_optimizer.n_sls_iterations = 100
-        # 2. more randomly sampled configurations
-        self.solver.scenario.acq_opt_challengers = 1000
+        super().__init__(**kwargs)
 
+        if self.solver.scenario.n_features > 0:
+            raise NotImplementedError("BOGP cannot handle instances")
+
+        self.logger.info(self.__class__)
+
+        self.solver.scenario.acq_opt_challengers = 1000
         # activate predict incumbent
         self.solver.predict_incumbent = True
