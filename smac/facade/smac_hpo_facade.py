@@ -1,4 +1,4 @@
-from smac.facade.smac_facade import SMAC
+from smac.facade.smac_ac_facade import SMAC4AC
 from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
 from smac.optimizer.acquisition import LogEI
 from smac.epm.rf_with_instances import RandomForestWithInstances
@@ -9,12 +9,12 @@ __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class BORF(SMAC):
+class SMAC4HPO(SMAC4AC):
     """
-    Facade to use BORF default mode
+    Facade to use SMAC for hyperparameter optimization
 
     see smac.facade.smac_Facade for API
-    This facade overwrites option available via the SMAC facade
+    This facade overwrites options available via the SMAC facade
 
     Attributes
     ----------

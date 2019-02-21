@@ -5,7 +5,7 @@ import glob
 import unittest
 from unittest.mock import patch
 
-from smac.facade.psmac_facade import PSMAC
+from smac.facade.experimental.psmac_facade import PSMAC
 from smac.optimizer.smbo import SMBO
 from smac.scenario.scenario import Scenario
 

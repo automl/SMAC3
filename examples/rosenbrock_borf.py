@@ -8,7 +8,8 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 # Import SMAC-utilities
 from smac.scenario.scenario import Scenario
-from smac.facade.borf_facade import BORF
+from smac.facade.smac_hpo_facade import SMAC4HPO
+
 
 def rosenbrock_2d(x):
     """ The 2 dimensional Rosenbrock function as a toy model
@@ -23,6 +24,7 @@ def rosenbrock_2d(x):
 
     val = 100. * (x2 - x1 ** 2.) ** 2. + (1 - x1) ** 2.
     return val
+
 
 logging.basicConfig(level=logging.INFO)  # logging.DEBUG for debug output
 
@@ -46,7 +48,7 @@ print("Default Value: %.2f" % (def_value))
 
 # Optimize, using a SMAC-object
 print("Optimizing! Depending on your machine, this might take a few minutes.")
-smac = BORF(scenario=scenario, rng=np.random.RandomState(42),
-        tae_runner=rosenbrock_2d )
+smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
+                tae_runner=rosenbrock_2d )
 
 smac.optimize()

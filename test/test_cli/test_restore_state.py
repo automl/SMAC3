@@ -1,20 +1,16 @@
 import os
-import sys
 import unittest
 from nose.plugins.attrib import attr
 import shutil
 
 import numpy as np
 
-from unittest import mock
-
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 from smac.configspace import ConfigurationSpace
 from smac.smac_cli import SMACCLI
 from smac.scenario.scenario import Scenario
-from smac.facade.smac_facade import SMAC
-from smac.optimizer.smbo import SMBO
+from smac.facade.smac_ac_facade import SMAC4AC
 from smac.stats.stats import Stats
 
 
@@ -77,13 +73,12 @@ class TestSMACCLI(unittest.TestCase):
         stats = Stats(scen)
         # Recorded runs but no incumbent.
         stats.ta_runs = 10
-        smac = SMAC(scen, stats=stats, rng=np.random.RandomState(42))
+        smac = SMAC4AC(scen, stats=stats, rng=np.random.RandomState(42))
         self.output_dirs.append(scen.output_dir)
         self.assertRaises(ValueError, smac.optimize)
         # Incumbent but no recoreded runs.
         incumbent = cs.get_default_configuration()
-        smac = SMAC(scen, restore_incumbent=incumbent,
-                    rng=np.random.RandomState(42))
+        smac = SMAC4AC(scen, restore_incumbent=incumbent, rng=np.random.RandomState(42))
         self.assertRaises(ValueError, smac.optimize)
 
     @attr('slow')

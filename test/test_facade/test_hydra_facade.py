@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 import numpy as np
 
-from smac.facade.hydra_facade import Hydra, PSMAC
+from smac.facade.experimental.hydra_facade import Hydra, PSMAC
 from smac.utils.io.output_writer import OutputWriter
 from smac.scenario.scenario import Scenario
 
