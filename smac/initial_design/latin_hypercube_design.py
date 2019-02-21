@@ -63,9 +63,13 @@ class LHDesign(InitialDesign):
                 lhd_[:, idx+1:] = lhd[:, idx:]
                 lhd = lhd_
             elif isinstance(param, CategoricalHyperparameter):
-                lhd[:, idx] = np.array(lhd[:, idx] * len(param.choices), dtype=np.int)
+                v_lhd = lhd[:, idx]
+                v_lhd[v_lhd == 1] = 1 - 10**-10
+                lhd[:, idx] = np.array(v_lhd * len(param.choices), dtype=np.int)
             elif isinstance(param, OrdinalHyperparameter):
-                lhd[:, idx] = np.array(lhd[:, idx] * len(param.sequence), dtype=np.int)
+                v_lhd = lhd[:, idx]
+                v_lhd[v_lhd == 1] = 1 - 10**-10
+                lhd[:, idx] = np.array(v_lhd * len(param.sequence), dtype=np.int)
             else:
                 raise ValueError("Hyperparamet not supported in LHD")
 
