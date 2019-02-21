@@ -39,6 +39,7 @@ class RandomForestWithInstances(AbstractEPM):
 
     def __init__(self, types: np.ndarray,
                  bounds: typing.List[typing.Tuple[float, float]],
+                 seed: int,
                  log_y: bool=False,
                  num_trees: int=N_TREES,
                  do_bootstrapping: bool=True,
@@ -49,7 +50,6 @@ class RandomForestWithInstances(AbstractEPM):
                  max_depth: int=2**20,
                  eps_purity: float=1e-8,
                  max_num_nodes: int=2**20,
-                 seed: int=42,
                  **kwargs):
         """
         Parameters
@@ -62,6 +62,8 @@ class RandomForestWithInstances(AbstractEPM):
             have to pass np.array([2, 0]). Note that we count starting from 0.
         bounds : list
             Specifies the bounds for continuous features.
+        seed : int
+            The seed that is passed to the random_forest_run library.
         log_y: bool
             y values (passed to this RF) are expected to be log(y) transformed;
             this will be considered during predicting
@@ -85,10 +87,8 @@ class RandomForestWithInstances(AbstractEPM):
             different
         max_num_nodes : int
             The maxmimum total number of nodes in a tree
-        seed : int
-            The seed that is passed to the random_forest_run library.
         """
-        super().__init__(types, bounds, **kwargs)
+        super().__init__(types, bounds, seed, **kwargs)
 
         self.log_y = log_y
         self.rng = regression.default_random_engine(seed)
@@ -112,8 +112,7 @@ class RandomForestWithInstances(AbstractEPM):
         # This list well be read out by save_iteration() in the solver
         self.hypers = [num_trees, max_num_nodes, do_bootstrapping,
                        n_points_per_tree, ratio_features, min_samples_split,
-                       min_samples_leaf, max_depth, eps_purity, seed]
-        self.seed = seed
+                       min_samples_leaf, max_depth, eps_purity, self.seed]
 
         self.logger = logging.getLogger(self.__module__ + "." +
                                         self.__class__.__name__)
@@ -253,9 +252,9 @@ class RandomForestWithInstances(AbstractEPM):
         if len(X.shape) != 2:
             raise ValueError(
                 'Expected 2d array, got %dd array!' % len(X.shape))
-        if X.shape[1] != self.bounds.shape[0]:
+        if X.shape[1] != len(self.bounds):
             raise ValueError('Rows in X should have %d entries but have %d!' %
-                             (self.bounds.shape[0],
+                             (len(self.bounds),
                               X.shape[1]))
 
         mean = np.zeros(X.shape[0])

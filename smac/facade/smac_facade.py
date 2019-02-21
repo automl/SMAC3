@@ -1,6 +1,7 @@
+import inspect
 import logging
 import os
-import typing
+from typing import  List, Union, Optional, Type, Callable
 
 import numpy as np
 
@@ -21,12 +22,11 @@ from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, \
 from smac.initial_design.initial_design import InitialDesign
 from smac.initial_design.default_configuration_design import \
     DefaultConfiguration
-from smac.initial_design.random_configuration_design import RandomConfiguration
+from smac.initial_design.random_configuration_design import RandomConfigurations
 from smac.initial_design.latin_hypercube_design import LHDesign
 from smac.initial_design.factorial_design import FactorialInitialDesign
-from smac.initial_design.sobol_design import SobolDesign 
-from smac.initial_design.multi_config_initial_design import \
-    MultiConfigInitialDesign
+from smac.initial_design.sobol_design import SobolDesign
+
 # intensification
 from smac.intensification.intensification import Intensifier
 # optimizer
@@ -35,8 +35,7 @@ from smac.optimizer.objective import average_cost
 from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
 from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
     AcquisitionFunctionMaximizer
-from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
-    RandomConfigurationChooser, ChooserCosineAnnealing, ChooserProb
+from smac.optimizer.random_configuration_chooser import RandomConfigurationChooser, ChooserProb
 # epm
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
@@ -44,11 +43,10 @@ from smac.epm.base_epm import AbstractEPM
 # utils
 from smac.utils.util_funcs import get_types
 from smac.utils.io.traj_logging import TrajLogger
-from smac.utils.constants import MAXINT, N_TREES
+from smac.utils.constants import MAXINT
 from smac.utils.util_funcs import get_rng
 from smac.utils.io.output_directory import create_output_directory
 from smac.configspace import Configuration
-
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
@@ -73,21 +71,31 @@ class SMAC(object):
 
     def __init__(self,
                  scenario: Scenario,
-                 tae_runner: typing.Optional[typing.Union[ExecuteTARun, typing.Callable]]=None,
-                 runhistory: typing.Optional[RunHistory]=None,
-                 intensifier: typing.Optional[Intensifier]=None,
-                 acquisition_function: typing.Optional[AbstractAcquisitionFunction]=None,
-                 acquisition_function_optimizer: typing.Optional[AcquisitionFunctionMaximizer]=None,
-                 model: typing.Optional[AbstractEPM]=None,
-                 runhistory2epm: typing.Optional[AbstractRunHistory2EPM]=None,
-                 initial_design: typing.Optional[InitialDesign]=None,
-                 initial_configurations: typing.Optional[typing.List[Configuration]]=None,
-                 stats: typing.Optional[Stats]=None,
-                 restore_incumbent: typing.Optional[Configuration]=None,
-                 rng: typing.Optional[typing.Union[np.random.RandomState, int]]=None,
-                 smbo_class: typing.Optional[SMBO]=None,
-                 run_id: typing.Optional[int]=None,
-                 random_configuration_chooser: typing.Optional[RandomConfigurationChooser]=None):
+                 tae_runner: Optional[Union[Type[ExecuteTARun], Callable]] = None,
+                 tae_runner_kwargs: Optional[dict] = None,
+                 runhistory: Optional[Union[Type[RunHistory], RunHistory]] = None,
+                 runhistory_kwargs: Optional[dict] = None,
+                 intensifier: Optional[Type[Intensifier]] = None,
+                 intensifier_kwargs: Optional[dict] = None,
+                 acquisition_function: Optional[Type[AbstractAcquisitionFunction]] = None,
+                 acquisition_function_kwargs: Optional[dict] = None,
+                 acquisition_function_optimizer: Optional[Type[AcquisitionFunctionMaximizer]] = None,
+                 acquisition_function_optimizer_kwargs: Optional[dict] = None,
+                 model: Optional[Type[AbstractEPM]] = None,
+                 model_kwargs: Optional[dict] = None,
+                 runhistory2epm: Optional[Type[AbstractRunHistory2EPM]] = None,
+                 runhistory2epm_kwargs: Optional[dict] = None,
+                 initial_design: Optional[Type[InitialDesign]] = None,
+                 initial_design_kwargs: Optional[dict] = None,
+                 initial_configurations: Optional[List[Configuration]] = None,
+                 stats: Optional[Stats] = None,
+                 restore_incumbent: Optional[Configuration] = None,
+                 rng: Optional[Union[np.random.RandomState, int]] = None,
+                 smbo_class: Optional[SMBO] = None,
+                 run_id: Optional[int] = None,
+                 random_configuration_chooser: Optional[Type[RandomConfigurationChooser]] = None,
+                 random_configuration_chooser_kwargs: Optional[dict] = None
+                 ):
         """
         Constructor
 
@@ -102,29 +110,48 @@ class SMAC(object):
             :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.
             If not set, it will be initialized with the
             :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.
+        tae_runner_kwargs: Optional[dict]
+            arguments passed to constructor of '~tae_runner'
         runhistory : RunHistory
             runhistory to store all algorithm runs
+        runhistory_kwargs : Optional[dict]
+            arguments passed to constructor of runhistory.
+            We strongly advise against changing the aggregation function,
+            since it will break some code assumptions
         intensifier : Intensifier
             intensification object to issue a racing to decide the current
             incumbent
+        intensifier_kwargs: Optional[dict]
+            arguments passed to the constructor of '~intensifier'
         acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction
-            Object that implements the :class:`~smac.optimizer.acquisition.AbstractAcquisitionFunction`.
-            Will use :class:`~smac.optimizer.acquisition.EI` if not set.
+            Class or object that implements the :class:`~smac.optimizer.acquisition.AbstractAcquisitionFunction`.
+            Will use :class:`~smac.optimizer.acquisition.EI` or :class:`~smac.optimizer.acquisition.LogEI` if not set.
+            `~acquisition_function_kwargs` is passed to the class constructor.
+        acquisition_function_kwargs : Optional[dict]
+            dictionary to pass specific arguments to ~acquisition_function
         acquisition_function_optimizer : ~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
             Object that implements the :class:`~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer`.
             Will use :class:`smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch` if not set.
+        acquisition_function_optimizer_kwargs: Optional[dict]
+            Arguments passed to constructor of '~acquisition_function_optimizer'
         model : AbstractEPM
             Model that implements train() and predict(). Will use a
             :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` if not set.
+        model_kwargs : Optional[dict]
+            Arguments passed to constructor of '~model'
         runhistory2epm : ~smac.runhistory.runhistory2epm.RunHistory2EMP
             Object that implements the AbstractRunHistory2EPM. If None,
             will use :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4Cost`
             if objective is cost or
             :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost`
             if objective is runtime.
+        runhistory2epm_kwargs: Optional[dict]
+            Arguments passed to the constructor of '~runhistory2epm'
         initial_design : InitialDesign
             initial sampling design
-        initial_configurations : typing.List[Configuration]
+        initial_design_kwargs: Optional[dict]
+            arguments passed to constructor of `~initial_design'
+        initial_configurations : List[Configuration]
             list of initial configurations for initial design --
             cannot be used together with initial_design
         stats : Stats
@@ -141,6 +168,8 @@ class SMAC(object):
             chosen.
         random_configuration_chooser : ~smac.optimizer.random_configuration_chooser.RandomConfigurationChooser
             How often to choose a random configuration during the intensification procedure.
+        random_configuration_chooser_kwargs : Optional[dict]
+            arguments of constructor for '~random_configuration_chooser'
 
         """
         self.logger = logging.getLogger(
@@ -171,10 +200,11 @@ class SMAC(object):
             and getattr(scenario, 'tuner_timeout', None) is None
             and scenario.run_obj == 'quality'
         ):
-            self.logger.info('Optimizing a deterministic scenario for '
-                             'quality without a tuner timeout - will make '
-                             'SMAC deterministic!')
+            self.logger.info('Optimizing a deterministic scenario for quality without a tuner timeout - will make '
+                             'SMAC deterministic and only evaluate one configuration per iteration!')
             scenario.intensification_percentage = 1e-10
+            scenario.min_chall = 1
+
         scenario.write()
 
         # initialize stats object
@@ -184,19 +214,35 @@ class SMAC(object):
             self.stats = Stats(scenario)
 
         if self.scenario.run_obj == "runtime" and not self.scenario.transform_y == "LOG":
-            self.logger.warn("Runtime as objective automatically activates log(y) transformation")
+            self.logger.warning("Runtime as objective automatically activates log(y) transformation")
             self.scenario.transform_y = "LOG"
 
         # initialize empty runhistory
+        runhistory_def_kwargs = {'aggregate_func': aggregate_func}
+        if runhistory_kwargs is not None:
+            runhistory_def_kwargs.update(runhistory_kwargs)
         if runhistory is None:
-            runhistory = RunHistory(aggregate_func=aggregate_func)
-        # inject aggr_func if necessary
-        if runhistory.aggregate_func is None:
-            runhistory.aggregate_func = aggregate_func
+            runhistory = RunHistory(**runhistory_def_kwargs)
+        elif inspect.isclass(runhistory):
+            runhistory = runhistory(**runhistory_def_kwargs)
+        else:
+            if runhistory.aggregate_func is None:
+                runhistory.aggregate_func = aggregate_func
 
-        if not random_configuration_chooser:
-            random_configuration_chooser = ChooserProb(prob=scenario.rand_prob,
-                                                       rng=rng)
+        rand_conf_chooser_kwargs = {
+           'rng': rng
+        }
+        if random_configuration_chooser_kwargs is not None:
+            rand_conf_chooser_kwargs.update(random_configuration_chooser_kwargs)
+        if random_configuration_chooser is None:
+            if 'prob' not in rand_conf_chooser_kwargs:
+                rand_conf_chooser_kwargs['prob'] = scenario.rand_prob
+            random_configuration_chooser = ChooserProb(**rand_conf_chooser_kwargs)
+        elif inspect.isclass(random_configuration_chooser):
+            random_configuration_chooser = random_configuration_chooser(**rand_conf_chooser_kwargs)
+        elif not isinstance(random_configuration_chooser, RandomConfigurationChooser):
+            raise ValueError("random_configuration_chooser has to be"
+                             " a class or object of RandomConfigurationChooser")
 
         # reset random number generator in config space to draw different
         # random configurations with each seed given to SMAC
@@ -207,75 +253,103 @@ class SMAC(object):
 
         # initial EPM
         types, bounds = get_types(scenario.cs, scenario.feature_array)
+        model_def_kwargs = {
+            'types': types,
+            'bounds': bounds,
+            'instance_features': scenario.feature_array,
+            'seed': rng.randint(MAXINT),
+            'pca_components': scenario.PCA_DIM,
+        }
+        if model_kwargs is not None:
+            model_def_kwargs.update(model_kwargs)
         if model is None:
-            model = RandomForestWithInstances(types=types,
-                                              bounds=bounds,
-                                              instance_features=scenario.feature_array,
-                                              seed=rng.randint(MAXINT),
-                                              pca_components=scenario.PCA_DIM,
-                                              log_y=scenario.transform_y in ["LOG", "LOGS"],
-                                              num_trees=scenario.rf_num_trees,
-                                              do_bootstrapping=scenario.rf_do_bootstrapping,
-                                              ratio_features=scenario.rf_ratio_features,
-                                              min_samples_split=scenario.rf_min_samples_split,
-                                              min_samples_leaf=scenario.rf_min_samples_leaf,
-                                              max_depth=scenario.rf_max_depth)
+            for key, value in {
+                'log_y': scenario.transform_y in ["LOG", "LOGS"],
+                'num_trees': scenario.rf_num_trees,
+                'do_bootstrapping': scenario.rf_do_bootstrapping,
+                'ratio_features': scenario.rf_ratio_features,
+                'min_samples_split': scenario.rf_min_samples_split,
+                'min_samples_leaf': scenario.rf_min_samples_leaf,
+                'max_depth': scenario.rf_max_depth,
+            }.items():
+                if key not in model_def_kwargs:
+                    model_def_kwargs[key] = value
+            model = RandomForestWithInstances(**model_def_kwargs)
+        elif inspect.isclass(model):
+            model = model(**model_def_kwargs)
+        else:
+            raise TypeError(
+                "Model not recognized: %s" %(type(model)))
+
         # initial acquisition function
+        acq_def_kwargs = {'model': model}
+        if acquisition_function_kwargs is not None:
+            acq_def_kwargs.update(acquisition_function_kwargs)
         if acquisition_function is None:
             if scenario.transform_y in ["LOG", "LOGS"]:
-                acquisition_function = LogEI(model=model)
+                acquisition_function = LogEI(**acq_def_kwargs)
             else:
-                acquisition_function = EI(model=model)
-
-        # inject model if necessary
-        if acquisition_function.model is None:
-            acquisition_function.model = model
+                acquisition_function = EI(**acq_def_kwargs)
+        elif inspect.isclass(acquisition_function):
+            acquisition_function = acquisition_function(**acq_def_kwargs)
+        else:
+            raise TypeError(
+                "Argument acquisition_function must be None or an object implementing the "
+                "AbstractAcquisitionFunction, not %s."
+                % type(acquisition_function)
+            )
 
         # initialize optimizer on acquisition function
+        acq_func_opt_kwargs = {
+            'acquisition_function': acquisition_function,
+            'config_space': scenario.cs,
+            'rng': rng,
+            }
+        if acquisition_function_optimizer_kwargs is not None:
+            acq_func_opt_kwargs.update(acquisition_function_optimizer_kwargs)
         if acquisition_function_optimizer is None:
-            acquisition_function_optimizer = InterleavedLocalAndRandomSearch(
-                acquisition_function=acquisition_function,
-                config_space=scenario.cs,
-                rng=np.random.RandomState(seed=rng.randint(MAXINT)),
-                max_steps=scenario.sls_max_steps,
-                n_steps_plateau_walk=scenario.sls_n_steps_plateau_walk
-            )
-        elif not isinstance(
-                acquisition_function_optimizer,
-                AcquisitionFunctionMaximizer,
-        ):
-            raise ValueError(
-                "Argument 'acquisition_function_optimizer' must be of type"
-                "'AcquisitionFunctionMaximizer', but is '%s'" %
+            for key, value in {
+                'max_steps': scenario.sls_max_steps,
+                'n_steps_plateau_walk': scenario.sls_n_steps_plateau_walk,
+            }.items():
+                if key not in acq_func_opt_kwargs:
+                    acq_func_opt_kwargs[key] = value
+            acquisition_function_optimizer = InterleavedLocalAndRandomSearch(**acq_func_opt_kwargs)
+        elif inspect.isclass(acquisition_function_optimizer):
+            acquisition_function_optimizer = acquisition_function_optimizer(**acq_func_opt_kwargs)
+        else:
+            raise TypeError(
+                "Argument acquisition_function_optimizer must be None or an object implementing the "
+                "AcquisitionFunctionMaximizer, but is '%s'" %
                 type(acquisition_function_optimizer)
             )
 
         # initialize tae_runner
         # First case, if tae_runner is None, the target algorithm is a call
         # string in the scenario file
+        tae_def_kwargs = {
+            'stats': self.stats,
+            'run_obj': scenario.run_obj,
+            'runhistory': runhistory,
+            'par_factor': scenario.par_factor,
+            'cost_for_crash': scenario.cost_for_crash,
+            'abort_on_first_run_crash': scenario.abort_on_first_run_crash
+            }
+        if tae_runner_kwargs is not None:
+            tae_def_kwargs.update(tae_runner_kwargs)
+        if 'ta' not in tae_def_kwargs:
+            tae_def_kwargs['ta'] = scenario.ta
         if tae_runner is None:
-            tae_runner = ExecuteTARunOld(ta=scenario.ta,
-                                         stats=self.stats,
-                                         run_obj=scenario.run_obj,
-                                         runhistory=runhistory,
-                                         par_factor=scenario.par_factor,
-                                         cost_for_crash=scenario.cost_for_crash,
-                                         abort_on_first_run_crash=scenario.abort_on_first_run_crash)
-        # Second case, the tae_runner is a function to be optimized
+            tae_def_kwargs['ta'] = scenario.ta
+            tae_runner = ExecuteTARunOld(**tae_def_kwargs)
+        elif inspect.isclass(tae_runner):
+            tae_runner = tae_runner(**tae_def_kwargs)
         elif callable(tae_runner):
-            tae_runner = ExecuteTAFuncDict(ta=tae_runner,
-                                           stats=self.stats,
-                                           run_obj=scenario.run_obj,
-                                           memory_limit=scenario.memory_limit,
-                                           runhistory=runhistory,
-                                           par_factor=scenario.par_factor,
-                                           cost_for_crash=scenario.cost_for_crash,
-                                           abort_on_first_run_crash=scenario.abort_on_first_run_crash)
-        # Third case, if it is an ExecuteTaRun we can simply use the
-        # instance. Otherwise, the next check raises an exception
-        elif not isinstance(tae_runner, ExecuteTARun):
+            tae_def_kwargs['ta'] = tae_runner
+            tae_runner = ExecuteTAFuncDict(**tae_def_kwargs)
+        else:
             raise TypeError("Argument 'tae_runner' is %s, but must be "
-                            "either a callable or an instance of "
+                            "either None, a callable or an object implementing "
                             "ExecuteTaRun. Passing 'None' will result in the "
                             "creation of target algorithm runner based on the "
                             "call string in the scenario file."
@@ -287,170 +361,139 @@ class SMAC(object):
                              "the scenario must be the same, but are '%s' and "
                              "'%s'" % (tae_runner.run_obj, scenario.run_obj))
 
-        # inject stats if necessary
-        if tae_runner.stats is None:
-            tae_runner.stats = self.stats
-        # inject runhistory if necessary
-        if tae_runner.runhistory is None:
-            tae_runner.runhistory = runhistory
-        # inject cost_for_crash
-        if tae_runner.crash_cost != scenario.cost_for_crash:
-            tae_runner.crash_cost = scenario.cost_for_crash
-
         # initialize intensification
+        intensifier_def_kwargs = {
+            'tae_runner': tae_runner,
+            'stats': self.stats,
+            'traj_logger': traj_logger,
+            'rng': rng,
+            'instances': scenario.train_insts,
+            'cutoff': scenario.cutoff,
+            'deterministic': scenario.deterministic,
+            'run_obj_time': scenario.run_obj == "runtime",
+            'always_race_against': scenario.cs.get_default_configuration()
+                                   if scenario.always_race_default else None,
+            'use_ta_time_bound': scenario.use_ta_time,
+            'instance_specifics': scenario.instance_specific,
+            'minR': scenario.minR,
+            'maxR': scenario.maxR,
+            'adaptive_capping_slackfactor': scenario.intens_adaptive_capping_slackfactor,
+            'min_chall': scenario.intens_min_chall
+            }
+        if intensifier_kwargs is not None:
+            intensifier_def_kwargs.update(intensifier_kwargs)
         if intensifier is None:
-            intensifier = Intensifier(tae_runner=tae_runner,
-                                      stats=self.stats,
-                                      traj_logger=traj_logger,
-                                      rng=rng,
-                                      instances=scenario.train_insts,
-                                      cutoff=scenario.cutoff,
-                                      deterministic=scenario.deterministic,
-                                      run_obj_time=scenario.run_obj == "runtime",
-                                      always_race_against=scenario.cs.get_default_configuration()
-                                      if scenario.always_race_default else None,
-                                      use_ta_time_bound=scenario.use_ta_time,
-                                      instance_specifics=scenario.instance_specific,
-                                      minR=scenario.minR,
-                                      maxR=scenario.maxR,
-                                      adaptive_capping_slackfactor=scenario.intens_adaptive_capping_slackfactor,
-                                      min_chall=scenario.intens_min_chall)
-        # inject deps if necessary
-        if intensifier.tae_runner is None:
-            intensifier.tae_runner = tae_runner
-        if intensifier.stats is None:
-            intensifier.stats = self.stats
-        if intensifier.traj_logger is None:
-            intensifier.traj_logger = traj_logger
+            intensifier = Intensifier(**intensifier_def_kwargs)
+        elif inspect.isclass(intensifier):
+            intensifier = intensifier(**intensifier_def_kwargs)
+        else:
+            raise TypeError(
+                "Argument intensifier must be None or an object implementing the Intensifier, but is '%s'" %
+                type(intensifier)
+            )
 
         # initial design
         if initial_design is not None and initial_configurations is not None:
             raise ValueError(
                 "Either use initial_design or initial_configurations; but not both")
 
+        init_design_def_kwargs = {
+            'tae_runner': tae_runner,
+            'scenario': scenario,
+            'stats': self.stats,
+            'traj_logger': traj_logger,
+            'runhistory': runhistory,
+            'rng': rng,
+            'configs': initial_configurations,
+            'intensifier': intensifier,
+            'aggregate_func': aggregate_func,
+            'n_configs_x_params': 0,
+            'max_config_fracs': 0.0
+            }
+        if initial_design_kwargs is not None:
+            init_design_def_kwargs.update(initial_design_kwargs)
         if initial_configurations is not None:
-            initial_design = MultiConfigInitialDesign(tae_runner=tae_runner,
-                                                      scenario=scenario,
-                                                      stats=self.stats,
-                                                      traj_logger=traj_logger,
-                                                      runhistory=runhistory,
-                                                      rng=rng,
-                                                      configs=initial_configurations,
-                                                      intensifier=intensifier,
-                                                      aggregate_func=aggregate_func)
+            initial_design = InitialDesign(**init_design_def_kwargs)
         elif initial_design is None:
             if scenario.initial_incumbent == "DEFAULT":
-                initial_design = DefaultConfiguration(tae_runner=tae_runner,
-                                                      scenario=scenario,
-                                                      stats=self.stats,
-                                                      traj_logger=traj_logger,
-                                                      rng=rng)
+                init_design_def_kwargs['max_config_fracs'] = 0.0
+                initial_design = DefaultConfiguration(**init_design_def_kwargs)
             elif scenario.initial_incumbent == "RANDOM":
-                initial_design = RandomConfiguration(tae_runner=tae_runner,
-                                                     scenario=scenario,
-                                                     stats=self.stats,
-                                                     traj_logger=traj_logger,
-                                                     rng=rng)
+                init_design_def_kwargs['max_config_fracs'] = 0.0
+                initial_design = RandomConfigurations(**init_design_def_kwargs)
             elif scenario.initial_incumbent == "LHD":
-                initial_design = LHDesign(runhistory=runhistory,
-                                            intensifier=intensifier,
-                                            aggregate_func=aggregate_func,
-                                            tae_runner=tae_runner,
-                                            scenario=scenario,
-                                            stats=self.stats,
-                                            traj_logger=traj_logger,
-                                            rng=rng)
+                initial_design = LHDesign(**init_design_def_kwargs)
             elif scenario.initial_incumbent == "FACTORIAL":
-                initial_design = FactorialInitialDesign(runhistory=runhistory,
-                                                        intensifier=intensifier,
-                                                        aggregate_func=aggregate_func,
-                                                        tae_runner=tae_runner,
-                                                        scenario=scenario,
-                                                        stats=self.stats,
-                                                        traj_logger=traj_logger,
-                                                        rng=rng)
+                initial_design = FactorialInitialDesign(**init_design_def_kwargs)
             elif scenario.initial_incumbent == "SOBOL":
-                initial_design = SobolDesign(runhistory=runhistory,
-                                            intensifier=intensifier,
-                                            aggregate_func=aggregate_func,
-                                            tae_runner=tae_runner,
-                                            scenario=scenario,
-                                            stats=self.stats,
-                                            traj_logger=traj_logger,
-                                            rng=rng)
+                initial_design = SobolDesign(**init_design_def_kwargs)
             else:
                 raise ValueError("Don't know what kind of initial_incumbent "
                                  "'%s' is" % scenario.initial_incumbent)
-        # inject deps if necessary
-        if initial_design.tae_runner is None:
-            initial_design.tae_runner = tae_runner
-        if initial_design.scenario is None:
-            initial_design.scenario = scenario
-        if initial_design.stats is None:
-            initial_design.stats = self.stats
-        if initial_design.traj_logger is None:
-            initial_design.traj_logger = traj_logger
+        elif inspect.isclass(initial_design):
+            initial_design = initial_design(**init_design_def_kwargs)
+        else:
+            raise TypeError(
+                "Argument initial_design must be None or an object implementing the InitialDesign, but is '%s'" %
+                type(initial_design)
+            )
 
-        # initial conversion of runhistory into EPM data
+        # if we log the performance data,
+        # the RFRImputator will already get
+        # log transform data from the runhistory
+        if scenario.transform_y in ["LOG", "LOGS"]:
+            cutoff = np.log(np.nanmin([np.inf, np.float_(scenario.cutoff)]))
+            threshold = cutoff + np.log(scenario.par_factor)
+        else:
+            cutoff = np.nanmin([np.inf, np.float_(scenario.cutoff)])
+            threshold = cutoff * scenario.par_factor
+        num_params = len(scenario.cs.get_hyperparameters())
+        imputor = RFRImputator(rng=rng,
+                               cutoff=cutoff,
+                               threshold=threshold,
+                               model=model,
+                               change_threshold=0.01,
+                               max_iter=2)
+
+        r2e_def_kwargs = {
+            'scenario': scenario,
+            'num_params': num_params,
+            'success_states': [StatusType.SUCCESS, ],
+            'impute_censored_data': True,
+            'impute_state': [StatusType.CAPPED, ],
+            'imputor': imputor,
+            'scale_perc': 5
+            }
+        if scenario.run_obj == 'quality':
+            r2e_def_kwargs.update({
+                'success_states': [StatusType.SUCCESS, StatusType.CRASHED],
+                'impute_censored_data': False,
+                'impute_state': None,
+            })
+        if runhistory2epm_kwargs is not None:
+            r2e_def_kwargs.update(runhistory2epm_kwargs)
         if runhistory2epm is None:
-
-            num_params = len(scenario.cs.get_hyperparameters())
             if scenario.run_obj == 'runtime':
-
-                # if we log the performance data,
-                # the RFRImputator will already get
-                # log transform data from the runhistory
-                cutoff = np.log(scenario.cutoff)
-                threshold = np.log(scenario.cutoff *
-                                     scenario.par_factor)
-
-                imputor = RFRImputator(rng=rng,
-                                       cutoff=cutoff,
-                                       threshold=threshold,
-                                       model=model,
-                                       change_threshold=0.01,
-                                       max_iter=2)
-
-                runhistory2epm = RunHistory2EPM4LogCost(
-                    scenario=scenario, num_params=num_params,
-                    success_states=[StatusType.SUCCESS, ],
-                    impute_censored_data=True,
-                    impute_state=[StatusType.CAPPED, ],
-                    imputor=imputor)
-
+                runhistory2epm = RunHistory2EPM4LogCost(**r2e_def_kwargs)
             elif scenario.run_obj == 'quality':
                 if scenario.transform_y == "NONE":
-                    runhistory2epm = RunHistory2EPM4Cost(scenario=scenario, num_params=num_params,
-                                                         success_states=[
-                                                             StatusType.SUCCESS,
-                                                             StatusType.CRASHED],
-                                                         impute_censored_data=False, impute_state=None)
+                    runhistory2epm = RunHistory2EPM4Cost(**r2e_def_kwargs)
                 elif scenario.transform_y == "LOG":
-                    runhistory2epm = RunHistory2EPM4LogCost(scenario=scenario, num_params=num_params,
-                                                         success_states=[
-                                                             StatusType.SUCCESS,
-                                                             StatusType.CRASHED],
-                                                         impute_censored_data=False, impute_state=None)
+                    runhistory2epm = RunHistory2EPM4LogCost(**r2e_def_kwargs)
                 elif scenario.transform_y == "LOGS":
-                    runhistory2epm = RunHistory2EPM4LogScaledCost(scenario=scenario, num_params=num_params,
-                                                         success_states=[
-                                                             StatusType.SUCCESS,
-                                                             StatusType.CRASHED],
-                                                         impute_censored_data=False, impute_state=None)
+                    runhistory2epm = RunHistory2EPM4LogScaledCost(**r2e_def_kwargs)
                 elif scenario.transform_y == "INVS":
-                    runhistory2epm = RunHistory2EPM4InvScaledCost(scenario=scenario, num_params=num_params,
-                                                         success_states=[
-                                                             StatusType.SUCCESS,
-                                                             StatusType.CRASHED],
-                                                         impute_censored_data=False, impute_state=None)
-
+                    runhistory2epm = RunHistory2EPM4InvScaledCost(**r2e_def_kwargs)
             else:
                 raise ValueError('Unknown run objective: %s. Should be either '
                                  'quality or runtime.' % self.scenario.run_obj)
-
-        # inject scenario if necessary:
-        if runhistory2epm.scenario is None:
-            runhistory2epm.scenario = scenario
+        elif inspect.isclass(runhistory2epm):
+            runhistory2epm = runhistory2epm(**r2e_def_kwargs)
+        else:
+            raise TypeError(
+                "Argument runhistory2epm must be None or an object implementing the RunHistory2EPM, but is '%s'" %
+                type(runhistory2epm)
+            )
 
         smbo_args = {
             'scenario': scenario,
@@ -504,9 +547,12 @@ class SMAC(object):
         return incumbent
 
     def validate(self,
-                 config_mode: typing.Union[typing.List[Configuration], np.ndarray, str]='inc',
-                 instance_mode: typing.Union[typing.List[str], str]='train+test',
-                 repetitions: int=1, use_epm: bool=False, n_jobs: int=-1, backend: str='threading'):
+                 config_mode: Union[List[Configuration], np.ndarray, str] = 'inc',
+                 instance_mode: Union[List[str], str] = 'train+test',
+                 repetitions: int = 1,
+                 use_epm: bool = False,
+                 n_jobs: int = -1, backend:
+                 str = 'threading'):
         """
         Create validator-object and run validation, using
         scenario-information, runhistory from smbo and tae_runner from intensify

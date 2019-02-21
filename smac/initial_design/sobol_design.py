@@ -6,14 +6,14 @@ from ConfigSpace.configuration_space import Configuration
 from ConfigSpace.hyperparameters import FloatHyperparameter
 from ConfigSpace.util import deactivate_inactive_hyperparameters
 
-from smac.initial_design.multi_config_initial_design import MultiConfigInitialDesign
+from smac.initial_design.initial_design import InitialDesign
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class SobolDesign(MultiConfigInitialDesign):
+class SobolDesign(InitialDesign):
     """ Sobol sequence design
 
     Attributes

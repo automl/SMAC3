@@ -34,6 +34,8 @@ class GaussianProcess(BaseModel):
         have to pass np.array([2, 0]). Note that we count starting from 0.
     bounds : list
         Specifies the bounds for continuous features.
+    seed : int
+        Model seed.
     kernel : george kernel object
         Specifies the kernel that is used for all Gaussian Process
     prior : prior object
@@ -57,21 +59,16 @@ class GaussianProcess(BaseModel):
         self,
         types: np.ndarray,
         bounds: typing.List[typing.Tuple[float, float]],
+        seed: int,
         kernel: george.kernels.Kernel,
         prior: BasePrior=None,
         noise: float=1e-3,
         use_gradients: bool=False,
         normalize_output: bool=True,
         normalize_input: bool=True,
-        rng: typing.Optional[np.random.RandomState]=None,
     ):
 
-        super().__init__(types=types, bounds=bounds)
-
-        if rng is None:
-            self.rng = np.random.RandomState(np.random.randint(0, 10000))
-        else:
-            self.rng = rng
+        super().__init__(types=types, bounds=bounds, seed=seed)
 
         self.kernel = kernel
         self.gp = None

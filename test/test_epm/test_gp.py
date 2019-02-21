@@ -28,7 +28,7 @@ def get_gp(n_dimensions, rs, noise=1e-3):
 
     model = GaussianProcess(
         bounds=bounds, types=types, kernel=kernel,
-        prior=prior, rng=rs, noise=noise,
+        prior=prior, seed=rs.randint(low=1, high=10000), noise=noise,
         normalize_output=False, normalize_input=True,
     )
     return model
@@ -116,7 +116,7 @@ class TestGP(unittest.TestCase):
         model = get_gp(X.shape[1], rs)
         cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
 
-        maes = [10.109955737245306468, 9.553761121008572789]
+        maes = [9.810206561442628563, 9.259995916707702291]
 
         for i, (train_split, test_split) in enumerate(cv.split(X, y)):
             X_train = X[train_split]

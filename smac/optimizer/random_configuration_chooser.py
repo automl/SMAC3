@@ -17,6 +17,9 @@ class RandomConfigurationChooser(ABC):
     random configurations in a list of challengers.
     """
 
+    def __init__(self, rng: np.random.RandomState):
+        self.rng = rng
+
     @abstractmethod
     def next_smbo_iteration(self) -> None:
         """Indicate beginning of next SMBO iteration"""
@@ -38,7 +41,9 @@ class ChooserNoCoolDown(RandomConfigurationChooser):
 
     """
 
-    def __init__(self, modulus: float=2.0):
+    def __init__(self, rng: np.random.RandomState, modulus: float = 2.0):
+        super().__init__(rng)
+
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         if modulus <= 1.0:
             self.logger.warning("Using SMAC with random configurations only."
@@ -54,7 +59,13 @@ class ChooserNoCoolDown(RandomConfigurationChooser):
 
 class ChooserLinearCoolDown(RandomConfigurationChooser):
 
-    def __init__(self, start_modulus: float=2.0, modulus_increment: float=0.3, end_modulus: float=np.inf):
+    def __init__(
+        self,
+        rng: np.random.RandomState,
+        start_modulus: float = 2.0,
+        modulus_increment: float = 0.3,
+        end_modulus: float = np.inf,
+    ):
         """Interleave a random configuration, decreasing the fraction of random configurations over time.
 
         Parameters
@@ -68,6 +79,8 @@ class ChooserLinearCoolDown(RandomConfigurationChooser):
             further increased. If it is not reached before the optimization is over, there will be no adjustment to make
             sure that the ``end_modulus`` is reached.
         """
+        super().__init__(rng)
+
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         if start_modulus <= 1.0 and modulus_increment <= 0.0:
             self.logger.warning("Using SMAC with random configurations only. ROAR is the better choice for this.")
@@ -91,7 +104,7 @@ class ChooserLinearCoolDown(RandomConfigurationChooser):
 
 class ChooserProb(RandomConfigurationChooser):
 
-    def __init__(self, prob: float, rng: np.random.RandomState):
+    def __init__(self, rng: np.random.RandomState, prob: float):
         """Interleave a random configuration according to a given probability.
 
         Parameters
@@ -101,8 +114,8 @@ class ChooserProb(RandomConfigurationChooser):
         rng : np.random.RandomState
             Random state
         """
+        super().__init__(rng)
         self.prob = prob
-        self.rng = rng
 
     def next_smbo_iteration(self) -> None:
         pass
@@ -116,7 +129,7 @@ class ChooserProb(RandomConfigurationChooser):
 
 class ChooserProbCoolDown(RandomConfigurationChooser):
 
-    def __init__(self, prob: float, cool_down_fac: float, rng: np.random.RandomState):
+    def __init__(self, rng: np.random.RandomState, prob: float, cool_down_fac: float):
         """Interleave a random configuration according to a given probability which is decreased over time.
 
         Parameters
@@ -128,8 +141,8 @@ class ChooserProbCoolDown(RandomConfigurationChooser):
         rng : np.random.RandomState
             Random state
         """
+        super().__init__(rng)
         self.prob = prob
-        self.rng = rng
         self.cool_down_fac = cool_down_fac
 
     def next_smbo_iteration(self) -> None:
@@ -160,11 +173,12 @@ class ChooserCosineAnnealing(RandomConfigurationChooser):
 
     def __init__(
         self,
+        rng: np.random.RandomState,
         prob_max: float,
         prob_min: float,
         restart_iteration: int,
-        rng: np.random.RandomState,
     ):
+        super().__init__(rng)
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
         self.prob_max = prob_max
@@ -172,14 +186,13 @@ class ChooserCosineAnnealing(RandomConfigurationChooser):
         self.restart_iteration = restart_iteration
         self.iteration = 0
         self.prob = prob_max
-        self.rng = rng
 
     def next_smbo_iteration(self) -> None:
         self.prob = (
             self.prob_min
             + (0.5 * (self.prob_max - self.prob_min) * (1 + np.cos(self.iteration * np.pi / self.restart_iteration)))
         )
-        self.logger.error("Probability for random configs: %f" % (self.prob))
+        self.logger.error("Probability for random configs: %f" % self.prob)
         self.iteration += 1
         if self.iteration > self.restart_iteration:
             self.iteration = 0

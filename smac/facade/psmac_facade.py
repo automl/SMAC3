@@ -31,6 +31,7 @@ __license__ = "3-clause BSD"
 def optimize(queue: multiprocessing.Queue,
              scenario: typing.Type[Scenario],
              tae: typing.Type[ExecuteTARun],
+             tae_kwargs: typing.Dict,
              rng: typing.Union[np.random.RandomState, int],
              output_dir: str,
              **kwargs) -> Configuration:
@@ -45,6 +46,8 @@ def optimize(queue: multiprocessing.Queue,
         smac.Scenario to initialize SMAC
     tae: ExecuteTARun
         Target Algorithm Runner (supports old and aclib format)
+    tae_runner_kwargs: Optional[dict]
+        arguments passed to constructor of '~tae'
     rng: int/np.random.RandomState
         The randomState/seed to pass to each smac run
     output_dir: str
@@ -56,8 +59,8 @@ def optimize(queue: multiprocessing.Queue,
         The incumbent configuration of this run
 
     """
-    tae = tae(ta=scenario.ta, run_obj=scenario.run_obj)
-    solver = SMAC(scenario=scenario, tae_runner=tae, rng=rng, **kwargs)
+    solver = SMAC(scenario=scenario, tae_runner=tae,
+                  tae_runner_kwargs=tae_kwargs, rng=rng, **kwargs)
     solver.stats.start_timing()
     solver.stats.print_stats()
 
@@ -96,6 +99,7 @@ class PSMAC(object):
                  rng: typing.Optional[typing.Union[np.random.RandomState, int]] = None,
                  run_id: int = 1,
                  tae: typing.Type[ExecuteTARun] = ExecuteTARunOld,
+                 tae_kwargs: typing.Union[dict, None] = None,
                  shared_model: bool = True,
                  validate: bool = True,
                  n_optimizers: int = 2,
@@ -117,6 +121,8 @@ class PSMAC(object):
             run_id for this hydra run
         tae: ExecuteTARun
             Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)
+        tae_kwargs: Optional[dict]
+            arguments passed to constructor of '~tae'
         shared_model: bool
             Flag to indicate whether information is shared between SMAC runs or not
         validate: bool / None
@@ -137,7 +143,7 @@ class PSMAC(object):
         self.output_dir = None
         self.rh = RunHistory(average_cost)
         self._tae = tae
-        self.tae = tae(ta=self.scenario.ta, run_obj=self.scenario.run_obj)
+        self._tae_kwargs = tae_kwargs
         if n_optimizers <= 1:
             self.logger.warning('Invalid value in %s: %d. Setting to 2', 'n_optimizers', n_optimizers)
         self.n_optimizers = max(n_optimizers, 2)
@@ -186,6 +192,7 @@ class PSMAC(object):
                                                q,  # Output queue
                                                self.scenario,  # Scenario object
                                                self._tae,  # type of tae to run target with
+                                               self._tae_kwargs,
                                                p,  # process_id (used in output folder name)
                                                self.output_dir,  # directory to create outputs in
                                            ),
@@ -271,7 +278,7 @@ class PSMAC(object):
         """
         Validation
         """
-        solver = SMAC(scenario=self.scenario, tae_runner=self.tae, rng=self.rng, run_id=MAXINT, **self.kwargs)
+        solver = SMAC(scenario=self.scenario, rng=self.rng, run_id=MAXINT, **self.kwargs)
         self.logger.info('*' * 120)
         self.logger.info('Validating')
         new_rh = solver.validate(config_mode=incs,

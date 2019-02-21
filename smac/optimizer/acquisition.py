@@ -27,7 +27,7 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
     def __str__(self):
         return type(self).__name__ + " (" + self.long_name + ")"
 
-    def __init__(self, model: AbstractEPM, **kwargs):
+    def __init__(self, model: AbstractEPM):
         """Constructor
 
         Parameters
@@ -63,7 +63,7 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
         ----------
         configurations : list
             The configurations where the acquisition function
-            should be evaluated. 
+            should be evaluated.
 
         Returns
         -------
@@ -112,8 +112,7 @@ class EI(AbstractAcquisitionFunction):
 
     def __init__(self,
                  model: AbstractEPM,
-                 par: float=0.0,
-                 **kwargs):
+                 par: float=0.0):
         """Constructor
 
         Parameters
@@ -184,8 +183,7 @@ class EI(AbstractAcquisitionFunction):
 class EIPS(EI):
     def __init__(self,
                  model: AbstractEPM,
-                 par: float=0.0,
-                 **kwargs):
+                 par: float=0.0):
         r"""Computes for a given x the expected improvement as
         acquisition value.
         :math:`EI(X) := \frac{\mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]} {np.log(r(x))}`,
@@ -270,8 +268,7 @@ class LogEI(AbstractAcquisitionFunction):
 
     def __init__(self,
                  model: AbstractEPM,
-                 par: float=0.0,
-                 **kwargs):
+                 par: float=0.0):
         r"""Computes for a given x the logarithm expected improvement as
         acquisition value.
 

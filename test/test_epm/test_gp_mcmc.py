@@ -36,7 +36,8 @@ def get_gp(n_dimensions, rs, noise=-8):
         burnin_steps=100,
         normalize_input=True,
         normalize_output=True,
-        rng=rs, noise=noise,
+        seed=rs.randint(low=1, high=10000),
+        noise=noise,
     )
     return model
 
@@ -109,13 +110,13 @@ class TestGPMCMC(unittest.TestCase):
         ):
             # Chain length too short to get excellent predictions
             self.assertAlmostEqual(y_i, y_hat_i, delta=0.1)
-            self.assertAlmostEqual(var_hat_i, 0, delta=0.1)
+            self.assertAlmostEqual(var_hat_i, 0, delta=0.2)
 
         # Regression test that performance does not drastically decrease in the near future
         y_hat, var_hat = model.predict(np.array([[10, 10, 10]]))
         self.assertAlmostEqual(y_hat[0][0], 54.61249999999999)
         # Massive variance due to internally used law of total variances
-        self.assertAlmostEqual(var_hat[0][0], 27691.09369406573)
+        self.assertAlmostEqual(var_hat[0][0], 8710.329996484437)
 
     def test_gp_on_sklearn_data(self):
         X, y = sklearn.datasets.load_boston(return_X_y=True)
@@ -125,7 +126,7 @@ class TestGPMCMC(unittest.TestCase):
         model = get_gp(X.shape[1], rs)
         cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
 
-        maes = [9.1921780939101723415, 8.929528339491875724]
+        maes = [9.370525409655151321, 9.056537966356946708]
 
         for i, (train_split, test_split) in enumerate(cv.split(X, y)):
             X_train = X[train_split]

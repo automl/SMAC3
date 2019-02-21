@@ -17,7 +17,7 @@ from smac.epm.uncorrelated_mo_rf_with_instances import \
     UncorrelatedMultiObjectiveRandomForestWithInstances
 from smac.utils.util_funcs import get_types
 from smac.facade.epils_facade import EPILS
-from smac.initial_design.single_config_initial_design import SingleConfigInitialDesign
+from smac.initial_design.initial_design import InitialDesign
 
 if sys.version_info[0] == 2:
     import mock
@@ -54,7 +54,7 @@ class TestSMBO(unittest.TestCase):
         y += 10 * (1 - 1 / (8 * np.pi)) * np.cos(config[0]) + 10
 
         return y
-    
+
     def test_epils(self):
         taf = ExecuteTAFuncArray(ta=self.branin)
         epils = EPILS(self.scenario, tae_runner=taf)
@@ -83,11 +83,11 @@ class TestSMBO(unittest.TestCase):
             self.scenario.run_obj = objective
             types, bounds = get_types(self.scenario.cs, None)
             umrfwi = UncorrelatedMultiObjectiveRandomForestWithInstances(
-                ['cost', 'runtime'], types, bounds)
+                ['cost', 'runtime'], types, bounds, seed=1, rf_kwargs={'seed': 1},)
             eips = EIPS(umrfwi)
             rh2EPM = RunHistory2EPM4EIPS(self.scenario, 2)
             epils = EPILS(self.scenario, model=umrfwi, acquisition_function=eips,
-                        runhistory2epm=rh2EPM).solver
+                          runhistory2epm=rh2EPM).solver
             self.assertIs(umrfwi, epils.model)
             self.assertIs(eips, epils.acquisition_func)
             self.assertIs(rh2EPM, epils.rh2EPM)
@@ -109,7 +109,7 @@ class TestSMBO(unittest.TestCase):
                                 'np.random.RandomState',
                                 EPILS, self.scenario, rng='BLA')
 
-    @mock.patch.object(SingleConfigInitialDesign, 'run')
+    @mock.patch.object(InitialDesign, 'run')
     def test_abort_on_initial_design(self, patch):
         def target(x):
             return 5

@@ -1,7 +1,5 @@
-from contextlib import suppress
 import unittest
 from unittest import mock
-import os
 import shutil
 from nose.plugins.attrib import attr
 
@@ -10,19 +8,15 @@ from ConfigSpace import Configuration
 
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
-from smac.epm.uncorrelated_mo_rf_with_instances import \
-    UncorrelatedMultiObjectiveRandomForestWithInstances
 from smac.facade.smac_facade import SMAC
-from smac.initial_design.single_config_initial_design import SingleConfigInitialDesign
-from smac.optimizer.acquisition import EI, EIPS, LogEI
+from smac.initial_design.initial_design import InitialDesign
+from smac.optimizer.acquisition import EI, LogEI
 from smac.optimizer.objective import average_cost
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, \
-    RunHistory2EPM4LogCost, RunHistory2EPM4EIPS
+from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, RunHistory2EPM4LogCost
 from smac.scenario.scenario import Scenario
 from smac.tae.execute_ta_run import FirstRunCrashedException
 from smac.utils import test_helpers
-from smac.utils.util_funcs import get_types
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
 
@@ -69,20 +63,6 @@ class TestSMBO(unittest.TestCase):
         self.assertIsInstance(smbo.model, RandomForestWithInstances)
         self.assertIsInstance(smbo.rh2EPM, RunHistory2EPM4Cost)
         self.assertIsInstance(smbo.acquisition_func, EI)
-
-    def test_init_EIPS_as_arguments(self):
-        for objective in ['runtime', 'quality']:
-            self.scenario.run_obj = objective
-            types, bounds = get_types(self.scenario.cs, None)
-            umrfwi = UncorrelatedMultiObjectiveRandomForestWithInstances(
-                ['cost', 'runtime'], types, bounds)
-            eips = EIPS(umrfwi)
-            rh2EPM = RunHistory2EPM4EIPS(self.scenario, 2)
-            smbo = SMAC(self.scenario, model=umrfwi, acquisition_function=eips,
-                        runhistory2epm=rh2EPM).solver
-            self.assertIs(umrfwi, smbo.model)
-            self.assertIs(eips, smbo.acquisition_func)
-            self.assertIs(rh2EPM, smbo.rh2EPM)
 
     def test_rng(self):
         smbo = SMAC(self.scenario, rng=None).solver
@@ -194,7 +174,7 @@ class TestSMBO(unittest.TestCase):
         # For each configuration it is randomly sampled whether to take it from the list of challengers or to sample it
         # completely at random. Therefore, it is not guaranteed to obtain twice the number of configurations selected
         # by EI.
-        self.assertEqual(len(challengers), 9913)
+        self.assertEqual(len(challengers), 9929)
         num_random_search_sorted = 0
         num_random_search = 0
         num_local_search = 0
@@ -211,7 +191,7 @@ class TestSMBO(unittest.TestCase):
 
         self.assertEqual(num_local_search, 1)
         self.assertEqual(num_random_search_sorted, 4999)
-        self.assertEqual(num_random_search, 4913)
+        self.assertEqual(num_random_search, 4929)
 
     def test_choose_next_3(self):
         # Test with ten configurations in the runhistory
@@ -245,7 +225,7 @@ class TestSMBO(unittest.TestCase):
         # For each configuration it is randomly sampled whether to take it from the list of challengers or to sample it
         # completely at random. Therefore, it is not guaranteed to obtain twice the number of configurations selected
         # by EI.
-        self.assertEqual(len(challengers), 9913)
+        self.assertEqual(len(challengers), 9929)
         num_random_search_sorted = 0
         num_random_search = 0
         num_local_search = 0
@@ -262,9 +242,9 @@ class TestSMBO(unittest.TestCase):
 
         self.assertEqual(num_local_search, 10)
         self.assertEqual(num_random_search_sorted, 4990)
-        self.assertEqual(num_random_search, 4913)
+        self.assertEqual(num_random_search, 4929)
 
-    @mock.patch.object(SingleConfigInitialDesign, 'run')
+    @mock.patch.object(InitialDesign, 'run')
     def test_abort_on_initial_design(self, patch):
         def target(x):
             return 5
@@ -328,7 +308,7 @@ class TestSMBO(unittest.TestCase):
         smac = SMAC(self.scenario)
         self.output_dirs.append(smac.output_dir)
         smbo = smac.solver
-        with mock.patch.object(SingleConfigInitialDesign, "run", return_value=None) as initial_mock:
+        with mock.patch.object(InitialDesign, "run", return_value=None) as initial_mock:
             smbo.start()
             self.assertEqual(smbo.incumbent, smbo.scenario.cs.get_default_configuration())
 
@@ -337,21 +317,21 @@ class TestSMBO(unittest.TestCase):
         smbo = SMAC(self.scenario, rng=seed).solver
         conf = {"model":"RF", "acq_func":"EI"}
         acqf, model = smbo._component_builder(conf)
-        
+
         self.assertTrue(isinstance(acqf, EI))
         self.assertTrue(isinstance(model, RandomForestWithInstances))
-        
+
         conf = {"model":"GP", "acq_func":"EI"}
         acqf, model = smbo._component_builder(conf)
-        
+
         self.assertTrue(isinstance(acqf, EI))
         self.assertTrue(isinstance(model, GaussianProcessMCMC))
-        
+
     def test_smbo_cs(self):
         seed = 42
         smbo = SMAC(self.scenario, rng=seed).solver
         cs = smbo._get_acm_cs()
-        
+
     def test_cs_comp_builder(self):
         seed = 42
         smbo = SMAC(self.scenario, rng=seed).solver

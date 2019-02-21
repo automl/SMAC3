@@ -20,6 +20,7 @@ class GaussianProcessMCMC(BaseModel):
         self,
         types: np.ndarray,
         bounds: typing.List[typing.Tuple[float, float]],
+        seed: int,
         kernel: george.kernels.Kernel,
         prior: BasePrior=None,
         n_hypers: int=20,
@@ -27,8 +28,8 @@ class GaussianProcessMCMC(BaseModel):
         burnin_steps: int=2000,
         normalize_output: bool=True,
         normalize_input: bool=True,
-        rng: typing.Optional[np.random.RandomState]=None,
         noise: int=-8,
+        **kwargs
     ):
         """
         Gaussian process model.
@@ -53,6 +54,8 @@ class GaussianProcessMCMC(BaseModel):
             have to pass np.array([2, 0]). Note that we count starting from 0.
         bounds : list
             Specifies the bounds for continuous features.
+        seed : int
+            Model seed.
         kernel : george kernel object
             Specifies the kernel that is used for all Gaussian Process
         prior : prior object
@@ -80,12 +83,7 @@ class GaussianProcessMCMC(BaseModel):
             Noise term that is added to the diagonal of the covariance matrix
             for the Cholesky decomposition.
         """
-        super().__init__(types=types, bounds=bounds)
-
-        if rng is None:
-            self.rng = np.random.RandomState(np.random.randint(0, 10000))
-        else:
-            self.rng = rng
+        super().__init__(types=types, bounds=bounds, seed=seed, **kwargs)
 
         self.kernel = kernel
         self.prior = prior
@@ -192,7 +190,7 @@ class GaussianProcessMCMC(BaseModel):
                 normalize_output=self.normalize_output,
                 normalize_input=self.normalize_input,
                 noise=noise,
-                rng=self.rng,
+                seed=self.rng.randint(low=0, high=10000),
             )
             model._train(X, y, do_optimize=False)
             self.models.append(model)

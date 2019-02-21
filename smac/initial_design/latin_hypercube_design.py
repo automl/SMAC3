@@ -1,21 +1,22 @@
 import typing
 
+import numpy as np
+
 from pyDOE import lhs
 
 from ConfigSpace.configuration_space import Configuration
 from ConfigSpace.hyperparameters import FloatHyperparameter
 from ConfigSpace.util import deactivate_inactive_hyperparameters
 
-from smac.initial_design.multi_config_initial_design import \
-    MultiConfigInitialDesign
+from smac.initial_design.initial_design import InitialDesign
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class LHDesign(MultiConfigInitialDesign):
-    """ Latin Hypercube design
+class LHDesign(InitialDesign):
+    """Latin Hypercube design
 
     Attributes
     ----------
@@ -39,6 +40,9 @@ class LHDesign(MultiConfigInitialDesign):
 
         cs = self.scenario.cs
         params = cs.get_hyperparameters()
+
+        # manual seeding of lhd design
+        np.random.seed(self.rng.randint(1,2*20))
 
         lhd = lhs(n=len(params), samples=self.init_budget)
 

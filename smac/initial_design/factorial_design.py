@@ -6,8 +6,7 @@ from ConfigSpace.hyperparameters import Constant, NumericalHyperparameter, Categ
 from ConfigSpace.util import deactivate_inactive_hyperparameters
 import numpy as np
 
-from smac.initial_design.multi_config_initial_design import \
-    MultiConfigInitialDesign
+from smac.initial_design.initial_design import InitialDesign
 
 
 __author__ = "Marius Lindauer"
@@ -15,8 +14,8 @@ __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class FactorialInitialDesign(MultiConfigInitialDesign):
-    """ Factorial initial design
+class FactorialInitialDesign(InitialDesign):
+    """Factorial initial design
 
     Attributes
     ----------

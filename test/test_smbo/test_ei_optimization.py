@@ -64,7 +64,7 @@ class TestLocalSearch(unittest.TestCase):
             dist = [euclidean(point, opt)]
             return np.array([-np.min(dist)])
 
-        l = LocalSearch(acquisition_function, self.cs, max_steps=100000)
+        l = LocalSearch(acquisition_function, self.cs, max_steps=100)
 
         start_point = self.cs.sample_configuration()
         acq_val_start_point = acquisition_function([start_point])
