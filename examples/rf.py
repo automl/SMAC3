@@ -97,7 +97,7 @@ smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
 # Example call of the function with default values
 # It returns: Status, Cost, Runtime, Additional Infos
 def_value = smac.get_tae_runner().run(cs.get_default_configuration(), 1)[1]
-print("Value for default configuration: %.2f" % (def_value))
+print("Value for default configuration: %.2f" % def_value)
 
 # Start optimization
 try:
@@ -106,4 +106,4 @@ finally:
     incumbent = smac.solver.incumbent
 
 inc_value = smac.get_tae_runner().run(incumbent, 1)[1]
-print("Optimized Value: %.2f" % (inc_value))
+print("Optimized Value: %.2f" % inc_value)

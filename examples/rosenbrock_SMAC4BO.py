@@ -8,7 +8,7 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 # Import SMAC-utilities
 from smac.scenario.scenario import Scenario
-from smac.facade.smac_hpo_facade import SMAC4HPO
+from smac.facade.smac_bo_facade import SMAC4BO
 
 
 def rosenbrock_2d(x):
@@ -44,11 +44,24 @@ scenario = Scenario({"run_obj": "quality",   # we optimize quality (alternativel
 # Example call of the function
 # It returns: Status, Cost, Runtime, Additional Infos
 def_value = rosenbrock_2d(cs.get_default_configuration())
-print("Default Value: %.2f" % (def_value))
+print("Default Value: %.2f" % def_value)
 
 # Optimize, using a SMAC-object
 print("Optimizing! Depending on your machine, this might take a few minutes.")
-smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
-                tae_runner=rosenbrock_2d )
+smac = SMAC4BO(
+    scenario=scenario,
+    rng=np.random.RandomState(42),
+    tae_runner=rosenbrock_2d,
+)
+
+smac.optimize()
+
+# Optimize, using a SMAC-object
+print("Optimizing! Depending on your machine, this might take a few minutes.")
+smac = SMAC4BO(
+    scenario=scenario,
+    rng=np.random.RandomState(42),
+    tae_runner=rosenbrock_2d,
+)
 
 smac.optimize()
