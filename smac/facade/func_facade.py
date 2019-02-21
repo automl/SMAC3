@@ -3,7 +3,7 @@ import typing
 
 import numpy as np
 
-from smac.facade.borf_facade import BORF
+from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.scenario.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.runhistory.runhistory import RunKey
@@ -24,9 +24,9 @@ def fmin_smac(func: typing.Callable,
               scenario_args: typing.Mapping[str, typing.Any] = None,
               **kwargs):
     """
-    Minimize a function func using the BORF facade
+    Minimize a function func using the SMAC4HPO facade
     (i.e., a modified version of SMAC).
-    This function is a convenience wrapper for the BORF class.
+    This function is a convenience wrapper for the SMAC4HPO class.
 
     Parameters
     ----------
@@ -54,7 +54,7 @@ def fmin_smac(func: typing.Callable,
         Estimated position of the minimum.
     f : float
         Value of `func` at the minimum.
-    s : :class:`smac.facade.smac_facade.SMAC`
+    s : :class:`smac.facade.smac_hpo_facade.SMAC4HPO`
         SMAC objects which enables the user to get
         e.g., the trajectory and runhistory.
 
@@ -87,7 +87,7 @@ def fmin_smac(func: typing.Callable,
         scenario_dict["runcount_limit"] = maxfun
     scenario = Scenario(scenario_dict)
 
-    smac = BORF(
+    smac = SMAC4HPO(
         scenario=scenario,
         tae_runner=ExecuteTAFuncArray,
         tae_runner_kwargs={'ta': func},

@@ -5,7 +5,7 @@ import numpy as np
 
 from smac.configspace import Configuration
 from smac.epm.random_epm import RandomEPM
-from smac.facade.smac_facade import SMAC
+from smac.facade.smac_ac_facade import SMAC4AC
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.optimizer.ei_optimization import RandomSearch
@@ -20,7 +20,7 @@ __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class ROAR(SMAC):
+class ROAR(SMAC4AC):
     """
     Facade to use ROAR mode
 

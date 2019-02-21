@@ -1,6 +1,4 @@
 import logging
-import os
-import inspect
 
 import numpy as np
 from sklearn.metrics import make_scorer
@@ -12,11 +10,11 @@ from smac.configspace import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformFloatHyperparameter, UniformIntegerHyperparameter
 
-from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.scenario.scenario import Scenario
-from smac.facade.smac_facade import SMAC
+from smac.facade.smac_hpo_facade import SMAC4HPO
 
 boston = load_boston()
+
 
 def rf_from_cfg(cfg, seed):
     """
@@ -93,8 +91,8 @@ scenario = Scenario({"run_obj": "quality",   # we optimize quality (alternative 
                      })
 
 # To optimize, we pass the function to the SMAC-object
-smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
-            tae_runner=rf_from_cfg)
+smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
+                tae_runner=rf_from_cfg)
 
 # Example call of the function with default values
 # It returns: Status, Cost, Runtime, Additional Infos

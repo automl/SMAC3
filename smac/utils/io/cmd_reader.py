@@ -136,6 +136,8 @@ class ReadPCSFileAction(Action):
     def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
         fn = values
         if fn:
+            print(fn)
+            print(os.getcwd())
             if os.path.isfile(fn):
                 parsed_scen_args['cs'] = in_reader.read_pcs_file(fn)
                 parsed_scen_args["cs"].seed(42)
@@ -372,7 +374,8 @@ class CMDReader(object):
                               default=logging.INFO, choices=["INFO", "DEBUG"],
                               help="Verbosity level.")
         opt_opts.add_argument("--mode",
-                              default="SMAC", choices=["SMAC", "ROAR", "EPILS", "Hydra", "PSMAC", "BORF", "BOGP"],
+                              default="SMAC4AC", choices=["SMAC4AC", "ROAR", "EPILS", "Hydra", "PSMAC", "SMAC4HPO",
+                                                          "SMAC4BO"],
                               help="Configuration mode.")
         opt_opts.add_argument("--restore-state", "--restore_state", dest="restore_state",
                               default=None,
