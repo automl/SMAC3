@@ -26,7 +26,7 @@ class TestPSMACFacade(unittest.TestCase):
         fn = os.path.join(os.path.dirname(__file__), '../test_files/spear_hydra_test_scenario.txt')
         self.scenario = Scenario(fn)
 
-    @patch('smac.facade.smac_facade.SMBO', new=MockSMBO)
+    @patch('smac.facade.smac_ac_facade.SMBO', new=MockSMBO)
     def test_psmac(self):
         optimizer = PSMAC(self.scenario, n_optimizers=3, n_incs=2, validate=False)
         incs = optimizer.optimize()
