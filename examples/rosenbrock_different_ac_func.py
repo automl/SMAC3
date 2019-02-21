@@ -8,10 +8,11 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 # Import SMAC-utilities
 from smac.scenario.scenario import Scenario
-from smac.facade.smac_facade import SMAC
-from smac.optimizer.acquisition import LCB
+from smac.facade.smac_hpo_facade import SMAC4HPO
+from smac.optimizer.acquisition import LCB, EI, PI
 from smac.initial_design.latin_hypercube_design import LHDesign
 from smac.runhistory.runhistory2epm import RunHistory2EPM4InvScaledCost
+
 
 def rosenbrock_2d(x):
     """ The 2 dimensional Rosenbrock function as a toy model
@@ -26,6 +27,7 @@ def rosenbrock_2d(x):
 
     val = 100. * (x2 - x1 ** 2.) ** 2. + (1 - x1) ** 2.
     return val
+
 
 logging.basicConfig(level=logging.INFO)  # logging.DEBUG for debug output
 
@@ -45,20 +47,20 @@ scenario = Scenario({"run_obj": "quality",   # we optimize quality (alternativel
 # Example call of the function
 # It returns: Status, Cost, Runtime, Additional Infos
 def_value = rosenbrock_2d(cs.get_default_configuration())
-print("Default Value: %.2f" % (def_value))
+print("Default Value: %.2f" % def_value)
 
 # Optimize, using a SMAC-object
-print("Optimizing! Depending on your machine, this might take a few minutes.")
-smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
-        tae_runner=rosenbrock_2d,
-        initial_design=LHDesign,
-        initial_design_kwargs={'n_configs_x_params':4,
-                               'max_config_fracs':1.0},
-        runhistory2epm=RunHistory2EPM4InvScaledCost,
-        model_kwargs={'num_trees': 42},
-        acquisition_function_optimizer_kwargs={'max_steps':100},
-        acquisition_function=LCB,
-        acquisition_function_kwargs={'par':0.01}
-        )
+for acquisition_func in (LCB, EI, PI):
+    print("Optimizing with %s! Depending on your machine, this might take a few minutes." % acquisition_func)
+    smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
+                    tae_runner=rosenbrock_2d,
+                    initial_design=LHDesign,
+                    initial_design_kwargs={'n_configs_x_params': 4,
+                                           'max_config_fracs': 1.0},
+                    runhistory2epm=RunHistory2EPM4InvScaledCost,
+                    acquisition_function_optimizer_kwargs={'max_steps': 100},
+                    acquisition_function=acquisition_func,
+                    acquisition_function_kwargs={'par': 0.01}
+                    )
 
-smac.optimize()
+    smac.optimize()

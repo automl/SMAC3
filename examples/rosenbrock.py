@@ -21,7 +21,7 @@ def rosenbrock_2d(x):
 
 # debug output
 logging.basicConfig(level=20)
-logger = logging.getLogger("Optimizer") # Enable to show Debug outputs
+logger = logging.getLogger("Optimizer")  # Enable to show Debug outputs
 
 x, cost, _ = fmin_smac(func=rosenbrock_2d,
                        x0=[-3, -4],
