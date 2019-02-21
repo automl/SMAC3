@@ -9,10 +9,6 @@ import sys
 import time
 import typing
 
-import numpy as np
-
-from smac.configspace import pcs, pcs_new
-from smac.configspace import json as pcs_json
 from smac.utils.constants import MAXINT, N_TREES
 from smac.utils.io.input_reader import InputReader
 
@@ -23,6 +19,7 @@ __license__ = "3-clause BSD"
 in_reader = InputReader()
 parsed_scen_args = {}
 logger = None
+
 
 def truthy(x):
     """Convert x into its truth value"""
@@ -136,8 +133,6 @@ class ReadPCSFileAction(Action):
     def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
         fn = values
         if fn:
-            print(fn)
-            print(os.getcwd())
             if os.path.isfile(fn):
                 parsed_scen_args['cs'] = in_reader.read_pcs_file(fn)
                 parsed_scen_args["cs"].seed(42)
