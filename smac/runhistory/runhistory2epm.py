@@ -196,8 +196,9 @@ class AbstractRunHistory2EPM(object):
         t_instance_id_list = [k.instance_id for k in s_run_dict.keys()]
 
         # use penalization (e.g. PAR10) for EPM training
+        store_statistics = True if self.min_y is None else False
         tX, tY = self._build_matrix(run_dict=t_run_dict, runhistory=runhistory,
-                                    instances=t_instance_id_list, store_statistics=False)
+                                    instances=t_instance_id_list, store_statistics=store_statistics)
 
         # if we don't have successful runs,
         # we have to return all timeout runs
@@ -363,6 +364,19 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
         return X, y
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
+        """Transform function response values.
+
+        Returns the input values.
+
+        Parameters
+        ----------
+        values : np.ndarray
+            Response values to be transformed.
+
+        Returns
+        -------
+        np.ndarray
+        """
         return values
 
 
@@ -370,6 +384,20 @@ class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
     """TODO"""
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
+        """Transform function response values.
+
+        Transforms the response values by using a log transformation.
+
+        Parameters
+        ----------
+        values : np.ndarray
+            Response values to be transformed.
+
+        Returns
+        -------
+        np.ndarray
+        """
+
 
         # ensure that minimal value is larger than 0
         if np.any(values <= 0):
@@ -386,11 +414,21 @@ class RunHistory2EPM4ScaledCost(RunHistory2EPM4Cost):
     """TODO"""
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
+        """Transform function response values.
 
-        #perc = np.percentile(values, self.scale_perc)
-        #min_y = np.min(values)
+        Transforms the response values by linearly scaling them between zero and one.
+
+        Parameters
+        ----------
+        values : np.ndarray
+            Response values to be transformed.
+
+        Returns
+        -------
+        np.ndarray
+        """
+
         min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
-        #max_y = np.max(values)
         # linear scaling
         if self.min_y == self.max_y:
             # prevent diving by zero
@@ -401,13 +439,28 @@ class RunHistory2EPM4ScaledCost(RunHistory2EPM4Cost):
 
 class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
     """TODO"""
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        if self.instance_features is not None:
+            if len(self.instance_features) > 1:
+                raise NotImplementedError('Handling more than one instance is not supported for inverse scaled cost.')
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
+        """Transform function response values.
 
-        #perc = np.percentile(values, self.scale_perc)
-        #min_y = np.min(values)
+        Transform the response values by linearly scaling them between zero and one and then using inverse scaling.
+
+        Parameters
+        ----------
+        values : np.ndarray
+            Response values to be transformed.
+
+        Returns
+        -------
+        np.ndarray
+        """
+
         min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
-        #max_y = np.max(values)
         # linear scaling
         if min_y == self.max_y:
             # prevent diving by zero
@@ -419,12 +472,28 @@ class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
 
 class RunHistory2EPM4SqrtScaledCost(RunHistory2EPM4Cost):
     """TODO"""
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        if self.instance_features is not None:
+            if len(self.instance_features) > 1:
+                raise NotImplementedError('Handling more than one instance is not supported for sqrt scaled cost.')
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
+        """Transform function response values.
 
-        #perc = np.percentile(values, self.scale_perc)
+        Transform the response values by linearly scaling them between zero and one and then using the square root.
+
+        Parameters
+        ----------
+        values : np.ndarray
+            Response values to be transformed.
+
+        Returns
+        -------
+        np.ndarray
+        """
+
         min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
-        #max_y = np.max(values)
         # linear scaling
         if min_y == self.max_y:
             # prevent diving by zero
@@ -438,10 +507,22 @@ class RunHistory2EPM4LogScaledCost(RunHistory2EPM4Cost):
     """TODO"""
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
+        """Transform function response values.
 
-        #perc = np.percentile(values, self.scale_perc)
+        Transform the response values by linearly scaling them between zero and one and then using the log
+        transformation.
+
+        Parameters
+        ----------
+        values : np.ndarray
+            Response values to be transformed.
+
+        Returns
+        -------
+        np.ndarray
+        """
+
         min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
-        #max_y = np.max(values)
         # linear scaling
         if min_y == self.max_y:
             # prevent diving by zero
@@ -480,7 +561,6 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
                 X[row, :] = np.hstack((conf_vector, feats))
             else:
                 X[row, :] = conf_vector
-            # run_array[row, -1] = instances[row]
             y[row, 0] = run.cost
             y[row, 1] = 1 + run.time
 
@@ -489,5 +569,19 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
         return X, y
 
     def transform_response_values(self, values: np.ndarray):
+        """Transform function response values.
+
+        Transform the runtimes by a log transformation (log(1 + runtime).
+
+        Parameters
+        ----------
+        values : np.ndarray
+            Response values to be transformed.
+
+        Returns
+        -------
+        np.ndarray
+        """
+
         values[:, 1] = np.log(1 + values[:, 1])
         return values

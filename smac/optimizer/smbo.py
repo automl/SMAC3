@@ -304,6 +304,8 @@ class SMBO(object):
                 raise ValueError("Runhistory is empty and the cost value of "
                                  "the incumbent is unknown.")
             incumbent_value = self.runhistory.get_cost(self.incumbent)
+            # It's unclear how to do this for inv scaling and potential future scaling. This line should be changed if
+            # necessary
             incumbent_value = self.rh2EPM.transform_response_values(np.array(incumbent_value).reshape((1, 1)))[0][0]
 
         return incumbent_value
