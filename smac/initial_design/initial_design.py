@@ -189,7 +189,7 @@ class InitialDesign:
     def _transform_continuous_designs(self,
                                       design: np.ndarray,
                                       origin: str,
-                                      cs: ConfigurationSpace):
+                                      cs: ConfigurationSpace) -> typing.List[Configuration]:
 
         params = cs.get_hyperparameters()
         for idx, param in enumerate(params):
