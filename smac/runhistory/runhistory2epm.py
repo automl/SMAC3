@@ -46,12 +46,12 @@ class AbstractRunHistory2EPM(object):
         self,
         scenario: Scenario,
         num_params: int,
-        success_states: typing.Optional[typing.List[StatusType]]=None,
-        impute_censored_data: bool=False,
-        impute_state: typing.Optional[typing.List[StatusType]]=None,
-        imputor: typing.Optional[BaseImputor]=None,
-        scale_perc: int=5,
-        rng: typing.Optional[np.random.RandomState]=None,
+        success_states: typing.Optional[typing.List[StatusType]] = None,
+        impute_censored_data: bool = False,
+        impute_state: typing.Optional[typing.List[StatusType]] = None,
+        imputor: typing.Optional[BaseImputor] = None,
+        scale_perc: int = 5,
+        rng: typing.Optional[np.random.RandomState] = None,
     ) -> None:
         """Constructor
 
@@ -111,7 +111,6 @@ class AbstractRunHistory2EPM(object):
         self.num_params = num_params
 
         # Sanity checks
-        # TODO: Decide whether we need this
         if impute_censored_data and scenario.run_obj != "runtime":
             # So far we don't know how to handle censored quality data
             self.logger.critical("Cannot impute censored data when not "
@@ -130,11 +129,17 @@ class AbstractRunHistory2EPM(object):
                              "smac.epm.base_imputor.BaseImputor, but %s" %
                              type(self.imputor))
 
+        # Learnt statistics
+        self.min_y = None
+        self.max_y = None
+        self.perc = None
+
     @abc.abstractmethod
     def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
                       runhistory: RunHistory,
-                      instances: list=None,
-                      par_factor: int=1):
+                      instances: list = None,
+                      return_time_as_y: bool = False,
+                      store_statistics: bool = False):
         """Builds x,y matrixes from selected runs from runhistory
 
         Parameters
@@ -145,8 +150,10 @@ class AbstractRunHistory2EPM(object):
             runhistory object
         instances: list
             list of instances
-        par_factor: int
-            penalization factor for censored runtime data
+        return_time_as_y: bool
+            Return the time instead of cost as y value. Necessary to access the raw y values for imputation.
+        store_statistics: bool
+            Whether to store statistics about the data (to be used at subsequent calls)
 
         Returns
         -------
@@ -180,7 +187,7 @@ class AbstractRunHistory2EPM(object):
         # Store a list of instance IDs
         s_instance_id_list = [k.instance_id for k in s_run_dict.keys()]
         X, Y = self._build_matrix(run_dict=s_run_dict, runhistory=runhistory,
-                                  instances=s_instance_id_list)
+                                  instances=s_instance_id_list, store_statistics=True)
 
         # Also get TIMEOUT runs
         t_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
@@ -190,8 +197,7 @@ class AbstractRunHistory2EPM(object):
 
         # use penalization (e.g. PAR10) for EPM training
         tX, tY = self._build_matrix(run_dict=t_run_dict, runhistory=runhistory,
-                                    instances=t_instance_id_list,
-                                    par_factor=self.scenario.par_factor)
+                                    instances=t_instance_id_list, store_statistics=False)
 
         # if we don't have successful runs,
         # we have to return all timeout runs
@@ -217,13 +223,15 @@ class AbstractRunHistory2EPM(object):
                 cen_X, cen_Y = self._build_matrix(run_dict=c_run_dict,
                                                   runhistory=runhistory,
                                                   instances=c_instance_id_list,
-                                                  par_factor=1)
+                                                  return_time_as_y=True,
+                                                  store_statistics=False,)
 
                 # Also impute TIMEOUTS
                 tX, tY = self._build_matrix(run_dict=t_run_dict,
                                             runhistory=runhistory,
                                             instances=t_instance_id_list,
-                                            par_factor=1)
+                                            return_time_as_y=True,
+                                            store_statistics=False,)
                 cen_X = np.vstack((cen_X, tX))
                 cen_Y = np.concatenate((cen_Y, tY))
                 self.logger.debug("%d TIMOUTS, %d censored, %d regular" %
@@ -244,6 +252,21 @@ class AbstractRunHistory2EPM(object):
 
         self.logger.debug("Converted %d observations" % (X.shape[0]))
         return X, Y
+
+    @abc.abstractmethod
+    def transform_response_values(self, values: np.ndarray, ) -> np.ndarray:
+        """Transform function response values.
+
+        Parameters
+        ----------
+        values : np.ndarray
+            Response values to be transformed.
+
+        Returns
+        -------
+        np.ndarray
+        """
+        raise NotImplementedError
 
     def get_X_y(self, runhistory: RunHistory):
         """Simple interface to obtain all data in runhistory in X, y format
@@ -283,8 +306,10 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
     """TODO"""
 
     def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
-                      runhistory: RunHistory, instances: typing.List[str]=None,
-                      par_factor: int=1):
+                      runhistory: RunHistory,
+                      instances: list = None,
+                      return_time_as_y: bool = False,
+                      store_statistics: bool = False):
         """"Builds X,y matrixes from selected runs from runhistory
 
         Parameters
@@ -295,8 +320,10 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
             runhistory object
         instances: list
             list of instances
-        par_factor: int
-            penalization factor for censored runtime data
+        return_time_as_y: bool
+            Return the time instead of cost as y value. Necessary to access the raw y values for imputation.
+        store_statistics: bool
+            Whether to store statistics about the data (to be used at subsequent calls)
 
         Returns
         -------
@@ -321,232 +348,127 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
             else:
                 X[row, :] = conf_vector
             # run_array[row, -1] = instances[row]
-            if self.scenario.run_obj == "runtime":
-                if run.status != StatusType.SUCCESS:
-                    y[row, 0] = run.time * par_factor
-                else:
-                    y[row, 0] = run.time
+            if return_time_as_y:
+                y[row, 0] = run.time
             else:
                 y[row, 0] = run.cost
 
+        if y.size > 0:
+            if store_statistics:
+                self.perc = np.percentile(y, self.scale_perc)
+                self.min_y = np.min(y)
+                self.max_y = np.max(y)
+            y = self.transform_response_values(values=y)
+
         return X, y
+
+    def transform_response_values(self, values: np.ndarray) -> np.ndarray:
+        return values
 
 
 class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
     """TODO"""
 
-    def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
-                      runhistory: RunHistory, instances: typing.List[str]=None,
-                      par_factor: int=1):
-        """Builds X,y matrices from selected runs from runhistory; transforms
-         y by using log
-
-        Parameters
-        ----------
-        run_dict: dict(RunKey -> RunValue)
-            Dictionary from RunHistory.RunKey to RunHistory.RunValue
-        runhistory: RunHistory
-            Runhistory object
-        instances: list
-            List of instances
-        par_factor: int
-            Penalization factor for censored runtime data
-
-        Returns
-        -------
-        X: np.ndarray
-        Y: np.ndarray
-        """
-        X, y = super()._build_matrix(run_dict=run_dict, runhistory=runhistory,
-                                     instances=instances, par_factor=par_factor)
+    def transform_response_values(self, values: np.ndarray) -> np.ndarray:
 
         # ensure that minimal value is larger than 0
-        if np.any(y <= 0):
+        if np.any(values <= 0):
             self.logger.warning(
                 "Got cost of smaller/equal to 0. Replace by %f since we use"
-                " log cost." % (constants.MINIMAL_COST_FOR_LOG))
-            y[y < constants.MINIMAL_COST_FOR_LOG] =\
+                " log cost." % constants.MINIMAL_COST_FOR_LOG)
+            values[values < constants.MINIMAL_COST_FOR_LOG] = \
                 constants.MINIMAL_COST_FOR_LOG
-        y = np.log(y)
+        values = np.log(values)
+        return values
 
-        return X, y
 
 class RunHistory2EPM4ScaledCost(RunHistory2EPM4Cost):
     """TODO"""
 
-    def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
-                      runhistory: RunHistory, instances: typing.List[str]=None,
-                      par_factor: int=1):
-        """Builds X,y matrices from selected runs from runhistory; transforms
-         y by linearly scaling 
+    def transform_response_values(self, values: np.ndarray) -> np.ndarray:
 
-        Parameters
-        ----------
-        run_dict: dict(RunKey -> RunValue)
-            Dictionary from RunHistory.RunKey to RunHistory.RunValue
-        runhistory: RunHistory
-            Runhistory object
-        instances: list
-            List of instances
-        par_factor: int
-            Penalization factor for censored runtime data
+        #perc = np.percentile(values, self.scale_perc)
+        #min_y = np.min(values)
+        min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
+        #max_y = np.max(values)
+        # linear scaling
+        if self.min_y == self.max_y:
+            # prevent diving by zero
+            min_y *= 1 - 10 ** -101
+        values = (values - min_y) / (self.max_y - min_y)
+        return values
 
-        Returns
-        -------
-        X: np.ndarray
-        Y: np.ndarray
-        """
-        X, y = super()._build_matrix(run_dict=run_dict, runhistory=runhistory,
-                                     instances=instances, par_factor=par_factor)
-
-        if y.size > 0:
-            perc = np.percentile(y, self.scale_perc)
-            min_y = 2 * np.min(y) - perc # ensure that scaled y cannot be 0
-            max_y = np.max(y)
-            # linear scaling
-            if min_y == max_y:
-                # prevent diving by zero
-                min_y *= 1 - 10**-101
-            y = (y - min_y) / (max_y - min_y)
-
-        return X, y
 
 class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
     """TODO"""
 
-    def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
-                      runhistory: RunHistory, instances: typing.List[str]=None,
-                      par_factor: int=1):
-        """Builds X,y matrices from selected runs from runhistory; transforms
-         y by linearly scaling and using inverse
+    def transform_response_values(self, values: np.ndarray) -> np.ndarray:
 
-        Parameters
-        ----------
-        run_dict: dict(RunKey -> RunValue)
-            Dictionary from RunHistory.RunKey to RunHistory.RunValue
-        runhistory: RunHistory
-            Runhistory object
-        instances: list
-            List of instances
-        par_factor: int
-            Penalization factor for censored runtime data
+        #perc = np.percentile(values, self.scale_perc)
+        #min_y = np.min(values)
+        min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
+        #max_y = np.max(values)
+        # linear scaling
+        if min_y == self.max_y:
+            # prevent diving by zero
+            min_y *= 1 - 10 ** -10
+        values = (values - min_y) / (self.max_y - min_y)
+        values = 1 - 1 / values
+        return values
 
-        Returns
-        -------
-        X: np.ndarray
-        Y: np.ndarray
-        """
-        X, y = super()._build_matrix(run_dict=run_dict, runhistory=runhistory,
-                                     instances=instances, par_factor=par_factor)
 
-        if y.size > 0:
-            perc = np.percentile(y, self.scale_perc)
-            min_y = 2 * np.min(y) - perc # ensure that scaled y cannot be 0
-            max_y = np.max(y)
-            # linear scaling
-            if min_y == max_y:
-                # prevent diving by zero
-                min_y *= 1 - 10**-10
-            y = (y - min_y) / (max_y - min_y)
-            y = 1 - 1/y
-
-        return X, y
-    
 class RunHistory2EPM4SqrtScaledCost(RunHistory2EPM4Cost):
     """TODO"""
 
-    def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
-                      runhistory: RunHistory, instances: typing.List[str]=None,
-                      par_factor: int=1):
-        """Builds X,y matrices from selected runs from runhistory; transforms
-         y by linearly scaling and using sqrt
+    def transform_response_values(self, values: np.ndarray) -> np.ndarray:
 
-        Parameters
-        ----------
-        run_dict: dict(RunKey -> RunValue)
-            Dictionary from RunHistory.RunKey to RunHistory.RunValue
-        runhistory: RunHistory
-            Runhistory object
-        instances: list
-            List of instances
-        par_factor: int
-            Penalization factor for censored runtime data
+        #perc = np.percentile(values, self.scale_perc)
+        min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
+        #max_y = np.max(values)
+        # linear scaling
+        if min_y == self.max_y:
+            # prevent diving by zero
+            min_y *= 1 - 10 ** -10
+        values = (values - min_y) / (self.max_y - min_y)
+        values = np.sqrt(values)
+        return values
 
-        Returns
-        -------
-        X: np.ndarray
-        Y: np.ndarray
-        """
-        X, y = super()._build_matrix(run_dict=run_dict, runhistory=runhistory,
-                                     instances=instances, par_factor=par_factor)
-
-        if y.size > 0:
-            perc = np.percentile(y, self.scale_perc)
-            min_y = 2 * np.min(y) - perc # ensure that scaled y cannot be 0
-            max_y = np.max(y)
-            # linear scaling
-            if min_y == max_y:
-                # prevent diving by zero
-                min_y *= 1 - 10**-10
-            y = (y - min_y) / (max_y - min_y)
-            y = np.sqrt(y)
-
-        return X, y
 
 class RunHistory2EPM4LogScaledCost(RunHistory2EPM4Cost):
     """TODO"""
 
-    def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
-                      runhistory: RunHistory, instances: typing.List[str]=None,
-                      par_factor: int=1):
-        """Builds X,y matrices from selected runs from runhistory; transforms
-         y by linearly scaling and using log
+    def transform_response_values(self, values: np.ndarray) -> np.ndarray:
 
-        Parameters
-        ----------
-        run_dict: dict(RunKey -> RunValue)
-            Dictionary from RunHistory.RunKey to RunHistory.RunValue
-        runhistory: RunHistory
-            Runhistory object
-        instances: list
-            List of instances
-        par_factor: int
-            Penalization factor for censored runtime data
-
-        Returns
-        -------
-        X: np.ndarray
-        Y: np.ndarray
-        """
-        X, y = super()._build_matrix(run_dict=run_dict, runhistory=runhistory,
-                                     instances=instances, par_factor=par_factor)
-
-        if y.size > 0:
-            perc = np.percentile(y, self.scale_perc) 
-            min_y = 2 * np.min(y) - perc # ensure that scaled y cannot be 0
-            max_y = np.max(y)
-            # linear scaling
-            if min_y == max_y:
-                # prevent diving by zero
-                min_y *= 1 - 10**-10
-            y = (y - min_y) / (max_y - min_y)
-            y = np.log(y)
-
-        return X, y
+        #perc = np.percentile(values, self.scale_perc)
+        min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
+        #max_y = np.max(values)
+        # linear scaling
+        if min_y == self.max_y:
+            # prevent diving by zero
+            min_y *= 1 - 10 ** -10
+        values = (values - min_y) / (self.max_y - min_y)
+        values = np.log(values)
+        return values
 
 
 class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
     """TODO"""
 
     def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
-                      runhistory: RunHistory, instances: typing.List[str]=None,
-                      par_factor: int=1):
+                      runhistory: RunHistory, instances: typing.List[str] = None,
+                      return_time_as_y: bool = False,
+                      store_statistics: bool = False):
         """TODO"""
+        if return_time_as_y:
+            raise NotImplementedError()
+        if store_statistics:
+            raise NotImplementedError()
+
         # First build nan-matrix of size #configs x #params+1
         n_rows = len(run_dict)
         n_cols = self.num_params
         X = np.ones([n_rows, n_cols + self.n_feats]) * np.nan
-        Y = np.ones([n_rows, 2])
+        y = np.ones([n_rows, 2])
 
         # Then populate matrix
         for row, (key, run) in enumerate(run_dict.items()):
@@ -559,7 +481,13 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
             else:
                 X[row, :] = conf_vector
             # run_array[row, -1] = instances[row]
-            Y[row, 0] = run.cost
-            Y[row, 1] = np.log(1 + run.time)
+            y[row, 0] = run.cost
+            y[row, 1] = 1 + run.time
 
-        return X, Y
+        y = self.transform_response_values(values=y)
+
+        return X, y
+
+    def transform_response_values(self, values: np.ndarray):
+        values[:, 1] = np.log(1 + values[:, 1])
+        return values
