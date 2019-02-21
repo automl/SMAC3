@@ -255,12 +255,15 @@
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">shlex</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">pcs</span><span class="p">,</span> <span class="n">pcs_new</span>
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">json</span> <span class="k">as</span> <span class="n">pcs_json</span>
 <span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="k">import</span> <span class="n">MAXINT</span><span class="p">,</span> <span class="n">N_TREES</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.input_reader</span> <span class="k">import</span> <span class="n">InputReader</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2018, ML4AAD&quot;</span>

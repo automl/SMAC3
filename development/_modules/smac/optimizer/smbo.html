@@ -395,7 +395,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_random_search</span> <span class="o">=</span> <span class="n">RandomSearch</span><span class="p">(</span>
             <span class="n">acquisition_func</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_space</span><span class="p">,</span> <span class="n">rng</span>
         <span class="p">)</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">predict_incumbent</span> <span class="o">=</span> <span class="n">predict_incumbent</span>
 
 <div class="viewcode-block" id="SMBO.start"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -482,7 +482,7 @@
 
 <div class="viewcode-block" id="SMBO.choose_next"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.choose_next">[docs]</a>    <span class="k">def</span> <span class="nf">choose_next</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                     <span class="n">incumbent_value</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Choose next candidate solution with Bayesian optimization. The </span>
+        <span class="sd">&quot;&quot;&quot;Choose next candidate solution with Bayesian optimization. The</span>
 <span class="sd">        suggested configurations depend on the argument ``acq_optimizer`` to</span>
 <span class="sd">        the ``SMBO`` class.</span>
 
@@ -522,18 +522,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_func</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="n">incumbent_value</span><span class="p">,</span> <span class="n">num_data</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
 
         <span class="n">challengers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span><span class="o">.</span><span class="n">maximize</span><span class="p">(</span>
-            <span class="n">runhistory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span> 
-            <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span> 
-            <span class="n">num_points</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">acq_opt_challengers</span><span class="p">,</span> 
+            <span class="n">runhistory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
+            <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+            <span class="n">num_points</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">acq_opt_challengers</span><span class="p">,</span>
             <span class="n">random_configuration_chooser</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_configuration_chooser</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">challengers</span></div>
-    
+
     <span class="k">def</span> <span class="nf">_get_incumbent_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39; get incumbent value either from runhistory</span>
 <span class="sd">            or from best predicted performance on configs in runhistory</span>
 <span class="sd">            (depends on self.predict_incumbent)&quot;</span>
-<span class="sd">            </span>
+
 <span class="sd">            Return</span>
 <span class="sd">            ------</span>
 <span class="sd">            float</span>
@@ -547,7 +547,7 @@
             <span class="p">))</span>
             <span class="n">incumbent_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">costs</span><span class="p">)</span>
             <span class="c1"># won&#39;t need log(y) if EPM was already trained on log(y)</span>
-            
+
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Runhistory is empty and the cost value of &quot;</span>
@@ -555,7 +555,7 @@
             <span class="n">incumbent_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rh2EPM</span><span class="p">,</span><span class="n">RunHistory2EPM4LogCost</span><span class="p">):</span>
                 <span class="n">incumbent_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">incumbent_value</span><span class="p">)</span>
-        
+
         <span class="k">return</span> <span class="n">incumbent_value</span>
 
 <div class="viewcode-block" id="SMBO.validate"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_mode</span><span class="o">=</span><span class="s1">&#39;inc&#39;</span><span class="p">,</span> <span class="n">instance_mode</span><span class="o">=</span><span class="s1">&#39;train+test&#39;</span><span class="p">,</span>
@@ -636,25 +636,25 @@
                           <span class="s2">&quot;intensification: </span><span class="si">%.4f</span><span class="s2"> (</span><span class="si">%.2f</span><span class="s2">)&quot;</span> <span class="o">%</span>
                           <span class="p">(</span><span class="n">total_time</span><span class="p">,</span> <span class="n">time_spent</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">frac_intensify</span><span class="p">),</span> <span class="n">time_left</span><span class="p">,</span> <span class="n">frac_intensify</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">time_left</span>
-    
+
     <span class="k">def</span> <span class="nf">_component_builder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conf</span><span class="p">:</span><span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">dict</span><span class="p">])</span> \
         <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">AbstractAcquisitionFunction</span><span class="p">,</span> <span class="n">AbstractEPM</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            builds new Acquisition function object</span>
 <span class="sd">            and EPM object and returns these</span>
-<span class="sd">            </span>
+
 <span class="sd">            Parameters</span>
 <span class="sd">            ----------</span>
 <span class="sd">            conf: typing.Union[Configuration, dict]</span>
 <span class="sd">                configuration specificing &quot;model&quot; and &quot;acq_func&quot;</span>
-<span class="sd">                </span>
+
 <span class="sd">            Returns</span>
 <span class="sd">            -------</span>
 <span class="sd">            typing.Tuple[AbstractAcquisitionFunction, AbstractEPM]</span>
-<span class="sd">            </span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">types</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">get_types</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_space</span><span class="p">,</span> <span class="n">instance_features</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">feature_array</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="n">conf</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;RF&quot;</span><span class="p">:</span>
             <span class="n">model</span> <span class="o">=</span> <span class="n">RandomForestWithInstances</span><span class="p">(</span>
                   <span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">,</span>
@@ -663,13 +663,13 @@
                   <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">),</span>
                   <span class="n">pca_components</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pca_dim&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">PCA_DIM</span><span class="p">),</span>
                   <span class="n">log_y</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;log_y&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;LOG&quot;</span><span class="p">,</span> <span class="s2">&quot;LOGS&quot;</span><span class="p">]),</span>
-                  <span class="n">num_trees</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;num_trees&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_num_trees</span><span class="p">),</span> 
-                  <span class="n">do_bootstrapping</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;do_bootstrapping&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_do_bootstrapping</span><span class="p">),</span>  
+                  <span class="n">num_trees</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;num_trees&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_num_trees</span><span class="p">),</span>
+                  <span class="n">do_bootstrapping</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;do_bootstrapping&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_do_bootstrapping</span><span class="p">),</span>
                   <span class="n">ratio_features</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ratio_features&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_ratio_features</span><span class="p">),</span>
                   <span class="n">min_samples_split</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;min_samples_split&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_min_samples_split</span><span class="p">),</span>
                   <span class="n">min_samples_leaf</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;min_samples_leaf&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_min_samples_leaf</span><span class="p">),</span>
                   <span class="n">max_depth</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;max_depth&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">rf_max_depth</span><span class="p">))</span>
-            
+
         <span class="k">elif</span> <span class="n">conf</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;GP&quot;</span><span class="p">:</span>
             <span class="n">cov_amp</span> <span class="o">=</span> <span class="mi">2</span>
             <span class="n">n_dims</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">types</span><span class="p">)</span>
@@ -694,9 +694,9 @@
                 <span class="n">burnin_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
                 <span class="n">normalize_input</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="n">normalize_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">rng</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span>
+                <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">10000</span><span class="p">),</span>
             <span class="p">)</span>
-            
+
         <span class="k">if</span> <span class="n">conf</span><span class="p">[</span><span class="s2">&quot;acq_func&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;EI&quot;</span><span class="p">:</span>
             <span class="n">acq</span> <span class="o">=</span> <span class="n">EI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
                      <span class="n">par</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;par_ei&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
@@ -710,55 +710,55 @@
             <span class="c1"># par value should be in log-space</span>
             <span class="n">acq</span> <span class="o">=</span> <span class="n">LogEI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
                         <span class="n">par</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;par_logei&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-        
+
         <span class="k">return</span> <span class="n">acq</span><span class="p">,</span> <span class="n">model</span>
-    
+
     <span class="k">def</span> <span class="nf">_get_acm_cs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            returns a configuration space </span>
+<span class="sd">            returns a configuration space</span>
 <span class="sd">            designed for querying ~smac.optimizer.smbo._component_builder</span>
-<span class="sd">            </span>
+
 <span class="sd">            Returns</span>
-<span class="sd">            ------- </span>
+<span class="sd">            -------</span>
 <span class="sd">                ConfigurationSpace</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="n">cs</span> <span class="o">=</span> <span class="n">ConfigurationSpace</span><span class="p">()</span>
         <span class="n">cs</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="o">**</span><span class="mi">20</span><span class="p">))</span>
-        
+
         <span class="n">model</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;RF&quot;</span><span class="p">,</span> <span class="s2">&quot;GP&quot;</span><span class="p">))</span>
-        
+
         <span class="n">num_trees</span> <span class="o">=</span> <span class="n">Constant</span><span class="p">(</span><span class="s2">&quot;num_trees&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
         <span class="n">bootstrap</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;do_bootstrapping&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span> <span class="n">default_value</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">ratio_features</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;ratio_features&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span> <span class="o">/</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span> <span class="o">/</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">5</span> <span class="o">/</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">default_value</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">min_split</span> <span class="o">=</span> <span class="n">UniformIntegerHyperparameter</span><span class="p">(</span><span class="s2">&quot;min_samples_to_split&quot;</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="n">min_leaves</span> <span class="o">=</span> <span class="n">UniformIntegerHyperparameter</span><span class="p">(</span><span class="s2">&quot;min_samples_in_leaf&quot;</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        
+
         <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">model</span><span class="p">,</span> <span class="n">num_trees</span><span class="p">,</span> <span class="n">bootstrap</span><span class="p">,</span> <span class="n">ratio_features</span><span class="p">,</span> <span class="n">min_split</span><span class="p">,</span> <span class="n">min_leaves</span><span class="p">])</span>
-        
+
         <span class="n">inc_num_trees</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">num_trees</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;RF&quot;</span><span class="p">])</span>
         <span class="n">inc_bootstrap</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">bootstrap</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;RF&quot;</span><span class="p">])</span>
         <span class="n">inc_ratio_features</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">ratio_features</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;RF&quot;</span><span class="p">])</span>
         <span class="n">inc_min_split</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">min_split</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;RF&quot;</span><span class="p">])</span>
         <span class="n">inc_min_leavs</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">min_leaves</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;RF&quot;</span><span class="p">])</span>
-        
+
         <span class="n">cs</span><span class="o">.</span><span class="n">add_conditions</span><span class="p">([</span><span class="n">inc_num_trees</span><span class="p">,</span> <span class="n">inc_bootstrap</span><span class="p">,</span> <span class="n">inc_ratio_features</span><span class="p">,</span> <span class="n">inc_min_split</span><span class="p">,</span> <span class="n">inc_min_leavs</span><span class="p">])</span>
-        
+
         <span class="n">acq</span>  <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;acq_func&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="s2">&quot;LCB&quot;</span><span class="p">,</span> <span class="s2">&quot;PI&quot;</span><span class="p">,</span> <span class="s2">&quot;LogEI&quot;</span><span class="p">))</span>
         <span class="n">par_ei</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;par_ei&quot;</span><span class="p">,</span> <span class="n">lower</span><span class="o">=-</span><span class="mi">10</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
         <span class="n">par_pi</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;par_pi&quot;</span><span class="p">,</span> <span class="n">lower</span><span class="o">=-</span><span class="mi">10</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
         <span class="n">par_logei</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;par_logei&quot;</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">par_lcb</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;par_lcb&quot;</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mf">0.9999</span><span class="p">)</span>
-        
+
         <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">acq</span><span class="p">,</span> <span class="n">par_ei</span><span class="p">,</span> <span class="n">par_pi</span><span class="p">,</span> <span class="n">par_logei</span><span class="p">,</span> <span class="n">par_lcb</span><span class="p">])</span>
-        
+
         <span class="n">inc_par_ei</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">par_ei</span><span class="p">,</span> <span class="n">acq</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;EI&quot;</span><span class="p">])</span>
         <span class="n">inc_par_pi</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">par_pi</span><span class="p">,</span> <span class="n">acq</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;PI&quot;</span><span class="p">])</span>
         <span class="n">inc_par_logei</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">par_logei</span><span class="p">,</span> <span class="n">acq</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;LogEI&quot;</span><span class="p">])</span>
         <span class="n">inc_par_lcb</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">par_lcb</span><span class="p">,</span> <span class="n">acq</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;LCB&quot;</span><span class="p">])</span>
-        
+
         <span class="n">cs</span><span class="o">.</span><span class="n">add_conditions</span><span class="p">([</span><span class="n">inc_par_ei</span><span class="p">,</span> <span class="n">inc_par_pi</span><span class="p">,</span> <span class="n">inc_par_logei</span><span class="p">,</span> <span class="n">inc_par_lcb</span><span class="p">])</span>
-        
+
         <span class="k">return</span> <span class="n">cs</span></div>
 </pre></div>
 

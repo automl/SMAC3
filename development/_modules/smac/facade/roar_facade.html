@@ -252,18 +252,17 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="k">import</span> <span class="n">average_cost</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="k">import</span> <span class="n">RandomSearch</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">StatusType</span><span class="p">,</span> <span class="n">ExecuteTARun</span>
-<span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="k">import</span> <span class="n">Stats</span>
-<span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
-<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
-<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="k">import</span> <span class="n">RunHistory2EPM4Cost</span>
+<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span> <span class="nn">smac.epm.random_epm</span> <span class="k">import</span> <span class="n">RandomEPM</span>
+<span class="kn">from</span> <span class="nn">smac.facade.smac_facade</span> <span class="k">import</span> <span class="n">SMAC</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.initial_design</span> <span class="k">import</span> <span class="n">InitialDesign</span>
 <span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="k">import</span> <span class="n">Intensifier</span>
-<span class="kn">from</span> <span class="nn">smac.facade.smac_facade</span> <span class="k">import</span> <span class="n">SMAC</span>
-<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">Configuration</span>
-<span class="kn">from</span> <span class="nn">smac.utils.util_funcs</span> <span class="k">import</span> <span class="n">get_rng</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="k">import</span> <span class="n">RandomSearch</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="k">import</span> <span class="n">RunHistory2EPM4Cost</span>
+<span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="k">import</span> <span class="n">Stats</span>
+<span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">ExecuteTARun</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2016, ML4AAD&quot;</span>
@@ -327,31 +326,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
-        <span class="c1"># initial random number generator</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">rng</span> <span class="o">=</span> <span class="n">get_rng</span><span class="p">(</span><span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
-
-        <span class="c1"># initial conversion of runhistory into EPM data</span>
-        <span class="c1"># since ROAR does not really use it the converted data</span>
-        <span class="c1"># we simply use a cheap RunHistory2EPM here</span>
-        <span class="n">num_params</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">())</span>
-        <span class="n">runhistory2epm</span> <span class="o">=</span> <span class="n">RunHistory2EPM4Cost</span><span class="p">(</span>
-            <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">num_params</span><span class="o">=</span><span class="n">num_params</span><span class="p">,</span>
-            <span class="n">success_states</span><span class="o">=</span><span class="p">[</span><span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span> <span class="p">],</span>
-            <span class="n">impute_censored_data</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">impute_state</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-
-        <span class="n">aggregate_func</span> <span class="o">=</span> <span class="n">average_cost</span>
-        <span class="c1"># initialize empty runhistory</span>
-        <span class="k">if</span> <span class="n">runhistory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">runhistory</span> <span class="o">=</span> <span class="n">RunHistory</span><span class="p">(</span><span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">)</span>
-        <span class="c1"># inject aggr_func if necessary</span>
-        <span class="k">if</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">aggregate_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">runhistory</span><span class="o">.</span><span class="n">aggregate_func</span> <span class="o">=</span> <span class="n">aggregate_func</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="n">Stats</span><span class="p">(</span><span class="n">scenario</span><span class="p">)</span>
-        <span class="n">rs</span> <span class="o">=</span> <span class="n">RandomSearch</span><span class="p">(</span>
-            <span class="n">acquisition_function</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">config_space</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="n">scenario</span><span class="o">.</span><span class="n">acq_opt_challengers</span> <span class="o">=</span> <span class="mi">1</span>
 
         <span class="c1"># use SMAC facade</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -359,13 +334,12 @@
             <span class="n">tae_runner</span><span class="o">=</span><span class="n">tae_runner</span><span class="p">,</span>
             <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
             <span class="n">intensifier</span><span class="o">=</span><span class="n">intensifier</span><span class="p">,</span>
-            <span class="n">runhistory2epm</span><span class="o">=</span><span class="n">runhistory2epm</span><span class="p">,</span>
+            <span class="n">runhistory2epm</span><span class="o">=</span><span class="n">RunHistory2EPM4Cost</span><span class="p">,</span>
             <span class="n">initial_design</span><span class="o">=</span><span class="n">initial_design</span><span class="p">,</span>
             <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configurations</span><span class="p">,</span>
-            <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
-            <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
             <span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span>
-            <span class="n">acquisition_function_optimizer</span><span class="o">=</span><span class="n">rs</span><span class="p">,</span>
+            <span class="n">acquisition_function_optimizer</span><span class="o">=</span><span class="n">RandomSearch</span><span class="p">,</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">RandomEPM</span><span class="p">,</span>
         <span class="p">)</span></div>
 </pre></div>
 

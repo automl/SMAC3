@@ -276,7 +276,7 @@
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot; (&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">long_name</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AbstractEPM</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AbstractEPM</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor</span>
 
 <span class="sd">        Parameters</span>
@@ -312,7 +312,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        configurations : list</span>
 <span class="sd">            The configurations where the acquisition function</span>
-<span class="sd">            should be evaluated. </span>
+<span class="sd">            should be evaluated.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -361,8 +361,7 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">model</span><span class="p">:</span> <span class="n">AbstractEPM</span><span class="p">,</span>
-                 <span class="n">par</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                 <span class="n">par</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor</span>
 
 <span class="sd">        Parameters</span>
@@ -433,8 +432,7 @@
 <div class="viewcode-block" id="EIPS"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.acquisition.html#smac.optimizer.acquisition.EIPS">[docs]</a><span class="k">class</span> <span class="nc">EIPS</span><span class="p">(</span><span class="n">EI</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">model</span><span class="p">:</span> <span class="n">AbstractEPM</span><span class="p">,</span>
-                 <span class="n">par</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                 <span class="n">par</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Computes for a given x the expected improvement as</span>
 <span class="sd">        acquisition value.</span>
 <span class="sd">        :math:`EI(X) := \frac{\mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]} {np.log(r(x))}`,</span>
@@ -519,8 +517,7 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">model</span><span class="p">:</span> <span class="n">AbstractEPM</span><span class="p">,</span>
-                 <span class="n">par</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                 <span class="n">par</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Computes for a given x the logarithm expected improvement as</span>
 <span class="sd">        acquisition value.</span>
 

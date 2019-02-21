@@ -257,10 +257,10 @@
   <div class="section" id="module-smac.initial_design.random_configuration_design">
 <span id="smac-initial-design-random-configuration-design-module"></span><h1>smac.initial_design.random_configuration_design module<a class="headerlink" href="#module-smac.initial_design.random_configuration_design" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="smac.initial_design.random_configuration_design.RandomConfiguration">
-<em class="property">class </em><code class="descclassname">smac.initial_design.random_configuration_design.</code><code class="descname">RandomConfiguration</code><span class="sig-paren">(</span><em>tae_runner: smac.tae.execute_ta_run.ExecuteTARun</em>, <em>scenario: smac.scenario.scenario.Scenario</em>, <em>stats: smac.stats.stats.Stats</em>, <em>traj_logger: smac.utils.io.traj_logging.TrajLogger</em>, <em>rng: mtrand.RandomState</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/initial_design/random_configuration_design.html#RandomConfiguration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.random_configuration_design.RandomConfiguration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.initial_design.single_config_initial_design.html#smac.initial_design.single_config_initial_design.SingleConfigInitialDesign" title="smac.initial_design.single_config_initial_design.SingleConfigInitialDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.initial_design.single_config_initial_design.SingleConfigInitialDesign</span></code></a></p>
-<p>Initial design that evaluates a single random configuration</p>
+<dt id="smac.initial_design.random_configuration_design.RandomConfigurations">
+<em class="property">class </em><code class="descclassname">smac.initial_design.random_configuration_design.</code><code class="descname">RandomConfigurations</code><span class="sig-paren">(</span><em>tae_runner: smac.tae.execute_ta_run.ExecuteTARun</em>, <em>scenario: smac.scenario.scenario.Scenario</em>, <em>stats: smac.stats.stats.Stats</em>, <em>traj_logger: smac.utils.io.traj_logging.TrajLogger</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>rng: mtrand.RandomState</em>, <em>intensifier: smac.intensification.intensification.Intensifier</em>, <em>aggregate_func: Callable</em>, <em>configs: Optional[List[ConfigSpace.configuration_space.Configuration]] = None</em>, <em>n_configs_x_params: int = 10</em>, <em>max_config_fracs: float = 0.25</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/initial_design/random_configuration_design.html#RandomConfigurations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.random_configuration_design.RandomConfigurations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign" title="smac.initial_design.initial_design.InitialDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.initial_design.initial_design.InitialDesign</span></code></a></p>
+<p>Initial design that evaluates random configurations.</p>
 <p>Constructor</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -273,17 +273,24 @@
 exhausts the budget.</li>
 <li><strong>traj_logger</strong> (<a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger"><em>TrajLogger</em></a>) – Trajectory logging to add new incumbents found by the initial
 design.</li>
+<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – Runhistory with all target algorithm runs.</li>
 <li><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</li>
+<li><strong>intensifier</strong> (<a class="reference internal" href="smac.intensification.intensification.html#smac.intensification.intensification.Intensifier" title="smac.intensification.intensification.Intensifier"><em>Intensifier</em></a>) – Intensification object to issue a racing to decide the current
+incumbent.</li>
+<li><strong>aggregate_func</strong> (<em>typing:Callable</em>) – Function to aggregate performance of a configuration across
+instances.</li>
+<li><strong>configs</strong> (<em>typing.Optional</em><em>[</em><em>typing.List</em><em>[</em><em>Configuration</em><em>]</em><em>]</em>) – List of initial configurations.</li>
+<li><strong>n_configs_x_params</strong> (<em>int</em>) – how many configurations will be used at most in the initial design (X*D)</li>
+<li><strong>max_config_fracs</strong> (<em>float</em>) – use at most X*budget in the initial design. Not active if a time limit is given.</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
-<dt id="smac.initial_design.random_configuration_design.RandomConfiguration.run">
-<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.Configuration<a class="headerlink" href="#smac.initial_design.random_configuration_design.RandomConfiguration.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Runs the initial design by calling the target algorithm
-and adding new entries to the trajectory logger.</p>
+<dt id="smac.initial_design.random_configuration_design.RandomConfigurations.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.Configuration<a class="headerlink" href="#smac.initial_design.random_configuration_design.RandomConfigurations.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the initial design.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -295,6 +302,11 @@ and adding new entries to the trajectory logger.</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="method">
+<dt id="smac.initial_design.random_configuration_design.RandomConfigurations.select_configurations">
+<code class="descname">select_configurations</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[ConfigSpace.configuration_space.Configuration]<a class="headerlink" href="#smac.initial_design.random_configuration_design.RandomConfigurations.select_configurations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 

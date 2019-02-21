@@ -267,10 +267,10 @@
 
 <div class="viewcode-block" id="fmin_smac"><a class="viewcode-back" href="../../../apidoc/smac.facade.func_facade.html#smac.facade.func_facade.fmin_smac">[docs]</a><span class="k">def</span> <span class="nf">fmin_smac</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
               <span class="n">x0</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
-              <span class="n">bounds</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
-              <span class="n">maxfun</span><span class="p">:</span> <span class="nb">int</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
-              <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-              <span class="n">scenario_args</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+              <span class="n">bounds</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span>
+              <span class="n">maxfun</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+              <span class="n">rng</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">scenario_args</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
               <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Minimize a function func using the BORF facade</span>
@@ -321,9 +321,6 @@
                                                <span class="n">default_value</span><span class="o">=</span><span class="n">x0</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
         <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameter</span><span class="p">(</span><span class="n">parameter</span><span class="p">)</span>
 
-    <span class="c1"># Create target algorithm runner</span>
-    <span class="n">ta</span> <span class="o">=</span> <span class="n">ExecuteTAFuncArray</span><span class="p">(</span><span class="n">ta</span><span class="o">=</span><span class="n">func</span><span class="p">)</span>
-
     <span class="c1"># create scenario</span>
     <span class="n">scenario_dict</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;run_obj&quot;</span><span class="p">:</span> <span class="s2">&quot;quality&quot;</span><span class="p">,</span>
@@ -339,7 +336,14 @@
         <span class="n">scenario_dict</span><span class="p">[</span><span class="s2">&quot;runcount_limit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">maxfun</span>
     <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="n">scenario_dict</span><span class="p">)</span>
 
-    <span class="n">smac</span> <span class="o">=</span> <span class="n">BORF</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">tae_runner</span><span class="o">=</span><span class="n">ta</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">smac</span> <span class="o">=</span> <span class="n">BORF</span><span class="p">(</span>
+        <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
+        <span class="n">tae_runner</span><span class="o">=</span><span class="n">ExecuteTAFuncArray</span><span class="p">,</span>
+        <span class="n">tae_runner_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ta&#39;</span><span class="p">:</span> <span class="n">func</span><span class="p">},</span>
+        <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
+
     <span class="n">smac</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">smac</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">smac</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
     <span class="n">incumbent</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
     <span class="n">config_id</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">config_ids</span><span class="p">[</span><span class="n">incumbent</span><span class="p">]</span>

@@ -248,33 +248,35 @@
             
   <h1>Source code for smac.initial_design.initial_design</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">typing</span>
 
-<span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="k">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span> <span class="nn">ConfigSpace.configuration_space</span> <span class="k">import</span> <span class="n">Configuration</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
+<span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="k">import</span> <span class="n">Intensifier</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">ExecuteTARun</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="k">import</span> <span class="n">Stats</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="k">import</span> <span class="n">TrajLogger</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">FirstRunCrashedException</span>
+<span class="kn">from</span> <span class="nn">smac.utils</span> <span class="k">import</span> <span class="n">constants</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2016, ML4AAD&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
-<div class="viewcode-block" id="InitialDesign"><a class="viewcode-back" href="../../../apidoc/smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign">[docs]</a><span class="k">class</span> <span class="nc">InitialDesign</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Base class for initial designs, i.e. the configurations that are run</span>
-<span class="sd">    before optimization starts</span>
+<div class="viewcode-block" id="InitialDesign"><a class="viewcode-back" href="../../../apidoc/smac.initial_design.initial_design.html#smac.initial_design.default_configuration_design.InitialDesign">[docs]</a><span class="k">class</span> <span class="nc">InitialDesign</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Base class for initial design strategies that evaluates multiple configurations</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    tae_runner : ExecuteTARun</span>
-<span class="sd">        Target algorithm runner that will be used to run the initial design</span>
-<span class="sd">    scenario</span>
-<span class="sd">    stats</span>
-<span class="sd">    traj_logger</span>
-<span class="sd">    rng</span>
-<span class="sd">    logger</span>
+<span class="sd">    configs : typing.List[Configuration]</span>
+<span class="sd">        List of configurations to be evaluated</span>
+<span class="sd">    intensifier</span>
+<span class="sd">    runhistory</span>
+<span class="sd">    aggregate_func</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
@@ -282,7 +284,13 @@
                  <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
                  <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">,</span>
                  <span class="n">traj_logger</span><span class="p">:</span> <span class="n">TrajLogger</span><span class="p">,</span>
-                 <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span>
+                 <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
+                 <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span>
+                 <span class="n">intensifier</span><span class="p">:</span> <span class="n">Intensifier</span><span class="p">,</span>
+                 <span class="n">aggregate_func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
+                 <span class="n">configs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">n_configs_x_params</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                 <span class="n">max_config_fracs</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
                  <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor</span>
 
@@ -298,26 +306,131 @@
 <span class="sd">        traj_logger: TrajLogger</span>
 <span class="sd">            Trajectory logging to add new incumbents found by the initial</span>
 <span class="sd">            design.</span>
+<span class="sd">        runhistory: RunHistory</span>
+<span class="sd">            Runhistory with all target algorithm runs.</span>
 <span class="sd">        rng: np.random.RandomState</span>
 <span class="sd">            Random state</span>
+<span class="sd">        intensifier: Intensifier</span>
+<span class="sd">            Intensification object to issue a racing to decide the current</span>
+<span class="sd">            incumbent.</span>
+<span class="sd">        aggregate_func: typing:Callable</span>
+<span class="sd">            Function to aggregate performance of a configuration across</span>
+<span class="sd">            instances.</span>
+<span class="sd">        configs: typing.Optional[typing.List[Configuration]]</span>
+<span class="sd">            List of initial configurations.</span>
+<span class="sd">        n_configs_x_params: int</span>
+<span class="sd">            how many configurations will be used at most in the initial design (X*D)</span>
+<span class="sd">        max_config_fracs: float</span>
+<span class="sd">            use at most X*budget in the initial design. Not active if a time limit is given.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">tae_runner</span> <span class="o">=</span> <span class="n">tae_runner</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span> <span class="o">=</span> <span class="n">scenario</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="n">stats</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">traj_logger</span> <span class="o">=</span> <span class="n">traj_logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span> <span class="o">=</span> <span class="n">scenario</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">rng</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">configs</span> <span class="o">=</span> <span class="n">configs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span> <span class="o">=</span> <span class="n">intensifier</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span> <span class="o">=</span> <span class="n">runhistory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aggregate_func</span> <span class="o">=</span> <span class="n">aggregate_func</span>
 
-<div class="viewcode-block" id="InitialDesign.run"><a class="viewcode-back" href="../../../apidoc/smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="n">n_params</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_budget</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_configs_x_params</span> <span class="o">*</span> <span class="n">n_params</span><span class="p">,</span>
+                          <span class="p">(</span><span class="n">max_config_fracs</span> <span class="o">*</span> <span class="n">scenario</span><span class="o">.</span><span class="n">ta_run_limit</span><span class="p">))))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Running initial design for </span><span class="si">%d</span><span class="s2"> configurations&quot;</span> <span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">init_budget</span><span class="p">))</span>
+
+<div class="viewcode-block" id="InitialDesign.select_configurations"><a class="viewcode-back" href="../../../apidoc/smac.initial_design.initial_design.html#smac.initial_design.default_configuration_design.InitialDesign.select_configurations">[docs]</a>    <span class="k">def</span> <span class="nf">select_configurations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">configs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_select_configurations</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">configs</span></div>
+
+    <span class="k">def</span> <span class="nf">_select_configurations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+<div class="viewcode-block" id="InitialDesign.run"><a class="viewcode-back" href="../../../apidoc/smac.initial_design.initial_design.html#smac.initial_design.default_configuration_design.InitialDesign.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Run the initial design.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        incumbent: Configuration</span>
-<span class="sd">            Initial incumbent configuration.</span>
+<span class="sd">            Initial incumbent configuration</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_configurations</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">origin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;Initial design&#39;</span>
 
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
+        <span class="c1"># run first design</span>
+        <span class="c1"># ensures that first design is part of trajectory file</span>
+        <span class="n">inc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_first_configuration</span><span class="p">(</span><span class="n">configs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">configs</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># intensify will skip all challenger that are identical with the incumbent;</span>
+            <span class="c1"># if &lt;configs&gt; has only identical configurations,</span>
+            <span class="c1"># intensifiy will not do any configuration runs</span>
+            <span class="c1"># (also not on the incumbent)</span>
+            <span class="c1"># therefore, at least two different configurations have to be in &lt;configs&gt;</span>
+            <span class="n">inc</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">intensify</span><span class="p">(</span>
+                <span class="n">challengers</span><span class="o">=</span><span class="n">configs</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span>
+                <span class="n">incumbent</span><span class="o">=</span><span class="n">configs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="n">run_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
+                <span class="n">aggregate_func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aggregate_func</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">inc</span></div>
+
+    <span class="k">def</span> <span class="nf">_run_first_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_incumbent</span><span class="p">,</span> <span class="n">scenario</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Runs the initial design by calling the target algorithm and adding new entries to the trajectory logger.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        incumbent: Configuration</span>
+<span class="sd">            Initial incumbent configuration</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">initial_incumbent</span><span class="o">.</span><span class="n">origin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">initial_incumbent</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;Initial design&#39;</span>
+
+        <span class="c1"># add this incumbent right away to have an entry to time point 0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">traj_logger</span><span class="o">.</span><span class="n">add_entry</span><span class="p">(</span><span class="n">train_perf</span><span class="o">=</span><span class="mi">2</span> <span class="o">**</span> <span class="mi">31</span><span class="p">,</span>
+                                   <span class="n">incumbent_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                   <span class="n">incumbent</span><span class="o">=</span><span class="n">initial_incumbent</span><span class="p">)</span>
+
+        <span class="n">rand_inst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">train_insts</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">deterministic</span><span class="p">:</span>
+            <span class="n">initial_seed</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">initial_seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">MAXINT</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tae_runner</span><span class="o">.</span><span class="n">start</span><span class="p">(</span>
+                <span class="n">initial_incumbent</span><span class="p">,</span>
+                <span class="n">instance</span><span class="o">=</span><span class="n">rand_inst</span><span class="p">,</span>
+                <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">cutoff</span><span class="p">,</span>
+                <span class="n">seed</span><span class="o">=</span><span class="n">initial_seed</span><span class="p">,</span>
+                <span class="n">instance_specific</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">instance_specific</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">rand_inst</span><span class="p">,</span>
+                                                                      <span class="s2">&quot;0&quot;</span><span class="p">))</span>
+        <span class="k">except</span> <span class="n">FirstRunCrashedException</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">err</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># TODO make it possible to add the failed run to the runhistory</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;quality&quot;</span><span class="p">:</span>
+                    <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">cost_for_crash</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">cutoff</span> <span class="o">*</span> <span class="n">scenario</span><span class="o">.</span><span class="n">par_factor</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># first incumbent</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">traj_logger</span><span class="o">.</span><span class="n">add_entry</span><span class="p">(</span><span class="n">train_perf</span><span class="o">=</span><span class="n">cost</span><span class="p">,</span>
+                                   <span class="n">incumbent_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span><span class="p">,</span>
+                                   <span class="n">incumbent</span><span class="o">=</span><span class="n">initial_incumbent</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">initial_incumbent</span></div>
 </pre></div>
 
            </div>

@@ -258,44 +258,9 @@
 <span id="smac-epm-random-epm-module"></span><h1>smac.epm.random_epm module<a class="headerlink" href="#module-smac.epm.random_epm" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.epm.random_epm.RandomEPM">
-<em class="property">class </em><code class="descclassname">smac.epm.random_epm.</code><code class="descname">RandomEPM</code><span class="sig-paren">(</span><em>rng: mtrand.RandomState</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/random_epm.html#RandomEPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.random_epm.RandomEPM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.epm.random_epm.</code><code class="descname">RandomEPM</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/random_epm.html#RandomEPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.random_epm.RandomEPM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_epm.AbstractEPM</span></code></a></p>
 <p>EPM which returns random values on a call to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
-<dl class="attribute">
-<dt id="smac.epm.random_epm.RandomEPM.logger">
-<code class="descname">logger</code><a class="headerlink" href="#smac.epm.random_epm.RandomEPM.logger" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">logging.Logger</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="smac.epm.random_epm.RandomEPM.rng">
-<code class="descname">rng</code><a class="headerlink" href="#smac.epm.random_epm.RandomEPM.rng" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">np.random.RandomState</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<p>Constructor</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rng</strong> (<em>np.random.RandomState</em>) – </td>
-</tr>
-</tbody>
-</table>
 <dl class="method">
 <dt id="smac.epm.random_epm.RandomEPM.predict">
 <code class="descname">predict</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="headerlink" href="#smac.epm.random_epm.RandomEPM.predict" title="Permalink to this definition">¶</a></dt>

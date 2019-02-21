@@ -263,11 +263,8 @@
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="k">import</span> <span class="n">AbstractRunHistory2EPM</span><span class="p">,</span> \
     <span class="n">RunHistory2EPM4LogCost</span><span class="p">,</span> <span class="n">RunHistory2EPM4Cost</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.initial_design</span> <span class="k">import</span> <span class="n">InitialDesign</span>
-<span class="kn">from</span> <span class="nn">smac.initial_design.default_configuration_design</span> <span class="k">import</span> \
-    <span class="n">DefaultConfiguration</span>
-<span class="kn">from</span> <span class="nn">smac.initial_design.random_configuration_design</span> <span class="k">import</span> <span class="n">RandomConfiguration</span>
-<span class="kn">from</span> <span class="nn">smac.initial_design.multi_config_initial_design</span> <span class="k">import</span> \
-    <span class="n">MultiConfigInitialDesign</span>
+<span class="kn">from</span> <span class="nn">smac.initial_design.default_configuration_design</span> <span class="k">import</span> <span class="n">DefaultConfiguration</span>
+<span class="kn">from</span> <span class="nn">smac.initial_design.random_configuration_design</span> <span class="k">import</span> <span class="n">RandomConfigurations</span>
 <span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="k">import</span> <span class="n">Intensifier</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.epils</span> <span class="k">import</span> <span class="n">EPILS_Solver</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="k">import</span> <span class="n">average_cost</span>
@@ -492,28 +489,36 @@
                 <span class="s2">&quot;Either use initial_design or initial_configurations; but not both&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">initial_configurations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">initial_design</span> <span class="o">=</span> <span class="n">MultiConfigInitialDesign</span><span class="p">(</span><span class="n">tae_runner</span><span class="o">=</span><span class="n">tae_runner</span><span class="p">,</span>
-                                                      <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
-                                                      <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
-                                                      <span class="n">traj_logger</span><span class="o">=</span><span class="n">traj_logger</span><span class="p">,</span>
-                                                      <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
-                                                      <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
-                                                      <span class="n">configs</span><span class="o">=</span><span class="n">initial_configurations</span><span class="p">,</span>
-                                                      <span class="n">intensifier</span><span class="o">=</span><span class="n">intensifier</span><span class="p">,</span>
-                                                      <span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">)</span>
+            <span class="n">initial_design</span> <span class="o">=</span> <span class="n">InitialDesign</span><span class="p">(</span><span class="n">tae_runner</span><span class="o">=</span><span class="n">tae_runner</span><span class="p">,</span>
+                                           <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
+                                           <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+                                           <span class="n">traj_logger</span><span class="o">=</span><span class="n">traj_logger</span><span class="p">,</span>
+                                           <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
+                                           <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
+                                           <span class="n">configs</span><span class="o">=</span><span class="n">initial_configurations</span><span class="p">,</span>
+                                           <span class="n">intensifier</span><span class="o">=</span><span class="n">intensifier</span><span class="p">,</span>
+                                           <span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">initial_design</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_incumbent</span> <span class="o">==</span> <span class="s2">&quot;DEFAULT&quot;</span><span class="p">:</span>
                 <span class="n">initial_design</span> <span class="o">=</span> <span class="n">DefaultConfiguration</span><span class="p">(</span><span class="n">tae_runner</span><span class="o">=</span><span class="n">tae_runner</span><span class="p">,</span>
                                                       <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
                                                       <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
                                                       <span class="n">traj_logger</span><span class="o">=</span><span class="n">traj_logger</span><span class="p">,</span>
-                                                      <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+                                                      <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
+                                                      <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
+                                                      <span class="n">intensifier</span><span class="o">=</span><span class="n">intensifier</span><span class="p">,</span>
+                                                      <span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">,</span>
+                                                      <span class="n">max_config_fracs</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_incumbent</span> <span class="o">==</span> <span class="s2">&quot;RANDOM&quot;</span><span class="p">:</span>
-                <span class="n">initial_design</span> <span class="o">=</span> <span class="n">RandomConfiguration</span><span class="p">(</span><span class="n">tae_runner</span><span class="o">=</span><span class="n">tae_runner</span><span class="p">,</span>
-                                                     <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
-                                                     <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
-                                                     <span class="n">traj_logger</span><span class="o">=</span><span class="n">traj_logger</span><span class="p">,</span>
-                                                     <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+                <span class="n">initial_design</span> <span class="o">=</span> <span class="n">RandomConfigurations</span><span class="p">(</span><span class="n">tae_runner</span><span class="o">=</span><span class="n">tae_runner</span><span class="p">,</span>
+                                                      <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
+                                                      <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+                                                      <span class="n">traj_logger</span><span class="o">=</span><span class="n">traj_logger</span><span class="p">,</span>
+                                                      <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
+                                                      <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
+                                                      <span class="n">intensifier</span><span class="o">=</span><span class="n">intensifier</span><span class="p">,</span>
+                                                      <span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">,</span>
+                                                      <span class="n">max_config_fracs</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Don&#39;t know what kind of initial_incumbent &quot;</span>
                                  <span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39; is&quot;</span> <span class="o">%</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_incumbent</span><span class="p">)</span>

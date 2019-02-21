@@ -258,7 +258,7 @@
 <span id="smac-facade-func-facade-module"></span><h1>smac.facade.func_facade module<a class="headerlink" href="#module-smac.facade.func_facade" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="smac.facade.func_facade.fmin_smac">
-<code class="descclassname">smac.facade.func_facade.</code><code class="descname">fmin_smac</code><span class="sig-paren">(</span><em>func: Callable, x0: List[float], bounds: List[List[float]], maxfun: int = -1, rng: mtrand.RandomState = None, scenario_args: Mapping[str, Any] = None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/func_facade.html#fmin_smac"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.func_facade.fmin_smac" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">smac.facade.func_facade.</code><code class="descname">fmin_smac</code><span class="sig-paren">(</span><em>func: Callable, x0: List[float], bounds: List[Iterable[float]], maxfun: int = -1, rng: Union[mtrand.RandomState, int] = None, scenario_args: Mapping[str, Any] = None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/func_facade.html#fmin_smac"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.func_facade.fmin_smac" title="Permalink to this definition">¶</a></dt>
 <dd><p>Minimize a function func using the BORF facade
 (i.e., a modified version of SMAC).
 This function is a convenience wrapper for the BORF class.</p>

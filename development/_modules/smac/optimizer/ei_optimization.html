@@ -289,7 +289,7 @@
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
             <span class="n">config_space</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
-            <span class="n">rng</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span>
+            <span class="n">rng</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
@@ -416,8 +416,8 @@
             <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
             <span class="n">config_space</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
             <span class="n">rng</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">max_steps</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">n_steps_plateau_walk</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+            <span class="n">max_steps</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">n_steps_plateau_walk</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">acquisition_function</span><span class="p">,</span> <span class="n">config_space</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_steps</span> <span class="o">=</span> <span class="n">max_steps</span>
@@ -457,7 +457,7 @@
 
         <span class="n">init_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_initial_points</span><span class="p">(</span>
             <span class="n">num_points</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">)</span>
-            
+
         <span class="n">configs_acq</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># Start N local search from different random start points</span>
         <span class="k">for</span> <span class="n">start_point</span> <span class="ow">in</span> <span class="n">init_points</span><span class="p">:</span>
@@ -476,7 +476,7 @@
         <span class="k">return</span> <span class="n">configs_acq</span>
 
     <span class="k">def</span> <span class="nf">_get_initial_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_points</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">):</span>
-        
+
         <span class="k">if</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
             <span class="n">init_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_space</span><span class="o">.</span><span class="n">sample_configuration</span><span class="p">(</span>
                 <span class="n">size</span><span class="o">=</span><span class="n">num_points</span><span class="p">)</span>
@@ -493,7 +493,7 @@
                 <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
                     <span class="n">configs_previous_runs_sorted</span><span class="p">[:</span><span class="n">num_configs_local_search</span><span class="p">])</span>
             <span class="p">)</span>
-            
+
         <span class="k">return</span> <span class="n">init_points</span>
 
     <span class="k">def</span> <span class="nf">_one_iter</span><span class="p">(</span>
@@ -531,7 +531,7 @@
             <span class="n">neighbors</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="n">all_neighbors</span><span class="p">:</span>
                 <span class="n">s_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-                <span class="n">acq_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function</span><span class="p">([</span><span class="n">neighbor</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">acq_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function</span><span class="p">([</span><span class="n">neighbor</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">neighbors_looked_at</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="n">time_n</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">s_time</span><span class="p">)</span>
 

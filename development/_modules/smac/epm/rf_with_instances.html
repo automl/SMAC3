@@ -288,6 +288,7 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">types</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
                  <span class="n">bounds</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
+                 <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                  <span class="n">log_y</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">num_trees</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="n">N_TREES</span><span class="p">,</span>
                  <span class="n">do_bootstrapping</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -298,7 +299,6 @@
                  <span class="n">max_depth</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="mi">20</span><span class="p">,</span>
                  <span class="n">eps_purity</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">,</span>
                  <span class="n">max_num_nodes</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="mi">20</span><span class="p">,</span>
-                 <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
                  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
@@ -311,6 +311,8 @@
 <span class="sd">            have to pass np.array([2, 0]). Note that we count starting from 0.</span>
 <span class="sd">        bounds : list</span>
 <span class="sd">            Specifies the bounds for continuous features.</span>
+<span class="sd">        seed : int</span>
+<span class="sd">            The seed that is passed to the random_forest_run library.</span>
 <span class="sd">        log_y: bool</span>
 <span class="sd">            y values (passed to this RF) are expected to be log(y) transformed;</span>
 <span class="sd">            this will be considered during predicting</span>
@@ -334,10 +336,8 @@
 <span class="sd">            different</span>
 <span class="sd">        max_num_nodes : int</span>
 <span class="sd">            The maxmimum total number of nodes in a tree</span>
-<span class="sd">        seed : int</span>
-<span class="sd">            The seed that is passed to the random_forest_run library.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">types</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">types</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">log_y</span> <span class="o">=</span> <span class="n">log_y</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">regression</span><span class="o">.</span><span class="n">default_random_engine</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
@@ -361,8 +361,7 @@
         <span class="c1"># This list well be read out by save_iteration() in the solver</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hypers</span> <span class="o">=</span> <span class="p">[</span><span class="n">num_trees</span><span class="p">,</span> <span class="n">max_num_nodes</span><span class="p">,</span> <span class="n">do_bootstrapping</span><span class="p">,</span>
                        <span class="n">n_points_per_tree</span><span class="p">,</span> <span class="n">ratio_features</span><span class="p">,</span> <span class="n">min_samples_split</span><span class="p">,</span>
-                       <span class="n">min_samples_leaf</span><span class="p">,</span> <span class="n">max_depth</span><span class="p">,</span> <span class="n">eps_purity</span><span class="p">,</span> <span class="n">seed</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+                       <span class="n">min_samples_leaf</span><span class="p">,</span> <span class="n">max_depth</span><span class="p">,</span> <span class="n">eps_purity</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span>
                                         <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
@@ -502,9 +501,9 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s1">&#39;Expected 2d array, got </span><span class="si">%d</span><span class="s1">d array!&#39;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Rows in X should have </span><span class="si">%d</span><span class="s1"> entries but have </span><span class="si">%d</span><span class="s1">!&#39;</span> <span class="o">%</span>
-                             <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                             <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">),</span>
                               <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
         <span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
