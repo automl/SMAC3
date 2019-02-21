@@ -1,7 +1,10 @@
 import logging
 import typing
 
-from ConfigSpace.configuration_space import Configuration
+from ConfigSpace.configuration_space import Configuration, ConfigurationSpace
+from ConfigSpace.hyperparameters import NumericalHyperparameter, \
+    Constant, CategoricalHyperparameter, OrdinalHyperparameter
+from ConfigSpace.util import deactivate_inactive_hyperparameters
 import numpy as np
 
 from smac.intensification.intensification import Intensifier
@@ -14,7 +17,7 @@ from smac.tae.execute_ta_run import FirstRunCrashedException
 from smac.utils import constants
 
 __author__ = "Marius Lindauer"
-__copyright__ = "Copyright 2016, ML4AAD"
+__copyright__ = "Copyright 2019, AutoML"
 __license__ = "3-clause BSD"
 
 
@@ -182,3 +185,43 @@ class InitialDesign:
                                    incumbent=initial_incumbent)
 
         return initial_incumbent
+
+    def _transform_continuous_designs(self,
+                                      design: np.ndarray,
+                                      origin: str,
+                                      cs: ConfigurationSpace):
+
+        params = cs.get_hyperparameters()
+        for idx, param in enumerate(params):
+            if isinstance(param, NumericalHyperparameter):
+                continue
+            elif isinstance(param, Constant):
+                # add a vector with zeros
+                design_ = np.zeros(np.array(design.shape) + np.array((0, 1)))
+                design_[:, :idx] = design[:, :idx]
+                design_[:, idx+1:] = design[:, idx:]
+                design = design_
+            elif isinstance(param, CategoricalHyperparameter):
+                v_design = design[:, idx]
+                v_design[v_design == 1] = 1 - 10**-10
+                design[:, idx] = np.array(v_design * len(param.choices), dtype=np.int)
+            elif isinstance(param, OrdinalHyperparameter):
+                v_design = design[:, idx]
+                v_design[v_design == 1] = 1 - 10**-10
+                design[:, idx] = np.array(v_design * len(param.sequence), dtype=np.int)
+            else:
+                raise ValueError("Hyperparamer not supported in LHD")
+
+        self.logger.debug("Initial Design")
+        configs = []
+        for vector in design:
+            conf = deactivate_inactive_hyperparameters(configuration=None,
+                                                       configuration_space=cs,
+                                                       vector=vector)
+            conf.origin = origin
+            configs.append(conf)
+            self.logger.debug(conf)
+
+        self.logger.debug("Size of initial design: %d" % (len(configs)))
+
+        return configs

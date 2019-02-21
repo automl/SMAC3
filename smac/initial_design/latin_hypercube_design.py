@@ -5,14 +5,12 @@ import numpy as np
 from pyDOE import lhs
 
 from ConfigSpace.configuration_space import Configuration
-from ConfigSpace.hyperparameters import NumericalHyperparameter, \
-    Constant, CategoricalHyperparameter, OrdinalHyperparameter
-from ConfigSpace.util import deactivate_inactive_hyperparameters
+from ConfigSpace.hyperparameters import Constant
 
 from smac.initial_design.initial_design import InitialDesign
 
 __author__ = "Marius Lindauer"
-__copyright__ = "Copyright 2018, ML4AAD"
+__copyright__ = "Copyright 2019, AutoML"
 __license__ = "3-clause BSD"
 
 
@@ -42,7 +40,7 @@ class LHDesign(InitialDesign):
         cs = self.scenario.cs
         params = cs.get_hyperparameters()
 
-        # manual seeding of lhd design
+        # seeding of lhd design
         np.random.seed(self.rng.randint(1,2*20))
 
         constants = 0
@@ -52,38 +50,6 @@ class LHDesign(InitialDesign):
 
         lhd = lhs(n=len(params)-constants, samples=self.init_budget)
 
-        for idx, param in enumerate(params):
-            if isinstance(param, NumericalHyperparameter):
-                continue
-                #lhd[:, idx] = lhd[:, idx] * (param.upper - param.lower) + param.lower
-            elif isinstance(param, Constant):
-                # add a vector with zeros
-                lhd_ = np.zeros(np.array(lhd.shape) + np.array((0, 1)))
-                lhd_[:, :idx] = lhd[:, :idx]
-                lhd_[:, idx+1:] = lhd[:, idx:]
-                lhd = lhd_
-            elif isinstance(param, CategoricalHyperparameter):
-                v_lhd = lhd[:, idx]
-                v_lhd[v_lhd == 1] = 1 - 10**-10
-                lhd[:, idx] = np.array(v_lhd * len(param.choices), dtype=np.int)
-            elif isinstance(param, OrdinalHyperparameter):
-                v_lhd = lhd[:, idx]
-                v_lhd[v_lhd == 1] = 1 - 10**-10
-                lhd[:, idx] = np.array(v_lhd * len(param.sequence), dtype=np.int)
-            else:
-                raise ValueError("Hyperparamet not supported in LHD")
-
-        self.logger.debug("Initial Design")
-        configs = []
-        # add middle point in space
-        for design in lhd:
-            conf = deactivate_inactive_hyperparameters(configuration=None,
-                                                       configuration_space=cs,
-                                                       vector=design)
-            conf.origin = "LHD"
-            configs.append(conf)
-            self.logger.debug(conf)
-
-        self.logger.debug("Size of lhd: %d" %(len(configs)))
-
-        return configs
+        return self._transform_continuous_designs(design=lhd,
+                                                  origin='LHD',
+                                                  cs=cs)
