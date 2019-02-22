@@ -553,8 +553,11 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Runhistory is empty and the cost value of &quot;</span>
                                  <span class="s2">&quot;the incumbent is unknown.&quot;</span><span class="p">)</span>
             <span class="n">incumbent_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rh2EPM</span><span class="p">,</span><span class="n">RunHistory2EPM4LogCost</span><span class="p">):</span>
-                <span class="n">incumbent_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">incumbent_value</span><span class="p">)</span>
+            <span class="c1"># It&#39;s unclear how to do this for inv scaling and potential future scaling. This line should be changed if</span>
+            <span class="c1"># necessary</span>
+            <span class="n">incumbent_value_as_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">incumbent_value</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">incumbent_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rh2EPM</span><span class="o">.</span><span class="n">transform_response_values</span><span class="p">(</span><span class="n">incumbent_value_as_array</span><span class="p">)</span>
+            <span class="n">incumbent_value</span> <span class="o">=</span> <span class="n">incumbent_value</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="n">incumbent_value</span>
 
