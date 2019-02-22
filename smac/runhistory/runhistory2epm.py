@@ -129,7 +129,7 @@ class AbstractRunHistory2EPM(object):
                              "smac.epm.base_imputor.BaseImputor, but %s" %
                              type(self.imputor))
 
-        # Learnt statistics
+        # Learned statistics
         self.min_y = None
         self.max_y = None
         self.perc = None

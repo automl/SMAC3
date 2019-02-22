@@ -306,7 +306,9 @@ class SMBO(object):
             incumbent_value = self.runhistory.get_cost(self.incumbent)
             # It's unclear how to do this for inv scaling and potential future scaling. This line should be changed if
             # necessary
-            incumbent_value = self.rh2EPM.transform_response_values(np.array(incumbent_value).reshape((1, 1)))[0][0]
+            incumbent_value_as_array = np.array(incumbent_value).reshape((1, 1))
+            incumbent_value = self.rh2EPM.transform_response_values(incumbent_value_as_array)
+            incumbent_value = incumbent_value[0][0]
 
         return incumbent_value
 
