@@ -19,7 +19,7 @@ from ConfigSpace.conditions import InCondition
 # Import SMAC-utilities
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.scenario.scenario import Scenario
-from smac.facade.smac_hpo_facade import import SMAC4HPO
+from smac.facade.smac_hpo_facade import SMAC4HPO
 
 
 # We load the iris-dataset (a widely used benchmark)
