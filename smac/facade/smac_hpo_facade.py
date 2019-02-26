@@ -70,7 +70,7 @@ class SMAC4HPO(SMAC4AC):
 
         # assumes random chooser for random configs
         random_config_chooser_kwargs = kwargs.get('random_configuration_chooser_kwargs', dict())
-        random_config_chooser_kwargs['prob'] = random_config_chooser_kwargs.get('prob', 0.0)
+        random_config_chooser_kwargs['prob'] = random_config_chooser_kwargs.get('prob', 0.2)
         kwargs['random_configuration_chooser_kwargs'] = random_config_chooser_kwargs
 
         # better improve acquisition function optimization
