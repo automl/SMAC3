@@ -84,7 +84,7 @@ cs.add_hyperparameters([num_trees, min_weight_frac_leaf, criterion,
 
 # SMAC scenario oject
 scenario = Scenario({"run_obj": "quality",   # we optimize quality (alternative runtime)
-                     "runcount-limit": 50,  # maximum number of function evaluations
+                     "runcount-limit": 10,   # max. number of function evaluations; for this example set to a low number
                      "cs": cs,               # configuration space
                      "deterministic": "true",
                      "memory_limit": 3072,   # adapt this to reasonable value for your hardware

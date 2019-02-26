@@ -20,10 +20,16 @@ fi
 cd ..
 
 cd branin
-bash branin_fmin.py
+python branin_fmin.py
 rval=$?
 if [ "$rval" != 0 ]; then
     echo "Error running example QCP"
     exit $rval
 fi
 
+python ../../scripts/smac --scenario scenario.txt
+rval=$?
+if [ "$rval" != 0 ]; then
+    echo "Error running example QCP"
+    exit $rval
+fi

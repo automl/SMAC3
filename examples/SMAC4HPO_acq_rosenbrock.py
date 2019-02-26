@@ -39,7 +39,7 @@ cs.add_hyperparameters([x0, x1])
 
 # Scenario object
 scenario = Scenario({"run_obj": "quality",   # we optimize quality (alternatively runtime)
-                     "runcount-limit": 200,  # maximum function evaluations
+                     "runcount-limit": 10,   # max. number of function evaluations; for this example set to a low number
                      "cs": cs,               # configuration space
                      "deterministic": "true"
                      })
