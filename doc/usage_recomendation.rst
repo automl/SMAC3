@@ -3,10 +3,10 @@
 .. _TAE: tae.html
 
 Usage Recommendation
-===========
+====================
 *SMAC* of course itself offers a lot of design choices, some of which are crucial to achieve peak performance. Luckily, often it is sufficient to distinguish between a few problem classes.
 To make the usage of *SMAC* as easy as possible, we provide several facades designed for these different use cases. Here we give some general recommendations on
-when to use which facade. This recommendation is based on our experience and technical limitations and is by far not intended to be complete:
+when to use which facade. These recommendations are based on our experience and technical limitations and is by far not intended to be complete:
 
 +-----------------------+----------------------+-----------------------+-------------------------+
 |                       | SMAC4BO              | SMAC4HPO              | SMAC4AC                 |
@@ -26,7 +26,7 @@ when to use which facade. This recommendation is based on our experience and tec
 
 Some examples of typical use cases:
 
-*SMAC4BO*: Vanilla Bayesian Optimization using a *Gaussian Process* and *Expected Improvement*
+*SMAC4BO*: Bayesian Optimization using a *Gaussian Process* and *Expected Improvement*
    - Optimizing the objective value of Branin and other low dimensional artificial test functions
    - Finding the best learning rate for training a neural network wrt. RMSE on a validation dataset
 
