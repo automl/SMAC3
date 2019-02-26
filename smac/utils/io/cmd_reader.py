@@ -563,8 +563,9 @@ class CMDReader(object):
                                help="[dev] Specifies the path to the execution-directory.")
         scen_opts.add_argument("--deterministic", dest="deterministic",
                                default=False, type=truthy,
-                               help="[dev] If true, the optimization process will be "
-                                    "repeatable.")
+                               help="[dev] If true, SMAC assumes that the target function or algorithm is deterministic"
+                               " (the same static seed of 0 is always passed to the function/algorithm)."
+                               " If false, different random seeds are passed to the target function/algorithm.")
         scen_opts.add_argument("--run-obj", "--run_obj", dest="run_obj",
                                type=str, action=ProcessRunObjectiveAction,
                                required=True, choices=['runtime', 'quality'],
