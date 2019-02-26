@@ -28,7 +28,7 @@ logger = logging.getLogger("Optimizer")  # Enable to show Debug outputs
 x, cost, _ = fmin_smac(func=rosenbrock_2d,
                        x0=[-3, -4],
                        bounds=[(-5, 10), (-5, 10)],
-                       maxfun=50,
+                       maxfun=10,
                        rng=3)  # Passing a seed makes fmin_smac determistic
 
 print("Best x: %s; with cost: %f"% (str(x), cost))
