@@ -87,6 +87,8 @@ class SMAC4BO(SMAC4AC):
                 model_kwargs['normalize_input'] = True
                 model_kwargs['normalize_output'] = True
                 model_kwargs['seed'] = rng.randint(0, 2**20)
+            else:
+                raise ValueError('Unknown model type %s' % model_type)
             kwargs['model_kwargs'] = model_kwargs
 
         if kwargs.get('random_configuration_chooser') is None:
