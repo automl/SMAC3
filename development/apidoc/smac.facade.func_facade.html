@@ -259,9 +259,9 @@
 <dl class="function">
 <dt id="smac.facade.func_facade.fmin_smac">
 <code class="descclassname">smac.facade.func_facade.</code><code class="descname">fmin_smac</code><span class="sig-paren">(</span><em>func: Callable, x0: List[float], bounds: List[Iterable[float]], maxfun: int = -1, rng: Union[mtrand.RandomState, int] = None, scenario_args: Mapping[str, Any] = None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/func_facade.html#fmin_smac"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.func_facade.fmin_smac" title="Permalink to this definition">¶</a></dt>
-<dd><p>Minimize a function func using the BORF facade
+<dd><p>Minimize a function func using the SMAC4HPO facade
 (i.e., a modified version of SMAC).
-This function is a convenience wrapper for the BORF class.</p>
+This function is a convenience wrapper for the SMAC4HPO class.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -283,7 +283,7 @@ See ~smac.facade.smac_facade.SMAC</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
 <li><strong>x</strong> (<em>list</em>) – Estimated position of the minimum.</li>
 <li><strong>f</strong> (<em>float</em>) – Value of <cite>func</cite> at the minimum.</li>
-<li><strong>s</strong> (<a class="reference internal" href="smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC" title="smac.facade.smac_facade.SMAC"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.facade.smac_facade.SMAC</span></code></a>) – SMAC objects which enables the user to get
+<li><strong>s</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">smac.facade.smac_hpo_facade.SMAC4HPO</span></code>) – SMAC objects which enables the user to get
 e.g., the trajectory and runhistory.</li>
 </ul>
 </p>

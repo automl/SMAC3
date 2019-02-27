@@ -283,7 +283,7 @@ import the fmin-function and the Branin-function:</p>
 21</pre></div></td><td class="code"><div class="highlight"><pre><span></span>    <span class="n">x</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">fmin_smac</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">branin</span><span class="p">,</span>  <span class="c1"># function</span>
                            <span class="n">x0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>    <span class="c1"># default configuration</span>
                            <span class="n">bounds</span><span class="o">=</span><span class="p">[(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">)],</span>  <span class="c1"># limits</span>
-                           <span class="n">maxfun</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>   <span class="c1"># maximum number of evaluations</span>
+                           <span class="n">maxfun</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>   <span class="c1"># maximum number of evaluations</span>
                            <span class="n">rng</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>        <span class="c1"># random seed</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimum at </span><span class="si">{}</span><span class="s2"> with cost of </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cost</span><span class="p">))</span>
 </pre></div>
@@ -306,7 +306,7 @@ python ../../scripts/smac --scenario scenario.txt
 <div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">python</span> <span class="n">cmdline_wrapper</span><span class="o">.</span><span class="n">py</span>
 <span class="n">paramfile</span> <span class="o">=</span> <span class="n">param_config_space</span><span class="o">.</span><span class="n">pcs</span>
 <span class="n">run_obj</span> <span class="o">=</span> <span class="n">quality</span>
-<span class="n">runcount_limit</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">runcount_limit</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">deterministic</span> <span class="o">=</span> <span class="mi">1</span>
 </pre></div>
 </div>
@@ -398,7 +398,7 @@ This example is located in <code class="code docutils literal notranslate"><span
 <span class="c1"># Import SMAC-utilities</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_func</span> <span class="k">import</span> <span class="n">ExecuteTAFuncDict</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
-<span class="kn">from</span> <span class="nn">smac.facade.smac_facade</span> <span class="k">import</span> <span class="n">SMAC</span>
+<span class="kn">from</span> <span class="nn">smac.facade.smac_hpo_facade</span> <span class="k">import</span> <span class="n">SMAC4HPO</span>
 </pre></div>
 </td></tr></table></div>
 <dl class="docutils">
@@ -549,7 +549,7 @@ scenario-file, which we used in the Branin example.</p>
 95
 96</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># Scenario object</span>
 <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">({</span><span class="s2">&quot;run_obj&quot;</span><span class="p">:</span> <span class="s2">&quot;quality&quot;</span><span class="p">,</span>   <span class="c1"># we optimize quality (alternatively runtime)</span>
-                     <span class="s2">&quot;runcount-limit&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>  <span class="c1"># maximum function evaluations</span>
+                     <span class="s2">&quot;runcount-limit&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>   <span class="c1"># max. number of function evaluations; for this example set to a low number</span>
                      <span class="s2">&quot;cs&quot;</span><span class="p">:</span> <span class="n">cs</span><span class="p">,</span>               <span class="c1"># configuration space</span>
                      <span class="s2">&quot;deterministic&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span>
                      <span class="p">})</span>
@@ -571,7 +571,7 @@ as well as the function.</p>
 111
 112</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># Optimize, using a SMAC-object</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimizing! Depending on your machine, this might take a few minutes.&quot;</span><span class="p">)</span>
-<span class="n">smac</span> <span class="o">=</span> <span class="n">SMAC</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span>
+<span class="n">smac</span> <span class="o">=</span> <span class="n">SMAC4HPO</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span>
         <span class="n">tae_runner</span><span class="o">=</span><span class="n">svm_from_cfg</span><span class="p">)</span>
 
 <span class="n">incumbent</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>

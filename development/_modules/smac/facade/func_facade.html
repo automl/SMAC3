@@ -252,7 +252,7 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">smac.facade.borf_facade</span> <span class="k">import</span> <span class="n">BORF</span>
+<span class="kn">from</span> <span class="nn">smac.facade.smac_hpo_facade</span> <span class="k">import</span> <span class="n">SMAC4HPO</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">ConfigurationSpace</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunKey</span>
@@ -273,9 +273,9 @@
               <span class="n">scenario_args</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
               <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Minimize a function func using the BORF facade</span>
+<span class="sd">    Minimize a function func using the SMAC4HPO facade</span>
 <span class="sd">    (i.e., a modified version of SMAC).</span>
-<span class="sd">    This function is a convenience wrapper for the BORF class.</span>
+<span class="sd">    This function is a convenience wrapper for the SMAC4HPO class.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -303,7 +303,7 @@
 <span class="sd">        Estimated position of the minimum.</span>
 <span class="sd">    f : float</span>
 <span class="sd">        Value of `func` at the minimum.</span>
-<span class="sd">    s : :class:`smac.facade.smac_facade.SMAC`</span>
+<span class="sd">    s : :class:`smac.facade.smac_hpo_facade.SMAC4HPO`</span>
 <span class="sd">        SMAC objects which enables the user to get</span>
 <span class="sd">        e.g., the trajectory and runhistory.</span>
 
@@ -336,7 +336,7 @@
         <span class="n">scenario_dict</span><span class="p">[</span><span class="s2">&quot;runcount_limit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">maxfun</span>
     <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="n">scenario_dict</span><span class="p">)</span>
 
-    <span class="n">smac</span> <span class="o">=</span> <span class="n">BORF</span><span class="p">(</span>
+    <span class="n">smac</span> <span class="o">=</span> <span class="n">SMAC4HPO</span><span class="p">(</span>
         <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
         <span class="n">tae_runner</span><span class="o">=</span><span class="n">ExecuteTAFuncArray</span><span class="p">,</span>
         <span class="n">tae_runner_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ta&#39;</span><span class="p">:</span> <span class="n">func</span><span class="p">},</span>

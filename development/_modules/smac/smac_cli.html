@@ -255,13 +255,13 @@
 
 <span class="kn">from</span> <span class="nn">smac.utils.io.cmd_reader</span> <span class="k">import</span> <span class="n">CMDReader</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
-<span class="kn">from</span> <span class="nn">smac.facade.smac_facade</span> <span class="k">import</span> <span class="n">SMAC</span>
+<span class="kn">from</span> <span class="nn">smac.facade.smac_ac_facade</span> <span class="k">import</span> <span class="n">SMAC4AC</span>
 <span class="kn">from</span> <span class="nn">smac.facade.roar_facade</span> <span class="k">import</span> <span class="n">ROAR</span>
-<span class="kn">from</span> <span class="nn">smac.facade.epils_facade</span> <span class="k">import</span> <span class="n">EPILS</span>
-<span class="kn">from</span> <span class="nn">smac.facade.hydra_facade</span> <span class="k">import</span> <span class="n">Hydra</span>
-<span class="kn">from</span> <span class="nn">smac.facade.psmac_facade</span> <span class="k">import</span> <span class="n">PSMAC</span>
-<span class="kn">from</span> <span class="nn">smac.facade.borf_facade</span> <span class="k">import</span> <span class="n">BORF</span>
-<span class="kn">from</span> <span class="nn">smac.facade.bogp_facade</span> <span class="k">import</span> <span class="n">BOGP</span>
+<span class="kn">from</span> <span class="nn">smac.facade.experimental.epils_facade</span> <span class="k">import</span> <span class="n">EPILS</span>
+<span class="kn">from</span> <span class="nn">smac.facade.experimental.hydra_facade</span> <span class="k">import</span> <span class="n">Hydra</span>
+<span class="kn">from</span> <span class="nn">smac.facade.experimental.psmac_facade</span> <span class="k">import</span> <span class="n">PSMAC</span>
+<span class="kn">from</span> <span class="nn">smac.facade.smac_hpo_facade</span> <span class="k">import</span> <span class="n">SMAC4HPO</span>
+<span class="kn">from</span> <span class="nn">smac.facade.smac_bo_facade</span> <span class="k">import</span> <span class="n">SMAC4BO</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="k">import</span> <span class="n">Stats</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="k">import</span> <span class="n">average_cost</span>
@@ -357,8 +357,8 @@
                     <span class="n">fn</span><span class="o">=</span><span class="n">traj_fn</span><span class="p">,</span> <span class="n">cs</span><span class="o">=</span><span class="n">scen</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
                 <span class="n">initial_configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">trajectory</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;incumbent&quot;</span><span class="p">])</span>
 
-        <span class="k">if</span> <span class="n">main_args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;SMAC&quot;</span><span class="p">:</span>
-            <span class="n">optimizer</span> <span class="o">=</span> <span class="n">SMAC</span><span class="p">(</span>
+        <span class="k">if</span> <span class="n">main_args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;SMAC4AC&quot;</span><span class="p">:</span>
+            <span class="n">optimizer</span> <span class="o">=</span> <span class="n">SMAC4AC</span><span class="p">(</span>
                 <span class="n">scenario</span><span class="o">=</span><span class="n">scen</span><span class="p">,</span>
                 <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">main_args_</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
                 <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>
@@ -366,8 +366,8 @@
                 <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
                 <span class="n">restore_incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
                 <span class="n">run_id</span><span class="o">=</span><span class="n">main_args_</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">main_args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;BORF&quot;</span><span class="p">:</span>
-            <span class="n">optimizer</span> <span class="o">=</span> <span class="n">BORF</span><span class="p">(</span>
+        <span class="k">elif</span> <span class="n">main_args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;SMAC4HPO&quot;</span><span class="p">:</span>
+            <span class="n">optimizer</span> <span class="o">=</span> <span class="n">SMAC4HPO</span><span class="p">(</span>
                 <span class="n">scenario</span><span class="o">=</span><span class="n">scen</span><span class="p">,</span>
                 <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">main_args_</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
                 <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>
@@ -375,8 +375,8 @@
                 <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
                 <span class="n">restore_incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
                 <span class="n">run_id</span><span class="o">=</span><span class="n">main_args_</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">main_args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;BOGP&quot;</span><span class="p">:</span>
-            <span class="n">optimizer</span> <span class="o">=</span> <span class="n">BOGP</span><span class="p">(</span>
+        <span class="k">elif</span> <span class="n">main_args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;SMAC4BO&quot;</span><span class="p">:</span>
+            <span class="n">optimizer</span> <span class="o">=</span> <span class="n">SMAC4BO</span><span class="p">(</span>
                 <span class="n">scenario</span><span class="o">=</span><span class="n">scen</span><span class="p">,</span>
                 <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">main_args_</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
                 <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>
