@@ -10,7 +10,6 @@ import os
 import numpy as np
 from scipy.spatial.distance import euclidean
 
-from smac.facade.smac_facade import SMAC
 from smac.configspace import pcs
 from smac.optimizer.acquisition import EI
 from smac.optimizer.ei_optimization import LocalSearch, RandomSearch
@@ -39,6 +38,7 @@ def rosenbrock_4d(cfg):
            100 * (x4 - x3 ** 2) ** 2 + (x3 - 1) ** 2)
 
     return(val)
+
 
 class TestLocalSearch(unittest.TestCase):
     def setUp(self):
@@ -157,7 +157,6 @@ class TestLocalSearch(unittest.TestCase):
             self.assertEqual(rval[i][1].origin, 'Local Search')
 
 
-
 class TestRandomSearch(unittest.TestCase):
     @unittest.mock.patch('smac.optimizer.ei_optimization.convert_configurations_to_array')
     @unittest.mock.patch.object(EI, '__call__')
@@ -205,6 +204,7 @@ class TestRandomSearch(unittest.TestCase):
             self.assertIsInstance(rval[i][1], ConfigurationMock)
             self.assertEqual(rval[i][1].origin, 'Random Search')
             self.assertEqual(rval[i][0], 0)
+
 
 if __name__ == "__main__":
     unittest.main()

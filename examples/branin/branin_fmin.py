@@ -16,6 +16,6 @@ if __name__ == '__main__':
     x, cost, _ = fmin_smac(func=branin,  # function
                            x0=[0, 0],    # default configuration
                            bounds=[(-5, 10), (0, 15)],  # limits
-                           maxfun=500,   # maximum number of evaluations
+                           maxfun=10,   # maximum number of evaluations
                            rng=3)        # random seed
     print("Optimum at {} with cost of {}".format(x, cost))

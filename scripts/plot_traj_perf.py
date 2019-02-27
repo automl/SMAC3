@@ -9,14 +9,14 @@ import matplotlib.pyplot as plt
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 from smac.utils.io.traj_logging import TrajLogger
-from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
-from smac.facade.smac_facade import SMAC
+from smac.facade.smac_ac_facade import SMAC4AC
 from smac.configspace import convert_configurations_to_array
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2017, ML4AAD"
 __license__ = "3-clause BSD"
+
 
 def setup_SMAC_from_file(smac_out_dn: str,
                          add_dn:typing.List[str]):
@@ -44,7 +44,7 @@ def setup_SMAC_from_file(smac_out_dn: str,
 
     scenario_fn = os.path.join(smac_out_dn, "scenario.txt")
     scenario = Scenario(scenario_fn, {"output_dir": ""})
-    smac = SMAC(scenario=scenario)
+    smac = SMAC4AC(scenario=scenario)
 
     rh = smac.solver.runhistory
     rh.load_json(os.path.join(smac_out_dn, "runhistory.json"), cs=scenario.cs)

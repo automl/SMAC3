@@ -19,7 +19,7 @@ from ConfigSpace.conditions import InCondition
 # Import SMAC-utilities
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.scenario.scenario import Scenario
-from smac.facade.smac_facade import SMAC
+from smac.facade.smac_hpo_facade import SMAC4HPO
 
 
 # We load the iris-dataset (a widely used benchmark)
@@ -90,7 +90,7 @@ cs.add_condition(InCondition(child=gamma, parent=kernel, values=["rbf", "poly", 
 
 # Scenario object
 scenario = Scenario({"run_obj": "quality",   # we optimize quality (alternatively runtime)
-                     "runcount-limit": 200,  # maximum function evaluations
+                     "runcount-limit": 10,   # max. number of function evaluations; for this example set to a low number
                      "cs": cs,               # configuration space
                      "deterministic": "true"
                      })
@@ -102,7 +102,7 @@ print("Default Value: %.2f" % (def_value))
 
 # Optimize, using a SMAC-object
 print("Optimizing! Depending on your machine, this might take a few minutes.")
-smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
+smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
         tae_runner=svm_from_cfg)
 
 incumbent = smac.optimize()
