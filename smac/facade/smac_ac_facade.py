@@ -53,9 +53,9 @@ __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class SMAC(object):
+class SMAC4AC(object):
     """
-    Facade to use SMAC default mode
+    Facade to use SMAC default mode for Algorithm configuration
 
     Attributes
     ----------

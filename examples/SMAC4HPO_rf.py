@@ -1,6 +1,4 @@
 import logging
-import os
-import inspect
 
 import numpy as np
 from sklearn.metrics import make_scorer
@@ -12,11 +10,11 @@ from smac.configspace import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformFloatHyperparameter, UniformIntegerHyperparameter
 
-from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.scenario.scenario import Scenario
-from smac.facade.smac_facade import SMAC
+from smac.facade.smac_hpo_facade import SMAC4HPO
 
 boston = load_boston()
+
 
 def rf_from_cfg(cfg, seed):
     """
@@ -86,20 +84,20 @@ cs.add_hyperparameters([num_trees, min_weight_frac_leaf, criterion,
 
 # SMAC scenario oject
 scenario = Scenario({"run_obj": "quality",   # we optimize quality (alternative runtime)
-                     "runcount-limit": 50,  # maximum number of function evaluations
+                     "runcount-limit": 10,   # max. number of function evaluations; for this example set to a low number
                      "cs": cs,               # configuration space
                      "deterministic": "true",
                      "memory_limit": 3072,   # adapt this to reasonable value for your hardware
                      })
 
 # To optimize, we pass the function to the SMAC-object
-smac = SMAC(scenario=scenario, rng=np.random.RandomState(42),
-            tae_runner=rf_from_cfg)
+smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
+                tae_runner=rf_from_cfg)
 
 # Example call of the function with default values
 # It returns: Status, Cost, Runtime, Additional Infos
 def_value = smac.get_tae_runner().run(cs.get_default_configuration(), 1)[1]
-print("Value for default configuration: %.2f" % (def_value))
+print("Value for default configuration: %.2f" % def_value)
 
 # Start optimization
 try:
@@ -108,4 +106,4 @@ finally:
     incumbent = smac.solver.incumbent
 
 inc_value = smac.get_tae_runner().run(incumbent, 1)[1]
-print("Optimized Value: %.2f" % (inc_value))
+print("Optimized Value: %.2f" % inc_value)

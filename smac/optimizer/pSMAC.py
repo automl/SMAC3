@@ -55,17 +55,14 @@ def read(run_history: RunHistory,
 
                 new_numruns_in_runhistory = len(run_history.data)
                 difference = new_numruns_in_runhistory - numruns_in_runhistory
-                logger.debug('Shared model mode: Loaded %d new runs from %s' %
-                             (difference, runhistory_file))
+                logger.debug('Shared model mode: Loaded %d new runs from %s' % (difference, runhistory_file))
                 numruns_in_runhistory = new_numruns_in_runhistory
 
     difference = numruns_in_runhistory - initial_numruns_in_runhistory
-    logger.info('Shared model mode: Finished loading new runs, found %d new '
-                 'runs.' % difference)
+    logger.info('Shared model mode: Finished loading new runs, found %d new runs.' % difference)
 
 
-def write(run_history: RunHistory, output_directory: str,
-          logger: logging.Logger):
+def write(run_history: RunHistory, output_directory: str, logger: logging.Logger):
     """Write the runhistory to the output directory.
 
     Overwrites previously outputted runhistories.
@@ -82,7 +79,7 @@ def write(run_history: RunHistory, output_directory: str,
 
     output_filename = os.path.join(output_directory, RUNHISTORY_FILEPATTERN)
 
-    logging.debug("Saving runhistory to %s" %(output_filename))
+    logging.debug("Saving runhistory to %s" % output_filename)
 
     with tempfile.NamedTemporaryFile('wb', dir=output_directory,
                                      delete=False) as fh:

@@ -1,7 +1,7 @@
 import numpy as np
 import george
 
-from smac.facade.smac_facade import SMAC
+from smac.facade.smac_ac_facade import SMAC4AC
 from smac.epm.gp_default_priors import DefaultPrior
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
 from smac.utils.util_funcs import get_types, get_rng
@@ -14,12 +14,12 @@ __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class BOGP(SMAC):
+class SMAC4BO(SMAC4AC):
     """
-    Facade to use BORF default mode
+    Facade to use SMAC for BO using a GP
 
     see smac.facade.smac_Facade for API
-    This facade overwrites option available via the SMAC facade
+    This facade overwrites options available via the SMAC facade
 
     Attributes
     ----------
@@ -87,6 +87,8 @@ class BOGP(SMAC):
                 model_kwargs['normalize_input'] = True
                 model_kwargs['normalize_output'] = True
                 model_kwargs['seed'] = rng.randint(0, 2**20)
+            else:
+                raise ValueError('Unknown model type %s' % model_type)
             kwargs['model_kwargs'] = model_kwargs
 
         if kwargs.get('random_configuration_chooser') is None:

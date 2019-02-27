@@ -125,7 +125,7 @@ This example is located in :code:`examples/svm.py`.
 
 To use *SMAC* directly with Python, we first import the necessary modules
 
-.. literalinclude:: ../examples/svm.py
+.. literalinclude:: ../examples/SMAC4HPO_svm.py
    :lines: 9-22
    :lineno-match:
    
@@ -142,14 +142,14 @@ the configuration.
 Let's start by creating a ConfigSpace-object and adding the first hyperparameter: the choice of
 the kernel.
 
-.. literalinclude:: ../examples/svm.py
+.. literalinclude:: ../examples/SMAC4HPO_svm.py
    :lines: 60-65
    :lineno-match:
 
 We can add Integers, Floats or Categoricals to the ConfigSpace-object all at
 once, by passing them in a list. 
 
-.. literalinclude:: ../examples/svm.py
+.. literalinclude:: ../examples/SMAC4HPO_svm.py
    :lines: 67-70
    :lineno-match:
 
@@ -158,7 +158,7 @@ We can reflect this in optimization using **conditions** to deactivate hyperpara
 Deactivated hyperparameters are not considered during optimization, limiting the search-space to reasonable configurations.
 This way human knowledge about the problem is introduced.
 
-.. literalinclude:: ../examples/svm.py
+.. literalinclude:: ../examples/SMAC4HPO_svm.py
    :lines: 72-78
    :lineno-match:
 
@@ -166,7 +166,7 @@ Conditions can be used for various reasons. The `gamma`-hyperparameter for
 example can be set to "auto" or to a fixed float-value. We introduce a hyperparameters
 that is only activated if `gamma` is not set to "auto".
 
-.. literalinclude:: ../examples/svm.py
+.. literalinclude:: ../examples/SMAC4HPO_svm.py
    :lines: 80-88
    :lineno-match:
 
@@ -174,7 +174,7 @@ Of course we also define a function to evaluate the configured SVM on the IRIS-d
 Some options, such as the *kernel* or *C*, can be passed directly.
 Others, such as *gamma*, need to be translated before the call to the SVM.
 
-.. literalinclude:: ../examples/svm.py
+.. literalinclude:: ../examples/SMAC4HPO_svm.py
    :pyobject: svm_from_cfg
    :lineno-match:
 
@@ -186,7 +186,7 @@ __ scenario_
 The initialization of a scenario in the code uses the same keywords as a
 scenario-file, which we used in the Branin example.
 
-.. literalinclude:: ../examples/svm.py
+.. literalinclude:: ../examples/SMAC4HPO_svm.py
    :lines: 91-96
    :lineno-match:
 
@@ -196,7 +196,7 @@ To automatically handle the exploration of the search space
 and evaluation of the function, SMAC needs as inputs the scenario object 
 as well as the function.
 
-.. literalinclude:: ../examples/svm.py
+.. literalinclude:: ../examples/SMAC4HPO_svm.py
    :lines: 103-112
    :lineno-match:
 
@@ -234,7 +234,7 @@ so that as final output we can see the error value of the incumbent.
 As a bonus, we can validate our results. This is more useful when optimizing on
 instances, but we include the code so it is easily applicable for any usecase.
 
-.. literalinclude:: ../examples/svm.py
+.. literalinclude:: ../examples/SMAC4HPO_svm.py
    :lines: 115-
    :lineno-match:
 

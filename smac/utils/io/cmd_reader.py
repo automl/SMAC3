@@ -9,10 +9,6 @@ import sys
 import time
 import typing
 
-import numpy as np
-
-from smac.configspace import pcs, pcs_new
-from smac.configspace import json as pcs_json
 from smac.utils.constants import MAXINT, N_TREES
 from smac.utils.io.input_reader import InputReader
 
@@ -23,6 +19,7 @@ __license__ = "3-clause BSD"
 in_reader = InputReader()
 parsed_scen_args = {}
 logger = None
+
 
 def truthy(x):
     """Convert x into its truth value"""
@@ -372,7 +369,8 @@ class CMDReader(object):
                               default=logging.INFO, choices=["INFO", "DEBUG"],
                               help="Verbosity level.")
         opt_opts.add_argument("--mode",
-                              default="SMAC", choices=["SMAC", "ROAR", "EPILS", "Hydra", "PSMAC", "BORF", "BOGP"],
+                              default="SMAC4AC", choices=["SMAC4AC", "ROAR", "EPILS", "Hydra", "PSMAC", "SMAC4HPO",
+                                                          "SMAC4BO"],
                               help="Configuration mode.")
         opt_opts.add_argument("--restore-state", "--restore_state", dest="restore_state",
                               default=None,
@@ -565,8 +563,9 @@ class CMDReader(object):
                                help="[dev] Specifies the path to the execution-directory.")
         scen_opts.add_argument("--deterministic", dest="deterministic",
                                default=False, type=truthy,
-                               help="[dev] If true, the optimization process will be "
-                                    "repeatable.")
+                               help="[dev] If true, SMAC assumes that the target function or algorithm is deterministic"
+                               " (the same static seed of 0 is always passed to the function/algorithm)."
+                               " If false, different random seeds are passed to the target function/algorithm.")
         scen_opts.add_argument("--run-obj", "--run_obj", dest="run_obj",
                                type=str, action=ProcessRunObjectiveAction,
                                required=True, choices=['runtime', 'quality'],

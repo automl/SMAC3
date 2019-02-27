@@ -5,7 +5,6 @@ import time
 import typing
 import copy
 
-import pickle
 import multiprocessing
 
 import numpy as np
@@ -15,7 +14,7 @@ from ConfigSpace.configuration_space import Configuration
 from smac.tae.execute_ta_run_hydra import ExecuteTARunOld
 from smac.tae.execute_ta_run_hydra import ExecuteTARun
 from smac.scenario.scenario import Scenario
-from smac.facade.smac_facade import SMAC
+from smac.facade.smac_ac_facade import SMAC4AC
 from smac.optimizer.pSMAC import read
 from smac.utils.io.output_directory import create_output_directory
 from smac.runhistory.runhistory import RunHistory
@@ -59,8 +58,7 @@ def optimize(queue: multiprocessing.Queue,
         The incumbent configuration of this run
 
     """
-    solver = SMAC(scenario=scenario, tae_runner=tae,
-                  tae_runner_kwargs=tae_kwargs, rng=rng, **kwargs)
+    solver = SMAC4AC(scenario=scenario, tae_runner=tae, tae_runner_kwargs=tae_kwargs, rng=rng, **kwargs)
     solver.stats.start_timing()
     solver.stats.print_stats()
 
@@ -104,7 +102,7 @@ class PSMAC(object):
                  validate: bool = True,
                  n_optimizers: int = 2,
                  val_set: typing.Union[typing.List[str], None] = None,
-                 n_incs: int=1,
+                 n_incs: int = 1,
                  **kwargs):
         """
         Constructor
@@ -278,7 +276,7 @@ class PSMAC(object):
         """
         Validation
         """
-        solver = SMAC(scenario=self.scenario, rng=self.rng, run_id=MAXINT, **self.kwargs)
+        solver = SMAC4AC(scenario=self.scenario, rng=self.rng, run_id=MAXINT, **self.kwargs)
         self.logger.info('*' * 120)
         self.logger.info('Validating')
         new_rh = solver.validate(config_mode=incs,

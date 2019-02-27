@@ -7,7 +7,6 @@ import copy
 from collections import defaultdict
 
 import pickle
-from functools import partial
 
 import numpy as np
 
@@ -17,8 +16,8 @@ from smac.tae.execute_ta_run_hydra import ExecuteTARunHydra
 from smac.tae.execute_ta_run_hydra import ExecuteTARunOld
 from smac.tae.execute_ta_run_hydra import ExecuteTARun
 from smac.scenario.scenario import Scenario
-from smac.facade.smac_facade import SMAC
-from smac.facade.psmac_facade import PSMAC
+from smac.facade.smac_ac_facade import SMAC4AC
+from smac.facade.experimental.psmac_facade import PSMAC
 from smac.utils.io.output_directory import create_output_directory
 from smac.runhistory.runhistory import RunHistory
 from smac.optimizer.objective import average_cost
@@ -52,12 +51,12 @@ class Hydra(object):
     def __init__(self,
                  scenario: typing.Type[Scenario],
                  n_iterations: int,
-                 val_set: str='train',
-                 incs_per_round: int=1,
-                 n_optimizers: int=1,
-                 rng: typing.Optional[typing.Union[np.random.RandomState, int]]=None,
-                 run_id: int=1,
-                 tae: typing.Type[ExecuteTARun]=ExecuteTARunOld,
+                 val_set: str = 'train',
+                 incs_per_round: int = 1,
+                 n_optimizers: int = 1,
+                 rng: typing.Optional[typing.Union[np.random.RandomState, int]] = None,
+                 run_id: int = 1,
+                 tae: typing.Type[ExecuteTARun] = ExecuteTARunOld,
                  tae_kwargs: typing.Union[dict, None] = None,
                  **kwargs):
         """
@@ -175,7 +174,7 @@ class Hydra(object):
         scen.output_dir_for_this_run = None
         scen.output_dir = None
         # parent process SMAC only used for validation purposes
-        self.solver = SMAC(scenario=scen, tae_runner=self._tae, rng=self.rng, run_id=self.run_id, **self.kwargs)
+        self.solver = SMAC4AC(scenario=scen, tae_runner=self._tae, rng=self.rng, run_id=self.run_id, **self.kwargs)
         for i in range(self.n_iterations):
             self.logger.info("="*120)
             self.logger.info("Hydra Iteration: %d", (i + 1))
