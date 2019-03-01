@@ -255,6 +255,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
         else:
             acq_val_incumbents = [a[0] for a in acq_val_incumbents]
         active = [True] * num_incumbents
+        n_no_plateau_walk = [0] * num_incumbents
 
         local_search_steps = [0] * num_incumbents
         neighbors_looked_at = [0] * num_incumbents
@@ -265,6 +266,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             neighborhood_iterators.append(get_one_exchange_neighbourhood(
                 inc, seed=self.rng.randint(low=0, high=100000)))
             local_search_steps[i] += 1
+        neighbors_w_equal_acq = [[]] * num_incumbents
 
         while np.any(active):
 
@@ -276,10 +278,26 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                         neighbors.append(next(neighborhood_iterator))
                         neighbors_looked_at[i] += 1
                     except StopIteration:
-                        active[i] = False
+                        if n_no_plateau_walk[i] < self.n_steps_plateau_walk:
+                            if len(neighbors_w_equal_acq[i]) > 0:
+                                incumbents[i] = neighbors_w_equal_acq[i][0]
+                                neighbors_w_equal_acq[i] = []
+                                neighborhood_iterators[i] = get_one_exchange_neighbourhood(
+                                    incumbents[i], seed=self.rng.randint(low=0, high=100000),
+                                )
+                                n_no_plateau_walk[i] += 1
+                                try:
+                                    neighbors.append(next(neighborhood_iterator))
+                                    neighbors_looked_at[i] += 1
+                                except StopIteration:
+                                    active[i] = False
+                            else:
+                                active[i] = False
+                        else:
+                            active[i] = False
 
             if len(neighbors) == 0:
-                continue
+                break
 
             start_time = time.time()
             acq_val = self.acquisition_function(neighbors, **kwargs)
@@ -293,13 +311,16 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                 if not active[i]:
                     continue
                 if acq_val[acq_index] > acq_val_incumbents[i]:
-                    self.logger.debug("Switch to one of the neighbors")
+                    #self.logger.debug("Switch to one of the neighbors")
                     incumbents[i] = neighbors[acq_index]
                     acq_val_incumbents[i] = acq_val[acq_index]
                     neighborhood_iterators[i] = get_one_exchange_neighbourhood(
                         incumbents[i], seed=self.rng.randint(low=0, high=100000),
                     )
                     local_search_steps[i] += 1
+                    neighbors_w_equal_acq[i] = []
+                elif acq_val[acq_index] == acq_val_incumbents[i]:
+                    neighbors_w_equal_acq[i].append(neighbors[acq_index])
 
                 acq_index += 1
 
