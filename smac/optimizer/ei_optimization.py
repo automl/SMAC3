@@ -289,7 +289,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                 if acq_val == acq_val_incumbent:
                     neighbors.append(neighbor)
                 if acq_val > acq_val_incumbent:
-                    self.logger.debug("Switch to one of the neighbors")
+                    self.logger.debug("Switch to one of the neighbors (after %d configurations).", neighbors_looked_at)
                     incumbent = neighbor
                     acq_val_incumbent = acq_val
                     changed_inc = True

@@ -1,4 +1,5 @@
 import logging
+import math
 import typing
 
 import numpy as np
@@ -195,21 +196,21 @@ class RandomForestWithInstances(AbstractEPM):
         if X.shape[1] != self.types.shape[0]:
             raise ValueError('Rows in X should have %d entries but have %d!' % (self.types.shape[0], X.shape[1]))
 
-        means, vars_ = [], []
-        for row_X in X:
-            if self.log_y:
+        if self.log_y:
+            all_means_per_tree = []
+            for row_X in X:
                 preds_per_tree = self.rf.all_leaf_values(row_X)
-                means_per_tree = []
-                for preds in preds_per_tree:
-                    # within one tree, we want to use the
-                    # arithmetic mean and not the geometric mean
-                    means_per_tree.append(np.log(np.mean(np.exp(preds))))
-                mean = np.mean(means_per_tree)
-                var = np.var(means_per_tree) # variance over trees as uncertainty estimate
-            else:
+                means_per_tree = [math.log(np.exp(preds).mean()) for preds in preds_per_tree]
+                all_means_per_tree.append(means_per_tree)
+            means = np.mean(all_means_per_tree, axis=1)
+            vars_ = np.var(all_means_per_tree, axis=1)
+        else:
+            means, vars_ = [], []
+            for row_X in X:
                 mean, var = self.rf.predict_mean_var(row_X)
-            means.append(mean)
-            vars_.append(var)
+                means.append(mean)
+                vars_.append(var)
+
         means = np.array(means)
         vars_ = np.array(vars_)
 
@@ -294,3 +295,5 @@ class RandomForestWithInstances(AbstractEPM):
             var = var.reshape((-1, 1))
 
         return mean, var
+
+

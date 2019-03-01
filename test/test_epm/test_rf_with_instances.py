@@ -176,15 +176,11 @@ class TestRFWithInstances(unittest.TestCase):
                                           instance_features=None, seed=12345,
                                           ratio_features=1.0)
         model.train(np.vstack((X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y)))
-        # for idx, x in enumerate(X):
-        #     print(model.rf.all_leaf_values(x))
-        #     print(x, model.predict(np.array([x]))[0], y[idx])
 
         y_hat, _ = model.predict(X)
         for y_i, y_hat_i in zip(y.reshape((1, -1)).flatten(), y_hat.reshape((1, -1)).flatten()):
             # print(y_i, y_hat_i)
             self.assertAlmostEqual(y_i, y_hat_i, delta=0.1)
-        # print()
 
     def test_with_ordinal(self):
         cs = smac.configspace.ConfigurationSpace()
@@ -222,3 +218,37 @@ class TestRFWithInstances(unittest.TestCase):
         mean, _ = model.predict(X)
         for idx, m in enumerate(mean):
             self.assertAlmostEqual(y[idx], m, 0.05)
+
+    def test_rf_on_sklearn_data(self):
+        import sklearn.datasets
+        X, y = sklearn.datasets.load_boston(return_X_y=True)
+        rs = np.random.RandomState(1)
+
+        types = np.zeros(X.shape[1])
+        bounds = [(np.min(X[:, i]), np.max(X[:, i])) for i in range(X.shape[1])]
+
+        cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
+
+        for do_log in [False, True]:
+            if do_log:
+                targets = np.log(y)
+                model = RandomForestWithInstances(types=types, bounds=bounds,
+                                                  seed=1, ratio_features=1.0,
+                                                  pca_components=100, log_y=True)
+                maes = [0.43186902865831907115, 0.42675195203430749165]
+            else:
+                targets = y
+                model = RandomForestWithInstances(types=types, bounds=bounds,
+                                                  seed=1, ratio_features=1.0,
+                                                  pca_components=100)
+                maes = [9.3298376833224042496, 9.348010654109179346]
+
+            for i, (train_split, test_split) in enumerate(cv.split(X, targets)):
+                X_train = X[train_split]
+                y_train = targets[train_split]
+                X_test = X[test_split]
+                y_test = targets[test_split]
+                model.train(X_train, y_train)
+                y_hat, mu_hat = model.predict(X_test)
+                mae = np.mean(np.abs(y_hat - y_test), dtype=np.float128)
+                self.assertAlmostEqual(mae, maes[i])
