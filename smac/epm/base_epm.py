@@ -114,7 +114,7 @@ class AbstractEPM(object):
         if len(X.shape) != 2:
             raise ValueError('Expected 2d array, got %dd array!' % len(X.shape))
         if X.shape[1] != len(self.types):
-            raise ValueError('Feature mismatch: X should have %d features, but has %d' % (X.shape[1], len(self.types)))
+            raise ValueError('Feature mismatch: X should have %d features, but has %d' % (len(self.types), X.shape[1]))
         if X.shape[0] != Y.shape[0]:
             raise ValueError('X.shape[0] (%s) != y.shape[0] (%s)' % (X.shape[0], Y.shape[0]))
 
