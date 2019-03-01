@@ -200,7 +200,8 @@ class RandomForestWithInstances(AbstractEPM):
             all_means_per_tree = []
             for row_X in X:
                 preds_per_tree = self.rf.all_leaf_values(row_X)
-                means_per_tree = [math.log(np.exp(preds).mean()) for preds in preds_per_tree]
+                # Adding 1e-8 to avoid a math domain error which can happen if np.exp(preds) is almost zero
+                means_per_tree = [math.log(np.exp(preds).mean() + 1e-8) for preds in preds_per_tree]
                 all_means_per_tree.append(means_per_tree)
             means = np.mean(all_means_per_tree, axis=1)
             vars_ = np.var(all_means_per_tree, axis=1)
