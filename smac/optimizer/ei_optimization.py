@@ -206,17 +206,8 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
         """
 
-        init_points = self._get_initial_points(
-            num_points, runhistory)
-
-        configs_acq = []
-        # Start N local search from different random start points
-        for start_point in init_points:
-            acq_val, configuration = self._one_iter(
-                start_point, **kwargs)
-
-            configuration.origin = "Local Search"
-            configs_acq.append((acq_val, configuration))
+        init_points = self._get_initial_points(num_points, runhistory)
+        configs_acq = self._do_search(init_points)
 
         # shuffle for random tie-break
         self.rng.shuffle(configs_acq)
@@ -247,75 +238,75 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
         return init_points
 
-    def _one_iter(
+    def _do_search(
             self,
-            start_point: Configuration,
+            start_points: List[Configuration],
             **kwargs
-    ) -> Tuple[float, Configuration]:
+    ) -> List[Tuple[float, Configuration]]:
 
-        incumbent = start_point
-        # Compute the acquisition value of the incumbent
-        acq_val_incumbent = self.acquisition_function([incumbent], **kwargs)[0]
+        if isinstance(start_points, Configuration):
+            start_points = [start_points]
+        incumbents = start_points
+        # Compute the acquisition value of the incumbents
+        num_incumbents = len(incumbents)
+        acq_val_incumbents = self.acquisition_function(incumbents, **kwargs)
+        if num_incumbents == 1:
+            acq_val_incumbents = [acq_val_incumbents[0][0]]
+        else:
+            acq_val_incumbents = [a[0] for a in acq_val_incumbents]
+        active = [True] * num_incumbents
 
-        local_search_steps = 0
-        neighbors_looked_at = 0
-        n_no_improvements = 0
-        time_n = []
-        while True:
+        local_search_steps = [0] * num_incumbents
+        neighbors_looked_at = [0] * num_incumbents
+        times = []
 
-            local_search_steps += 1
-            if local_search_steps % 1000 == 0:
-                self.logger.warning(
-                    "Local search took already %d iterations. Is it maybe "
-                    "stuck in a infinite loop?", local_search_steps
-                )
+        neighborhood_iterators = []
+        for i, inc in enumerate(incumbents):
+            neighborhood_iterators.append(get_one_exchange_neighbourhood(
+                inc, seed=self.rng.randint(low=0, high=100000)))
+            local_search_steps[i] += 1
 
-            # Get neighborhood of the current incumbent
-            # by randomly drawing configurations
-            changed_inc = False
+        while np.any(active):
 
-            # Get one exchange neighborhood returns an iterator (in contrast of
-            # the previously returned list).
-            all_neighbors = get_one_exchange_neighbourhood(
-                incumbent, seed=self.rng.randint(MAXINT))
-
+            # gather all neighbors
             neighbors = []
-            for neighbor in all_neighbors:
-                s_time = time.time()
-                acq_val = self.acquisition_function([neighbor], **kwargs)[0]
-                neighbors_looked_at += 1
-                time_n.append(time.time() - s_time)
+            for i, neighborhood_iterator in enumerate(neighborhood_iterators):
+                if active[i]:
+                    try:
+                        neighbors.append(next(neighborhood_iterator))
+                        neighbors_looked_at[i] += 1
+                    except StopIteration:
+                        active[i] = False
 
-                if acq_val == acq_val_incumbent:
-                    neighbors.append(neighbor)
-                if acq_val > acq_val_incumbent:
-                    self.logger.debug("Switch to one of the neighbors (after %d configurations).", neighbors_looked_at)
-                    incumbent = neighbor
-                    acq_val_incumbent = acq_val
-                    changed_inc = True
-                    break
+            if len(neighbors) == 0:
+                continue
 
-            if (
-                not changed_inc
-                and n_no_improvements < self.n_steps_plateau_walk
-                and len(neighbors) > 0
-            ):
-                n_no_improvements += 1
-                incumbent = neighbors[0]
-                changed_inc = True
+            start_time = time.time()
+            acq_val = self.acquisition_function(neighbors, **kwargs)
+            end_time = time.time()
+            times.append(end_time - start_time)
+            if num_incumbents == 1:
+                acq_val = [acq_val]
 
-            if (not changed_inc) or \
-                    (self.max_steps is not None and
-                     local_search_steps == self.max_steps):
-                self.logger.debug("Local search took %d steps and looked at %d "
-                                  "configurations. Computing the acquisition "
-                                  "value for one configuration took %f seconds"
-                                  " on average.",
-                                  local_search_steps, neighbors_looked_at,
-                                  np.mean(time_n))
-                break
+            acq_index = 0
+            for i in range(num_incumbents):
+                if not active[i]:
+                    continue
+                if acq_val[acq_index] > acq_val_incumbents[i]:
+                    self.logger.debug("Switch to one of the neighbors")
+                    incumbents[i] = neighbors[acq_index]
+                    acq_val_incumbents[i] = acq_val[acq_index]
+                    neighborhood_iterators[i] = get_one_exchange_neighbourhood(
+                        incumbents[i], seed=self.rng.randint(low=0, high=100000),
+                    )
+                    local_search_steps[i] += 1
 
-        return acq_val_incumbent, incumbent
+                acq_index += 1
+
+        for inc in incumbents:
+            inc.origin = 'Local search'
+
+        return [(a, i) for a, i in zip(acq_val_incumbents, incumbents)]
 
 
 class DiffOpt(AcquisitionFunctionMaximizer):
