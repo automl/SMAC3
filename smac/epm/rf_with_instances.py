@@ -1,5 +1,4 @@
 import logging
-import math
 import typing
 
 import numpy as np
@@ -41,16 +40,16 @@ class RandomForestWithInstances(AbstractEPM):
     def __init__(self, types: np.ndarray,
                  bounds: typing.List[typing.Tuple[float, float]],
                  seed: int,
-                 log_y: bool=False,
-                 num_trees: int=N_TREES,
-                 do_bootstrapping: bool=True,
-                 n_points_per_tree: int=-1,
-                 ratio_features: float=5. / 6.,
-                 min_samples_split: int=3,
-                 min_samples_leaf: int=3,
-                 max_depth: int=2**20,
-                 eps_purity: float=1e-8,
-                 max_num_nodes: int=2**20,
+                 log_y: bool = False,
+                 num_trees: int = N_TREES,
+                 do_bootstrapping: bool = True,
+                 n_points_per_tree: int = -1,
+                 ratio_features: float = 5. / 6.,
+                 min_samples_split: int = 3,
+                 min_samples_leaf: int = 3,
+                 max_depth: int = 2**20,
+                 eps_purity: float = 1e-8,
+                 max_num_nodes: int = 2**20,
                  **kwargs):
         """
         Parameters
@@ -125,7 +124,7 @@ class RandomForestWithInstances(AbstractEPM):
         ----------
         X : np.ndarray [n_samples, n_features (config + instance features)]
             Input data points.
-        Y : np.ndarray [n_samples, ]
+        y : np.ndarray [n_samples, ]
             The corresponding target values.
 
         Returns
@@ -310,5 +309,3 @@ class RandomForestWithInstances(AbstractEPM):
             var = var.reshape((-1, 1))
 
         return mean_, var
-
-
