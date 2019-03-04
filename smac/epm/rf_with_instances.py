@@ -198,18 +198,48 @@ class RandomForestWithInstances(AbstractEPM):
 
         if self.log_y:
             all_means_per_tree = []
+            all_preds = []
+            alternative = []
+            third_dimension = 0
+
             for row_X in X:
                 preds_per_tree = self.rf.all_leaf_values(row_X)
-                # Adding 1e-8 to avoid a math domain error which can happen if np.exp(preds) is almost zero
-                means_per_tree = [math.log(np.exp(preds).mean() + 1e-8) for preds in preds_per_tree]
-                all_means_per_tree.append(means_per_tree)
-            means = np.mean(all_means_per_tree, axis=1)
-            vars_ = np.var(all_means_per_tree, axis=1)
+                all_preds.append(preds_per_tree)
+                #max_num_leaf_data = max([len(pred) for pred in preds_per_tree])
+                max_num_leaf_data = max(map(len, preds_per_tree))
+                #max_num_leaf_data = max(preds_per_tree, key=len)
+                third_dimension = max(max_num_leaf_data, third_dimension)
+
+                #a = np.empty((self.rf_opts.num_trees, max_num_leaf_data)) * np.NaN
+                #for i, pred in enumerate(preds_per_tree):
+                #    a[i, : len(pred)] = pred
+                # alternative.append(a)
+                #b = np.log(np.nanmean(np.exp(a), axis=1) + 1e-8)
+                ## Adding 1e-8 to avoid a math domain error which can happen if np.exp(preds) is almost zero
+                #means_per_tree = [math.log(np.exp(preds).mean() + 1e-8) for preds in preds_per_tree]
+                #means_per_tree = b
+                #all_means_per_tree.append(means_per_tree)
+
+            big_alternative = np.empty((X.shape[0], self.rf_opts.num_trees, third_dimension)) * np.NaN
+            for i, preds_per_tree in enumerate(all_preds):
+                for j, pred in enumerate(preds_per_tree):
+                    big_alternative[i, j, :len(pred)] = pred
+            #for i, alt in enumerate(alternative):
+            #    big_alternative[i, :, :alt.shape[1]] = alt
+            alternative = big_alternative
+            #alternative = np.array(alternative)
+            alternative = np.log(np.nanmean(np.exp(alternative), axis=2) + 1e-10)
+            #old_means = np.mean(all_means_per_tree, axis=1)
+            # np.testing.assert_array_almost_equal(np.mean(alternative, axis=1), means)
+            means = alternative.mean(axis=1)
+            #old_vars_ = np.var(all_means_per_tree, axis=1)
+            #np.testing.assert_array_almost_equal(np.var(alternative, axis=1), vars_)
+            vars_ = alternative.var(axis=1)
         else:
             means, vars_ = [], []
             for row_X in X:
-                mean, var = self.rf.predict_mean_var(row_X)
-                means.append(mean)
+                mean_, var = self.rf.predict_mean_var(row_X)
+                means.append(mean_)
                 vars_.append(var)
 
         means = np.array(means)
@@ -246,10 +276,10 @@ class RandomForestWithInstances(AbstractEPM):
 
         if self.instance_features is None or \
                 len(self.instance_features) == 0:
-            mean, var = self.predict(X)
+            mean_, var = self.predict(X)
             var[var < self.var_threshold] = self.var_threshold
             var[np.isnan(var)] = self.var_threshold
-            return mean, var
+            return mean_, var
 
         if len(X.shape) != 2:
             raise ValueError(
@@ -259,7 +289,7 @@ class RandomForestWithInstances(AbstractEPM):
                              (len(self.bounds),
                               X.shape[1]))
 
-        mean = np.zeros(X.shape[0])
+        mean_ = np.zeros(X.shape[0])
         var = np.zeros(X.shape[0])
         for i, x in enumerate(X):
 
@@ -288,13 +318,13 @@ class RandomForestWithInstances(AbstractEPM):
                 var_x = self.var_threshold
 
             var[i] = var_x
-            mean[i] = mean_x
+            mean_[i] = mean_x
 
-        if len(mean.shape) == 1:
-            mean = mean.reshape((-1, 1))
+        if len(mean_.shape) == 1:
+            mean_ = mean_.reshape((-1, 1))
         if len(var.shape) == 1:
             var = var.reshape((-1, 1))
 
-        return mean, var
+        return mean_, var
 
 
