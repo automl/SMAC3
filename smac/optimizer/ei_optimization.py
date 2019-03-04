@@ -259,6 +259,8 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
         local_search_steps = [0] * num_incumbents
         neighbors_looked_at = [0] * num_incumbents
+        neighbors_generated = [0] * num_incumbents
+        obtain_n = [2] * num_incumbents
         times = []
 
         neighborhood_iterators = []
@@ -268,62 +270,82 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             local_search_steps[i] += 1
         neighbors_w_equal_acq = [[]] * num_incumbents
 
+        num_iters = 0
         while np.any(active):
+
+            num_iters += 1
+            improved = [False] * num_incumbents
+            new_neighborhood = [False] * num_incumbents
 
             # gather all neighbors
             neighbors = []
             for i, neighborhood_iterator in enumerate(neighborhood_iterators):
                 if active[i]:
-                    try:
-                        neighbors.append(next(neighborhood_iterator))
-                        neighbors_looked_at[i] += 1
-                    except StopIteration:
-                        if n_no_plateau_walk[i] < self.n_steps_plateau_walk:
-                            if len(neighbors_w_equal_acq[i]) > 0:
-                                incumbents[i] = neighbors_w_equal_acq[i][0]
-                                neighbors_w_equal_acq[i] = []
-                                neighborhood_iterators[i] = get_one_exchange_neighbourhood(
-                                    incumbents[i], seed=self.rng.randint(low=0, high=100000),
-                                )
-                                n_no_plateau_walk[i] += 1
-                                try:
-                                    neighbors.append(next(neighborhood_iterator))
-                                    neighbors_looked_at[i] += 1
-                                except StopIteration:
-                                    active[i] = False
-                            else:
-                                active[i] = False
+                    neighbors_for_i = []
+                    for j in range(obtain_n[i]):
+                        try:
+                            n = next(neighborhood_iterator)
+                            neighbors_generated[i] += 1
+                            neighbors_for_i.append(n)
+                        except StopIteration:
+                            obtain_n[i] = len(neighbors_for_i)
+                            new_neighborhood[i] = True
+                            break
+                    neighbors.extend(neighbors_for_i)
+
+            if len(neighbors) > 0:
+                start_time = time.time()
+                acq_val = self.acquisition_function(neighbors, **kwargs)
+                end_time = time.time()
+                times.append(end_time - start_time)
+                if num_incumbents == 1:
+                    acq_val = [acq_val]
+
+                acq_index = 0
+                for i in range(num_incumbents):
+                    if not active[i]:
+                        continue
+                    for j in range(obtain_n[i]):
+                        if improved[i]:
+                            acq_index += 1
                         else:
-                            active[i] = False
+                            if acq_val[acq_index] > acq_val_incumbents[i]:
+                                #self.logger.debug("Switch to one of the neighbors")
+                                incumbents[i] = neighbors[acq_index]
+                                acq_val_incumbents[i] = acq_val[acq_index]
+                                new_neighborhood[i] = True
+                                improved[i] = True
+                                local_search_steps[i] += 1
+                                neighbors_w_equal_acq[i] = []
+                                obtain_n[i] = 1
+                            elif acq_val[acq_index] == acq_val_incumbents[i]:
+                                neighbors_w_equal_acq[i].append(neighbors[acq_index])
+                            acq_index += 1
+                        neighbors_looked_at[i] += 1
 
-            if len(neighbors) == 0:
-                break
-
-            start_time = time.time()
-            acq_val = self.acquisition_function(neighbors, **kwargs)
-            end_time = time.time()
-            times.append(end_time - start_time)
-            if num_incumbents == 1:
-                acq_val = [acq_val]
-
-            acq_index = 0
             for i in range(num_incumbents):
                 if not active[i]:
                     continue
-                if acq_val[acq_index] > acq_val_incumbents[i]:
-                    #self.logger.debug("Switch to one of the neighbors")
-                    incumbents[i] = neighbors[acq_index]
-                    acq_val_incumbents[i] = acq_val[acq_index]
+                if obtain_n[i] == 0 or improved[i]:
+                    obtain_n[i] = 2
+                else:
+                    obtain_n[i] = obtain_n[i] * 2
+                    obtain_n[i] = min(obtain_n[i], 64)
+                if new_neighborhood[i]:
+                    if not improved[i] and n_no_plateau_walk[i] < self.n_steps_plateau_walk:
+                        if len(neighbors_w_equal_acq[i]) > 0:
+                            incumbents[i] = neighbors_w_equal_acq[i][0]
+                            neighbors_w_equal_acq[i] = []
+                        n_no_plateau_walk[i] += 1
+                    if n_no_plateau_walk[i] >= self.n_steps_plateau_walk:
+                        active[i] = False
+                        continue
+
                     neighborhood_iterators[i] = get_one_exchange_neighbourhood(
                         incumbents[i], seed=self.rng.randint(low=0, high=100000),
                     )
-                    local_search_steps[i] += 1
-                    neighbors_w_equal_acq[i] = []
-                elif acq_val[acq_index] == acq_val_incumbents[i]:
-                    neighbors_w_equal_acq[i].append(neighbors[acq_index])
 
-                acq_index += 1
-
+        print(num_iters, local_search_steps)
         for inc in incumbents:
             inc.origin = 'Local search'
 
