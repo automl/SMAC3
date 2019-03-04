@@ -197,44 +197,28 @@ class RandomForestWithInstances(AbstractEPM):
             raise ValueError('Rows in X should have %d entries but have %d!' % (self.types.shape[0], X.shape[1]))
 
         if self.log_y:
-            all_means_per_tree = []
             all_preds = []
-            alternative = []
             third_dimension = 0
 
+            # Gather data in a list of 2d arrays and get statistics about the required size of the 3d array
             for row_X in X:
                 preds_per_tree = self.rf.all_leaf_values(row_X)
                 all_preds.append(preds_per_tree)
-                #max_num_leaf_data = max([len(pred) for pred in preds_per_tree])
                 max_num_leaf_data = max(map(len, preds_per_tree))
-                #max_num_leaf_data = max(preds_per_tree, key=len)
                 third_dimension = max(max_num_leaf_data, third_dimension)
 
-                #a = np.empty((self.rf_opts.num_trees, max_num_leaf_data)) * np.NaN
-                #for i, pred in enumerate(preds_per_tree):
-                #    a[i, : len(pred)] = pred
-                # alternative.append(a)
-                #b = np.log(np.nanmean(np.exp(a), axis=1) + 1e-8)
-                ## Adding 1e-8 to avoid a math domain error which can happen if np.exp(preds) is almost zero
-                #means_per_tree = [math.log(np.exp(preds).mean() + 1e-8) for preds in preds_per_tree]
-                #means_per_tree = b
-                #all_means_per_tree.append(means_per_tree)
-
-            big_alternative = np.empty((X.shape[0], self.rf_opts.num_trees, third_dimension)) * np.NaN
+            # Transform list of 2d arrays into a 3d array
+            preds_as_array = np.empty((X.shape[0], self.rf_opts.num_trees, third_dimension)) * np.NaN
             for i, preds_per_tree in enumerate(all_preds):
                 for j, pred in enumerate(preds_per_tree):
-                    big_alternative[i, j, :len(pred)] = pred
-            #for i, alt in enumerate(alternative):
-            #    big_alternative[i, :, :alt.shape[1]] = alt
-            alternative = big_alternative
-            #alternative = np.array(alternative)
-            alternative = np.log(np.nanmean(np.exp(alternative), axis=2) + 1e-10)
-            #old_means = np.mean(all_means_per_tree, axis=1)
-            # np.testing.assert_array_almost_equal(np.mean(alternative, axis=1), means)
-            means = alternative.mean(axis=1)
-            #old_vars_ = np.var(all_means_per_tree, axis=1)
-            #np.testing.assert_array_almost_equal(np.var(alternative, axis=1), vars_)
-            vars_ = alternative.var(axis=1)
+                    preds_as_array[i, j, :len(pred)] = pred
+
+            # Do all necessary computation with vectorized functions
+            preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + 1e-10)
+
+            # Compute the mean and the variance across the different trees
+            means = preds_as_array.mean(axis=1)
+            vars_ = preds_as_array.var(axis=1)
         else:
             means, vars_ = [], []
             for row_X in X:
