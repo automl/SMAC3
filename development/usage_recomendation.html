@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>F.A.Q. &mdash; SMAC 0.10.1.dev documentation</title>
+  <title>Usage Recommendation &mdash; SMAC 0.10.1.dev documentation</title>
   
 
   
@@ -36,8 +36,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Contact" href="contact.html" />
-    <link rel="prev" title="smac.smac_cli module" href="apidoc/smac.smac_cli.html" /> 
+    <link rel="next" title="Manual" href="manual.html" />
+    <link rel="prev" title="Quick Start" href="quickstart.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -91,7 +91,7 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage_recomendation.html">Usage Recommendation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage Recommendation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="manual.html">Manual</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="basic_usage.html">Basic Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="options.html">Options and file formats</a></li>
@@ -184,7 +184,7 @@
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.smac_cli.html">smac.smac_cli module</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">F.A.Q.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">F.A.Q.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 </ul>
@@ -232,13 +232,13 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>F.A.Q.</li>
+      <li>Usage Recommendation</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/faq.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/usage_recomendation.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -251,56 +251,84 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="f-a-q">
-<h1>F.A.Q.<a class="headerlink" href="#f-a-q" title="Permalink to this headline">¶</a></h1>
-<p class="rubric">SMAC cannot be imported.</p>
-<p>Try to either run SMAC from SMAC’s root directory
-or try to run the installation first.</p>
-<p class="rubric">pyrfr raises cryptic import errors.</p>
-<p>Ensure that the gcc used to compile the pyrfr is the same as used for linking
-during execution. This often happens with Anaconda – see
-<a class="reference external" href="installation.html">Installation</a> for a solution.</p>
-<p class="rubric">My target algorithm is not accepted, when using the scenario-file.</p>
-<p>Make sure that your algorithm accepts commandline options as provided by
-<em>SMAC</em>. Refer to <a class="reference external" href="basic_usage.html#commandline">commandline execution</a> for
-details on how to wrap your algorithm.</p>
-<p>You can also run SMAC with <code class="code docutils literal notranslate"><span class="pre">--verbose</span> <span class="pre">DEBUG</span></code> to see how <em>SMAC</em> tried to call your algorithm.</p>
-<p class="rubric">Can I restore SMAC from a previous state?</p>
-<p>Use the <a class="reference external" href="basic_usage.html#restorestate">restore-option</a>.</p>
-<p class="rubric">I discovered a bug or SMAC does not behave as expected. Where should I report to?</p>
-<p>Open an issue in our issue list on GitHub. Before you report a bug, please make sure that:</p>
-<blockquote>
-<div><ul class="simple">
-<li>Your bug hasn’t already been reported in our issue tracker</li>
-<li>You are using the latest SMAC3 version.</li>
+  <div class="section" id="usage-recommendation">
+<h1>Usage Recommendation<a class="headerlink" href="#usage-recommendation" title="Permalink to this headline">¶</a></h1>
+<p><em>SMAC</em> of course itself offers a lot of design choices, some of which are crucial to achieve peak performance. Luckily, often it is sufficient to distinguish between a few problem classes.
+To make the usage of <em>SMAC</em> as easy as possible, we provide several facades designed for these different use cases. Here we give some general recommendations on
+when to use which facade. These recommendations are based on our experience and technical limitations and is by far not intended to be complete:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="24%" />
+<col width="25%" />
+<col width="27%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&#160;</th>
+<th class="head">SMAC4BO</th>
+<th class="head">SMAC4HPO</th>
+<th class="head">SMAC4AC</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td># parameter</td>
+<td>low</td>
+<td>low/medium/high</td>
+<td>low/medium/high</td>
+</tr>
+<tr class="row-odd"><td>categorical parameter</td>
+<td>no</td>
+<td>supported</td>
+<td>supported</td>
+</tr>
+<tr class="row-even"><td>conditional parameter</td>
+<td>no</td>
+<td>supported</td>
+<td>supported</td>
+</tr>
+<tr class="row-odd"><td>instances</td>
+<td>no</td>
+<td>None or CV-folds</td>
+<td>yes</td>
+</tr>
+<tr class="row-even"><td>stochasticity</td>
+<td>no</td>
+<td>supported</td>
+<td>supported</td>
+</tr>
+<tr class="row-odd"><td>objective</td>
+<td>any (except runtime)</td>
+<td>e.g. validation loss</td>
+<td>e.g. runtime or quality</td>
+</tr>
+</tbody>
+</table>
+<p>Some examples of typical use cases:</p>
+<dl class="docutils">
+<dt><em>SMAC4BO</em>: Bayesian Optimization using a <em>Gaussian Process</em> and <em>Expected Improvement</em></dt>
+<dd><ul class="first last simple">
+<li>Optimizing the objective value of Branin and other low dimensional artificial test functions</li>
+<li>Finding the best learning rate for training a neural network wrt. RMSE on a validation dataset</li>
 </ul>
-</div></blockquote>
-<p>If you found an issue, please provide us with the following information:</p>
-<blockquote>
-<div><ul class="simple">
-<li>A description of the problem</li>
-<li>An example to reproduce the problem</li>
-<li>Any information about your setup that could be helpful to resolve the bug (such as installed python packages)</li>
-<li>Feel free, to add a screenshot showing the issue</li>
+</dd>
+<dt><em>SMAC4HPO</em>: Bayesian optimization using a <em>Random Forest</em></dt>
+<dd><ul class="first last simple">
+<li>Finding the optimal choice of machine learning algorithm and its hyperparameters wrt. validation error</li>
+<li>Tuning the architecture and training parameters of a neural network wrt. classification error on a validation dataset</li>
+<li>Optimize hyperparameters of a SVM wrt. the CV-fold error</li>
+<li>Minimize objective values of problems that are noisy and/or yield crashed runs (e.g. due to mem-outs).</li>
+<li>Finding the best setting of an RL-agent to minimize regret (or a set of RL problems)</li>
 </ul>
-</div></blockquote>
-<p class="rubric">I want to contribute code or discuss a new idea. Where should I report to?</p>
-<p><em>SMAC</em> uses the <a class="reference external" href="https://github.com/automl/SMAC3/issues">GitHub issue-tracker</a> to also take care
-of questions and feedback and is the preferred location for discussing new features and ongoing work. Please also have a look at our
-<a class="reference external" href="https://github.com/automl/SMAC3/blob/master/.github/CONTRIBUTING.md">contribution guide</a>.</p>
-<p class="rubric">What is the meaning of <em>deterministic</em>?</p>
-<p>If the <em>deterministic</em> flag is set to <strong>False</strong> the target algorithm is assumed to be non-deterministic.
-To evaluate a configuration of a non-deterministic algorithm, multiple runs with different seeds will be evaluated
-to determine the performance of that configuration on one instance.
-Deterministic algorithms don’t depend on seeds, thus requiring only one evaluation of a configuration on an instance
-to evaluate the performance on that instance. Nevertheless the default seed 0 is still passed to the target algorithm.</p>
-<p class="rubric"><strong>Glossary</strong></p>
-<ul class="simple">
-<li><strong>SMAC</strong>: Sequential Model-Based Algorithm Configuration</li>
-<li><strong>ROAR</strong>: Random Online Adaptive Racing</li>
-<li><strong>PCS</strong>: Parameter Configuration Space</li>
-<li><strong>TAE</strong>: Target Algorithm Evaluator</li>
+</dd>
+<dt><em>SMAC4AC</em>: Algorithm configuration using a <em>Random Forest</em></dt>
+<dd><ul class="first last simple">
+<li>Minimizing the average time it takes for a SAT-solver to solve a set of SAT instances</li>
+<li>Configuring a MIP solver to solve a set of mixed-integer-problems as fast as possible</li>
+<li>Optimizing the average quality of solutions returned by a configurable TSP solver</li>
 </ul>
+</dd>
+</dl>
+<p><strong>Important:</strong> If your problem is not covered in this table, this doesn’t mean you can’t benefit from using our tool. In case of doubt, please create an issue on Github.</p>
 </div>
 
 
@@ -311,10 +339,10 @@ to evaluate the performance on that instance. Nevertheless the default seed 0 is
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="contact.html" class="btn btn-neutral float-right" title="Contact" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="manual.html" class="btn btn-neutral float-right" title="Manual" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="apidoc/smac.smac_cli.html" class="btn btn-neutral float-left" title="smac.smac_cli module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="quickstart.html" class="btn btn-neutral float-left" title="Quick Start" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

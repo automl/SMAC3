@@ -21,6 +21,7 @@ Contents:
 
    installation
    quickstart
+   usage_recomendation
    manual
    api
    faq
