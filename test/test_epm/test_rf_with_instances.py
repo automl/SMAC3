@@ -150,7 +150,7 @@ class TestRFWithInstances(unittest.TestCase):
         self.assertEqual(vars.shape, (11, 1))
         for i in range(11):
             self.assertEqual(means[i], 0.)
-            self.assertEqual(vars[i], 1.e-05)
+            self.assertEqual(vars[i], 1.e-10)
 
     def test_predict_with_actual_values(self):
         X = np.array([
