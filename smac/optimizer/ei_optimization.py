@@ -244,6 +244,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             **kwargs
     ) -> List[Tuple[float, Configuration]]:
 
+        # Gather data strucuture for starting points
         if isinstance(start_points, Configuration):
             start_points = [start_points]
         incumbents = start_points
@@ -254,27 +255,42 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             acq_val_incumbents = [acq_val_incumbents[0][0]]
         else:
             acq_val_incumbents = [a[0] for a in acq_val_incumbents]
-        active = [True] * num_incumbents
-        n_no_plateau_walk = [0] * num_incumbents
 
+        # Set up additional variables required to do vectorized local search:
+        # whether the i-th local search is still running
+        active = [True] * num_incumbents
+        # number of plateau walks of the i-th local search. Reaching the maximum number is the stopping criterion of
+        # the local search.
+        n_no_plateau_walk = [0] * num_incumbents
+        # tracking the number of steps for logging purposes
         local_search_steps = [0] * num_incumbents
+        # tracking the number of neighbors looked at for logging purposes
         neighbors_looked_at = [0] * num_incumbents
+        # tracking the number of neighbors generated for logging purposse
         neighbors_generated = [0] * num_incumbents
+        # how many neighbors were obtained for the i-th local search. Important to map the individual acquisition
+        # function values to the correct local search run
         obtain_n = [2] * num_incumbents
+        # Tracking the time it takes to compute the acquisition function
         times = []
 
+        # Set up the neighborhood generators
         neighborhood_iterators = []
         for i, inc in enumerate(incumbents):
             neighborhood_iterators.append(get_one_exchange_neighbourhood(
                 inc, seed=self.rng.randint(low=0, high=100000)))
             local_search_steps[i] += 1
+        # Keeping track of configurations with equal acquisition value for plateau walking
         neighbors_w_equal_acq = [[]] * num_incumbents
 
         num_iters = 0
         while np.any(active):
 
             num_iters += 1
+            # Whether the i-th local search improved. When a new neighborhood is generated, this is used to determine
+            # whether a step was made (improvement) or not (iterator exhausted)
             improved = [False] * num_incumbents
+            # Used to request a new neighborhood for the incumbent of the i-th local search
             new_neighborhood = [False] * num_incumbents
 
             # gather all neighbors
@@ -301,16 +317,21 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                 if num_incumbents == 1:
                     acq_val = [acq_val]
 
+                # Comparing the acquisition function of the neighbors with the acquisition value of the incumbent
                 acq_index = 0
+                # Iterating the all i local searches
                 for i in range(num_incumbents):
                     if not active[i]:
                         continue
+                    # And for each local search we know how many neighbors we obtained
                     for j in range(obtain_n[i]):
+                        # The next line is only true if there was an improvement and we basically need to iterate to
+                        # the i+1-th local search
                         if improved[i]:
                             acq_index += 1
                         else:
+                            # Found a better configuration
                             if acq_val[acq_index] > acq_val_incumbents[i]:
-                                #self.logger.debug("Switch to one of the neighbors")
                                 incumbents[i] = neighbors[acq_index]
                                 acq_val_incumbents[i] = acq_val[acq_index]
                                 new_neighborhood[i] = True
@@ -318,11 +339,15 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                                 local_search_steps[i] += 1
                                 neighbors_w_equal_acq[i] = []
                                 obtain_n[i] = 1
+                            # Found an equally well performing configuration, keeping it for plateau walking
                             elif acq_val[acq_index] == acq_val_incumbents[i]:
                                 neighbors_w_equal_acq[i].append(neighbors[acq_index])
                             acq_index += 1
                         neighbors_looked_at[i] += 1
 
+            # Now we check whether we need to create new neighborhoods and whether we need to increase the number of
+            # plateau walks for one of the local searches. Also disables local searches if the number of plateau walks
+            # is reached (and all being switched off is the termination criterion).
             for i in range(num_incumbents):
                 if not active[i]:
                     continue
