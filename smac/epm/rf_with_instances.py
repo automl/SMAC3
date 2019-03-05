@@ -5,7 +5,7 @@ import numpy as np
 from pyrfr import regression
 
 from smac.epm.base_epm import AbstractEPM
-from smac.utils.constants import N_TREES
+from smac.utils.constants import N_TREES, VERY_SMALL_NUMBER
 
 
 __author__ = "Aaron Klein"
@@ -213,7 +213,7 @@ class RandomForestWithInstances(AbstractEPM):
                     preds_as_array[i, j, :len(pred)] = pred
 
             # Do all necessary computation with vectorized functions
-            preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + 1e-10)
+            preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
 
             # Compute the mean and the variance across the different trees
             means = preds_as_array.mean(axis=1)
