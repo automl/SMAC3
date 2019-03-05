@@ -7,6 +7,8 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.exceptions import NotFittedError
 
+from smac.utils.constants import VERY_SMALL_NUMBER
+
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
@@ -92,7 +94,7 @@ class AbstractEPM(object):
             self.scaler = MinMaxScaler()
 
         # Never use a lower variance than this
-        self.var_threshold = 10 ** -5
+        self.var_threshold = VERY_SMALL_NUMBER
 
         self.bounds = bounds
         self.types = types
