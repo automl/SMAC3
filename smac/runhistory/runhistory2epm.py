@@ -461,6 +461,7 @@ class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
         """
 
         min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
+        min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
         # linear scaling
         if min_y == self.max_y:
             # prevent diving by zero
@@ -523,6 +524,7 @@ class RunHistory2EPM4LogScaledCost(RunHistory2EPM4Cost):
         """
 
         min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
+        min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
         # linear scaling
         if min_y == self.max_y:
             # prevent diving by zero
