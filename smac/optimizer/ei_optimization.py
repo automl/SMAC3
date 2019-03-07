@@ -323,7 +323,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                             break
                     neighbors.extend(neighbors_for_i)
 
-            if len(neighbors) > 0:
+            if len(neighbors) != 0:
                 start_time = time.time()
                 acq_val = self.acquisition_function(neighbors, **kwargs)
                 end_time = time.time()
@@ -372,7 +372,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                     obtain_n[i] = min(obtain_n[i], self.vectorization_max_obtain)
                 if new_neighborhood[i]:
                     if not improved[i] and n_no_plateau_walk[i] < self.n_steps_plateau_walk:
-                        if len(neighbors_w_equal_acq[i]) > 0:
+                        if len(neighbors_w_equal_acq[i]) != 0:
                             incumbents[i] = neighbors_w_equal_acq[i][0]
                             neighbors_w_equal_acq[i] = []
                         n_no_plateau_walk[i] += 1
