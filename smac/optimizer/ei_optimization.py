@@ -160,6 +160,14 @@ class LocalSearch(AcquisitionFunctionMaximizer):
     n_steps_plateau_walk: int
         number of steps during a plateau walk before local search terminates
 
+    vectorization_min_obtain : int
+        Minimal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
+        reduce the overhead of SMAC
+
+    vectorization_max_obtain : int
+        Maximal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
+        reduce the overhead of SMAC
+
     """
 
     def __init__(
@@ -169,10 +177,14 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             rng: Union[bool, np.random.RandomState] = None,
             max_steps: Optional[int] = None,
             n_steps_plateau_walk: int = 10,
+            vectorization_min_obtain: int = 2,
+            vectorization_max_obtain: int = 64,
     ):
         super().__init__(acquisition_function, config_space, rng)
         self.max_steps = max_steps
         self.n_steps_plateau_walk = n_steps_plateau_walk
+        self.vectorization_min_obtain = vectorization_min_obtain
+        self.vectorization_max_obtain = vectorization_max_obtain
 
     def _maximize(
             self,
@@ -272,7 +284,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
         neighbors_generated = [0] * num_incumbents
         # how many neighbors were obtained for the i-th local search. Important to map the individual acquisition
         # function values to the correct local search run
-        obtain_n = [2] * num_incumbents
+        obtain_n = [self.vectorization_min_obtain] * num_incumbents
         # Tracking the time it takes to compute the acquisition function
         times = []
 
@@ -357,7 +369,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                     obtain_n[i] = 2
                 else:
                     obtain_n[i] = obtain_n[i] * 2
-                    obtain_n[i] = min(obtain_n[i], 64)
+                    obtain_n[i] = min(obtain_n[i], self.vectorization_max_obtain)
                 if new_neighborhood[i]:
                     if not improved[i] and n_no_plateau_walk[i] < self.n_steps_plateau_walk:
                         if len(neighbors_w_equal_acq[i]) > 0:
