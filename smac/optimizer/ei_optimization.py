@@ -214,6 +214,8 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
         # sort according to acq value
         configs_acq.sort(reverse=True, key=lambda x: x[0])
+        for _, inc in configs_acq:
+            inc.origin = 'Local Search'
 
         return configs_acq
 
@@ -314,7 +316,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                 acq_val = self.acquisition_function(neighbors, **kwargs)
                 end_time = time.time()
                 times.append(end_time - start_time)
-                if num_incumbents == 1:
+                if np.ndim(acq_val.shape) == 0:
                     acq_val = [acq_val]
 
                 # Comparing the acquisition function of the neighbors with the acquisition value of the incumbent
@@ -369,10 +371,6 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                     neighborhood_iterators[i] = get_one_exchange_neighbourhood(
                         incumbents[i], seed=self.rng.randint(low=0, high=100000),
                     )
-
-        print(num_iters, local_search_steps)
-        for inc in incumbents:
-            inc.origin = 'Local search'
 
         return [(a, i) for a, i in zip(acq_val_incumbents, incumbents)]
 
