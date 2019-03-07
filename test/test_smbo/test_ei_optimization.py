@@ -11,8 +11,11 @@ import numpy as np
 from scipy.spatial.distance import euclidean
 
 from smac.configspace import pcs
+from smac.optimizer.objective import average_cost
 from smac.optimizer.acquisition import EI
 from smac.optimizer.ei_optimization import LocalSearch, RandomSearch
+from smac.runhistory.runhistory import RunHistory
+from smac.tae.execute_ta_run import StatusType
 from smac.configspace import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformFloatHyperparameter, UniformIntegerHyperparameter
@@ -155,6 +158,30 @@ class TestLocalSearch(unittest.TestCase):
         self.assertEqual(patch.call_args_list[1][0][0][0], 'Incumbent')
         for i in range(10):
             self.assertEqual(rval[i][1].origin, 'Local Search')
+
+    def test_local_search_finds_minimum(self):
+        def acquisition_function(arrays):
+            rval = []
+            for array in arrays:
+                rval.append([-rosenbrock_4d(array)])
+            return np.array(rval)
+        ls = LocalSearch(
+            acquisition_function=acquisition_function,
+            config_space=self.cs,
+            n_steps_plateau_walk=10,
+            max_steps=np.inf,
+        )
+
+        runhistory = RunHistory(aggregate_func=average_cost)
+        self.cs.seed(1)
+        random_configs = self.cs.sample_configuration(size=100)
+        costs = [rosenbrock_4d(random_config) for random_config in random_configs]
+        self.assertGreater(np.min(costs), 100)
+        for random_config, cost in zip(random_configs, costs):
+            runhistory.add(config=random_config, cost=cost, time=0, status=StatusType.SUCCESS)
+        minimizer = ls.maximize(runhistory, None, 10)
+        minima = [-rosenbrock_4d(m) for m in minimizer]
+        self.assertGreater(minima[0], -0.05)
 
 
 class TestRandomSearch(unittest.TestCase):
