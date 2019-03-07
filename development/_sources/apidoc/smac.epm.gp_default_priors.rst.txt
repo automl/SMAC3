@@ -1,0 +1,8 @@
+smac.epm.gp\_default\_priors module
+===================================
+
+.. automodule:: smac.epm.gp_default_priors
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :inherited-members:

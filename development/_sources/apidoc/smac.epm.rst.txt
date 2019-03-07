@@ -1,0 +1,26 @@
+smac.epm package
+================
+
+.. automodule:: smac.epm
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    :inherited-members:
+
+
+.. toctree::
+
+   smac.epm.base_epm
+   smac.epm.base_gp
+   smac.epm.base_imputor
+   smac.epm.gaussian_process
+   smac.epm.gaussian_process_mcmc
+   smac.epm.gp_base_prior
+   smac.epm.gp_default_priors
+   smac.epm.normalization
+   smac.epm.random_epm
+   smac.epm.rf_with_instances
+   smac.epm.rf_with_instances_hpo
+   smac.epm.rfr_imputator
+   smac.epm.uncorrelated_mo_rf_with_instances
+
