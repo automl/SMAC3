@@ -344,8 +344,15 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                         if improved[i]:
                             acq_index += 1
                         else:
+                            neighbors_looked_at[i] += 1
+
                             # Found a better configuration
                             if acq_val[acq_index] > acq_val_incumbents[i]:
+                                self.logger.debug(
+                                    "Local search %d: Switch to one of the neighbors (after %d configurations).",
+                                    i,
+                                    neighbors_looked_at[i],
+                                )
                                 incumbents[i] = neighbors[acq_index]
                                 acq_val_incumbents[i] = acq_val[acq_index]
                                 new_neighborhood[i] = True
@@ -356,8 +363,8 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                             # Found an equally well performing configuration, keeping it for plateau walking
                             elif acq_val[acq_index] == acq_val_incumbents[i]:
                                 neighbors_w_equal_acq[i].append(neighbors[acq_index])
+
                             acq_index += 1
-                        neighbors_looked_at[i] += 1
 
             # Now we check whether we need to create new neighborhoods and whether we need to increase the number of
             # plateau walks for one of the local searches. Also disables local searches if the number of plateau walks
@@ -383,6 +390,12 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                     neighborhood_iterators[i] = get_one_exchange_neighbourhood(
                         incumbents[i], seed=self.rng.randint(low=0, high=100000),
                     )
+
+        self.logger.debug(
+            "Local searches took %s steps and looked at %s configurations. Computing the acquisition function in "
+            "vectorized for took %f seconds on average.",
+            local_search_steps, neighbors_looked_at, np.mean(times),
+        )
 
         return [(a, i) for a, i in zip(acq_val_incumbents, incumbents)]
 
