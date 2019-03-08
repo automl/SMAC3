@@ -427,6 +427,14 @@
 <span class="sd">    n_steps_plateau_walk: int</span>
 <span class="sd">        number of steps during a plateau walk before local search terminates</span>
 
+<span class="sd">    vectorization_min_obtain : int</span>
+<span class="sd">        Minimal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to</span>
+<span class="sd">        reduce the overhead of SMAC</span>
+
+<span class="sd">    vectorization_max_obtain : int</span>
+<span class="sd">        Maximal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to</span>
+<span class="sd">        reduce the overhead of SMAC</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
@@ -436,10 +444,14 @@
             <span class="n">rng</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">max_steps</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">n_steps_plateau_walk</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="n">vectorization_min_obtain</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">vectorization_max_obtain</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">acquisition_function</span><span class="p">,</span> <span class="n">config_space</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_steps</span> <span class="o">=</span> <span class="n">max_steps</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_plateau_walk</span> <span class="o">=</span> <span class="n">n_steps_plateau_walk</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vectorization_min_obtain</span> <span class="o">=</span> <span class="n">vectorization_min_obtain</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vectorization_max_obtain</span> <span class="o">=</span> <span class="n">vectorization_max_obtain</span>
 
     <span class="k">def</span> <span class="nf">_maximize</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
@@ -473,23 +485,16 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">init_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_initial_points</span><span class="p">(</span>
-            <span class="n">num_points</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">)</span>
-
-        <span class="n">configs_acq</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="c1"># Start N local search from different random start points</span>
-        <span class="k">for</span> <span class="n">start_point</span> <span class="ow">in</span> <span class="n">init_points</span><span class="p">:</span>
-            <span class="n">acq_val</span><span class="p">,</span> <span class="n">configuration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_one_iter</span><span class="p">(</span>
-                <span class="n">start_point</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-            <span class="n">configuration</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s2">&quot;Local Search&quot;</span>
-            <span class="n">configs_acq</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">acq_val</span><span class="p">,</span> <span class="n">configuration</span><span class="p">))</span>
+        <span class="n">init_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_initial_points</span><span class="p">(</span><span class="n">num_points</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">)</span>
+        <span class="n">configs_acq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_search</span><span class="p">(</span><span class="n">init_points</span><span class="p">)</span>
 
         <span class="c1"># shuffle for random tie-break</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">configs_acq</span><span class="p">)</span>
 
         <span class="c1"># sort according to acq value</span>
         <span class="n">configs_acq</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">inc</span> <span class="ow">in</span> <span class="n">configs_acq</span><span class="p">:</span>
+            <span class="n">inc</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;Local Search&#39;</span>
 
         <span class="k">return</span> <span class="n">configs_acq</span>
 
@@ -514,75 +519,152 @@
 
         <span class="k">return</span> <span class="n">init_points</span>
 
-    <span class="k">def</span> <span class="nf">_one_iter</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_do_search</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
-            <span class="n">start_point</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+            <span class="n">start_points</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
             <span class="o">**</span><span class="n">kwargs</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
 
-        <span class="n">incumbent</span> <span class="o">=</span> <span class="n">start_point</span>
-        <span class="c1"># Compute the acquisition value of the incumbent</span>
-        <span class="n">acq_val_incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function</span><span class="p">([</span><span class="n">incumbent</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Gather data strucuture for starting points</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">start_points</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">):</span>
+            <span class="n">start_points</span> <span class="o">=</span> <span class="p">[</span><span class="n">start_points</span><span class="p">]</span>
+        <span class="n">incumbents</span> <span class="o">=</span> <span class="n">start_points</span>
+        <span class="c1"># Compute the acquisition value of the incumbents</span>
+        <span class="n">num_incumbents</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">incumbents</span><span class="p">)</span>
+        <span class="n">acq_val_incumbents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function</span><span class="p">(</span><span class="n">incumbents</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">num_incumbents</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">acq_val_incumbents</span> <span class="o">=</span> <span class="p">[</span><span class="n">acq_val_incumbents</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">acq_val_incumbents</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">acq_val_incumbents</span><span class="p">]</span>
 
-        <span class="n">local_search_steps</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">neighbors_looked_at</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">n_no_improvements</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">time_n</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="c1"># Set up additional variables required to do vectorized local search:</span>
+        <span class="c1"># whether the i-th local search is still running</span>
+        <span class="n">active</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_incumbents</span>
+        <span class="c1"># number of plateau walks of the i-th local search. Reaching the maximum number is the stopping criterion of</span>
+        <span class="c1"># the local search.</span>
+        <span class="n">n_no_plateau_walk</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_incumbents</span>
+        <span class="c1"># tracking the number of steps for logging purposes</span>
+        <span class="n">local_search_steps</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_incumbents</span>
+        <span class="c1"># tracking the number of neighbors looked at for logging purposes</span>
+        <span class="n">neighbors_looked_at</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_incumbents</span>
+        <span class="c1"># tracking the number of neighbors generated for logging purposse</span>
+        <span class="n">neighbors_generated</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_incumbents</span>
+        <span class="c1"># how many neighbors were obtained for the i-th local search. Important to map the individual acquisition</span>
+        <span class="c1"># function values to the correct local search run</span>
+        <span class="n">obtain_n</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorization_min_obtain</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_incumbents</span>
+        <span class="c1"># Tracking the time it takes to compute the acquisition function</span>
+        <span class="n">times</span> <span class="o">=</span> <span class="p">[]</span>
 
-            <span class="n">local_search_steps</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="k">if</span> <span class="n">local_search_steps</span> <span class="o">%</span> <span class="mi">1000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                    <span class="s2">&quot;Local search took already </span><span class="si">%d</span><span class="s2"> iterations. Is it maybe &quot;</span>
-                    <span class="s2">&quot;stuck in a infinite loop?&quot;</span><span class="p">,</span> <span class="n">local_search_steps</span>
-                <span class="p">)</span>
+        <span class="c1"># Set up the neighborhood generators</span>
+        <span class="n">neighborhood_iterators</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">inc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">incumbents</span><span class="p">):</span>
+            <span class="n">neighborhood_iterators</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_one_exchange_neighbourhood</span><span class="p">(</span>
+                <span class="n">inc</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">100000</span><span class="p">)))</span>
+            <span class="n">local_search_steps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># Keeping track of configurations with equal acquisition value for plateau walking</span>
+        <span class="n">neighbors_w_equal_acq</span> <span class="o">=</span> <span class="p">[[]]</span> <span class="o">*</span> <span class="n">num_incumbents</span>
 
-            <span class="c1"># Get neighborhood of the current incumbent</span>
-            <span class="c1"># by randomly drawing configurations</span>
-            <span class="n">changed_inc</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">num_iters</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">active</span><span class="p">):</span>
 
-            <span class="c1"># Get one exchange neighborhood returns an iterator (in contrast of</span>
-            <span class="c1"># the previously returned list).</span>
-            <span class="n">all_neighbors</span> <span class="o">=</span> <span class="n">get_one_exchange_neighbourhood</span><span class="p">(</span>
-                <span class="n">incumbent</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">))</span>
+            <span class="n">num_iters</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1"># Whether the i-th local search improved. When a new neighborhood is generated, this is used to determine</span>
+            <span class="c1"># whether a step was made (improvement) or not (iterator exhausted)</span>
+            <span class="n">improved</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_incumbents</span>
+            <span class="c1"># Used to request a new neighborhood for the incumbent of the i-th local search</span>
+            <span class="n">new_neighborhood</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_incumbents</span>
 
+            <span class="c1"># gather all neighbors</span>
             <span class="n">neighbors</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="n">all_neighbors</span><span class="p">:</span>
-                <span class="n">s_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-                <span class="n">acq_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function</span><span class="p">([</span><span class="n">neighbor</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">neighbors_looked_at</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="n">time_n</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">s_time</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">neighborhood_iterator</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">neighborhood_iterators</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">active</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                    <span class="n">neighbors_for_i</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">obtain_n</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">n</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">neighborhood_iterator</span><span class="p">)</span>
+                            <span class="n">neighbors_generated</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                            <span class="n">neighbors_for_i</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+                        <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                            <span class="n">obtain_n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">neighbors_for_i</span><span class="p">)</span>
+                            <span class="n">new_neighborhood</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                            <span class="k">break</span>
+                    <span class="n">neighbors</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">neighbors_for_i</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="n">acq_val</span> <span class="o">==</span> <span class="n">acq_val_incumbent</span><span class="p">:</span>
-                    <span class="n">neighbors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neighbor</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">acq_val</span> <span class="o">&gt;</span> <span class="n">acq_val_incumbent</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Switch to one of the neighbors (after </span><span class="si">%d</span><span class="s2"> configurations).&quot;</span><span class="p">,</span> <span class="n">neighbors_looked_at</span><span class="p">)</span>
-                    <span class="n">incumbent</span> <span class="o">=</span> <span class="n">neighbor</span>
-                    <span class="n">acq_val_incumbent</span> <span class="o">=</span> <span class="n">acq_val</span>
-                    <span class="n">changed_inc</span> <span class="o">=</span> <span class="kc">True</span>
-                    <span class="k">break</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">neighbors</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+                <span class="n">acq_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function</span><span class="p">(</span><span class="n">neighbors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+                <span class="n">times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">acq_val</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">acq_val</span> <span class="o">=</span> <span class="p">[</span><span class="n">acq_val</span><span class="p">]</span>
 
-            <span class="k">if</span> <span class="p">(</span>
-                <span class="ow">not</span> <span class="n">changed_inc</span>
-                <span class="ow">and</span> <span class="n">n_no_improvements</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_plateau_walk</span>
-                <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">neighbors</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
-            <span class="p">):</span>
-                <span class="n">n_no_improvements</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="n">incumbent</span> <span class="o">=</span> <span class="n">neighbors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">changed_inc</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="c1"># Comparing the acquisition function of the neighbors with the acquisition value of the incumbent</span>
+                <span class="n">acq_index</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="c1"># Iterating the all i local searches</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_incumbents</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">active</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                        <span class="k">continue</span>
+                    <span class="c1"># And for each local search we know how many neighbors we obtained</span>
+                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">obtain_n</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
+                        <span class="c1"># The next line is only true if there was an improvement and we basically need to iterate to</span>
+                        <span class="c1"># the i+1-th local search</span>
+                        <span class="k">if</span> <span class="n">improved</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                            <span class="n">acq_index</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">neighbors_looked_at</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
-            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">changed_inc</span><span class="p">)</span> <span class="ow">or</span> \
-                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_steps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
-                     <span class="n">local_search_steps</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_steps</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Local search took </span><span class="si">%d</span><span class="s2"> steps and looked at </span><span class="si">%d</span><span class="s2"> &quot;</span>
-                                  <span class="s2">&quot;configurations. Computing the acquisition &quot;</span>
-                                  <span class="s2">&quot;value for one configuration took </span><span class="si">%f</span><span class="s2"> seconds&quot;</span>
-                                  <span class="s2">&quot; on average.&quot;</span><span class="p">,</span>
-                                  <span class="n">local_search_steps</span><span class="p">,</span> <span class="n">neighbors_looked_at</span><span class="p">,</span>
-                                  <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">time_n</span><span class="p">))</span>
-                <span class="k">break</span>
+                            <span class="c1"># Found a better configuration</span>
+                            <span class="k">if</span> <span class="n">acq_val</span><span class="p">[</span><span class="n">acq_index</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">acq_val_incumbents</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                                    <span class="s2">&quot;Local search </span><span class="si">%d</span><span class="s2">: Switch to one of the neighbors (after </span><span class="si">%d</span><span class="s2"> configurations).&quot;</span><span class="p">,</span>
+                                    <span class="n">i</span><span class="p">,</span>
+                                    <span class="n">neighbors_looked_at</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                <span class="p">)</span>
+                                <span class="n">incumbents</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">neighbors</span><span class="p">[</span><span class="n">acq_index</span><span class="p">]</span>
+                                <span class="n">acq_val_incumbents</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">acq_val</span><span class="p">[</span><span class="n">acq_index</span><span class="p">]</span>
+                                <span class="n">new_neighborhood</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                                <span class="n">improved</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                                <span class="n">local_search_steps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                                <span class="n">neighbors_w_equal_acq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                                <span class="n">obtain_n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                            <span class="c1"># Found an equally well performing configuration, keeping it for plateau walking</span>
+                            <span class="k">elif</span> <span class="n">acq_val</span><span class="p">[</span><span class="n">acq_index</span><span class="p">]</span> <span class="o">==</span> <span class="n">acq_val_incumbents</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                                <span class="n">neighbors_w_equal_acq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neighbors</span><span class="p">[</span><span class="n">acq_index</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">acq_val_incumbent</span><span class="p">,</span> <span class="n">incumbent</span></div>
+                            <span class="n">acq_index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># Now we check whether we need to create new neighborhoods and whether we need to increase the number of</span>
+            <span class="c1"># plateau walks for one of the local searches. Also disables local searches if the number of plateau walks</span>
+            <span class="c1"># is reached (and all being switched off is the termination criterion).</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_incumbents</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">active</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="n">obtain_n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">improved</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                    <span class="n">obtain_n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">obtain_n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">obtain_n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
+                    <span class="n">obtain_n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">obtain_n</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectorization_max_obtain</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">new_neighborhood</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">improved</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">and</span> <span class="n">n_no_plateau_walk</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_plateau_walk</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">neighbors_w_equal_acq</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">incumbents</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">neighbors_w_equal_acq</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="n">neighbors_w_equal_acq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="n">n_no_plateau_walk</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="n">n_no_plateau_walk</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_plateau_walk</span><span class="p">:</span>
+                        <span class="n">active</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="k">continue</span>
+
+                    <span class="n">neighborhood_iterators</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_one_exchange_neighbourhood</span><span class="p">(</span>
+                        <span class="n">incumbents</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">100000</span><span class="p">),</span>
+                    <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">&quot;Local searches took </span><span class="si">%s</span><span class="s2"> steps and looked at </span><span class="si">%s</span><span class="s2"> configurations. Computing the acquisition function in &quot;</span>
+            <span class="s2">&quot;vectorized for took </span><span class="si">%f</span><span class="s2"> seconds on average.&quot;</span><span class="p">,</span>
+            <span class="n">local_search_steps</span><span class="p">,</span> <span class="n">neighbors_looked_at</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">times</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[(</span><span class="n">a</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">acq_val_incumbents</span><span class="p">,</span> <span class="n">incumbents</span><span class="p">)]</span></div>
 
 
 <div class="viewcode-block" id="DiffOpt"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.DiffOpt">[docs]</a><span class="k">class</span> <span class="nc">DiffOpt</span><span class="p">(</span><span class="n">AcquisitionFunctionMaximizer</span><span class="p">):</span>
