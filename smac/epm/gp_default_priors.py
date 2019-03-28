@@ -56,5 +56,11 @@ class DefaultPrior(BasePrior):
         return p0
 
     def gradient(self, theta: np.ndarray):
-        # TODO: Implement real gradient here
-        return np.zeros([theta.shape[0]])
+        grad = np.zeros([theta.shape[0]])
+        # Covariance amplitude
+        grad[0] += self.ln_prior.gradient(theta[0])
+        # Lengthscales
+        grad[1: -1] += self.tophat.gradient(theta[1: -1])
+        # Noise
+        grad[-1] += self.horseshoe.gradient(theta[-1])
+        return grad

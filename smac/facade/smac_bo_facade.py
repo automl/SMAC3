@@ -1,5 +1,5 @@
 import numpy as np
-import george
+import skopt
 
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.epm.gp_default_priors import DefaultPrior
@@ -51,19 +51,22 @@ class SMAC4BO(SMAC4AC):
         if kwargs.get('model') is None:
             _, rng = get_rng(rng=kwargs.get("rng", None), run_id=kwargs.get("run_id", None), logger=None)
 
-            cov_amp = 2
             types, bounds = get_types(kwargs['scenario'].cs, instance_features=None)
             n_dims = len(types)
 
-            initial_ls = np.ones([n_dims])
-            exp_kernel = george.kernels.Matern52Kernel(initial_ls, ndim=n_dims)
-            kernel = cov_amp * exp_kernel
+            cov_amp = skopt.learning.gaussian_process.kernels.ConstantKernel(2.0, constant_value_bounds=(1e-10, 2))
+            exp_kernel = skopt.learning.gaussian_process.kernels.Matern(
+                np.ones([n_dims]),
+                [(np.exp(-10), np.exp(2)) for _ in range(n_dims)],
+                nu=2.5,
+            )
+            noise_kernel = skopt.learning.gaussian_process.kernels.WhiteKernel(
+                noise_level=1e-3,
+                noise_level_bounds=(1e-10, 2),
+            )
+            kernel = cov_amp * exp_kernel + noise_kernel
 
-            prior = DefaultPrior(len(kernel) + 1, rng=rng)
-
-            n_hypers = 3 * len(kernel)
-            if n_hypers % 2 == 1:
-                n_hypers += 1
+            prior = DefaultPrior(len(kernel.theta), rng=rng)
 
             if model_type == "gp":
                 model_class = GaussianProcess
@@ -71,9 +74,7 @@ class SMAC4BO(SMAC4AC):
                 model_kwargs = kwargs.get('model_kwargs', dict())
                 model_kwargs['kernel'] = kernel
                 model_kwargs['prior'] = prior
-                model_kwargs['normalize_input'] = True
-                model_kwargs['normalize_output'] = True
-                model_kwargs['normalize_input'] = True
+                model_kwargs['normalize_y'] = True
                 model_kwargs['seed'] = rng.randint(0, 2 ** 20)
             elif model_type == "gp_mcmc":
                 model_class = GaussianProcessMCMC
@@ -81,11 +82,15 @@ class SMAC4BO(SMAC4AC):
                 model_kwargs = kwargs.get('model_kwargs', dict())
                 model_kwargs['kernel'] = kernel
                 model_kwargs['prior'] = prior
-                model_kwargs['n_hypers'] = n_hypers
+
+                n_mcmc_walkers = 3 * len(kernel.theta)
+                if n_mcmc_walkers % 2 == 1:
+                    n_mcmc_walkers += 1
+
+                model_kwargs['n_mcmc_walkers'] = n_mcmc_walkers
                 model_kwargs['chain_length'] = 200
                 model_kwargs['burnin_steps'] = 100
-                model_kwargs['normalize_input'] = True
-                model_kwargs['normalize_output'] = True
+                model_kwargs['normalize_y'] = True
                 model_kwargs['seed'] = rng.randint(0, 2**20)
             else:
                 raise ValueError('Unknown model type %s' % model_type)

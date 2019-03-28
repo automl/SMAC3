@@ -4,7 +4,7 @@ import numpy as np
 import time
 import typing
 
-import george
+import skopt.learning.gaussian_process
 
 from smac.configspace import ConfigurationSpace, Configuration, Constant,\
      CategoricalHyperparameter, UniformFloatHyperparameter, \
@@ -425,29 +425,33 @@ class SMBO(object):
                   max_depth=conf.get("max_depth", self.scenario.rf_max_depth))
 
         elif conf["model"] == "GP":
-            cov_amp = 2
-            n_dims = len(types)
+            cov_amp = skopt.learning.gaussian_process.kernels.ConstantKernel(2.0, constant_value_bounds=(1e-10, 2))
+            exp_kernel = skopt.learning.gaussian_process.kernels.Matern(
+                np.ones([len(types)]),
+                [(np.exp(-10), np.exp(2)) for _ in range(len(types))],
+                nu=2.5,
+            )
+            noise_kernel = skopt.learning.gaussian_process.kernels.WhiteKernel(
+                noise_level=1e-3,
+                noise_level_bounds=(1e-10, 2),
+            )
+            kernel = cov_amp * exp_kernel + noise_kernel
 
-            initial_ls = np.ones([n_dims])
-            exp_kernel = george.kernels.Matern52Kernel(initial_ls, ndim=n_dims)
-            kernel = cov_amp * exp_kernel
+            prior = DefaultPrior(len(kernel.theta) + 1, rng=self.rng)
 
-            prior = DefaultPrior(len(kernel) + 1, rng=self.rng)
-
-            n_hypers = 3 * len(kernel)
-            if n_hypers % 2 == 1:
-                n_hypers += 1
+            n_mcmc_walkers = 3 * len(kernel)
+            if n_mcmc_walkers % 2 == 1:
+                n_mcmc_walkers += 1
 
             model = GaussianProcessMCMC(
                 types=types,
                 bounds=bounds,
                 kernel=kernel,
                 prior=prior,
-                n_hypers=n_hypers,
+                n_mcmc_walkers=n_mcmc_walkers,
                 chain_length=200,
                 burnin_steps=100,
-                normalize_input=True,
-                normalize_output=True,
+                normalize_y=True,
                 seed=self.rng.randint(low=0, high=10000),
             )
 

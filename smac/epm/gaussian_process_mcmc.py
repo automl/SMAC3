@@ -2,13 +2,13 @@ from copy import deepcopy
 import logging
 import typing
 
-import george
 import emcee
 import numpy as np
+import skopt.learning.gaussian_process
+import skopt.learning.gaussian_process.kernels
 
 from smac.epm.base_gp import BaseModel
 from smac.epm.gaussian_process import GaussianProcess
-from smac.epm import normalization
 from smac.epm.gp_base_prior import BasePrior
 
 logger = logging.getLogger(__name__)
@@ -21,14 +21,12 @@ class GaussianProcessMCMC(BaseModel):
         types: np.ndarray,
         bounds: typing.List[typing.Tuple[float, float]],
         seed: int,
-        kernel: george.kernels.Kernel,
+        kernel: skopt.learning.gaussian_process.kernels.Kernel,
         prior: BasePrior=None,
-        n_hypers: int=20,
+        n_mcmc_walkers: int=20,
         chain_length: int=2000,
         burnin_steps: int=2000,
-        normalize_output: bool=True,
-        normalize_input: bool=True,
-        noise: int=-8,
+        normalize_y: bool=True,
         **kwargs
     ):
         """
@@ -62,39 +60,31 @@ class GaussianProcessMCMC(BaseModel):
             Defines a prior for the hyperparameters of the GP. Make sure that
             it implements the Prior interface. During MCMC sampling the
             lnlikelihood is multiplied with the prior.
-        n_hypers : int
+        n_mcmc_walkers : int
             The number of hyperparameter samples. This also determines the
             number of walker for MCMC sampling as each walker will
             return one hyperparameter sample.
         chain_length : int
-            The length of the MCMC chain. We start n_hypers walker for
+            The length of the MCMC chain. We start n_mcmc_walkers walker for
             chain_length steps and we use the last sample
             in the chain as a hyperparameter sample.
         burnin_steps : int
             The number of burnin steps before the actual MCMC sampling starts.
-        normalize_output : bool
+        normalize_y : bool
             Zero mean unit variance normalization of the output values
-        normalize_input : bool
-            Normalize all inputs to be in [0, 1]. This is important to define good priors for the
-            length scales.
         rng: np.random.RandomState
             Random number generator
-        noise : float
-            Noise term that is added to the diagonal of the covariance matrix
-            for the Cholesky decomposition.
         """
         super().__init__(types=types, bounds=bounds, seed=seed, **kwargs)
 
         self.kernel = kernel
         self.prior = prior
-        self.noise = noise
-        self.n_hypers = n_hypers
+        self.n_mcmc_walkers = n_mcmc_walkers
         self.chain_length = chain_length
         self.burned = False
         self.burnin_steps = burnin_steps
         self.models = []
-        self.normalize_output = normalize_output
-        self.normalize_input = normalize_input
+        self.normalize_y = normalize_y
         self.X = None
         self.y = None
         self.is_trained = False
@@ -116,42 +106,35 @@ class GaussianProcessMCMC(BaseModel):
             hyperparameter specified in the kernel.
         """
 
-        if self.normalize_input:
-            # Normalize input to be in [0, 1]
-            self.X, self.lower, self.upper = normalization.zero_one_normalization(X, self.lower, self.upper)
-        else:
-            self.X = X
-
         if len(y.shape) > 1:
             y = y.flatten()
             if len(y) != len(X):
                 raise ValueError('Shape mismatch: %s vs %s' % (y.shape, X.shape))
 
-        if self.normalize_output:
-            # Normalize output to have zero mean and unit standard deviation
-            self.y, self.y_mean, self.y_std = normalization.zero_mean_unit_var_normalization(y)
-            if self.y_std == 0:
-                raise ValueError("Cannot normalize output. All targets have the same value")
-        else:
-            self.y = y
-
-        # Use the mean of the data as mean for the GP
-        self.mean = np.mean(self.y, axis=0)
-        self.gp = george.GP(self.kernel, mean=self.mean)
+        self.gp = skopt.learning.gaussian_process.GaussianProcessRegressor(
+            kernel=self.kernel,
+            normalize_y=self.normalize_y,
+            optimizer=None,
+            n_restarts_optimizer=-1,  # Do not use scikit-learn's optimization routine
+            alpha=0,  # Governed by the kernel
+            noise=None,
+        )
+        # Initialize some variables
+        self.gp.fit(X, y)
 
         if do_optimize:
             # We have one walker for each hyperparameter configuration
-            sampler = emcee.EnsembleSampler(self.n_hypers,
-                                            len(self.kernel) + 1,
-                                            self._loglikelihood)
+            sampler = emcee.EnsembleSampler(self.n_mcmc_walkers,
+                                            len(self.kernel.theta),
+                                            self._ll)
             sampler.random_state = self.rng.get_state()
             # Do a burn-in in the first iteration
             if not self.burned:
                 # Initialize the walkers by sampling from the prior
                 if self.prior is None:
-                    self.p0 = self.rng.rand(self.n_hypers, len(self.kernel) + 1)
+                    self.p0 = self.rng.rand(self.n_mcmc_walkers, len(self.kernel.theta))
                 else:
-                    self.p0 = self.prior.sample_from_prior(self.n_hypers)
+                    self.p0 = self.prior.sample_from_prior(self.n_mcmc_walkers)
                 # Run MCMC sampling
                 self.p0, _, _ = sampler.run_mcmc(self.p0,
                                                  self.burnin_steps,
@@ -159,14 +142,8 @@ class GaussianProcessMCMC(BaseModel):
 
                 self.burned = True
 
-            # Start sampling
-            pos, _, _ = sampler.run_mcmc(self.p0,
-                                         self.chain_length,
-                                         rstate0=self.rng)
-
-            # Save the current position, it will be the start point in
-            # the next iteration
-            self.p0 = pos
+            # Start sampling & save the current position, it will be the start point in the next iteration
+            self.p0, _, _ = sampler.run_mcmc(self.p0, self.chain_length, rstate0=self.rng)
 
             # Take the last samples from each walker
             self.hypers = sampler.chain[:, -1]
@@ -181,15 +158,12 @@ class GaussianProcessMCMC(BaseModel):
 
             # Instantiate a GP for each hyperparameter configuration
             kernel = deepcopy(self.kernel)
-            kernel.set_parameter_vector(sample[:-1])
-            noise = np.exp(sample[-1])
+            kernel.theta = sample
             model = GaussianProcess(
                 types=self.types,
                 bounds=self.bounds,
                 kernel=kernel,
-                normalize_output=self.normalize_output,
-                normalize_input=self.normalize_input,
-                noise=noise,
+                normalize_y=self.normalize_y,
                 seed=self.rng.randint(low=0, high=10000),
             )
             model._train(X, y, do_optimize=False)
@@ -197,10 +171,10 @@ class GaussianProcessMCMC(BaseModel):
 
         self.is_trained = True
 
-    def _loglikelihood(self, theta: np.ndarray):
+    def _ll(self, theta: np.ndarray) -> float:
         """
-        Return the loglikelihood (+ the prior) for a hyperparameter
-        configuration theta.
+        Returns the marginal log likelihood (+ the prior) for
+        a hyperparameter configuration theta.
 
         Parameters
         ----------
@@ -217,22 +191,22 @@ class GaussianProcessMCMC(BaseModel):
         # Bound the hyperparameter space to keep things sane. Note all
         # hyperparameters live on a log scale
         if np.any((-20 > theta) + (theta > 20)):
-            return -np.inf
-
-        # The last entry is always the noise
-        sigma_2 = np.exp(theta[-1])
-        # Update the kernel and compute the lnlikelihood.
-        self.gp.kernel.set_parameter_vector(theta[:-1])
+            return -1e25
 
         try:
-            self.gp.compute(self.X, yerr=np.sqrt(sigma_2))
-        except:
-            return -np.inf
+            lml = self.gp.log_marginal_likelihood(theta)
+        except ValueError as e:
+            return -1e25
 
+        # Add prior
         if self.prior is not None:
-            return self.prior.lnprob(theta) + self.gp.lnlikelihood(self.y, quiet=True)
+            lml += self.prior.lnprob(theta)
+
+        # We add a minus here because scipy is minimizing
+        if not np.isfinite(lml):
+            return -1e25
         else:
-            return self.gp.lnlikelihood(self.y, quiet=True)
+            return lml
 
     def _predict(self, X_test: np.ndarray):
         r"""

@@ -1,13 +1,14 @@
 import logging
 import typing
 
-import george
 import numpy as np
+import skopt.learning.gaussian_process
+import skopt.learning.gaussian_process.kernels
 from scipy import optimize
 
-from smac.epm import normalization
 from smac.epm.base_gp import BaseModel
 from smac.epm.gp_base_prior import BasePrior
+from smac.utils.constants import VERY_SMALL_NUMBER
 
 logger = logging.getLogger(__name__)
 
@@ -41,11 +42,6 @@ class GaussianProcess(BaseModel):
     prior : prior object
         Defines a prior for the hyperparameters of the GP. Make sure that
         it implements the Prior interface.
-    noise : float
-        Noise term that is added to the diagonal of the covariance matrix
-        for the Cholesky decomposition.
-    use_gradients : bool
-        Use gradient information to optimize the negative log likelihood
     normalize_output : bool
         Zero mean unit variance normalization of the output values
     normalize_input : bool
@@ -60,23 +56,18 @@ class GaussianProcess(BaseModel):
         types: np.ndarray,
         bounds: typing.List[typing.Tuple[float, float]],
         seed: int,
-        kernel: george.kernels.Kernel,
+        kernel: skopt.learning.gaussian_process.kernels.Kernel,
         prior: BasePrior=None,
-        noise: float=1e-3,
-        use_gradients: bool=False,
-        normalize_output: bool=True,
-        normalize_input: bool=True,
+        normalize_y: bool=True,
+        **kwargs
     ):
 
-        super().__init__(types=types, bounds=bounds, seed=seed)
+        super().__init__(types=types, bounds=bounds, seed=seed, **kwargs)
 
         self.kernel = kernel
         self.gp = None
         self.prior = prior
-        self.noise = noise
-        self.use_gradients = use_gradients
-        self.normalize_output = normalize_output
-        self.normalize_input = normalize_input
+        self.normalize_y = normalize_y
         self.X = None
         self.y = None
         self.hypers = []
@@ -101,49 +92,28 @@ class GaussianProcess(BaseModel):
             the default hyperparameters of the kernel are used.
         """
 
-        if self.normalize_input:
-            # Normalize input to be in [0, 1]
-            self.X, self.lower, self.upper = normalization.zero_one_normalization(X, self.lower, self.upper)
-        else:
-            self.X = X
-
-        if len(y.shape) > 1:
-            y = y.flatten()
-            if len(y) != len(X):
-                raise ValueError('Shape mismatch: %s vs %s' % (y.shape, X.shape))
-
-        if self.normalize_output:
-            # Normalize output to have zero mean and unit standard deviation
-            self.y, self.y_mean, self.y_std = normalization.zero_mean_unit_var_normalization(y)
-            if self.y_std == 0:
-                raise ValueError("Cannot normalize output. All targets have the same value")
-        else:
-            self.y = y
-
-        # Use the empirical mean of the data as mean for the GP
-        self.mean = np.mean(self.y, axis=0)
-        self.gp = george.GP(self.kernel, mean=self.mean)
+        self.gp = skopt.learning.gaussian_process.GaussianProcessRegressor(
+            kernel=self.kernel,
+            normalize_y=self.normalize_y,
+            optimizer=None,
+            n_restarts_optimizer=-1,  # Do not use scikit-learn's optimization routine
+            alpha=0,  # Governed by the kernel
+            noise=None,
+        )
+        # Initialize some variables
+        self.gp.fit(X, y)
 
         if do_optimize:
             self.hypers = self._optimize()
-            self.gp.kernel.set_parameter_vector(self.hypers[:-1])
-            self.noise = np.exp(self.hypers[-1])  # sigma^2
         else:
-            self.hypers = self.gp.kernel.get_parameter_vector()
-            self.hypers = np.append(self.hypers, np.log(self.noise))
+            self.hypers = self.gp.kernel.theta
 
-        try:
-            self.gp.compute(self.X, yerr=np.sqrt(self.noise))
-        except np.linalg.LinAlgError:
-            self.noise *= 10
-            self.gp.compute(self.X, yerr=np.sqrt(self.noise))
+        self.gp.kernel.theta = self.hypers
+        self.gp.fit(X, y)
 
         self.is_trained = True
 
-    def _get_noise(self):
-        return self.noise
-
-    def _nll(self, theta: np.ndarray) -> float:
+    def _nll(self, theta: np.ndarray) -> typing.Tuple[float, np.ndarray]:
         """
         Returns the negative marginal log likelihood (+ the prior) for
         a hyperparameter configuration theta.
@@ -160,52 +130,19 @@ class GaussianProcess(BaseModel):
         float
             lnlikelihood + prior
         """
-        # Specify bounds to keep things sane
-        if np.any((-20 > theta) + (theta > 20)):
-            return 1e25
 
-        # The last entry of theta is always the noise
-        self.gp.kernel.set_parameter_vector(theta[:-1])
-        noise = np.exp(theta[-1])  # sigma^2
-
-        try:
-            self.gp.compute(self.X, yerr=np.sqrt(noise))
-        except np.linalg.LinAlgError:
-            return 1e25
-
-        ll = self.gp.lnlikelihood(self.y, quiet=True)
+        lml, grad = self.gp.log_marginal_likelihood(theta, eval_gradient=True)
 
         # Add prior
         if self.prior is not None:
-            ll += self.prior.lnprob(theta)
+            lml += self.prior.lnprob(theta)
+            grad += self.prior.gradient(theta)
 
         # We add a minus here because scipy is minimizing
-        return -ll if np.isfinite(ll) else 1e25
-
-    def _grad_nll(self, theta: np.ndarray):
-
-        self.gp.kernel.set_parameter_vector(theta[:-1])
-        noise = np.exp(theta[-1])
-
-        self.gp.compute(self.X, yerr=np.sqrt(noise))
-
-        self.gp._compute_alpha(self.y)
-        K_inv = self.gp.solver.apply_inverse(np.eye(self.gp._alpha.size),
-                                             in_place=True)
-
-        # The gradients of the Gram matrix, for the noise this is just
-        # the identity matrix
-        Kg = self.gp.kernel.gradient(self.gp._x)
-        Kg = np.concatenate((Kg, np.eye(Kg.shape[0])[:, :, None]), axis=2)
-
-        # Calculate the gradient.
-        A = np.outer(self.gp._alpha, self.gp._alpha) - K_inv
-        g = 0.5 * np.einsum('ijk,ij', Kg, A)
-
-        if self.prior is not None:
-            g += self.prior.gradient(theta)
-
-        return -g
+        if not np.isfinite(lml).all() or not np.all(np.isfinite(grad)):
+            return 1e25, np.array([1e25] * theta.shape[0])
+        else:
+            return -lml, -grad
 
     def _optimize(self) -> np.ndarray:
         """
@@ -218,21 +155,9 @@ class GaussianProcess(BaseModel):
             Hyperparameter vector that maximizes the marginal log likelihood
         """
         # Start optimization from the previous hyperparameter configuration
-        p0 = self.gp.kernel.get_parameter_vector()
-        p0 = np.append(p0, np.log(self.noise))
-
-        if self.use_gradients:
-            theta, _, _ = optimize.minimize(self._nll, p0,
-                                            method="BFGS",
-                                            jac=self._grad_nll)
-        else:
-            try:
-                results = optimize.minimize(self._nll, p0, method='L-BFGS-B')
-                theta = results.x
-            except ValueError:
-                logging.error("Could not find a valid hyperparameter configuration! Use initial configuration")
-                theta = p0
-
+        p0 = self.gp.kernel.theta
+        bounds = [(np.exp(b[0]), np.exp(b[1])) for b in self.gp.kernel.bounds]
+        theta, f_opt, _ = optimize.fmin_l_bfgs_b(self._nll, p0, bounds=bounds)
         return theta
 
     def _predict(self, X_test: np.ndarray, full_cov: bool=False):
@@ -259,26 +184,12 @@ class GaussianProcess(BaseModel):
         if not self.is_trained:
             raise Exception('Model has to be trained first!')
 
-        if self.normalize_input:
-            X_test_norm, _, _ = normalization.zero_one_normalization(X_test, self.lower, self.upper)
-        else:
-            X_test_norm = X_test
-
-        mu, var = self.gp.predict(self.y, X_test_norm)
-
-        if self.normalize_output:
-            mu = normalization.zero_mean_unit_var_unnormalization(mu, self.y_mean, self.y_std)
-            var *= self.y_std ** 2
-        if not full_cov:
-            var = np.diag(var)
+        mu, var = self.gp.predict(X_test, return_cov=True)
+        var = np.diag(var)
 
         # Clip negative variances and set them to the smallest
         # positive float value
-        if var.shape[0] == 1:
-            var = np.clip(var, np.finfo(var.dtype).eps, np.inf)
-        else:
-            var = np.clip(var, np.finfo(var.dtype).eps, np.inf)
-            var[np.where((var < np.finfo(var.dtype).eps) & (var > -np.finfo(var.dtype).eps))] = 0
+        np.clip(var, VERY_SMALL_NUMBER, np.inf)
 
         return mu, var
 
@@ -300,18 +211,10 @@ class GaussianProcess(BaseModel):
             The F function values drawn at the N test points.
         """
 
-        if self.normalize_input:
-            X_test_norm, _, _ = normalization.zero_one_normalization(X_test, self.lower, self.upper)
-        else:
-            X_test_norm = X_test
-
         if not self.is_trained:
             raise Exception('Model has to be trained first!')
 
-        funcs = self.gp.sample_conditional(self.y, X_test_norm, n_funcs)
-
-        if self.normalize_output:
-            funcs = normalization.zero_mean_unit_var_unnormalization(funcs, self.y_mean, self.y_std)
+        funcs = self.gp.sample_y(X_test, n_samples=n_funcs, random_state=self.rng)
 
         if len(funcs.shape) == 1:
             return funcs[None, :]

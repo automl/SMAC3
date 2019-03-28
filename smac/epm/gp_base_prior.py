@@ -1,6 +1,7 @@
-
 import numpy as np
 import scipy.stats as sps
+
+from smac.utils.constants import VERY_SMALL_NUMBER
 
 
 class BasePrior(object):
@@ -211,7 +212,10 @@ class HorseshoePrior(BasePrior):
         # We computed it exactly as in the original spearmint code
         if np.any(theta == 0.0):
             return np.inf
-        return np.log(np.log(1 + 3.0 * (self.scale / np.exp(theta)) ** 2))
+        a = np.maximum(np.exp(theta), VERY_SMALL_NUMBER)
+        b = np.log(1 + 3.0 * (self.scale / a) ** 2)
+        b = np.maximum(b, VERY_SMALL_NUMBER)
+        return np.log(b)
 
     def sample_from_prior(self, n_samples: int):
         """
@@ -248,10 +252,12 @@ class HorseshoePrior(BasePrior):
         (D) np.array
             The gradient of the prior at theta.
         """
-        a = -(6 * self.scale ** 2)
-        b = (3 * self.scale ** 2 + np.exp(2 * theta))
-        b *= np.log(3 * self.scale ** 2 * np.exp(- 2 * theta) + 1)
-        return a / b
+        a = -(6 * np.power(self.scale, 2))
+        b = (3 * np.power(self.scale, 2) + np.exp(2 * theta))
+        b *= np.log(3 * np.power(self.scale, 2) * np.exp(- 2 * theta) + 1)
+        b = np.maximum(b, 1e-14)
+        rval = a / b
+        return rval
 
 
 class LognormalPrior(BasePrior):
@@ -280,6 +286,9 @@ class LognormalPrior(BasePrior):
         else:
             self.rng = rng
 
+        if mean != 0:
+            raise NotImplementedError(mean)
+
         self.sigma = sigma
         self.mean = mean
 
@@ -298,7 +307,6 @@ class LognormalPrior(BasePrior):
         float
             The log probability of theta
         """
-
         return sps.lognorm.logpdf(theta, self.sigma, loc=self.mean)
 
     def sample_from_prior(self, n_samples: int):
@@ -336,7 +344,8 @@ class LognormalPrior(BasePrior):
         (D) np.array
             The gradient of the prior at theta.
         """
-        pass
+        # derivative 1 / (x * s^2 * sqrt(2 pi)) * exp( - 0.5 * (log(x ) / s^2))^2)
+        return - (self.sigma **2 + np.log(theta)) / (self.sigma ** 2 * theta)
 
 
 class NormalPrior(BasePrior):

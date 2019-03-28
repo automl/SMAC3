@@ -1,27 +1,33 @@
 import unittest
 import unittest.mock
 
-import george
 import numpy as np
 import sklearn.datasets
 import sklearn.model_selection
+import skopt.learning.gaussian_process
 
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
 from smac.epm.gp_default_priors import DefaultPrior
 
 
-def get_gp(n_dimensions, rs, noise=-8):
-    cov_amp = 2
+def get_gp(n_dimensions, rs, noise=1e-3):
+    cov_amp = skopt.learning.gaussian_process.kernels.ConstantKernel(2.0, constant_value_bounds=(1e-10, 2))
+    exp_kernel = skopt.learning.gaussian_process.kernels.Matern(
+        np.ones([n_dimensions]),
+        [(np.exp(-10), np.exp(2)) for _ in range(n_dimensions)],
+        nu=2.5,
+    )
+    noise_kernel = skopt.learning.gaussian_process.kernels.WhiteKernel(
+        noise_level=noise,
+        noise_level_bounds=(1e-10, 2),
+    )
+    kernel = cov_amp * exp_kernel + noise_kernel
 
-    initial_ls = np.ones([n_dimensions])
-    exp_kernel = george.kernels.Matern52Kernel(initial_ls, ndim=n_dimensions)
-    kernel = cov_amp * exp_kernel
+    prior = DefaultPrior(len(kernel.theta), rng=rs)
 
-    prior = DefaultPrior(len(kernel) + 1, rng=rs)
-
-    n_hypers = 3 * len(kernel)
-    if n_hypers % 2 == 1:
-        n_hypers += 1
+    n_mcmc_walkers = 3 * len(kernel.theta)
+    if n_mcmc_walkers % 2 == 1:
+        n_mcmc_walkers += 1
 
     bounds = [(0., 1.) for _ in range(n_dimensions)]
     types = np.zeros(n_dimensions)
@@ -31,13 +37,11 @@ def get_gp(n_dimensions, rs, noise=-8):
         bounds=bounds,
         kernel=kernel,
         prior=prior,
-        n_hypers=n_hypers,
+        n_mcmc_walkers=n_mcmc_walkers,
         chain_length=20,
         burnin_steps=100,
-        normalize_input=True,
-        normalize_output=True,
+        normalize_y=True,
         seed=rs.randint(low=1, high=10000),
-        noise=noise,
     )
     return model
 
@@ -101,7 +105,7 @@ class TestGPMCMC(unittest.TestCase):
             [109.],
             [109.2]], dtype=np.float64)
         rs = np.random.RandomState(1)
-        model = get_gp(3, rs, noise=-8)
+        model = get_gp(3, rs)
         model.train(np.vstack((X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y)))
 
         y_hat, var_hat = model.predict(X)
@@ -109,14 +113,14 @@ class TestGPMCMC(unittest.TestCase):
             y.reshape((1, -1)).flatten(), y_hat.reshape((1, -1)).flatten(), var_hat.reshape((1, -1)).flatten(),
         ):
             # Chain length too short to get excellent predictions
-            self.assertAlmostEqual(y_i, y_hat_i, delta=0.1)
-            self.assertAlmostEqual(var_hat_i, 0, delta=0.2)
+            self.assertAlmostEqual(y_i, y_hat_i)
+            self.assertAlmostEqual(var_hat_i, 0)
 
         # Regression test that performance does not drastically decrease in the near future
         y_hat, var_hat = model.predict(np.array([[10, 10, 10]]))
         self.assertAlmostEqual(y_hat[0][0], 54.61249999999999)
         # Massive variance due to internally used law of total variances
-        self.assertAlmostEqual(var_hat[0][0], 8710.329996484437)
+        self.assertAlmostEqual(var_hat[0][0], 5726.732275219232)
 
     def test_gp_on_sklearn_data(self):
         X, y = sklearn.datasets.load_boston(return_X_y=True)
@@ -126,7 +130,7 @@ class TestGPMCMC(unittest.TestCase):
         model = get_gp(X.shape[1], rs)
         cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
 
-        maes = [9.370525409655151321, 9.056537966356946708]
+        maes = [7.430556296025081061, 7.723028018833807827]
 
         for i, (train_split, test_split) in enumerate(cv.split(X, y)):
             X_train = X[train_split]

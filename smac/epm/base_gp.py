@@ -9,8 +9,7 @@ class BaseModel(AbstractEPM):
         """
         Abstract base class for all Gaussian process models.
         """
-        super().__init__(types=types, bounds=bounds, seed=seed,
-                         **kwargs)
+        super().__init__(types=types, bounds=bounds, seed=seed, **kwargs)
 
         self.rng = np.random.RandomState(seed)
 
