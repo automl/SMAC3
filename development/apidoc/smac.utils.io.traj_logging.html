@@ -368,53 +368,43 @@
 <dd></dd></dl>
 
 <p>Constructor</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>output_dir</strong> (<em>str</em>) – directory for logging (or None to disable logging)</li>
-<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a><em>(</em><em>)</em>) – Stats object</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_dir</strong> (<em>str</em>) – directory for logging (or None to disable logging)</p></li>
+<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a><em>(</em><em>)</em>) – Stats object</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.utils.io.traj_logging.TrajLogger.add_entry">
 <code class="descname">add_entry</code><span class="sig-paren">(</span><em>train_perf: float</em>, <em>incumbent_id: int</em>, <em>incumbent: ConfigSpace.configuration_space.Configuration</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger.add_entry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.add_entry" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds entries to trajectory files (several formats) with using the
 same timestamps for each entry</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>train_perf</strong> (<em>float</em>) – estimated performance on training (sub)set</li>
-<li><strong>incumbent_id</strong> (<em>int</em>) – id of incumbent</li>
-<li><strong>incumbent</strong> (<em>Configuration</em><em>(</em><em>)</em>) – current incumbent configuration</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>train_perf</strong> (<em>float</em>) – estimated performance on training (sub)set</p></li>
+<li><p><strong>incumbent_id</strong> (<em>int</em>) – id of incumbent</p></li>
+<li><p><strong>incumbent</strong> (<em>Configuration</em><em>(</em><em>)</em>) – current incumbent configuration</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="staticmethod">
 <dt id="smac.utils.io.traj_logging.TrajLogger.read_traj_aclib_format">
 <em class="property">static </em><code class="descname">read_traj_aclib_format</code><span class="sig-paren">(</span><em>fn: str</em>, <em>cs: ConfigSpace.configuration_space.ConfigurationSpace</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger.read_traj_aclib_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.read_traj_aclib_format" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads trajectory from file</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>fn</strong> (<em>str</em>) – Filename with saved runhistory in self._add_in_aclib_format format</li>
-<li><strong>cs</strong> (<em>ConfigurationSpace</em>) – Configuration Space to translate dict object into Confiuration object</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fn</strong> (<em>str</em>) – Filename with saved runhistory in self._add_in_aclib_format format</p></li>
+<li><p><strong>cs</strong> (<em>ConfigurationSpace</em>) – Configuration Space to translate dict object into Confiuration object</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>trajectory</strong> – Each entry in the list is a dictionary of the form
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>trajectory</strong> – Each entry in the list is a dictionary of the form
 {
 “cpu_time”: float,
 “total_cpu_time”: None, # TODO
@@ -423,13 +413,11 @@ same timestamps for each entry</p>
 “cost”: float,
 “incumbent”: Configuration
 }</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

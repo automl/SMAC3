@@ -280,21 +280,21 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
 <p>Definition of how data in the runhistory is used.</p>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">INTERNAL</span></code>: internal data which was gathered during the current
+<li><p><code class="docutils literal notranslate"><span class="pre">INTERNAL</span></code>: internal data which was gathered during the current
 optimization run. It will be saved to disk, used for building EPMs and
-during intensify.</li>
-<li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">EXTERNAL_SAME_INSTANCES</span></code>: external data, which was gathered by running</dt>
-<dd>another program on the same instances as the current optimization run
+during intensify.</p></li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">EXTERNAL_SAME_INSTANCES</span></code>: external data, which was gathered by running</dt><dd><p>another program on the same instances as the current optimization run
 runs on (for example pSMAC). It will not be saved to disk, but used both
-for EPM building and during intensify.</dd>
+for EPM building and during intensify.</p>
+</dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">EXTERNAL_DIFFERENT_INSTANCES</span></code>: external data, which was gathered on a</dt>
-<dd>different instance set as the one currently used, but due to having the
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">EXTERNAL_DIFFERENT_INSTANCES</span></code>: external data, which was gathered on a</dt><dd><p>different instance set as the one currently used, but due to having the
 same instance features can still provide useful information. Will not be
-saved to disk and only used for EPM building.</dd>
+saved to disk and only used for EPM building.</p>
+</dd>
 </dl>
 </li>
 </ul>
@@ -450,70 +450,55 @@ representation as available.</p>
 <dt id="smac.runhistory.runhistory.RunHistory.data">
 <code class="descname">data</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.data" title="Permalink to this definition">¶</a></dt>
 <dd><p>TODO</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">collections.OrderedDict()</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>collections.OrderedDict()</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="smac.runhistory.runhistory.RunHistory.config_ids">
 <code class="descname">config_ids</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.config_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maps config -&gt; id</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="smac.runhistory.runhistory.RunHistory.ids_config">
 <code class="descname">ids_config</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.ids_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maps id -&gt; config</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="smac.runhistory.runhistory.RunHistory.cost_per_config">
 <code class="descname">cost_per_config</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.cost_per_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maps config_id -&gt; cost</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="smac.runhistory.runhistory.RunHistory.runs_per_config">
 <code class="descname">runs_per_config</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.runs_per_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maps config_id -&gt; number of runs</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -527,45 +512,37 @@ representation as available.</p>
 <dd></dd></dl>
 
 <p>Constructor</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>aggregate_func</strong> (<em>callable</em>) – function to aggregate perf across instances</li>
-<li><strong>overwrite_existing_runs</strong> (<em>bool</em>) – allows to overwrites old results if pairs of
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>aggregate_func</strong> (<em>callable</em>) – function to aggregate perf across instances</p></li>
+<li><p><strong>overwrite_existing_runs</strong> (<em>bool</em>) – allows to overwrites old results if pairs of
 algorithm-instance-seed were measured
-multiple times</li>
+multiple times</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.add">
 <code class="descname">add</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em>, <em>cost: float</em>, <em>time: float</em>, <em>status: smac.tae.execute_ta_run.StatusType</em>, <em>instance_id: str = None</em>, <em>seed: int = None</em>, <em>additional_info: dict = None</em>, <em>origin: smac.runhistory.runhistory.DataOrigin = &lt;DataOrigin.INTERNAL: 1&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a data of a new target algorithm (TA) run;
 it will update data if the same key values are used
 (config, instance_id, seed)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>config</strong> (<em>dict</em><em> (or </em><em>other type -- depending on config space module</em><em>)</em>) – Parameter configuration</li>
-<li><strong>cost</strong> (<em>float</em>) – Cost of TA run (will be minimized)</li>
-<li><strong>time</strong> (<em>float</em>) – Runtime of TA run</li>
-<li><strong>status</strong> (<em>str</em>) – Status in {SUCCESS, TIMEOUT, CRASHED, ABORT, MEMOUT}</li>
-<li><strong>instance_id</strong> (<em>str</em>) – String representing an instance (default: None)</li>
-<li><strong>seed</strong> (<em>int</em>) – Random seed used by TA (default: None)</li>
-<li><strong>additional_info</strong> (<em>dict</em>) – Additional run infos (could include further returned
-information from TA or fields such as start time and host_id)</li>
-<li><strong>origin</strong> (<a class="reference internal" href="#smac.runhistory.runhistory.DataOrigin" title="smac.runhistory.runhistory.DataOrigin"><em>DataOrigin</em></a>) – Defines how data will be used.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>dict</em><em> (or </em><em>other type -- depending on config space module</em><em>)</em>) – Parameter configuration</p></li>
+<li><p><strong>cost</strong> (<em>float</em>) – Cost of TA run (will be minimized)</p></li>
+<li><p><strong>time</strong> (<em>float</em>) – Runtime of TA run</p></li>
+<li><p><strong>status</strong> (<em>str</em>) – Status in {SUCCESS, TIMEOUT, CRASHED, ABORT, MEMOUT}</p></li>
+<li><p><strong>instance_id</strong> (<em>str</em>) – String representing an instance (default: None)</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – Random seed used by TA (default: None)</p></li>
+<li><p><strong>additional_info</strong> (<em>dict</em>) – Additional run infos (could include further returned
+information from TA or fields such as start time and host_id)</p></li>
+<li><p><strong>origin</strong> (<a class="reference internal" href="#smac.runhistory.runhistory.DataOrigin" title="smac.runhistory.runhistory.DataOrigin"><em>DataOrigin</em></a>) – Defines how data will be used.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -573,65 +550,57 @@ information from TA or fields such as start time and host_id)</li>
 <code class="descname">compute_all_costs</code><span class="sig-paren">(</span><em>instances: List[str] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.compute_all_costs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.compute_all_costs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the cost of all configurations from scratch and overwrites
 self.cost_perf_config and self.runs_per_config accordingly;</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>instances</strong> (<em>typing.List</em><em>[</em><em>str</em><em>]</em>) – list of instances; if given, cost is only computed wrt to this instance set</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>instances</strong> (<em>typing.List</em><em>[</em><em>str</em><em>]</em>) – list of instances; if given, cost is only computed wrt to this instance set</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.empty">
 <code class="descname">empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether or not the RunHistory is empty.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>emptiness</strong> – True if runs have been added to the RunHistory,
-False otherwise</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>emptiness</strong> – True if runs have been added to the RunHistory,
+False otherwise</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.get_all_configs">
 <code class="descname">get_all_configs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_all_configs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_all_configs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all configurations in this RunHistory object</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>parameter configurations</strong></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>parameter configurations</strong></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.get_cost">
 <code class="descname">get_cost</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns empirical cost for a configuration; uses  self.cost_per_config</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<em>Configuration</em>) – </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>cost</strong> – Computed cost for configuration</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>Configuration</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>cost</strong> – Computed cost for configuration</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -641,34 +610,31 @@ False otherwise</td>
 for a configuration
 :param config: Parameter configuration
 :type config: Configuration from ConfigSpace</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>cost_per_inst</strong></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict&lt;instance name&lt;str&gt;, cost&lt;float&gt;&gt;</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>cost_per_inst</strong></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict&lt;instance name&lt;str&gt;, cost&lt;float&gt;&gt;</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.get_runs_for_config">
 <code class="descname">get_runs_for_config</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_runs_for_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_runs_for_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all runs (instance seed pairs) for a configuration.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<em>Configuration from ConfigSpace</em>) – Parameter configuration</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>instance_seed_pairs</strong></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list&lt;tuples of instance, seed&gt;</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>Configuration from ConfigSpace</em>) – Parameter configuration</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>instance_seed_pairs</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list&lt;tuples of instance, seed&gt;</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -676,18 +642,14 @@ for a configuration
 <code class="descname">incremental_update_cost</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em>, <em>cost: float</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.incremental_update_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.incremental_update_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Incrementally updates the performance of a configuration by using a
 moving average;</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>config</strong> (<em>Configuration</em>) – configuration to update cost based on all runs in runhistory</li>
-<li><strong>cost</strong> (<em>float</em>) – cost of new run of config</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>Configuration</em>) – configuration to update cost based on all runs in runhistory</p></li>
+<li><p><strong>cost</strong> (<em>float</em>) – cost of new run of config</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -695,56 +657,44 @@ moving average;</p>
 <code class="descname">load_json</code><span class="sig-paren">(</span><em>fn: str</em>, <em>cs: ConfigSpace.configuration_space.ConfigurationSpace</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.load_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.load_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load and runhistory in json representation from disk.</p>
 <p>Overwrites current runhistory!</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>fn</strong> (<em>str</em>) – file name to load from</li>
-<li><strong>cs</strong> (<em>ConfigSpace</em>) – instance of configuration space</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fn</strong> (<em>str</em>) – file name to load from</p></li>
+<li><p><strong>cs</strong> (<em>ConfigSpace</em>) – instance of configuration space</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.save_json">
 <code class="descname">save_json</code><span class="sig-paren">(</span><em>fn: str = 'runhistory.json'</em>, <em>save_external: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.save_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.save_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>saves runhistory on disk</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>fn</strong> (<em>str</em>) – file name</li>
-<li><strong>save_external</strong> (<em>bool</em>) – Whether to save external data in the runhistory file.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fn</strong> (<em>str</em>) – file name</p></li>
+<li><p><strong>save_external</strong> (<em>bool</em>) – Whether to save external data in the runhistory file.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.update">
 <code class="descname">update</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>origin: smac.runhistory.runhistory.DataOrigin = &lt;DataOrigin.EXTERNAL_SAME_INSTANCES: 2&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the current runhistory by adding new runs from a RunHistory.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>runhistory</strong> (<a class="reference internal" href="#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – Runhistory with additional data to be added to self</li>
-<li><strong>origin</strong> (<a class="reference internal" href="#smac.runhistory.runhistory.DataOrigin" title="smac.runhistory.runhistory.DataOrigin"><em>DataOrigin</em></a>) – If set to <code class="docutils literal notranslate"><span class="pre">INTERNAL</span></code> or <code class="docutils literal notranslate"><span class="pre">EXTERNAL_FULL</span></code> the data will be
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – Runhistory with additional data to be added to self</p></li>
+<li><p><strong>origin</strong> (<a class="reference internal" href="#smac.runhistory.runhistory.DataOrigin" title="smac.runhistory.runhistory.DataOrigin"><em>DataOrigin</em></a>) – If set to <code class="docutils literal notranslate"><span class="pre">INTERNAL</span></code> or <code class="docutils literal notranslate"><span class="pre">EXTERNAL_FULL</span></code> the data will be
 added to the internal data structure self._configid_to_inst_seed
-and be available <code class="xref py py-meth docutils literal notranslate"><span class="pre">through</span> <span class="pre">get_runs_for_config()</span></code>.</li>
+and be available <code class="xref py py-meth docutils literal notranslate"><span class="pre">through</span> <span class="pre">get_runs_for_config()</span></code>.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -753,33 +703,26 @@ and be available <code class="xref py py-meth docutils literal notranslate"><spa
 <dd><p>Store the performance of a configuration across the instances in
 self.cost_perf_config and also updates self.runs_per_config;
 uses self.aggregate_func</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<em>Configuration</em>) – configuration to update cost based on all runs in runhistory</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>Configuration</em>) – configuration to update cost based on all runs in runhistory</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.update_from_json">
 <code class="descname">update_from_json</code><span class="sig-paren">(</span><em>fn: str</em>, <em>cs: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>origin: smac.runhistory.runhistory.DataOrigin = &lt;DataOrigin.EXTERNAL_SAME_INSTANCES: 2&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.update_from_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update_from_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the current runhistory by adding new runs from a json file.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>fn</strong> (<em>str</em>) – File name to load from.</li>
-<li><strong>cs</strong> (<em>ConfigSpace</em>) – Instance of configuration space.</li>
-<li><strong>origin</strong> (<a class="reference internal" href="#smac.runhistory.runhistory.DataOrigin" title="smac.runhistory.runhistory.DataOrigin"><em>DataOrigin</em></a>) – What to store as data origin.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fn</strong> (<em>str</em>) – File name to load from.</p></li>
+<li><p><strong>cs</strong> (<em>ConfigSpace</em>) – Instance of configuration space.</p></li>
+<li><p><strong>origin</strong> (<a class="reference internal" href="#smac.runhistory.runhistory.DataOrigin" title="smac.runhistory.runhistory.DataOrigin"><em>DataOrigin</em></a>) – What to store as data origin.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

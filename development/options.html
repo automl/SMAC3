@@ -274,22 +274,20 @@
 <h1>Options and file formats<a class="headerlink" href="#options-and-file-formats" title="Permalink to this headline">¶</a></h1>
 <p>In the optimization-process of <em>SMAC</em>, there are several ways to configure the
 options:</p>
-<dl class="docutils">
-<dt>Mandatory:</dt>
-<dd><ul class="first last simple">
-<li><a class="reference external" href="basic_usage.html#commandline">Commandline</a>-options, with which <em>SMAC</em> is called directly (not needed if
-<em>SMAC</em> is used within Python).</li>
-<li>Scenario-options, that are specified via a Scenario-object. Either directly
-in the Python-code or by using a <a class="reference internal" href="#scenario">scenario</a>-file.</li>
-<li>A Parameter Configuration Space (<a class="reference external" href="options.html#paramcs">PCS</a>), that provides the legal ranges of
+<dl class="simple">
+<dt>Mandatory:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="basic_usage.html#commandline">Commandline</a>-options, with which <em>SMAC</em> is called directly (not needed if
+<em>SMAC</em> is used within Python).</p></li>
+<li><p>Scenario-options, that are specified via a Scenario-object. Either directly
+in the Python-code or by using a <a class="reference internal" href="#scenario">scenario</a>-file.</p></li>
+<li><p>A Parameter Configuration Space (<a class="reference external" href="options.html#paramcs">PCS</a>), that provides the legal ranges of
 parameters to optimize, their types (e.g. int or float) and their default
-values.</li>
+values.</p></li>
 </ul>
 </dd>
-<dt>Optional:</dt>
-<dd><ul class="first last simple">
-<li><a class="reference internal" href="#instance">Instance</a>- and <a class="reference internal" href="#feature">feature</a>-files, that list the instances and features to
-optimize upon.</li>
+<dt>Optional:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#instance">Instance</a>- and <a class="reference internal" href="#feature">feature</a>-files, that list the instances and features to
+optimize upon.</p></li>
 </ul>
 </dd>
 </dl>
@@ -299,107 +297,116 @@ optimize upon.</li>
 The options are separated into three groups, <em>Main Options</em>, <em>SMAC Options</em> and <em>Scenario Options</em>.
 See the Main and SMAC Options below. Find the Scenario Options in the next section.</p>
 <p>Main Options:</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">hydra_iterations:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">number of hydra iterations. Only active if mode is set to Hydra Default: 3.</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">hydra_validation:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">set to validate incumbents on. valX =&gt; validation set of size training_set * 0.X Default: train.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">incumbents_per_round:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">number of configurations to keep per psmac/hydra iteration. Default: 1.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">mode:</th><td class="field-body">Configuration mode. Default: SMAC4AC.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">n_optimizers:</th><td class="field-body">number of optimizers to run in parallel per psmac/hydra iteration. Default: 1.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">psmac_validate:</th><td class="field-body">Validate all psmac configurations.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">random_configuration_chooser:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">path to a python module containing a class <cite>RandomConfigurationChooserImpl`implementing the interface of `RandomConfigurationChooser</cite></td>
-</tr>
-<tr class="field-even field"><th class="field-name">restore_state:</th><td class="field-body">Path to directory with SMAC-files.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">scenario_file:</th><td class="field-body">Scenario file in AClib format.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">seed:</th><td class="field-body">Random Seed. Default: 1.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">verbose_level:</th><td class="field-body">Verbosity level. Default: 20.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">hydra_iterations</dt>
+<dd class="field-odd"><p>number of hydra iterations. Only active if mode is set to Hydra Default: 3.</p>
+</dd>
+<dt class="field-even">hydra_validation</dt>
+<dd class="field-even"><p>set to validate incumbents on. valX =&gt; validation set of size training_set * 0.X Default: train.</p>
+</dd>
+<dt class="field-odd">incumbents_per_round</dt>
+<dd class="field-odd"><p>number of configurations to keep per psmac/hydra iteration. Default: 1.</p>
+</dd>
+<dt class="field-even">mode</dt>
+<dd class="field-even"><p>Configuration mode. Default: SMAC4AC.</p>
+</dd>
+<dt class="field-odd">n_optimizers</dt>
+<dd class="field-odd"><p>number of optimizers to run in parallel per psmac/hydra iteration. Default: 1.</p>
+</dd>
+<dt class="field-even">psmac_validate</dt>
+<dd class="field-even"><p>Validate all psmac configurations.</p>
+</dd>
+<dt class="field-odd">random_configuration_chooser</dt>
+<dd class="field-odd"><p>path to a python module containing a class <cite>RandomConfigurationChooserImpl`implementing the interface of `RandomConfigurationChooser</cite></p>
+</dd>
+<dt class="field-even">restore_state</dt>
+<dd class="field-even"><p>Path to directory with SMAC-files.</p>
+</dd>
+<dt class="field-odd">scenario_file</dt>
+<dd class="field-odd"><p>Scenario file in AClib format.</p>
+</dd>
+<dt class="field-even">seed</dt>
+<dd class="field-even"><p>Random Seed. Default: 1.</p>
+</dd>
+<dt class="field-odd">verbose_level</dt>
+<dd class="field-odd"><p>Verbosity level. Default: 20.</p>
+</dd>
+</dl>
 <p>SMAC Options:</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">abort_on_first_run_crash:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">If true, <em>SMAC</em> will abort if the first run of the target algorithm crashes. Default: True.</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">acq_opt_challengers:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">Number of challengers returned by acquisition function optimization. Also influences the number of randomly sampled configurations to optimized the acquisition function Default: 5000.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">always_race_default:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">Race new incumbents always against default configuration.</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">hydra_iterations:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">number of hydra iterations. Only active if mode is set to Hydra Default: 3.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">input_psmac_dirs:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">For parallel SMAC, multiple output-directories are used.</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">intens_adaptive_capping_slackfactork:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">Slack factor of adpative capping (factor * adpative cutoff). Only active if obj is runtime. If set to very large number it practically deactivates adaptive capping. Default: 1.2.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">intens_min_chall:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">Minimal number of challengers to be considered in each intensification run (&gt; 1). Set to 1 and in combination with very small intensification-percentage. it will deactivate randomly sampled configurations (and hence, extrapolation of random forest will be an issue.) Default: 2.</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">intensification_percentage:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">The fraction of time to be used on intensification (versus choice of next Configurations). Default: 0.5.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">maxR:</th><td class="field-body">Maximum number of calls per configuration. Default: 2000.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">minR:</th><td class="field-body">Minimum number of calls per configuration. Default: 1.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">output_dir:</th><td class="field-body">Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2019-03-27_18:16:10_379325.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">rand_prob:</th><td class="field-body">probablity to run a random configuration instead of configuration optimized on the acquisition function Default: 0.5.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">random_configuration_chooser:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">path to a python module containing a class`RandomConfigurationChooserImpl` implementingthe interface of <cite>RandomConfigurationChooser</cite></td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">rf_do_bootstrapping:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">Use bootstraping in random forest. Default: True.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">rf_max_depth:</th><td class="field-body">Maximum depth of each tree in the random forest. Default: 20.</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">rf_min_samples_leaf:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">Minimum required number of samples in each leaf of a tree in the random forest. Default: 3.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">rf_min_samples_split:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">Minimum number of samples to split for building a tree in the random forest. Default: 3.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">rf_num_trees:</th><td class="field-body">Number of trees in the random forest (&gt; 1). Default: 10.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">rf_ratio_features:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">Ratio of sampled features in each split ([0.,1.]). Default: 0.8333333333333334.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">shared_model:</th><td class="field-body">Whether to run SMAC in parallel mode.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">sls_max_steps:</th><td class="field-body">Maximum number of local search steps in one iteration during the optimization of the acquisition function.</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">sls_n_steps_plateau_walk:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">Maximum number of steps on plateaus during the optimization of the acquisition function. Default: 10.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">transform_y:</th><td class="field-body">Transform all observed cost values via log-transformations or inverse scaling. The subfix “s” indicates that SMAC scales the y-values accordingly to apply the transformation. Default: NONE.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">use_ta_time:</th><td class="field-body">Instead of measuring SMAC’s wallclock time, only consider time reported by the target algorithm (ta).</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">abort_on_first_run_crash</dt>
+<dd class="field-odd"><p>If true, <em>SMAC</em> will abort if the first run of the target algorithm crashes. Default: True.</p>
+</dd>
+<dt class="field-even">acq_opt_challengers</dt>
+<dd class="field-even"><p>Number of challengers returned by acquisition function optimization. Also influences the number of randomly sampled configurations to optimized the acquisition function Default: 5000.</p>
+</dd>
+<dt class="field-odd">always_race_default</dt>
+<dd class="field-odd"><p>Race new incumbents always against default configuration.</p>
+</dd>
+<dt class="field-even">hydra_iterations</dt>
+<dd class="field-even"><p>number of hydra iterations. Only active if mode is set to Hydra Default: 3.</p>
+</dd>
+<dt class="field-odd">input_psmac_dirs</dt>
+<dd class="field-odd"><p>For parallel SMAC, multiple output-directories are used.</p>
+</dd>
+<dt class="field-even">intens_adaptive_capping_slackfactork</dt>
+<dd class="field-even"><p>Slack factor of adpative capping (factor * adpative cutoff). Only active if obj is runtime. If set to very large number it practically deactivates adaptive capping. Default: 1.2.</p>
+</dd>
+<dt class="field-odd">intens_min_chall</dt>
+<dd class="field-odd"><p>Minimal number of challengers to be considered in each intensification run (&gt; 1). Set to 1 and in combination with very small intensification-percentage. it will deactivate randomly sampled configurations (and hence, extrapolation of random forest will be an issue.) Default: 2.</p>
+</dd>
+<dt class="field-even">intensification_percentage</dt>
+<dd class="field-even"><p>The fraction of time to be used on intensification (versus choice of next Configurations). Default: 0.5.</p>
+</dd>
+<dt class="field-odd">maxR</dt>
+<dd class="field-odd"><p>Maximum number of calls per configuration. Default: 2000.</p>
+</dd>
+<dt class="field-even">minR</dt>
+<dd class="field-even"><p>Minimum number of calls per configuration. Default: 1.</p>
+</dd>
+<dt class="field-odd">output_dir</dt>
+<dd class="field-odd"><p>Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2019-03-29_16:46:14_521994.</p>
+</dd>
+<dt class="field-even">rand_prob</dt>
+<dd class="field-even"><p>probablity to run a random configuration instead of configuration optimized on the acquisition function Default: 0.5.</p>
+</dd>
+<dt class="field-odd">random_configuration_chooser</dt>
+<dd class="field-odd"><p>path to a python module containing a class`RandomConfigurationChooserImpl` implementingthe interface of <cite>RandomConfigurationChooser</cite></p>
+</dd>
+<dt class="field-even">rf_do_bootstrapping</dt>
+<dd class="field-even"><p>Use bootstraping in random forest. Default: True.</p>
+</dd>
+<dt class="field-odd">rf_max_depth</dt>
+<dd class="field-odd"><p>Maximum depth of each tree in the random forest. Default: 20.</p>
+</dd>
+<dt class="field-even">rf_min_samples_leaf</dt>
+<dd class="field-even"><p>Minimum required number of samples in each leaf of a tree in the random forest. Default: 3.</p>
+</dd>
+<dt class="field-odd">rf_min_samples_split</dt>
+<dd class="field-odd"><p>Minimum number of samples to split for building a tree in the random forest. Default: 3.</p>
+</dd>
+<dt class="field-even">rf_num_trees</dt>
+<dd class="field-even"><p>Number of trees in the random forest (&gt; 1). Default: 10.</p>
+</dd>
+<dt class="field-odd">rf_ratio_features</dt>
+<dd class="field-odd"><p>Ratio of sampled features in each split ([0.,1.]). Default: 0.8333333333333334.</p>
+</dd>
+<dt class="field-even">shared_model</dt>
+<dd class="field-even"><p>Whether to run SMAC in parallel mode.</p>
+</dd>
+<dt class="field-odd">sls_max_steps</dt>
+<dd class="field-odd"><p>Maximum number of local search steps in one iteration during the optimization of the acquisition function.</p>
+</dd>
+<dt class="field-even">sls_n_steps_plateau_walk</dt>
+<dd class="field-even"><p>Maximum number of steps on plateaus during the optimization of the acquisition function. Default: 10.</p>
+</dd>
+<dt class="field-odd">transform_y</dt>
+<dd class="field-odd"><p>Transform all observed cost values via log-transformations or inverse scaling. The subfix “s” indicates that SMAC scales the y-values accordingly to apply the transformation. Default: NONE.</p>
+</dd>
+<dt class="field-even">use_ta_time</dt>
+<dd class="field-even"><p>Instead of measuring SMAC’s wallclock time, only consider time reported by the target algorithm (ta).</p>
+</dd>
+</dl>
 </div>
 <div class="section" id="scenario">
 <span id="id2"></span><h2>Scenario<a class="headerlink" href="#scenario" title="Permalink to this headline">¶</a></h2>
@@ -416,50 +423,59 @@ scenario file (see <a class="reference external" href="quickstart.html#spear-exa
 The following assumes that the scenario is created via a scenario-file. If it is
 generated within custom code, you might not need <em>algo</em> or <em>paramfile</em>.</p>
 <p>Scenario Options:</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">algo_runs_timelimit:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">Maximum amount of CPU-time used for optimization. Default: inf.</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">always_race_default:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">Race new incumbents always against default configuration.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">cost_for_crash:</th><td class="field-body">Defines the cost-value for crashed runs on scenarios with quality as run-obj. Default: 2147483647.0.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">cutoff:</th><td class="field-body">Maximum runtime, after which the target algorithm is cancelled. <strong>Required if *run_obj* is runtime.</strong></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">deterministic:</th><td class="field-body">If true, SMAC assumes that the target function or algorithm is deterministic (the same static seed of 0 is always passed to the function/algorithm). If false, different random seeds are passed to the target function/algorithm.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">execdir:</th><td class="field-body">Specifies the path to the execution-directory. Default: ..</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">feature_fn:</th><td class="field-body">Specifies the file with the instance-features.</td>
-</tr>
-<tr class="field-even field"><th class="field-name" colspan="2">initial_incumbent:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body">DEFAULT is the default from the PCS. Default: DEFAULT.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">memory_limit:</th><td class="field-body">Maximum available memory the target algorithm can occupy before being cancelled in MB.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">overall_obj:</th><td class="field-body">PARX, where X is an integer defining the penalty imposed on timeouts (i.e. runtimes that exceed the <em>cutoff-time</em>). Default: par10.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">pcs_fn:</th><td class="field-body">Specifies the path to the PCS-file.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">run_obj:</th><td class="field-body">Defines what metric to optimize. When optimizing runtime, <em>cutoff_time</em> is required as well.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">ta:</th><td class="field-body">Specifies the target algorithm call that <em>SMAC</em> will optimize. Interpreted as a bash-command.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">ta_run_limit:</th><td class="field-body">Maximum number of algorithm-calls during optimization. Default: inf.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">test_inst_fn:</th><td class="field-body">Specifies the file with the test-instances.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">train_inst_fn:</th><td class="field-body">Specifies the file with the training-instances.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">wallclock_limit:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body">Maximum amount of wallclock-time used for optimization. Default: inf.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">algo_runs_timelimit</dt>
+<dd class="field-odd"><p>Maximum amount of CPU-time used for optimization. Default: inf.</p>
+</dd>
+<dt class="field-even">always_race_default</dt>
+<dd class="field-even"><p>Race new incumbents always against default configuration.</p>
+</dd>
+<dt class="field-odd">cost_for_crash</dt>
+<dd class="field-odd"><p>Defines the cost-value for crashed runs on scenarios with quality as run-obj. Default: 2147483647.0.</p>
+</dd>
+<dt class="field-even">cutoff</dt>
+<dd class="field-even"><p>Maximum runtime, after which the target algorithm is cancelled. <strong>Required if *run_obj* is runtime.</strong></p>
+</dd>
+<dt class="field-odd">deterministic</dt>
+<dd class="field-odd"><p>If true, SMAC assumes that the target function or algorithm is deterministic (the same static seed of 0 is always passed to the function/algorithm). If false, different random seeds are passed to the target function/algorithm.</p>
+</dd>
+<dt class="field-even">execdir</dt>
+<dd class="field-even"><p>Specifies the path to the execution-directory. Default: ..</p>
+</dd>
+<dt class="field-odd">feature_fn</dt>
+<dd class="field-odd"><p>Specifies the file with the instance-features.</p>
+</dd>
+<dt class="field-even">initial_incumbent</dt>
+<dd class="field-even"><p>DEFAULT is the default from the PCS. Default: DEFAULT.</p>
+</dd>
+<dt class="field-odd">memory_limit</dt>
+<dd class="field-odd"><p>Maximum available memory the target algorithm can occupy before being cancelled in MB.</p>
+</dd>
+<dt class="field-even">overall_obj</dt>
+<dd class="field-even"><p>PARX, where X is an integer defining the penalty imposed on timeouts (i.e. runtimes that exceed the <em>cutoff-time</em>). Default: par10.</p>
+</dd>
+<dt class="field-odd">pcs_fn</dt>
+<dd class="field-odd"><p>Specifies the path to the PCS-file.</p>
+</dd>
+<dt class="field-even">run_obj</dt>
+<dd class="field-even"><p>Defines what metric to optimize. When optimizing runtime, <em>cutoff_time</em> is required as well.</p>
+</dd>
+<dt class="field-odd">ta</dt>
+<dd class="field-odd"><p>Specifies the target algorithm call that <em>SMAC</em> will optimize. Interpreted as a bash-command.</p>
+</dd>
+<dt class="field-even">ta_run_limit</dt>
+<dd class="field-even"><p>Maximum number of algorithm-calls during optimization. Default: inf.</p>
+</dd>
+<dt class="field-odd">test_inst_fn</dt>
+<dd class="field-odd"><p>Specifies the file with the test-instances.</p>
+</dd>
+<dt class="field-even">train_inst_fn</dt>
+<dd class="field-even"><p>Specifies the file with the training-instances.</p>
+</dd>
+<dt class="field-odd">wallclock_limit</dt>
+<dd class="field-odd"><p>Maximum amount of wallclock-time used for optimization. Default: inf.</p>
+</dd>
+</dl>
 <p>These options are also available as command line switches: Prepend two “-” and replace each “_” by “-“,
 e.g. “wallclock_limit” becomes “–wallclock-limit”. The options on the command line overwrite the values
 given in the scenario file.</p>
@@ -509,30 +525,30 @@ training- and test-sets, separate files are expected.</p>
 <p>Feature-files are files following the comma-separated-value-format, as can also be
 seen in the <a class="reference external" href="quickstart.html#spear-qcp">SPEAR-example</a>:</p>
 <blockquote>
-<div><table border="1" class="docutils">
+<div><table class="docutils align-center">
 <colgroup>
-<col width="31%" />
-<col width="31%" />
-<col width="31%" />
-<col width="8%" />
+<col style="width: 31%" />
+<col style="width: 31%" />
+<col style="width: 31%" />
+<col style="width: 8%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">instance</th>
-<th class="head">name of feature 1</th>
-<th class="head">name of feature 2</th>
-<th class="head">…</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>instance</p></th>
+<th class="head"><p>name of feature 1</p></th>
+<th class="head"><p>name of feature 2</p></th>
+<th class="head"><p>…</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>name of instance 1</td>
-<td>value of feature 1</td>
-<td>value of feature 2</td>
-<td>…</td>
+<tbody>
+<tr class="row-even"><td><p>name of instance 1</p></td>
+<td><p>value of feature 1</p></td>
+<td><p>value of feature 2</p></td>
+<td><p>…</p></td>
 </tr>
-<tr class="row-odd"><td>…</td>
-<td>…</td>
-<td>…</td>
-<td>…</td>
+<tr class="row-odd"><td><p>…</p></td>
+<td><p>…</p></td>
+<td><p>…</p></td>
+<td><p>…</p></td>
 </tr>
 </tbody>
 </table>

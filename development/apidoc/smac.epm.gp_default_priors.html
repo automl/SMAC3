@@ -287,21 +287,20 @@ In: NIPS 2017 Bayesian Optimization Workshop</p>
 <code class="descname">gradient</code><span class="sig-paren">(</span><em>theta: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_default_priors.html#DefaultPrior.gradient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_default_priors.DefaultPrior.gradient" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the gradient of the prior with
 respect to theta.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – Hyperparameter configuration in log space</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The gradient of the prior at theta.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><ol class="upperalpha simple" start="4">
-<li>np.array</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – Hyperparameter configuration in log space</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The gradient of the prior at theta.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ol class="upperalpha simple" start="4">
+<li><p>np.array</p></li>
 </ol>
-</td>
-</tr>
-</tbody>
-</table>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -309,36 +308,34 @@ respect to theta.</p>
 <code class="descname">lnprob</code><span class="sig-paren">(</span><em>theta: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_default_priors.html#DefaultPrior.lnprob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_default_priors.DefaultPrior.lnprob" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the log probability of theta. Note: theta should
 be on a log scale.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – A hyperparameter configuration in log space.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The log probability of theta</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – A hyperparameter configuration in log space.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The log probability of theta</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.epm.gp_default_priors.DefaultPrior.sample_from_prior">
 <code class="descname">sample_from_prior</code><span class="sig-paren">(</span><em>n_samples: int</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_default_priors.html#DefaultPrior.sample_from_prior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_default_priors.DefaultPrior.sample_from_prior" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns N samples from the prior.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n_samples</strong> (<em>int</em>) – The number of samples that will be drawn.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The samples from the prior.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(N, D) np.array</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_samples</strong> (<em>int</em>) – The number of samples that will be drawn.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The samples from the prior.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(N, D) np.array</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

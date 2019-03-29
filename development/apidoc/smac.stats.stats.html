@@ -301,18 +301,14 @@ Written to output-directory to be restored</p>
 <dd></dd></dl>
 
 <p>Constructor</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – </li>
-<li><strong>output_dir</strong> (<em>str</em>) – </li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
+<li><p><strong>output_dir</strong> (<em>str</em>) – </p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.stats.stats.Stats.get_remaing_time_budget">
 <code class="descname">get_remaing_time_budget</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.get_remaing_time_budget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.get_remaing_time_budget" title="Permalink to this definition">¶</a></dt>
@@ -337,16 +333,14 @@ runs</p>
 <dt id="smac.stats.stats.Stats.get_used_wallclock_time">
 <code class="descname">get_used_wallclock_time</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.get_used_wallclock_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.get_used_wallclock_time" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns used wallclock time</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>wallclock_time</strong> – used wallclock time in sec</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>wallclock_time</strong> – used wallclock time in sec</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -354,45 +348,37 @@ runs</p>
 <code class="descname">is_budget_exhausted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.is_budget_exhausted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.is_budget_exhausted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether the configuration budget for time budget, ta_budget
 and ta_runs is empty</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>exhaustedness</strong> – true if one of the budgets is exhausted</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">boolean</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>exhaustedness</strong> – true if one of the budgets is exhausted</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.stats.stats.Stats.load">
 <code class="descname">load</code><span class="sig-paren">(</span><em>fn=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load all attributes from dictionary in file into stats-object.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fn</strong> (<em>string</em><em> or </em><em>None</em>) – Path to file to load stats from. If no path is given, the path given
-in the current scenario is used.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fn</strong> (<em>string</em><em> or </em><em>None</em>) – Path to file to load stats from. If no path is given, the path given
+in the current scenario is used.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.stats.stats.Stats.print_stats">
 <code class="descname">print_stats</code><span class="sig-paren">(</span><em>debug_out: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.print_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.print_stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints all statistics</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>debug</strong> (<em>bool</em>) – use logging.debug instead of logging.info if set to true</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>debug</strong> (<em>bool</em>) – use logging.debug instead of logging.info if set to true</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -413,14 +399,11 @@ Substracting wallclock time used so we can continue loaded Stats.</p>
 <code class="descname">update_average_configs_per_intensify</code><span class="sig-paren">(</span><em>n_configs: int</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.update_average_configs_per_intensify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.update_average_configs_per_intensify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates statistics how many configurations on average per used in
 intensify</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n_configs</strong> (<em>int</em>) – number of configurations in current intensify</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_configs</strong> (<em>int</em>) – number of configurations in current intensify</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

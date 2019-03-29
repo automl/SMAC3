@@ -284,34 +284,30 @@ of GP hyperparameter.</p>
 <p>Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
 RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
 In: NIPS 2017 Bayesian Optimization Workshop</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</p>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.epm.gp_base_prior.BasePrior.gradient">
 <code class="descname">gradient</code><span class="sig-paren">(</span><em>theta: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#BasePrior.gradient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.BasePrior.gradient" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the gradient of the prior with
 respect to theta.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – Hyperparameter configuration in log space</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The gradient of the prior at theta.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><ol class="upperalpha simple" start="4">
-<li>np.array</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – Hyperparameter configuration in log space</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The gradient of the prior at theta.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ol class="upperalpha simple" start="4">
+<li><p>np.array</p></li>
 </ol>
-</td>
-</tr>
-</tbody>
-</table>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -319,36 +315,34 @@ respect to theta.</p>
 <code class="descname">lnprob</code><span class="sig-paren">(</span><em>theta: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#BasePrior.lnprob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.BasePrior.lnprob" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the log probability of theta. Note: theta should
 be on a log scale.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – A hyperparameter configuration in log space.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The log probability of theta</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – A hyperparameter configuration in log space.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The log probability of theta</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.epm.gp_base_prior.BasePrior.sample_from_prior">
 <code class="descname">sample_from_prior</code><span class="sig-paren">(</span><em>n_samples: int</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#BasePrior.sample_from_prior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.BasePrior.sample_from_prior" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns N samples from the prior.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n_samples</strong> (<em>int</em>) – The number of samples that will be drawn.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The samples from the prior.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(N, D) np.array</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_samples</strong> (<em>int</em>) – The number of samples that will be drawn.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The samples from the prior.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(N, D) np.array</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -362,39 +356,34 @@ be on a log scale.</p>
 <p>Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
 RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
 In: NIPS 2017 Bayesian Optimization Workshop</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>scale</strong> (<em>float</em>) – Scaling parameter. See below how it is influenced
-the distribution.</li>
-<li><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scale</strong> (<em>float</em>) – Scaling parameter. See below how it is influenced
+the distribution.</p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.epm.gp_base_prior.HorseshoePrior.gradient">
 <code class="descname">gradient</code><span class="sig-paren">(</span><em>theta: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#HorseshoePrior.gradient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.HorseshoePrior.gradient" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the gradient of the prior with
 respect to theta.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – Hyperparameter configuration in log space</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The gradient of the prior at theta.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><ol class="upperalpha simple" start="4">
-<li>np.array</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – Hyperparameter configuration in log space</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The gradient of the prior at theta.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ol class="upperalpha simple" start="4">
+<li><p>np.array</p></li>
 </ol>
-</td>
-</tr>
-</tbody>
-</table>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -402,36 +391,34 @@ respect to theta.</p>
 <code class="descname">lnprob</code><span class="sig-paren">(</span><em>theta: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#HorseshoePrior.lnprob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.HorseshoePrior.lnprob" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the log probability of theta. Note: theta should
 be on a log scale.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – A hyperparameter configuration in log space.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The log probability of theta</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – A hyperparameter configuration in log space.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The log probability of theta</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.epm.gp_base_prior.HorseshoePrior.sample_from_prior">
 <code class="descname">sample_from_prior</code><span class="sig-paren">(</span><em>n_samples: int</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#HorseshoePrior.sample_from_prior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.HorseshoePrior.sample_from_prior" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns N samples from the prior.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n_samples</strong> (<em>int</em>) – The number of samples that will be drawn.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The samples from the prior.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(N, D) np.array</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_samples</strong> (<em>int</em>) – The number of samples that will be drawn.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The samples from the prior.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(N, D) np.array</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -445,40 +432,35 @@ be on a log scale.</p>
 <p>Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
 RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
 In: NIPS 2017 Bayesian Optimization Workshop</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>sigma</strong> (<em>float</em>) – Specifies the standard deviation of the normal
-distribution.</li>
-<li><strong>mean</strong> (<em>float</em>) – Specifies the mean of the normal distribution</li>
-<li><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sigma</strong> (<em>float</em>) – Specifies the standard deviation of the normal
+distribution.</p></li>
+<li><p><strong>mean</strong> (<em>float</em>) – Specifies the mean of the normal distribution</p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.epm.gp_base_prior.LognormalPrior.gradient">
 <code class="descname">gradient</code><span class="sig-paren">(</span><em>theta: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#LognormalPrior.gradient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.LognormalPrior.gradient" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the gradient of the prior with
 respect to theta.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – Hyperparameter configuration in log space</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The gradient of the prior at theta.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><ol class="upperalpha simple" start="4">
-<li>np.array</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – Hyperparameter configuration in log space</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The gradient of the prior at theta.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ol class="upperalpha simple" start="4">
+<li><p>np.array</p></li>
 </ol>
-</td>
-</tr>
-</tbody>
-</table>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -486,36 +468,34 @@ respect to theta.</p>
 <code class="descname">lnprob</code><span class="sig-paren">(</span><em>theta: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#LognormalPrior.lnprob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.LognormalPrior.lnprob" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the log probability of theta. Note: theta should
 be on a log scale.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – A hyperparameter configuration in log space.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The log probability of theta</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – A hyperparameter configuration in log space.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The log probability of theta</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.epm.gp_base_prior.LognormalPrior.sample_from_prior">
 <code class="descname">sample_from_prior</code><span class="sig-paren">(</span><em>n_samples: int</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#LognormalPrior.sample_from_prior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.LognormalPrior.sample_from_prior" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns N samples from the prior.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n_samples</strong> (<em>int</em>) – The number of samples that will be drawn.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The samples from the prior.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(N, D) np.array</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_samples</strong> (<em>int</em>) – The number of samples that will be drawn.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The samples from the prior.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(N, D) np.array</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -529,40 +509,35 @@ be on a log scale.</p>
 <p>Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
 RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
 In: NIPS 2017 Bayesian Optimization Workshop</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>sigma</strong> (<em>float</em>) – Specifies the standard deviation of the normal
-distribution.</li>
-<li><strong>mean</strong> (<em>float</em>) – Specifies the mean of the normal distribution</li>
-<li><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sigma</strong> (<em>float</em>) – Specifies the standard deviation of the normal
+distribution.</p></li>
+<li><p><strong>mean</strong> (<em>float</em>) – Specifies the mean of the normal distribution</p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.epm.gp_base_prior.NormalPrior.gradient">
 <code class="descname">gradient</code><span class="sig-paren">(</span><em>theta: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#NormalPrior.gradient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.NormalPrior.gradient" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the gradient of the prior with
 respect to theta.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – Hyperparameter configuration in log space</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The gradient of the prior at theta.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><ol class="upperalpha simple" start="4">
-<li>np.array</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – Hyperparameter configuration in log space</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The gradient of the prior at theta.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ol class="upperalpha simple" start="4">
+<li><p>np.array</p></li>
 </ol>
-</td>
-</tr>
-</tbody>
-</table>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -570,36 +545,34 @@ respect to theta.</p>
 <code class="descname">lnprob</code><span class="sig-paren">(</span><em>theta: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#NormalPrior.lnprob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.NormalPrior.lnprob" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the pdf of theta. Note: theta should
 be on a log scale.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – A hyperparameter configuration in log space.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The log probability of theta</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – A hyperparameter configuration in log space.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The log probability of theta</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.epm.gp_base_prior.NormalPrior.sample_from_prior">
 <code class="descname">sample_from_prior</code><span class="sig-paren">(</span><em>n_samples: int</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#NormalPrior.sample_from_prior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.NormalPrior.sample_from_prior" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns N samples from the prior.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n_samples</strong> (<em>int</em>) – The number of samples that will be drawn.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The samples from the prior.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(N, D) np.array</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_samples</strong> (<em>int</em>) – The number of samples that will be drawn.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The samples from the prior.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(N, D) np.array</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -613,39 +586,34 @@ be on a log scale.</p>
 <p>Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
 RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
 In: NIPS 2017 Bayesian Optimization Workshop</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>l_bound</strong> (<em>float</em>) – Lower bound of the prior. Note the log scale.</li>
-<li><strong>u_bound</strong> (<em>float</em>) – Upper bound of the prior. Note the log scale.</li>
-<li><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>l_bound</strong> (<em>float</em>) – Lower bound of the prior. Note the log scale.</p></li>
+<li><p><strong>u_bound</strong> (<em>float</em>) – Upper bound of the prior. Note the log scale.</p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.epm.gp_base_prior.TophatPrior.gradient">
 <code class="descname">gradient</code><span class="sig-paren">(</span><em>theta: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#TophatPrior.gradient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.TophatPrior.gradient" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the gradient of the prior with
 respect to theta.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – Hyperparameter configuration in log space</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The gradient of the prior at theta.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><ol class="upperalpha simple" start="4">
-<li>np.array</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – Hyperparameter configuration in log space</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The gradient of the prior at theta.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ol class="upperalpha simple" start="4">
+<li><p>np.array</p></li>
 </ol>
-</td>
-</tr>
-</tbody>
-</table>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -653,36 +621,34 @@ respect to theta.</p>
 <code class="descname">lnprob</code><span class="sig-paren">(</span><em>theta: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#TophatPrior.lnprob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.TophatPrior.lnprob" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the log probability of theta. Note: theta should
 be on a log scale.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – A hyperparameter configuration in log space.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The log probability of theta</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – A hyperparameter configuration in log space.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The log probability of theta</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.epm.gp_base_prior.TophatPrior.sample_from_prior">
 <code class="descname">sample_from_prior</code><span class="sig-paren">(</span><em>n_samples: int</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#TophatPrior.sample_from_prior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.TophatPrior.sample_from_prior" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns N samples from the prior.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n_samples</strong> (<em>int</em>) – The number of samples that will be drawn.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The samples from the prior.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(N, D) np.array</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_samples</strong> (<em>int</em>) – The number of samples that will be drawn.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The samples from the prior.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(N, D) np.array</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

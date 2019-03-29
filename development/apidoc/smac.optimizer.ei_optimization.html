@@ -281,43 +281,35 @@
 <p>Abstract class for acquisition maximization.</p>
 <p>In order to use this class it has to be subclassed and the method
 <code class="docutils literal notranslate"><span class="pre">_maximize</span></code> must be implemented.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>acquisition_function</strong> (<a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </li>
-<li><strong>config_space</strong> (<em>ConfigurationSpace</em>) – </li>
-<li><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </p></li>
+<li><p><strong>config_space</strong> (<em>ConfigurationSpace</em>) – </p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer.maximize">
 <code class="descname">maximize</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>stats: smac.stats.stats.Stats</em>, <em>num_points: int</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; Iterable[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#AcquisitionFunctionMaximizer.maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer.maximize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maximize acquisition function using <code class="docutils literal notranslate"><span class="pre">_maximize</span></code>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</li>
-<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</li>
-<li><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</li>
-<li><strong>**kwargs</strong> – </li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</p></li>
+<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</p></li>
+<li><p><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</p></li>
+<li><p><strong>**kwargs</strong> – </p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">An iterable consisting of <code class="xref py py-class docutils literal notranslate"><span class="pre">smac.configspace.Configuration</span></code>.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">iterable</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An iterable consisting of <code class="xref py py-class docutils literal notranslate"><span class="pre">smac.configspace.Configuration</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>iterable</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -331,18 +323,14 @@
 iteration. Reduces time necessary to generate a list of new challengers
 as one does not need to sample several hundreds of random configurations
 in each iteration which are never looked at.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>challengers</strong> (<em>list</em>) – List of challengers (without interleaved random configurations)</li>
-<li><strong>configuration_space</strong> (<em>ConfigurationSpace</em>) – ConfigurationSpace from which to sample new random configurations.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>challengers</strong> (<em>list</em>) – List of challengers (without interleaved random configurations)</p></li>
+<li><p><strong>configuration_space</strong> (<em>ConfigurationSpace</em>) – ConfigurationSpace from which to sample new random configurations.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="class">
@@ -350,43 +338,35 @@ in each iteration which are never looked at.</p>
 <em class="property">class </em><code class="descclassname">smac.optimizer.ei_optimization.</code><code class="descname">DiffOpt</code><span class="sig-paren">(</span><em>acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>rng: Union[bool</em>, <em>mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#DiffOpt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.DiffOpt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</span></code></a></p>
 <p>Get candidate solutions via DifferentialEvolutionSolvers.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>acquisition_function</strong> (<a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </li>
-<li><strong>config_space</strong> (<em>ConfigurationSpace</em>) – </li>
-<li><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </p></li>
+<li><p><strong>config_space</strong> (<em>ConfigurationSpace</em>) – </p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.optimizer.ei_optimization.DiffOpt.maximize">
 <code class="descname">maximize</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>stats: smac.stats.stats.Stats</em>, <em>num_points: int</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; Iterable[ConfigSpace.configuration_space.Configuration]<a class="headerlink" href="#smac.optimizer.ei_optimization.DiffOpt.maximize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maximize acquisition function using <code class="docutils literal notranslate"><span class="pre">_maximize</span></code>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</li>
-<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</li>
-<li><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</li>
-<li><strong>**kwargs</strong> – </li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</p></li>
+<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</p></li>
+<li><p><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</p></li>
+<li><p><strong>**kwargs</strong> – </p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">An iterable consisting of <code class="xref py py-class docutils literal notranslate"><span class="pre">smac.configspace.Configuration</span></code>.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">iterable</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An iterable consisting of <code class="xref py py-class docutils literal notranslate"><span class="pre">smac.configspace.Configuration</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>iterable</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -400,51 +380,43 @@ in each iteration which are never looked at.</p>
 according, to the acquisition function, uses the acquisition function to
 sort randomly sampled configurations and interleaves unsorted, randomly
 sampled configurations in between.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>acquisition_function</strong> (<a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </li>
-<li><strong>config_space</strong> (<em>ConfigurationSpace</em>) – </li>
-<li><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </li>
-<li><strong>max_steps</strong> (<em>int</em>) – [LocalSearch] Maximum number of steps that the local search will perform</li>
-<li><strong>n_steps_plateau_walk</strong> (<em>int</em>) – [LocalSearch] number of steps during a plateau walk before local search terminates</li>
-<li><strong>n_sls_iterations</strong> (<em>int</em>) – [Local Search] number of local search iterations</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </p></li>
+<li><p><strong>config_space</strong> (<em>ConfigurationSpace</em>) – </p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </p></li>
+<li><p><strong>max_steps</strong> (<em>int</em>) – [LocalSearch] Maximum number of steps that the local search will perform</p></li>
+<li><p><strong>n_steps_plateau_walk</strong> (<em>int</em>) – [LocalSearch] number of steps during a plateau walk before local search terminates</p></li>
+<li><p><strong>n_sls_iterations</strong> (<em>int</em>) – [Local Search] number of local search iterations</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch.maximize">
 <code class="descname">maximize</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>stats: smac.stats.stats.Stats</em>, <em>num_points: int</em>, <em>random_configuration_chooser</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; Iterable[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#InterleavedLocalAndRandomSearch.maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch.maximize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maximize acquisition function using <code class="docutils literal notranslate"><span class="pre">_maximize</span></code>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</li>
-<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</li>
-<li><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</li>
-<li><strong>random_configuration_chooser</strong> (<a class="reference internal" href="smac.optimizer.random_configuration_chooser.html#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser"><em>RandomConfigurationChooser</em></a>) – part of the returned ChallengerList such
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</p></li>
+<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</p></li>
+<li><p><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</p></li>
+<li><p><strong>random_configuration_chooser</strong> (<a class="reference internal" href="smac.optimizer.random_configuration_chooser.html#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser"><em>RandomConfigurationChooser</em></a>) – part of the returned ChallengerList such
 that we can interleave random configurations
 by a scheme defined by the random_configuration_chooser;
 random_configuration_chooser.next_smbo_iteration()
-is called at the end of this function</li>
-<li><strong>**kwargs</strong> – passed to acquisition function</li>
+is called at the end of this function</p></li>
+<li><p><strong>**kwargs</strong> – passed to acquisition function</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">to be concrete: ~smac.ei_optimization.ChallengerList</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Iterable[Configuration]</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>to be concrete: ~smac.ei_optimization.ChallengerList</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Iterable[Configuration]</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -454,49 +426,41 @@ is called at the end of this function</li>
 <em class="property">class </em><code class="descclassname">smac.optimizer.ei_optimization.</code><code class="descname">LocalSearch</code><span class="sig-paren">(</span><em>acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>rng: Union[bool</em>, <em>mtrand.RandomState] = None</em>, <em>max_steps: Optional[int] = None</em>, <em>n_steps_plateau_walk: int = 10</em>, <em>vectorization_min_obtain: int = 2</em>, <em>vectorization_max_obtain: int = 64</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#LocalSearch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.LocalSearch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</span></code></a></p>
 <p>Implementation of SMAC’s local search.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>acquisition_function</strong> (<a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </li>
-<li><strong>config_space</strong> (<em>ConfigurationSpace</em>) – </li>
-<li><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </li>
-<li><strong>max_steps</strong> (<em>int</em>) – Maximum number of iterations that the local search will perform</li>
-<li><strong>n_steps_plateau_walk</strong> (<em>int</em>) – number of steps during a plateau walk before local search terminates</li>
-<li><strong>vectorization_min_obtain</strong> (<em>int</em>) – Minimal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
-reduce the overhead of SMAC</li>
-<li><strong>vectorization_max_obtain</strong> (<em>int</em>) – Maximal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
-reduce the overhead of SMAC</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </p></li>
+<li><p><strong>config_space</strong> (<em>ConfigurationSpace</em>) – </p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </p></li>
+<li><p><strong>max_steps</strong> (<em>int</em>) – Maximum number of iterations that the local search will perform</p></li>
+<li><p><strong>n_steps_plateau_walk</strong> (<em>int</em>) – number of steps during a plateau walk before local search terminates</p></li>
+<li><p><strong>vectorization_min_obtain</strong> (<em>int</em>) – Minimal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
+reduce the overhead of SMAC</p></li>
+<li><p><strong>vectorization_max_obtain</strong> (<em>int</em>) – Maximal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
+reduce the overhead of SMAC</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.optimizer.ei_optimization.LocalSearch.maximize">
 <code class="descname">maximize</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>stats: smac.stats.stats.Stats</em>, <em>num_points: int</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; Iterable[ConfigSpace.configuration_space.Configuration]<a class="headerlink" href="#smac.optimizer.ei_optimization.LocalSearch.maximize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maximize acquisition function using <code class="docutils literal notranslate"><span class="pre">_maximize</span></code>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</li>
-<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</li>
-<li><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</li>
-<li><strong>**kwargs</strong> – </li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</p></li>
+<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</p></li>
+<li><p><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</p></li>
+<li><p><strong>**kwargs</strong> – </p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">An iterable consisting of <code class="xref py py-class docutils literal notranslate"><span class="pre">smac.configspace.Configuration</span></code>.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">iterable</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An iterable consisting of <code class="xref py py-class docutils literal notranslate"><span class="pre">smac.configspace.Configuration</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>iterable</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -506,43 +470,35 @@ reduce the overhead of SMAC</li>
 <em class="property">class </em><code class="descclassname">smac.optimizer.ei_optimization.</code><code class="descname">RandomSearch</code><span class="sig-paren">(</span><em>acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>rng: Union[bool</em>, <em>mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#RandomSearch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.RandomSearch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</span></code></a></p>
 <p>Get candidate solutions via random sampling of configurations.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>acquisition_function</strong> (<a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </li>
-<li><strong>config_space</strong> (<em>ConfigurationSpace</em>) – </li>
-<li><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </p></li>
+<li><p><strong>config_space</strong> (<em>ConfigurationSpace</em>) – </p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.optimizer.ei_optimization.RandomSearch.maximize">
 <code class="descname">maximize</code><span class="sig-paren">(</span><em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>stats: smac.stats.stats.Stats</em>, <em>num_points: int</em>, <em>**kwargs</em><span class="sig-paren">)</span> &#x2192; Iterable[ConfigSpace.configuration_space.Configuration]<a class="headerlink" href="#smac.optimizer.ei_optimization.RandomSearch.maximize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maximize acquisition function using <code class="docutils literal notranslate"><span class="pre">_maximize</span></code>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</li>
-<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</li>
-<li><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</li>
-<li><strong>**kwargs</strong> – </li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</p></li>
+<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</p></li>
+<li><p><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</p></li>
+<li><p><strong>**kwargs</strong> – </p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">An iterable consisting of <code class="xref py py-class docutils literal notranslate"><span class="pre">smac.configspace.Configuration</span></code>.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">iterable</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An iterable consisting of <code class="xref py py-class docutils literal notranslate"><span class="pre">smac.configspace.Configuration</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>iterable</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -556,30 +512,26 @@ Frank Hutter, Holger H. Hoos and Kevin Leyton-Brown
 Sequential Model-Based Optimization for General Algorithm Configuration
 In Proceedings of the conference on Learning and Intelligent
 Optimization(LION 5)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>configuration</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code>) – for this Configuration object <code class="docutils literal notranslate"><span class="pre">num_neighbors</span></code> neighbors are computed</li>
-<li><strong>seed</strong> (<em>int</em>) – Sets the random seed to a fixed value</li>
-<li><strong>num_neighbors</strong> (<em>(</em><em>int</em><em>, </em><em>optional</em><em>)</em>) – number of configurations, which are sampled from the neighbourhood
-of the input configuration</li>
-<li><strong>stdev</strong> (<em>(</em><em>float</em><em>, </em><em>optional</em><em>)</em>) – The standard deviation is used to determine the neigbours of
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>configuration</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code>) – for this Configuration object <code class="docutils literal notranslate"><span class="pre">num_neighbors</span></code> neighbors are computed</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – Sets the random seed to a fixed value</p></li>
+<li><p><strong>num_neighbors</strong> (<em>(</em><em>int</em><em>, </em><em>optional</em><em>)</em>) – number of configurations, which are sampled from the neighbourhood
+of the input configuration</p></li>
+<li><p><strong>stdev</strong> (<em>(</em><em>float</em><em>, </em><em>optional</em><em>)</em>) – The standard deviation is used to determine the neigbours of
 <code class="xref py py-class docutils literal notranslate"><span class="pre">UniformFloatHyperparameter</span></code> and
-<code class="xref py py-class docutils literal notranslate"><span class="pre">UniformIntegerHyperparameter</span></code>.</li>
+<code class="xref py py-class docutils literal notranslate"><span class="pre">UniformIntegerHyperparameter</span></code>.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">It contains configurations, with values being situated around
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>It contains configurations, with values being situated around
 the given configuration.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Generator</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Generator</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

@@ -285,14 +285,11 @@
 <dd><p>List of configurations to be evaluated
 Don’t pass configs to the constructor;
 otherwise factorial design is overwritten</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">typing.List[Configuration]</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>typing.List[Configuration]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -311,45 +308,39 @@ otherwise factorial design is overwritten</p>
 <dd></dd></dl>
 
 <p>Constructor</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>tae_runner</strong> (<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><em>ExecuteTARun</em></a>) – Target algorithm execution object.</li>
-<li><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – Scenario with all meta information (including configuration space).</li>
-<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – Statistics of experiments; needed in case initial design already
-exhausts the budget.</li>
-<li><strong>traj_logger</strong> (<a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger"><em>TrajLogger</em></a>) – Trajectory logging to add new incumbents found by the initial
-design.</li>
-<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – Runhistory with all target algorithm runs.</li>
-<li><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</li>
-<li><strong>intensifier</strong> (<a class="reference internal" href="smac.intensification.intensification.html#smac.intensification.intensification.Intensifier" title="smac.intensification.intensification.Intensifier"><em>Intensifier</em></a>) – Intensification object to issue a racing to decide the current
-incumbent.</li>
-<li><strong>aggregate_func</strong> (<em>typing:Callable</em>) – Function to aggregate performance of a configuration across
-instances.</li>
-<li><strong>configs</strong> (<em>typing.Optional</em><em>[</em><em>typing.List</em><em>[</em><em>Configuration</em><em>]</em><em>]</em>) – List of initial configurations.</li>
-<li><strong>n_configs_x_params</strong> (<em>int</em>) – how many configurations will be used at most in the initial design (X*D)</li>
-<li><strong>max_config_fracs</strong> (<em>float</em>) – use at most X*budget in the initial design. Not active if a time limit is given.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tae_runner</strong> (<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><em>ExecuteTARun</em></a>) – Target algorithm execution object.</p></li>
+<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – Scenario with all meta information (including configuration space).</p></li>
+<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – Statistics of experiments; needed in case initial design already
+exhausts the budget.</p></li>
+<li><p><strong>traj_logger</strong> (<a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger"><em>TrajLogger</em></a>) – Trajectory logging to add new incumbents found by the initial
+design.</p></li>
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – Runhistory with all target algorithm runs.</p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</p></li>
+<li><p><strong>intensifier</strong> (<a class="reference internal" href="smac.intensification.intensification.html#smac.intensification.intensification.Intensifier" title="smac.intensification.intensification.Intensifier"><em>Intensifier</em></a>) – Intensification object to issue a racing to decide the current
+incumbent.</p></li>
+<li><p><strong>aggregate_func</strong> (<em>typing:Callable</em>) – Function to aggregate performance of a configuration across
+instances.</p></li>
+<li><p><strong>configs</strong> (<em>typing.Optional</em><em>[</em><em>typing.List</em><em>[</em><em>Configuration</em><em>]</em><em>]</em>) – List of initial configurations.</p></li>
+<li><p><strong>n_configs_x_params</strong> (<em>int</em>) – how many configurations will be used at most in the initial design (X*D)</p></li>
+<li><p><strong>max_config_fracs</strong> (<em>float</em>) – use at most X*budget in the initial design. Not active if a time limit is given.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.initial_design.sobol_design.SobolDesign.run">
 <code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.Configuration<a class="headerlink" href="#smac.initial_design.sobol_design.SobolDesign.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the initial design.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>incumbent</strong> – Initial incumbent configuration</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Configuration</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>incumbent</strong> – Initial incumbent configuration</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Configuration</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">

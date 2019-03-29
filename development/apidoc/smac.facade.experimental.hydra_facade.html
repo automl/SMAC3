@@ -290,94 +290,76 @@
 <dt id="smac.facade.experimental.hydra_facade.Hydra.stats">
 <code class="descname">stats</code><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>loggs information about used resources</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">Stats</a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">Stats</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="smac.facade.experimental.hydra_facade.Hydra.solver">
 <code class="descname">solver</code><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.solver" title="Permalink to this definition">¶</a></dt>
 <dd><p>handles the actual algorithm calls</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO" title="smac.optimizer.smbo.SMBO">SMBO</a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO" title="smac.optimizer.smbo.SMBO">SMBO</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="smac.facade.experimental.hydra_facade.Hydra.rh">
 <code class="descname">rh</code><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.rh" title="Permalink to this definition">¶</a></dt>
 <dd><p>List with information about previous runs</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">RunHistory</a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">RunHistory</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="smac.facade.experimental.hydra_facade.Hydra.portfolio">
 <code class="descname">portfolio</code><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.portfolio" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all incumbents</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
 <p>Constructor</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – Scenario object</li>
-<li><strong>n_iterations</strong> (<em>int</em><em>,</em>) – number of Hydra iterations</li>
-<li><strong>val_set</strong> (<em>str</em>) – Set to validate incumbent(s) on. [train, valX].
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – Scenario object</p></li>
+<li><p><strong>n_iterations</strong> (<em>int</em><em>,</em>) – number of Hydra iterations</p></li>
+<li><p><strong>val_set</strong> (<em>str</em>) – Set to validate incumbent(s) on. [train, valX].
 train =&gt; whole training set,
-valX =&gt; train_set * 100/X where X in (0, 100)</li>
-<li><strong>incs_per_round</strong> (<em>int</em>) – Number of incumbents to keep per round</li>
-<li><strong>n_optimizers</strong> (<em>int</em>) – Number of optimizers to run in parallel per round</li>
-<li><strong>rng</strong> (<em>int/np.random.RandomState</em>) – The randomState/seed to pass to each smac run</li>
-<li><strong>run_id</strong> (<em>int</em>) – run_id for this hydra run</li>
-<li><strong>tae</strong> (<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><em>ExecuteTARun</em></a>) – Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)</li>
-<li><strong>tae_kwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – arguments passed to constructor of ‘~tae’</li>
+valX =&gt; train_set * 100/X where X in (0, 100)</p></li>
+<li><p><strong>incs_per_round</strong> (<em>int</em>) – Number of incumbents to keep per round</p></li>
+<li><p><strong>n_optimizers</strong> (<em>int</em>) – Number of optimizers to run in parallel per round</p></li>
+<li><p><strong>rng</strong> (<em>int/np.random.RandomState</em>) – The randomState/seed to pass to each smac run</p></li>
+<li><p><strong>run_id</strong> (<em>int</em>) – run_id for this hydra run</p></li>
+<li><p><strong>tae</strong> (<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><em>ExecuteTARun</em></a>) – Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)</p></li>
+<li><p><strong>tae_kwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – arguments passed to constructor of ‘~tae’</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.facade.experimental.hydra_facade.Hydra.optimize">
 <code class="descname">optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/facade/experimental/hydra_facade.html#Hydra.optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.optimize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Optimizes the algorithm provided in scenario (given in constructor)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>portfolio</strong> – Portfolio of found configurations</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">typing.List[Configuration]</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>portfolio</strong> – Portfolio of found configurations</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>typing.List[Configuration]</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

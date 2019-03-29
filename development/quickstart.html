@@ -274,9 +274,9 @@
 Examples to illustrate the usage of <em>SMAC</em> - either by reading in a scenario file, or by directly using <em>SMAC</em> in Python - are provided in the examples-folder.</p>
 <p>To get started, we will walk you through a few examples.</p>
 <ul class="simple">
-<li>First, we explain the basic usage of <em>SMAC</em> by optimizing the <a class="reference internal" href="#branin-example">Branin</a>-function as a toy example.</li>
-<li>Second, we explain the usage of <em>SMAC</em> within Python by optimizing a <a class="reference internal" href="#svm-example">Support Vector Machine</a>.</li>
-<li>Third, we show a real-world example, using an algorithm-wrapper to optimize the <a class="reference internal" href="#spear-example">SPEAR SAT-solver</a>.</li>
+<li><p>First, we explain the basic usage of <em>SMAC</em> by optimizing the <a class="reference internal" href="#branin-example">Branin</a>-function as a toy example.</p></li>
+<li><p>Second, we explain the usage of <em>SMAC</em> within Python by optimizing a <a class="reference internal" href="#svm-example">Support Vector Machine</a>.</p></li>
+<li><p>Third, we show a real-world example, using an algorithm-wrapper to optimize the <a class="reference internal" href="#spear-example">SPEAR SAT-solver</a>.</p></li>
 </ul>
 <div class="section" id="branin">
 <span id="branin-example"></span><h2>Branin<a class="headerlink" href="#branin" title="Permalink to this headline">¶</a></h2>
@@ -419,9 +419,9 @@ This example is located in <code class="code docutils literal notranslate"><span
 <span class="kn">from</span> <span class="nn">smac.facade.smac_hpo_facade</span> <span class="k">import</span> <span class="n">SMAC4HPO</span>
 </pre></div>
 </td></tr></table></div>
-<dl class="docutils">
-<dt>We import the <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html">SVM from Scikit-Learn</a>,</dt>
-<dd>different hyperparameter types, the ConfigurationSpace, and the objects we need from <em>SMAC</em>.</dd>
+<dl class="simple">
+<dt>We import the <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html">SVM from Scikit-Learn</a>,</dt><dd><p>different hyperparameter types, the ConfigurationSpace, and the objects we need from <em>SMAC</em>.</p>
+</dd>
 </dl>
 <p>The ConfigurationSpace is used to define the hyperparameters we want to optimize as well as
 their domains. Possible hyperparameter types are floats, integers and categorical parameters.</p>
@@ -648,47 +648,45 @@ to solve a small subset of the QCP-dataset.</p>
 </div>
 <p>In this folder you see the following files and directories:</p>
 <ul>
-<li><p class="first"><strong>features.txt</strong>:</p>
+<li><p><strong>features.txt</strong>:</p>
 <blockquote>
 <div><p>The <a class="reference external" href="options.html#feature">feature file</a> contains the features for each instance in a csv-format.</p>
-<table border="1" class="docutils">
+<table class="docutils align-center">
 <colgroup>
-<col width="31%" />
-<col width="31%" />
-<col width="31%" />
-<col width="8%" />
+<col style="width: 31%" />
+<col style="width: 31%" />
+<col style="width: 31%" />
+<col style="width: 8%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">instance</th>
-<th class="head">name of feature 1</th>
-<th class="head">name of feature 2</th>
-<th class="head">…</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>instance</p></th>
+<th class="head"><p>name of feature 1</p></th>
+<th class="head"><p>name of feature 2</p></th>
+<th class="head"><p>…</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>name of instance 1</td>
-<td>value of feature 1</td>
-<td>value of feature 2</td>
-<td>…</td>
+<tbody>
+<tr class="row-even"><td><p>name of instance 1</p></td>
+<td><p>value of feature 1</p></td>
+<td><p>value of feature 2</p></td>
+<td><p>…</p></td>
 </tr>
-<tr class="row-odd"><td>…</td>
-<td>…</td>
-<td>…</td>
-<td>…</td>
+<tr class="row-odd"><td><p>…</p></td>
+<td><p>…</p></td>
+<td><p>…</p></td>
+<td><p>…</p></td>
 </tr>
 </tbody>
 </table>
 </div></blockquote>
 </li>
-<li><dl class="first docutils">
-<dt><strong>instances.txt</strong></dt>
-<dd><p class="first last">The <a class="reference external" href="options.html#instance">instance file</a> contains the names of all instances one might want to consider during the optimization process.</p>
+<li><dl class="simple">
+<dt><strong>instances.txt</strong></dt><dd><p>The <a class="reference external" href="options.html#instance">instance file</a> contains the names of all instances one might want to consider during the optimization process.</p>
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><strong>scenario.txt</strong></dt>
-<dd><p class="first">The <a class="reference external" href="options.html#scenario">scenario</a> file contains all the necessary information about the configuration scenario at hand.</p>
+<li><dl>
+<dt><strong>scenario.txt</strong></dt><dd><p>The <a class="reference external" href="options.html#scenario">scenario</a> file contains all the necessary information about the configuration scenario at hand.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">python3</span> <span class="o">-</span><span class="n">u</span> <span class="o">./</span><span class="n">target_algorithm</span><span class="o">/</span><span class="n">scripts</span><span class="o">/</span><span class="n">SATCSSCWrapper</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">mem</span><span class="o">-</span><span class="n">limit</span> <span class="mi">1024</span> <span class="o">--</span><span class="n">script</span> <span class="o">./</span><span class="n">target_algorithm</span><span class="o">/</span><span class="n">spear</span><span class="o">-</span><span class="n">python</span><span class="o">/</span><span class="n">spearCSSCWrapper</span><span class="o">.</span><span class="n">py</span>
 <span class="n">paramfile</span> <span class="o">=</span> <span class="o">./</span><span class="n">target_algorithm</span><span class="o">/</span><span class="n">spear</span><span class="o">-</span><span class="n">python</span><span class="o">/</span><span class="n">spear</span><span class="o">-</span><span class="n">params</span><span class="o">-</span><span class="n">mixed</span><span class="o">.</span><span class="n">pcs</span>
 <span class="n">execdir</span> <span class="o">=</span> <span class="o">.</span>
@@ -702,8 +700,8 @@ to solve a small subset of the QCP-dataset.</p>
 </pre></div>
 </div>
 <p>For this example the following options are used:</p>
-<ul class="last">
-<li><p class="first"><em>algo:</em></p>
+<ul>
+<li><p><em>algo:</em></p>
 <blockquote>
 <div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -u ./target_algorithm/scripts/SATCSSCWrapper.py --mem-limit <span class="m">1024</span> --script ./target_algorithm/spear-python/spearCSSCWrapper.py
 </pre></div>
@@ -722,7 +720,7 @@ algorithm and <em>SMAC</em>, which executes the wrapper through a command line c
 </div>
 </div></blockquote>
 </li>
-<li><p class="first"><em>paramfile:</em></p>
+<li><p><em>paramfile:</em></p>
 <blockquote>
 <div><p>This parameter specifies which pcs-file to use and where it is located.</p>
 <p>The PCS-file specifies the Parameter Configuration Space file, which lists the algorithm’s parameters, their domains, and default values (one per line)</p>
@@ -730,38 +728,27 @@ algorithm and <em>SMAC</em>, which executes the wrapper through a command line c
 parameters, 9 parameters are conditionals (they are only active if their parent parameter takes on a certain value).</p>
 </div></blockquote>
 </li>
-<li><p class="first"><em>execdir:</em> Specifies the directory in which the target algorithm will be run.</p>
-</li>
-<li><p class="first"><em>deterministic:</em> Specifies if the target algorithm is deterministic.</p>
-</li>
-<li><p class="first"><em>run_obj:</em> This parameter tells <em>SMAC</em> what is to be optimized, i.e. running time or (solution) quality.</p>
-</li>
-<li><p class="first"><em>overall_obj:</em> Specifies how to evaluate the error values, e.g as mean or PARX.</p>
-</li>
-<li><p class="first"><em>cutoff_time:</em> The target algorithms cutoff time.</p>
-</li>
-<li><p class="first"><em>wallclock-limit:</em> This parameter is used to give the time budget for the configuration task in seconds.</p>
-</li>
-<li><p class="first"><em>instance_file:</em> See instances.txt above.</p>
-</li>
-<li><p class="first"><em>feature_file:</em> See features.txt above.</p>
-</li>
+<li><p><em>execdir:</em> Specifies the directory in which the target algorithm will be run.</p></li>
+<li><p><em>deterministic:</em> Specifies if the target algorithm is deterministic.</p></li>
+<li><p><em>run_obj:</em> This parameter tells <em>SMAC</em> what is to be optimized, i.e. running time or (solution) quality.</p></li>
+<li><p><em>overall_obj:</em> Specifies how to evaluate the error values, e.g as mean or PARX.</p></li>
+<li><p><em>cutoff_time:</em> The target algorithms cutoff time.</p></li>
+<li><p><em>wallclock-limit:</em> This parameter is used to give the time budget for the configuration task in seconds.</p></li>
+<li><p><em>instance_file:</em> See instances.txt above.</p></li>
+<li><p><em>feature_file:</em> See features.txt above.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><strong>run.sh</strong></dt>
-<dd><p class="first">A shell script calling <em>SMAC</em> with the following command:</p>
+<li><dl>
+<dt><strong>run.sh</strong></dt><dd><p>A shell script calling <em>SMAC</em> with the following command:</p>
 <p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">../../scripts/smac</span> <span class="pre">--scenario</span> <span class="pre">scenario.txt</span> <span class="pre">--verbose</span> <span class="pre">DEBUG</span></code></p>
-<p class="last">This runs <em>SMAC</em> with the scenario options specified in the scenario.txt file.</p>
+<p>This runs <em>SMAC</em> with the scenario options specified in the scenario.txt file.</p>
 </dd>
 </dl>
 </li>
-<li><p class="first"><strong>target_algorithms</strong> contains the wrapper and the executable for Spear.</p>
-</li>
-<li><p class="first"><strong>instances</strong> folder contains the instances on which <em>SMAC</em> will configure Spear.</p>
-</li>
+<li><p><strong>target_algorithms</strong> contains the wrapper and the executable for Spear.</p></li>
+<li><p><strong>instances</strong> folder contains the instances on which <em>SMAC</em> will configure Spear.</p></li>
 </ul>
 <p>To run the example type one of the two commands below into a terminal:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bash run.sh
@@ -817,7 +804,8 @@ across all instances as a starting point for the portfolio. In following iterati
 improves the portfolio performance.</p>
 <p>To run Hydra for three iterations you can run the following code in the spear-qcp example folder.</p>
 <blockquote>
-<div><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">../../scripts/smac</span> <span class="pre">--scenario</span> <span class="pre">scenario.txt</span> <span class="pre">--verbose</span> <span class="pre">DEBUG</span> <span class="pre">--mode</span> <span class="pre">Hydra</span> <span class="pre">--hydra_iterations</span> <span class="pre">3</span></code></div></blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">../../scripts/smac</span> <span class="pre">--scenario</span> <span class="pre">scenario.txt</span> <span class="pre">--verbose</span> <span class="pre">DEBUG</span> <span class="pre">--mode</span> <span class="pre">Hydra</span> <span class="pre">--hydra_iterations</span> <span class="pre">3</span></code></p>
+</div></blockquote>
 <p>As the individual SMAC scenario takes 30 seconds to run Hydra will run for ~90 seconds on this example.
 You will see the same output to the terminal as with standard SMAC. In the folder where you executed the above command,
 you will find a <em>hydra-output-yyy-mm-dd_hh:mm:ss_xyz</em> folder. This folder contains the results of all three performed
