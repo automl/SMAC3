@@ -2,23 +2,23 @@ import unittest
 import unittest.mock
 
 import scipy.optimize
-import skopt.learning.gaussian_process.kernels
 import numpy as np
 import sklearn.datasets
 import sklearn.model_selection
 
 from smac.epm.gaussian_process import GaussianProcess
 from smac.epm.gp_default_priors import DefaultPrior
+from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel
 
 
 def get_gp(n_dimensions, rs, noise=1e-3):
-    cov_amp = skopt.learning.gaussian_process.kernels.ConstantKernel(2.0, constant_value_bounds=(1e-10, 2))
-    exp_kernel = skopt.learning.gaussian_process.kernels.Matern(
+    cov_amp = ConstantKernel(2.0, constant_value_bounds=(1e-10, 2))
+    exp_kernel = Matern(
         np.ones([n_dimensions]),
         [(np.exp(-10), np.exp(2)) for _ in range(n_dimensions)],
         nu=2.5,
     )
-    noise_kernel = skopt.learning.gaussian_process.kernels.WhiteKernel(
+    noise_kernel = WhiteKernel(
         noise_level=noise,
         noise_level_bounds=(1e-10, 2),
     )
@@ -143,6 +143,6 @@ class TestGP(unittest.TestCase):
             theta = np.array([rs.uniform(1e-10, 10), rs.uniform(-10, 2), rs.uniform(-10, 1)])  # Values from the default prior
             error = scipy.optimize.check_grad(lambda x: gp._nll(x)[0], lambda x: gp._nll(x)[1], theta, epsilon=1e-5)
             # print(error, theta, gp._nll(theta)[1], scipy.optimize.approx_fprime(theta, lambda x: gp._nll(x)[0], 1e-5))
-            if error > 1:
+            if error > 0.1:
                 n_above_1 += 1
         self.assertLessEqual(n_above_1, 10)

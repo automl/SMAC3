@@ -1,10 +1,12 @@
+import math
+
 import numpy as np
 import scipy.stats as sps
 
 from smac.utils.constants import VERY_SMALL_NUMBER
 
 
-class BasePrior(object):
+class Prior(object):
 
     def __init__(self, rng: np.random.RandomState=None):
         """
@@ -79,7 +81,7 @@ class BasePrior(object):
         pass
 
 
-class TophatPrior(BasePrior):
+class TophatPrior(Prior):
 
     def __init__(self, l_bound: float, u_bound: float, rng: np.random.RandomState=None):
         """
@@ -107,8 +109,7 @@ class TophatPrior(BasePrior):
         self.min = l_bound
         self.max = u_bound
         if not (self.max > self.min):
-            raise Exception("Upper bound of Tophat prior must be greater \
-            than the lower bound!")
+            raise Exception("Upper bound of Tophat prior must be greater than the lower bound!")
 
     def lnprob(self, theta: np.ndarray):
         """
@@ -125,11 +126,16 @@ class TophatPrior(BasePrior):
         float
             The log probability of theta
         """
-
-        if np.any(theta < self.min) or np.any(theta > self.max):
-            return -np.inf
+        if np.ndim(theta) == 0:
+            if theta < self.min or theta > self.max:
+                return -np.inf
+            else:
+                return 0
         else:
-            return 0
+            if ((theta < self.min) | (theta > self.max)).any():
+                return -np.inf
+            else:
+                return 0
 
     def sample_from_prior(self, n_samples: int):
         """
@@ -165,10 +171,13 @@ class TophatPrior(BasePrior):
 
             The gradient of the prior at theta.
         """
-        return np.zeros([theta.shape[0]])
+        if np.ndim(theta) == 0:
+            return 0
+        else:
+            return np.zeros([theta.shape[0]])
 
 
-class HorseshoePrior(BasePrior):
+class HorseshoePrior(Prior):
 
     def __init__(self, scale: float=0.1, rng: np.random.RandomState=None):
         """
@@ -193,6 +202,7 @@ class HorseshoePrior(BasePrior):
         else:
             self.rng = rng
         self.scale = scale
+        self.scale_square = scale ** 2
 
     def lnprob(self, theta: np.ndarray):
         """
@@ -209,13 +219,25 @@ class HorseshoePrior(BasePrior):
         float
             The log probability of theta
         """
-        # We computed it exactly as in the original spearmint code
-        if np.any(theta == 0.0):
-            return np.inf
-        a = np.maximum(np.exp(theta), VERY_SMALL_NUMBER)
-        b = np.log(1 + 3.0 * (self.scale / a) ** 2)
-        b = np.maximum(b, VERY_SMALL_NUMBER)
-        return np.log(b)
+        # We computed it exactly as in the original spearmint code, they basically say that there's no analytical form
+        # of the horseshoe prior, but that the multiplier is bounded between 2 and 4 and that they used the middle
+        # See "The horseshoe estimator for sparse signals" by Carvalho, Poloson and Scott (2010), Equation 1.
+        # https://www.jstor.org/stable/25734098
+        # Compared to the paper by Carvalho, there's a constant multiplicator missing
+        # Compared to Spearmint we first have to undo the log space transformation of the theta
+        if np.ndim(theta) == 0:
+            if theta == 0:
+                return np.inf  # POSITIVE infinity (this is the "spike")
+        else:
+            if np.any(theta == 0.0):
+                return np.inf  # POSITIVE infinity (this is the "spike")
+
+        if np.ndim(theta) == 0:
+            a = math.log(1 + 3.0 * (self.scale_square / math.exp(theta) ** 2))
+            return math.log(a + VERY_SMALL_NUMBER)
+        else:
+            a = np.log(1 + 3.0 * (self.scale_square / np.exp(theta) ** 2))
+            return np.log(sum(a) + VERY_SMALL_NUMBER)
 
     def sample_from_prior(self, n_samples: int):
         """
@@ -252,6 +274,13 @@ class HorseshoePrior(BasePrior):
         (D) np.array
             The gradient of the prior at theta.
         """
+        if np.ndim(theta) == 0:
+            if theta == 0:
+                return np.inf  # POSITIVE infinity (this is the "spike")
+        else:
+            if np.any(theta == 0.0):
+                return np.ones(theta.shape) * np.inf  # POSITIVE infinity (this is the "spike")
+
         a = -(6 * np.power(self.scale, 2))
         b = (3 * np.power(self.scale, 2) + np.exp(2 * theta))
         b *= np.log(3 * np.power(self.scale, 2) * np.exp(- 2 * theta) + 1)
@@ -260,7 +289,7 @@ class HorseshoePrior(BasePrior):
         return rval
 
 
-class LognormalPrior(BasePrior):
+class LognormalPrior(Prior):
     def __init__(self, sigma: float, mean: float=0, rng: np.random.RandomState=None):
         """
         Log normal prior
@@ -290,12 +319,13 @@ class LognormalPrior(BasePrior):
             raise NotImplementedError(mean)
 
         self.sigma = sigma
+        self.sigma_square = sigma ** 2
         self.mean = mean
+        self.sqrt_2_pi = np.sqrt(2 * np.pi)
 
     def lnprob(self, theta: np.ndarray):
         """
-        Returns the log probability of theta. Note: theta should
-        be on a log scale.
+        Returns the log probability of theta. Note: theta should be on a log scale.
 
         Parameters
         ----------
@@ -307,7 +337,21 @@ class LognormalPrior(BasePrior):
         float
             The log probability of theta
         """
-        return sps.lognorm.logpdf(theta, self.sigma, loc=self.mean)
+        if np.ndim(theta) == 0:
+            if theta <= 0:
+                return 0
+            else:
+                rval = (
+                    -(math.log(theta) - self.mean) ** 2 / (2 * self.sigma_square)
+                    - math.log(self.sqrt_2_pi * self.sigma * theta)
+                )
+                return rval
+
+        rval = -(np.log(theta) - self.mean) ** 2 / (2 * self.sigma_square) - np.log(self.sqrt_2_pi * self.sigma * theta)
+        # Alternative (slower) form of computation: sps.lognorm.logpdf(theta, self.sigma, loc=self.mean)
+        if (~np.isfinite(rval)).any():
+            rval[~np.isfinite(rval)] = 0
+        return rval
 
     def sample_from_prior(self, n_samples: int):
         """
@@ -344,11 +388,21 @@ class LognormalPrior(BasePrior):
         (D) np.array
             The gradient of the prior at theta.
         """
-        # derivative 1 / (x * s^2 * sqrt(2 pi)) * exp( - 0.5 * (log(x ) / s^2))^2)
-        return - (self.sigma **2 + np.log(theta)) / (self.sigma ** 2 * theta)
+        if np.ndim(theta) == 0:
+            if theta <= 0:
+                return 0
+            else:
+                return -(self.sigma_square + math.log(theta)) / (self.sigma_square * (theta))
+
+        # derivative of log(1 / (x * s^2 * sqrt(2 pi)) * exp( - 0.5 * (log(x ) / s^2))^2))
+        # This is without the mean!!!
+        rval = - (self.sigma_square + np.log(theta)) / (self.sigma_square * (theta))
+        if (~np.isfinite(rval)).any():
+            rval[~np.isfinite(rval)] = 0
+        return rval
 
 
-class NormalPrior(BasePrior):
+class NormalPrior(Prior):
     def __init__(self, sigma: float, mean: float=0, rng: np.random.RandomState=None):
         """
         Normal prior

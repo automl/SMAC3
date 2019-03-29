@@ -2,8 +2,9 @@ import numpy as np
 import skopt
 
 from smac.facade.smac_ac_facade import SMAC4AC
-from smac.epm.gp_default_priors import DefaultPrior
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
+from smac.epm.gp_default_priors import DefaultPrior
+from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel
 from smac.utils.util_funcs import get_types, get_rng
 from smac.initial_design.sobol_design import SobolDesign
 from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
@@ -54,15 +55,15 @@ class SMAC4BO(SMAC4AC):
             types, bounds = get_types(kwargs['scenario'].cs, instance_features=None)
             n_dims = len(types)
 
-            cov_amp = skopt.learning.gaussian_process.kernels.ConstantKernel(2.0, constant_value_bounds=(1e-10, 2))
-            exp_kernel = skopt.learning.gaussian_process.kernels.Matern(
+            cov_amp = ConstantKernel(2.0, constant_value_bounds=(np.exp(-10), np.exp(2)))
+            exp_kernel = Matern(
                 np.ones([n_dims]),
                 [(np.exp(-10), np.exp(2)) for _ in range(n_dims)],
                 nu=2.5,
             )
-            noise_kernel = skopt.learning.gaussian_process.kernels.WhiteKernel(
-                noise_level=1e-3,
-                noise_level_bounds=(1e-10, 2),
+            noise_kernel = WhiteKernel(
+                noise_level=1e-8,
+                noise_level_bounds=(np.exp(-10), np.exp(2)),
             )
             kernel = cov_amp * exp_kernel + noise_kernel
 

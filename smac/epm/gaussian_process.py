@@ -7,7 +7,7 @@ import skopt.learning.gaussian_process.kernels
 from scipy import optimize
 
 from smac.epm.base_gp import BaseModel
-from smac.epm.gp_base_prior import BasePrior
+from smac.epm.gp_base_prior import Prior
 from smac.utils.constants import VERY_SMALL_NUMBER
 
 logger = logging.getLogger(__name__)
@@ -57,7 +57,7 @@ class GaussianProcess(BaseModel):
         bounds: typing.List[typing.Tuple[float, float]],
         seed: int,
         kernel: skopt.learning.gaussian_process.kernels.Kernel,
-        prior: BasePrior=None,
+        prior: Prior=None,
         normalize_y: bool=True,
         **kwargs
     ):

@@ -131,7 +131,7 @@ class TestGPMCMC(unittest.TestCase):
         model = get_gp(X.shape[1], rs)
         cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
 
-        maes = [7.430556296025081061, 7.723028018833807827]
+        maes = [7.3503124558747888425, 7.7493806362044323605]
 
         for i, (train_split, test_split) in enumerate(cv.split(X, y)):
             X_train = X[train_split]

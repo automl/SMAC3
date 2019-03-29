@@ -4,12 +4,13 @@ import typing
 
 import emcee
 import numpy as np
+import nuts.nuts
 import skopt.learning.gaussian_process
 import skopt.learning.gaussian_process.kernels
 
 from smac.epm.base_gp import BaseModel
 from smac.epm.gaussian_process import GaussianProcess
-from smac.epm.gp_base_prior import BasePrior
+from smac.epm.gp_base_prior import Prior
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +23,7 @@ class GaussianProcessMCMC(BaseModel):
         bounds: typing.List[typing.Tuple[float, float]],
         seed: int,
         kernel: skopt.learning.gaussian_process.kernels.Kernel,
-        prior: BasePrior=None,
+        prior: Prior=None,
         n_mcmc_walkers: int=20,
         chain_length: int=2000,
         burnin_steps: int=2000,
@@ -119,38 +120,52 @@ class GaussianProcessMCMC(BaseModel):
             alpha=0,  # Governed by the kernel
             noise=None,
         )
-        # Initialize some variables
-        self.gp.fit(X, y)
 
         if do_optimize:
-            # We have one walker for each hyperparameter configuration
-            sampler = emcee.EnsembleSampler(self.n_mcmc_walkers,
-                                            len(self.kernel.theta),
-                                            self._ll)
-            sampler.random_state = self.rng.get_state()
-            # Do a burn-in in the first iteration
-            if not self.burned:
-                # Initialize the walkers by sampling from the prior
-                if self.prior is None:
-                    self.p0 = self.rng.rand(self.n_mcmc_walkers, len(self.kernel.theta))
+            self.gp.fit(X, y)
+
+            sampler = 'emcee'
+            if sampler == 'emcee':
+                sampler = emcee.EnsembleSampler(self.n_mcmc_walkers,
+                                                len(self.kernel.theta),
+                                                self._ll)
+                sampler.random_state = self.rng.get_state()
+                # Do a burn-in in the first iteration
+                if not self.burned:
+                    # Initialize some variables
+
+                    # Initialize the walkers by sampling from the prior
+                    if self.prior is None:
+                        self.p0 = self.rng.rand(self.n_mcmc_walkers, len(self.kernel.theta))
+                    else:
+                        self.p0 = self.prior.sample_from_prior(self.n_mcmc_walkers)
+                    # Run MCMC sampling
+                    self.p0, _, _ = sampler.run_mcmc(self.p0,
+                                                     self.burnin_steps,
+                                                     rstate0=self.rng)
+
+                    self.burned = True
+
+                # Start sampling & save the current position, it will be the start point in the next iteration
+                self.p0, _, _ = sampler.run_mcmc(self.p0, self.chain_length, rstate0=self.rng)
+
+                # Take the last samples from each walker
+                self.hypers = sampler.chain[:, -1]
+            elif sampler == 'nuts':
+                # Perform initial fit to the data to obtain theta0
+                if not self.burned:
+                    theta0 = self.gp.kernel.theta
+                    self.burned = True
                 else:
-                    self.p0 = self.prior.sample_from_prior(self.n_mcmc_walkers)
-                # Run MCMC sampling
-                self.p0, _, _ = sampler.run_mcmc(self.p0,
-                                                 self.burnin_steps,
-                                                 rstate0=self.rng)
-
-                self.burned = True
-
-            # Start sampling & save the current position, it will be the start point in the next iteration
-            self.p0, _, _ = sampler.run_mcmc(self.p0, self.chain_length, rstate0=self.rng)
-
-            # Take the last samples from each walker
-            self.hypers = sampler.chain[:, -1]
+                    theta0 = self.p0
+                samples, _, _ = nuts.nuts.nuts6(self._ll_w_grad, 50, 100, theta0, 0.6)
+                self.p0 = samples.mean(axis=0)
+                self.hypers = samples[::10]
+            else:
+                raise ValueError(sampler)
 
         else:
-            self.hypers = self.gp.kernel.get_parameter_vector().tolist()
-            self.hypers.append(self.noise)
+            self.hypers = self.gp.kernel.theta
             self.hypers = [self.hypers]
 
         self.models = []
@@ -190,8 +205,12 @@ class GaussianProcessMCMC(BaseModel):
 
         # Bound the hyperparameter space to keep things sane. Note all
         # hyperparameters live on a log scale
-        if np.any((-20 > theta) + (theta > 20)):
-            return -1e25
+        if np.ndim(theta) == 0:
+            if np.any((-20 > theta) + (theta > 20)):
+                return -1e25
+        else:
+            if ((-20 > theta) + (theta > 20)).any():
+                return -1e25
 
         try:
             lml = self.gp.log_marginal_likelihood(theta)
@@ -207,6 +226,44 @@ class GaussianProcessMCMC(BaseModel):
             return -1e25
         else:
             return lml
+
+    def _ll_w_grad(self, theta: np.ndarray) -> typing.Tuple[float, np.ndarray]:
+        """
+        Returns the marginal log likelihood (+ the prior) for
+        a hyperparameter configuration theta.
+
+        Parameters
+        ----------
+        theta : np.ndarray(H)
+            Hyperparameter vector. Note that all hyperparameter are
+            on a log scale.
+
+        Returns
+        ----------
+        float
+            lnlikelihood + prior
+        """
+
+        # Bound the hyperparameter space to keep things sane. Note all
+        # hyperparameters live on a log scale
+        if np.any((-20 > theta) + (theta > 20)):
+            return -1e25, np.zeros(theta.shape)
+
+        try:
+            lml, grad = self.gp.log_marginal_likelihood(theta, eval_gradient=True)
+        except ValueError as e:
+            return -1e25, np.zeros(theta.shape)
+
+        # Add prior
+        if self.prior is not None:
+            lml += self.prior.lnprob(theta)
+            grad += self.prior.gradient(theta)
+
+        # We add a minus here because scipy is minimizing
+        if not np.isfinite(lml) or np.any(~np.isfinite(grad)):
+            return -1e25, np.zeros(theta.shape)
+        else:
+            return lml, grad
 
     def _predict(self, X_test: np.ndarray):
         r"""

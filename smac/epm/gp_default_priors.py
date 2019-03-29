@@ -1,11 +1,11 @@
 
 import numpy as np
 
-from smac.epm.gp_base_prior import BasePrior, TophatPrior, \
+from smac.epm.gp_base_prior import Prior, TophatPrior, \
     LognormalPrior, HorseshoePrior
 
 
-class DefaultPrior(BasePrior):
+class DefaultPrior(Prior):
 
     def __init__(self, n_dims: int, rng: np.random.RandomState=None):
         """
