@@ -119,8 +119,9 @@ class TestGPMCMC(unittest.TestCase):
         # Regression test that performance does not drastically decrease in the near future
         y_hat, var_hat = model.predict(np.array([[10, 10, 10]]))
         self.assertAlmostEqual(y_hat[0][0], 54.61249999999999)
-        # Massive variance due to internally used law of total variances
-        self.assertAlmostEqual(var_hat[0][0], 5726.732275219232)
+        # Massive variance due to internally used law of total variances, also a massive difference locally and on
+        # travis-cis
+        self.assertTrue(abs(var_hat[0][0] - 5726.732275219232) < 50)
 
     def test_gp_on_sklearn_data(self):
         X, y = sklearn.datasets.load_boston(return_X_y=True)

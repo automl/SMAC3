@@ -439,7 +439,7 @@ class SMBO(object):
 
             prior = DefaultPrior(len(kernel.theta) + 1, rng=self.rng)
 
-            n_mcmc_walkers = 3 * len(kernel)
+            n_mcmc_walkers = 3 * len(kernel.theta)
             if n_mcmc_walkers % 2 == 1:
                 n_mcmc_walkers += 1
 
