@@ -262,15 +262,15 @@ default values of the tunable parameters. In addition, you can configure the
 optimization process with the <a class="reference external" href="options.html#scenario">scenario</a>-options.</p>
 <p>The most important scenario-options are:</p>
 <ul class="simple">
-<li><strong>run_obj</strong>: Either quality or runtime, depending on what you want to
-optimize.</li>
-<li><strong>cutoff_time</strong>: This is the maximum time the target algorithm is allowed to
-run.</li>
-<li><strong>wallclock_limit</strong>, <strong>runcount_limit</strong> and <strong>tuner-timeout</strong>
+<li><p><strong>run_obj</strong>: Either quality or runtime, depending on what you want to
+optimize.</p></li>
+<li><p><strong>cutoff_time</strong>: This is the maximum time the target algorithm is allowed to
+run.</p></li>
+<li><p><strong>wallclock_limit</strong>, <strong>runcount_limit</strong> and <strong>tuner-timeout</strong>
 are used to control maximum wallclock-time, number of algorithm calls and
-cpu-time used for optimization respectively.</li>
-<li><strong>instance_file</strong>, <strong>test_instance_file</strong> and <strong>feature_file</strong> specify the
-paths to the instances and features (see <a class="reference external" href="options.html#instance">file-formats</a>)</li>
+cpu-time used for optimization respectively.</p></li>
+<li><p><strong>instance_file</strong>, <strong>test_instance_file</strong> and <strong>feature_file</strong> specify the
+paths to the instances and features (see <a class="reference external" href="options.html#instance">file-formats</a>)</p></li>
 </ul>
 <p>For a full list, see <a class="reference external" href="options.html#scenario">scenario-options</a>.</p>
 <div class="section" id="commandline">
@@ -282,18 +282,16 @@ The script to invoke <em>SMAC</em> is located in <em>scripts/smac</em>. Please s
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python smac --scenario SCENARIO --seed INT --verbose_level LEVEL --mode MODE
 </pre></div>
 </div>
-<dl class="docutils">
-<dt>Required:</dt>
-<dd><ul class="first last simple">
-<li><em>scenario</em>: Path to the file that specifies the <a class="reference external" href="options.html#scenario">scenario</a> for this <em>SMAC</em>-run.</li>
+<dl class="simple">
+<dt>Required:</dt><dd><ul class="simple">
+<li><p><em>scenario</em>: Path to the file that specifies the <a class="reference external" href="options.html#scenario">scenario</a> for this <em>SMAC</em>-run.</p></li>
 </ul>
 </dd>
-<dt>Optional:</dt>
-<dd><ul class="first last simple">
-<li><em>seed</em>: The integer that the random-generator will be based upon. <strong>Default</strong>: 12345</li>
-<li><em>verbose_level</em>: in [INFO, DEBUG], specifies the logging-verbosity. <strong>Default</strong>: INFO</li>
-<li><em>mode</em>: in [SMAC, ROAR]. SMAC will use the bayeasian optimization with an intensification process, whereas ROAR stands for Random Online Adaptive Racing. <strong>Default</strong>: SMAC</li>
-<li><em>restore_state</em>: A string specifying the folder of the <em>SMAC</em>-run to be continued. <strong>Assuming exactly the same scenario, except for budget-options.</strong></li>
+<dt>Optional:</dt><dd><ul class="simple">
+<li><p><em>seed</em>: The integer that the random-generator will be based upon. <strong>Default</strong>: 12345</p></li>
+<li><p><em>verbose_level</em>: in [INFO, DEBUG], specifies the logging-verbosity. <strong>Default</strong>: INFO</p></li>
+<li><p><em>mode</em>: in [SMAC, ROAR]. SMAC will use the bayeasian optimization with an intensification process, whereas ROAR stands for Random Online Adaptive Racing. <strong>Default</strong>: SMAC</p></li>
+<li><p><em>restore_state</em>: A string specifying the folder of the <em>SMAC</em>-run to be continued. <strong>Assuming exactly the same scenario, except for budget-options.</strong></p></li>
 </ul>
 </dd>
 </dl>
@@ -305,11 +303,11 @@ The <strong>paramfile</strong>-parameter defines the path to the <a class="refer
 which describes the ranges and default values of the tunable parameters.
 Both will interpret paths <em>from the execution-directory</em>.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
+<p class="admonition-title">Note</p>
 <p>Currently, running <em>SMAC</em> via the commandline will register the algorithm with a
 <a class="reference external" href="tae.html#tae">Target Algorithm Evaluator (TAE)</a>, that requires the target algorithm to print
 the results to the console in the following format (see <a class="reference external" href="quickstart.html#branin">Branin</a>):</p>
-<div class="last highlight-bash notranslate"><div class="highlight"><pre><span></span>Result <span class="k">for</span> SMAC: &lt;STATUS&gt;, &lt;runtime&gt;, &lt;runlength&gt;, &lt;quality&gt;, &lt;seed&gt;, &lt;instance-specifics&gt;
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Result <span class="k">for</span> SMAC: &lt;STATUS&gt;, &lt;runtime&gt;, &lt;runlength&gt;, &lt;quality&gt;, &lt;seed&gt;, &lt;instance-specifics&gt;
 </pre></div>
 </div>
 </div>
@@ -342,14 +340,14 @@ In that case, the algorithm needs to return a cost, representing the quality of
 the solution, while time- and memory-limits are measured and enforced by <a class="reference external" href="https://github.com/sfalkner/pynisher">Pynisher</a>, so no wrapper is needed for your
 algorithm here.</p>
 <ul class="simple">
-<li><a class="reference external" href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict">ExecuteTAFuncDict</a>:
+<li><p><a class="reference external" href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict">ExecuteTAFuncDict</a>:
 The target algorithm is called with a dict-like configuration and optionally
 with seed and instance, returning either the loss as a float or a tuple (loss,
-additional information).</li>
-<li><a class="reference external" href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncArray">ExecuteTAFuncArray</a>:
+additional information).</p></li>
+<li><p><a class="reference external" href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncArray">ExecuteTAFuncArray</a>:
 The target algorithm is called with an array-like configuration and optionally
 with seed and instance, returning either the loss as a float or a tuple (loss,
-additional information).</li>
+additional information).</p></li>
 </ul>
 </div>
 </div>

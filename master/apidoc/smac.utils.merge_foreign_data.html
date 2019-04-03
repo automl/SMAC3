@@ -261,27 +261,23 @@
 <code class="descclassname">smac.utils.merge_foreign_data.</code><code class="descname">merge_foreign_data</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario, runhistory: smac.runhistory.runhistory.RunHistory, in_scenario_list: List[smac.scenario.scenario.Scenario], in_runhistory_list: List[smac.runhistory.runhistory.RunHistory]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/merge_foreign_data.html#merge_foreign_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.merge_foreign_data.merge_foreign_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extend &lt;scenario&gt; and &lt;runhistory&gt; with runhistory data from another
 &lt;in_scenario&gt; assuming the same pcs, feature space, but different instances</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – original scenario – feature dictionary will be extended</li>
-<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – original runhistory – will be extended by further data points</li>
-<li><strong>in_scenario_list</strong> (<em>typing.List</em><em>[</em><a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a><em>]</em>) – input scenario</li>
-<li><strong>in_runhistory_list</strong> (<em>typing.List</em><em>[</em><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a><em>]</em>) – list of runhistories wrt &lt;in_scenario&gt;</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – original scenario – feature dictionary will be extended</p></li>
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – original runhistory – will be extended by further data points</p></li>
+<li><p><strong>in_scenario_list</strong> (<em>typing.List</em><em>[</em><a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a><em>]</em>) – input scenario</p></li>
+<li><p><strong>in_runhistory_list</strong> (<em>typing.List</em><em>[</em><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a><em>]</em>) – list of runhistories wrt &lt;in_scenario&gt;</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><strong>scenario</strong> (<em>Scenario</em>)</li>
-<li><strong>runhistory</strong> (<em>Runhistory</em>)</li>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>scenario</strong> (<em>Scenario</em>)</p></li>
+<li><p><strong>runhistory</strong> (<em>Runhistory</em>)</p></li>
 </ul>
 </p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -289,29 +285,25 @@
 <code class="descclassname">smac.utils.merge_foreign_data.</code><code class="descname">merge_foreign_data_from_file</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario, runhistory: smac.runhistory.runhistory.RunHistory, in_scenario_fn_list: List[str], in_runhistory_fn_list: List[str], cs: ConfigSpace.configuration_space.ConfigurationSpace, aggregate_func: Callable = &lt;function average_cost&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/merge_foreign_data.html#merge_foreign_data_from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.merge_foreign_data.merge_foreign_data_from_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extend &lt;scenario&gt; and &lt;runhistory&gt; with runhistory data from another
 &lt;in_scenario&gt; assuming the same pcs, feature space, but different instances</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – original scenario – feature dictionary will be extended</li>
-<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – original runhistory – will be extended by further data points</li>
-<li><strong>in_scenario_fn_list</strong> (<em>typing.List</em><em>[</em><em>str</em><em>]</em>) – input scenario file names</li>
-<li><strong>in_runhistory_fn_list</strong> (<em>typing.List</em><em>[</em><em>str</em><em>]</em>) – list filenames of runhistory dumps</li>
-<li><strong>cs</strong> (<em>ConfigurationSpace</em>) – parameter configuration space to read runhistory from file</li>
-<li><strong>aggregate_func</strong> (<em>typing.Callable</em>) – function to aggregate performance of a configuratoion across instances</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – original scenario – feature dictionary will be extended</p></li>
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – original runhistory – will be extended by further data points</p></li>
+<li><p><strong>in_scenario_fn_list</strong> (<em>typing.List</em><em>[</em><em>str</em><em>]</em>) – input scenario file names</p></li>
+<li><p><strong>in_runhistory_fn_list</strong> (<em>typing.List</em><em>[</em><em>str</em><em>]</em>) – list filenames of runhistory dumps</p></li>
+<li><p><strong>cs</strong> (<em>ConfigurationSpace</em>) – parameter configuration space to read runhistory from file</p></li>
+<li><p><strong>aggregate_func</strong> (<em>typing.Callable</em>) – function to aggregate performance of a configuratoion across instances</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><strong>scenario</strong> (<em>Scenario</em>)</li>
-<li><strong>runhistory</strong> (<em>Runhistory</em>)</li>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>scenario</strong> (<em>Scenario</em>)</p></li>
+<li><p><strong>runhistory</strong> (<em>Runhistory</em>)</p></li>
 </ul>
 </p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

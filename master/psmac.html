@@ -259,8 +259,8 @@ This variant of SMAC is called <em>pSMAC</em> (parallel SMAC).
 The general idea is that all target algorithm run evaluations are shared between the individual <em>SMAC</em> runs
 such that all <em>SMAC</em> are better informed and can work together.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">To use <em>pSMAC</em>, please note that it communicates via the file space,
+<p class="admonition-title">Note</p>
+<p>To use <em>pSMAC</em>, please note that it communicates via the file space,
 i.e., all <em>pSMAC</em> runs write from time to time its runhistory (all target algorithm evaluations)
 to disk and read the runhistories of all other <em>pSMAC</em> runs.
 So, a requirement for <em>pSMAC</em> is that it can write to a shared file space.</p>
@@ -271,13 +271,13 @@ So, a requirement for <em>pSMAC</em> is that it can write to a shared file space
 please specify the following two arguments:</p>
 <blockquote>
 <div><ul class="simple">
-<li><strong>–shared_model True</strong>: this will activate the information sharing between the <em>pSMAC</em> runs</li>
-<li><strong>–input_psmac_dirs &lt;output_path&gt;</strong>: list of <em>pSMAC</em>’s output directories (you can use shell-extension with asterix-notation)</li>
+<li><p><strong>–shared_model True</strong>: this will activate the information sharing between the <em>pSMAC</em> runs</p></li>
+<li><p><strong>–input_psmac_dirs &lt;output_path&gt;</strong>: list of <em>pSMAC</em>’s output directories (you can use shell-extension with asterix-notation)</p></li>
 </ul>
 </div></blockquote>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last"><em>pSMAC</em> has no option to specify the number of parallel runs. You have to start as many <em>pSMAC</em> runs as you want to run.</p>
+<p class="admonition-title">Note</p>
+<p><em>pSMAC</em> has no option to specify the number of parallel runs. You have to start as many <em>pSMAC</em> runs as you want to run.</p>
 </div>
 <p>On the command line an exemplary call could be:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python smac --scenario SCENARIO --seed INT --shared_model True --input_psmac_dirs smac3-output*

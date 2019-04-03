@@ -266,14 +266,11 @@ before optimization starts</p>
 <dt id="smac.initial_design.initial_design.InitialDesign.tae_runner">
 <code class="descname">tae_runner</code><a class="headerlink" href="#smac.initial_design.initial_design.InitialDesign.tae_runner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Target algorithm runner that will be used to run the initial design</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun">ExecuteTARun</a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun">ExecuteTARun</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
@@ -302,37 +299,31 @@ before optimization starts</p>
 <dd></dd></dl>
 
 <p>Constructor</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>tae_runner</strong> (<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><em>ExecuteTARun</em></a>) – Target algorithm execution object.</li>
-<li><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – Scenario with all meta information (including configuration space).</li>
-<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – Statistics of experiments; needed in case initial design already
-exhausts the budget.</li>
-<li><strong>traj_logger</strong> (<a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger"><em>TrajLogger</em></a>) – Trajectory logging to add new incumbents found by the initial
-design.</li>
-<li><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tae_runner</strong> (<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><em>ExecuteTARun</em></a>) – Target algorithm execution object.</p></li>
+<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – Scenario with all meta information (including configuration space).</p></li>
+<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – Statistics of experiments; needed in case initial design already
+exhausts the budget.</p></li>
+<li><p><strong>traj_logger</strong> (<a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger"><em>TrajLogger</em></a>) – Trajectory logging to add new incumbents found by the initial
+design.</p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.initial_design.initial_design.InitialDesign.run">
 <code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.Configuration<a class="reference internal" href="../_modules/smac/initial_design/initial_design.html#InitialDesign.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.initial_design.InitialDesign.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the initial design.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>incumbent</strong> – Initial incumbent configuration.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Configuration</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>incumbent</strong> – Initial incumbent configuration.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Configuration</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

@@ -263,19 +263,15 @@
 <p>Validator for the output of SMAC-scenarios.
 Evaluates specified configurations on specified instances.</p>
 <p>Construct Validator for given scenario and trajectory.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – scenario object for cutoff, instances, features and specifics</li>
-<li><strong>trajectory</strong> (<em>trajectory-list</em>) – trajectory to take incumbent(s) from</li>
-<li><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em>) – Random number generator or seed</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – scenario object for cutoff, instances, features and specifics</p></li>
+<li><p><strong>trajectory</strong> (<em>trajectory-list</em>) – trajectory to take incumbent(s) from</p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em>) – Random number generator or seed</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.utils.validate.Validator.validate">
 <code class="descname">validate</code><span class="sig-paren">(</span><em>config_mode: Union[str</em>, <em>List[ConfigSpace.configuration_space.Configuration]] = 'def'</em>, <em>instance_mode: Union[str</em>, <em>List[str]] = 'test'</em>, <em>repetitions: int = 1</em>, <em>n_jobs: int = 1</em>, <em>backend: str = 'threading'</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory = None</em>, <em>tae: smac.tae.execute_ta_run.ExecuteTARun = None</em>, <em>output_fn: str = ''</em><span class="sig-paren">)</span> &#x2192; smac.runhistory.runhistory.RunHistory<a class="reference internal" href="../_modules/smac/utils/validate.html#Validator.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator.validate" title="Permalink to this definition">¶</a></dt>
@@ -283,37 +279,33 @@ Evaluates specified configurations on specified instances.</p>
 If a runhistory is provided as input it is important that you run it on the same/comparable hardware.</p>
 <p>side effect: if output is specified, saves runhistory to specified
 output directory.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>config_mode</strong> (<em>str</em><em> or </em><em>list&lt;Configuration&gt;</em>) – string or directly a list of Configuration.
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_mode</strong> (<em>str</em><em> or </em><em>list&lt;Configuration&gt;</em>) – string or directly a list of Configuration.
 string from [def, inc, def+inc, wallclock_time, cpu_time, all].
 time evaluates at cpu- or wallclock-timesteps of:
 [max_time/2^0, max_time/2^1, max_time/2^3, …, default]
-with max_time being the highest recorded time</li>
-<li><strong>instance_mode</strong> (<em>str</em><em> or </em><em>list&lt;str&gt;</em>) – what instances to use for validation, either from
-[train, test, train+test] or directly a list of instances</li>
-<li><strong>repetitions</strong> (<em>int</em>) – number of repetitions in nondeterministic algorithms</li>
-<li><strong>n_jobs</strong> (<em>int</em>) – number of parallel processes used by joblib</li>
-<li><strong>backend</strong> (<em>str</em>) – what backend joblib should use for parallel runs</li>
-<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – optional, RunHistory-object to reuse runs</li>
-<li><strong>tae</strong> (<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><em>ExecuteTARun</em></a>) – tae to be used. if None, will initialize ExecuteTARunOld</li>
-<li><strong>output_fn</strong> (<em>str</em>) – path to runhistory to be saved. if the suffix is not ‘.json’, will
+with max_time being the highest recorded time</p></li>
+<li><p><strong>instance_mode</strong> (<em>str</em><em> or </em><em>list&lt;str&gt;</em>) – what instances to use for validation, either from
+[train, test, train+test] or directly a list of instances</p></li>
+<li><p><strong>repetitions</strong> (<em>int</em>) – number of repetitions in nondeterministic algorithms</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em>) – number of parallel processes used by joblib</p></li>
+<li><p><strong>backend</strong> (<em>str</em>) – what backend joblib should use for parallel runs</p></li>
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – optional, RunHistory-object to reuse runs</p></li>
+<li><p><strong>tae</strong> (<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><em>ExecuteTARun</em></a>) – tae to be used. if None, will initialize ExecuteTARunOld</p></li>
+<li><p><strong>output_fn</strong> (<em>str</em>) – path to runhistory to be saved. if the suffix is not ‘.json’, will
 be interpreted as directory and filename will be
-‘validated_runhistory.json’</li>
+‘validated_runhistory.json’</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>runhistory</strong> – runhistory with validated runs</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">RunHistory</a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>runhistory</strong> – runhistory with validated runs</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">RunHistory</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -322,33 +314,29 @@ be interpreted as directory and filename will be
 <dd><p>Use EPM to predict costs/runtimes for unknown config/inst-pairs.</p>
 <p>side effect: if output is specified, saves runhistory to specified
 output directory.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>output_fn</strong> (<em>str</em>) – path to runhistory to be saved. if the suffix is not ‘.json’, will
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_fn</strong> (<em>str</em>) – path to runhistory to be saved. if the suffix is not ‘.json’, will
 be interpreted as directory and filename will be
-‘validated_runhistory_EPM.json’</li>
-<li><strong>config_mode</strong> (<em>str</em><em> or </em><em>list&lt;Configuration&gt;</em>) – string or directly a list of Configuration, string from [def, inc, def+inc, wallclock_time, cpu_time, all].
+‘validated_runhistory_EPM.json’</p></li>
+<li><p><strong>config_mode</strong> (<em>str</em><em> or </em><em>list&lt;Configuration&gt;</em>) – string or directly a list of Configuration, string from [def, inc, def+inc, wallclock_time, cpu_time, all].
 time evaluates at cpu- or wallclock-timesteps of:
-[max_time/2^0, max_time/2^1, max_time/2^3, …, default] with max_time being the highest recorded time</li>
-<li><strong>instance_mode</strong> (<em>str</em><em> or </em><em>list&lt;str&gt;</em>) – what instances to use for validation, either from
-[train, test, train+test] or directly a list of instances</li>
-<li><strong>repetitions</strong> (<em>int</em>) – number of repetitions in nondeterministic algorithms</li>
-<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – optional, RunHistory-object to reuse runs</li>
-<li><strong>reuse_epm</strong> (<em>bool</em>) – if true (and if <cite>self.epm</cite>), reuse epm to validate runs</li>
+[max_time/2^0, max_time/2^1, max_time/2^3, …, default] with max_time being the highest recorded time</p></li>
+<li><p><strong>instance_mode</strong> (<em>str</em><em> or </em><em>list&lt;str&gt;</em>) – what instances to use for validation, either from
+[train, test, train+test] or directly a list of instances</p></li>
+<li><p><strong>repetitions</strong> (<em>int</em>) – number of repetitions in nondeterministic algorithms</p></li>
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – optional, RunHistory-object to reuse runs</p></li>
+<li><p><strong>reuse_epm</strong> (<em>bool</em>) – if true (and if <cite>self.epm</cite>), reuse epm to validate runs</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>runhistory</strong> – runhistory with predicted runs</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">RunHistory</a></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>runhistory</strong> – runhistory with predicted runs</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">RunHistory</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

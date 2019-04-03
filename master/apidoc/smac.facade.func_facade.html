@@ -262,35 +262,31 @@
 <dd><p>Minimize a function func using the BORF facade
 (i.e., a modified version of SMAC).
 This function is a convenience wrapper for the BORF class.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>func</strong> (<em>typing.Callable</em>) – Function to minimize.</li>
-<li><strong>x0</strong> (<em>typing.List</em><em>[</em><em>float</em><em>]</em>) – Initial guess/default configuration.</li>
-<li><strong>bounds</strong> (<em>typing.List</em><em>[</em><em>typing.List</em><em>[</em><em>float</em><em>]</em><em>]</em>) – <code class="docutils literal notranslate"><span class="pre">(min,</span> <span class="pre">max)</span></code> pairs for each element in <code class="docutils literal notranslate"><span class="pre">x</span></code>, defining the bound on
-that parameters.</li>
-<li><strong>maxfun</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of function evaluations.</li>
-<li><strong>rng</strong> (<em>np.random.RandomState</em><em>, </em><em>optional</em>) – Random number generator used by SMAC.</li>
-<li><strong>scenario_args</strong> (<em>typing.Mapping</em><em>[</em><em>str</em><em>,</em><em>typing.Any</em><em>]</em>) – Arguments passed to the scenario
-See smac.scenario.scenario.Scenario</li>
-<li><strong>**kwargs</strong> – Arguments passed to the optimizer class
-See ~smac.facade.smac_facade.SMAC</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<em>typing.Callable</em>) – Function to minimize.</p></li>
+<li><p><strong>x0</strong> (<em>typing.List</em><em>[</em><em>float</em><em>]</em>) – Initial guess/default configuration.</p></li>
+<li><p><strong>bounds</strong> (<em>typing.List</em><em>[</em><em>typing.List</em><em>[</em><em>float</em><em>]</em><em>]</em>) – <code class="docutils literal notranslate"><span class="pre">(min,</span> <span class="pre">max)</span></code> pairs for each element in <code class="docutils literal notranslate"><span class="pre">x</span></code>, defining the bound on
+that parameters.</p></li>
+<li><p><strong>maxfun</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of function evaluations.</p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em><em>, </em><em>optional</em>) – Random number generator used by SMAC.</p></li>
+<li><p><strong>scenario_args</strong> (<em>typing.Mapping</em><em>[</em><em>str</em><em>,</em><em>typing.Any</em><em>]</em>) – Arguments passed to the scenario
+See smac.scenario.scenario.Scenario</p></li>
+<li><p><strong>**kwargs</strong> – Arguments passed to the optimizer class
+See ~smac.facade.smac_facade.SMAC</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><strong>x</strong> (<em>list</em>) – Estimated position of the minimum.</li>
-<li><strong>f</strong> (<em>float</em>) – Value of <cite>func</cite> at the minimum.</li>
-<li><strong>s</strong> (<a class="reference internal" href="smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC" title="smac.facade.smac_facade.SMAC"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.facade.smac_facade.SMAC</span></code></a>) – SMAC objects which enables the user to get
-e.g., the trajectory and runhistory.</li>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>x</strong> (<em>list</em>) – Estimated position of the minimum.</p></li>
+<li><p><strong>f</strong> (<em>float</em>) – Value of <cite>func</cite> at the minimum.</p></li>
+<li><p><strong>s</strong> (<a class="reference internal" href="smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC" title="smac.facade.smac_facade.SMAC"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.facade.smac_facade.SMAC</span></code></a>) – SMAC objects which enables the user to get
+e.g., the trajectory and runhistory.</p></li>
 </ul>
 </p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

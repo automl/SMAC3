@@ -258,7 +258,7 @@
 Algorithm Evaluator (TAE). There are different TAEs implemented in <em>SMAC</em> which
 provide slightly different interfaces. You can see <a class="reference external" href="quickstart.html#using-smac-in-python-svm">SVM-example</a> for an example on the usage.</p>
 <ul>
-<li><p class="first"><a class="reference external" href="apidoc/smac.tae.execute_ta_run_old.html#module-smac.tae.execute_ta_run_old">smac.tae.execute_ta_run_old</a>:
+<li><p><a class="reference external" href="apidoc/smac.tae.execute_ta_run_old.html#module-smac.tae.execute_ta_run_old">smac.tae.execute_ta_run_old</a>:
 Used when calling <em>SMAC</em> via the <a class="reference external" href="basic_usage.html#commandline">commandline</a>, where it takes the algorithm call
 from the algo-parameter of the <a class="reference external" href="options.html#scenario">scenario</a>.
 The parameters will be appended to the algorithm call, which in total looks
@@ -280,15 +280,15 @@ Result <span class="k">for</span> ParamILS: &lt;STATUS&gt;, &lt;running time&gt;
 </div>
 <p>The examples <a class="reference external" href="quickstart.html#branin">Branin</a> or <a class="reference external" href="quickstart.html#spear-example">SPEAR</a> reflect the usage.</p>
 <ul class="simple">
-<li><strong>STATUS</strong> can be one of [SAT, UNSAT, SUCCESS, TIMEOUT, MEMOUT, CRASHED, ABORT]. SAT and UNSAT are mainly supported for backcompatibility and are treated as SUCCESS. The difference between CRASHED and ABORT is that ABORT is called when all future calls are assumed to crash and will abort the whole optimization, whereas CRASHED only indicates a single failed run.</li>
-<li><strong>running time</strong> indicates the time that the execution took.</li>
-<li><strong>runlength</strong> indicates the number of steps needed for execution.</li>
-<li><strong>quality</strong> is the solution quality.</li>
-<li><strong>seed</strong> is the seed used for the algorithm call.</li>
-<li><strong>instance-specifics</strong> is additional information.</li>
+<li><p><strong>STATUS</strong> can be one of [SAT, UNSAT, SUCCESS, TIMEOUT, MEMOUT, CRASHED, ABORT]. SAT and UNSAT are mainly supported for backcompatibility and are treated as SUCCESS. The difference between CRASHED and ABORT is that ABORT is called when all future calls are assumed to crash and will abort the whole optimization, whereas CRASHED only indicates a single failed run.</p></li>
+<li><p><strong>running time</strong> indicates the time that the execution took.</p></li>
+<li><p><strong>runlength</strong> indicates the number of steps needed for execution.</p></li>
+<li><p><strong>quality</strong> is the solution quality.</p></li>
+<li><p><strong>seed</strong> is the seed used for the algorithm call.</p></li>
+<li><p><strong>instance-specifics</strong> is additional information.</p></li>
 </ul>
 </li>
-<li><p class="first"><a class="reference external" href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict">ExecuteTAFuncDict</a> and
+<li><p><a class="reference external" href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict">ExecuteTAFuncDict</a> and
 <a class="reference external" href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncArray">ExecuteTAFuncArray</a>:
 The target algorithm is called with a dict- or array-like configuration and optionally
 with seed and instance, returning either the loss as a float or a tuple (loss,
@@ -298,8 +298,7 @@ result string; the error will be interpreted from the return value. Just be
 aware of the fact that <em>SMAC</em> is always minimizing as well as the function
 needs to be able to interpret the configuration correctly.
 With this TAE, <a class="reference external" href="https://github.com/sfalkner/pynisher">Pynisher</a> is used to
-enforce time- and memory-limits.</p>
-</li>
+enforce time- and memory-limits.</p></li>
 </ul>
 </div>
 

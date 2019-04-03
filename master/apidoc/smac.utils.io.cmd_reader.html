@@ -266,14 +266,11 @@
 <dl class="attribute">
 <dt id="smac.utils.io.cmd_reader.CMDReader.logger">
 <code class="descname">logger</code><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader.logger" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">Logger</td>
-</tr>
-</tbody>
-</table>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Logger</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -306,32 +303,28 @@ Parsed scenario arguments</p>
 <dt id="smac.utils.io.cmd_reader.CMDReader.read_cmd">
 <code class="descname">read_cmd</code><span class="sig-paren">(</span><em>commandline_arguments: List[str] = ['-b', 'html', '-d', 'build/doctrees', '.', 'build/html']</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader.read_cmd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader.read_cmd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads command line options (main, smac and scenario options)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>smac_args_, scen_args_</strong> – main, smac and scenario options parsed with corresponding ArgumentParser</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">parsed arguments;</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>smac_args_, scen_args_</strong> – main, smac and scenario options parsed with corresponding ArgumentParser</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>parsed arguments;</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.utils.io.cmd_reader.CMDReader.read_smac_scenario_dict_cmd">
 <code class="descname">read_smac_scenario_dict_cmd</code><span class="sig-paren">(</span><em>dict_cmd: dict</em>, <em>scenario_file: str = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader.read_smac_scenario_dict_cmd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader.read_smac_scenario_dict_cmd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads smac and scenario options provided in a dictionary</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>smac_args_, scen_args_</strong></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">smac and scenario options parsed with corresponding ArgumentParser</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>smac_args_, scen_args_</strong></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>smac and scenario options parsed with corresponding ArgumentParser</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -339,14 +332,11 @@ Parsed scenario arguments</p>
 <code class="descname">write_main_options_to_doc</code><span class="sig-paren">(</span><em>path: str = 'main_options.rst'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader.write_main_options_to_doc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader.write_main_options_to_doc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes the SMAC option-list to file for autogeneration in documentation.
 The list is created in doc/conf.py and read in doc/options.rst.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<em>string</em>) – Where to write to (relative to doc-folder since executed in conf.py)</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>string</em>) – Where to write to (relative to doc-folder since executed in conf.py)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -354,14 +344,11 @@ The list is created in doc/conf.py and read in doc/options.rst.</p>
 <code class="descname">write_scenario_options_to_doc</code><span class="sig-paren">(</span><em>path: str = 'scenario_options.rst'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader.write_scenario_options_to_doc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader.write_scenario_options_to_doc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes the Scenario option-list to file for autogeneration in documentation.
 The list is created in doc/conf.py and read in doc/options.rst.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<em>string</em>) – Where to write to (relative to doc-folder since executed in conf.py)</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>string</em>) – Where to write to (relative to doc-folder since executed in conf.py)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -369,14 +356,11 @@ The list is created in doc/conf.py and read in doc/options.rst.</p>
 <code class="descname">write_smac_options_to_doc</code><span class="sig-paren">(</span><em>path: str = 'smac_options.rst'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader.write_smac_options_to_doc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader.write_smac_options_to_doc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes the SMAC option-list to file for autogeneration in documentation.
 The list is created in doc/conf.py and read in doc/options.rst.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<em>string</em>) – Where to write to (relative to doc-folder since executed in conf.py)</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>string</em>) – Where to write to (relative to doc-folder since executed in conf.py)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

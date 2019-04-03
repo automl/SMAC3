@@ -337,55 +337,47 @@ instance and some resource limitations</p>
 <dd></dd></dl>
 
 <p>Constructor</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ta</strong> (<em>list</em>) – target algorithm command line as list of arguments</li>
-<li><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory to keep track of all runs; only used if set</li>
-<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a><em>(</em><em>)</em>) – stats object to collect statistics about runtime and so on</li>
-<li><strong>run_obj</strong> (<em>str</em>) – run objective of SMAC</li>
-<li><strong>par_factor</strong> (<em>int</em>) – penalization factor</li>
-<li><strong>crash_cost</strong> (<em>float</em>) – cost that is used in case of crashed runs (including runs
-that returned NaN or inf)</li>
-<li><strong>abort_on_first_run_crash</strong> (<em>bool</em>) – if true and first run crashes, raise FirstRunCrashedException</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ta</strong> (<em>list</em>) – target algorithm command line as list of arguments</p></li>
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory to keep track of all runs; only used if set</p></li>
+<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a><em>(</em><em>)</em>) – stats object to collect statistics about runtime and so on</p></li>
+<li><p><strong>run_obj</strong> (<em>str</em>) – run objective of SMAC</p></li>
+<li><p><strong>par_factor</strong> (<em>int</em>) – penalization factor</p></li>
+<li><p><strong>crash_cost</strong> (<em>float</em>) – cost that is used in case of crashed runs (including runs
+that returned NaN or inf)</p></li>
+<li><p><strong>abort_on_first_run_crash</strong> (<em>bool</em>) – if true and first run crashes, raise FirstRunCrashedException</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.tae.execute_ta_run.ExecuteTARun.run">
 <code class="descname">run</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em>, <em>instance: str</em>, <em>cutoff: int = None</em>, <em>seed: int = 12345</em>, <em>instance_specific: str = '0'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#ExecuteTARun.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs target algorithm &lt;self.ta&gt; with configuration &lt;config&gt; on
 instance &lt;instance&gt; with instance specifics &lt;specifics&gt; for at most
 &lt;cutoff&gt; seconds and random seed &lt;seed&gt;</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>config</strong> (<em>Configuration</em>) – dictionary param -&gt; value</li>
-<li><strong>instance</strong> (<em>string</em>) – problem instance</li>
-<li><strong>cutoff</strong> (<em>int</em><em>, </em><em>optional</em>) – Wallclock time limit of the target algorithm. If no value is
-provided no limit will be enforced.</li>
-<li><strong>seed</strong> (<em>int</em>) – random seed</li>
-<li><strong>instance_specific</strong> (<em>str</em>) – instance specific information (e.g., domain file or solution)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>Configuration</em>) – dictionary param -&gt; value</p></li>
+<li><p><strong>instance</strong> (<em>string</em>) – problem instance</p></li>
+<li><p><strong>cutoff</strong> (<em>int</em><em>, </em><em>optional</em>) – Wallclock time limit of the target algorithm. If no value is
+provided no limit will be enforced.</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – random seed</p></li>
+<li><p><strong>instance_specific</strong> (<em>str</em>) – instance specific information (e.g., domain file or solution)</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><strong>status</strong> (<em>enum of StatusType (int)</em>) – {SUCCESS, TIMEOUT, CRASHED, ABORT}</li>
-<li><strong>cost</strong> (<em>float</em>) – cost/regret/quality (float) (None, if not returned by TA)</li>
-<li><strong>runtime</strong> (<em>float</em>) – runtime (None if not returned by TA)</li>
-<li><strong>additional_info</strong> (<em>dict</em>) – all further additional run information</li>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>status</strong> (<em>enum of StatusType (int)</em>) – {SUCCESS, TIMEOUT, CRASHED, ABORT}</p></li>
+<li><p><strong>cost</strong> (<em>float</em>) – cost/regret/quality (float) (None, if not returned by TA)</p></li>
+<li><p><strong>runtime</strong> (<em>float</em>) – runtime (None if not returned by TA)</p></li>
+<li><p><strong>additional_info</strong> (<em>dict</em>) – all further additional run information</p></li>
 </ul>
 </p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -393,32 +385,28 @@ provided no limit will be enforced.</li>
 <code class="descname">start</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em>, <em>instance: str</em>, <em>cutoff: float = None</em>, <em>seed: int = 12345</em>, <em>instance_specific: str = '0'</em>, <em>capped: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#ExecuteTARun.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.start" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper function for ExecuteTARun.run() to check configuration
 budget before the runs and to update stats after run</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>config</strong> (<em>Configuration</em>) – Mainly a dictionary param -&gt; value</li>
-<li><strong>instance</strong> (<em>string</em>) – Problem instance</li>
-<li><strong>cutoff</strong> (<em>float</em>) – Runtime cutoff</li>
-<li><strong>seed</strong> (<em>int</em>) – Random seed</li>
-<li><strong>instance_specific</strong> (<em>str</em>) – Instance specific information (e.g., domain file or solution)</li>
-<li><strong>capped</strong> (<em>bool</em>) – If true and status is StatusType.TIMEOUT,
-uses StatusType.CAPPED</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>Configuration</em>) – Mainly a dictionary param -&gt; value</p></li>
+<li><p><strong>instance</strong> (<em>string</em>) – Problem instance</p></li>
+<li><p><strong>cutoff</strong> (<em>float</em>) – Runtime cutoff</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – Random seed</p></li>
+<li><p><strong>instance_specific</strong> (<em>str</em>) – Instance specific information (e.g., domain file or solution)</p></li>
+<li><p><strong>capped</strong> (<em>bool</em>) – If true and status is StatusType.TIMEOUT,
+uses StatusType.CAPPED</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><strong>status</strong> (<em>enum of StatusType (int)</em>) – {SUCCESS, TIMEOUT, CRASHED, ABORT}</li>
-<li><strong>cost</strong> (<em>float</em>) – cost/regret/quality (float) (None, if not returned by TA)</li>
-<li><strong>runtime</strong> (<em>float</em>) – runtime (None if not returned by TA)</li>
-<li><strong>additional_info</strong> (<em>dict</em>) – all further additional run information</li>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>status</strong> (<em>enum of StatusType (int)</em>) – {SUCCESS, TIMEOUT, CRASHED, ABORT}</p></li>
+<li><p><strong>cost</strong> (<em>float</em>) – cost/regret/quality (float) (None, if not returned by TA)</p></li>
+<li><p><strong>runtime</strong> (<em>float</em>) – runtime (None if not returned by TA)</p></li>
+<li><p><strong>additional_info</strong> (<em>dict</em>) – all further additional run information</p></li>
 </ul>
 </p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

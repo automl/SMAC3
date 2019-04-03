@@ -262,20 +262,16 @@
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.random_configuration_chooser.RandomConfigurationChooser</span></code></a></p>
 <p>Interleave a random configuration according to a given probability which is decreased according to a cosine
 annealing schedule.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>prob_max</strong> (<em>float</em>) – Initial probility of a random configuration</li>
-<li><strong>prob_min</strong> (<em>float</em>) – Lowest probility of a random configuration</li>
-<li><strong>restart_iteration</strong> (<em>int</em>) – Restart the annealing schedule every <code class="docutils literal notranslate"><span class="pre">restart_iteration</span></code> iterations.</li>
-<li><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prob_max</strong> (<em>float</em>) – Initial probility of a random configuration</p></li>
+<li><p><strong>prob_min</strong> (<em>float</em>) – Lowest probility of a random configuration</p></li>
+<li><p><strong>restart_iteration</strong> (<em>int</em>) – Restart the annealing schedule every <code class="docutils literal notranslate"><span class="pre">restart_iteration</span></code> iterations.</p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing.check">
 <code class="descname">check</code><span class="sig-paren">(</span><em>iteration: int</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserCosineAnnealing.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing.check" title="Permalink to this definition">¶</a></dt>
@@ -295,21 +291,17 @@ annealing schedule.</p>
 <em class="property">class </em><code class="descclassname">smac.optimizer.random_configuration_chooser.</code><code class="descname">ChooserLinearCoolDown</code><span class="sig-paren">(</span><em>start_modulus: float = 2.0</em>, <em>modulus_increment: float = 0.3</em>, <em>end_modulus: float = inf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserLinearCoolDown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.random_configuration_chooser.RandomConfigurationChooser</span></code></a></p>
 <p>Interleave a random configuration, decreasing the fraction of random configurations over time.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>start_modulus</strong> (<em>float</em>) – Initially, every modulus-th configuration will be at random</li>
-<li><strong>modulus_increment</strong> (<em>float</em>) – Increase modulus by this amount in every iteration</li>
-<li><strong>end_modulus</strong> (<em>float</em>) – Highest modulus used in the chooser. If the value is reached before the optimization is over, it is not
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_modulus</strong> (<em>float</em>) – Initially, every modulus-th configuration will be at random</p></li>
+<li><p><strong>modulus_increment</strong> (<em>float</em>) – Increase modulus by this amount in every iteration</p></li>
+<li><p><strong>end_modulus</strong> (<em>float</em>) – Highest modulus used in the chooser. If the value is reached before the optimization is over, it is not
 further increased. If it is not reached before the optimization is over, there will be no adjustment to make
-sure that the <code class="docutils literal notranslate"><span class="pre">end_modulus</span></code> is reached.</li>
+sure that the <code class="docutils literal notranslate"><span class="pre">end_modulus</span></code> is reached.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown.check">
 <code class="descname">check</code><span class="sig-paren">(</span><em>iteration: int</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserLinearCoolDown.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown.check" title="Permalink to this definition">¶</a></dt>
@@ -329,14 +321,11 @@ sure that the <code class="docutils literal notranslate"><span class="pre">end_m
 <em class="property">class </em><code class="descclassname">smac.optimizer.random_configuration_chooser.</code><code class="descname">ChooserNoCoolDown</code><span class="sig-paren">(</span><em>modulus: float = 2.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserNoCoolDown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserNoCoolDown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.random_configuration_chooser.RandomConfigurationChooser</span></code></a></p>
 <p>Interleave a random configuration after a constant number of configurations found by Bayesian optimization.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>modulus</strong> (<em>float</em>) – Every modulus-th configuration will be at random.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>modulus</strong> (<em>float</em>) – Every modulus-th configuration will be at random.</p>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserNoCoolDown.check">
 <code class="descname">check</code><span class="sig-paren">(</span><em>iteration</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserNoCoolDown.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserNoCoolDown.check" title="Permalink to this definition">¶</a></dt>
@@ -356,18 +345,14 @@ sure that the <code class="docutils literal notranslate"><span class="pre">end_m
 <em class="property">class </em><code class="descclassname">smac.optimizer.random_configuration_chooser.</code><code class="descname">ChooserProb</code><span class="sig-paren">(</span><em>prob: float</em>, <em>rng: mtrand.RandomState</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserProb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.random_configuration_chooser.RandomConfigurationChooser</span></code></a></p>
 <p>Interleave a random configuration according to a given probability.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>prob</strong> (<em>float</em>) – Probility of a random configuration</li>
-<li><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prob</strong> (<em>float</em>) – Probility of a random configuration</p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserProb.check">
 <code class="descname">check</code><span class="sig-paren">(</span><em>iteration: int</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserProb.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProb.check" title="Permalink to this definition">¶</a></dt>
@@ -387,19 +372,15 @@ sure that the <code class="docutils literal notranslate"><span class="pre">end_m
 <em class="property">class </em><code class="descclassname">smac.optimizer.random_configuration_chooser.</code><code class="descname">ChooserProbCoolDown</code><span class="sig-paren">(</span><em>prob: float</em>, <em>cool_down_fac: float</em>, <em>rng: mtrand.RandomState</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserProbCoolDown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProbCoolDown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.random_configuration_chooser.RandomConfigurationChooser</span></code></a></p>
 <p>Interleave a random configuration according to a given probability which is decreased over time.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>prob</strong> (<em>float</em>) – Probility of a random configuration</li>
-<li><strong>cool_down_fac</strong> (<em>float</em>) – Multiply the <code class="docutils literal notranslate"><span class="pre">prob</span></code> by <code class="docutils literal notranslate"><span class="pre">cool_down_fac</span></code> in each iteration</li>
-<li><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prob</strong> (<em>float</em>) – Probility of a random configuration</p></li>
+<li><p><strong>cool_down_fac</strong> (<em>float</em>) – Multiply the <code class="docutils literal notranslate"><span class="pre">prob</span></code> by <code class="docutils literal notranslate"><span class="pre">cool_down_fac</span></code> in each iteration</p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserProbCoolDown.check">
 <code class="descname">check</code><span class="sig-paren">(</span><em>iteration: int</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserProbCoolDown.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProbCoolDown.check" title="Permalink to this definition">¶</a></dt>

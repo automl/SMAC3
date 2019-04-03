@@ -262,66 +262,58 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Races challengers against an incumbent (a.k.a. SMAC’s intensification
 procedure).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>tae_runner</strong> (<em>tae.executre_ta_run_*.ExecuteTARun* Object</em>) – target algorithm run executor</li>
-<li><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – stats object</li>
-<li><strong>traj_logger</strong> (<a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger"><em>TrajLogger</em></a>) – TrajLogger object to log all new incumbents</li>
-<li><strong>rng</strong> (<em>np.random.RandomState</em>) – </li>
-<li><strong>instances</strong> (<em>typing.List</em><em>[</em><em>str</em><em>]</em>) – list of all instance ids</li>
-<li><strong>instance_specifics</strong> (<em>typing.Mapping</em><em>[</em><em>str</em><em>,</em><em>np.ndarray</em><em>]</em>) – mapping from instance name to instance specific string</li>
-<li><strong>cutoff</strong> (<em>int</em>) – runtime cutoff of TA runs</li>
-<li><strong>deterministic</strong> (<em>bool</em>) – whether the TA is deterministic or not</li>
-<li><strong>run_obj_time</strong> (<em>bool</em>) – whether the run objective is runtime or not (if true, apply adaptive capping)</li>
-<li><strong>always_race_against</strong> (<em>Configuration</em>) – if incumbent changes race this configuration always against new incumbent;
-can sometimes prevent over-tuning</li>
-<li><strong>use_ta_time_bound</strong> (<em>bool</em><em>,</em>) – if true, trust time reported by the target algorithms instead of
-measuring the wallclock time for limiting the time of intensification</li>
-<li><strong>run_limit</strong> (<em>int</em>) – Maximum number of target algorithm runs per call to intensify.</li>
-<li><strong>maxR</strong> (<em>int</em>) – Maximum number of runs per config (summed over all calls to
-intensifiy).</li>
-<li><strong>minR</strong> (<em>int</em>) – Minimum number of run per config (summed over all calls to
-intensify).</li>
-<li><strong>adaptive_capping_slackfactor</strong> (<em>float</em>) – slack factor of adpative capping (factor * adpative cutoff)</li>
-<li><strong>min_chall</strong> (<em>int</em>) – minimal number of challengers to be considered
-(even if time_bound is exhausted earlier)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tae_runner</strong> (<em>tae.executre_ta_run_*.ExecuteTARun* Object</em>) – target algorithm run executor</p></li>
+<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – stats object</p></li>
+<li><p><strong>traj_logger</strong> (<a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger"><em>TrajLogger</em></a>) – TrajLogger object to log all new incumbents</p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – </p></li>
+<li><p><strong>instances</strong> (<em>typing.List</em><em>[</em><em>str</em><em>]</em>) – list of all instance ids</p></li>
+<li><p><strong>instance_specifics</strong> (<em>typing.Mapping</em><em>[</em><em>str</em><em>,</em><em>np.ndarray</em><em>]</em>) – mapping from instance name to instance specific string</p></li>
+<li><p><strong>cutoff</strong> (<em>int</em>) – runtime cutoff of TA runs</p></li>
+<li><p><strong>deterministic</strong> (<em>bool</em>) – whether the TA is deterministic or not</p></li>
+<li><p><strong>run_obj_time</strong> (<em>bool</em>) – whether the run objective is runtime or not (if true, apply adaptive capping)</p></li>
+<li><p><strong>always_race_against</strong> (<em>Configuration</em>) – if incumbent changes race this configuration always against new incumbent;
+can sometimes prevent over-tuning</p></li>
+<li><p><strong>use_ta_time_bound</strong> (<em>bool</em><em>,</em>) – if true, trust time reported by the target algorithms instead of
+measuring the wallclock time for limiting the time of intensification</p></li>
+<li><p><strong>run_limit</strong> (<em>int</em>) – Maximum number of target algorithm runs per call to intensify.</p></li>
+<li><p><strong>maxR</strong> (<em>int</em>) – Maximum number of runs per config (summed over all calls to
+intensifiy).</p></li>
+<li><p><strong>minR</strong> (<em>int</em>) – Minimum number of run per config (summed over all calls to
+intensify).</p></li>
+<li><p><strong>adaptive_capping_slackfactor</strong> (<em>float</em>) – slack factor of adpative capping (factor * adpative cutoff)</p></li>
+<li><p><strong>min_chall</strong> (<em>int</em>) – minimal number of challengers to be considered
+(even if time_bound is exhausted earlier)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.intensification.intensification.Intensifier.intensify">
 <code class="descname">intensify</code><span class="sig-paren">(</span><em>challengers: List[ConfigSpace.configuration_space.Configuration], incumbent: ConfigSpace.configuration_space.Configuration, run_history: smac.runhistory.runhistory.RunHistory, aggregate_func: Callable, time_bound: float = 2147483647.0, log_traj: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier.intensify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier.intensify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Running intensification to determine the incumbent configuration.
 <em>Side effect:</em> adds runs to run_history</p>
 <p>Implementation of Procedure 2 in Hutter et al. (2011).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>challengers</strong> (<em>typing.List</em><em>[</em><em>Configuration</em><em>]</em>) – promising configurations</li>
-<li><strong>incumbent</strong> (<em>Configuration</em>) – best configuration so far</li>
-<li><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – stores all runs we ran so far</li>
-<li><strong>aggregate_func</strong> (<em>typing.Callable</em>) – aggregate error across instances</li>
-<li><strong>time_bound</strong> (<em>float</em><em>, </em><em>optional</em><em> (</em><em>default=2 ** 31 - 1</em><em>)</em>) – time in [sec] available to perform intensify</li>
-<li><strong>log_traj</strong> (<em>bool</em>) – whether to log changes of incumbents in trajectory</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>challengers</strong> (<em>typing.List</em><em>[</em><em>Configuration</em><em>]</em>) – promising configurations</p></li>
+<li><p><strong>incumbent</strong> (<em>Configuration</em>) – best configuration so far</p></li>
+<li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – stores all runs we ran so far</p></li>
+<li><p><strong>aggregate_func</strong> (<em>typing.Callable</em>) – aggregate error across instances</p></li>
+<li><p><strong>time_bound</strong> (<em>float</em><em>, </em><em>optional</em><em> (</em><em>default=2 ** 31 - 1</em><em>)</em>) – time in [sec] available to perform intensify</p></li>
+<li><p><strong>log_traj</strong> (<em>bool</em>) – whether to log changes of incumbents in trajectory</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><strong>incumbent</strong> (<em>Configuration()</em>) – current (maybe new) incumbent configuration</li>
-<li><strong>inc_perf</strong> (<em>float</em>) – empirical performance of incumbent configuration</li>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>incumbent</strong> (<em>Configuration()</em>) – current (maybe new) incumbent configuration</p></li>
+<li><p><strong>inc_perf</strong> (<em>float</em>) – empirical performance of incumbent configuration</p></li>
 </ul>
 </p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
