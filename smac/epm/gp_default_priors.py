@@ -2,7 +2,7 @@
 import numpy as np
 
 from smac.epm.gp_base_prior import Prior, TophatPrior, \
-    LognormalPrior, HorseshoePrior
+    LognormalPrior, HorseshoePrior, LowerBoundPrior
 
 
 class DefaultPrior(Prior):
@@ -31,6 +31,7 @@ class DefaultPrior(Prior):
 
         # Prior for the noise
         self.horseshoe = HorseshoePrior(scale=0.1, rng=self.rng)
+        self.noise_bound = LowerBoundPrior(lower_bound=-20, rng=self.rng)
 
     def lnprob(self, theta: np.ndarray):
         lp = 0
@@ -40,6 +41,7 @@ class DefaultPrior(Prior):
         lp += self.tophat.lnprob(theta[1:-1])
         # Noise
         lp += self.horseshoe.lnprob(theta[-1])
+        lp += self.noise_bound.lnprob(theta[-1])
 
         return lp
 
@@ -63,4 +65,5 @@ class DefaultPrior(Prior):
         grad[1: -1] += self.tophat.gradient(theta[1: -1])
         # Noise
         grad[-1] += self.horseshoe.gradient(theta[-1])
+        grad[-1] += self.noise_bound.gradient(theta[-1])
         return grad

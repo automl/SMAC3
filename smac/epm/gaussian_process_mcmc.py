@@ -107,10 +107,8 @@ class GaussianProcessMCMC(BaseModel):
             hyperparameter specified in the kernel.
         """
 
-        if len(y.shape) > 1:
-            y = y.flatten()
-            if len(y) != len(X):
-                raise ValueError('Shape mismatch: %s vs %s' % (y.shape, X.shape))
+        if self.normalize_y:
+            y = self._normalize_y(y)
 
         self.gp = skopt.learning.gaussian_process.GaussianProcessRegressor(
             kernel=self.kernel,
@@ -124,7 +122,7 @@ class GaussianProcessMCMC(BaseModel):
         if do_optimize:
             self.gp.fit(X, y)
 
-            sampler = 'emcee'
+            sampler = 'nuts'
             if sampler == 'emcee':
                 sampler = emcee.EnsembleSampler(self.n_mcmc_walkers,
                                                 len(self.kernel.theta),
@@ -151,15 +149,34 @@ class GaussianProcessMCMC(BaseModel):
 
                 # Take the last samples from each walker
                 self.hypers = sampler.chain[:, -1]
+                print('hypers', self.hypers.mean(axis=0))
             elif sampler == 'nuts':
+                # Originally published as:
+                # http://www.stat.columbia.edu/~gelman/research/published/nuts.pdf
+                # A good explanation of HMC:
+                # https://theclevermachine.wordpress.com/2012/11/18/mcmc-hamiltonian-monte-carlo-a-k-a-hybrid-monte-carlo/
+                # A good explanation of HMC and NUTS can be found in:
+                # https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12681
+
                 # Perform initial fit to the data to obtain theta0
                 if not self.burned:
                     theta0 = self.gp.kernel.theta
                     self.burned = True
                 else:
                     theta0 = self.p0
-                samples, _, _ = nuts.nuts.nuts6(self._ll_w_grad, 50, 100, theta0, 0.6)
+                samples, _, _ = nuts.nuts.nuts6(
+                    f=self._ll_w_grad,
+                    Madapt=100,
+                    M=100,
+                    theta0=theta0,
+                    delta=0.6,
+                    adapt_mass=True,
+                    # Rather low max depth to keep the number of required gradient steps low
+                    max_depth=10,
+                    rng=self.rng,
+                )
                 self.p0 = samples.mean(axis=0)
+                print('hypers', self.p0)
                 self.hypers = samples[::10]
             else:
                 raise ValueError(sampler)
@@ -206,10 +223,10 @@ class GaussianProcessMCMC(BaseModel):
         # Bound the hyperparameter space to keep things sane. Note all
         # hyperparameters live on a log scale
         if np.ndim(theta) == 0:
-            if np.any((-20 > theta) + (theta > 20)):
+            if (theta < -20) or (theta > 20):
                 return -1e25
         else:
-            if ((-20 > theta) + (theta > 20)).any():
+            if ((theta < -20) | (theta > 20)).any():
                 return -1e25
 
         try:
@@ -221,7 +238,6 @@ class GaussianProcessMCMC(BaseModel):
         if self.prior is not None:
             lml += self.prior.lnprob(theta)
 
-        # We add a minus here because scipy is minimizing
         if not np.isfinite(lml):
             return -1e25
         else:
@@ -246,8 +262,6 @@ class GaussianProcessMCMC(BaseModel):
 
         # Bound the hyperparameter space to keep things sane. Note all
         # hyperparameters live on a log scale
-        if np.any((-20 > theta) + (theta > 20)):
-            return -1e25, np.zeros(theta.shape)
 
         try:
             lml, grad = self.gp.log_marginal_likelihood(theta, eval_gradient=True)
@@ -294,6 +308,8 @@ class GaussianProcessMCMC(BaseModel):
         var = np.zeros([len(self.models), X_test.shape[0]])
         for i, model in enumerate(self.models):
             mu_tmp, var_tmp = model.predict(X_test)
+            if self.normalize_y:
+                mu_tmp, var_tmp = self._untransform_y(mu_tmp, var_tmp)
             mu[i] = mu_tmp.flatten()
             var[i] = var_tmp.flatten()
 

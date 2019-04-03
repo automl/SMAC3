@@ -486,3 +486,28 @@ class NormalPrior(Prior):
         """
         return (1 / (self.sigma * np.sqrt(2 * np.pi))) *\
                (- theta / (self.sigma ** 2) * np.exp(- (theta ** 2) / (2 * self.sigma ** 2)))
+
+
+class LowerBoundPrior(Prior):
+    def __init__(self, lower_bound=-20, rng: np.random.RandomState=None):
+        super().__init__(rng=rng)
+        self.lower_bound = lower_bound
+
+    def lnprob(self, theta: np.ndarray):
+        if np.ndim(theta) == 0:
+            if theta < self.lower_bound:
+                return 2 * (theta - self.lower_bound)
+            else:
+                return 0
+        else:
+            raise NotImplementedError()
+
+    def gradient(self, theta: np.ndarray):
+        if np.ndim(theta) == 0:
+            if theta < self.lower_bound:
+                return 2
+            else:
+                return 0
+        else:
+            raise NotImplementedError()
+

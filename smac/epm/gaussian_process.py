@@ -42,11 +42,8 @@ class GaussianProcess(BaseModel):
     prior : prior object
         Defines a prior for the hyperparameters of the GP. Make sure that
         it implements the Prior interface.
-    normalize_output : bool
+    normalize_y : bool
         Zero mean unit variance normalization of the output values
-    normalize_input : bool
-        Normalize all inputs to be in [0, 1]. This is important to define good priors for the
-        length scales.
     rng: np.random.RandomState
         Random number generator
     """
@@ -92,9 +89,12 @@ class GaussianProcess(BaseModel):
             the default hyperparameters of the kernel are used.
         """
 
+        if self.normalize_y:
+            y = self._normalize_y(y)
+
         self.gp = skopt.learning.gaussian_process.GaussianProcessRegressor(
             kernel=self.kernel,
-            normalize_y=self.normalize_y,
+            normalize_y=False,
             optimizer=None,
             n_restarts_optimizer=-1,  # Do not use scikit-learn's optimization routine
             alpha=0,  # Governed by the kernel
@@ -186,6 +186,8 @@ class GaussianProcess(BaseModel):
 
         mu, var = self.gp.predict(X_test, return_cov=True)
         var = np.diag(var)
+        if self.normalize_y:
+            mu, var = self._untransform_y(mu, var)
 
         # Clip negative variances and set them to the smallest
         # positive float value
@@ -215,6 +217,10 @@ class GaussianProcess(BaseModel):
             raise Exception('Model has to be trained first!')
 
         funcs = self.gp.sample_y(X_test, n_samples=n_funcs, random_state=self.rng)
+        funcs = np.squeeze(funcs, axis=1)
+
+        if self.normalize_y:
+            funcs = self._untransform_y(funcs)
 
         if len(funcs.shape) == 1:
             return funcs[None, :]

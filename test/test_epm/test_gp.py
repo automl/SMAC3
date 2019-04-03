@@ -11,7 +11,7 @@ from smac.epm.gp_default_priors import DefaultPrior
 from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel
 
 
-def get_gp(n_dimensions, rs, noise=1e-3):
+def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True):
     cov_amp = ConstantKernel(2.0, constant_value_bounds=(1e-10, 2))
     exp_kernel = Matern(
         np.ones([n_dimensions]),
@@ -35,7 +35,7 @@ def get_gp(n_dimensions, rs, noise=1e-3):
         kernel=kernel,
         prior=prior,
         seed=rs.randint(low=1, high=10000),
-        normalize_y=False,
+        normalize_y=normalize_y,
     )
     return model
 
@@ -101,12 +101,13 @@ class TestGP(unittest.TestCase):
         rs = np.random.RandomState(1)
         model = get_gp(3, rs)
         model.train(np.vstack((X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y)))
+        print(model.kernel.theta)
 
         y_hat, mu_hat = model.predict(X)
         for y_i, y_hat_i, mu_hat_i in zip(
             y.reshape((1, -1)).flatten(), y_hat.reshape((1, -1)).flatten(), mu_hat.reshape((1, -1)).flatten(),
         ):
-            self.assertAlmostEqual(y_i, y_hat_i, delta=2)
+            self.assertAlmostEqual(y_hat_i, y_i, delta=2)
             self.assertAlmostEqual(mu_hat_i, 0, delta=2)
 
         # Regression test that performance does not drastically decrease in the near future
@@ -122,7 +123,7 @@ class TestGP(unittest.TestCase):
         model = get_gp(X.shape[1], rs)
         cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
 
-        maes = [8.6835211971259218715, 9.087941533717404484]
+        maes = [8.937466457514421494, 9.166446381461289561]
 
         for i, (train_split, test_split) in enumerate(cv.split(X, y)):
             X_train = X[train_split]
@@ -146,3 +147,36 @@ class TestGP(unittest.TestCase):
             if error > 0.1:
                 n_above_1 += 1
         self.assertLessEqual(n_above_1, 10)
+
+    def test_sampling_shape(self):
+        X = np.arange(-5, 5, 0.1).reshape((-1, 1))
+        X_test = np.arange(-5.05, 5.05, 0.1).reshape((-1, 1))
+        y = np.sin(X)
+        rng = np.random.RandomState(1)
+        for gp in (
+            get_gp(n_dimensions=1, rs=rng, noise=1e-10, normalize_y=False),
+            get_gp(n_dimensions=1, rs=rng, noise=1e-10, normalize_y=True),
+        ):
+            gp._train(X, y)
+            func = gp.sample_functions(X_test=X_test, n_funcs=1)
+            self.assertEqual(func.shape, (101, 1))
+            func = gp.sample_functions(X_test=X_test, n_funcs=2)
+            self.assertEqual(func.shape, (101, 2))
+
+    def test_normalization(self):
+        X = np.arange(-5, 5, 0.1).reshape((-1, 1))
+        X_test = np.arange(-5.05, 5.05, 0.1).reshape((-1, 1))
+        y = np.sin(X)
+        rng = np.random.RandomState(1)
+        gp = get_gp(n_dimensions=1, rs=rng, noise=1e-10, normalize_y=False)
+        gp._train(X, y, do_optimize=False)
+        mu_hat, var_hat = gp.predict(X_test)
+        gp_norm = get_gp(n_dimensions=1, rs=rng, noise=1e-10, normalize_y=True)
+        gp_norm._train(X, y, do_optimize=False)
+        mu_hat_prime, var_hat_prime = gp_norm.predict(X_test)
+        np.testing.assert_array_almost_equal(mu_hat, mu_hat_prime, decimal=4)
+        np.testing.assert_array_almost_equal(var_hat, var_hat_prime, decimal=4)
+
+        func = gp.sample_functions(X_test=X_test, n_funcs=2)
+        func_prime = gp_norm.sample_functions(X_test=X_test, n_funcs=2)
+        np.testing.assert_array_almost_equal(func, func_prime)
