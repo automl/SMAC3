@@ -1,6 +1,7 @@
 from inspect import signature
 
 import skopt.learning.gaussian_process.kernels
+import numpy as np
 
 
 def _signature(self, func):
@@ -104,7 +105,35 @@ def clone_with_theta(self, theta):
     return self
 
 
+def set_active_dims(self, operate_on=None):
+    """Sets dimensions this kernel should work on
+
+    Parameters
+    ----------
+    operate_on : None, list or array, shape (n_dims,)
+    """
+    if operate_on is not None and type(operate_on) in (list, np.ndarray):
+        self.operate_on = np.array(operate_on, dtype=np.int)
+        self.len_active = len(operate_on)
+    else:
+        self.operate_on = None
+        self.len_active = None
+
+
 class MagicMixin:
+
+    def __call__(self, X, Y=None, eval_gradient=False):
+        if self.operate_on is None:
+            return super(MagicMixin, self).__call__(X, Y, eval_gradient)
+        else:
+            if Y is None:
+                return super(MagicMixin, self).__call__(X=X[:, self.operate_on].reshape([-1, self.len_active]), Y=None,
+                                                        eval_gradient=eval_gradient)
+            else:
+                return super(MagicMixin, self).__call__(X=X[:, self.operate_on].reshape([-1, self.len_active]),
+                                                        Y=Y[:, self.operate_on].reshape([-1, self.len_active]),
+                                                        eval_gradient=eval_gradient)
+
     def __add__(self, b):
         print('Sum')
         if not isinstance(b, skopt.learning.gaussian_process.kernels.Kernel):
@@ -131,31 +160,56 @@ class MagicMixin:
 
 
 class Sum(MagicMixin, skopt.learning.gaussian_process.kernels.Sum):
-    pass
+
+    def __init__(self, k1, k2, operate_on=None):
+        super(Sum, self).__init__(k1=k1, k2=k2)
+        self.set_active_dims(operate_on)
 
 
 class Product(MagicMixin, skopt.learning.gaussian_process.kernels.Product):
-    pass
+
+    def __init__(self, k1, k2, operate_on=None):
+        super(Product, self).__init__(k1=k1, k2=k2)
+        self.set_active_dims(operate_on)
 
 
 class ConstantKernel(MagicMixin, skopt.learning.gaussian_process.kernels.ConstantKernel):
-    pass
+
+    def __init__(self, constant_value=1.0, constant_value_bounds=(1e-5, 1e5), operate_on=None):
+        super(ConstantKernel, self).__init__(constant_value=constant_value, constant_value_bounds=constant_value_bounds)
+        self.set_active_dims(operate_on)
 
 
 class Matern(MagicMixin, skopt.learning.gaussian_process.kernels.Matern):
-    pass
+
+    def __init__(self, length_scale=1.0, length_scale_bounds=(1e-5, 1e5), nu=1.5, operate_on=None):
+        super(Matern, self).__init__(length_scale=length_scale, length_scale_bounds=length_scale_bounds, nu=nu)
+        self.set_active_dims(operate_on)
 
 
 class RBF(MagicMixin, skopt.learning.gaussian_process.kernels.RBF):
-    pass
+
+    def __init__(self, length_scale=1.0, length_scale_bounds=(1e-5, 1e5), operate_on=None):
+        super(RBF, self).__init__(length_scale=length_scale, length_scale_bounds=length_scale_bounds)
+        self.set_active_dims(operate_on)
 
 
 class WhiteKernel(MagicMixin, skopt.learning.gaussian_process.kernels.WhiteKernel):
-    pass
+
+    def __init__(self, noise_level=1.0, noise_level_bounds=(1e-5, 1e5), operate_on=None):
+        super(WhiteKernel, self).__init__(noise_level=noise_level, noise_level_bounds=noise_level_bounds)
+        self.set_active_dims(operate_on)
+
+
+class HammingKernel(MagicMixin, skopt.learning.gaussian_process.kernels.HammingKernel):
+
+    def __init__(self, length_scale=1.0, length_scale_bounds=(1e-5, 1e5), operate_on=None):
+        super(HammingKernel, self).__init__(length_scale=length_scale, length_scale_bounds=length_scale_bounds)
+        self.set_active_dims(operate_on)
 
 
 for kernel in (
-    ConstantKernel, Matern, RBF, WhiteKernel,  # kernels
+    ConstantKernel, Matern, RBF, WhiteKernel, HammingKernel,  # kernels
     Product, Sum,  # Operations
 ):
     kernel.get_params = get_params
@@ -163,3 +217,4 @@ for kernel in (
     kernel.hyperparameters = hyperparameters
     kernel.n_dims = n_dims
     kernel.clone_with_theta = clone_with_theta
+    kernel.set_active_dims = set_active_dims
