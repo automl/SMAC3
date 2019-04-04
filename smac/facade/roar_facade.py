@@ -91,4 +91,6 @@ class ROAR(SMAC4AC):
             run_id=run_id,
             acquisition_function_optimizer=RandomSearch,
             model=RandomEPM,
+            rng=rng,
+            stats=stats
         )
