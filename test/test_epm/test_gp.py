@@ -1,4 +1,3 @@
-import unittest
 import unittest.mock
 
 import scipy.optimize
@@ -8,7 +7,7 @@ import sklearn.model_selection
 
 from smac.epm.gaussian_process import GaussianProcess
 from smac.epm.gp_default_priors import DefaultPrior
-from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel
+from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel, HammingKernel
 
 
 def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True):
@@ -40,44 +39,117 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True):
     return model
 
 
+def get_cont_data(rs):
+    X = rs.rand(20, 10)
+    Y = rs.rand(10, 1)
+    n_dims = 10
+    return X, Y, n_dims
+
+
+def get_cat_data(rs):
+    X_cont = rs.rand(20, 5)
+    X_cat = rs.randint(low=0, high=3, size=(20, 5))
+    X = np.concatenate([X_cat, X_cont], axis=1)
+    Y = rs.rand(10, 1)
+    cat_dims = [0, 1, 2, 3, 4]
+    cont_dims = [5, 6, 7, 8, 9]
+    return X, Y, cat_dims, cont_dims
+
+
+def get_mixed_gp(cat_dims, cont_dims, rs, noise=1e-3, normalize_y=True):
+    n_dimensions = len(cat_dims) + len(cont_dims)
+    cov_amp = ConstantKernel(2.0, constant_value_bounds=(1e-10, 2))
+
+    exp_kernel = Matern(
+        np.ones([len(cont_dims)]),
+        [(np.exp(-10), np.exp(2)) for _ in range(len(cont_dims))],
+        nu=2.5,
+        operate_on=cont_dims,
+    )
+
+    ham_kernel = HammingKernel(
+        np.ones([len(cat_dims)]),
+        [(np.exp(-10), np.exp(2)) for _ in range(len(cat_dims))],
+        operate_on=cat_dims,
+    )
+    noise_kernel = WhiteKernel(
+        noise_level=noise,
+        noise_level_bounds=(1e-10, 2),
+    )
+    kernel = cov_amp * (exp_kernel * ham_kernel) + noise_kernel
+
+    prior = DefaultPrior(len(kernel.theta) + 1, rng=rs)
+
+    bounds = [0] * n_dimensions
+    types = np.zeros(n_dimensions)
+    for c in cont_dims:
+        bounds[c] = (0., 1.)
+    for c in cat_dims:
+        types[c] = 3
+        bounds[c] = (3, np.nan)
+
+    model = GaussianProcess(
+        bounds=bounds,
+        types=types,
+        kernel=kernel,
+        prior=prior,
+        seed=rs.randint(low=1, high=10000),
+        normalize_y=normalize_y,
+    )
+    return model
+
+
 class TestGP(unittest.TestCase):
     def test_predict_wrong_X_dimensions(self):
         rs = np.random.RandomState(1)
-        model = get_gp(10, rs)
 
-        X = rs.rand(10)
-        self.assertRaisesRegexp(ValueError, "Expected 2d array, got 1d array!",
-                                model.predict, X)
-        X = rs.rand(10, 10, 10)
-        self.assertRaisesRegexp(ValueError, "Expected 2d array, got 3d array!",
-                                model.predict, X)
+        # cont
+        X, Y, n_dims = get_cont_data(rs)
+        # cat
+        X, Y, cat_dims, cont_dims = get_cat_data(rs)
 
-        X = rs.rand(10, 5)
-        self.assertRaisesRegexp(ValueError, "Rows in X should have 10 entries "
-                                            "but have 5!",
-                                model.predict, X)
+        for model in (get_gp(n_dims, rs), get_mixed_gp(cat_dims, cont_dims, rs)):
+            X = rs.rand(10)
+            self.assertRaisesRegexp(ValueError, "Expected 2d array, got 1d array!",
+                                    model.predict, X)
+            X = rs.rand(10, 10, 10)
+            self.assertRaisesRegexp(ValueError, "Expected 2d array, got 3d array!",
+                                    model.predict, X)
+
+            X = rs.rand(10, 5)
+            self.assertRaisesRegexp(ValueError, "Rows in X should have 10 entries "
+                                                "but have 5!",
+                                    model.predict, X)
 
     def test_predict(self):
         rs = np.random.RandomState(1)
-        X = rs.rand(20, 10)
-        Y = rs.rand(10, 1)
-        model = get_gp(10, rs)
-        model.train(X[:10], Y[:10])
-        m_hat, v_hat = model.predict(X[10:])
-        self.assertEqual(m_hat.shape, (10, 1))
-        self.assertEqual(v_hat.shape, (10, 1))
+
+        # cont
+        X, Y, n_dims = get_cont_data(rs)
+        # cat
+        X, Y, cat_dims, cont_dims = get_cat_data(rs)
+
+        for model in (get_gp(n_dims, rs), get_mixed_gp(cat_dims, cont_dims, rs)):
+            model = get_gp(10, rs)
+            model.train(X[:10], Y[:10])
+            m_hat, v_hat = model.predict(X[10:])
+            self.assertEqual(m_hat.shape, (10, 1))
+            self.assertEqual(v_hat.shape, (10, 1))
 
     @unittest.mock.patch.object(GaussianProcess, 'predict')
     def test_predict_marginalized_over_instances_no_features(self, rf_mock):
         """The GP should fall back to the regular predict() method."""
-
         rs = np.random.RandomState(1)
-        X = rs.rand(20, 10)
-        Y = rs.rand(10, 1)
-        model = get_gp(10, rs)
-        model.train(X[:10], Y[:10])
-        model.predict(X[10:])
-        self.assertEqual(rf_mock.call_count, 1)
+
+        # cont
+        X, Y, n_dims = get_cont_data(rs)
+        # cat
+        X, Y, cat_dims, cont_dims = get_cat_data(rs)
+
+        for ct, model in enumerate((get_gp(n_dims, rs), get_mixed_gp(cat_dims, cont_dims, rs))):
+            model.train(X[:10], Y[:10])
+            model.predict(X[10:])
+            self.assertEqual(rf_mock.call_count, ct+1)
 
     def test_predict_with_actual_values(self):
         X = np.array([

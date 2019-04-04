@@ -4,7 +4,7 @@ import skopt
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
 from smac.epm.gp_default_priors import DefaultPrior
-from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel
+from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel, HammingKernel
 from smac.utils.util_funcs import get_types, get_rng
 from smac.initial_design.sobol_design import SobolDesign
 from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
@@ -56,16 +56,41 @@ class SMAC4BO(SMAC4AC):
             n_dims = len(types)
 
             cov_amp = ConstantKernel(2.0, constant_value_bounds=(np.exp(-10), np.exp(2)))
-            exp_kernel = Matern(
-                np.ones([n_dims]),
-                [(np.exp(-10), np.exp(2)) for _ in range(n_dims)],
-                nu=2.5,
-            )
+
+            cont_dims = np.nonzero(types == 0)[0]
+            cat_dims = np.nonzero(types != 0)[0]
+
+            if len(cont_dims) > 0:
+                exp_kernel = Matern(
+                    np.ones([len(cont_dims)]),
+                    [(np.exp(-10), np.exp(2)) for _ in range(len(cont_dims))],
+                    nu=2.5,
+                    operate_on=cont_dims,
+                )
+
+            if len(cat_dims) > 0:
+                ham_kernel = HammingKernel(
+                    np.ones([len(cat_dims)]),
+                    [(np.exp(-10), np.exp(2)) for _ in range(len(cat_dims))],
+                    operate_on=cat_dims,
+                )
+
             noise_kernel = WhiteKernel(
                 noise_level=1e-8,
                 noise_level_bounds=(np.exp(-10), np.exp(2)),
             )
-            kernel = cov_amp * exp_kernel + noise_kernel
+
+            if len(cont_dims) > 0 and len(cat_dims) > 0:
+                # both
+                kernel = cov_amp * (exp_kernel*ham_kernel) + noise_kernel
+            elif len(cont_dims) > 0 and len(cat_dims) == 0:
+                # only cont
+                kernel = cov_amp * exp_kernel + noise_kernel
+            elif len(cont_dims) == 0 and len(cat_dims) > 0:
+                # only cont
+                kernel = cov_amp * ham_kernel + noise_kernel
+            else:
+                raise ValueError()
 
             prior = DefaultPrior(len(kernel.theta), rng=rng)
 
