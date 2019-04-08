@@ -40,7 +40,8 @@ def get_types(config_space, instance_features=None):
             bounds[i] = (0.0, 1.0)
         elif not isinstance(param, (UniformFloatHyperparameter,
                                     UniformIntegerHyperparameter,
-                                    OrdinalHyperparameter)):
+                                    OrdinalHyperparameter,
+                                    CategoricalHyperparameter)):
             raise TypeError("Unknown hyperparameter type %s" % type(param))
 
     if instance_features is not None:
