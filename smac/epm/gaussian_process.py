@@ -56,6 +56,7 @@ class GaussianProcess(BaseModel):
         kernel: skopt.learning.gaussian_process.kernels.Kernel,
         prior: Prior=None,
         normalize_y: bool=True,
+        n_opt_restarts=0,
         **kwargs
     ):
 
@@ -65,10 +66,11 @@ class GaussianProcess(BaseModel):
         self.gp = None
         self.prior = prior
         self.normalize_y = normalize_y
-        self.X = None
-        self.y = None
+        self.n_opt_restarts = n_opt_restarts
+
         self.hypers = []
         self.is_trained = False
+        self._n_ll_evals = 0
 
     def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool=True):
         """
@@ -92,16 +94,26 @@ class GaussianProcess(BaseModel):
         if self.normalize_y:
             y = self._normalize_y(y)
 
-        self.gp = skopt.learning.gaussian_process.GaussianProcessRegressor(
-            kernel=self.kernel,
-            normalize_y=False,
-            optimizer=None,
-            n_restarts_optimizer=-1,  # Do not use scikit-learn's optimization routine
-            alpha=0,  # Governed by the kernel
-            noise=None,
-        )
-        # Initialize some variables
-        self.gp.fit(X, y)
+        n_tries = 5
+        for i in range(n_tries):
+            try:
+                # Instantiate a GP for each hyperparameter configuration
+                self.gp = skopt.learning.gaussian_process.GaussianProcessRegressor(
+                    kernel=self.kernel,
+                    normalize_y=False,
+                    optimizer=None,
+                    n_restarts_optimizer=-1,  # Do not use scikit-learn's optimization routine
+                    alpha=0,  # Governed by the kernel
+                    noise=None,
+                )
+                self.gp.fit(X, y)
+            except np.linalg.LinAlgError as e:
+                # Assume that the last entry of theta is the noise
+                theta = self.kernel.theta
+                theta[-1] += 1
+                self.kernel.theta = theta
+                if n_tries + 1 == 5:
+                    raise e
 
         if do_optimize:
             self.hypers = self._optimize()
@@ -130,6 +142,7 @@ class GaussianProcess(BaseModel):
         float
             lnlikelihood + prior
         """
+        self._n_ll_evals += 1
 
         lml, grad = self.gp.log_marginal_likelihood(theta, eval_gradient=True)
 
@@ -154,11 +167,39 @@ class GaussianProcess(BaseModel):
         theta : np.ndarray(H)
             Hyperparameter vector that maximizes the marginal log likelihood
         """
+
+        log_bounds = [(b[0], b[1]) for b in self.gp.kernel.bounds]
+
         # Start optimization from the previous hyperparameter configuration
-        p0 = self.gp.kernel.theta
-        bounds = [(np.exp(b[0]), np.exp(b[1])) for b in self.gp.kernel.bounds]
-        theta, f_opt, _ = optimize.fmin_l_bfgs_b(self._nll, p0, bounds=bounds)
-        return theta
+        if self.n_opt_restarts <= 0:
+            p0 = [self.gp.kernel.theta]
+        else:
+            if self.prior is None:
+                p0 = []
+                for hp_bound in log_bounds:
+                    try:
+                        sample = self.rng.uniform(
+                            low=hp_bound[0],
+                            high=hp_bound[1],
+                            size=(self.n_opt_restarts,),
+                        )
+                    except OverflowError:
+                        raise ValueError('OverflowError while sampling from (%f, %f)' % (hp_bound[0], hp_bound[1]))
+                    p0.append(sample)
+                p0 = np.vstack(p0).transpose()
+            else:
+                p0 = self.prior.sample_from_prior(self.n_opt_restarts)
+
+        theta_star = None
+        f_opt_star = np.inf
+        iter_star = -1
+        for i, start_point in enumerate(p0):
+            theta, f_opt, _ = optimize.fmin_l_bfgs_b(self._nll, start_point, bounds=log_bounds)
+            if f_opt < f_opt_star:
+                f_opt_star = f_opt
+                theta_star = theta
+                iter_star = i
+        return theta_star
 
     def _predict(self, X_test: np.ndarray, full_cov: bool=False):
         r"""

@@ -86,9 +86,11 @@ class GaussianProcessMCMC(BaseModel):
         self.burnin_steps = burnin_steps
         self.models = []
         self.normalize_y = normalize_y
-        self.X = None
-        self.y = None
+
         self.is_trained = False
+
+        # Internal statistics
+        self._n_ll_evals = 0
 
     def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool=True):
         """
@@ -122,7 +124,7 @@ class GaussianProcessMCMC(BaseModel):
         if do_optimize:
             self.gp.fit(X, y)
 
-            sampler = 'nuts'
+            sampler = 'emcee'
             if sampler == 'emcee':
                 sampler = emcee.EnsembleSampler(self.n_mcmc_walkers,
                                                 len(self.kernel.theta),
@@ -149,7 +151,7 @@ class GaussianProcessMCMC(BaseModel):
 
                 # Take the last samples from each walker
                 self.hypers = sampler.chain[:, -1]
-                print('hypers', self.hypers.mean(axis=0))
+                print('hypers', self.hypers.mean(axis=0), np.exp(self.hypers.mean(axis=0)))
             elif sampler == 'nuts':
                 # Originally published as:
                 # http://www.stat.columbia.edu/~gelman/research/published/nuts.pdf
@@ -166,18 +168,19 @@ class GaussianProcessMCMC(BaseModel):
                     theta0 = self.p0
                 samples, _, _ = nuts.nuts.nuts6(
                     f=self._ll_w_grad,
-                    Madapt=100,
-                    M=100,
+                    Madapt=250,
+                    M=250,
                     theta0=theta0,
-                    delta=0.6,
+                    # Increasing this value results in longer running times
+                    delta=0.2,
                     adapt_mass=True,
                     # Rather low max depth to keep the number of required gradient steps low
                     max_depth=10,
                     rng=self.rng,
                 )
                 self.p0 = samples.mean(axis=0)
-                print('hypers', self.p0)
-                self.hypers = samples[::10]
+                print('hypers', 'log space', self.p0, 'regular space', np.exp(self.p0))
+                self.hypers = samples[::25]
             else:
                 raise ValueError(sampler)
 
@@ -198,10 +201,27 @@ class GaussianProcessMCMC(BaseModel):
                 normalize_y=self.normalize_y,
                 seed=self.rng.randint(low=0, high=10000),
             )
+            try:
+                model._train(X, y, do_optimize=False)
+                self.models.append(model)
+            except np.linalg.LinAlgError:
+                pass
+
+        if len(self.models) == 0:
+            kernel = deepcopy(self.kernel)
+            kernel.theta = self.p0
+            model = GaussianProcess(
+                types=self.types,
+                bounds=self.bounds,
+                kernel=kernel,
+                normalize_y=self.normalize_y,
+                seed=self.rng.randint(low=0, high=10000),
+            )
             model._train(X, y, do_optimize=False)
             self.models.append(model)
 
         self.is_trained = True
+        print('#LL evaluations', self._n_ll_evals)
 
     def _ll(self, theta: np.ndarray) -> float:
         """
@@ -219,6 +239,7 @@ class GaussianProcessMCMC(BaseModel):
         float
             lnlikelihood + prior
         """
+        self._n_ll_evals += 1
 
         # Bound the hyperparameter space to keep things sane. Note all
         # hyperparameters live on a log scale
@@ -259,9 +280,13 @@ class GaussianProcessMCMC(BaseModel):
         float
             lnlikelihood + prior
         """
+        self._n_ll_evals += 1
 
-        # Bound the hyperparameter space to keep things sane. Note all
-        # hyperparameters live on a log scale
+        # Bound the hyperparameter space to keep things sane. Note all hyperparameters live on a log scale
+        if (theta < -50).any():
+            theta[theta < -50] = -50
+        if (theta > 50).any():
+            theta[theta > 50] = 50
 
         try:
             lml, grad = self.gp.log_marginal_likelihood(theta, eval_gradient=True)
@@ -274,7 +299,7 @@ class GaussianProcessMCMC(BaseModel):
             grad += self.prior.gradient(theta)
 
         # We add a minus here because scipy is minimizing
-        if not np.isfinite(lml) or np.any(~np.isfinite(grad)):
+        if not np.isfinite(lml) or (~np.isfinite(grad)).any():
             return -1e25, np.zeros(theta.shape)
         else:
             return lml, grad

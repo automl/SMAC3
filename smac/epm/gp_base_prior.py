@@ -277,16 +277,22 @@ class HorseshoePrior(Prior):
         if np.ndim(theta) == 0:
             if theta == 0:
                 return np.inf  # POSITIVE infinity (this is the "spike")
+            else:
+                a = -(6 * self.scale_square)
+                b = (3 * self.scale_square + math.exp(2 * theta))
+                b *= np.log(3 * self.scale_square * math.exp(- 2 * theta) + 1)
+                b = max(b, 1e-14)
+                return a / b
+
         else:
             if np.any(theta == 0.0):
                 return np.ones(theta.shape) * np.inf  # POSITIVE infinity (this is the "spike")
-
-        a = -(6 * np.power(self.scale, 2))
-        b = (3 * np.power(self.scale, 2) + np.exp(2 * theta))
-        b *= np.log(3 * np.power(self.scale, 2) * np.exp(- 2 * theta) + 1)
-        b = np.maximum(b, 1e-14)
-        rval = a / b
-        return rval
+            else:
+                a = -(6 * self.scale_square)
+                b = (3 * self.scale_square + np.exp(2 * theta))
+                b *= np.log(3 * self.scale_square * np.exp(- 2 * theta) + 1)
+                b = np.maximum(b, 1e-14)
+                return a / b
 
 
 class LognormalPrior(Prior):
@@ -496,7 +502,7 @@ class LowerBoundPrior(Prior):
     def lnprob(self, theta: np.ndarray):
         if np.ndim(theta) == 0:
             if theta < self.lower_bound:
-                return 2 * (theta - self.lower_bound)
+                return - ((theta - self.lower_bound) ** 2)
             else:
                 return 0
         else:
@@ -505,7 +511,7 @@ class LowerBoundPrior(Prior):
     def gradient(self, theta: np.ndarray):
         if np.ndim(theta) == 0:
             if theta < self.lower_bound:
-                return 2
+                return -2 * (theta - self.lower_bound)
             else:
                 return 0
         else:
