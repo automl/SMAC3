@@ -31,7 +31,7 @@ class DefaultPrior(Prior):
 
         # Prior for the noise
         self.horseshoe = HorseshoePrior(scale=0.1, rng=self.rng)
-        self.noise_bound = LowerBoundPrior(lower_bound=-20, rng=self.rng)
+        self.noise_bound = LowerBoundPrior(lower_bound=np.log(1e-10), rng=self.rng)
 
     def lnprob(self, theta: np.ndarray):
         lp = 0

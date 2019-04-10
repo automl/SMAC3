@@ -13,18 +13,6 @@ class BaseModel(AbstractEPM):
 
         self.rng = np.random.RandomState(seed)
 
-        lower = []
-        upper = []
-        for bound in bounds:
-            lower.append(bound[0])
-            upper.append(bound[1])
-
-        self.lower = np.array(lower)
-        self.upper = np.array(upper)
-
-        self.X = None
-        self.y = None
-
     def _normalize_y(self, y):
         self.mean_y_ = np.mean(y)
         self.std_y_ = np.std(y)
