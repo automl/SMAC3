@@ -2,9 +2,9 @@ import math
 
 import numpy as np
 import scipy.stats as sps
+import scipy.special as scsp
 
 from smac.utils.constants import VERY_SMALL_NUMBER
-
 
 class Prior(object):
 
@@ -296,6 +296,7 @@ class HorseshoePrior(Prior):
 
 
 class LognormalPrior(Prior):
+
     def __init__(self, sigma: float, mean: float=0, rng: np.random.RandomState=None):
         """
         Log normal prior
@@ -409,6 +410,7 @@ class LognormalPrior(Prior):
 
 
 class NormalPrior(Prior):
+
     def __init__(self, sigma: float, mean: float=0, rng: np.random.RandomState=None):
         """
         Normal prior
@@ -452,7 +454,7 @@ class NormalPrior(Prior):
         float
             The log probability of theta
         """
-
+        # TODO: I think this should be logpdf
         return sps.norm.pdf(theta, scale=self.sigma, loc=self.mean)
 
     def sample_from_prior(self, n_samples: int):
@@ -517,3 +519,71 @@ class LowerBoundPrior(Prior):
         else:
             raise NotImplementedError()
 
+
+class GammaPrior(Prior):
+
+    def __init__(self, a: float, scale: float, loc: float=0, rng: np.random.RandomState=None):
+        """
+        Gamma prior
+
+        f(x) = (x-loc)**(a-1) * e**(-(x-loc)) * (1/scale)**a / gamma(a)
+
+        Parameters
+        ----------
+        a: float > 0
+            shape parameter
+        scale: float > 0
+            scale parameter (1/scale corresponds to parameter p in canonical form)
+        loc: float
+            mean parameter for the distribution
+        rng: np.random.RandomState
+            Random number generator
+        """
+        super().__init__(rng=rng)
+
+        self.a = a
+        self.loc = loc
+        self.scale = scale
+
+    def lnprob(self, theta: np.ndarray):
+        """
+        Returns the pdf of theta.
+
+        Parameters
+        ----------
+        theta : (D,) numpy array
+            A hyperparameter configuration in log space. Will be exponentiated for any computation.
+
+        Returns
+        -------
+        float
+            The log probability of theta
+        """
+
+        return np.sum(sps.gamma.logpdf(np.exp(theta), a=self.a, scale=self.scale, loc=self.loc))
+
+    def gradient(self, theta: np.ndarray):
+        """
+        As computed by Wolfram Alpha
+
+        Parameters
+        ----------
+        theta: (D,) numpy array
+            A hyperparameter configuration in log space. Will be exponentiated for any computation.
+
+        Returns
+        -------
+        float
+            The gradient wrt to theta
+        """
+        theta = np.exp(theta)
+        if True: #np.ndim(theta) == 0:
+            b = 1/self.scale
+            grad = b ** (-self.a -1)
+            grad *= theta ** (self.a - 2)
+            grad *= np.exp(-theta / b)
+            grad *= (-self.a * b + b + theta)
+            grad /= scsp.gamma(theta)
+            return grad
+        else:
+            raise NotImplementedError()

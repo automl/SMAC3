@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 import scipy.optimize
 
-from smac.epm.gp_base_prior import TophatPrior, HorseshoePrior, LognormalPrior
+from smac.epm.gp_base_prior import TophatPrior, HorseshoePrior, LognormalPrior, GammaPrior
 from smac.utils.constants import VERY_SMALL_NUMBER
 
 
@@ -85,6 +85,39 @@ class TestHoreshoePrior(unittest.TestCase):
         samples = prior.sample_from_prior(10)
         # Test that the rng is set
         self.assertAlmostEqual(samples[0][0], 1.0723988839129437)
+
+    def test_gradient(self):
+        for scale in (0.5, 1., 2.):
+            prior = HorseshoePrior(scale=scale)
+            # The function appears to be unstable above 15
+            for theta in range(-20, 15):
+                if theta == 0:
+                    continue
+                grad = prior.gradient(theta)
+                grad_vector = prior.gradient(np.array([theta]))
+                self.assertEqual(grad, grad_vector)
+                error = scipy.optimize.check_grad(prior.lnprob, prior.gradient, np.array([theta]), epsilon=1e-5)
+                self.assertAlmostEqual(error, 0, delta=5)
+
+
+class TestGammaPrior(unittest.TestCase):
+
+    def test_lnprob_and_grad_scalar(self):
+        prior = GammaPrior(a=0.5, scale=1/2, loc=0)
+
+        # Legal scalar
+        x = -1
+        self.assertEqual(prior.lnprob(x), -0.46155023498761205)
+        self.assertEqual(prior.gradient(x), 0.7458042693520156)
+
+    def test_lnprob_and_grad_array(self):
+        prior = GammaPrior(a=0.5, scale=1/2, loc=0)
+
+        # Legal array
+        val = np.array([-1, -1])
+        print(prior.lnprob(val))
+        self.assertEqual(prior.lnprob(val), -0.9231004699752241)
+        np.testing.assert_array_almost_equal(prior.gradient(val), [0.7458042693520156, 0.7458042693520156])
 
     def test_gradient(self):
         for scale in (0.5, 1., 2.):
