@@ -63,9 +63,9 @@ class AbstractEPM(object):
             the i-th entry corresponds to the i-th input dimension. Let's say we
             have 2 dimension where the first dimension consists of 3 different
             categorical choices and the second dimension is continuous than we
-            have to pass np.array([2, 0]). Note that we count starting from 0.
+            have to pass np.array([3, 0]). Note that we count starting from 0.
         bounds : list
-            Specifies the bounds for continuous features.
+            bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
         seed : int
             The seed that is passed to the model library.
         instance_features : np.ndarray (I, K)
