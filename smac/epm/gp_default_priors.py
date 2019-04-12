@@ -2,7 +2,7 @@
 import numpy as np
 
 from smac.epm.gp_base_prior import Prior, TophatPrior, \
-    LognormalPrior, HorseshoePrior, LowerBoundPrior
+    LognormalPrior, HorseshoePrior, SoftTopHatPrior
 
 
 class DefaultPrior(Prior):
@@ -24,14 +24,14 @@ class DefaultPrior(Prior):
         self.n_dims = n_dims
 
         # Prior for the Matern52 lengthscales
-        self.tophat = TophatPrior(-10, 2, rng=self.rng)
+        self.tophat = TophatPrior(-10 - 1e-10, 2 + 1e-10, rng=self.rng)
 
         # Prior for the covariance amplitude
         self.ln_prior = LognormalPrior(mean=0.0, sigma=1.0, rng=self.rng)
 
         # Prior for the noise
         self.horseshoe = HorseshoePrior(scale=0.1, rng=self.rng)
-        self.noise_bound = LowerBoundPrior(lower_bound=np.log(1e-10), rng=self.rng)
+        self.noise_bound = SoftTopHatPrior(lower_bound=np.log(1e-10), rng=self.rng)
 
     def lnprob(self, theta: np.ndarray):
         lp = 0
@@ -55,7 +55,7 @@ class DefaultPrior(Prior):
         p0[:, 1:(self.n_dims - 1)] = ls_sample
         # Noise
         p0[:, -1] = self.horseshoe.sample_from_prior(n_samples)[:, 0]
-        return p0
+        return list(p0)
 
     def gradient(self, theta: np.ndarray):
         grad = np.zeros([theta.shape[0]])

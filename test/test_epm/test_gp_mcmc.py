@@ -4,26 +4,29 @@ import unittest.mock
 import numpy as np
 import sklearn.datasets
 import sklearn.model_selection
-import skopt.learning.gaussian_process
 
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
-from smac.epm.gp_default_priors import DefaultPrior
+from smac.epm.gp_base_prior import LognormalPrior, HorseshoePrior
+from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel
 
 
 def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True):
-    cov_amp = skopt.learning.gaussian_process.kernels.ConstantKernel(2.0, constant_value_bounds=(1e-10, 2))
-    exp_kernel = skopt.learning.gaussian_process.kernels.Matern(
+    cov_amp = ConstantKernel(
+        2.0,
+        constant_value_bounds=(1e-10, 2),
+        prior=LognormalPrior(mean=0.0, sigma=1.0, rng=rs),
+    )
+    exp_kernel = Matern(
         np.ones([n_dimensions]),
         [(np.exp(-10), np.exp(2)) for _ in range(n_dimensions)],
         nu=2.5,
     )
-    noise_kernel = skopt.learning.gaussian_process.kernels.WhiteKernel(
+    noise_kernel = WhiteKernel(
         noise_level=noise,
         noise_level_bounds=(1e-10, 2),
+        prior=HorseshoePrior(scale=0.1, rng=rs),
     )
     kernel = cov_amp * exp_kernel + noise_kernel
-
-    prior = DefaultPrior(len(kernel.theta), rng=rs)
 
     n_mcmc_walkers = 3 * len(kernel.theta)
     if n_mcmc_walkers % 2 == 1:
@@ -36,9 +39,8 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True):
         types=types,
         bounds=bounds,
         kernel=kernel,
-        prior=prior,
         n_mcmc_walkers=n_mcmc_walkers,
-        chain_length=20,
+        chain_length=100,
         burnin_steps=100,
         normalize_y=normalize_y,
         seed=rs.randint(low=1, high=10000),
@@ -118,10 +120,10 @@ class TestGPMCMC(unittest.TestCase):
 
         # Regression test that performance does not drastically decrease in the near future
         y_hat, var_hat = model.predict(np.array([[10, 10, 10]]))
-        self.assertAlmostEqual(y_hat[0][0], 54.61249999999999)
+        self.assertAlmostEqual(y_hat[0][0], 54.654561606510825)
         # Massive variance due to internally used law of total variances, also a massive difference locally and on
         # travis-cis
-        self.assertLessEqual(abs(var_hat[0][0] - 3500), 50)
+        self.assertLessEqual(abs(var_hat[0][0] - 5080), 50)
 
     def test_gp_on_sklearn_data(self):
         X, y = sklearn.datasets.load_boston(return_X_y=True)
@@ -131,7 +133,7 @@ class TestGPMCMC(unittest.TestCase):
         model = get_gp(X.shape[1], rs, noise=1e-10, normalize_y=True)
         cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
 
-        maes = [10.179732235886636338, 7.7493806362044323605]
+        maes = [8.091083825101466946, 9.0298698203192439065]
 
         for i, (train_split, test_split) in enumerate(cv.split(X, y)):
             X_train = X[train_split]
@@ -139,9 +141,7 @@ class TestGPMCMC(unittest.TestCase):
             X_test = X[test_split]
             y_test = y[test_split]
             model.train(X_train, y_train)
-            print(model.hypers)
             y_hat, mu_hat = model.predict(X_test)
-            print(y_hat, np.mean(np.abs(np.mean(y_train) - y_test), dtype=np.float128))
             mae = np.mean(np.abs(y_hat - y_test), dtype=np.float128)
             self.assertAlmostEqual(mae, maes[i])
 

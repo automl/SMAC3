@@ -4,6 +4,7 @@ import skopt
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
 from smac.epm.gp_default_priors import DefaultPrior
+from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
 from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel, HammingKernel
 from smac.utils.util_funcs import get_types, get_rng
 from smac.initial_design.sobol_design import SobolDesign
@@ -50,12 +51,17 @@ class SMAC4BO(SMAC4AC):
         kwargs['initial_design_kwargs'] = init_kwargs
 
         if kwargs.get('model') is None:
+            model_kwargs = kwargs.get('model_kwargs', dict())
+
             _, rng = get_rng(rng=kwargs.get("rng", None), run_id=kwargs.get("run_id", None), logger=None)
 
             types, bounds = get_types(kwargs['scenario'].cs, instance_features=None)
-            n_dims = len(types)
 
-            cov_amp = ConstantKernel(2.0, constant_value_bounds=(np.exp(-10), np.exp(2)))
+            cov_amp = ConstantKernel(
+                2.0,
+                constant_value_bounds=(np.exp(-10), np.exp(2)),
+                prior=LognormalPrior(mean=0.0, sigma=1.0, rng=rng),
+            )
 
             cont_dims = np.nonzero(types == 0)[0]
             cat_dims = np.nonzero(types != 0)[0]
@@ -77,7 +83,8 @@ class SMAC4BO(SMAC4AC):
 
             noise_kernel = WhiteKernel(
                 noise_level=1e-8,
-                noise_level_bounds=(np.exp(-10), np.exp(2)),
+                noise_level_bounds=(np.exp(-25), np.exp(2)),
+                prior=HorseshoePrior(scale=0.1, rng=rng),
             )
 
             if len(cont_dims) > 0 and len(cat_dims) > 0:
@@ -92,27 +99,21 @@ class SMAC4BO(SMAC4AC):
             else:
                 raise ValueError()
 
-            prior = DefaultPrior(len(kernel.theta), rng=rng)
-
             if model_type == "gp":
                 model_class = GaussianProcess
                 kwargs['model'] = model_class
-                model_kwargs = kwargs.get('model_kwargs', dict())
                 model_kwargs['kernel'] = kernel
-                model_kwargs['prior'] = prior
                 model_kwargs['normalize_y'] = True
                 model_kwargs['seed'] = rng.randint(0, 2 ** 20)
             elif model_type == "gp_mcmc":
                 model_class = GaussianProcessMCMC
                 kwargs['model'] = model_class
-                model_kwargs = kwargs.get('model_kwargs', dict())
+
                 model_kwargs['kernel'] = kernel
-                model_kwargs['prior'] = prior
 
                 n_mcmc_walkers = 3 * len(kernel.theta)
                 if n_mcmc_walkers % 2 == 1:
                     n_mcmc_walkers += 1
-
                 model_kwargs['n_mcmc_walkers'] = n_mcmc_walkers
                 model_kwargs['chain_length'] = 200
                 model_kwargs['burnin_steps'] = 100

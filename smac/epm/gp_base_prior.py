@@ -6,6 +6,7 @@ import scipy.special as scsp
 
 from smac.utils.constants import VERY_SMALL_NUMBER
 
+
 class Prior(object):
 
     def __init__(self, rng: np.random.RandomState=None):
@@ -83,7 +84,7 @@ class Prior(object):
 
 class TophatPrior(Prior):
 
-    def __init__(self, l_bound: float, u_bound: float, rng: np.random.RandomState=None):
+    def __init__(self, lower_bound: float, upper_bound: float, rng: np.random.RandomState=None):
         """
         Tophat prior as it used in the original spearmint code.
 
@@ -95,9 +96,9 @@ class TophatPrior(Prior):
 
         Parameters
         ----------
-        l_bound : float
+        lower_bound : float
             Lower bound of the prior. Note the log scale.
-        u_bound : float
+        upper_bound : float
             Upper bound of the prior. Note the log scale.
         rng: np.random.RandomState
             Random number generator
@@ -106,8 +107,8 @@ class TophatPrior(Prior):
             self.rng = np.random.RandomState(np.random.randint(0, 10000))
         else:
             self.rng = rng
-        self.min = l_bound
-        self.max = u_bound
+        self.min = lower_bound
+        self.max = upper_bound
         if not (self.max > self.min):
             raise Exception("Upper bound of Tophat prior must be greater than the lower bound!")
 
@@ -346,7 +347,7 @@ class LognormalPrior(Prior):
         """
         if np.ndim(theta) == 0:
             if theta <= 0:
-                return 0
+                return -1e25
             else:
                 rval = (
                     -(math.log(theta) - self.mean) ** 2 / (2 * self.sigma_square)
@@ -409,53 +410,25 @@ class LognormalPrior(Prior):
         return rval
 
 
-class NormalPrior(Prior):
-
-    def __init__(self, sigma: float, mean: float=0, rng: np.random.RandomState=None):
-        """
-        Normal prior
-
-        This class is a verbatim copy of the implementation of RoBO:
-
-        Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
-        RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
-        In: NIPS 2017 Bayesian Optimization Workshop
-
-        Parameters
-        ----------
-        sigma: float
-            Specifies the standard deviation of the normal
-            distribution.
-        mean: float
-            Specifies the mean of the normal distribution
-        rng: np.random.RandomState
-            Random number generator
-        """
-        if rng is None:
-            self.rng = np.random.RandomState(np.random.randint(0, 10000))
-        else:
-            self.rng = rng
-
-        self.sigma = sigma
-        self.mean = mean
+class SoftTopHatPrior(Prior):
+    def __init__(self, lower_bound=-10, upper_bound=10, exponent=2, rng: np.random.RandomState=None):
+        super().__init__(rng=rng)
+        self.lower_bound = lower_bound
+        self.upper_bound = upper_bound
+        if exponent <= 0:
+            raise ValueError('Exponent cannot be less or equal than zero (but is %f)' % exponent)
+        self.exponent = exponent
 
     def lnprob(self, theta: np.ndarray):
-        """
-        Returns the pdf of theta. Note: theta should
-        be on a log scale.
-
-        Parameters
-        ----------
-        theta : (D,) numpy array
-            A hyperparameter configuration in log space.
-
-        Returns
-        -------
-        float
-            The log probability of theta
-        """
-        # TODO: I think this should be logpdf
-        return sps.norm.pdf(theta, scale=self.sigma, loc=self.mean)
+        if np.ndim(theta) == 0 or (np.ndim(theta) == 1 and len(theta) == 1):
+            if theta < self.lower_bound:
+                return - ((theta - self.lower_bound) ** self.exponent)
+            elif theta > self.upper_bound:
+                return - (self.upper_bound - theta) ** self.exponent
+            else:
+                return 0
+        else:
+            raise NotImplementedError()
 
     def sample_from_prior(self, n_samples: int):
         """
@@ -472,53 +445,21 @@ class NormalPrior(Prior):
             The samples from the prior.
         """
 
-        p0 = self.rng.normal(loc=self.mean,
-                             scale=self.sigma,
-                             size=n_samples)
-        return p0[:, np.newaxis]
+        return self.rng.uniform(self.lower_bound, self.upper_bound, size=(n_samples, ))
 
     def gradient(self, theta: np.ndarray):
-        """
-        Computes the gradient of the prior with
-        respect to theta.
-
-        Parameters
-        ----------
-        theta : (D,) numpy array
-            Hyperparameter configuration in log space
-
-        Returns
-        -------
-        (D) np.array
-            The gradient of the prior at theta.
-        """
-        return (1 / (self.sigma * np.sqrt(2 * np.pi))) *\
-               (- theta / (self.sigma ** 2) * np.exp(- (theta ** 2) / (2 * self.sigma ** 2)))
-
-
-class LowerBoundPrior(Prior):
-    def __init__(self, lower_bound=-20, rng: np.random.RandomState=None):
-        super().__init__(rng=rng)
-        self.lower_bound = lower_bound
-
-    def lnprob(self, theta: np.ndarray):
-        if np.ndim(theta) == 0:
+        if np.ndim(theta) == 0 or (np.ndim(theta) == 1 and len(theta) == 1):
             if theta < self.lower_bound:
-                return - ((theta - self.lower_bound) ** 2)
+                return - self.exponent * (theta - self.lower_bound)
+            elif theta > self.upper_bound:
+                return self.exponent * ( self.upper_bound - theta)
             else:
                 return 0
         else:
             raise NotImplementedError()
 
-    def gradient(self, theta: np.ndarray):
-        if np.ndim(theta) == 0:
-            if theta < self.lower_bound:
-                return -2 * (theta - self.lower_bound)
-            else:
-                return 0
-        else:
-            raise NotImplementedError()
-
+    def __str__(self):
+        return 'LowerBoundPrior(lower_bound=%f)' % self.lower_bound
 
 class GammaPrior(Prior):
 
@@ -561,6 +502,26 @@ class GammaPrior(Prior):
         """
 
         return np.sum(sps.gamma.logpdf(np.exp(theta), a=self.a, scale=self.scale, loc=self.loc))
+
+    def sample_from_prior(self, n_samples: int):
+        """
+        Returns N samples from the prior.
+
+        Parameters
+        ----------
+        n_samples : int
+            The number of samples that will be drawn.
+
+        Returns
+        -------
+        (N, D) np.array
+            The samples from the prior.
+        """
+
+        p0 = self.rng.gamma(shape=self.a,
+                            scale=self.scale,
+                            size=n_samples)
+        return p0[:, np.newaxis]
 
     def gradient(self, theta: np.ndarray):
         """

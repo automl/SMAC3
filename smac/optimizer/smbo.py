@@ -425,6 +425,7 @@ class SMBO(object):
                   max_depth=conf.get("max_depth", self.scenario.rf_max_depth))
 
         elif conf["model"] == "GP":
+            raise NotImplementedError()
             cov_amp = skopt.learning.gaussian_process.kernels.ConstantKernel(2.0, constant_value_bounds=(1e-10, 2))
             exp_kernel = skopt.learning.gaussian_process.kernels.Matern(
                 np.ones([len(types)]),
@@ -437,8 +438,6 @@ class SMBO(object):
             )
             kernel = cov_amp * exp_kernel + noise_kernel
 
-            prior = DefaultPrior(len(kernel.theta) + 1, rng=self.rng)
-
             n_mcmc_walkers = 3 * len(kernel.theta)
             if n_mcmc_walkers % 2 == 1:
                 n_mcmc_walkers += 1
@@ -447,7 +446,6 @@ class SMBO(object):
                 types=types,
                 bounds=bounds,
                 kernel=kernel,
-                prior=prior,
                 n_mcmc_walkers=n_mcmc_walkers,
                 chain_length=200,
                 burnin_steps=100,

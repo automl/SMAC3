@@ -10,7 +10,6 @@ import skopt.learning.gaussian_process.kernels
 
 from smac.epm.base_gp import BaseModel
 from smac.epm.gaussian_process import GaussianProcess
-from smac.epm.gp_base_prior import Prior
 
 logger = logging.getLogger(__name__)
 
@@ -23,11 +22,11 @@ class GaussianProcessMCMC(BaseModel):
         bounds: typing.List[typing.Tuple[float, float]],
         seed: int,
         kernel: skopt.learning.gaussian_process.kernels.Kernel,
-        prior: Prior=None,
         n_mcmc_walkers: int=20,
         chain_length: int=2000,
         burnin_steps: int=2000,
         normalize_y: bool=True,
+        mcmc_sampler: str = 'emcee',
         **kwargs
     ):
         """
@@ -79,13 +78,13 @@ class GaussianProcessMCMC(BaseModel):
         super().__init__(types=types, bounds=bounds, seed=seed, **kwargs)
 
         self.kernel = kernel
-        self.prior = prior
         self.n_mcmc_walkers = n_mcmc_walkers
         self.chain_length = chain_length
         self.burned = False
         self.burnin_steps = burnin_steps
         self.models = []
         self.normalize_y = normalize_y
+        self.mcmc_sampler = mcmc_sampler
 
         self.is_trained = False
 
@@ -123,22 +122,33 @@ class GaussianProcessMCMC(BaseModel):
 
         if do_optimize:
             self.gp.fit(X, y)
+            self._all_priors = self._get_all_priors(
+                add_bound_priors=True,
+                add_soft_bounds=True if self.mcmc_sampler == 'nuts' else False,
+            )
 
-            sampler = 'emcee'
-            if sampler == 'emcee':
+            if self.mcmc_sampler == 'emcee':
                 sampler = emcee.EnsembleSampler(self.n_mcmc_walkers,
                                                 len(self.kernel.theta),
                                                 self._ll)
                 sampler.random_state = self.rng.get_state()
                 # Do a burn-in in the first iteration
                 if not self.burned:
-                    # Initialize some variables
-
                     # Initialize the walkers by sampling from the prior
-                    if self.prior is None:
-                        self.p0 = self.rng.rand(self.n_mcmc_walkers, len(self.kernel.theta))
-                    else:
-                        self.p0 = self.prior.sample_from_prior(self.n_mcmc_walkers)
+                    dim_samples = []
+                    for dim, prior in enumerate(self._all_priors):
+                        # Always sample from the first prior
+                        if isinstance(prior, list):
+                            if len(prior) == 0:
+                                prior = None
+                            else:
+                                prior = prior[0]
+                        if prior is None:
+                            raise NotImplementedError()
+                        else:
+                            dim_samples.append(prior.sample_from_prior(self.n_mcmc_walkers).flatten())
+                    self.p0 = list(np.vstack(dim_samples).transpose())
+
                     # Run MCMC sampling
                     self.p0, _, _ = sampler.run_mcmc(self.p0,
                                                      self.burnin_steps,
@@ -152,7 +162,7 @@ class GaussianProcessMCMC(BaseModel):
                 # Take the last samples from each walker
                 self.hypers = sampler.chain[:, -1]
                 print('hypers', self.hypers.mean(axis=0), np.exp(self.hypers.mean(axis=0)))
-            elif sampler == 'nuts':
+            elif self.mcmc_sampler == 'nuts':
                 # Originally published as:
                 # http://www.stat.columbia.edu/~gelman/research/published/nuts.pdf
                 # A good explanation of HMC:
@@ -168,11 +178,11 @@ class GaussianProcessMCMC(BaseModel):
                     theta0 = self.p0
                 samples, _, _ = nuts.nuts.nuts6(
                     f=self._ll_w_grad,
-                    Madapt=250,
-                    M=250,
+                    Madapt=self.burnin_steps,
+                    M=self.chain_length,
                     theta0=theta0,
                     # Increasing this value results in longer running times
-                    delta=0.2,
+                    delta=0.5,
                     adapt_mass=True,
                     # Rather low max depth to keep the number of required gradient steps low
                     max_depth=10,
@@ -182,7 +192,7 @@ class GaussianProcessMCMC(BaseModel):
                 print('hypers', 'log space', self.p0, 'regular space', np.exp(self.p0))
                 self.hypers = samples[::25]
             else:
-                raise ValueError(sampler)
+                raise ValueError(self.mcmc_sampler)
 
         else:
             self.hypers = self.gp.kernel.theta
@@ -256,8 +266,9 @@ class GaussianProcessMCMC(BaseModel):
             return -1e25
 
         # Add prior
-        if self.prior is not None:
-            lml += self.prior.lnprob(theta)
+        for dim, priors in enumerate(self._all_priors):
+            for prior in priors:
+                lml += prior.lnprob(theta[dim])
 
         if not np.isfinite(lml):
             return -1e25
@@ -288,15 +299,26 @@ class GaussianProcessMCMC(BaseModel):
         if (theta > 50).any():
             theta[theta > 50] = 50
 
-        try:
-            lml, grad = self.gp.log_marginal_likelihood(theta, eval_gradient=True)
-        except ValueError as e:
-            return -1e25, np.zeros(theta.shape)
+        lml = 0
+        grad = np.zeros(theta.shape)
 
         # Add prior
-        if self.prior is not None:
-            lml += self.prior.lnprob(theta)
-            grad += self.prior.gradient(theta)
+        for dim, priors in enumerate(self._all_priors):
+            for prior in priors:
+                lml += prior.lnprob(theta[dim])
+                grad[dim] += prior.gradient(theta[dim])
+
+        # Check if one of the priors is invalid, if so, no need to compute the log marginal likelihood
+        if lml < -1e24:
+            return -1e25, np.zeros(theta.shape)
+
+        try:
+            lml_, grad_ = self.gp.log_marginal_likelihood(theta, eval_gradient=True)
+            lml += lml_
+            grad += grad_
+        except ValueError:
+            return -1e25, np.zeros(theta.shape)
+        #print(theta, lml, grad)
 
         # We add a minus here because scipy is minimizing
         if not np.isfinite(lml) or (~np.isfinite(grad)).any():

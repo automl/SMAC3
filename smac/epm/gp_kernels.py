@@ -7,6 +7,8 @@ import numpy as np
 
 class MagicMixin:
 
+    prior = None
+
     def __call__(self, X, Y=None, eval_gradient=False):
         if self.operate_on is None:
             return super(MagicMixin, self).__call__(X, Y, eval_gradient)
@@ -69,26 +71,8 @@ class MagicMixin:
         try:
             args = self._args_cache
         except AttributeError:
-            # introspect the constructor arguments to find the model parameters
-            # to represent
-            cls = self.__class__
-            init = getattr(cls.__init__, 'deprecated_original', cls.__init__)
-            init_sign = signature(init)
-            args, varargs = [], []
-            for parameter in init_sign.parameters.values():
-                if (parameter.kind != parameter.VAR_KEYWORD and
-                        parameter.name != 'self'):
-                    args.append(parameter.name)
-                if parameter.kind == parameter.VAR_POSITIONAL:
-                    varargs.append(parameter.name)
-
-            if len(varargs) != 0:
-                raise RuntimeError("scikit-learn kernels should always "
-                                   "specify their parameters in the signature"
-                                   " of their __init__ (no varargs)."
-                                   " %s doesn't follow this convention."
-                                   % (cls,))
-
+            tmp = super().get_params(deep)
+            args = list(tmp.keys())
             self._args_cache = args
 
         for arg in args:
@@ -103,11 +87,7 @@ class MagicMixin:
         except AttributeError:
             pass
 
-        r = []
-        for attr in dir(self):
-            if attr.startswith("hyperparameter_"):
-                r.append(getattr(self, attr))
-
+        r = super().hyperparameters
         self._hyperparameters_cache = r
 
         return r
@@ -121,7 +101,7 @@ class MagicMixin:
         except AttributeError:
             pass
 
-        self._n_dims_cache = self.theta.shape[0]
+        self._n_dims_cache = super().n_dims
         return self._n_dims_cache
 
     def clone_with_theta(self, theta):
@@ -170,37 +150,42 @@ class Product(MagicMixin, skopt.learning.gaussian_process.kernels.Product):
 
 class ConstantKernel(MagicMixin, skopt.learning.gaussian_process.kernels.ConstantKernel):
 
-    def __init__(self, constant_value=1.0, constant_value_bounds=(1e-5, 1e5), operate_on=None):
+    def __init__(self, constant_value=1.0, constant_value_bounds=(1e-5, 1e5), operate_on=None, prior=None):
         super(ConstantKernel, self).__init__(constant_value=constant_value, constant_value_bounds=constant_value_bounds)
         self.set_active_dims(operate_on)
+        self.prior = prior
 
 
 class Matern(MagicMixin, skopt.learning.gaussian_process.kernels.Matern):
 
-    def __init__(self, length_scale=1.0, length_scale_bounds=(1e-5, 1e5), nu=1.5, operate_on=None):
+    def __init__(self, length_scale=1.0, length_scale_bounds=(1e-5, 1e5), nu=1.5, operate_on=None, prior=None):
         super(Matern, self).__init__(length_scale=length_scale, length_scale_bounds=length_scale_bounds, nu=nu)
         self.set_active_dims(operate_on)
+        self.prior = prior
 
 
 class RBF(MagicMixin, skopt.learning.gaussian_process.kernels.RBF):
 
-    def __init__(self, length_scale=1.0, length_scale_bounds=(1e-5, 1e5), operate_on=None):
+    def __init__(self, length_scale=1.0, length_scale_bounds=(1e-5, 1e5), operate_on=None, prior=None):
         super(RBF, self).__init__(length_scale=length_scale, length_scale_bounds=length_scale_bounds)
         self.set_active_dims(operate_on)
+        self.prior = prior
 
 
 class WhiteKernel(MagicMixin, skopt.learning.gaussian_process.kernels.WhiteKernel):
 
-    def __init__(self, noise_level=1.0, noise_level_bounds=(1e-5, 1e5), operate_on=None):
+    def __init__(self, noise_level=1.0, noise_level_bounds=(1e-5, 1e5), operate_on=None, prior=None):
         super(WhiteKernel, self).__init__(noise_level=noise_level, noise_level_bounds=noise_level_bounds)
         self.set_active_dims(operate_on)
+        self.prior = prior
 
 
 class HammingKernel(MagicMixin, skopt.learning.gaussian_process.kernels.HammingKernel):
 
-    def __init__(self, length_scale=1.0, length_scale_bounds=(1e-5, 1e5), operate_on=None):
+    def __init__(self, length_scale=1.0, length_scale_bounds=(1e-5, 1e5), operate_on=None, prior=None):
         super(HammingKernel, self).__init__(length_scale=length_scale, length_scale_bounds=length_scale_bounds)
         self.set_active_dims(operate_on)
+        self.prior = prior
 
     def __call__(self, X, Y=None, eval_gradient=False):
         """Return the kernel k(X, Y) and optionally its gradient.

@@ -6,12 +6,16 @@ import sklearn.datasets
 import sklearn.model_selection
 
 from smac.epm.gaussian_process import GaussianProcess
-from smac.epm.gp_default_priors import DefaultPrior
+from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
 from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel, HammingKernel
 
 
 def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True):
-    cov_amp = ConstantKernel(2.0, constant_value_bounds=(1e-10, 2))
+    cov_amp = ConstantKernel(
+        2.0,
+        constant_value_bounds=(1e-10, 2),
+        prior=LognormalPrior(mean=0.0, sigma=1.0, rng=rs),
+    )
     exp_kernel = Matern(
         np.ones([n_dimensions]),
         [(np.exp(-10), np.exp(2)) for _ in range(n_dimensions)],
@@ -20,10 +24,9 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True):
     noise_kernel = WhiteKernel(
         noise_level=noise,
         noise_level_bounds=(1e-10, 2),
+        prior=HorseshoePrior(scale=0.1, rng=rs),
     )
     kernel = cov_amp * exp_kernel + noise_kernel
-
-    prior = DefaultPrior(len(kernel.theta) + 1, rng=rs)
 
     bounds = [(0., 1.) for _ in range(n_dimensions)]
     types = np.zeros(n_dimensions)
@@ -32,7 +35,6 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True):
         bounds=bounds,
         types=types,
         kernel=kernel,
-        prior=prior,
         seed=rs.randint(low=1, high=10000),
         normalize_y=normalize_y,
     )
@@ -57,8 +59,14 @@ def get_cat_data(rs):
 
 
 def get_mixed_gp(cat_dims, cont_dims, rs, noise=1e-3, normalize_y=True):
+    cat_dims = np.array(cat_dims, dtype=np.int)
+    cont_dims = np.array(cont_dims, dtype=np.int)
     n_dimensions = len(cat_dims) + len(cont_dims)
-    cov_amp = ConstantKernel(2.0, constant_value_bounds=(1e-10, 2))
+    cov_amp = ConstantKernel(
+        2.0,
+        constant_value_bounds=(1e-10, 2),
+        prior=LognormalPrior(mean=0.0, sigma=1.0, rng=rs),
+    )
 
     exp_kernel = Matern(
         np.ones([len(cont_dims)]),
@@ -75,10 +83,9 @@ def get_mixed_gp(cat_dims, cont_dims, rs, noise=1e-3, normalize_y=True):
     noise_kernel = WhiteKernel(
         noise_level=noise,
         noise_level_bounds=(1e-10, 2),
+        prior=HorseshoePrior(scale=0.1, rng=rs),
     )
     kernel = cov_amp * (exp_kernel * ham_kernel) + noise_kernel
-
-    prior = DefaultPrior(len(kernel.theta) + 1, rng=rs)
 
     bounds = [0] * n_dimensions
     types = np.zeros(n_dimensions)
@@ -92,7 +99,6 @@ def get_mixed_gp(cat_dims, cont_dims, rs, noise=1e-3, normalize_y=True):
         bounds=bounds,
         types=types,
         kernel=kernel,
-        prior=prior,
         seed=rs.randint(low=1, high=10000),
         normalize_y=normalize_y,
     )
@@ -184,8 +190,8 @@ class TestGP(unittest.TestCase):
 
         # Regression test that performance does not drastically decrease in the near future
         y_hat, mu_hat = model.predict(np.array([[10, 10, 10]]))
-        self.assertAlmostEqual(y_hat[0][0], 1.2579769765743784e-05)
-        self.assertAlmostEqual(mu_hat[0][0], 8.701826756269622)
+        self.assertAlmostEqual(y_hat[0][0], 54.612500000000004)
+        self.assertAlmostEqual(mu_hat[0][0], 5037.79218775189)
 
     def test_gp_on_sklearn_data(self):
         X, y = sklearn.datasets.load_boston(return_X_y=True)
@@ -195,7 +201,7 @@ class TestGP(unittest.TestCase):
         model = get_gp(X.shape[1], rs)
         cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
 
-        maes = [8.937466457514421494, 9.166446381461289561]
+        maes = [6.780366865623075037, 6.9163148932181415644]
 
         for i, (train_split, test_split) in enumerate(cv.split(X, y)):
             X_train = X[train_split]
@@ -251,4 +257,4 @@ class TestGP(unittest.TestCase):
 
         func = gp.sample_functions(X_test=X_test, n_funcs=2)
         func_prime = gp_norm.sample_functions(X_test=X_test, n_funcs=2)
-        np.testing.assert_array_almost_equal(func, func_prime)
+        np.testing.assert_array_almost_equal(func, func_prime, decimal=1)

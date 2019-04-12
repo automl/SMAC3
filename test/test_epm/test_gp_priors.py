@@ -3,14 +3,14 @@ import unittest
 import numpy as np
 import scipy.optimize
 
-from smac.epm.gp_base_prior import TophatPrior, HorseshoePrior, LognormalPrior, GammaPrior
+from smac.epm.gp_base_prior import TophatPrior, HorseshoePrior, LognormalPrior, GammaPrior, SoftTopHatPrior
 from smac.utils.constants import VERY_SMALL_NUMBER
 
 
 class TestTophatPrior(unittest.TestCase):
 
     def test_lnprob_and_grad_scalar(self):
-        prior = TophatPrior(l_bound=-10, u_bound=2)
+        prior = TophatPrior(lower_bound=-10, upper_bound=2)
 
         # Legal scalar
         for val in (-1, 0, 1):
@@ -28,7 +28,7 @@ class TestTophatPrior(unittest.TestCase):
             self.assertEqual(prior.gradient(val), 0)
 
     def test_lnprob_and_grad_array(self):
-        prior = TophatPrior(l_bound=-10, u_bound=2)
+        prior = TophatPrior(lower_bound=-10, upper_bound=2)
 
         # Legal arrays
         for val in ([-1, -1], [0, 0], [1, 1]):
@@ -47,7 +47,7 @@ class TestTophatPrior(unittest.TestCase):
             np.testing.assert_array_almost_equal(prior.gradient(val), [0, 0])
 
     def test_sample_from_prior(self):
-        prior = TophatPrior(l_bound=-10, u_bound=2, rng=np.random.RandomState(1))
+        prior = TophatPrior(lower_bound=-10, upper_bound=2, rng=np.random.RandomState(1))
         samples = prior.sample_from_prior(10)
         np.testing.assert_array_equal(samples >= -10, True)
         np.testing.assert_array_equal(samples <= 2, True)
@@ -147,3 +147,39 @@ class TestLogNormalPrior(unittest.TestCase):
                 self.assertEqual(grad, grad_vector)
                 error = scipy.optimize.check_grad(prior.lnprob, prior.gradient, np.array([theta]), epsilon=1e-5)
                 self.assertAlmostEqual(error, 0, delta=5, msg=theta)
+
+
+class TestSoftTopHatPrior(unittest.TestCase):
+
+    def test_lnprob(self):
+        prior = SoftTopHatPrior(lower_bound=-5, upper_bound=5)
+
+        # Legal values
+        self.assertEqual(prior.lnprob(-5), 0)
+        self.assertEqual(prior.lnprob(0), 0)
+        self.assertEqual(prior.lnprob(5), 0)
+
+        # Illegal values
+        self.assertAlmostEqual(prior.lnprob(-5.1), -0.01)
+        self.assertAlmostEqual(prior.lnprob(-6), -1)
+        self.assertAlmostEqual(prior.lnprob(-7), -4)
+        self.assertAlmostEqual(prior.lnprob(5.1), -0.01)
+        self.assertAlmostEqual(prior.lnprob(6), -1)
+        self.assertAlmostEqual(prior.lnprob(7), -4)
+
+    def test_grad(self):
+        prior = SoftTopHatPrior(lower_bound=-5, upper_bound=5)
+
+        # Legal values
+        self.assertEqual(prior.gradient(-5), 0)
+        self.assertEqual(prior.gradient(0), 0)
+        self.assertEqual(prior.gradient(5), 0)
+
+        for theta in [-10, -7, -6, -5.1, 5.1, 6, 7, 10]:
+            # Gradient approximation becomes unstable when going closer to zero
+            theta += 1e-2
+            grad = prior.gradient(theta)
+            grad_vector = prior.gradient(theta)
+            self.assertEqual(grad, grad_vector)
+            error = scipy.optimize.check_grad(prior.lnprob, prior.gradient, np.array([theta]), epsilon=1e-5)
+            self.assertAlmostEqual(error, 0, delta=5, msg=theta)

@@ -2,6 +2,7 @@ import logging
 import typing
 
 import numpy as np
+import sklearn.gaussian_process.kernels
 import skopt.learning.gaussian_process
 import skopt.learning.gaussian_process.kernels
 from scipy import optimize
@@ -54,9 +55,8 @@ class GaussianProcess(BaseModel):
         bounds: typing.List[typing.Tuple[float, float]],
         seed: int,
         kernel: skopt.learning.gaussian_process.kernels.Kernel,
-        prior: Prior=None,
         normalize_y: bool=True,
-        n_opt_restarts=0,
+        n_opt_restarts=10,
         **kwargs
     ):
 
@@ -64,7 +64,6 @@ class GaussianProcess(BaseModel):
 
         self.kernel = kernel
         self.gp = None
-        self.prior = prior
         self.normalize_y = normalize_y
         self.n_opt_restarts = n_opt_restarts
 
@@ -94,7 +93,7 @@ class GaussianProcess(BaseModel):
         if self.normalize_y:
             y = self._normalize_y(y)
 
-        n_tries = 5
+        n_tries = 10
         for i in range(n_tries):
             try:
                 # Instantiate a GP for each hyperparameter configuration
@@ -116,6 +115,7 @@ class GaussianProcess(BaseModel):
                     raise e
 
         if do_optimize:
+            self._all_priors = self._get_all_priors(add_bound_priors=False)
             self.hypers = self._optimize()
         else:
             self.hypers = self.gp.kernel.theta
@@ -146,10 +146,10 @@ class GaussianProcess(BaseModel):
 
         lml, grad = self.gp.log_marginal_likelihood(theta, eval_gradient=True)
 
-        # Add prior
-        if self.prior is not None:
-            lml += self.prior.lnprob(theta)
-            grad += self.prior.gradient(theta)
+        for dim, priors in enumerate(self._all_priors):
+            for prior in priors:
+                lml += prior.lnprob(theta[dim])
+                grad[dim] += prior.gradient(theta[dim])
 
         # We add a minus here because scipy is minimizing
         if not np.isfinite(lml).all() or not np.all(np.isfinite(grad)):
@@ -171,12 +171,18 @@ class GaussianProcess(BaseModel):
         log_bounds = [(b[0], b[1]) for b in self.gp.kernel.bounds]
 
         # Start optimization from the previous hyperparameter configuration
-        if self.n_opt_restarts <= 0:
-            p0 = [self.gp.kernel.theta]
-        else:
-            if self.prior is None:
-                p0 = []
-                for hp_bound in log_bounds:
+        p0 = [self.gp.kernel.theta]
+        if self.n_opt_restarts > 0:
+            dim_samples = []
+            for dim, hp_bound in enumerate(log_bounds):
+                prior = self._all_priors[dim]
+                # Always sample from the first prior
+                if isinstance(prior, list):
+                    if len(prior) == 0:
+                        prior = None
+                    else:
+                        prior = prior[0]
+                if prior is None:
                     try:
                         sample = self.rng.uniform(
                             low=hp_bound[0],
@@ -185,10 +191,10 @@ class GaussianProcess(BaseModel):
                         )
                     except OverflowError:
                         raise ValueError('OverflowError while sampling from (%f, %f)' % (hp_bound[0], hp_bound[1]))
-                    p0.append(sample)
-                p0 = np.vstack(p0).transpose()
-            else:
-                p0 = self.prior.sample_from_prior(self.n_opt_restarts)
+                    dim_samples.append(sample.flatten())
+                else:
+                    dim_samples.append(prior.sample_from_prior(self.n_opt_restarts).flatten())
+            p0 += list(np.vstack(dim_samples).transpose())
 
         theta_star = None
         f_opt_star = np.inf
