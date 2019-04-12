@@ -12,7 +12,6 @@ from smac.configspace import ConfigurationSpace, Configuration, Constant,\
 from smac.configspace.util import convert_configurations_to_array
 from smac.epm.base_epm import AbstractEPM
 from smac.epm.rf_with_instances import RandomForestWithInstances
-from smac.epm.gp_default_priors import DefaultPrior
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.intensification import Intensifier
