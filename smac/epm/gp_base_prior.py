@@ -46,11 +46,14 @@ class Prior(object):
         float
             The log probability of theta
         """
-        pass
+        return self._lnprob(np.exp(theta))
+
+    def _lnprob(self, theta: np.ndarray):
+        raise NotImplementedError()
 
     def sample_from_prior(self, n_samples: int):
         """
-        Returns N samples from the prior.
+        Returns N samples from the prior (already on a logscale)
 
         Parameters
         ----------
@@ -62,7 +65,10 @@ class Prior(object):
         (N, D) np.array
             The samples from the prior.
         """
-        pass
+        return np.log(self._sample_from_prior(n_samples=n_samples))
+
+    def _sample_from_prior(self, n_samples: int):
+        raise NotImplementedError()
 
     def gradient(self, theta: np.ndarray):
         """
@@ -79,7 +85,10 @@ class Prior(object):
         (D) np.array
             The gradient of the prior at theta.
         """
-        pass
+        return self._gradient(np.exp(theta))
+
+    def _gradient(self, theta: np.ndarray):
+        raise NotImplementedError()
 
 
 class TophatPrior(Prior):
@@ -97,9 +106,9 @@ class TophatPrior(Prior):
         Parameters
         ----------
         lower_bound : float
-            Lower bound of the prior. Note the log scale.
+            Lower bound of the prior. In original scale.
         upper_bound : float
-            Upper bound of the prior. Note the log scale.
+            Upper bound of the prior. In original scale.
         rng: np.random.RandomState
             Random number generator
         """
@@ -112,15 +121,14 @@ class TophatPrior(Prior):
         if not (self.max > self.min):
             raise Exception("Upper bound of Tophat prior must be greater than the lower bound!")
 
-    def lnprob(self, theta: np.ndarray):
+    def _lnprob(self, theta: np.ndarray):
         """
-        Returns the log probability of theta. Note: theta should
-        be on a log scale.
+        Returns the log probability of theta.
 
         Parameters
         ----------
         theta : (D,) numpy array
-            A hyperparameter configuration in log space.
+            A hyperparameter configuration
 
         Returns
         -------
@@ -138,7 +146,7 @@ class TophatPrior(Prior):
             else:
                 return 0
 
-    def sample_from_prior(self, n_samples: int):
+    def _sample_from_prior(self, n_samples: int):
         """
         Returns N samples from the prior.
 
@@ -156,7 +164,7 @@ class TophatPrior(Prior):
         p0 = self.min + self.rng.rand(n_samples) * (self.max - self.min)
         return p0[:, np.newaxis]
 
-    def gradient(self, theta: np.ndarray):
+    def _gradient(self, theta: np.ndarray):
         """
         Computes the gradient of the prior with
         respect to theta.
@@ -193,8 +201,7 @@ class HorseshoePrior(Prior):
         Parameters
         ----------
         scale: float
-            Scaling parameter. See below how it is influenced
-            the distribution.
+            Scaling parameter. See below how it is influencing the distribution.
         rng: np.random.RandomState
             Random number generator
         """
@@ -205,15 +212,14 @@ class HorseshoePrior(Prior):
         self.scale = scale
         self.scale_square = scale ** 2
 
-    def lnprob(self, theta: np.ndarray):
+    def _lnprob(self, theta: np.ndarray):
         """
-        Returns the log probability of theta. Note: theta should
-        be on a log scale.
+        Returns the log probability of theta.
 
         Parameters
         ----------
         theta : (D,) numpy array
-            A hyperparameter configuration in log space.
+            A hyperparameter configuration
 
         Returns
         -------
@@ -226,21 +232,23 @@ class HorseshoePrior(Prior):
         # https://www.jstor.org/stable/25734098
         # Compared to the paper by Carvalho, there's a constant multiplicator missing
         # Compared to Spearmint we first have to undo the log space transformation of the theta
+        # Note: "undo log space transformation" is done in parent class
         if np.ndim(theta) == 0:
             if theta == 0:
                 return np.inf  # POSITIVE infinity (this is the "spike")
         else:
-            if np.any(theta == 0.0):
+            if np.any(np.log(theta) == 0.0):
                 return np.inf  # POSITIVE infinity (this is the "spike")
 
         if np.ndim(theta) == 0:
-            a = math.log(1 + 3.0 * (self.scale_square / math.exp(theta) ** 2))
-            return math.log(a + VERY_SMALL_NUMBER)
+            a = np.log(1 + 3.0 * (self.scale_square / theta**2) )
+            return np.log(a + VERY_SMALL_NUMBER)
         else:
-            a = np.log(1 + 3.0 * (self.scale_square / np.exp(theta) ** 2))
-            return np.log(sum(a) + VERY_SMALL_NUMBER)
+            a = np.array(np.log(1 + 3.0 * (self.scale_square / theta ** 2)))
+            # TODO: Find a better way than this
+            return np.nansum(np.log(a + VERY_SMALL_NUMBER))
 
-    def sample_from_prior(self, n_samples: int):
+    def _sample_from_prior(self, n_samples: int):
         """
         Returns N samples from the prior.
 
@@ -257,10 +265,11 @@ class HorseshoePrior(Prior):
 
         lamda = np.abs(self.rng.standard_cauchy(size=n_samples))
 
-        p0 = np.log(np.abs(self.rng.randn() * lamda * self.scale))
+        #p0 = np.log(np.abs(self.rng.randn() * lamda * self.scale))
+        p0 = np.abs(self.rng.randn() * lamda * self.scale)
         return p0[:, np.newaxis]
 
-    def gradient(self, theta: np.ndarray):
+    def _gradient(self, theta: np.ndarray):
         """
         Computes the gradient of the prior with
         respect to theta.
@@ -268,7 +277,7 @@ class HorseshoePrior(Prior):
         Parameters
         ----------
         theta : (D,) numpy array
-            Hyperparameter configuration in log space
+            Hyperparameter configuration
 
         Returns
         -------
@@ -280,18 +289,22 @@ class HorseshoePrior(Prior):
                 return np.inf  # POSITIVE infinity (this is the "spike")
             else:
                 a = -(6 * self.scale_square)
-                b = (3 * self.scale_square + math.exp(2 * theta))
-                b *= np.log(3 * self.scale_square * math.exp(- 2 * theta) + 1)
+                #b = (3 * self.scale_square + math.exp(2 * theta))
+                b = 3 * self.scale_square + theta**2
+                #b *= np.log(3 * self.scale_square * math.exp(- 2 * theta) + 1)
+                b *= np.log(3 * self.scale_square * theta ** (-2) + 1)
                 b = max(b, 1e-14)
                 return a / b
 
         else:
-            if np.any(theta == 0.0):
+            if np.any(np.log(theta) == 0.0):
                 return np.ones(theta.shape) * np.inf  # POSITIVE infinity (this is the "spike")
             else:
                 a = -(6 * self.scale_square)
-                b = (3 * self.scale_square + np.exp(2 * theta))
-                b *= np.log(3 * self.scale_square * np.exp(- 2 * theta) + 1)
+                #b = (3 * self.scale_square + np.exp(2 * theta))
+                b = 3 * self.scale_square + theta**2
+                #b *= np.log(3 * self.scale_square * np.exp(- 2 * theta) + 1)
+                b *= np.log(3 * self.scale_square * theta ** (-2) + 1)
                 b = np.maximum(b, 1e-14)
                 return a / b
 
@@ -331,14 +344,14 @@ class LognormalPrior(Prior):
         self.mean = mean
         self.sqrt_2_pi = np.sqrt(2 * np.pi)
 
-    def lnprob(self, theta: np.ndarray):
+    def _lnprob(self, theta: np.ndarray):
         """
-        Returns the log probability of theta. Note: theta should be on a log scale.
+        Returns the log probability of theta
 
         Parameters
         ----------
         theta : (D,) numpy array
-            A hyperparameter configuration in log space.
+            A hyperparameter configuration
 
         Returns
         -------
@@ -346,22 +359,23 @@ class LognormalPrior(Prior):
             The log probability of theta
         """
         if np.ndim(theta) == 0:
-            if theta <= 0:
+            if theta <= self.mean:
                 return -1e25
             else:
                 rval = (
-                    -(math.log(theta) - self.mean) ** 2 / (2 * self.sigma_square)
-                    - math.log(self.sqrt_2_pi * self.sigma * theta)
+                    -(np.log(theta) - self.mean) ** 2 / (2 * self.sigma_square)
+                    - np.log(self.sqrt_2_pi * self.sigma * theta)
                 )
                 return rval
 
         rval = -(np.log(theta) - self.mean) ** 2 / (2 * self.sigma_square) - np.log(self.sqrt_2_pi * self.sigma * theta)
         # Alternative (slower) form of computation: sps.lognorm.logpdf(theta, self.sigma, loc=self.mean)
+        rval[theta <= self.mean] = -1e25
         if (~np.isfinite(rval)).any():
             rval[~np.isfinite(rval)] = 0
-        return rval
+        return np.sum(rval)
 
-    def sample_from_prior(self, n_samples: int):
+    def _sample_from_prior(self, n_samples: int):
         """
         Returns N samples from the prior.
 
@@ -381,7 +395,7 @@ class LognormalPrior(Prior):
                                 size=n_samples)
         return p0[:, np.newaxis]
 
-    def gradient(self, theta: np.ndarray):
+    def _gradient(self, theta: np.ndarray):
         """
         Computes the gradient of the prior with
         respect to theta.
@@ -419,7 +433,7 @@ class SoftTopHatPrior(Prior):
             raise ValueError('Exponent cannot be less or equal than zero (but is %f)' % exponent)
         self.exponent = exponent
 
-    def lnprob(self, theta: np.ndarray):
+    def _lnprob(self, theta: np.ndarray):
         if np.ndim(theta) == 0 or (np.ndim(theta) == 1 and len(theta) == 1):
             if theta < self.lower_bound:
                 return - ((theta - self.lower_bound) ** self.exponent)
@@ -428,9 +442,11 @@ class SoftTopHatPrior(Prior):
             else:
                 return 0
         else:
-            raise NotImplementedError()
+            rval = [self._lnprob(t) for t in theta]
+            rval = np.sum(np.array(rval))
+            return rval
 
-    def sample_from_prior(self, n_samples: int):
+    def _sample_from_prior(self, n_samples: int):
         """
         Returns N samples from the prior.
 
@@ -447,7 +463,7 @@ class SoftTopHatPrior(Prior):
 
         return self.rng.uniform(self.lower_bound, self.upper_bound, size=(n_samples, ))
 
-    def gradient(self, theta: np.ndarray):
+    def _gradient(self, theta: np.ndarray):
         if np.ndim(theta) == 0 or (np.ndim(theta) == 1 and len(theta) == 1):
             if theta < self.lower_bound:
                 return - self.exponent * (theta - self.lower_bound)
@@ -460,6 +476,7 @@ class SoftTopHatPrior(Prior):
 
     def __str__(self):
         return 'LowerBoundPrior(lower_bound=%f)' % self.lower_bound
+
 
 class GammaPrior(Prior):
 
@@ -486,14 +503,14 @@ class GammaPrior(Prior):
         self.loc = loc
         self.scale = scale
 
-    def lnprob(self, theta: np.ndarray):
+    def _lnprob(self, theta: np.ndarray):
         """
         Returns the pdf of theta.
 
         Parameters
         ----------
         theta : (D,) numpy array
-            A hyperparameter configuration in log space. Will be exponentiated for any computation.
+            A hyperparameter configuration
 
         Returns
         -------
@@ -501,9 +518,9 @@ class GammaPrior(Prior):
             The log probability of theta
         """
 
-        return np.sum(sps.gamma.logpdf(np.exp(theta), a=self.a, scale=self.scale, loc=self.loc))
+        return np.sum(sps.gamma.logpdf(theta, a=self.a, scale=self.scale, loc=self.loc))
 
-    def sample_from_prior(self, n_samples: int):
+    def _sample_from_prior(self, n_samples: int):
         """
         Returns N samples from the prior.
 
@@ -523,22 +540,21 @@ class GammaPrior(Prior):
                             size=n_samples)
         return p0[:, np.newaxis]
 
-    def gradient(self, theta: np.ndarray):
+    def _gradient(self, theta: np.ndarray):
         """
         As computed by Wolfram Alpha
 
         Parameters
         ----------
         theta: (D,) numpy array
-            A hyperparameter configuration in log space. Will be exponentiated for any computation.
+            A hyperparameter configuration
 
         Returns
         -------
         float
             The gradient wrt to theta
         """
-        theta = np.exp(theta)
-        if True: #np.ndim(theta) == 0:
+        if np.ndim(theta) == 0:
             b = 1/self.scale
             grad = b ** (-self.a -1)
             grad *= theta ** (self.a - 2)

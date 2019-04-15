@@ -2,12 +2,43 @@ import unittest
 
 import numpy as np
 import scipy.optimize
+import scipy.stats as scst
+import scipy.integrate as scin
 
 from smac.epm.gp_base_prior import TophatPrior, HorseshoePrior, LognormalPrior, GammaPrior, SoftTopHatPrior
 from smac.utils.constants import VERY_SMALL_NUMBER
 
 
+def compare_to_scalar(self, prior, bounds):
+    """
+    1) Samples 1000 configs within bounds
+    2) Computes lnprob using prior
+    3) ASSERTS lnprog for array is the same as lnprob for scalars
+    """
+    samples = np.linspace(bounds[0], bounds[1], 5)
+    lns = np.array([prior.lnprob(np.log(s)) for s in samples])
+    self.assertEqual(np.nansum(lns), prior.lnprob(np.log(samples)))
+    return lns
+
+
+def wrap_ln(theta, prior):
+    return np.exp(prior.lnprob(np.log(theta)))
+
+
 class TestTophatPrior(unittest.TestCase):
+
+    def test_lnprob_sums_to_1(self):
+        rng = np.random.RandomState(1)
+        for i in range(100):
+            lower_bound = 2+rng.random_sample()*50
+            upper_bound = lower_bound + rng.random_sample()*50
+            prior = TophatPrior(lower_bound=lower_bound, upper_bound=upper_bound)
+            compare_to_scalar(self, prior, [lower_bound, upper_bound])
+
+        # Doesn't work yet
+        #integral = scin.quad(wrap_ln, args=(TophatPrior(lower_bound=-1, upper_bound=1), ), a=-5, b=5)
+        #self.assertLess(integral[1], 0.1)
+        #self.assertEqual(integral[0], 1)
 
     def test_lnprob_and_grad_scalar(self):
         prior = TophatPrior(lower_bound=-10, upper_bound=2)
@@ -55,7 +86,21 @@ class TestTophatPrior(unittest.TestCase):
         self.assertAlmostEqual(samples[0][0], -4.995735943569112)
 
 
-class TestHoreshoePrior(unittest.TestCase):
+class TestHorseshoePrior(unittest.TestCase):
+
+    def test_lnprob_sums_to_1(self):
+        rng = np.random.RandomState(1)
+        for i in range(100):
+            lower_bound = 1+rng.random_sample()
+            upper_bound = lower_bound + rng.random_sample()*5
+            scale = 0.5+rng.random_sample()
+            prior = HorseshoePrior(scale=scale)
+            compare_to_scalar(self, prior, [lower_bound, upper_bound])
+
+        # Does not work
+        #integral = scin.quad(wrap_ln, args=(HorseshoePrior(scale=1), ), a=1e-10, b=5)#, b=100)
+        #self.assertLess(integral[1], 0.1)
+        #self.assertEqual(integral[0], 1)
 
     def test_lnprob_and_grad_scalar(self):
         prior = HorseshoePrior(scale=1)
@@ -102,6 +147,21 @@ class TestHoreshoePrior(unittest.TestCase):
 
 class TestGammaPrior(unittest.TestCase):
 
+    def test_lnprob_sums_to_1(self):
+        rng = np.random.RandomState(1)
+        for i in range(100):
+            lower_bound = rng.randint(low=1, high=5)
+            upper_bound = lower_bound + 5
+            loc = lower_bound-0.5
+            a = rng.random_sample()
+            scale = 0.1 + rng.random_sample()
+            prior = GammaPrior(a=a, loc=loc, scale=scale)
+            compare_to_scalar(self, prior, [lower_bound, upper_bound])
+
+        integral = scin.quad(wrap_ln, args=(GammaPrior(a=1, loc=0, scale=1),), a=0, b=100)
+        self.assertLess(integral[1], 0.1)
+        self.assertAlmostEqual(integral[0], 1, 2)
+
     def test_lnprob_and_grad_scalar(self):
         prior = GammaPrior(a=0.5, scale=1/2, loc=0)
 
@@ -121,7 +181,7 @@ class TestGammaPrior(unittest.TestCase):
 
     def test_gradient(self):
         for scale in (0.5, 1., 2.):
-            prior = HorseshoePrior(scale=scale)
+            prior = GammaPrior(a=0.5, scale=scale, loc=0)
             # The function appears to be unstable above 15
             for theta in range(-20, 15):
                 if theta == 0:
@@ -134,6 +194,19 @@ class TestGammaPrior(unittest.TestCase):
 
 
 class TestLogNormalPrior(unittest.TestCase):
+
+    def test_lnprob_sums_to_1(self):
+        rng = np.random.RandomState(1)
+        for i in range(100):
+            lower_bound = 0.001
+            upper_bound = 5
+            scale = 0.1+rng.random_sample()
+            prior = LognormalPrior(mean=0, sigma=scale)
+            compare_to_scalar(self, prior, [lower_bound, upper_bound])
+
+        integral = scin.quad(wrap_ln, args=(LognormalPrior(mean=0, sigma=1), ), a=1e-10, b=100)
+        self.assertLess(integral[1], 0.1)
+        self.assertAlmostEqual(integral[0], 1, 2)
 
     def test_gradient(self):
         for sigma in (0.5, 1., 2.):
@@ -150,6 +223,20 @@ class TestLogNormalPrior(unittest.TestCase):
 
 
 class TestSoftTopHatPrior(unittest.TestCase):
+
+    def test_lnprob_sums_to_1(self):
+        rng = np.random.RandomState(1)
+        for i in range(100):
+            lower_bound = -rng.randint(low=-50, high=-6)
+            upper_bound = -lower_bound
+            exponent = 2
+            prior = SoftTopHatPrior(lower_bound=lower_bound+5, upper_bound=upper_bound-5, exponent=exponent)
+            compare_to_scalar(self, prior, [lower_bound, upper_bound])
+
+        # Does not work
+        #integral = scin.quad(wrap_ln, args=(SoftTopHatPrior(lower_bound=1, upper_bound=5, exponent=2),), a=-10, b=100)
+        #self.assertLess(integral[1], 0.1)
+        #self.assertAlmostEqual(integral[0], 1, 2)
 
     def test_lnprob(self):
         prior = SoftTopHatPrior(lower_bound=-5, upper_bound=5)
