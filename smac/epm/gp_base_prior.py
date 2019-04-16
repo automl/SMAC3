@@ -20,6 +20,8 @@ class Prior(object):
         RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
         In: NIPS 2017 Bayesian Optimization Workshop
 
+        [16.04.2019]: Whenever lnprob or the gradient is computed for a scalar input, we use math.* rather than np.*
+
         Parameters
         ----------
         rng: np.random.RandomState
@@ -237,12 +239,12 @@ class HorseshoePrior(Prior):
             if theta == 0:
                 return np.inf  # POSITIVE infinity (this is the "spike")
         else:
-            if np.any(np.log(theta) == 0.0):
+            if np.any(theta) == 0.0:
                 return np.inf  # POSITIVE infinity (this is the "spike")
 
         if np.ndim(theta) == 0:
-            a = np.log(1 + 3.0 * (self.scale_square / theta**2) )
-            return np.log(a + VERY_SMALL_NUMBER)
+            a = math.log(1 + 3.0 * (self.scale_square / theta**2))
+            return math.log(a + VERY_SMALL_NUMBER)
         else:
             a = np.array(np.log(1 + 3.0 * (self.scale_square / theta ** 2)))
             # TODO: Find a better way than this
@@ -291,13 +293,13 @@ class HorseshoePrior(Prior):
                 a = -(6 * self.scale_square)
                 #b = (3 * self.scale_square + math.exp(2 * theta))
                 b = 3 * self.scale_square + theta**2
-                #b *= np.log(3 * self.scale_square * math.exp(- 2 * theta) + 1)
-                b *= np.log(3 * self.scale_square * theta ** (-2) + 1)
+                #b *= math.log(3 * self.scale_square * math.exp(- 2 * theta) + 1)
+                b *= math.log(3 * self.scale_square * theta ** (-2) + 1)
                 b = max(b, 1e-14)
                 return a / b
 
         else:
-            if np.any(np.log(theta) == 0.0):
+            if np.any(theta == 0.0):
                 return np.ones(theta.shape) * np.inf  # POSITIVE infinity (this is the "spike")
             else:
                 a = -(6 * self.scale_square)
@@ -363,8 +365,8 @@ class LognormalPrior(Prior):
                 return -1e25
             else:
                 rval = (
-                    -(np.log(theta) - self.mean) ** 2 / (2 * self.sigma_square)
-                    - np.log(self.sqrt_2_pi * self.sigma * theta)
+                    -(math.log(theta) - self.mean) ** 2 / (2 * self.sigma_square)
+                    - math.log(self.sqrt_2_pi * self.sigma * theta)
                 )
                 return rval
 
@@ -558,7 +560,7 @@ class GammaPrior(Prior):
             b = 1/self.scale
             grad = b ** (-self.a -1)
             grad *= theta ** (self.a - 2)
-            grad *= np.exp(-theta / b)
+            grad *= math.exp(-theta / b)
             grad *= (-self.a * b + b + theta)
             grad /= scsp.gamma(theta)
             return grad
