@@ -105,6 +105,8 @@ class TophatPrior(Prior):
         RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
         In: NIPS 2017 Bayesian Optimization Workshop
 
+        [19.04.2019]: Don't log samples afterwards or exponentiate theta before
+
         Parameters
         ----------
         lower_bound : float
@@ -123,7 +125,7 @@ class TophatPrior(Prior):
         if not (self.max > self.min):
             raise Exception("Upper bound of Tophat prior must be greater than the lower bound!")
 
-    def _lnprob(self, theta: np.ndarray):
+    def lnprob(self, theta: np.ndarray):
         """
         Returns the log probability of theta.
 
@@ -148,9 +150,10 @@ class TophatPrior(Prior):
             else:
                 return 0
 
-    def _sample_from_prior(self, n_samples: int):
+    def sample_from_prior(self, n_samples: int):
         """
         Returns N samples from the prior.
+
 
         Parameters
         ----------
@@ -166,7 +169,7 @@ class TophatPrior(Prior):
         p0 = self.min + self.rng.rand(n_samples) * (self.max - self.min)
         return p0[:, np.newaxis]
 
-    def _gradient(self, theta: np.ndarray):
+    def gradient(self, theta: np.ndarray):
         """
         Computes the gradient of the prior with
         respect to theta.
