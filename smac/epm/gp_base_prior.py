@@ -67,6 +67,12 @@ class Prior(object):
         (N, D) np.array
             The samples from the prior.
         """
+
+        if np.ndim(n_samples) != 0:
+            raise ValueError('argument n_samples needs to be a scalar (is %s)' % n_samples)
+        if n_samples <= 0:
+            raise ValueError('argument n_samples needs to be positive (is %d)' % n_samples)
+
         return np.log(self._sample_from_prior(n_samples=n_samples))
 
     def _sample_from_prior(self, n_samples: int):
@@ -145,10 +151,7 @@ class TophatPrior(Prior):
             else:
                 return 0
         else:
-            if ((theta < self.min) | (theta > self.max)).any():
-                return -np.inf
-            else:
-                return 0
+            raise NotImplementedError()
 
     def sample_from_prior(self, n_samples: int):
         """
@@ -166,8 +169,13 @@ class TophatPrior(Prior):
             The samples from the prior.
         """
 
+        if np.ndim(n_samples) != 0:
+            raise ValueError('argument n_samples needs to be a scalar (is %s)' % n_samples)
+        if n_samples <= 0:
+            raise ValueError('argument n_samples needs to be positive (is %d)' % n_samples)
+
         p0 = self.min + self.rng.rand(n_samples) * (self.max - self.min)
-        return p0[:, np.newaxis]
+        return p0
 
     def gradient(self, theta: np.ndarray):
         """
@@ -188,7 +196,7 @@ class TophatPrior(Prior):
         if np.ndim(theta) == 0:
             return 0
         else:
-            return np.zeros([theta.shape[0]])
+            raise NotImplementedError()
 
 
 class HorseshoePrior(Prior):
@@ -242,16 +250,10 @@ class HorseshoePrior(Prior):
             if theta == 0:
                 return np.inf  # POSITIVE infinity (this is the "spike")
         else:
-            if np.any(theta) == 0.0:
-                return np.inf  # POSITIVE infinity (this is the "spike")
+            raise NotImplementedError()
 
-        if np.ndim(theta) == 0:
-            a = math.log(1 + 3.0 * (self.scale_square / theta**2))
-            return math.log(a + VERY_SMALL_NUMBER)
-        else:
-            a = np.array(np.log(1 + 3.0 * (self.scale_square / theta ** 2)))
-            # TODO: Find a better way than this
-            return np.nansum(np.log(a + VERY_SMALL_NUMBER))
+        a = math.log(1 + 3.0 * (self.scale_square / theta**2))
+        return math.log(a + VERY_SMALL_NUMBER)
 
     def _sample_from_prior(self, n_samples: int):
         """
@@ -272,7 +274,7 @@ class HorseshoePrior(Prior):
 
         #p0 = np.log(np.abs(self.rng.randn() * lamda * self.scale))
         p0 = np.abs(self.rng.randn() * lamda * self.scale)
-        return p0[:, np.newaxis]
+        return p0
 
     def _gradient(self, theta: np.ndarray):
         """
@@ -302,16 +304,7 @@ class HorseshoePrior(Prior):
                 return a / b
 
         else:
-            if np.any(theta == 0.0):
-                return np.ones(theta.shape) * np.inf  # POSITIVE infinity (this is the "spike")
-            else:
-                a = -(6 * self.scale_square)
-                #b = (3 * self.scale_square + np.exp(2 * theta))
-                b = 3 * self.scale_square + theta**2
-                #b *= np.log(3 * self.scale_square * np.exp(- 2 * theta) + 1)
-                b *= np.log(3 * self.scale_square * theta ** (-2) + 1)
-                b = np.maximum(b, 1e-14)
-                return a / b
+            raise NotImplementedError()
 
 
 class LognormalPrior(Prior):
@@ -373,12 +366,8 @@ class LognormalPrior(Prior):
                 )
                 return rval
 
-        rval = -(np.log(theta) - self.mean) ** 2 / (2 * self.sigma_square) - np.log(self.sqrt_2_pi * self.sigma * theta)
-        # Alternative (slower) form of computation: sps.lognorm.logpdf(theta, self.sigma, loc=self.mean)
-        rval[theta <= self.mean] = -1e25
-        if (~np.isfinite(rval)).any():
-            rval[~np.isfinite(rval)] = 0
-        return np.sum(rval)
+        else:
+            raise NotImplementedError()
 
     def _sample_from_prior(self, n_samples: int):
         """
@@ -395,10 +384,8 @@ class LognormalPrior(Prior):
             The samples from the prior.
         """
 
-        p0 = self.rng.lognormal(mean=self.mean,
-                                sigma=self.sigma,
-                                size=n_samples)
-        return p0[:, np.newaxis]
+        p0 = self.rng.lognormal(mean=self.mean, sigma=self.sigma, size=n_samples)
+        return p0
 
     def _gradient(self, theta: np.ndarray):
         """
@@ -419,14 +406,12 @@ class LognormalPrior(Prior):
             if theta <= 0:
                 return 0
             else:
+                # derivative of log(1 / (x * s^2 * sqrt(2 pi)) * exp( - 0.5 * (log(x ) / s^2))^2))
+                # This is without the mean!!!
                 return -(self.sigma_square + math.log(theta)) / (self.sigma_square * (theta))
 
-        # derivative of log(1 / (x * s^2 * sqrt(2 pi)) * exp( - 0.5 * (log(x ) / s^2))^2))
-        # This is without the mean!!!
-        rval = - (self.sigma_square + np.log(theta)) / (self.sigma_square * (theta))
-        if (~np.isfinite(rval)).any():
-            rval[~np.isfinite(rval)] = 0
-        return rval
+        else:
+            raise NotImplementedError()
 
 
 class SoftTopHatPrior(Prior):
@@ -447,9 +432,7 @@ class SoftTopHatPrior(Prior):
             else:
                 return 0
         else:
-            rval = [self._lnprob(t) for t in theta]
-            rval = np.sum(np.array(rval))
-            return rval
+            raise NotImplementedError()
 
     def _sample_from_prior(self, n_samples: int):
         """
@@ -522,8 +505,9 @@ class GammaPrior(Prior):
         float
             The log probability of theta
         """
-
-        return np.sum(sps.gamma.logpdf(theta, a=self.a, scale=self.scale, loc=self.loc))
+        if np.ndim(theta) != 0:
+            raise NotImplementedError()
+        return sps.gamma.logpdf(theta, a=self.a, scale=self.scale, loc=self.loc)
 
     def _sample_from_prior(self, n_samples: int):
         """
@@ -540,10 +524,8 @@ class GammaPrior(Prior):
             The samples from the prior.
         """
 
-        p0 = self.rng.gamma(shape=self.a,
-                            scale=self.scale,
-                            size=n_samples)
-        return p0[:, np.newaxis]
+        p0 = self.rng.gamma(shape=self.a, scale=self.scale, size=n_samples)
+        return p0
 
     def _gradient(self, theta: np.ndarray):
         """
