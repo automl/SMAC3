@@ -24,12 +24,12 @@ class TestTophatPrior(unittest.TestCase):
         #self.assertEqual(integral[0], 1)
 
     def test_lnprob_and_grad_scalar(self):
-        prior = TophatPrior(lower_bound=-10, upper_bound=2)
+        prior = TophatPrior(lower_bound=np.exp(-10), upper_bound=np.exp(2))
 
         # Legal scalar
         for val in (-1, 0, 1):
-            self.assertEqual(prior.lnprob(val), 0)
-            self.assertEqual(prior.gradient(val), 0)
+            self.assertEqual(prior.lnprob(val), 0, msg=str(val))
+            self.assertEqual(prior.gradient(val), 0, msg=str(val))
 
         # Boundary
         for val in (-10, 2):
@@ -51,7 +51,7 @@ class TestTophatPrior(unittest.TestCase):
             prior.gradient(val)
 
     def test_sample_from_prior(self):
-        prior = TophatPrior(lower_bound=-10, upper_bound=2, rng=np.random.RandomState(1))
+        prior = TophatPrior(lower_bound=np.exp(-10), upper_bound=np.exp(2), rng=np.random.RandomState(1))
         samples = prior.sample_from_prior(10)
         np.testing.assert_array_equal(samples >= -10, True)
         np.testing.assert_array_equal(samples <= 2, True)
@@ -220,7 +220,7 @@ class TestSoftTopHatPrior(unittest.TestCase):
         #self.assertAlmostEqual(integral[0], 1, 2)
 
     def test_lnprob(self):
-        prior = SoftTopHatPrior(lower_bound=-5, upper_bound=5)
+        prior = SoftTopHatPrior(lower_bound=np.exp(-5), upper_bound=np.exp(5))
 
         # Legal values
         self.assertEqual(prior.lnprob(-5), 0)
@@ -236,7 +236,7 @@ class TestSoftTopHatPrior(unittest.TestCase):
         self.assertAlmostEqual(prior.lnprob(7), -4)
 
     def test_grad(self):
-        prior = SoftTopHatPrior(lower_bound=-5, upper_bound=5)
+        prior = SoftTopHatPrior(lower_bound=np.exp(-5), upper_bound=np.exp(5))
 
         # Legal values
         self.assertEqual(prior.gradient(-5), 0)

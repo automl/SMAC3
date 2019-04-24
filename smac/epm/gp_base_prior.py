@@ -127,11 +127,13 @@ class TophatPrior(Prior):
         else:
             self.rng = rng
         self.min = lower_bound
+        self._log_min = np.log(lower_bound)
         self.max = upper_bound
+        self._log_max = np.log(upper_bound)
         if not (self.max > self.min):
             raise Exception("Upper bound of Tophat prior must be greater than the lower bound!")
 
-    def lnprob(self, theta: np.ndarray):
+    def _lnprob(self, theta: np.ndarray):
         """
         Returns the log probability of theta.
 
@@ -174,7 +176,7 @@ class TophatPrior(Prior):
         if n_samples <= 0:
             raise ValueError('argument n_samples needs to be positive (is %d)' % n_samples)
 
-        p0 = self.min + self.rng.rand(n_samples) * (self.max - self.min)
+        p0 = self.rng.uniform(low=self._log_min, high=self._log_max, size=(n_samples, ))
         return p0
 
     def gradient(self, theta: np.ndarray):
@@ -271,8 +273,6 @@ class HorseshoePrior(Prior):
         """
 
         lamda = np.abs(self.rng.standard_cauchy(size=n_samples))
-
-        #p0 = np.log(np.abs(self.rng.randn() * lamda * self.scale))
         p0 = np.abs(self.rng.randn() * lamda * self.scale)
         return p0
 
@@ -296,9 +296,7 @@ class HorseshoePrior(Prior):
                 return np.inf  # POSITIVE infinity (this is the "spike")
             else:
                 a = -(6 * self.scale_square)
-                #b = (3 * self.scale_square + math.exp(2 * theta))
                 b = 3 * self.scale_square + theta**2
-                #b *= math.log(3 * self.scale_square * math.exp(- 2 * theta) + 1)
                 b *= math.log(3 * self.scale_square * theta ** (-2) + 1)
                 b = max(b, 1e-14)
                 return a / b
@@ -418,17 +416,21 @@ class SoftTopHatPrior(Prior):
     def __init__(self, lower_bound=-10, upper_bound=10, exponent=2, rng: np.random.RandomState=None):
         super().__init__(rng=rng)
         self.lower_bound = lower_bound
+        self._log_lower_bound = np.log(lower_bound)
         self.upper_bound = upper_bound
+        self._log_upper_bound = np.log(upper_bound)
         if exponent <= 0:
             raise ValueError('Exponent cannot be less or equal than zero (but is %f)' % exponent)
         self.exponent = exponent
 
-    def _lnprob(self, theta: np.ndarray):
+    def lnprob(self, theta: np.ndarray):
+        # We need to use lnprob here instead of _lnprob to have the squared function work in the logarithmic space,
+        # too.
         if np.ndim(theta) == 0 or (np.ndim(theta) == 1 and len(theta) == 1):
-            if theta < self.lower_bound:
-                return - ((theta - self.lower_bound) ** self.exponent)
-            elif theta > self.upper_bound:
-                return - (self.upper_bound - theta) ** self.exponent
+            if theta < self._log_lower_bound:
+                return - ((theta - self._log_lower_bound) ** self.exponent)
+            elif theta > self._log_upper_bound:
+                return - (self._log_upper_bound - theta) ** self.exponent
             else:
                 return 0
         else:
@@ -449,14 +451,14 @@ class SoftTopHatPrior(Prior):
             The samples from the prior.
         """
 
-        return self.rng.uniform(self.lower_bound, self.upper_bound, size=(n_samples, ))
+        return self.rng.uniform(self._log_lower_bound, self._log_upper_bound, size=(n_samples, ))
 
-    def _gradient(self, theta: np.ndarray):
+    def gradient(self, theta: np.ndarray):
         if np.ndim(theta) == 0 or (np.ndim(theta) == 1 and len(theta) == 1):
-            if theta < self.lower_bound:
-                return - self.exponent * (theta - self.lower_bound)
-            elif theta > self.upper_bound:
-                return self.exponent * ( self.upper_bound - theta)
+            if theta < self._log_lower_bound:
+                return - self.exponent * (theta - self._log_lower_bound)
+            elif theta > self._log_upper_bound:
+                return self.exponent * ( self._log_upper_bound - theta)
             else:
                 return 0
         else:
