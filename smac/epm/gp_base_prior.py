@@ -408,7 +408,7 @@ class LognormalPrior(Prior):
             else:
                 # derivative of log(1 / (x * s^2 * sqrt(2 pi)) * exp( - 0.5 * (log(x ) / s^2))^2))
                 # This is without the mean!!!
-                return -(self.sigma_square + math.log(theta)) / (self.sigma_square * (theta))
+                return -(self.sigma_square + math.log(theta)) / (self.sigma_square * (theta)) * theta
 
         else:
             raise NotImplementedError()
@@ -542,12 +542,7 @@ class GammaPrior(Prior):
             The gradient wrt to theta
         """
         if np.ndim(theta) == 0:
-            b = 1/self.scale
-            grad = b ** (-self.a -1)
-            grad *= theta ** (self.a - 2)
-            grad *= math.exp(-theta / b)
-            grad *= (-self.a * b + b + theta)
-            grad /= scsp.gamma(theta)
-            return grad
+            # Multiply by theta because of the chain rule...
+            return ((self.a - 1) / theta - (1 / self.scale)) * theta
         else:
             raise NotImplementedError()
