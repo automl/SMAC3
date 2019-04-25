@@ -238,7 +238,7 @@ class HammingKernel(MagicMixin, skopt.learning.gaussian_process.kernels.HammingK
             Y = np.atleast_2d(Y)
 
         indicator = np.expand_dims(X, axis=1) != Y
-        kernel_prod = -(1/(2*length_scale**2) * indicator).sum(axis=2)
+        kernel_prod = -1/(2*length_scale**2) * indicator.sum(axis=2)
         kernel_prod = np.exp(kernel_prod)
 
         if eval_gradient:
@@ -248,11 +248,11 @@ class HammingKernel(MagicMixin, skopt.learning.gaussian_process.kernels.HammingK
 
             # dK / dL computation
             if np.iterable(length_scale) and length_scale.shape[0] > 1:
-                grad = (-np.expand_dims(kernel_prod, axis=-1) * np.array(indicator, dtype=np.float32))
+                grad = (np.expand_dims(kernel_prod, axis=-1) * np.array(indicator, dtype=np.float32))
             else:
-                grad = -np.expand_dims(kernel_prod * np.sum(indicator, axis=2), axis=-1)
+                grad = np.expand_dims(kernel_prod * np.sum(indicator, axis=2), axis=-1)
 
-            grad *= (1/length_scale**2)
+            grad *= (1/length_scale**3)
 
             return kernel_prod, grad
         return kernel_prod
