@@ -1,4 +1,5 @@
 import math
+import warnings
 
 import numpy as np
 import scipy.stats as sps
@@ -272,6 +273,7 @@ class HorseshoePrior(Prior):
             The samples from the prior.
         """
 
+        # This is copied from RoBO - scale is most likely the tau parameter
         lamda = np.abs(self.rng.standard_cauchy(size=n_samples))
         p0 = np.abs(self.rng.randn() * lamda * self.scale)
         return p0
@@ -415,10 +417,26 @@ class LognormalPrior(Prior):
 class SoftTopHatPrior(Prior):
     def __init__(self, lower_bound=-10, upper_bound=10, exponent=2, rng: np.random.RandomState=None):
         super().__init__(rng=rng)
-        self.lower_bound = lower_bound
-        self._log_lower_bound = np.log(lower_bound)
-        self.upper_bound = upper_bound
-        self._log_upper_bound = np.log(upper_bound)
+
+        with warnings.catch_warnings():
+            warnings.simplefilter('error')
+            self.lower_bound = lower_bound
+            try:
+                self._log_lower_bound = np.log(lower_bound)
+            except RuntimeWarning as w:
+                if 'invalid value encountered in log' in w.args[0]:
+                    raise ValueError('Invalid lower bound %f (cannot compute log)' % lower_bound)
+                else:
+                    raise w
+            self.upper_bound = upper_bound
+            try:
+                self._log_upper_bound = np.log(upper_bound)
+            except RuntimeWarning as w:
+                if 'invalid value encountered in log' in w.args[0]:
+                    raise ValueError('Invalid lower bound %f (cannot compute log)' % lower_bound)
+                else:
+                    raise w
+
         if exponent <= 0:
             raise ValueError('Exponent cannot be less or equal than zero (but is %f)' % exponent)
         self.exponent = exponent

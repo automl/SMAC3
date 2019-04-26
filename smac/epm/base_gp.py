@@ -55,11 +55,11 @@ class BaseModel(AbstractEPM):
                     if add_bound_priors:
                         if add_bound_priors:
                             priors_for_hp.append(smac.epm.gp_base_prior.SoftTopHatPrior(
-                               lower_bound=np.log(bounds[i][0]), upper_bound=np.log(bounds[i][1]), rng=self.rng,
+                               lower_bound=bounds[i][0], upper_bound=bounds[i][1], rng=self.rng,
                             ))
                         else:
                             priors_for_hp.append(smac.epm.gp_base_prior.TophatPrior(
-                                lower_bound=np.log(bounds[i][0]), upper_bound=np.log(bounds[i][1]), rng=self.rng,
+                                lower_bound=bounds[i][0], upper_bound=bounds[i][1], rng=self.rng,
                             ))
                     all_priors.append(priors_for_hp)
         return all_priors

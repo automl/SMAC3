@@ -2,7 +2,6 @@ import logging
 import typing
 
 import numpy as np
-import sklearn.gaussian_process.kernels
 import skopt.learning.gaussian_process
 import skopt.learning.gaussian_process.kernels
 from scipy import optimize
@@ -233,12 +232,13 @@ class GaussianProcess(BaseModel):
 
         mu, var = self.gp.predict(X_test, return_cov=True)
         var = np.diag(var)
-        if self.normalize_y:
-            mu, var = self._untransform_y(mu, var)
 
         # Clip negative variances and set them to the smallest
         # positive float value
-        np.clip(var, VERY_SMALL_NUMBER, np.inf)
+        var = np.clip(var, VERY_SMALL_NUMBER, np.inf)
+
+        if self.normalize_y:
+            mu, var = self._untransform_y(mu, var)
 
         return mu, var
 
