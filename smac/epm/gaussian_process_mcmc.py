@@ -4,7 +4,6 @@ import typing
 
 import emcee
 import numpy as np
-import nuts.nuts
 import skopt.learning.gaussian_process
 import skopt.learning.gaussian_process.kernels
 
@@ -23,9 +22,9 @@ class GaussianProcessMCMC(BaseModel):
         seed: int,
         kernel: skopt.learning.gaussian_process.kernels.Kernel,
         n_mcmc_walkers: int=20,
-        chain_length: int=2000,
-        burnin_steps: int=2000,
-        normalize_y: bool=True,
+        chain_length: int = 50,
+        burnin_steps: int = 50,
+        normalize_y: bool = True,
         mcmc_sampler: str = 'emcee',
         **kwargs
     ):
@@ -170,6 +169,10 @@ class GaussianProcessMCMC(BaseModel):
                 # A good explanation of HMC and NUTS can be found in:
                 # https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12681
 
+                # Do not require the installation of NUTS for SMAC
+                # This requires NUTS from https://github.com/mfeurer/NUTS
+                import nuts.nuts
+
                 # Perform initial fit to the data to obtain theta0
                 if not self.burned:
                     theta0 = self.gp.kernel.theta
@@ -183,14 +186,15 @@ class GaussianProcessMCMC(BaseModel):
                     theta0=theta0,
                     # Increasing this value results in longer running times
                     delta=0.5,
-                    adapt_mass=True,
+                    adapt_mass=False,
                     # Rather low max depth to keep the number of required gradient steps low
                     max_depth=10,
                     rng=self.rng,
                 )
                 self.p0 = samples.mean(axis=0)
                 print('hypers', 'log space', self.p0, 'regular space', np.exp(self.p0))
-                self.hypers = samples[::25]
+                indices = [int(np.rint(ind)) for ind in np.linspace(start=0, stop=len(samples) - 1, num=10)]
+                self.hypers = samples[indices]
             else:
                 raise ValueError(self.mcmc_sampler)
 

@@ -107,6 +107,7 @@ class SMAC4BO(SMAC4AC):
             elif model_type == "gp_mcmc":
                 model_class = GaussianProcessMCMC
                 kwargs['model'] = model_class
+                kwargs['integrate_acquisition_function'] = True
 
                 model_kwargs['kernel'] = kernel
 
@@ -114,8 +115,8 @@ class SMAC4BO(SMAC4AC):
                 if n_mcmc_walkers % 2 == 1:
                     n_mcmc_walkers += 1
                 model_kwargs['n_mcmc_walkers'] = n_mcmc_walkers
-                model_kwargs['chain_length'] = 200
-                model_kwargs['burnin_steps'] = 100
+                model_kwargs['chain_length'] = 250
+                model_kwargs['burnin_steps'] = 250
                 model_kwargs['normalize_y'] = True
                 model_kwargs['seed'] = rng.randint(0, 2**20)
             else:
@@ -129,7 +130,7 @@ class SMAC4BO(SMAC4AC):
 
         if kwargs.get('acquisition_function_optimizer') is None:
             acquisition_function_optimizer_kwargs = kwargs.get('acquisition_function_optimizer_kwargs', dict())
-            acquisition_function_optimizer_kwargs['n_sls_iterations'] = 100
+            acquisition_function_optimizer_kwargs['n_sls_iterations'] = 10
             kwargs['acquisition_function_optimizer_kwargs'] = acquisition_function_optimizer_kwargs
 
         # only 1 configuration per SMBO iteration

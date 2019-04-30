@@ -47,9 +47,9 @@ class BaseModel(AbstractEPM):
                 hp = hps[0]
                 if hp.fixed:
                     continue
-                priors_for_hp = []
                 bounds = hps[0].bounds
                 for i in range(hps[0].n_elements):
+                    priors_for_hp = []
                     if current_param.prior is not None:
                         priors_for_hp.append(current_param.prior)
                     if add_bound_priors:

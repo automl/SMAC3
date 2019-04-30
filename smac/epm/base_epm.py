@@ -1,4 +1,3 @@
-import logging
 import typing
 
 import numpy as np
@@ -8,6 +7,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.exceptions import NotFittedError
 
 from smac.utils.constants import VERY_SMALL_NUMBER
+from smac.utils.logging import PickableLoggerAdapter
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -101,7 +101,7 @@ class AbstractEPM(object):
         # Initial types array which is used to reset the type array at every call to train()
         self._initial_types = types.copy()
 
-        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
+        self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
 
     def train(self, X: np.ndarray, Y: np.ndarray) -> 'AbstractEPM':
         """Trains the EPM on X and Y.

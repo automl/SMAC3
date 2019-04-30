@@ -235,13 +235,13 @@ class TestRFWithInstances(unittest.TestCase):
                 model = RandomForestWithInstances(types=types, bounds=bounds,
                                                   seed=1, ratio_features=1.0,
                                                   pca_components=100, log_y=True)
-                maes = [0.43186902865831907115, 0.42675195203430749165]
+                maes = [0.4307232906022975148, 0.42191054918079707589]
             else:
                 targets = y
                 model = RandomForestWithInstances(types=types, bounds=bounds,
                                                   seed=1, ratio_features=1.0,
                                                   pca_components=100)
-                maes = [9.3298376833224042496, 9.348010654109179346]
+                maes = [9.315854297409988671, 9.24975259164380215]
 
             for i, (train_split, test_split) in enumerate(cv.split(X, targets)):
                 X_train = X[train_split]

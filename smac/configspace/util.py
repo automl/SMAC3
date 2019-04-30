@@ -38,7 +38,7 @@ def impute_default_values(
     Parameters
     ----------
     configuration_space : ConfigurationSpace
-    
+
     configs_array : np.ndarray
         Array of configurations.
 
@@ -49,9 +49,8 @@ def impute_default_values(
         with their default value.
     """
     for hp in configuration_space.get_hyperparameters():
-        default = hp.normalized_default_value
         idx = configuration_space.get_idx_by_hyperparameter_name(hp.name)
         nonfinite_mask = ~np.isfinite(configs_array[:, idx])
-        configs_array[nonfinite_mask, idx] = default
+        configs_array[nonfinite_mask, idx] = -1
 
     return configs_array

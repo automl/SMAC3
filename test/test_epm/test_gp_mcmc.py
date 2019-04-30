@@ -20,6 +20,7 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True):
         np.ones([n_dimensions]),
         [(np.exp(-10), np.exp(2)) for _ in range(n_dimensions)],
         nu=2.5,
+        prior=None,
     )
     noise_kernel = WhiteKernel(
         noise_level=noise,
@@ -28,9 +29,7 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True):
     )
     kernel = cov_amp * exp_kernel + noise_kernel
 
-    n_mcmc_walkers = 3 * len(kernel.theta)
-    if n_mcmc_walkers % 2 == 1:
-        n_mcmc_walkers += 1
+    n_mcmc_walkers = 2 * len(kernel.theta)
 
     bounds = [(0., 1.) for _ in range(n_dimensions)]
     types = np.zeros(n_dimensions)
@@ -40,10 +39,11 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True):
         bounds=bounds,
         kernel=kernel,
         n_mcmc_walkers=n_mcmc_walkers,
-        chain_length=100,
-        burnin_steps=100,
+        chain_length=50,
+        burnin_steps=50,
         normalize_y=normalize_y,
         seed=rs.randint(low=1, high=10000),
+        mcmc_sampler='emcee',
     )
     return model
 
@@ -64,6 +64,25 @@ class TestGPMCMC(unittest.TestCase):
         self.assertRaisesRegexp(ValueError, "Rows in X should have 10 entries "
                                             "but have 5!",
                                 model.predict, X)
+
+    def test_gp_train(self):
+        rs = np.random.RandomState(1)
+        X = rs.rand(20, 10)
+        Y = rs.rand(10, 1)
+
+        fixture = np.array([0.693147, 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., -6.907755])
+
+        model = get_gp(10, rs)
+        np.testing.assert_array_almost_equal(model.kernel.theta, fixture)
+        model.train(X[:10], Y[:10])
+
+        for base_model in model.models:
+            theta = base_model.gp.kernel.theta
+            theta_ = base_model.gp.kernel_.theta
+            # Test that the kernels of the base GP are actually changed!
+            np.testing.assert_array_almost_equal(theta, theta_)
+            self.assertFalse(np.any(theta == fixture))
+            self.assertFalse(np.any(theta_ == fixture))
 
     def test_predict(self):
         rs = np.random.RandomState(1)
@@ -116,14 +135,15 @@ class TestGPMCMC(unittest.TestCase):
         ):
             # Chain length too short to get excellent predictions
             self.assertAlmostEqual(y_i, y_hat_i, delta=0.1)
-            self.assertAlmostEqual(var_hat_i, 0, delta=0.1)
+            self.assertAlmostEqual(var_hat_i, 0, delta=5)
 
         # Regression test that performance does not drastically decrease in the near future
         y_hat, var_hat = model.predict(np.array([[10, 10, 10]]))
-        self.assertAlmostEqual(y_hat[0][0], 54.654561606510825)
+        self.assertAlmostEqual(y_hat[0][0], 54.613410745846785)
         # Massive variance due to internally used law of total variances, also a massive difference locally and on
         # travis-cis
-        self.assertLessEqual(abs(var_hat[0][0] - 5080), 50)
+        print(var_hat)
+        self.assertLessEqual(abs(var_hat[0][0] - 1035226.16296308), 1000)
 
     def test_gp_on_sklearn_data(self):
         X, y = sklearn.datasets.load_boston(return_X_y=True)
@@ -133,7 +153,7 @@ class TestGPMCMC(unittest.TestCase):
         model = get_gp(X.shape[1], rs, noise=1e-10, normalize_y=True)
         cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
 
-        maes = [8.091083825101466946, 9.0298698203192439065]
+        maes = [7.6508237954242926415, 8.100214212235063669]
 
         for i, (train_split, test_split) in enumerate(cv.split(X, y)):
             X_train = X[train_split]

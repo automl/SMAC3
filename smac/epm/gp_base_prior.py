@@ -74,7 +74,12 @@ class Prior(object):
         if n_samples <= 0:
             raise ValueError('argument n_samples needs to be positive (is %d)' % n_samples)
 
-        return np.log(self._sample_from_prior(n_samples=n_samples))
+        sample = np.log(self._sample_from_prior(n_samples=n_samples))
+
+        if np.any(~np.isfinite(sample)):
+            raise ValueError('Sample %s from prior %s contains infinite values!' % (sample, self))
+
+        return sample
 
     def _sample_from_prior(self, n_samples: int):
         raise NotImplementedError()
@@ -156,7 +161,7 @@ class TophatPrior(Prior):
         else:
             raise NotImplementedError()
 
-    def sample_from_prior(self, n_samples: int):
+    def _sample_from_prior(self, n_samples: int):
         """
         Returns N samples from the prior.
 
@@ -177,7 +182,7 @@ class TophatPrior(Prior):
         if n_samples <= 0:
             raise ValueError('argument n_samples needs to be positive (is %d)' % n_samples)
 
-        p0 = self.rng.uniform(low=self._log_min, high=self._log_max, size=(n_samples, ))
+        p0 = np.exp(self.rng.uniform(low=self._log_min, high=self._log_max, size=(n_samples, )))
         return p0
 
     def gradient(self, theta: np.ndarray):
@@ -384,8 +389,7 @@ class LognormalPrior(Prior):
             The samples from the prior.
         """
 
-        p0 = self.rng.lognormal(mean=self.mean, sigma=self.sigma, size=n_samples)
-        return p0
+        return self.rng.lognormal(mean=self.mean, sigma=self.sigma, size=n_samples)
 
     def _gradient(self, theta: np.ndarray):
         """
@@ -469,7 +473,7 @@ class SoftTopHatPrior(Prior):
             The samples from the prior.
         """
 
-        return self.rng.uniform(self._log_lower_bound, self._log_upper_bound, size=(n_samples, ))
+        return np.exp(self.rng.uniform(self._log_lower_bound, self._log_upper_bound, size=(n_samples, )))
 
     def gradient(self, theta: np.ndarray):
         if np.ndim(theta) == 0 or (np.ndim(theta) == 1 and len(theta) == 1):
@@ -482,8 +486,8 @@ class SoftTopHatPrior(Prior):
         else:
             raise NotImplementedError()
 
-    def __str__(self):
-        return 'LowerBoundPrior(lower_bound=%f)' % self.lower_bound
+    def __repr__(self):
+        return 'SoftTopHatPrior(lower_bound=%f, upper_bound=%f)' % (self.lower_bound, self.upper_bound)
 
 
 class GammaPrior(Prior):
@@ -544,8 +548,7 @@ class GammaPrior(Prior):
             The samples from the prior.
         """
 
-        p0 = self.rng.gamma(shape=self.a, scale=self.scale, size=n_samples)
-        return p0
+        return self.rng.gamma(shape=self.a, scale=self.scale, size=n_samples)
 
     def _gradient(self, theta: np.ndarray):
         """

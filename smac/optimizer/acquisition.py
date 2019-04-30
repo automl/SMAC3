@@ -1,6 +1,6 @@
 # encoding=utf8
 import abc
-import logging
+import copy
 from typing import List
 
 import numpy as np
@@ -9,6 +9,7 @@ from scipy.stats import norm
 from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
 from smac.epm.base_epm import AbstractEPM
+from smac.utils.logging import PickableLoggerAdapter
 
 __author__ = "Aaron Klein, Marius Lindauer"
 __copyright__ = "Copyright 2017, ML4AAD"
@@ -36,8 +37,7 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
             Models the objective function.
         """
         self.model = model
-        self.logger = logging.getLogger(
-            self.__module__ + "." + self.__class__.__name__)
+        self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
 
     def update(self, **kwargs):
         """Update the acquisition functions values.
@@ -99,6 +99,73 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
             Acquisition function values wrt X
         """
         raise NotImplementedError()
+
+
+class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
+
+    r"""Marginalize over Model hyperparameters to compute the integrated acquisition function.
+
+    See "Practical Bayesian Optimization of Machine Learning Algorithms" by Jasper Snoek et al.
+    (https://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf)
+    for further details.
+    """
+
+    def __init__(self, model: AbstractEPM, acquisition_function: AbstractAcquisitionFunction, **kwargs):
+        """Constructor
+
+        Parameters
+        ----------
+        model : AbstractEPM
+            The model needs to implement an additional attribute ``models`` which contains the different models to
+            integrate over.
+        kwargs
+            Additional keyword arguments
+        """
+
+        super().__init__(model, **kwargs)
+        self.long_name = 'Integrated Acquisition Function (%s)' % acquisition_function.long_name
+        self.acq = acquisition_function
+        self._functions = None
+        self.eta = None
+
+    def update(self, model: AbstractEPM, **kwargs):
+        """Update the acquisition functions values.
+
+        This method will be called if the model is updated. E.g. entropy search uses it to update its approximation
+        of P(x=x_min), EI uses it to update the current fmin.
+
+        This implementation creates an acquisition function object for each model to integrate over and sets the
+        respective attributes for each acquisition function object.
+
+        Parameters
+        ----------
+        model : AbstractEPM
+            The model needs to implement an additional attribute ``models`` which contains the different models to
+            integrate over.
+        kwargs
+        """
+        if len(model.models) == 0:
+            raise ValueError('IntegratedAcquisitionFunction requires at least one model to integrate!')
+        self._functions = [copy.deepcopy(self.acq) for _ in model.models]
+        for model, func in zip(model.models, self._functions):
+            func.update(model=model, **kwargs)
+
+    def _compute(self, X: np.ndarray, **kwargs):
+        """Computes the EI value and its derivatives.
+
+        Parameters
+        ----------
+        X: np.ndarray(N, D), The input points where the acquisition function
+            should be evaluated. The dimensionality of X is (N, D), with N as
+            the number of points to evaluate at and D is the number of
+            dimensions of one X.
+
+        Returns
+        -------
+        np.ndarray(N,1)
+            Expected Improvement of X
+        """
+        return np.array([func._compute(X) for func in self._functions]).mean(axis=0)
 
 
 class EI(AbstractAcquisitionFunction):

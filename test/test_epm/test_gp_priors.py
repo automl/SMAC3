@@ -15,14 +15,6 @@ def wrap_ln(theta, prior):
 
 class TestTophatPrior(unittest.TestCase):
 
-    def test_lnprob_sums_to_1(self):
-        pass
-
-        # Doesn't work yet
-        #integral = scin.quad(wrap_ln, args=(TophatPrior(lower_bound=-1, upper_bound=1), ), a=-5, b=5)
-        #self.assertLess(integral[1], 0.1)
-        #self.assertEqual(integral[0], 1)
-
     def test_lnprob_and_grad_scalar(self):
         prior = TophatPrior(lower_bound=np.exp(-10), upper_bound=np.exp(2))
 
@@ -76,14 +68,6 @@ class TestTophatPrior(unittest.TestCase):
 
 
 class TestHorseshoePrior(unittest.TestCase):
-
-    def test_lnprob_sums_to_1(self):
-        pass
-
-        # Does not work
-        #integral = scin.quad(wrap_ln, args=(HorseshoePrior(scale=1), ), a=1e-10, b=5)#, b=100)
-        #self.assertLess(integral[1], 0.1)
-        #self.assertEqual(integral[0], 1)
 
     def test_lnprob_and_grad_scalar(self):
         prior = HorseshoePrior(scale=1)
@@ -145,13 +129,6 @@ class TestHorseshoePrior(unittest.TestCase):
 
 class TestGammaPrior(unittest.TestCase):
 
-    def test_lnprob_sums_to_1(self):
-        pass
-
-        integral = scin.quad(wrap_ln, args=(GammaPrior(a=1, loc=0, scale=1),), a=0, b=100)
-        self.assertLess(integral[1], 0.1)
-        self.assertAlmostEqual(integral[0], 1, 2)
-
     def test_lnprob_and_grad_scalar(self):
         prior = GammaPrior(a=0.5, scale=1/2, loc=0)
 
@@ -186,13 +163,6 @@ class TestGammaPrior(unittest.TestCase):
 
 class TestLogNormalPrior(unittest.TestCase):
 
-    def test_lnprob_sums_to_1(self):
-        pass
-
-        integral = scin.quad(wrap_ln, args=(LognormalPrior(mean=0, sigma=1), ), a=1e-10, b=100)
-        self.assertLess(integral[1], 0.1)
-        self.assertAlmostEqual(integral[0], 1, 2)
-
     def test_gradient(self):
         for sigma in (0.5, 1., 2.):
             prior = LognormalPrior(mean=0, sigma=sigma)
@@ -210,14 +180,6 @@ class TestLogNormalPrior(unittest.TestCase):
 
 
 class TestSoftTopHatPrior(unittest.TestCase):
-
-    def test_lnprob_sums_to_1(self):
-        pass
-
-        # Does not work
-        #integral = scin.quad(wrap_ln, args=(SoftTopHatPrior(lower_bound=1, upper_bound=5, exponent=2),), a=-10, b=100)
-        #self.assertLess(integral[1], 0.1)
-        #self.assertAlmostEqual(integral[0], 1, 2)
 
     def test_lnprob(self):
         prior = SoftTopHatPrior(lower_bound=np.exp(-5), upper_bound=np.exp(5))

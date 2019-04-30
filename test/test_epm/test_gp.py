@@ -10,7 +10,7 @@ from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
 from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel, HammingKernel
 
 
-def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True):
+def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True) -> GaussianProcess:
     cov_amp = ConstantKernel(
         2.0,
         constant_value_bounds=(1e-10, 2),
@@ -37,6 +37,7 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True):
         kernel=kernel,
         seed=rs.randint(low=1, high=10000),
         normalize_y=normalize_y,
+        n_opt_restarts=2,
     )
     return model
 
@@ -106,6 +107,7 @@ def get_mixed_gp(cat_dims, cont_dims, rs, noise=1e-3, normalize_y=True):
 
 
 class TestGP(unittest.TestCase):
+
     def test_predict_wrong_X_dimensions(self):
         rs = np.random.RandomState(1)
 
@@ -141,6 +143,29 @@ class TestGP(unittest.TestCase):
             m_hat, v_hat = model.predict(X[10:])
             self.assertEqual(m_hat.shape, (10, 1))
             self.assertEqual(v_hat.shape, (10, 1))
+
+    def test_train_do_optimize(self):
+        # Check that do_optimize does not mess with the kernel hyperparameters given to the Gaussian process!
+
+        rs = np.random.RandomState(1)
+        X, Y, n_dims = get_cont_data(rs)
+
+        model = get_gp(n_dims, rs)
+        model._train(X[:10], Y[:10], do_optimize=False)
+        theta = model.gp.kernel.theta
+        theta_ = model.gp.kernel_.theta
+        fixture = np.array([0.693147, 0.,  0.,  0.,  0.,  0., 0.,  0.,  0.,  0.,  0., -6.907755])
+        np.testing.assert_array_almost_equal(theta, fixture)
+        np.testing.assert_array_almost_equal(theta_, fixture)
+        np.testing.assert_array_almost_equal(theta, theta_)
+
+        model._train(X[:10], Y[:10], do_optimize=True)
+        theta = model.gp.kernel.theta
+        theta_ = model.gp.kernel_.theta
+        fixture = np.array([0.693147, 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., -6.907755])
+        self.assertFalse(np.any(theta == fixture))
+        self.assertFalse(np.any(theta_ == fixture))
+        np.testing.assert_array_almost_equal(theta, theta_)
 
     @unittest.mock.patch.object(GaussianProcess, 'predict')
     def test_predict_marginalized_over_instances_no_features(self, rf_mock):
@@ -181,17 +206,17 @@ class TestGP(unittest.TestCase):
         model.train(np.vstack((X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y)))
         print(model.kernel.theta)
 
-        y_hat, mu_hat = model.predict(X)
+        mu_hat, var_hat = model.predict(X)
         for y_i, y_hat_i, mu_hat_i in zip(
-            y.reshape((1, -1)).flatten(), y_hat.reshape((1, -1)).flatten(), mu_hat.reshape((1, -1)).flatten(),
+            y.reshape((1, -1)).flatten(), mu_hat.reshape((1, -1)).flatten(), var_hat.reshape((1, -1)).flatten(),
         ):
             self.assertAlmostEqual(y_hat_i, y_i, delta=2)
             self.assertAlmostEqual(mu_hat_i, 0, delta=2)
 
         # Regression test that performance does not drastically decrease in the near future
-        y_hat, mu_hat = model.predict(np.array([[10, 10, 10]]))
-        self.assertAlmostEqual(y_hat[0][0], 54.612500000000004)
-        self.assertAlmostEqual(mu_hat[0][0], 5037.79218775189)
+        mu_hat, var_hat = model.predict(np.array([[10, 10, 10]]))
+        self.assertAlmostEqual(mu_hat[0][0], 54.612500000000004)
+        self.assertAlmostEqual(var_hat[0][0], 1121.8409184001594)
 
     def test_gp_on_sklearn_data(self):
         X, y = sklearn.datasets.load_boston(return_X_y=True)
@@ -201,7 +226,7 @@ class TestGP(unittest.TestCase):
         model = get_gp(X.shape[1], rs)
         cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
 
-        maes = [6.780366865623075037, 6.9163148932181415644]
+        maes = [8.6993869642930739955, 8.762298719335234949]
 
         for i, (train_split, test_split) in enumerate(cv.split(X, y)):
             X_train = X[train_split]
