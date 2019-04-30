@@ -86,6 +86,30 @@ class TestIntegratedAcquisitionFunction(unittest.TestCase):
         for counting_mock in iaf._functions:
             self.assertEqual(counting_mock.counter, 1)
 
+    def test_compute_with_different_numbers_of_models(self):
+        class CountingMock:
+            counter = 0
+            long_name = 'CountingMock'
+
+            def _compute(self, *args, **kwargs):
+                self.counter += 1
+                return self.counter
+
+            def update(self, **kwargs):
+                pass
+
+        for i in range(1, 3):
+            self.model.models = [MockModel()] * i
+            iaf = IntegratedAcquisitionFunction(model=self.model, acquisition_function=self.ei)
+            iaf.update(model=self.model, eta=1)
+            configurations = [ConfigurationMock([1.0, 1.0, 1.0])]
+            rval = iaf(configurations)
+            self.assertEqual(rval.shape, (1, 1))
+
+            configurations = [ConfigurationMock([1.0, 1.0, 1.0]), ConfigurationMock([1.0, 2.0, 3.0])]
+            rval = iaf(configurations)
+            self.assertEqual(rval.shape, (2, 1))
+
 
 class TestEI(unittest.TestCase):
     def setUp(self):

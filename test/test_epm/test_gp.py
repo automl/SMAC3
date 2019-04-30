@@ -4,6 +4,7 @@ import scipy.optimize
 import numpy as np
 import sklearn.datasets
 import sklearn.model_selection
+import skopt.learning.gaussian_process
 
 from smac.epm.gaussian_process import GaussianProcess
 from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
@@ -167,6 +168,57 @@ class TestGP(unittest.TestCase):
         self.assertFalse(np.any(theta_ == fixture))
         np.testing.assert_array_almost_equal(theta, theta_)
 
+    @unittest.mock.patch.object(skopt.learning.gaussian_process.GaussianProcessRegressor, 'fit')
+    def test_train_continue_on_linalg_error(self, fit_mock):
+        # Check that training does not stop on a linalg error, but that uncertainty is increased!
+
+        class Dummy:
+            counter = 0
+            def __call__(self, X, y):
+                print(self.counter)
+                if self.counter >= 10:
+                    return None
+                else:
+                    self.counter += 1
+                    raise np.linalg.LinAlgError
+
+        fit_mock.side_effect = Dummy()
+
+        rs = np.random.RandomState(1)
+        X, Y, n_dims = get_cont_data(rs)
+
+        model = get_gp(n_dims, rs)
+        fixture = model.kernel.theta[-1]
+        model._train(X[:10], Y[:10], do_optimize=False)
+        self.assertAlmostEqual(model.gp.kernel.theta[-1], fixture + 10)
+
+    @unittest.mock.patch.object(skopt.learning.gaussian_process.GaussianProcessRegressor, 'log_marginal_likelihood')
+    def test_train_continue_on_linalg_error_2(self, fit_mock):
+        # Check that training does not stop on a linalg error during hyperparameter optimization
+
+        class Dummy:
+            counter = 0
+            def __call__(self, X, eval_gradient=True):
+                # If this is not aligned with the GP an error will be raised that None is not iterable
+                if self.counter == 13:
+                    return None
+                else:
+                    self.counter += 1
+                    raise np.linalg.LinAlgError
+
+        fit_mock.side_effect = Dummy()
+
+        rs = np.random.RandomState(1)
+        X, Y, n_dims = get_cont_data(rs)
+
+        model = get_gp(n_dims, rs)
+        fixture = model.kernel.theta
+        model._train(X[:10], Y[:10], do_optimize=True)
+        np.testing.assert_array_almost_equal(
+            model.gp.kernel.theta,
+            [0.69314718, 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.69314718]
+        )
+
     @unittest.mock.patch.object(GaussianProcess, 'predict')
     def test_predict_marginalized_over_instances_no_features(self, rf_mock):
         """The GP should fall back to the regular predict() method."""
@@ -216,7 +268,8 @@ class TestGP(unittest.TestCase):
         # Regression test that performance does not drastically decrease in the near future
         mu_hat, var_hat = model.predict(np.array([[10, 10, 10]]))
         self.assertAlmostEqual(mu_hat[0][0], 54.612500000000004)
-        self.assertAlmostEqual(var_hat[0][0], 1121.8409184001594)
+        # There's a slight difference between my local installation and travis
+        self.assertLess(abs(var_hat[0][0] - 1121.8409184001594), 2)
 
     def test_gp_on_sklearn_data(self):
         X, y = sklearn.datasets.load_boston(return_X_y=True)

@@ -106,21 +106,20 @@ class GaussianProcess(BaseModel):
                 )
                 self.gp.fit(X, y)
             except np.linalg.LinAlgError as e:
+                if i == n_tries:
+                    raise e
                 # Assume that the last entry of theta is the noise
                 theta = self.kernel.theta
                 theta[-1] += 1
                 self.kernel.theta = theta
-                if n_tries + 1 == 5:
-                    raise e
 
         if do_optimize:
             self._all_priors = self._get_all_priors(add_bound_priors=False)
             self.hypers = self._optimize()
+            self.gp.kernel.theta = self.hypers
+            self.gp.fit(X, y)
         else:
             self.hypers = self.gp.kernel.theta
-
-        self.gp.kernel.theta = self.hypers
-        self.gp.fit(X, y)
 
         self.is_trained = True
 
@@ -143,7 +142,10 @@ class GaussianProcess(BaseModel):
         """
         self._n_ll_evals += 1
 
-        lml, grad = self.gp.log_marginal_likelihood(theta, eval_gradient=True)
+        try:
+            lml, grad = self.gp.log_marginal_likelihood(theta, eval_gradient=True)
+        except np.linalg.LinAlgError:
+            return 1e25, np.zeros(theta.shape)
 
         for dim, priors in enumerate(self._all_priors):
             for prior in priors:
@@ -152,7 +154,7 @@ class GaussianProcess(BaseModel):
 
         # We add a minus here because scipy is minimizing
         if not np.isfinite(lml).all() or not np.all(np.isfinite(grad)):
-            return 1e25, np.array([1e25] * theta.shape[0])
+            return 1e25, np.zeros(theta.shape)
         else:
             return -lml, -grad
 
@@ -197,13 +199,11 @@ class GaussianProcess(BaseModel):
 
         theta_star = None
         f_opt_star = np.inf
-        iter_star = -1
         for i, start_point in enumerate(p0):
             theta, f_opt, _ = optimize.fmin_l_bfgs_b(self._nll, start_point, bounds=log_bounds)
             if f_opt < f_opt_star:
                 f_opt_star = f_opt
                 theta_star = theta
-                iter_star = i
         return theta_star
 
     def _predict(self, X_test: np.ndarray, full_cov: bool=False):

@@ -26,6 +26,7 @@ class GaussianProcessMCMC(BaseModel):
         burnin_steps: int = 50,
         normalize_y: bool = True,
         mcmc_sampler: str = 'emcee',
+        average_samples: bool = False,
         **kwargs
     ):
         """
@@ -55,10 +56,6 @@ class GaussianProcessMCMC(BaseModel):
             Model seed.
         kernel : george kernel object
             Specifies the kernel that is used for all Gaussian Process
-        prior : prior object
-            Defines a prior for the hyperparameters of the GP. Make sure that
-            it implements the Prior interface. During MCMC sampling the
-            lnlikelihood is multiplied with the prior.
         n_mcmc_walkers : int
             The number of hyperparameter samples. This also determines the
             number of walker for MCMC sampling as each walker will
@@ -71,6 +68,12 @@ class GaussianProcessMCMC(BaseModel):
             The number of burnin steps before the actual MCMC sampling starts.
         normalize_y : bool
             Zero mean unit variance normalization of the output values
+        mcmc_sampler : str
+            Choose a self-tuning MCMC sampler. Can be either ``emcee`` or ``nuts``.
+        average_samples : bool
+            Average the sampled hyperparameters if ``True``, uses the samples independently if ``False``.
+            This is equivalent to the posterior mean as used by
+            Letham et al. (2018, http://lethalletham.com/ConstrainedBO.pdf).
         rng: np.random.RandomState
             Random number generator
         """
@@ -84,6 +87,7 @@ class GaussianProcessMCMC(BaseModel):
         self.models = []
         self.normalize_y = normalize_y
         self.mcmc_sampler = mcmc_sampler
+        self.average_samples = average_samples
 
         self.is_trained = False
 
@@ -191,12 +195,15 @@ class GaussianProcessMCMC(BaseModel):
                     max_depth=10,
                     rng=self.rng,
                 )
-                self.p0 = samples.mean(axis=0)
                 print('hypers', 'log space', self.p0, 'regular space', np.exp(self.p0))
                 indices = [int(np.rint(ind)) for ind in np.linspace(start=0, stop=len(samples) - 1, num=10)]
                 self.hypers = samples[indices]
+                self.p0 = self.hypers.mean(axis=0)
             else:
                 raise ValueError(self.mcmc_sampler)
+
+            if self.average_samples:
+                self.hypers = [self.hypers.mean(axis=0)]
 
         else:
             self.hypers = self.gp.kernel.theta

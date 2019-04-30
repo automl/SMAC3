@@ -10,7 +10,7 @@ from smac.epm.gp_base_prior import LognormalPrior, HorseshoePrior
 from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel
 
 
-def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True):
+def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True, average_samples=False):
     cov_amp = ConstantKernel(
         2.0,
         constant_value_bounds=(1e-10, 2),
@@ -44,6 +44,7 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True):
         normalize_y=normalize_y,
         seed=rs.randint(low=1, high=10000),
         mcmc_sampler='emcee',
+        average_samples=average_samples,
     )
     return model
 
@@ -83,6 +84,27 @@ class TestGPMCMC(unittest.TestCase):
             np.testing.assert_array_almost_equal(theta, theta_)
             self.assertFalse(np.any(theta == fixture))
             self.assertFalse(np.any(theta_ == fixture))
+
+    def test_gp_train_posterior_mean(self):
+        rs = np.random.RandomState(1)
+        X = rs.rand(20, 10)
+        Y = rs.rand(10, 1)
+
+        fixture = np.array([0.693147, 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., -6.907755])
+
+        model = get_gp(10, rs, average_samples=True)
+        np.testing.assert_array_almost_equal(model.kernel.theta, fixture)
+        model.train(X[:10], Y[:10])
+
+        for base_model in model.models:
+            theta = base_model.gp.kernel.theta
+            theta_ = base_model.gp.kernel_.theta
+            # Test that the kernels of the base GP are actually changed!
+            np.testing.assert_array_almost_equal(theta, theta_)
+            self.assertFalse(np.any(theta == fixture))
+            self.assertFalse(np.any(theta_ == fixture))
+
+        self.assertEqual(len(model.models), 1)
 
     def test_predict(self):
         rs = np.random.RandomState(1)
