@@ -144,7 +144,7 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
             integrate over.
         kwargs
         """
-        if len(model.models) == 0:
+        if not hasattr(model, 'models') or len(model.models) == 0:
             raise ValueError('IntegratedAcquisitionFunction requires at least one model to integrate!')
         self._functions = [copy.deepcopy(self.acq) for _ in model.models]
         for model, func in zip(model.models, self._functions):
@@ -165,6 +165,8 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
         np.ndarray(N,1)
             Expected Improvement of X
         """
+        if self._functions is None:
+            raise ValueError('Need to call update first!')
         return np.array([func._compute(X) for func in self._functions]).mean(axis=0)
 
 

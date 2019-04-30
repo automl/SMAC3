@@ -103,7 +103,7 @@ class TestRandomForestWithInstancesHPO(unittest.TestCase):
         model = get_rf(X.shape[1], rs)
         cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
 
-        maes = [9.055323406350271818, 9.032099557003913958]
+        maes = [9.212142058553677762, 9.002105421756146103]
 
         for i, (train_split, test_split) in enumerate(cv.split(X, y)):
             X_train = X[train_split]

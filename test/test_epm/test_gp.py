@@ -226,7 +226,7 @@ class TestGP(unittest.TestCase):
         model = get_gp(X.shape[1], rs)
         cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
 
-        maes = [8.6993869642930739955, 8.762298719335234949]
+        maes = [8.712875586609810299, 8.7608419489812271634]
 
         for i, (train_split, test_split) in enumerate(cv.split(X, y)):
             X_train = X[train_split]
