@@ -1,5 +1,6 @@
 from inspect import signature
 import math
+from typing import Optional
 
 import numpy as np
 import sklearn.gaussian_process.kernels
@@ -9,7 +10,10 @@ import scipy.spatial.distance
 import scipy.special
 
 
-def get_condition_hyperparameters(X, Y):
+# This file contains almost no type annotations to simplify comparing it to the original scikit-learn version!
+
+
+def get_conditional_hyperparameters(X: np.ndarray, Y: Optional[np.ndarray]) -> np.ndarray:
     # Taking care of conditional hyperparameters according to Levesque et al.
     X_cond = X <= -1
     if Y is not None:
@@ -247,7 +251,7 @@ class Matern(MagicMixin, skopt.learning.gaussian_process.kernels.Matern):
             K = scipy.spatial.distance.squareform(K)
             np.fill_diagonal(K, 1)
 
-        active = get_condition_hyperparameters(X, Y)
+        active = get_conditional_hyperparameters(X, Y)
         K = K * active
 
         if eval_gradient:
@@ -340,7 +344,7 @@ class RBF(MagicMixin, skopt.learning.gaussian_process.kernels.RBF):
             dists = scipy.spatial.distance.cdist(X / length_scale, Y / length_scale, metric='sqeuclidean')
             K = np.exp(-.5 * dists)
 
-        active = get_condition_hyperparameters(X, Y)
+        active = get_conditional_hyperparameters(X, Y)
         K = K * active
 
         if eval_gradient:
@@ -406,7 +410,7 @@ class WhiteKernel(MagicMixin, skopt.learning.gaussian_process.kernels.WhiteKerne
         if Y is None:
             K = self.noise_level * np.eye(X.shape[0])
 
-            active = get_condition_hyperparameters(X, Y)
+            active = get_conditional_hyperparameters(X, Y)
             K = K * active
 
             if eval_gradient:
@@ -484,7 +488,7 @@ class HammingKernel(MagicMixin, skopt.learning.gaussian_process.kernels.HammingK
         K = (-1/(2*length_scale**2) * indicator).sum(axis=2)
         K = np.exp(K)
 
-        active = get_condition_hyperparameters(X, Y)
+        active = get_conditional_hyperparameters(X, Y)
         K = K * active
 
         if eval_gradient:

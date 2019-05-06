@@ -21,7 +21,7 @@ class GaussianProcessMCMC(BaseModel):
         bounds: typing.List[typing.Tuple[float, float]],
         seed: int,
         kernel: skopt.learning.gaussian_process.kernels.Kernel,
-        n_mcmc_walkers: int=20,
+        n_mcmc_walkers: int = 20,
         chain_length: int = 50,
         burnin_steps: int = 50,
         normalize_y: bool = True,
