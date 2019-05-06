@@ -24,14 +24,14 @@ def convert_configurations_to_array(configs: List[Configuration]) -> np.ndarray:
     configs_array = np.array([config.get_array() for config in configs],
                              dtype=np.float64)
     configuration_space = configs[0].configuration_space
-    return impute_default_values(configuration_space, configs_array)
+    return impute_inactive_values(configuration_space, configs_array)
 
 
-def impute_default_values(
+def impute_inactive_values(
         configuration_space: ConfigurationSpace,
         configs_array: np.ndarray
 ) -> np.ndarray:
-    """Impute inactive hyperparameters in configuration array with their default.
+    """Impute inactive hyperparameters in configuration array with a value outside their default range.
 
     Necessary to apply an EPM to the data.
 
@@ -45,8 +45,6 @@ def impute_default_values(
     Returns
     -------
     np.ndarray
-        Array with configuration hyperparameters. Inactive values are imputed
-        with their default value.
     """
     for hp in configuration_space.get_hyperparameters():
         idx = configuration_space.get_idx_by_hyperparameter_name(hp.name)

@@ -33,15 +33,6 @@ class TestTophatPrior(unittest.TestCase):
             self.assertTrue(np.isinf(prior.lnprob(val)))
             self.assertEqual(prior.gradient(val), 0)
 
-    def test_lnprob_and_grad_array(self):
-        prior = TophatPrior(lower_bound=-10, upper_bound=2)
-
-        val = np.array([-1, -1])
-        with self.assertRaises(NotImplementedError):
-            prior.lnprob(val)
-        with self.assertRaises(NotImplementedError):
-            prior.gradient(val)
-
     def test_sample_from_prior(self):
         prior = TophatPrior(lower_bound=np.exp(-10), upper_bound=np.exp(2), rng=np.random.RandomState(1))
         samples = prior.sample_from_prior(10)
@@ -79,15 +70,6 @@ class TestHorseshoePrior(unittest.TestCase):
         # Boundary
         self.assertTrue(np.isinf(prior._lnprob(0)))
         self.assertTrue(np.isinf(prior._gradient(0)))
-
-    def test_lnprob_and_grad_array(self):
-        prior = HorseshoePrior(scale=1)
-
-        val = np.array([-1, -1])
-        with self.assertRaises(NotImplementedError):
-            prior.lnprob(val)
-        with self.assertRaises(NotImplementedError):
-            prior.gradient(val)
 
     def test_sample_from_prior(self):
         prior = HorseshoePrior(scale=1, rng=np.random.RandomState(1))

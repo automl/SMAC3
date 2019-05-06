@@ -1,3 +1,5 @@
+from typing import List, Optional, Tuple, Union
+
 import numpy as np
 import sklearn.gaussian_process.kernels
 
@@ -15,21 +17,55 @@ class BaseModel(AbstractEPM):
 
         self.rng = np.random.RandomState(seed)
 
-    def _normalize_y(self, y):
+    def _normalize_y(self, y: np.ndarray) -> np.ndarray:
+        """Normalize data to zero mean unit standard deviation.
+
+        Parameters
+        ----------
+        y : np.ndarray
+            Targets for the Gaussian process
+
+        Returns
+        -------
+        np.ndarray
+        """
         self.mean_y_ = np.mean(y)
         self.std_y_ = np.std(y)
         if self.std_y_ == 0:
             self.std_y_ = 1
         return (y - self.mean_y_) / self.std_y_
 
-    def _untransform_y(self, y, var=None):
+    def _untransform_y(
+        self,
+        y: np.ndarray,
+        var: Optional[np.ndarray] = None,
+    ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
+        """Transform zeromean unit standard deviation data into the regular space.
+
+        This function should be used after a prediction with the Gaussian process which was trained on normalized data.
+
+        Parameters
+        ----------
+        y : np.ndarray
+            Normalized data.
+        var : np.ndarray (optional)
+            Normalized variance
+
+        Returns
+        -------
+        np.ndarray on Tuple[np.ndarray, np.ndarray]
+        """
         y = y * self.std_y_ + self.mean_y_
         if var is not None:
             var = var * self.std_y_ ** 2
             return y, var
         return y
 
-    def _get_all_priors(self, add_bound_priors=True, add_soft_bounds=False):
+    def _get_all_priors(
+        self,
+        add_bound_priors: bool = True,
+        add_soft_bounds: bool = False,
+    ) -> List[List[smac.epm.gp_base_prior.Prior]]:
         # Obtain a list of all priors for each tunable hyperparameter of the kernel
         all_priors = []
         to_visit = []
@@ -53,7 +89,7 @@ class BaseModel(AbstractEPM):
                     if current_param.prior is not None:
                         priors_for_hp.append(current_param.prior)
                     if add_bound_priors:
-                        if add_bound_priors:
+                        if add_soft_bounds:
                             priors_for_hp.append(smac.epm.gp_base_prior.SoftTopHatPrior(
                                lower_bound=bounds[i][0], upper_bound=bounds[i][1], rng=self.rng,
                             ))

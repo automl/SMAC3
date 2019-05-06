@@ -1,5 +1,4 @@
 import numpy as np
-import skopt
 
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess

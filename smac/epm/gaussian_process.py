@@ -95,7 +95,6 @@ class GaussianProcess(BaseModel):
         n_tries = 10
         for i in range(n_tries):
             try:
-                # Instantiate a GP for each hyperparameter configuration
                 self.gp = skopt.learning.gaussian_process.GaussianProcessRegressor(
                     kernel=self.kernel,
                     normalize_y=False,
@@ -103,8 +102,10 @@ class GaussianProcess(BaseModel):
                     n_restarts_optimizer=-1,  # Do not use scikit-learn's optimization routine
                     alpha=0,  # Governed by the kernel
                     noise=None,
+                    random_state=self.rng,
                 )
                 self.gp.fit(X, y)
+                break
             except np.linalg.LinAlgError as e:
                 if i == n_tries:
                     raise e
