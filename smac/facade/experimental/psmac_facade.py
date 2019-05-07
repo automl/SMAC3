@@ -19,7 +19,7 @@ from smac.optimizer.pSMAC import read
 from smac.utils.io.output_directory import create_output_directory
 from smac.runhistory.runhistory import RunHistory
 from smac.optimizer.objective import average_cost
-from smac.utils.util_funcs import get_rng
+from smac.epm.util_funcs import get_rng
 from smac.utils.constants import MAXINT
 
 __author__ = "Andre Biedenkapp"

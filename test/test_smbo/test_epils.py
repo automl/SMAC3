@@ -49,7 +49,6 @@ class TestSMBO(unittest.TestCase):
                 shutil.rmtree(dirname)
 
     def branin(self, config):
-        print(config)
         y = (config[1] - (5.1 / (4 * np.pi ** 2)) * config[0] ** 2 + 5 * config[0] / np.pi - 6) ** 2
         y += 10 * (1 - 1 / (8 * np.pi)) * np.cos(config[0]) + 10
 

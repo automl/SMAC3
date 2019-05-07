@@ -13,6 +13,7 @@ from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
 from smac.epm.gp_kernels import ConstantKernel, HammingKernel, WhiteKernel, Matern
 from smac.epm.gp_base_prior import LognormalPrior, HorseshoePrior
+from smac.epm.util_funcs import get_types
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.optimizer import pSMAC
@@ -29,7 +30,6 @@ from smac.stats.stats import Stats
 from smac.tae.execute_ta_run import FirstRunCrashedException
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
-from smac.utils.util_funcs import get_types
 from smac.utils.constants import MAXINT
 
 

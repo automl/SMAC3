@@ -40,11 +40,10 @@ from smac.optimizer.random_configuration_chooser import RandomConfigurationChoos
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.base_epm import AbstractEPM
+from smac.epm.util_funcs import get_types, get_rng
 # utils
-from smac.utils.util_funcs import get_types
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.constants import MAXINT
-from smac.utils.util_funcs import get_rng
 from smac.utils.io.output_directory import create_output_directory
 from smac.configspace import Configuration
 

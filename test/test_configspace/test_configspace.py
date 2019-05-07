@@ -41,7 +41,6 @@ class ConfigSpaceTest(unittest.TestCase):
         configs = cs.sample_configuration(size=100)
         config_array = smac.configspace.convert_configurations_to_array(configs)
         for line in config_array:
-            print(line, flush=True)
             if line[0] == 0:
                 self.assertEqual(line[1], 2)
             elif line[0] == 1:
