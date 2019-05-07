@@ -343,7 +343,7 @@
         <span class="c1"># better improve acquisition function optimization</span>
         <span class="c1"># 1. increase number of sls iterations</span>
         <span class="n">acquisition_function_optimizer_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acquisition_function_optimizer_kwargs&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
-        <span class="n">acquisition_function_optimizer_kwargs</span><span class="p">[</span><span class="s1">&#39;n_sls_iterations&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="n">acquisition_function_optimizer_kwargs</span><span class="p">[</span><span class="s1">&#39;n_sls_iterations&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>
         <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;acquisition_function_optimizer_kwargs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">acquisition_function_optimizer_kwargs</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
