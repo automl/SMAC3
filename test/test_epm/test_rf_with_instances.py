@@ -179,7 +179,6 @@ class TestRFWithInstances(unittest.TestCase):
 
         y_hat, _ = model.predict(X)
         for y_i, y_hat_i in zip(y.reshape((1, -1)).flatten(), y_hat.reshape((1, -1)).flatten()):
-            # print(y_i, y_hat_i)
             self.assertAlmostEqual(y_i, y_hat_i, delta=0.1)
 
     def test_with_ordinal(self):

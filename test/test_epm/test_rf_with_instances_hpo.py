@@ -92,7 +92,6 @@ class TestRandomForestWithInstancesHPO(unittest.TestCase):
         y_hat, var_hat = model.predict(np.array([[10., 10., 10.]]))
         self.assertAlmostEqual(y_hat[0][0], 109.2)
         # No variance because the data point is outside of the observed data
-        print(var_hat)
         self.assertAlmostEqual(var_hat[0][0], 0)
 
     def test_rf_on_sklearn_data(self):

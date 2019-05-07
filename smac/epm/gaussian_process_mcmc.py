@@ -111,9 +111,6 @@ class GaussianProcessMCMC(BaseModel):
             hyperparameter specified in the kernel.
         """
 
-        if self.normalize_y:
-            y = self._normalize_y(y)
-
         self.gp = skopt.learning.gaussian_process.GaussianProcessRegressor(
             kernel=self.kernel,
             normalize_y=self.normalize_y,
@@ -150,7 +147,7 @@ class GaussianProcessMCMC(BaseModel):
                             raise NotImplementedError()
                         else:
                             dim_samples.append(prior.sample_from_prior(self.n_mcmc_walkers).flatten())
-                    self.p0 = list(np.vstack(dim_samples).transpose())
+                    self.p0 = np.vstack(dim_samples).transpose()
 
                     # Run MCMC sampling
                     self.p0, _, _ = sampler.run_mcmc(self.p0,
@@ -266,15 +263,15 @@ class GaussianProcessMCMC(BaseModel):
         # hyperparameters live on a log scale
         if np.ndim(theta) == 0:
             if (theta < -20) or (theta > 20):
-                return -1e25
+                return -np.inf
         else:
             if ((theta < -20) | (theta > 20)).any():
-                return -1e25
+                return -np.inf
 
         try:
             lml = self.gp.log_marginal_likelihood(theta)
         except ValueError as e:
-            return -1e25
+            return -np.inf
 
         # Add prior
         for dim, priors in enumerate(self._all_priors):
@@ -282,7 +279,7 @@ class GaussianProcessMCMC(BaseModel):
                 lml += prior.lnprob(theta[dim])
 
         if not np.isfinite(lml):
-            return -1e25
+            return -np.inf
         else:
             return lml
 
@@ -329,7 +326,6 @@ class GaussianProcessMCMC(BaseModel):
             grad += grad_
         except ValueError:
             return -1e25, np.zeros(theta.shape)
-        #print(theta, lml, grad)
 
         # We add a minus here because scipy is minimizing
         if not np.isfinite(lml) or (~np.isfinite(grad)).any():
@@ -366,8 +362,6 @@ class GaussianProcessMCMC(BaseModel):
         var = np.zeros([len(self.models), X_test.shape[0]])
         for i, model in enumerate(self.models):
             mu_tmp, var_tmp = model.predict(X_test)
-            if self.normalize_y:
-                mu_tmp, var_tmp = self._untransform_y(mu_tmp, var_tmp)
             mu[i] = mu_tmp.flatten()
             var[i] = var_tmp.flatten()
 

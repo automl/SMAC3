@@ -175,7 +175,6 @@ class TestGP(unittest.TestCase):
         class Dummy:
             counter = 0
             def __call__(self, X, y):
-                print(self.counter)
                 if self.counter >= 10:
                     return None
                 else:
@@ -256,7 +255,6 @@ class TestGP(unittest.TestCase):
         rs = np.random.RandomState(1)
         model = get_gp(3, rs)
         model.train(np.vstack((X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y)))
-        print(model.kernel.theta)
 
         mu_hat, var_hat = model.predict(X)
         for y_i, y_hat_i, mu_hat_i in zip(
@@ -297,9 +295,10 @@ class TestGP(unittest.TestCase):
         gp.train(np.array([[0], [1]]), np.array([0, 1]))
         n_above_1 = 0
         for i in range(1000):
-            theta = np.array([rs.uniform(1e-10, 10), rs.uniform(-10, 2), rs.uniform(-10, 1)])  # Values from the default prior
+            theta = np.array(
+                [rs.uniform(1e-10, 10), rs.uniform(-10, 2), rs.uniform(-10, 1)]
+            )  # Values from the default prior
             error = scipy.optimize.check_grad(lambda x: gp._nll(x)[0], lambda x: gp._nll(x)[1], theta, epsilon=1e-5)
-            # print(error, theta, gp._nll(theta)[1], scipy.optimize.approx_fprime(theta, lambda x: gp._nll(x)[0], 1e-5))
             if error > 0.1:
                 n_above_1 += 1
         self.assertLessEqual(n_above_1, 10)
