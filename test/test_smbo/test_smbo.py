@@ -1,5 +1,6 @@
 import unittest
 from unittest import mock
+import sys
 import shutil
 from nose.plugins.attrib import attr
 
@@ -173,7 +174,7 @@ class TestSMBO(unittest.TestCase):
         # For each configuration it is randomly sampled whether to take it from the list of challengers or to sample it
         # completely at random. Therefore, it is not guaranteed to obtain twice the number of configurations selected
         # by EI.
-        self.assertEqual(len(challengers), 9922)
+        self.assertEqual(len(challengers), 9940)
         num_random_search_sorted = 0
         num_random_search = 0
         num_local_search = 0
@@ -188,10 +189,11 @@ class TestSMBO(unittest.TestCase):
             else:
                 raise ValueError((c.origin, 'Local Search' == c.origin, type('Local Search'), type(c.origin)))
 
-        self.assertEqual(num_local_search, 1)
-        self.assertEqual(num_random_search_sorted, 4999)
-        self.assertEqual(num_random_search, 4922)
+        self.assertEqual(num_local_search, 11)
+        self.assertEqual(num_random_search_sorted, 5000)
+        self.assertEqual(num_random_search, 4929)
 
+    @unittest.skipIf(sys.version_info < (3, 6), 'Test not deterministic for Python 3.5 and earlier')
     def test_choose_next_3(self):
         # Test with ten configurations in the runhistory
         def side_effect(X):
@@ -223,8 +225,8 @@ class TestSMBO(unittest.TestCase):
 
         # For each configuration it is randomly sampled whether to take it from the list of challengers or to sample it
         # completely at random. Therefore, it is not guaranteed to obtain twice the number of configurations selected
-        # by EI.
-        self.assertEqual(len(challengers), 9908)
+        # by EI
+        self.assertEqual(len(challengers), 9977)
         num_random_search_sorted = 0
         num_random_search = 0
         num_local_search = 0
@@ -239,9 +241,9 @@ class TestSMBO(unittest.TestCase):
             else:
                 raise ValueError(c.origin)
 
-        self.assertEqual(num_local_search, 10)
-        self.assertEqual(num_random_search_sorted, 4990)
-        self.assertEqual(num_random_search, 4908)
+        self.assertEqual(num_local_search, 26)
+        self.assertEqual(num_random_search_sorted, 5000)
+        self.assertEqual(num_random_search, 4951)
 
     @mock.patch.object(InitialDesign, 'run')
     def test_abort_on_initial_design(self, patch):

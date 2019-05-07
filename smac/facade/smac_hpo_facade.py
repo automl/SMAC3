@@ -76,7 +76,7 @@ class SMAC4HPO(SMAC4AC):
         # better improve acquisition function optimization
         # 1. increase number of sls iterations
         acquisition_function_optimizer_kwargs = kwargs.get('acquisition_function_optimizer_kwargs', dict())
-        acquisition_function_optimizer_kwargs['n_sls_iterations'] = 100
+        acquisition_function_optimizer_kwargs['n_sls_iterations'] = 10
         kwargs['acquisition_function_optimizer_kwargs'] = acquisition_function_optimizer_kwargs
 
         super().__init__(**kwargs)
