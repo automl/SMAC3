@@ -329,7 +329,7 @@ class RBF(MagicMixin, skopt.learning.gaussian_process.kernels.RBF):
                 X = X[:, self.operate_on].reshape([-1, self.len_active])
                 Y = Y[:, self.operate_on].reshape([-1, self.len_active])
 
-        length_scale = sklearn.gaussian_process._check_length_scale(X, self.length_scale)
+        length_scale = sklearn.gaussian_process.kernels._check_length_scale(X, self.length_scale)
 
         if Y is None:
             dists = scipy.spatial.distance.pdist(X / length_scale, metric='sqeuclidean')
