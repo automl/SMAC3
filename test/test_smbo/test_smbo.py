@@ -1,5 +1,6 @@
 import unittest
 from unittest import mock
+import sys
 import shutil
 from nose.plugins.attrib import attr
 
@@ -192,6 +193,7 @@ class TestSMBO(unittest.TestCase):
         self.assertEqual(num_random_search_sorted, 5000)
         self.assertEqual(num_random_search, 4929)
 
+    @unittest.skipIf(sys.version_info < (3, 6), 'Test not deterministic for Python 3.5 and earlier')
     def test_choose_next_3(self):
         # Test with ten configurations in the runhistory
         def side_effect(X):
@@ -223,8 +225,8 @@ class TestSMBO(unittest.TestCase):
 
         # For each configuration it is randomly sampled whether to take it from the list of challengers or to sample it
         # completely at random. Therefore, it is not guaranteed to obtain twice the number of configurations selected
-        # by EI. Interestingly, we obtain a different number of configurations with Python3.5 on travis-ci (9983)
-        self.assertIn(len(challengers), [9977, 9983])
+        # by EI
+        self.assertEqual(len(challengers), 9977)
         num_random_search_sorted = 0
         num_random_search = 0
         num_local_search = 0
