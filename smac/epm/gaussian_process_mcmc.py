@@ -93,6 +93,8 @@ class GaussianProcessMCMC(BaseModel):
 
         self.is_trained = False
 
+        self._set_has_conditions()
+
         # Internal statistics
         self._n_ll_evals = 0
 

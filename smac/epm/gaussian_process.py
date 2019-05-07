@@ -71,6 +71,8 @@ class GaussianProcess(BaseModel):
         self.is_trained = False
         self._n_ll_evals = 0
 
+        self._set_has_conditions()
+
     def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool=True):
         """
         Computes the Cholesky decomposition of the covariance of X and

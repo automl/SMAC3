@@ -20,7 +20,7 @@ def get_conditional_hyperparameters(X: np.ndarray, Y: Optional[np.ndarray]) -> n
         Y_cond = Y <= -1
     else:
         Y_cond = X <= -1
-    active = (np.expand_dims(X_cond, axis=1) == Y_cond).all(axis=2)
+    active = ~((np.expand_dims(X_cond, axis=1) != Y_cond).any(axis=2))
     return active
 
 
@@ -28,18 +28,35 @@ class MagicMixin:
 
     prior = None
 
-    def __call__(self, X, Y=None, eval_gradient=False):
+    def __call__(self, X, Y=None, eval_gradient=False, active=None):
+
+        if active is None and self.has_conditions:
+            if self.operate_on is None:
+                active = get_conditional_hyperparameters(X, Y)
+            else:
+                if Y is None:
+                    active = get_conditional_hyperparameters(X[:, self.operate_on], None)
+                else:
+                    active = get_conditional_hyperparameters(X[:, self.operate_on], Y[:, self.operate_on])
+
         if self.operate_on is None:
-            rval = super(MagicMixin, self).__call__(X, Y, eval_gradient)
+            rval = self._call(X, Y, eval_gradient, active)
         else:
             if Y is None:
-                rval = super(MagicMixin, self).__call__(X=X[:, self.operate_on].reshape([-1, self.len_active]), Y=None,
-                                                        eval_gradient=eval_gradient)
+                rval = self._call(
+                    X=X[:, self.operate_on].reshape([-1, self.len_active]),
+                    Y=None,
+                    eval_gradient=eval_gradient,
+                    active=active,
+                )
                 X = X[:, self.operate_on].reshape((-1, self.len_active))
             else:
-                rval = super(MagicMixin, self).__call__(X=X[:, self.operate_on].reshape([-1, self.len_active]),
-                                                        Y=Y[:, self.operate_on].reshape([-1, self.len_active]),
-                                                        eval_gradient=eval_gradient)
+                rval = self._call(
+                    X=X[:, self.operate_on].reshape([-1, self.len_active]),
+                    Y=Y[:, self.operate_on].reshape([-1, self.len_active]),
+                    eval_gradient=eval_gradient,
+                    active=active,
+                )
                 X = X[:, self.operate_on].reshape((-1, self.len_active))
                 Y = Y[:, self.operate_on].reshape((-1, self.len_active))
 
@@ -97,6 +114,10 @@ class MagicMixin:
         except AttributeError:
             tmp = super().get_params(deep)
             args = list(tmp.keys())
+            # Sum and Product do not clone the 'has_conditions' attribute by default. Instead of changing their
+            # get_params() method, we simply add the attribute here!
+            if 'has_conditions' not in args:
+                args.append('has_conditions')
             self._args_cache = args
 
         for arg in args:
@@ -160,34 +181,173 @@ class MagicMixin:
 
 class Sum(MagicMixin, skopt.learning.gaussian_process.kernels.Sum):
 
-    def __init__(self, k1, k2, operate_on=None):
+    def __init__(self, k1, k2, operate_on=None, has_conditions=False):
         super(Sum, self).__init__(k1=k1, k2=k2)
         self.set_active_dims(operate_on)
+        self.has_conditions = has_conditions
+
+    def _call(self, X, Y=None, eval_gradient=False, active=None):
+        """Return the kernel k(X, Y) and optionally its gradient.
+
+        Parameters
+        ----------
+        X : array, shape (n_samples_X, n_features)
+            Left argument of the returned kernel k(X, Y)
+
+        Y : array, shape (n_samples_Y, n_features), (optional, default=None)
+            Right argument of the returned kernel k(X, Y). If None, k(X, X)
+            if evaluated instead.
+
+        eval_gradient : bool (optional, default=False)
+            Determines whether the gradient with respect to the kernel
+            hyperparameter is determined.
+
+        active : np.ndarray (n_samples_X, n_features) (optional)
+            Boolean array specifying which hyperparameters are active.
+
+        Returns
+        -------
+        K : array, shape (n_samples_X, n_samples_Y)
+            Kernel k(X, Y)
+
+        K_gradient : array (opt.), shape (n_samples_X, n_samples_X, n_dims)
+            The gradient of the kernel k(X, X) with respect to the
+            hyperparameter of the kernel. Only returned when eval_gradient
+            is True.
+        """
+        if eval_gradient:
+            K1, K1_gradient = self.k1(X, Y, eval_gradient=True, active=active)
+            K2, K2_gradient = self.k2(X, Y, eval_gradient=True, active=active)
+            return K1 + K2, np.dstack((K1_gradient, K2_gradient))
+        else:
+            return self.k1(X, Y, active=active) + self.k2(X, Y, active=active)
 
 
 class Product(MagicMixin, skopt.learning.gaussian_process.kernels.Product):
 
-    def __init__(self, k1, k2, operate_on=None):
+    def __init__(self, k1, k2, operate_on=None, has_conditions=False):
         super(Product, self).__init__(k1=k1, k2=k2)
         self.set_active_dims(operate_on)
+        self.has_conditions = has_conditions
+
+    def _call(self, X, Y=None, eval_gradient=False, active=None):
+        """Return the kernel k(X, Y) and optionally its gradient.
+
+        Parameters
+        ----------
+        X : array, shape (n_samples_X, n_features)
+            Left argument of the returned kernel k(X, Y)
+
+        Y : array, shape (n_samples_Y, n_features), (optional, default=None)
+            Right argument of the returned kernel k(X, Y). If None, k(X, X)
+            if evaluated instead.
+
+        eval_gradient : bool (optional, default=False)
+            Determines whether the gradient with respect to the kernel
+            hyperparameter is determined.
+
+        active : np.ndarray (n_samples_X, n_features) (optional)
+            Boolean array specifying which hyperparameters are active.
+
+        Returns
+        -------
+        K : array, shape (n_samples_X, n_samples_Y)
+            Kernel k(X, Y)
+
+        K_gradient : array (opt.), shape (n_samples_X, n_samples_X, n_dims)
+            The gradient of the kernel k(X, X) with respect to the
+            hyperparameter of the kernel. Only returned when eval_gradient
+            is True.
+        """
+        if eval_gradient:
+            K1, K1_gradient = self.k1(X, Y, eval_gradient=True, active=active)
+            K2, K2_gradient = self.k2(X, Y, eval_gradient=True, active=active)
+            return K1 * K2, np.dstack((K1_gradient * K2[:, :, np.newaxis],
+                                       K2_gradient * K1[:, :, np.newaxis]))
+        else:
+            return self.k1(X, Y, active=active) * self.k2(X, Y, active=active)
 
 
 class ConstantKernel(MagicMixin, skopt.learning.gaussian_process.kernels.ConstantKernel):
 
-    def __init__(self, constant_value=1.0, constant_value_bounds=(1e-5, 1e5), operate_on=None, prior=None):
+    def __init__(
+            self,
+            constant_value=1.0,
+            constant_value_bounds=(1e-5, 1e5),
+            operate_on=None,
+            prior=None,
+            has_conditions=False,
+    ):
         super(ConstantKernel, self).__init__(constant_value=constant_value, constant_value_bounds=constant_value_bounds)
         self.set_active_dims(operate_on)
         self.prior = prior
+        self.has_conditions = has_conditions
+
+    def _call(self, X, Y=None, eval_gradient=False, active=None):
+        """Return the kernel k(X, Y) and optionally its gradient.
+
+        Parameters
+        ----------
+        X : array, shape (n_samples_X, n_features)
+            Left argument of the returned kernel k(X, Y)
+
+        Y : array, shape (n_samples_Y, n_features), (optional, default=None)
+            Right argument of the returned kernel k(X, Y). If None, k(X, X)
+            if evaluated instead.
+
+        eval_gradient : bool (optional, default=False)
+            Determines whether the gradient with respect to the kernel
+            hyperparameter is determined. Only supported when Y is None.
+
+        active : np.ndarray (n_samples_X, n_features) (optional)
+            Boolean array specifying which hyperparameters are active.
+
+        Returns
+        -------
+        K : array, shape (n_samples_X, n_samples_Y)
+            Kernel k(X, Y)
+
+        K_gradient : array (opt.), shape (n_samples_X, n_samples_X, n_dims)
+            The gradient of the kernel k(X, X) with respect to the
+            hyperparameter of the kernel. Only returned when eval_gradient
+            is True.
+        """
+        X = np.atleast_2d(X)
+        if Y is None:
+            Y = X
+        elif eval_gradient:
+            raise ValueError("Gradient can only be evaluated when Y is None.")
+
+        K = np.full((X.shape[0], Y.shape[0]), self.constant_value,
+                    dtype=np.array(self.constant_value).dtype)
+        if eval_gradient:
+            if not self.hyperparameter_constant_value.fixed:
+                return (K, np.full((X.shape[0], X.shape[0], 1),
+                                   self.constant_value,
+                                   dtype=np.array(self.constant_value).dtype))
+            else:
+                return K, np.empty((X.shape[0], X.shape[0], 0))
+        else:
+            return K
 
 
 class Matern(MagicMixin, skopt.learning.gaussian_process.kernels.Matern):
 
-    def __init__(self, length_scale=1.0, length_scale_bounds=(1e-5, 1e5), nu=1.5, operate_on=None, prior=None):
+    def __init__(
+        self,
+        length_scale=1.0,
+        length_scale_bounds=(1e-5, 1e5),
+        nu=1.5,
+        operate_on=None,
+        prior=None,
+        has_conditions=False
+    ):
         super(Matern, self).__init__(length_scale=length_scale, length_scale_bounds=length_scale_bounds, nu=nu)
         self.set_active_dims(operate_on)
         self.prior = prior
+        self.has_conditions = has_conditions
 
-    def __call__(self, X, Y=None, eval_gradient=False):
+    def _call(self, X, Y=None, eval_gradient=False, active=None):
         """Return the kernel k(X, Y) and optionally its gradient.
         Parameters
         ----------
@@ -199,6 +359,8 @@ class Matern(MagicMixin, skopt.learning.gaussian_process.kernels.Matern):
         eval_gradient : bool (optional, default=False)
             Determines whether the gradient with respect to the kernel
             hyperparameter is determined. Only supported when Y is None.
+        active : np.ndarray (n_samples_X, n_features) (optional)
+            Boolean array specifying which hyperparameters are active.
         Returns
         -------
         K : array, shape (n_samples_X, n_samples_Y)
@@ -210,16 +372,6 @@ class Matern(MagicMixin, skopt.learning.gaussian_process.kernels.Matern):
         """
 
         X = np.atleast_2d(X)
-
-        if self.operate_on is None:
-            pass
-        else:
-            if Y is None:
-                X = X[:, self.operate_on].reshape([-1, self.len_active])
-            else:
-                X = X[:, self.operate_on].reshape([-1, self.len_active])
-                Y = Y[:, self.operate_on].reshape([-1, self.len_active])
-
         length_scale = sklearn.gaussian_process.kernels._check_length_scale(X, self.length_scale)
 
         if Y is None:
@@ -251,8 +403,8 @@ class Matern(MagicMixin, skopt.learning.gaussian_process.kernels.Matern):
             K = scipy.spatial.distance.squareform(K)
             np.fill_diagonal(K, 1)
 
-        active = get_conditional_hyperparameters(X, Y)
-        K = K * active
+        if active is not None:
+            K = K * active
 
         if eval_gradient:
             if self.hyperparameter_length_scale.fixed:
@@ -275,11 +427,9 @@ class Matern(MagicMixin, skopt.learning.gaussian_process.kernels.Matern):
                 tmp = np.sqrt(5 * D.sum(-1))[..., np.newaxis]
                 K_gradient = 5.0 / 3.0 * D * (tmp + 1) * np.exp(-tmp)
             else:
-                # approximate gradient numerically
-                def f(theta):  # helper function
-                    return self.clone_with_theta(theta)(X, Y)
-
-                return K, sklearn.gaussian_process.kernels._approx_fprime(self.theta, f, 1e-10)
+                # original sklearn code would approximate gradient numerically, but this would violate our assumption
+                # that the kernel hyperparameters are not changed within __call__
+                raise ValueError(self.nu)
 
             if not self.anisotropic:
                 return K, K_gradient[:, :].sum(-1)[:, :, np.newaxis]
@@ -291,12 +441,20 @@ class Matern(MagicMixin, skopt.learning.gaussian_process.kernels.Matern):
 
 class RBF(MagicMixin, skopt.learning.gaussian_process.kernels.RBF):
 
-    def __init__(self, length_scale=1.0, length_scale_bounds=(1e-5, 1e5), operate_on=None, prior=None):
+    def __init__(
+        self,
+        length_scale=1.0,
+        length_scale_bounds=(1e-5, 1e5),
+        operate_on=None,
+        prior=None,
+        has_conditions=False,
+    ):
         super(RBF, self).__init__(length_scale=length_scale, length_scale_bounds=length_scale_bounds)
         self.set_active_dims(operate_on)
         self.prior = prior
+        self.has_conditions = has_conditions
 
-    def __call__(self, X, Y=None, eval_gradient=False):
+    def _call(self, X, Y=None, eval_gradient=False, active=None):
         """Return the kernel k(X, Y) and optionally its gradient.
         Parameters
         ----------
@@ -308,6 +466,8 @@ class RBF(MagicMixin, skopt.learning.gaussian_process.kernels.RBF):
         eval_gradient : bool (optional, default=False)
             Determines whether the gradient with respect to the kernel
             hyperparameter is determined. Only supported when Y is None.
+        active : np.ndarray (n_samples_X, n_features) (optional)
+            Boolean array specifying which hyperparameters are active.
         Returns
         -------
         K : array, shape (n_samples_X, n_samples_Y)
@@ -319,16 +479,6 @@ class RBF(MagicMixin, skopt.learning.gaussian_process.kernels.RBF):
         """
 
         X = np.atleast_2d(X)
-
-        if self.operate_on is None:
-            pass
-        else:
-            if Y is None:
-                X = X[:, self.operate_on].reshape([-1, self.len_active])
-            else:
-                X = X[:, self.operate_on].reshape([-1, self.len_active])
-                Y = Y[:, self.operate_on].reshape([-1, self.len_active])
-
         length_scale = sklearn.gaussian_process._check_length_scale(X, self.length_scale)
 
         if Y is None:
@@ -344,8 +494,8 @@ class RBF(MagicMixin, skopt.learning.gaussian_process.kernels.RBF):
             dists = scipy.spatial.distance.cdist(X / length_scale, Y / length_scale, metric='sqeuclidean')
             K = np.exp(-.5 * dists)
 
-        active = get_conditional_hyperparameters(X, Y)
-        K = K * active
+        if active is not None:
+            K = K * active
 
         if eval_gradient:
             if self.hyperparameter_length_scale.fixed:
@@ -366,12 +516,20 @@ class RBF(MagicMixin, skopt.learning.gaussian_process.kernels.RBF):
 
 class WhiteKernel(MagicMixin, skopt.learning.gaussian_process.kernels.WhiteKernel):
 
-    def __init__(self, noise_level=1.0, noise_level_bounds=(1e-5, 1e5), operate_on=None, prior=None):
+    def __init__(
+        self,
+        noise_level=1.0,
+        noise_level_bounds=(1e-5, 1e5),
+        operate_on=None,
+        prior=None,
+        has_conditions=False,
+    ):
         super(WhiteKernel, self).__init__(noise_level=noise_level, noise_level_bounds=noise_level_bounds)
         self.set_active_dims(operate_on)
         self.prior = prior
+        self.has_conditions = has_conditions
 
-    def __call__(self, X, Y=None, eval_gradient=False):
+    def _call(self, X, Y=None, eval_gradient=False, active=None):
         """Return the kernel k(X, Y) and optionally its gradient.
         Parameters
         ----------
@@ -383,6 +541,8 @@ class WhiteKernel(MagicMixin, skopt.learning.gaussian_process.kernels.WhiteKerne
         eval_gradient : bool (optional, default=False)
             Determines whether the gradient with respect to the kernel
             hyperparameter is determined. Only supported when Y is None.
+        active : np.ndarray (n_samples_X, n_features) (optional)
+            Boolean array specifying which hyperparameters are active.
         Returns
         -------
         K : array, shape (n_samples_X, n_samples_Y)
@@ -395,23 +555,14 @@ class WhiteKernel(MagicMixin, skopt.learning.gaussian_process.kernels.WhiteKerne
 
         X = np.atleast_2d(X)
 
-        if self.operate_on is None:
-            pass
-        else:
-            if Y is None:
-                X = X[:, self.operate_on].reshape([-1, self.len_active])
-            else:
-                X = X[:, self.operate_on].reshape([-1, self.len_active])
-                Y = Y[:, self.operate_on].reshape([-1, self.len_active])
-
         if Y is not None and eval_gradient:
             raise ValueError("Gradient can only be evaluated when Y is None.")
 
         if Y is None:
             K = self.noise_level * np.eye(X.shape[0])
 
-            active = get_conditional_hyperparameters(X, Y)
-            K = K * active
+            if active is not None:
+                K = K * active
 
             if eval_gradient:
                 if not self.hyperparameter_noise_level.fixed:
@@ -427,33 +578,41 @@ class WhiteKernel(MagicMixin, skopt.learning.gaussian_process.kernels.WhiteKerne
 
 class HammingKernel(MagicMixin, skopt.learning.gaussian_process.kernels.HammingKernel):
 
-    def __init__(self, length_scale=1.0, length_scale_bounds=(1e-5, 1e5), operate_on=None, prior=None):
+    def __init__(
+        self,
+        length_scale=1.0,
+        length_scale_bounds=(1e-5, 1e5),
+        operate_on=None,
+        prior=None,
+        has_conditions=False,
+    ):
         super(HammingKernel, self).__init__(length_scale=length_scale, length_scale_bounds=length_scale_bounds)
         self.set_active_dims(operate_on)
         self.prior = prior
+        self.has_conditions = has_conditions
 
-    def __call__(self, X, Y=None, eval_gradient=False):
+    def _call(self, X, Y=None, eval_gradient=False, active=None):
         """Return the kernel k(X, Y) and optionally its gradient.
 
         Parameters
         ----------
-        * `X` [array-like, shape=(n_samples_X, n_features)]
+        X : [array-like, shape=(n_samples_X, n_features)]
             Left argument of the returned kernel k(X, Y)
-
-        * `Y` [array-like, shape=(n_samples_Y, n_features) or None(default)]
+        Y : [array-like, shape=(n_samples_Y, n_features) or None(default)]
             Right argument of the returned kernel k(X, Y). If None, k(X, X)
             if evaluated instead.
-
-        * `eval_gradient` [bool, False(default)]
+        eval_gradient : [bool, False(default)]
             Determines whether the gradient with respect to the kernel
             hyperparameter is determined. Only supported when Y is None.
+        active : np.ndarray (n_samples_X, n_features) (optional)
+            Boolean array specifying which hyperparameters are active.
 
         Returns
         -------
-        * `K` [array-like, shape=(n_samples_X, n_samples_Y)]
+        K : [array-like, shape=(n_samples_X, n_samples_Y)]
             Kernel k(X, Y)
 
-        * `K_gradient` [array-like, shape=(n_samples_X, n_samples_X, n_dims)]
+        K_gradient : [array-like, shape=(n_samples_X, n_samples_X, n_dims)]
             The gradient of the kernel k(X, X) with respect to the
             hyperparameter of the kernel. Only returned when eval_gradient
             is True.
@@ -465,16 +624,6 @@ class HammingKernel(MagicMixin, skopt.learning.gaussian_process.kernels.HammingK
         """
 
         X = np.atleast_2d(X)
-
-        if self.operate_on is None:
-            pass
-        else:
-            if Y is None:
-                X = X[:, self.operate_on].reshape([-1, self.len_active])
-            else:
-                X = X[:, self.operate_on].reshape([-1, self.len_active])
-                Y = Y[:, self.operate_on].reshape([-1, self.len_active])
-
         length_scale = sklearn.gaussian_process.kernels._check_length_scale(X, self.length_scale)
 
         if Y is None:
@@ -488,8 +637,8 @@ class HammingKernel(MagicMixin, skopt.learning.gaussian_process.kernels.HammingK
         K = (-1/(2*length_scale**2) * indicator).sum(axis=2)
         K = np.exp(K)
 
-        active = get_conditional_hyperparameters(X, Y)
-        K = K * active
+        if active is not None:
+            K = K * active
 
         if eval_gradient:
             # dK / d theta = (dK / dl) * (dl / d theta)
