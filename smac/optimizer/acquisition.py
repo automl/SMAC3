@@ -146,7 +146,8 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
         """
         if not hasattr(model, 'models') or len(model.models) == 0:
             raise ValueError('IntegratedAcquisitionFunction requires at least one model to integrate!')
-        self._functions = [copy.deepcopy(self.acq) for _ in model.models]
+        if self._functions is None or len(self._functions) != len(model.models):
+            self._functions = [copy.deepcopy(self.acq) for _ in model.models]
         for model, func in zip(model.models, self._functions):
             func.update(model=model, **kwargs)
 

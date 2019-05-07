@@ -10,6 +10,7 @@ import numpy as np
 from smac.configspace import Configuration, convert_configurations_to_array
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
+from smac.epm.util_funcs import get_types
 from smac.optimizer.objective import average_cost
 from smac.runhistory.runhistory import RunHistory, RunKey, StatusType
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
@@ -18,7 +19,6 @@ from smac.stats.stats import Stats
 from smac.tae.execute_ta_run import ExecuteTARun
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.utils.constants import MAXINT
-from smac.utils.util_funcs import get_types
 
 __author__ = "Joshua Marben"
 __copyright__ = "Copyright 2017, ML4AAD"
@@ -284,11 +284,14 @@ class Validator(object):
         elif reuse_epm is False or self.epm is None:
             # Create RandomForest
             types, bounds = get_types(self.scen.cs, self.scen.feature_array)
-            self.epm = RandomForestWithInstances(types=types,
-                                                 bounds=bounds,
-                                                 instance_features=self.scen.feature_array,
-                                                 seed=self.rng.randint(MAXINT),
-                                                 ratio_features=1.0)
+            self.epm = RandomForestWithInstances(
+                configspace=self.scen.cs,
+                types=types,
+                bounds=bounds,
+                instance_features=self.scen.feature_array,
+                seed=self.rng.randint(MAXINT),
+                ratio_features=1.0,
+            )
             # Use imputor if objective is runtime
             imputor = None
             impute_state = None

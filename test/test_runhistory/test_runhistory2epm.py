@@ -19,7 +19,7 @@ from smac.scenario.scenario import Scenario
 from smac.optimizer.objective import average_cost
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.rf_with_instances import RandomForestWithInstances
-from smac.utils.util_funcs import get_types
+from smac.epm.util_funcs import get_types
 
 
 def get_config_space():
@@ -57,15 +57,19 @@ class RunhistoryTest(unittest.TestCase):
         '''
             adding some rundata to RunHistory2EPM4LogCost and impute censored data
         '''
-        self.imputor = RFRImputator(rng=np.random.RandomState(seed=12345),
-                                    cutoff=np.log(self.scen.cutoff),
-                                    threshold=np.log(
-                                        self.scen.cutoff * self.scen.par_factor),
-                                    model=RandomForestWithInstances(types=self.types, bounds=self.bounds,
-                                                                    instance_features=None,
-                                                                    seed=12345,
-                                                                    ratio_features=1.0)
-                                    )
+        self.imputor = RFRImputator(
+            rng=np.random.RandomState(seed=12345),
+            cutoff=np.log(self.scen.cutoff),
+            threshold=np.log(self.scen.cutoff * self.scen.par_factor),
+            model=RandomForestWithInstances(
+                configspace=self.cs,
+                types=self.types,
+                bounds=self.bounds,
+                instance_features=None,
+                seed=12345,
+                ratio_features=1.0,
+            )
+        )
 
         rh2epm = runhistory2epm.RunHistory2EPM4LogCost(num_params=2,
                                                        scenario=self.scen,
@@ -155,15 +159,20 @@ class RunhistoryTest(unittest.TestCase):
             adding some rundata to RunHistory2EPM4Cost and impute censored data
         '''
 
-        self.imputor = RFRImputator(rng=np.random.RandomState(seed=12345),
-
-                                    cutoff=self.scen.cutoff,
-                                    threshold=self.scen.cutoff * self.scen.par_factor,
-                                    model=RandomForestWithInstances(types=self.types, bounds=self.bounds,
-                                                                    instance_features=None,
-                                                                    seed=12345, n_points_per_tree=90,
-                                                                    ratio_features=1.0)
-                                    )
+        self.imputor = RFRImputator(
+            rng=np.random.RandomState(seed=12345),
+            cutoff=self.scen.cutoff,
+            threshold=self.scen.cutoff * self.scen.par_factor,
+            model=RandomForestWithInstances(
+                configspace=self.cs,
+                types=self.types,
+                bounds=self.bounds,
+                instance_features=None,
+                seed=12345,
+                n_points_per_tree=90,
+                ratio_features=1.0,
+            )
+        )
 
         rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
                                                        scenario=self.scen,

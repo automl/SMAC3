@@ -7,6 +7,7 @@ import numpy as np
 import skopt.learning.gaussian_process
 import skopt.learning.gaussian_process.kernels
 
+from smac.configspace import ConfigurationSpace
 from smac.epm.base_gp import BaseModel
 from smac.epm.gaussian_process import GaussianProcess
 
@@ -17,6 +18,7 @@ class GaussianProcessMCMC(BaseModel):
 
     def __init__(
         self,
+        configspace: ConfigurationSpace,
         types: np.ndarray,
         bounds: typing.List[typing.Tuple[float, float]],
         seed: int,
@@ -77,7 +79,7 @@ class GaussianProcessMCMC(BaseModel):
         rng: np.random.RandomState
             Random number generator
         """
-        super().__init__(types=types, bounds=bounds, seed=seed, **kwargs)
+        super().__init__(configspace=configspace, types=types, bounds=bounds, seed=seed, **kwargs)
 
         self.kernel = kernel
         self.n_mcmc_walkers = n_mcmc_walkers
@@ -90,6 +92,8 @@ class GaussianProcessMCMC(BaseModel):
         self.average_samples = average_samples
 
         self.is_trained = False
+
+        self._set_has_conditions()
 
         # Internal statistics
         self._n_ll_evals = 0
@@ -110,7 +114,7 @@ class GaussianProcessMCMC(BaseModel):
             If set to true we perform MCMC sampling otherwise we just use the
             hyperparameter specified in the kernel.
         """
-
+        X = self._impute_inactive(X)
         self.gp = skopt.learning.gaussian_process.GaussianProcessRegressor(
             kernel=self.kernel,
             normalize_y=self.normalize_y,
@@ -213,6 +217,7 @@ class GaussianProcessMCMC(BaseModel):
             kernel = deepcopy(self.kernel)
             kernel.theta = sample
             model = GaussianProcess(
+                configspace=self.configspace,
                 types=self.types,
                 bounds=self.bounds,
                 kernel=kernel,
@@ -357,6 +362,8 @@ class GaussianProcessMCMC(BaseModel):
         """
         if not self.is_trained:
             raise Exception('Model has to be trained first!')
+
+        X = self._impute_inactive(X_test)
 
         mu = np.zeros([len(self.models), X_test.shape[0]])
         var = np.zeros([len(self.models), X_test.shape[0]])

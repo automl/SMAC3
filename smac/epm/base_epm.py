@@ -6,6 +6,7 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.exceptions import NotFittedError
 
+from smac.configspace import ConfigurationSpace
 from smac.utils.constants import VERY_SMALL_NUMBER
 from smac.utils.logging import PickableLoggerAdapter
 
@@ -48,6 +49,7 @@ class AbstractEPM(object):
     """
 
     def __init__(self,
+                 configspace: ConfigurationSpace,
                  types: np.ndarray,
                  bounds: typing.List[typing.Tuple[float, float]],
                  seed: int,
@@ -58,6 +60,8 @@ class AbstractEPM(object):
 
         Parameters
         ----------
+        configspace : ConfigurationSpace
+            Configuration space to tune for.
         types : np.ndarray (D)
             Specifies the number of categorical values of an input dimension where
             the i-th entry corresponds to the i-th input dimension. Let's say we
@@ -76,6 +80,7 @@ class AbstractEPM(object):
             dimensionality of instance features. Requires to
             set n_feats (> pca_dims).
         """
+        self.configspace = configspace
         self.seed = seed
         self.instance_features = instance_features
         self.pca_components = pca_components

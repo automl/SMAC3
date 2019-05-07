@@ -14,6 +14,7 @@ from smac.configspace import ConfigurationSpace
 from smac.epm.random_epm import RandomEPM
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.uncorrelated_mo_rf_with_instances import UncorrelatedMultiObjectiveRandomForestWithInstances
+from smac.epm.util_funcs import get_rng
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.initial_design.default_configuration_design import DefaultConfiguration
 from smac.initial_design.initial_design import InitialDesign
@@ -31,7 +32,6 @@ from smac.optimizer.random_configuration_chooser import (
     ChooserProb,
 )
 from smac.tae.execute_func import ExecuteTAFuncDict
-from smac.utils.util_funcs import get_rng
 
 
 class TestSMACFacade(unittest.TestCase):

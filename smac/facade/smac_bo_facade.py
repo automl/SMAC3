@@ -4,7 +4,7 @@ from smac.facade.smac_ac_facade import SMAC4AC
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
 from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
 from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel, HammingKernel
-from smac.utils.util_funcs import get_types, get_rng
+from smac.epm.util_funcs import get_types, get_rng
 from smac.initial_design.sobol_design import SobolDesign
 from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
 

@@ -9,11 +9,11 @@ import smac.epm.gp_base_prior
 
 class BaseModel(AbstractEPM):
 
-    def __init__(self, types, bounds, seed, **kwargs):
+    def __init__(self, configspace, types, bounds, seed, **kwargs):
         """
         Abstract base class for all Gaussian process models.
         """
-        super().__init__(types=types, bounds=bounds, seed=seed, **kwargs)
+        super().__init__(configspace=configspace, types=types, bounds=bounds, seed=seed, **kwargs)
 
         self.rng = np.random.RandomState(seed)
 
@@ -99,3 +99,23 @@ class BaseModel(AbstractEPM):
                             ))
                     all_priors.append(priors_for_hp)
         return all_priors
+
+    def _set_has_conditions(self):
+        has_conditions = len(self.configspace.get_conditions()) > 0
+        to_visit = []
+        to_visit.append(self.kernel)
+        while len(to_visit) > 0:
+            current_param = to_visit.pop(0)
+            if isinstance(current_param, sklearn.gaussian_process.kernels.KernelOperator):
+                to_visit.insert(0, current_param.k1)
+                to_visit.insert(1, current_param.k2)
+                current_param.has_conditions = has_conditions
+            elif isinstance(current_param, sklearn.gaussian_process.kernels.Kernel):
+                current_param.has_conditions = has_conditions
+            else:
+                raise ValueError(current_param)
+
+    def _impute_inactive(self, X: np.ndarray) -> np.ndarray:
+        X = X.copy()
+        X[~np.isfinite(X)] = -1
+        return X

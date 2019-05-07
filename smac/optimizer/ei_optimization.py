@@ -5,8 +5,7 @@ import numpy as np
 
 from typing import Iterable, List, Union, Tuple, Optional
 
-from smac.configspace import get_one_exchange_neighbourhood, \
-    convert_configurations_to_array, Configuration, ConfigurationSpace
+from smac.configspace import get_one_exchange_neighbourhood, Configuration, ConfigurationSpace
 from smac.runhistory.runhistory import RunHistory
 from smac.stats.stats import Stats
 from smac.optimizer.acquisition import AbstractAcquisitionFunction

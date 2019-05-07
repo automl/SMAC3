@@ -45,6 +45,7 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
 
     def __init__(
         self,
+        configspace: ConfigurationSpace,
         types: np.ndarray,
         bounds: typing.List[typing.Tuple[float, float]],
         seed: int,
@@ -76,6 +77,7 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
             The seed that is passed to the random_forest_run library.
         """
         super().__init__(
+            configspace=configspace,
             types=types,
             seed=seed,
             bounds=bounds,
@@ -134,6 +136,7 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
         self
         """
 
+        X = self._impute_inactive(X)
         self.X = X
         self.y = y.flatten()
 

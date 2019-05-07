@@ -15,7 +15,7 @@ from smac.utils import test_helpers
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.uncorrelated_mo_rf_with_instances import \
     UncorrelatedMultiObjectiveRandomForestWithInstances
-from smac.utils.util_funcs import get_types
+from smac.epm.util_funcs import get_types
 from smac.facade.experimental.epils_facade import EPILS
 from smac.initial_design.initial_design import InitialDesign
 
@@ -49,7 +49,6 @@ class TestSMBO(unittest.TestCase):
                 shutil.rmtree(dirname)
 
     def branin(self, config):
-        print(config)
         y = (config[1] - (5.1 / (4 * np.pi ** 2)) * config[0] ** 2 + 5 * config[0] / np.pi - 6) ** 2
         y += 10 * (1 - 1 / (8 * np.pi)) * np.cos(config[0]) + 10
 
@@ -83,7 +82,7 @@ class TestSMBO(unittest.TestCase):
             self.scenario.run_obj = objective
             types, bounds = get_types(self.scenario.cs, None)
             umrfwi = UncorrelatedMultiObjectiveRandomForestWithInstances(
-                ['cost', 'runtime'], types, bounds, seed=1, rf_kwargs={'seed': 1},)
+                ['cost', 'runtime'], self.scenario.cs, types, bounds, seed=1, rf_kwargs={'seed': 1},)
             eips = EIPS(umrfwi)
             rh2EPM = RunHistory2EPM4EIPS(self.scenario, 2)
             epils = EPILS(self.scenario, model=umrfwi, acquisition_function=eips,

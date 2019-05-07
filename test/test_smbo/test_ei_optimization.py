@@ -185,7 +185,7 @@ class TestLocalSearch(unittest.TestCase):
 
 
 class TestRandomSearch(unittest.TestCase):
-    @unittest.mock.patch('smac.optimizer.ei_optimization.convert_configurations_to_array')
+    @unittest.mock.patch('smac.optimizer.acquisition.convert_configurations_to_array')
     @unittest.mock.patch.object(EI, '__call__')
     @unittest.mock.patch.object(ConfigurationSpace, 'sample_configuration')
     def test_get_next_by_random_search_sorted(self,

@@ -1,11 +1,18 @@
 import unittest.mock
 
+from ConfigSpace import EqualsCondition
 import scipy.optimize
 import numpy as np
 import sklearn.datasets
 import sklearn.model_selection
 import skopt.learning.gaussian_process
 
+from smac.configspace import (
+    ConfigurationSpace,
+    UniformFloatHyperparameter,
+    CategoricalHyperparameter,
+    convert_configurations_to_array,
+)
 from smac.epm.gaussian_process import GaussianProcess
 from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
 from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel, HammingKernel
@@ -32,7 +39,12 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True) -> GaussianProcess:
     bounds = [(0., 1.) for _ in range(n_dimensions)]
     types = np.zeros(n_dimensions)
 
+    configspace = ConfigurationSpace()
+    for i in range(n_dimensions):
+        configspace.add_hyperparameter(UniformFloatHyperparameter('x%d' % i, 0, 1))
+
     model = GaussianProcess(
+        configspace=configspace,
         bounds=bounds,
         types=types,
         kernel=kernel,
@@ -97,7 +109,14 @@ def get_mixed_gp(cat_dims, cont_dims, rs, noise=1e-3, normalize_y=True):
         types[c] = 3
         bounds[c] = (3, np.nan)
 
+    cs = ConfigurationSpace()
+    for c in cont_dims:
+        cs.add_hyperparameter(UniformFloatHyperparameter('X%d' % c, 0, 1))
+    for c in cat_dims:
+        cs.add_hyperparameter(CategoricalHyperparameter('X%d' % c, [0, 1, 2, 3]))
+
     model = GaussianProcess(
+        configspace=cs,
         bounds=bounds,
         types=types,
         kernel=kernel,
@@ -139,7 +158,6 @@ class TestGP(unittest.TestCase):
         X, Y, cat_dims, cont_dims = get_cat_data(rs)
 
         for model in (get_gp(n_dims, rs), get_mixed_gp(cat_dims, cont_dims, rs)):
-            model = get_gp(10, rs)
             model.train(X[:10], Y[:10])
             m_hat, v_hat = model.predict(X[10:])
             self.assertEqual(m_hat.shape, (10, 1))
@@ -335,3 +353,28 @@ class TestGP(unittest.TestCase):
         func = gp.sample_functions(X_test=X_test, n_funcs=2)
         func_prime = gp_norm.sample_functions(X_test=X_test, n_funcs=2)
         np.testing.assert_array_almost_equal(func, func_prime, decimal=1)
+
+    def test_impute_inactive_hyperparameters(self):
+        cs = ConfigurationSpace()
+        a = cs.add_hyperparameter(CategoricalHyperparameter('a', [0, 1]))
+        b = cs.add_hyperparameter(CategoricalHyperparameter('b', [0, 1]))
+        c = cs.add_hyperparameter(UniformFloatHyperparameter('c', 0, 1))
+        cs.add_condition(EqualsCondition(b, a, 1))
+        cs.add_condition(EqualsCondition(c, a, 0))
+        cs.seed(1)
+
+        configs = cs.sample_configuration(size=100)
+        config_array = convert_configurations_to_array(configs)
+        for line in config_array:
+            if line[0] == 0:
+                self.assertTrue(np.isnan(line[1]))
+            elif line[0] == 1:
+                self.assertTrue(np.isnan(line[2]))
+
+        gp = get_gp(3, np.random.RandomState(1))
+        config_array = gp._impute_inactive(config_array)
+        for line in config_array:
+            if line[0] == 0:
+                self.assertEqual(line[1], -1)
+            elif line[0] == 1:
+                self.assertEqual(line[2], -1)

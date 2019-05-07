@@ -14,8 +14,7 @@ from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.stats.stats import Stats
 from smac.initial_design.initial_design import InitialDesign
 from smac.scenario.scenario import Scenario
-from smac.configspace import Configuration, convert_configurations_to_array, \
-    get_one_exchange_neighbourhood
+from smac.configspace import Configuration, get_one_exchange_neighbourhood
 from smac.tae.execute_ta_run import FirstRunCrashedException
 from smac.utils.constants import MAXINT
 
