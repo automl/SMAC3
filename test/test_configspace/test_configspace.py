@@ -42,7 +42,7 @@ class ConfigSpaceTest(unittest.TestCase):
         config_array = smac.configspace.convert_configurations_to_array(configs)
         for line in config_array:
             if line[0] == 0:
-                self.assertEqual(line[1], 1)
+                self.assertEqual(line[1], -1)
 
 
 

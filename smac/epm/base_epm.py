@@ -1,4 +1,3 @@
-import logging
 import typing
 
 import numpy as np
@@ -8,6 +7,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.exceptions import NotFittedError
 
 from smac.utils.constants import VERY_SMALL_NUMBER
+from smac.utils.logging import PickableLoggerAdapter
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -63,9 +63,9 @@ class AbstractEPM(object):
             the i-th entry corresponds to the i-th input dimension. Let's say we
             have 2 dimension where the first dimension consists of 3 different
             categorical choices and the second dimension is continuous than we
-            have to pass np.array([2, 0]). Note that we count starting from 0.
+            have to pass np.array([3, 0]). Note that we count starting from 0.
         bounds : list
-            Specifies the bounds for continuous features.
+            bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
         seed : int
             The seed that is passed to the model library.
         instance_features : np.ndarray (I, K)
@@ -101,7 +101,7 @@ class AbstractEPM(object):
         # Initial types array which is used to reset the type array at every call to train()
         self._initial_types = types.copy()
 
-        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
+        self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
 
     def train(self, X: np.ndarray, Y: np.ndarray) -> 'AbstractEPM':
         """Trains the EPM on X and Y.

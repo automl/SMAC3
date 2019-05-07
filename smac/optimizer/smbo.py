@@ -4,16 +4,15 @@ import numpy as np
 import time
 import typing
 
-import george
-
 from smac.configspace import ConfigurationSpace, Configuration, Constant,\
      CategoricalHyperparameter, UniformFloatHyperparameter, \
      UniformIntegerHyperparameter, InCondition
 from smac.configspace.util import convert_configurations_to_array
 from smac.epm.base_epm import AbstractEPM
 from smac.epm.rf_with_instances import RandomForestWithInstances
-from smac.epm.gp_default_priors import DefaultPrior
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
+from smac.epm.gp_kernels import ConstantKernel, HammingKernel, WhiteKernel, Matern
+from smac.epm.gp_base_prior import LognormalPrior, HorseshoePrior
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.optimizer import pSMAC
@@ -425,29 +424,59 @@ class SMBO(object):
                   max_depth=conf.get("max_depth", self.scenario.rf_max_depth))
 
         elif conf["model"] == "GP":
-            cov_amp = 2
-            n_dims = len(types)
+            cov_amp = ConstantKernel(
+                2.0,
+                constant_value_bounds=(np.exp(-10), np.exp(2)),
+                prior=LognormalPrior(mean=0.0, sigma=1.0, rng=self.rng),
+            )
 
-            initial_ls = np.ones([n_dims])
-            exp_kernel = george.kernels.Matern52Kernel(initial_ls, ndim=n_dims)
-            kernel = cov_amp * exp_kernel
+            cont_dims = np.nonzero(types == 0)[0]
+            cat_dims = np.nonzero(types != 0)[0]
 
-            prior = DefaultPrior(len(kernel) + 1, rng=self.rng)
+            if len(cont_dims) > 0:
+                exp_kernel = Matern(
+                    np.ones([len(cont_dims)]),
+                    [(np.exp(-10), np.exp(2)) for _ in range(len(cont_dims))],
+                    nu=2.5,
+                    operate_on=cont_dims,
+                )
 
-            n_hypers = 3 * len(kernel)
-            if n_hypers % 2 == 1:
-                n_hypers += 1
+            if len(cat_dims) > 0:
+                ham_kernel = HammingKernel(
+                    np.ones([len(cat_dims)]),
+                    [(np.exp(-10), np.exp(2)) for _ in range(len(cat_dims))],
+                    operate_on=cat_dims,
+                )
+            noise_kernel = WhiteKernel(
+                noise_level=1e-8,
+                noise_level_bounds=(np.exp(-25), np.exp(2)),
+                prior=HorseshoePrior(scale=0.1, rng=self.rng),
+            )
+
+            if len(cont_dims) > 0 and len(cat_dims) > 0:
+                # both
+                kernel = cov_amp * (exp_kernel * ham_kernel) + noise_kernel
+            elif len(cont_dims) > 0 and len(cat_dims) == 0:
+                # only cont
+                kernel = cov_amp * exp_kernel + noise_kernel
+            elif len(cont_dims) == 0 and len(cat_dims) > 0:
+                # only cont
+                kernel = cov_amp * ham_kernel + noise_kernel
+            else:
+                raise ValueError()
+
+            n_mcmc_walkers = 3 * len(kernel.theta)
+            if n_mcmc_walkers % 2 == 1:
+                n_mcmc_walkers += 1
 
             model = GaussianProcessMCMC(
                 types=types,
                 bounds=bounds,
                 kernel=kernel,
-                prior=prior,
-                n_hypers=n_hypers,
-                chain_length=200,
-                burnin_steps=100,
-                normalize_input=True,
-                normalize_output=True,
+                n_mcmc_walkers=n_mcmc_walkers,
+                chain_length=250,
+                burnin_steps=250,
+                normalize_y=True,
                 seed=self.rng.randint(low=0, high=10000),
             )
 

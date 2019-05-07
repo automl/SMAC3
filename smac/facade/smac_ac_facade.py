@@ -32,7 +32,7 @@ from smac.intensification.intensification import Intensifier
 # optimizer
 from smac.optimizer.smbo import SMBO
 from smac.optimizer.objective import average_cost
-from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction
+from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction, IntegratedAcquisitionFunction
 from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
     AcquisitionFunctionMaximizer
 from smac.optimizer.random_configuration_chooser import RandomConfigurationChooser, ChooserProb
@@ -79,6 +79,7 @@ class SMAC4AC(object):
                  intensifier_kwargs: Optional[dict] = None,
                  acquisition_function: Optional[Type[AbstractAcquisitionFunction]] = None,
                  acquisition_function_kwargs: Optional[dict] = None,
+                 integrate_acquisition_function: bool = False,
                  acquisition_function_optimizer: Optional[Type[AcquisitionFunctionMaximizer]] = None,
                  acquisition_function_optimizer_kwargs: Optional[dict] = None,
                  model: Optional[Type[AbstractEPM]] = None,
@@ -129,6 +130,9 @@ class SMAC4AC(object):
             `~acquisition_function_kwargs` is passed to the class constructor.
         acquisition_function_kwargs : Optional[dict]
             dictionary to pass specific arguments to ~acquisition_function
+        integrate_acquisition_function : bool, default=False
+            Whether to integrate the acquisition function. Works only with models which can sample their
+            hyperparameters (i.e. GaussianProcessMCMC).
         acquisition_function_optimizer : ~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
             Object that implements the :class:`~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer`.
             Will use :class:`smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch` if not set.
@@ -297,6 +301,11 @@ class SMAC4AC(object):
                 "Argument acquisition_function must be None or an object implementing the "
                 "AbstractAcquisitionFunction, not %s."
                 % type(acquisition_function)
+            )
+        if integrate_acquisition_function:
+            acquisition_function = IntegratedAcquisitionFunction(
+                acquisition_function=acquisition_function,
+                **acq_def_kwargs
             )
 
         # initialize optimizer on acquisition function

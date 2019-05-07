@@ -179,7 +179,6 @@ class TestRFWithInstances(unittest.TestCase):
 
         y_hat, _ = model.predict(X)
         for y_i, y_hat_i in zip(y.reshape((1, -1)).flatten(), y_hat.reshape((1, -1)).flatten()):
-            # print(y_i, y_hat_i)
             self.assertAlmostEqual(y_i, y_hat_i, delta=0.1)
 
     def test_with_ordinal(self):
@@ -235,7 +234,7 @@ class TestRFWithInstances(unittest.TestCase):
                 model = RandomForestWithInstances(types=types, bounds=bounds,
                                                   seed=1, ratio_features=1.0,
                                                   pca_components=100, log_y=True)
-                maes = [0.43186902865831907115, 0.42675195203430749165]
+                maes = [0.43186902865718386507, 0.4267519520332511912]
             else:
                 targets = y
                 model = RandomForestWithInstances(types=types, bounds=bounds,

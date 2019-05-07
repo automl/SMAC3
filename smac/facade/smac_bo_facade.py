@@ -1,9 +1,9 @@
 import numpy as np
-import george
 
 from smac.facade.smac_ac_facade import SMAC4AC
-from smac.epm.gp_default_priors import DefaultPrior
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
+from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
+from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel, HammingKernel
 from smac.utils.util_funcs import get_types, get_rng
 from smac.initial_design.sobol_design import SobolDesign
 from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
@@ -49,43 +49,74 @@ class SMAC4BO(SMAC4AC):
         kwargs['initial_design_kwargs'] = init_kwargs
 
         if kwargs.get('model') is None:
+            model_kwargs = kwargs.get('model_kwargs', dict())
+
             _, rng = get_rng(rng=kwargs.get("rng", None), run_id=kwargs.get("run_id", None), logger=None)
 
-            cov_amp = 2
             types, bounds = get_types(kwargs['scenario'].cs, instance_features=None)
-            n_dims = len(types)
 
-            initial_ls = np.ones([n_dims])
-            exp_kernel = george.kernels.Matern52Kernel(initial_ls, ndim=n_dims)
-            kernel = cov_amp * exp_kernel
+            cov_amp = ConstantKernel(
+                2.0,
+                constant_value_bounds=(np.exp(-10), np.exp(2)),
+                prior=LognormalPrior(mean=0.0, sigma=1.0, rng=rng),
+            )
 
-            prior = DefaultPrior(len(kernel) + 1, rng=rng)
+            cont_dims = np.nonzero(types == 0)[0]
+            cat_dims = np.nonzero(types != 0)[0]
 
-            n_hypers = 3 * len(kernel)
-            if n_hypers % 2 == 1:
-                n_hypers += 1
+            if len(cont_dims) > 0:
+                exp_kernel = Matern(
+                    np.ones([len(cont_dims)]),
+                    [(np.exp(-10), np.exp(2)) for _ in range(len(cont_dims))],
+                    nu=2.5,
+                    operate_on=cont_dims,
+                )
+
+            if len(cat_dims) > 0:
+                ham_kernel = HammingKernel(
+                    np.ones([len(cat_dims)]),
+                    [(np.exp(-10), np.exp(2)) for _ in range(len(cat_dims))],
+                    operate_on=cat_dims,
+                )
+
+            noise_kernel = WhiteKernel(
+                noise_level=1e-8,
+                noise_level_bounds=(np.exp(-25), np.exp(2)),
+                prior=HorseshoePrior(scale=0.1, rng=rng),
+            )
+
+            if len(cont_dims) > 0 and len(cat_dims) > 0:
+                # both
+                kernel = cov_amp * (exp_kernel*ham_kernel) + noise_kernel
+            elif len(cont_dims) > 0 and len(cat_dims) == 0:
+                # only cont
+                kernel = cov_amp * exp_kernel + noise_kernel
+            elif len(cont_dims) == 0 and len(cat_dims) > 0:
+                # only cont
+                kernel = cov_amp * ham_kernel + noise_kernel
+            else:
+                raise ValueError()
 
             if model_type == "gp":
                 model_class = GaussianProcess
                 kwargs['model'] = model_class
-                model_kwargs = kwargs.get('model_kwargs', dict())
                 model_kwargs['kernel'] = kernel
-                model_kwargs['prior'] = prior
-                model_kwargs['normalize_input'] = True
-                model_kwargs['normalize_output'] = True
-                model_kwargs['normalize_input'] = True
+                model_kwargs['normalize_y'] = True
                 model_kwargs['seed'] = rng.randint(0, 2 ** 20)
             elif model_type == "gp_mcmc":
                 model_class = GaussianProcessMCMC
                 kwargs['model'] = model_class
-                model_kwargs = kwargs.get('model_kwargs', dict())
+                kwargs['integrate_acquisition_function'] = True
+
                 model_kwargs['kernel'] = kernel
-                model_kwargs['prior'] = prior
-                model_kwargs['n_hypers'] = n_hypers
-                model_kwargs['chain_length'] = 200
-                model_kwargs['burnin_steps'] = 100
-                model_kwargs['normalize_input'] = True
-                model_kwargs['normalize_output'] = True
+
+                n_mcmc_walkers = 3 * len(kernel.theta)
+                if n_mcmc_walkers % 2 == 1:
+                    n_mcmc_walkers += 1
+                model_kwargs['n_mcmc_walkers'] = n_mcmc_walkers
+                model_kwargs['chain_length'] = 250
+                model_kwargs['burnin_steps'] = 250
+                model_kwargs['normalize_y'] = True
                 model_kwargs['seed'] = rng.randint(0, 2**20)
             else:
                 raise ValueError('Unknown model type %s' % model_type)
@@ -98,7 +129,7 @@ class SMAC4BO(SMAC4AC):
 
         if kwargs.get('acquisition_function_optimizer') is None:
             acquisition_function_optimizer_kwargs = kwargs.get('acquisition_function_optimizer_kwargs', dict())
-            acquisition_function_optimizer_kwargs['n_sls_iterations'] = 100
+            acquisition_function_optimizer_kwargs['n_sls_iterations'] = 10
             kwargs['acquisition_function_optimizer_kwargs'] = acquisition_function_optimizer_kwargs
 
         # only 1 configuration per SMBO iteration
