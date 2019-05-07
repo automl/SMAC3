@@ -377,11 +377,6 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
                             # Found a better configuration
                             if acq_val[acq_index] > acq_val_incumbents[i]:
-                                self.logger.debug(
-                                    "Local search %d: Switch to one of the neighbors (after %d configurations).",
-                                    i,
-                                    neighbors_looked_at[i],
-                                )
                                 incumbents[i] = neighbors[acq_index]
                                 acq_val_incumbents[i] = acq_val[acq_index]
                                 new_neighborhood[i] = True
