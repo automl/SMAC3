@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.utils.util_funcs &mdash; SMAC 0.10.1.dev documentation</title>
+  <title>smac.epm.util_funcs &mdash; SMAC 0.10.1.dev documentation</title>
   
 
   
@@ -107,6 +107,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.base_epm.html">smac.epm.base_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.base_gp.html">smac.epm.base_gp module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.base_imputor.html">smac.epm.base_imputor module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.base_rf.html">smac.epm.base_rf module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gaussian_process.html">smac.epm.gaussian_process module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
@@ -116,6 +117,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.facade.html">smac.facade package</a><ul>
@@ -191,7 +193,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.logging.html">smac.utils.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.util_funcs.html">smac.utils.util_funcs module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.validate.html">smac.utils.validate module</a></li>
 </ul>
 </li>
@@ -248,7 +249,7 @@
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
-      <li>smac.utils.util_funcs</li>
+      <li>smac.epm.util_funcs</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -263,7 +264,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for smac.utils.util_funcs</h1><div class="highlight"><pre>
+  <h1>Source code for smac.epm.util_funcs</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -274,7 +275,7 @@
 <span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="k">import</span> <span class="n">MAXINT</span>
 
 
-<div class="viewcode-block" id="get_types"><a class="viewcode-back" href="../../../apidoc/smac.utils.util_funcs.html#smac.utils.util_funcs.get_types">[docs]</a><span class="k">def</span> <span class="nf">get_types</span><span class="p">(</span><span class="n">config_space</span><span class="p">,</span> <span class="n">instance_features</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get_types"><a class="viewcode-back" href="../../../apidoc/smac.epm.util_funcs.html#smac.epm.util_funcs.get_types">[docs]</a><span class="k">def</span> <span class="nf">get_types</span><span class="p">(</span><span class="n">config_space</span><span class="p">,</span> <span class="n">instance_features</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;TODO&quot;&quot;&quot;</span>
     <span class="c1"># Extract types vector for rf from config space and the bounds</span>
     <span class="n">types</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">config_space</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()),</span>
@@ -282,28 +283,49 @@
     <span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)]</span><span class="o">*</span><span class="n">types</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">config_space</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()):</span>
+        <span class="n">parents</span> <span class="o">=</span> <span class="n">config_space</span><span class="o">.</span><span class="n">get_parents_of</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parents</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">can_be_inactive</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">can_be_inactive</span> <span class="o">=</span> <span class="kc">True</span>
+
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="p">(</span><span class="n">CategoricalHyperparameter</span><span class="p">)):</span>
             <span class="n">n_cats</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">choices</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">can_be_inactive</span><span class="p">:</span>
+                <span class="n">n_cats</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">choices</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
             <span class="n">types</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_cats</span>
             <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">n_cats</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="p">(</span><span class="n">OrdinalHyperparameter</span><span class="p">)):</span>
             <span class="n">n_cats</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
             <span class="n">types</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_cats</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">can_be_inactive</span><span class="p">:</span>
+                <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_cats</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_cats</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">Constant</span><span class="p">):</span>
-            <span class="c1"># for constants we simply set types to 0</span>
-            <span class="c1"># which makes it a numerical parameter</span>
-            <span class="n">types</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+            <span class="c1"># for constants we simply set types to 0 which makes it a numerical</span>
+            <span class="c1"># parameter</span>
+            <span class="k">if</span> <span class="n">can_be_inactive</span><span class="p">:</span>
+                <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                <span class="n">types</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                <span class="n">types</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="c1"># and we leave the bounds to be 0 for now</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">UniformFloatHyperparameter</span><span class="p">):</span>         <span class="c1"># Are sampled on the unit hypercube thus the bounds</span>
-            <span class="c1"># bounds[i] = (float(param.lower), float(param.upper))  # are always 0.0, 1.0</span>
-            <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">UniformFloatHyperparameter</span><span class="p">):</span>
+            <span class="c1"># Are sampled on the unit hypercube thus the bounds</span>
+            <span class="c1"># are always 0.0, 1.0</span>
+            <span class="k">if</span> <span class="n">can_be_inactive</span><span class="p">:</span>
+                <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">UniformIntegerHyperparameter</span><span class="p">):</span>
-            <span class="c1"># bounds[i] = (int(param.lower), int(param.upper))</span>
-            <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">can_be_inactive</span><span class="p">:</span>
+                <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="p">(</span><span class="n">UniformFloatHyperparameter</span><span class="p">,</span>
                                     <span class="n">UniformIntegerHyperparameter</span><span class="p">,</span>
                                     <span class="n">OrdinalHyperparameter</span><span class="p">,</span>
@@ -312,14 +334,15 @@
 
     <span class="k">if</span> <span class="n">instance_features</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">types</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
-            <span class="p">(</span><span class="n">types</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">instance_features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))))</span>
+            <span class="p">(</span><span class="n">types</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">instance_features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+        <span class="p">)</span>
 
     <span class="n">types</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">types</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint</span><span class="p">)</span>
     <span class="n">bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">types</span><span class="p">,</span> <span class="n">bounds</span></div>
 
 
-<div class="viewcode-block" id="get_rng"><a class="viewcode-back" href="../../../apidoc/smac.utils.util_funcs.html#smac.utils.util_funcs.get_rng">[docs]</a><span class="k">def</span> <span class="nf">get_rng</span><span class="p">(</span>
+<div class="viewcode-block" id="get_rng"><a class="viewcode-back" href="../../../apidoc/smac.epm.util_funcs.html#smac.epm.util_funcs.get_rng">[docs]</a><span class="k">def</span> <span class="nf">get_rng</span><span class="p">(</span>
         <span class="n">rng</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">run_id</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">logger</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>

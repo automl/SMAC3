@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.epm.base_imputor module &mdash; SMAC 0.10.1.dev documentation</title>
+  <title>smac.epm.util_funcs module &mdash; SMAC 0.10.1.dev documentation</title>
   
 
   
@@ -36,8 +36,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.epm.base_rf module" href="smac.epm.base_rf.html" />
-    <link rel="prev" title="smac.epm.base_gp module" href="smac.epm.base_gp.html" /> 
+    <link rel="next" title="smac.facade package" href="smac.facade.html" />
+    <link rel="prev" title="smac.epm.uncorrelated_mo_rf_with_instances module" href="smac.epm.uncorrelated_mo_rf_with_instances.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -108,7 +108,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="smac.epm.html">smac.epm package</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.base_epm.html">smac.epm.base_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.base_gp.html">smac.epm.base_gp module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">smac.epm.base_imputor module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_imputor.html">smac.epm.base_imputor module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.base_rf.html">smac.epm.base_rf module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process.html">smac.epm.gaussian_process module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
@@ -119,7 +119,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">smac.epm.util_funcs module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.facade.html">smac.facade package</a><ul>
@@ -253,13 +253,13 @@
         
           <li><a href="smac.epm.html">smac.epm package</a> &raquo;</li>
         
-      <li>smac.epm.base_imputor module</li>
+      <li>smac.epm.util_funcs module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/apidoc/smac.epm.base_imputor.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/apidoc/smac.epm.util_funcs.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -272,35 +272,41 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-smac.epm.base_imputor">
-<span id="smac-epm-base-imputor-module"></span><h1>smac.epm.base_imputor module<a class="headerlink" href="#module-smac.epm.base_imputor" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="smac.epm.base_imputor.BaseImputor">
-<em class="property">class </em><code class="descclassname">smac.epm.base_imputor.</code><code class="descname">BaseImputor</code><a class="reference internal" href="../_modules/smac/epm/base_imputor.html#BaseImputor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_imputor.BaseImputor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Abstract implementation of the Imputation API.</p>
-<dl class="method">
-<dt id="smac.epm.base_imputor.BaseImputor.impute">
-<code class="descname">impute</code><span class="sig-paren">(</span><em>censored_X: numpy.ndarray</em>, <em>censored_y: numpy.ndarray</em>, <em>uncensored_X: numpy.ndarray</em>, <em>uncensored_y: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_imputor.html#BaseImputor.impute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_imputor.BaseImputor.impute" title="Permalink to this definition">¶</a></dt>
-<dd><p>Imputes censored runs and returns new y values.</p>
+  <div class="section" id="module-smac.epm.util_funcs">
+<span id="smac-epm-util-funcs-module"></span><h1>smac.epm.util_funcs module<a class="headerlink" href="#module-smac.epm.util_funcs" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="smac.epm.util_funcs.get_rng">
+<code class="descclassname">smac.epm.util_funcs.</code><code class="descname">get_rng</code><span class="sig-paren">(</span><em>rng: Union[int</em>, <em>mtrand.RandomState</em>, <em>None] = None</em>, <em>run_id: Optional[int] = None</em>, <em>logger: Optional[logging.Logger] = None</em><span class="sig-paren">)</span> &#x2192; Tuple[int, mtrand.RandomState]<a class="reference internal" href="../_modules/smac/epm/util_funcs.html#get_rng"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.util_funcs.get_rng" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize random number generator and set run_id</p>
+<ul class="simple">
+<li><p>If rng and run_id are None, initialize a new generator and sample a run_id</p></li>
+<li><p>If rng is None and a run_id is given, use the run_id to initialize the rng</p></li>
+<li><p>If rng is an int, a RandomState object is created from that.</p></li>
+<li><p>If rng is RandomState, return it</p></li>
+<li><p>If only run_id is None, a run_id is sampled from the random state.</p></li>
+</ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>censored_X</strong> (<em>np.ndarray</em><em> [</em><em>N</em><em>, </em><em>M</em><em>]</em>) – Feature array of all censored runs.</p></li>
-<li><p><strong>censored_y</strong> (<em>np.ndarray</em><em> [</em><em>N</em><em>, </em><em>1</em><em>]</em>) – Target values for all runs censored runs.</p></li>
-<li><p><strong>uncensored_X</strong> (<em>np.ndarray</em><em> [</em><em>N</em><em>, </em><em>M</em><em>]</em>) – Feature array of all non-censored runs.</p></li>
-<li><p><strong>uncensored_y</strong> (<em>np.ndarray</em><em> [</em><em>N</em><em>, </em><em>1</em><em>]</em>) – Target values for all non-censored runs.</p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState|int|None</em>) – </p></li>
+<li><p><strong>run_id</strong> (<em>int</em><em>, </em><em>optional</em>) – </p></li>
+<li><p><strong>logger</strong> (<em>logging.Logger</em><em>, </em><em>optional</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>imputed_y</strong> – Same shape as censored_y [N, 1]</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>int</em></p></li>
+<li><p><em>np.random.RandomState</em></p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
 
+<dl class="function">
+<dt id="smac.epm.util_funcs.get_types">
+<code class="descclassname">smac.epm.util_funcs.</code><code class="descname">get_types</code><span class="sig-paren">(</span><em>config_space</em>, <em>instance_features=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/util_funcs.html#get_types"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.util_funcs.get_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO</p>
 </dd></dl>
 
 </div>
@@ -313,10 +319,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="smac.epm.base_rf.html" class="btn btn-neutral float-right" title="smac.epm.base_rf module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="smac.facade.html" class="btn btn-neutral float-right" title="smac.facade package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="smac.epm.base_gp.html" class="btn btn-neutral float-left" title="smac.epm.base_gp module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="smac.epm.uncorrelated_mo_rf_with_instances.html" class="btn btn-neutral float-left" title="smac.epm.uncorrelated_mo_rf_with_instances module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

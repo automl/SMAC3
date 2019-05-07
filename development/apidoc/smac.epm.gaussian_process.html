@@ -37,7 +37,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.epm.gaussian_process_mcmc module" href="smac.epm.gaussian_process_mcmc.html" />
-    <link rel="prev" title="smac.epm.base_imputor module" href="smac.epm.base_imputor.html" /> 
+    <link rel="prev" title="smac.epm.base_rf module" href="smac.epm.base_rf.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -109,6 +109,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.base_epm.html">smac.epm.base_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.base_gp.html">smac.epm.base_gp module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.base_imputor.html">smac.epm.base_imputor module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_rf.html">smac.epm.base_rf module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">smac.epm.gaussian_process module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
@@ -118,6 +119,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.facade.html">smac.facade package</a><ul>
@@ -193,7 +195,6 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.logging.html">smac.utils.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.utils.util_funcs.html">smac.utils.util_funcs module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.validate.html">smac.utils.validate module</a></li>
 </ul>
 </li>
@@ -275,7 +276,7 @@
 <span id="smac-epm-gaussian-process-module"></span><h1>smac.epm.gaussian_process module<a class="headerlink" href="#module-smac.epm.gaussian_process" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.epm.gaussian_process.GaussianProcess">
-<em class="property">class </em><code class="descclassname">smac.epm.gaussian_process.</code><code class="descname">GaussianProcess</code><span class="sig-paren">(</span><em>types: numpy.ndarray, bounds: List[Tuple[float, float]], seed: int, kernel: skopt.learning.gaussian_process.kernels.Kernel, normalize_y: bool = True, n_opt_restarts=10, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.epm.gaussian_process.</code><code class="descname">GaussianProcess</code><span class="sig-paren">(</span><em>configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: numpy.ndarray, bounds: List[Tuple[float, float]], seed: int, kernel: skopt.learning.gaussian_process.kernels.Kernel, normalize_y: bool = True, n_opt_restarts=10, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.epm.base_gp.html#smac.epm.base_gp.BaseModel" title="smac.epm.base_gp.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_gp.BaseModel</span></code></a></p>
 <p>Gaussian process model.</p>
 <p>The GP hyperparameterŝ are obtained by optimizing the marginal log likelihood.</p>
@@ -396,7 +397,7 @@ number of target names specified in the constructor.</p></li>
         <a href="smac.epm.gaussian_process_mcmc.html" class="btn btn-neutral float-right" title="smac.epm.gaussian_process_mcmc module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="smac.epm.base_imputor.html" class="btn btn-neutral float-left" title="smac.epm.base_imputor module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="smac.epm.base_rf.html" class="btn btn-neutral float-left" title="smac.epm.base_rf module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

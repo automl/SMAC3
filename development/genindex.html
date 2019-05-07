@@ -108,6 +108,7 @@
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.base_epm.html">smac.epm.base_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.base_gp.html">smac.epm.base_gp module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.base_imputor.html">smac.epm.base_imputor module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.base_rf.html">smac.epm.base_rf module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.gaussian_process.html">smac.epm.gaussian_process module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
@@ -117,6 +118,7 @@
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.facade.html">smac.facade package</a><ul>
@@ -192,7 +194,6 @@
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.logging.html">smac.utils.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.util_funcs.html">smac.utils.util_funcs module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.validate.html">smac.utils.validate module</a></li>
 </ul>
 </li>
@@ -395,7 +396,11 @@
       <li><a href="apidoc/smac.epm.base_imputor.html#smac.epm.base_imputor.BaseImputor">BaseImputor (class in smac.epm.base_imputor)</a>
 </li>
       <li><a href="apidoc/smac.epm.base_gp.html#smac.epm.base_gp.BaseModel">BaseModel (class in smac.epm.base_gp)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.epm.base_rf.html#smac.epm.base_rf.BaseModel">(class in smac.epm.base_rf)</a>
 </li>
+      </ul></li>
       <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.ConstantKernel.bounds">bounds (smac.epm.gp_kernels.ConstantKernel attribute)</a>
 
       <ul>
@@ -726,7 +731,7 @@
 </li>
       <li><a href="apidoc/smac.stats.stats.html#smac.stats.stats.Stats.get_remaining_ta_runs">get_remaining_ta_runs() (smac.stats.stats.Stats method)</a>
 </li>
-      <li><a href="apidoc/smac.utils.util_funcs.html#smac.utils.util_funcs.get_rng">get_rng() (in module smac.utils.util_funcs)</a>
+      <li><a href="apidoc/smac.epm.util_funcs.html#smac.epm.util_funcs.get_rng">get_rng() (in module smac.epm.util_funcs)</a>
 </li>
       <li><a href="apidoc/smac.facade.experimental.epils_facade.html#smac.facade.experimental.epils_facade.EPILS.get_runhistory">get_runhistory() (smac.facade.experimental.epils_facade.EPILS method)</a>
 
@@ -768,7 +773,7 @@
         <li><a href="apidoc/smac.facade.smac_hpo_facade.html#smac.facade.smac_hpo_facade.SMAC4HPO.get_trajectory">(smac.facade.smac_hpo_facade.SMAC4HPO method)</a>
 </li>
       </ul></li>
-      <li><a href="apidoc/smac.utils.util_funcs.html#smac.utils.util_funcs.get_types">get_types() (in module smac.utils.util_funcs)</a>
+      <li><a href="apidoc/smac.epm.util_funcs.html#smac.epm.util_funcs.get_types">get_types() (in module smac.epm.util_funcs)</a>
 </li>
       <li><a href="apidoc/smac.stats.stats.html#smac.stats.stats.Stats.get_used_wallclock_time">get_used_wallclock_time() (smac.stats.stats.Stats method)</a>
 </li>
@@ -894,8 +899,6 @@
         <li><a href="apidoc/smac.epm.rfr_imputator.html#smac.epm.rfr_imputator.RFRImputator.impute">(smac.epm.rfr_imputator.RFRImputator method)</a>
 </li>
       </ul></li>
-      <li><a href="apidoc/smac.configspace.util.html#smac.configspace.util.impute_inactive_values">impute_inactive_values() (in module smac.configspace.util)</a>
-</li>
       <li><a href="apidoc/smac.stats.stats.html#smac.stats.stats.Stats.inc_changed">inc_changed (smac.stats.stats.Stats attribute)</a>
 </li>
       <li><a href="apidoc/smac.utils.dependencies.html#smac.utils.dependencies.IncorrectPackageVersionError">IncorrectPackageVersionError</a>
@@ -1263,6 +1266,8 @@
       <ul>
         <li><a href="apidoc/smac.epm.base_gp.html#smac.epm.base_gp.BaseModel.predict">(smac.epm.base_gp.BaseModel method)</a>
 </li>
+        <li><a href="apidoc/smac.epm.base_rf.html#smac.epm.base_rf.BaseModel.predict">(smac.epm.base_rf.BaseModel method)</a>
+</li>
         <li><a href="apidoc/smac.epm.gaussian_process.html#smac.epm.gaussian_process.GaussianProcess.predict">(smac.epm.gaussian_process.GaussianProcess method)</a>
 </li>
         <li><a href="apidoc/smac.epm.gaussian_process_mcmc.html#smac.epm.gaussian_process_mcmc.GaussianProcessMCMC.predict">(smac.epm.gaussian_process_mcmc.GaussianProcessMCMC method)</a>
@@ -1282,6 +1287,8 @@
 
       <ul>
         <li><a href="apidoc/smac.epm.base_gp.html#smac.epm.base_gp.BaseModel.predict_marginalized_over_instances">(smac.epm.base_gp.BaseModel method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.base_rf.html#smac.epm.base_rf.BaseModel.predict_marginalized_over_instances">(smac.epm.base_rf.BaseModel method)</a>
 </li>
         <li><a href="apidoc/smac.epm.gaussian_process.html#smac.epm.gaussian_process.GaussianProcess.predict_marginalized_over_instances">(smac.epm.gaussian_process.GaussianProcess method)</a>
 </li>
@@ -1622,6 +1629,8 @@
 </li>
       <li><a href="apidoc/smac.epm.base_imputor.html#module-smac.epm.base_imputor">smac.epm.base_imputor (module)</a>
 </li>
+      <li><a href="apidoc/smac.epm.base_rf.html#module-smac.epm.base_rf">smac.epm.base_rf (module)</a>
+</li>
       <li><a href="apidoc/smac.epm.gaussian_process.html#module-smac.epm.gaussian_process">smac.epm.gaussian_process (module)</a>
 </li>
       <li><a href="apidoc/smac.epm.gaussian_process_mcmc.html#module-smac.epm.gaussian_process_mcmc">smac.epm.gaussian_process_mcmc (module)</a>
@@ -1639,6 +1648,8 @@
       <li><a href="apidoc/smac.epm.rfr_imputator.html#module-smac.epm.rfr_imputator">smac.epm.rfr_imputator (module)</a>
 </li>
       <li><a href="apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html#module-smac.epm.uncorrelated_mo_rf_with_instances">smac.epm.uncorrelated_mo_rf_with_instances (module)</a>
+</li>
+      <li><a href="apidoc/smac.epm.util_funcs.html#module-smac.epm.util_funcs">smac.epm.util_funcs (module)</a>
 </li>
       <li><a href="apidoc/smac.facade.html#module-smac.facade">smac.facade (module)</a>
 </li>
@@ -1674,10 +1685,10 @@
 </li>
       <li><a href="apidoc/smac.initial_design.sobol_design.html#module-smac.initial_design.sobol_design">smac.initial_design.sobol_design (module)</a>
 </li>
-      <li><a href="apidoc/smac.intensification.html#module-smac.intensification">smac.intensification (module)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apidoc/smac.intensification.html#module-smac.intensification">smac.intensification (module)</a>
+</li>
       <li><a href="apidoc/smac.intensification.intensification.html#module-smac.intensification.intensification">smac.intensification.intensification (module)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.html#module-smac.optimizer">smac.optimizer (module)</a>
@@ -1749,8 +1760,6 @@
       <li><a href="apidoc/smac.utils.merge_foreign_data.html#module-smac.utils.merge_foreign_data">smac.utils.merge_foreign_data (module)</a>
 </li>
       <li><a href="apidoc/smac.utils.test_helpers.html#module-smac.utils.test_helpers">smac.utils.test_helpers (module)</a>
-</li>
-      <li><a href="apidoc/smac.utils.util_funcs.html#module-smac.utils.util_funcs">smac.utils.util_funcs (module)</a>
 </li>
       <li><a href="apidoc/smac.utils.validate.html#module-smac.utils.validate">smac.utils.validate (module)</a>
 </li>
@@ -1896,6 +1905,8 @@
 
       <ul>
         <li><a href="apidoc/smac.epm.base_gp.html#smac.epm.base_gp.BaseModel.train">(smac.epm.base_gp.BaseModel method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.base_rf.html#smac.epm.base_rf.BaseModel.train">(smac.epm.base_rf.BaseModel method)</a>
 </li>
         <li><a href="apidoc/smac.epm.gaussian_process.html#smac.epm.gaussian_process.GaussianProcess.train">(smac.epm.gaussian_process.GaussianProcess method)</a>
 </li>

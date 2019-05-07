@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.utils.util_funcs module &mdash; SMAC 0.10.1.dev documentation</title>
+  <title>smac.epm.base_rf module &mdash; SMAC 0.10.1.dev documentation</title>
   
 
   
@@ -36,8 +36,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.utils.validate module" href="smac.utils.validate.html" />
-    <link rel="prev" title="smac.utils.test_helpers module" href="smac.utils.test_helpers.html" /> 
+    <link rel="next" title="smac.epm.gaussian_process module" href="smac.epm.gaussian_process.html" />
+    <link rel="prev" title="smac.epm.base_imputor module" href="smac.epm.base_imputor.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -105,10 +105,11 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.configspace.util.html">smac.configspace.util module</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="smac.epm.html">smac.epm package</a><ul>
+<li class="toctree-l2 current"><a class="reference internal" href="smac.epm.html">smac.epm package</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.base_epm.html">smac.epm.base_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.base_gp.html">smac.epm.base_gp module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.base_imputor.html">smac.epm.base_imputor module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">smac.epm.base_rf module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process.html">smac.epm.gaussian_process module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
@@ -118,6 +119,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.facade.html">smac.facade package</a><ul>
@@ -178,7 +180,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="smac.utils.html">smac.utils package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="smac.utils.html">smac.utils package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.io.html">smac.utils.io package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="smac.utils.io.cmd_reader.html">smac.utils.io.cmd_reader module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="smac.utils.io.input_reader.html">smac.utils.io.input_reader module</a></li>
@@ -193,7 +195,6 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.logging.html">smac.utils.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">smac.utils.util_funcs module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.validate.html">smac.utils.validate module</a></li>
 </ul>
 </li>
@@ -250,15 +251,15 @@
         
           <li><a href="../api.html">API Documentation</a> &raquo;</li>
         
-          <li><a href="smac.utils.html">smac.utils package</a> &raquo;</li>
+          <li><a href="smac.epm.html">smac.epm package</a> &raquo;</li>
         
-      <li>smac.utils.util_funcs module</li>
+      <li>smac.epm.base_rf module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/apidoc/smac.utils.util_funcs.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/apidoc/smac.epm.base_rf.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -271,41 +272,72 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-smac.utils.util_funcs">
-<span id="smac-utils-util-funcs-module"></span><h1>smac.utils.util_funcs module<a class="headerlink" href="#module-smac.utils.util_funcs" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="smac.utils.util_funcs.get_rng">
-<code class="descclassname">smac.utils.util_funcs.</code><code class="descname">get_rng</code><span class="sig-paren">(</span><em>rng: Union[int</em>, <em>mtrand.RandomState</em>, <em>None] = None</em>, <em>run_id: Optional[int] = None</em>, <em>logger: Optional[logging.Logger] = None</em><span class="sig-paren">)</span> &#x2192; Tuple[int, mtrand.RandomState]<a class="reference internal" href="../_modules/smac/utils/util_funcs.html#get_rng"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.util_funcs.get_rng" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize random number generator and set run_id</p>
-<ul class="simple">
-<li><p>If rng and run_id are None, initialize a new generator and sample a run_id</p></li>
-<li><p>If rng is None and a run_id is given, use the run_id to initialize the rng</p></li>
-<li><p>If rng is an int, a RandomState object is created from that.</p></li>
-<li><p>If rng is RandomState, return it</p></li>
-<li><p>If only run_id is None, a run_id is sampled from the random state.</p></li>
-</ul>
+  <div class="section" id="module-smac.epm.base_rf">
+<span id="smac-epm-base-rf-module"></span><h1>smac.epm.base_rf module<a class="headerlink" href="#module-smac.epm.base_rf" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="smac.epm.base_rf.BaseModel">
+<em class="property">class </em><code class="descclassname">smac.epm.base_rf.</code><code class="descname">BaseModel</code><span class="sig-paren">(</span><em>configspace</em>, <em>types</em>, <em>bounds</em>, <em>seed</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_rf.html#BaseModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_rf.BaseModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_epm.AbstractEPM</span></code></a></p>
+<p>Abstract base class for all random forest models.</p>
+<dl class="method">
+<dt id="smac.epm.base_rf.BaseModel.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="headerlink" href="#smac.epm.base_rf.BaseModel.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict means and variances for given X.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>rng</strong> (<em>np.random.RandomState|int|None</em>) – </p></li>
-<li><p><strong>run_id</strong> (<em>int</em><em>, </em><em>optional</em>) – </p></li>
-<li><p><strong>logger</strong> (<em>logging.Logger</em><em>, </em><em>optional</em>) – </p></li>
-</ul>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray of shape =</em><em> [</em><em>n_samples</em><em>, </em><em>n_features</em><em> (</em><em>config + instance features</em><em>)</em><em>]</em>) – Training samples</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><em>int</em></p></li>
-<li><p><em>np.random.RandomState</em></p></li>
+<li><p><strong>means</strong> (<em>np.ndarray of shape = [n_samples, n_objectives]</em>) – Predictive mean</p></li>
+<li><p><strong>vars</strong> (<em>np.ndarray  of shape = [n_samples, n_objectives]</em>) – Predictive variance</p></li>
 </ul>
 </p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="smac.utils.util_funcs.get_types">
-<code class="descclassname">smac.utils.util_funcs.</code><code class="descname">get_types</code><span class="sig-paren">(</span><em>config_space</em>, <em>instance_features=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/util_funcs.html#get_types"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.util_funcs.get_types" title="Permalink to this definition">¶</a></dt>
-<dd><p>TODO</p>
+<dl class="method">
+<dt id="smac.epm.base_rf.BaseModel.predict_marginalized_over_instances">
+<code class="descname">predict_marginalized_over_instances</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="headerlink" href="#smac.epm.base_rf.BaseModel.predict_marginalized_over_instances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict mean and variance marginalized over all instances.</p>
+<p>Returns the predictive mean and variance marginalised over all
+instances for a set of configurations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em>) – [n_samples, n_features (config)]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>means</strong> (<em>np.ndarray of shape = [n_samples, 1]</em>) – Predictive mean</p></li>
+<li><p><strong>vars</strong> (<em>np.ndarray  of shape = [n_samples, 1]</em>) – Predictive variance</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.base_rf.BaseModel.train">
+<code class="descname">train</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em>, <em>Y: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; smac.epm.base_epm.AbstractEPM<a class="headerlink" href="#smac.epm.base_rf.BaseModel.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trains the EPM on X and Y.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>n_samples</em><em>, </em><em>n_features</em><em> (</em><em>config + instance features</em><em>)</em><em>]</em>) – Input data points.</p></li>
+<li><p><strong>Y</strong> (<em>np.ndarray</em><em> [</em><em>n_samples</em><em>, </em><em>n_objectives</em><em>]</em>) – The corresponding target values. n_objectives must match the
+number of target names specified in the constructor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>self</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM">AbstractEPM</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -318,10 +350,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="smac.utils.validate.html" class="btn btn-neutral float-right" title="smac.utils.validate module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="smac.epm.gaussian_process.html" class="btn btn-neutral float-right" title="smac.epm.gaussian_process module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="smac.utils.test_helpers.html" class="btn btn-neutral float-left" title="smac.utils.test_helpers module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="smac.epm.base_imputor.html" class="btn btn-neutral float-left" title="smac.epm.base_imputor module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

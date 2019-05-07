@@ -109,6 +109,7 @@
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.base_epm.html">smac.epm.base_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.base_gp.html">smac.epm.base_gp module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.base_imputor.html">smac.epm.base_imputor module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.base_rf.html">smac.epm.base_rf module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.gaussian_process.html">smac.epm.gaussian_process module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
@@ -118,6 +119,7 @@
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.facade.html">smac.facade package</a><ul>
@@ -193,7 +195,6 @@
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.logging.html">smac.utils.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.util_funcs.html">smac.utils.util_funcs module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.validate.html">smac.utils.validate module</a></li>
 </ul>
 </li>
@@ -566,7 +567,7 @@ scenario-file, which we used in the Branin example.</p>
 95
 96</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># Scenario object</span>
 <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">({</span><span class="s2">&quot;run_obj&quot;</span><span class="p">:</span> <span class="s2">&quot;quality&quot;</span><span class="p">,</span>   <span class="c1"># we optimize quality (alternatively runtime)</span>
-                     <span class="s2">&quot;runcount-limit&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>   <span class="c1"># max. number of function evaluations; for this example set to a low number</span>
+                     <span class="s2">&quot;runcount-limit&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>   <span class="c1"># max. number of function evaluations; for this example set to a low number</span>
                      <span class="s2">&quot;cs&quot;</span><span class="p">:</span> <span class="n">cs</span><span class="p">,</span>               <span class="c1"># configuration space</span>
                      <span class="s2">&quot;deterministic&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span>
                      <span class="p">})</span>

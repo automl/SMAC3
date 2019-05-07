@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.facade package" href="smac.facade.html" />
+    <link rel="next" title="smac.epm.util_funcs module" href="smac.epm.util_funcs.html" />
     <link rel="prev" title="smac.epm.rfr_imputator module" href="smac.epm.rfr_imputator.html" /> 
 </head>
 
@@ -109,6 +109,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.base_epm.html">smac.epm.base_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.base_gp.html">smac.epm.base_gp module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.base_imputor.html">smac.epm.base_imputor module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_rf.html">smac.epm.base_rf module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process.html">smac.epm.gaussian_process module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
@@ -118,6 +119,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.facade.html">smac.facade package</a><ul>
@@ -193,7 +195,6 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.logging.html">smac.utils.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.utils.util_funcs.html">smac.utils.util_funcs module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.validate.html">smac.utils.validate module</a></li>
 </ul>
 </li>
@@ -275,7 +276,7 @@
 <span id="smac-epm-uncorrelated-mo-rf-with-instances-module"></span><h1>smac.epm.uncorrelated_mo_rf_with_instances module<a class="headerlink" href="#module-smac.epm.uncorrelated_mo_rf_with_instances" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances">
-<em class="property">class </em><code class="descclassname">smac.epm.uncorrelated_mo_rf_with_instances.</code><code class="descname">UncorrelatedMultiObjectiveRandomForestWithInstances</code><span class="sig-paren">(</span><em>target_names: List[str], bounds: List[Tuple[float, float]], types: numpy.ndarray, seed: int, rf_kwargs: Optional[Dict[str, Any]] = None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/uncorrelated_mo_rf_with_instances.html#UncorrelatedMultiObjectiveRandomForestWithInstances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.epm.uncorrelated_mo_rf_with_instances.</code><code class="descname">UncorrelatedMultiObjectiveRandomForestWithInstances</code><span class="sig-paren">(</span><em>target_names: List[str], configspace: ConfigSpace.configuration_space.ConfigurationSpace, bounds: List[Tuple[float, float]], types: numpy.ndarray, seed: int, rf_kwargs: Optional[Dict[str, Any]] = None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/uncorrelated_mo_rf_with_instances.html#UncorrelatedMultiObjectiveRandomForestWithInstances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_epm.AbstractEPM</span></code></a></p>
 <p>Wrapper for the random forest to predict multiple targets.</p>
 <p>Only the a list with the target names and the types array for the
@@ -380,7 +381,7 @@ number of target names specified in the constructor.</p></li>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="smac.facade.html" class="btn btn-neutral float-right" title="smac.facade package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="smac.epm.util_funcs.html" class="btn btn-neutral float-right" title="smac.epm.util_funcs module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="smac.epm.rfr_imputator.html" class="btn btn-neutral float-left" title="smac.epm.rfr_imputator module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
