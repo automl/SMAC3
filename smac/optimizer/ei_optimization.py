@@ -377,6 +377,11 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
                             # Found a better configuration
                             if acq_val[acq_index] > acq_val_incumbents[i]:
+                                self.logger.debug(
+                                    "Local search %d: Switch to one of the neighbors (after %d configurations).",
+                                    i,
+                                    neighbors_looked_at[i],
+                                )
                                 incumbents[i] = neighbors[acq_index]
                                 acq_val_incumbents[i] = acq_val[acq_index]
                                 new_neighborhood[i] = True
@@ -666,8 +671,8 @@ class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
         )
         next_configs_by_acq_value.sort(reverse=True, key=lambda x: x[0])
         self.logger.debug(
-            "First 10 acq func (origin) values of selected configurations: %s",
-            str([[_[0], _[1].origin] for _ in next_configs_by_acq_value])
+            "First 5 acq func (origin) values of selected configurations: %s",
+            str([[_[0], _[1].origin] for _ in next_configs_by_acq_value[:5]])
         )
         next_configs_by_acq_value = [_[1] for _ in next_configs_by_acq_value]
 
