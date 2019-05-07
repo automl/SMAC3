@@ -368,17 +368,13 @@ class TestGP(unittest.TestCase):
         for line in config_array:
             if line[0] == 0:
                 self.assertTrue(np.isnan(line[1]))
-                #self.assertEqual(line[1], 2)
             elif line[0] == 1:
                 self.assertTrue(np.isnan(line[2]))
-                #self.assertEqual(line[2], -1)
 
         gp = get_gp(3, np.random.RandomState(1))
         config_array = gp._impute_inactive(config_array)
         for line in config_array:
             if line[0] == 0:
-                #self.assertTrue(np.isnan(line[1]))
                 self.assertEqual(line[1], -1)
             elif line[0] == 1:
-                #self.assertTrue(np.isnan(line[2]))
                 self.assertEqual(line[2], -1)

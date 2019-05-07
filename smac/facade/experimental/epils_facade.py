@@ -138,16 +138,19 @@ class EPILS(object):
         types, bounds = get_types(scenario.cs, scenario.feature_array)
         if model is None:
             model = RandomForestWithInstances(
-                    types=types, bounds=bounds,
-                    instance_features=scenario.feature_array,
-                    seed=rng.randint(MAXINT),
-                    pca_components=scenario.PCA_DIM,
-                    num_trees=scenario.rf_num_trees,
-                    do_bootstrapping=scenario.rf_do_bootstrapping,
-                    ratio_features=scenario.rf_ratio_features,
-                    min_samples_split=scenario.rf_min_samples_split,
-                    min_samples_leaf=scenario.rf_min_samples_leaf,
-                    max_depth=scenario.rf_max_depth)
+                configspace=scenario.cs,
+                types=types,
+                bounds=bounds,
+                instance_features=scenario.feature_array,
+                seed=rng.randint(MAXINT),
+                pca_components=scenario.PCA_DIM,
+                num_trees=scenario.rf_num_trees,
+                do_bootstrapping=scenario.rf_do_bootstrapping,
+                ratio_features=scenario.rf_ratio_features,
+                min_samples_split=scenario.rf_min_samples_split,
+                min_samples_leaf=scenario.rf_min_samples_leaf,
+                max_depth=scenario.rf_max_depth,
+            )
         # initial acquisition function
         if acquisition_function is None:
             if scenario.run_obj == "runtime":

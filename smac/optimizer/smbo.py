@@ -410,18 +410,20 @@ class SMBO(object):
 
         if conf["model"] == "RF":
             model = RandomForestWithInstances(
-                  types=types,
-                  bounds=bounds,
-                  instance_features=self.scenario.feature_array,
-                  seed=self.rng.randint(MAXINT),
-                  pca_components=conf.get("pca_dim", self.scenario.PCA_DIM),
-                  log_y=conf.get("log_y", self.scenario.transform_y in ["LOG", "LOGS"]),
-                  num_trees=conf.get("num_trees", self.scenario.rf_num_trees),
-                  do_bootstrapping=conf.get("do_bootstrapping", self.scenario.rf_do_bootstrapping),
-                  ratio_features=conf.get("ratio_features", self.scenario.rf_ratio_features),
-                  min_samples_split=conf.get("min_samples_split", self.scenario.rf_min_samples_split),
-                  min_samples_leaf=conf.get("min_samples_leaf", self.scenario.rf_min_samples_leaf),
-                  max_depth=conf.get("max_depth", self.scenario.rf_max_depth))
+                configspace=self.config_space,
+                types=types,
+                bounds=bounds,
+                instance_features=self.scenario.feature_array,
+                seed=self.rng.randint(MAXINT),
+                pca_components=conf.get("pca_dim", self.scenario.PCA_DIM),
+                log_y=conf.get("log_y", self.scenario.transform_y in ["LOG", "LOGS"]),
+                num_trees=conf.get("num_trees", self.scenario.rf_num_trees),
+                do_bootstrapping=conf.get("do_bootstrapping", self.scenario.rf_do_bootstrapping),
+                ratio_features=conf.get("ratio_features", self.scenario.rf_ratio_features),
+                min_samples_split=conf.get("min_samples_split", self.scenario.rf_min_samples_split),
+                min_samples_leaf=conf.get("min_samples_leaf", self.scenario.rf_min_samples_leaf),
+                max_depth=conf.get("max_depth", self.scenario.rf_max_depth),
+            )
 
         elif conf["model"] == "GP":
             cov_amp = ConstantKernel(
@@ -470,6 +472,7 @@ class SMBO(object):
                 n_mcmc_walkers += 1
 
             model = GaussianProcessMCMC(
+                self.config_space,
                 types=types,
                 bounds=bounds,
                 kernel=kernel,

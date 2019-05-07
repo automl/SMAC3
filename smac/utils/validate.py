@@ -284,11 +284,14 @@ class Validator(object):
         elif reuse_epm is False or self.epm is None:
             # Create RandomForest
             types, bounds = get_types(self.scen.cs, self.scen.feature_array)
-            self.epm = RandomForestWithInstances(types=types,
-                                                 bounds=bounds,
-                                                 instance_features=self.scen.feature_array,
-                                                 seed=self.rng.randint(MAXINT),
-                                                 ratio_features=1.0)
+            self.epm = RandomForestWithInstances(
+                configspace=self.scen.cs,
+                types=types,
+                bounds=bounds,
+                instance_features=self.scen.feature_array,
+                seed=self.rng.randint(MAXINT),
+                ratio_features=1.0,
+            )
             # Use imputor if objective is runtime
             imputor = None
             impute_state = None

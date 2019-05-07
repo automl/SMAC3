@@ -112,7 +112,7 @@ class GaussianProcessMCMC(BaseModel):
             If set to true we perform MCMC sampling otherwise we just use the
             hyperparameter specified in the kernel.
         """
-
+        X = self._impute_inactive(X)
         self.gp = skopt.learning.gaussian_process.GaussianProcessRegressor(
             kernel=self.kernel,
             normalize_y=self.normalize_y,
@@ -360,6 +360,8 @@ class GaussianProcessMCMC(BaseModel):
         """
         if not self.is_trained:
             raise Exception('Model has to be trained first!')
+
+        X = self._impute_inactive(X_test)
 
         mu = np.zeros([len(self.models), X_test.shape[0]])
         var = np.zeros([len(self.models), X_test.shape[0]])
