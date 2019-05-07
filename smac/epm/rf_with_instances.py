@@ -207,7 +207,7 @@ class RandomForestWithInstances(AbstractEPM):
                 third_dimension = max(max_num_leaf_data, third_dimension)
 
             # Transform list of 2d arrays into a 3d array
-            preds_as_array = np.empty((X.shape[0], self.rf_opts.num_trees, third_dimension)) * np.NaN
+            preds_as_array = np.zeros((X.shape[0], self.rf_opts.num_trees, third_dimension)) * np.NaN
             for i, preds_per_tree in enumerate(all_preds):
                 for j, pred in enumerate(preds_per_tree):
                     preds_as_array[i, j, :len(pred)] = pred

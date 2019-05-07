@@ -1,4 +1,5 @@
 import abc
+import itertools
 import logging
 import time
 import numpy as np
@@ -191,6 +192,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             runhistory: RunHistory,
             stats: Stats,
             num_points: int,
+            additional_start_points: Optional[List[Tuple[float, Configuration]]] = None,
             **kwargs
     ) -> List[Tuple[float, Configuration]]:
         """Starts a local search from the given startpoint and quits
@@ -205,6 +207,8 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             current stats object
         num_points: int
             number of points to be sampled
+        additional_start_points : Optional[List[Tuple[float, Configuration]]]
+            Additional start point
         ***kwargs:
             Additional parameters that will be passed to the
             acquisition function
@@ -218,7 +222,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
         """
 
-        init_points = self._get_initial_points(num_points, runhistory)
+        init_points = self._get_initial_points(num_points, runhistory, additional_start_points)
         configs_acq = self._do_search(init_points)
 
         # shuffle for random tie-break
@@ -231,24 +235,49 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
         return configs_acq
 
-    def _get_initial_points(self, num_points, runhistory):
+    def _get_initial_points(self, num_points, runhistory, additional_start_points):
 
         if runhistory.empty():
-            init_points = self.config_space.sample_configuration(
-                size=num_points)
+            init_points = self.config_space.sample_configuration(size=num_points)
         else:
-            # initiate local search with best configurations from previous runs
+            # initiate local search
             configs_previous_runs = runhistory.get_all_configs()
-            configs_previous_runs_sorted = self._sort_configs_by_acq_value(
-                configs_previous_runs)
-            num_configs_local_search = int(min(
-                len(configs_previous_runs_sorted),
-                num_points)
-            )
-            init_points = list(
-                map(lambda x: x[1],
-                    configs_previous_runs_sorted[:num_configs_local_search])
-            )
+
+            # configurations with the highest previous EI
+            configs_previous_runs_sorted = self._sort_configs_by_acq_value(configs_previous_runs)
+            configs_previous_runs_sorted = [conf[1] for conf in configs_previous_runs_sorted[:num_points]]
+
+            # configurations with the lowest predictive cost, check for None to make unit tests work
+            if self.acquisition_function.model is not None:
+                conf_array = convert_configurations_to_array(configs_previous_runs)
+                costs = self.acquisition_function.model.predict_marginalized_over_instances(conf_array)[0]
+                # From here
+                # http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values
+                random = self.rng.rand(len(costs))
+                # Last column is primary sort key!
+                indices = np.lexsort((random.flatten(), costs.flatten()))
+
+                # Cannot use zip here because the indices array cannot index the
+                # rand_configs list, because the second is a pure python list
+                configs_previous_runs_sorted_by_cost = [configs_previous_runs[ind] for ind in indices][:num_points]
+            else:
+                configs_previous_runs_sorted_by_cost = []
+
+            if additional_start_points is not None:
+                additional_start_points = [asp[1] for asp in additional_start_points[:num_points]]
+            else:
+                additional_start_points = []
+
+            init_points = []
+            init_points_as_set = set()
+            for cand in itertools.chain(
+                configs_previous_runs_sorted,
+                configs_previous_runs_sorted_by_cost,
+                additional_start_points,
+            ):
+                if cand not in init_points_as_set:
+                    init_points.append(cand)
+                    init_points_as_set.add(cand)
 
         return init_points
 
@@ -617,16 +646,17 @@ class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
             to be concrete: ~smac.ei_optimization.ChallengerList
         """
 
-        next_configs_by_local_search = self.local_search._maximize(
-            runhistory, stats, self.n_sls_iterations, **kwargs
-        )
-
         # Get configurations sorted by EI
         next_configs_by_random_search_sorted = self.random_search._maximize(
             runhistory,
             stats,
-            num_points - len(next_configs_by_local_search),
+            num_points,
             _sorted=True,
+        )
+
+        next_configs_by_local_search = self.local_search._maximize(
+            runhistory, stats, self.n_sls_iterations, additional_start_points=next_configs_by_random_search_sorted,
+            **kwargs
         )
 
         # Having the configurations from random search, sorted by their
@@ -642,7 +672,7 @@ class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
         next_configs_by_acq_value.sort(reverse=True, key=lambda x: x[0])
         self.logger.debug(
             "First 10 acq func (origin) values of selected configurations: %s",
-            str([[_[0], _[1].origin] for _ in next_configs_by_acq_value[:10]])
+            str([[_[0], _[1].origin] for _ in next_configs_by_acq_value])
         )
         next_configs_by_acq_value = [_[1] for _ in next_configs_by_acq_value]
 

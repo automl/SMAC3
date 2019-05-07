@@ -160,13 +160,19 @@ class TestLocalSearch(unittest.TestCase):
             self.assertEqual(rval[i][1].origin, 'Local Search')
 
     def test_local_search_finds_minimum(self):
-        def acquisition_function(arrays):
-            rval = []
-            for array in arrays:
-                rval.append([-rosenbrock_4d(array)])
-            return np.array(rval)
+
+        class AcquisitionFunction:
+
+            model = None
+
+            def __call__(self, arrays):
+                rval = []
+                for array in arrays:
+                    rval.append([-rosenbrock_4d(array)])
+                return np.array(rval)
+
         ls = LocalSearch(
-            acquisition_function=acquisition_function,
+            acquisition_function=AcquisitionFunction(),
             config_space=self.cs,
             n_steps_plateau_walk=10,
             max_steps=np.inf,
