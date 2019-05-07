@@ -110,8 +110,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gaussian_process.html">smac.epm.gaussian_process module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gp_default_priors.html">smac.epm.gp_default_priors module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.normalization.html">smac.epm.normalization module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
@@ -307,7 +306,8 @@
             <span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="p">(</span><span class="n">UniformFloatHyperparameter</span><span class="p">,</span>
                                     <span class="n">UniformIntegerHyperparameter</span><span class="p">,</span>
-                                    <span class="n">OrdinalHyperparameter</span><span class="p">)):</span>
+                                    <span class="n">OrdinalHyperparameter</span><span class="p">,</span>
+                                    <span class="n">CategoricalHyperparameter</span><span class="p">)):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Unknown hyperparameter type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">param</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="n">instance_features</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>

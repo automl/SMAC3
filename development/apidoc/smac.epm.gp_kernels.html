@@ -1,0 +1,1536 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>smac.epm.gp_kernels module &mdash; SMAC 0.10.1.dev documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="smac.epm.random_epm module" href="smac.epm.random_epm.html" />
+    <link rel="prev" title="smac.epm.gp_base_prior module" href="smac.epm.gp_base_prior.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> SMAC
+          
+
+          
+            
+            <img src="../_static/SMAC3.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.10.1.dev
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage_recomendation.html">Usage Recommendation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual.html">Manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basic_usage.html">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../options.html">Options and file formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tae.html">Target Algorithm Evaluator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../psmac.html">Parallel SMAC (pSMAC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../validation.html">Validation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="smac.configspace.html">smac.configspace package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.configspace.util.html">smac.configspace.util module</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="smac.epm.html">smac.epm package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_epm.html">smac.epm.base_epm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_gp.html">smac.epm.base_gp module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_imputor.html">smac.epm.base_imputor module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process.html">smac.epm.gaussian_process module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">smac.epm.gp_kernels module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.facade.html">smac.facade package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.experimental.html">smac.facade.experimental package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.epils_facade.html">smac.facade.experimental.epils_facade module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.hydra_facade.html">smac.facade.experimental.hydra_facade module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.psmac_facade.html">smac.facade.experimental.psmac_facade module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.initial_design.html">smac.initial_design package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.default_configuration_design.html">smac.initial_design.default_configuration_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.factorial_design.html">smac.initial_design.factorial_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.initial_design.html">smac.initial_design.initial_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.latin_hypercube_design.html">smac.initial_design.latin_hypercube_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.random_configuration_design.html">smac.initial_design.random_configuration_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.sobol_design.html">smac.initial_design.sobol_design module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.optimizer.html">smac.optimizer package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.runhistory.html">smac.runhistory package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.runhistory.runhistory.html">smac.runhistory.runhistory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.runhistory.runhistory2epm.html">smac.runhistory.runhistory2epm module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.scenario.html">smac.scenario package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.scenario.scenario.html">smac.scenario.scenario module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.stats.html">smac.stats package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.stats.stats.html">smac.stats.stats module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.tae.html">smac.tae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.utils.html">smac.utils package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.io.html">smac.utils.io package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.cmd_reader.html">smac.utils.io.cmd_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.input_reader.html">smac.utils.io.input_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.output_directory.html">smac.utils.io.output_directory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.output_writer.html">smac.utils.io.output_writer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.traj_logging.html">smac.utils.io.traj_logging module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.constants.html">smac.utils.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.dependencies.html">smac.utils.dependencies module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.logging.html">smac.utils.logging module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.util_funcs.html">smac.utils.util_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.validate.html">smac.utils.validate module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.smac_cli.html">smac.smac_cli module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SMAC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../api.html">API Documentation</a> &raquo;</li>
+        
+          <li><a href="smac.epm.html">smac.epm package</a> &raquo;</li>
+        
+      <li>smac.epm.gp_kernels module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/apidoc/smac.epm.gp_kernels.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-smac.epm.gp_kernels">
+<span id="smac-epm-gp-kernels-module"></span><h1>smac.epm.gp_kernels module<a class="headerlink" href="#module-smac.epm.gp_kernels" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="smac.epm.gp_kernels.ConstantKernel">
+<em class="property">class </em><code class="descclassname">smac.epm.gp_kernels.</code><code class="descname">ConstantKernel</code><span class="sig-paren">(</span><em>constant_value=1.0</em>, <em>constant_value_bounds=(1e-05</em>, <em>100000.0)</em>, <em>operate_on=None</em>, <em>prior=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#ConstantKernel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.ConstantKernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smac.epm.gp_kernels.MagicMixin" title="smac.epm.gp_kernels.MagicMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.gp_kernels.MagicMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.learning.gaussian_process.kernels.ConstantKernel</span></code></p>
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.ConstantKernel.bounds">
+<code class="descname">bounds</code><a class="headerlink" href="#smac.epm.gp_kernels.ConstantKernel.bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the log-transformed bounds on the theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>bounds</strong> – The log-transformed bounds on the kernel’s hyperparameters theta</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>array, shape (n_dims, 2)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.ConstantKernel.clone_with_theta">
+<code class="descname">clone_with_theta</code><span class="sig-paren">(</span><em>theta</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.ConstantKernel.clone_with_theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a clone of self with given hyperparameters theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_dims</em><em>,</em><em>)</em>) – The hyperparameters</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.ConstantKernel.diag">
+<code class="descname">diag</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sklearn/gaussian_process/kernels.html#ConstantKernel.diag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.ConstantKernel.diag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the diagonal of the kernel k(X, X).</p>
+<p>The result of this method is identical to np.diag(self(X)); however,
+it can be evaluated more efficiently since only the diagonal is
+evaluated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em>) – Left argument of the returned kernel k(X, Y)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>K_diag</strong> – Diagonal of kernel k(X, X)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array, shape (n_samples_X,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.ConstantKernel.get_params">
+<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.ConstantKernel.get_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get parameters of this kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>deep</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If True, will return the parameters for this estimator and
+contained subobjects that are estimators.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>params</strong> – Parameter names mapped to their values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mapping of string to any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.ConstantKernel.gradient_x">
+<code class="descname">gradient_x</code><span class="sig-paren">(</span><em>x</em>, <em>X_train</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skopt/learning/gaussian_process/kernels.html#ConstantKernel.gradient_x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.ConstantKernel.gradient_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes gradient of K(x, X_train) with respect to x</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array-like</em><em>, </em><em>shape=</em><em>(</em><em>n_features</em><em>,</em><em>)</em>) – A single test point.</p></li>
+<li><p><strong>Y</strong> (<em>array-like</em><em>, </em><em>shape=</em><em>(</em><em>n_samples</em><em>, </em><em>n_features</em><em>)</em>) – Training data used to fit the gaussian process.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>gradient_x</strong> – Gradient of K(x, X_train) with respect to x.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array-like, shape=(n_samples, n_features)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.ConstantKernel.hyperparameter_constant_value">
+<code class="descname">hyperparameter_constant_value</code><a class="headerlink" href="#smac.epm.gp_kernels.ConstantKernel.hyperparameter_constant_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.ConstantKernel.hyperparameters">
+<code class="descname">hyperparameters</code><a class="headerlink" href="#smac.epm.gp_kernels.ConstantKernel.hyperparameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all hyperparameter specifications.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.ConstantKernel.is_stationary">
+<code class="descname">is_stationary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.ConstantKernel.is_stationary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether the kernel is stationary.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.ConstantKernel.n_dims">
+<code class="descname">n_dims</code><a class="headerlink" href="#smac.epm.gp_kernels.ConstantKernel.n_dims" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of non-fixed hyperparameters of the kernel.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.ConstantKernel.prior">
+<code class="descname">prior</code><em class="property"> = None</em><a class="headerlink" href="#smac.epm.gp_kernels.ConstantKernel.prior" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.ConstantKernel.set_active_dims">
+<code class="descname">set_active_dims</code><span class="sig-paren">(</span><em>operate_on=None</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.ConstantKernel.set_active_dims" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets dimensions this kernel should work on</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>operate_on</strong> (<em>None</em><em>, </em><em>list</em><em> or </em><em>array</em><em>, </em><em>shape</em><em> (</em><em>n_dims</em><em>,</em><em>)</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.ConstantKernel.set_params">
+<code class="descname">set_params</code><span class="sig-paren">(</span><em>**params</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.ConstantKernel.set_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the parameters of this kernel.</p>
+<p>The method works on simple kernels as well as on nested kernels.
+The latter have parameters of the form <code class="docutils literal notranslate"><span class="pre">&lt;component&gt;__&lt;parameter&gt;</span></code>
+so that it’s possible to update each component of a nested object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.ConstantKernel.theta">
+<code class="descname">theta</code><a class="headerlink" href="#smac.epm.gp_kernels.ConstantKernel.theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the (flattened, log-transformed) non-fixed hyperparameters.</p>
+<p>Note that theta are typically the log-transformed values of the
+kernel’s hyperparameters as this representation of the search space
+is more amenable for hyperparameter search, as hyperparameters like
+length-scales naturally live on a log-scale.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>theta</strong> – The non-fixed, log-transformed hyperparameters of the kernel</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>array, shape (n_dims,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="smac.epm.gp_kernels.HammingKernel">
+<em class="property">class </em><code class="descclassname">smac.epm.gp_kernels.</code><code class="descname">HammingKernel</code><span class="sig-paren">(</span><em>length_scale=1.0</em>, <em>length_scale_bounds=(1e-05</em>, <em>100000.0)</em>, <em>operate_on=None</em>, <em>prior=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#HammingKernel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.HammingKernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smac.epm.gp_kernels.MagicMixin" title="smac.epm.gp_kernels.MagicMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.gp_kernels.MagicMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.learning.gaussian_process.kernels.HammingKernel</span></code></p>
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.HammingKernel.bounds">
+<code class="descname">bounds</code><a class="headerlink" href="#smac.epm.gp_kernels.HammingKernel.bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the log-transformed bounds on the theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>bounds</strong> – The log-transformed bounds on the kernel’s hyperparameters theta</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>array, shape (n_dims, 2)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.HammingKernel.clone_with_theta">
+<code class="descname">clone_with_theta</code><span class="sig-paren">(</span><em>theta</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.HammingKernel.clone_with_theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a clone of self with given hyperparameters theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_dims</em><em>,</em><em>)</em>) – The hyperparameters</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.HammingKernel.diag">
+<code class="descname">diag</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.HammingKernel.diag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the diagonal of the kernel k(X, X).</p>
+<p>The result of this method is identical to np.diag(self(X)); however,
+it can be evaluated more efficiently since only the diagonal is
+evaluated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em>) – Left argument of the returned kernel k(X, Y)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>K_diag</strong> – Diagonal of kernel k(X, X)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array, shape (n_samples_X,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.HammingKernel.get_params">
+<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.HammingKernel.get_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get parameters of this kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>deep</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If True, will return the parameters for this estimator and
+contained subobjects that are estimators.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>params</strong> – Parameter names mapped to their values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mapping of string to any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.HammingKernel.gradient_x">
+<code class="descname">gradient_x</code><span class="sig-paren">(</span><em>x</em>, <em>X_train</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.HammingKernel.gradient_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes gradient of K(x, X_train) with respect to x</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array-like</em><em>, </em><em>shape=</em><em>(</em><em>n_features</em><em>,</em><em>)</em>) – A single test point.</p></li>
+<li><p><strong>Y</strong> (<em>array-like</em><em>, </em><em>shape=</em><em>(</em><em>n_samples</em><em>, </em><em>n_features</em><em>)</em>) – Training data used to fit the gaussian process.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>gradient_x</strong> – Gradient of K(x, X_train) with respect to x.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array-like, shape=(n_samples, n_features)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.HammingKernel.hyperparameter_length_scale">
+<code class="descname">hyperparameter_length_scale</code><a class="headerlink" href="#smac.epm.gp_kernels.HammingKernel.hyperparameter_length_scale" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.HammingKernel.hyperparameters">
+<code class="descname">hyperparameters</code><a class="headerlink" href="#smac.epm.gp_kernels.HammingKernel.hyperparameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all hyperparameter specifications.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.HammingKernel.is_stationary">
+<code class="descname">is_stationary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.HammingKernel.is_stationary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether the kernel is stationary.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.HammingKernel.n_dims">
+<code class="descname">n_dims</code><a class="headerlink" href="#smac.epm.gp_kernels.HammingKernel.n_dims" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of non-fixed hyperparameters of the kernel.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.HammingKernel.prior">
+<code class="descname">prior</code><em class="property"> = None</em><a class="headerlink" href="#smac.epm.gp_kernels.HammingKernel.prior" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.HammingKernel.set_active_dims">
+<code class="descname">set_active_dims</code><span class="sig-paren">(</span><em>operate_on=None</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.HammingKernel.set_active_dims" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets dimensions this kernel should work on</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>operate_on</strong> (<em>None</em><em>, </em><em>list</em><em> or </em><em>array</em><em>, </em><em>shape</em><em> (</em><em>n_dims</em><em>,</em><em>)</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.HammingKernel.set_params">
+<code class="descname">set_params</code><span class="sig-paren">(</span><em>**params</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.HammingKernel.set_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the parameters of this kernel.</p>
+<p>The method works on simple kernels as well as on nested kernels.
+The latter have parameters of the form <code class="docutils literal notranslate"><span class="pre">&lt;component&gt;__&lt;parameter&gt;</span></code>
+so that it’s possible to update each component of a nested object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.HammingKernel.theta">
+<code class="descname">theta</code><a class="headerlink" href="#smac.epm.gp_kernels.HammingKernel.theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the (flattened, log-transformed) non-fixed hyperparameters.</p>
+<p>Note that theta are typically the log-transformed values of the
+kernel’s hyperparameters as this representation of the search space
+is more amenable for hyperparameter search, as hyperparameters like
+length-scales naturally live on a log-scale.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>theta</strong> – The non-fixed, log-transformed hyperparameters of the kernel</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>array, shape (n_dims,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="smac.epm.gp_kernels.MagicMixin">
+<em class="property">class </em><code class="descclassname">smac.epm.gp_kernels.</code><code class="descname">MagicMixin</code><a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#MagicMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.MagicMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="smac.epm.gp_kernels.MagicMixin.clone_with_theta">
+<code class="descname">clone_with_theta</code><span class="sig-paren">(</span><em>theta</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#MagicMixin.clone_with_theta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.MagicMixin.clone_with_theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a clone of self with given hyperparameters theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_dims</em><em>,</em><em>)</em>) – The hyperparameters</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.MagicMixin.get_params">
+<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#MagicMixin.get_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.MagicMixin.get_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get parameters of this kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>deep</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If True, will return the parameters for this estimator and
+contained subobjects that are estimators.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>params</strong> – Parameter names mapped to their values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mapping of string to any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.MagicMixin.hyperparameters">
+<code class="descname">hyperparameters</code><a class="headerlink" href="#smac.epm.gp_kernels.MagicMixin.hyperparameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all hyperparameter specifications.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.MagicMixin.n_dims">
+<code class="descname">n_dims</code><a class="headerlink" href="#smac.epm.gp_kernels.MagicMixin.n_dims" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of non-fixed hyperparameters of the kernel.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.MagicMixin.prior">
+<code class="descname">prior</code><em class="property"> = None</em><a class="headerlink" href="#smac.epm.gp_kernels.MagicMixin.prior" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.MagicMixin.set_active_dims">
+<code class="descname">set_active_dims</code><span class="sig-paren">(</span><em>operate_on=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#MagicMixin.set_active_dims"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.MagicMixin.set_active_dims" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets dimensions this kernel should work on</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>operate_on</strong> (<em>None</em><em>, </em><em>list</em><em> or </em><em>array</em><em>, </em><em>shape</em><em> (</em><em>n_dims</em><em>,</em><em>)</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="smac.epm.gp_kernels.Matern">
+<em class="property">class </em><code class="descclassname">smac.epm.gp_kernels.</code><code class="descname">Matern</code><span class="sig-paren">(</span><em>length_scale=1.0</em>, <em>length_scale_bounds=(1e-05</em>, <em>100000.0)</em>, <em>nu=1.5</em>, <em>operate_on=None</em>, <em>prior=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#Matern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.Matern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smac.epm.gp_kernels.MagicMixin" title="smac.epm.gp_kernels.MagicMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.gp_kernels.MagicMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.learning.gaussian_process.kernels.Matern</span></code></p>
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.Matern.anisotropic">
+<code class="descname">anisotropic</code><a class="headerlink" href="#smac.epm.gp_kernels.Matern.anisotropic" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.Matern.bounds">
+<code class="descname">bounds</code><a class="headerlink" href="#smac.epm.gp_kernels.Matern.bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the log-transformed bounds on the theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>bounds</strong> – The log-transformed bounds on the kernel’s hyperparameters theta</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>array, shape (n_dims, 2)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Matern.clone_with_theta">
+<code class="descname">clone_with_theta</code><span class="sig-paren">(</span><em>theta</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.Matern.clone_with_theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a clone of self with given hyperparameters theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_dims</em><em>,</em><em>)</em>) – The hyperparameters</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Matern.diag">
+<code class="descname">diag</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.Matern.diag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the diagonal of the kernel k(X, X).</p>
+<p>The result of this method is identical to np.diag(self(X)); however,
+it can be evaluated more efficiently since only the diagonal is
+evaluated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em>) – Left argument of the returned kernel k(X, Y)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>K_diag</strong> – Diagonal of kernel k(X, X)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array, shape (n_samples_X,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Matern.get_params">
+<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.Matern.get_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get parameters of this kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>deep</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If True, will return the parameters for this estimator and
+contained subobjects that are estimators.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>params</strong> – Parameter names mapped to their values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mapping of string to any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Matern.gradient_x">
+<code class="descname">gradient_x</code><span class="sig-paren">(</span><em>x</em>, <em>X_train</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skopt/learning/gaussian_process/kernels.html#Matern.gradient_x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.Matern.gradient_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes gradient of K(x, X_train) with respect to x</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array-like</em><em>, </em><em>shape=</em><em>(</em><em>n_features</em><em>,</em><em>)</em>) – A single test point.</p></li>
+<li><p><strong>Y</strong> (<em>array-like</em><em>, </em><em>shape=</em><em>(</em><em>n_samples</em><em>, </em><em>n_features</em><em>)</em>) – Training data used to fit the gaussian process.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>gradient_x</strong> – Gradient of K(x, X_train) with respect to x.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array-like, shape=(n_samples, n_features)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.Matern.hyperparameter_length_scale">
+<code class="descname">hyperparameter_length_scale</code><a class="headerlink" href="#smac.epm.gp_kernels.Matern.hyperparameter_length_scale" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.Matern.hyperparameters">
+<code class="descname">hyperparameters</code><a class="headerlink" href="#smac.epm.gp_kernels.Matern.hyperparameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all hyperparameter specifications.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Matern.is_stationary">
+<code class="descname">is_stationary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.Matern.is_stationary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether the kernel is stationary.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.Matern.n_dims">
+<code class="descname">n_dims</code><a class="headerlink" href="#smac.epm.gp_kernels.Matern.n_dims" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of non-fixed hyperparameters of the kernel.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.Matern.prior">
+<code class="descname">prior</code><em class="property"> = None</em><a class="headerlink" href="#smac.epm.gp_kernels.Matern.prior" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Matern.set_active_dims">
+<code class="descname">set_active_dims</code><span class="sig-paren">(</span><em>operate_on=None</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.Matern.set_active_dims" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets dimensions this kernel should work on</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>operate_on</strong> (<em>None</em><em>, </em><em>list</em><em> or </em><em>array</em><em>, </em><em>shape</em><em> (</em><em>n_dims</em><em>,</em><em>)</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Matern.set_params">
+<code class="descname">set_params</code><span class="sig-paren">(</span><em>**params</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.Matern.set_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the parameters of this kernel.</p>
+<p>The method works on simple kernels as well as on nested kernels.
+The latter have parameters of the form <code class="docutils literal notranslate"><span class="pre">&lt;component&gt;__&lt;parameter&gt;</span></code>
+so that it’s possible to update each component of a nested object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.Matern.theta">
+<code class="descname">theta</code><a class="headerlink" href="#smac.epm.gp_kernels.Matern.theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the (flattened, log-transformed) non-fixed hyperparameters.</p>
+<p>Note that theta are typically the log-transformed values of the
+kernel’s hyperparameters as this representation of the search space
+is more amenable for hyperparameter search, as hyperparameters like
+length-scales naturally live on a log-scale.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>theta</strong> – The non-fixed, log-transformed hyperparameters of the kernel</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>array, shape (n_dims,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="smac.epm.gp_kernels.Product">
+<em class="property">class </em><code class="descclassname">smac.epm.gp_kernels.</code><code class="descname">Product</code><span class="sig-paren">(</span><em>k1</em>, <em>k2</em>, <em>operate_on=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#Product"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.Product" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smac.epm.gp_kernels.MagicMixin" title="smac.epm.gp_kernels.MagicMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.gp_kernels.MagicMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.learning.gaussian_process.kernels.Product</span></code></p>
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.Product.bounds">
+<code class="descname">bounds</code><a class="headerlink" href="#smac.epm.gp_kernels.Product.bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the log-transformed bounds on the theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>bounds</strong> – The log-transformed bounds on the kernel’s hyperparameters theta</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>array, shape (n_dims, 2)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Product.clone_with_theta">
+<code class="descname">clone_with_theta</code><span class="sig-paren">(</span><em>theta</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.Product.clone_with_theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a clone of self with given hyperparameters theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_dims</em><em>,</em><em>)</em>) – The hyperparameters</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Product.diag">
+<code class="descname">diag</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sklearn/gaussian_process/kernels.html#Product.diag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.Product.diag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the diagonal of the kernel k(X, X).</p>
+<p>The result of this method is identical to np.diag(self(X)); however,
+it can be evaluated more efficiently since only the diagonal is
+evaluated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em>) – Left argument of the returned kernel k(X, Y)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>K_diag</strong> – Diagonal of kernel k(X, X)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array, shape (n_samples_X,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Product.get_params">
+<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.Product.get_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get parameters of this kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>deep</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If True, will return the parameters for this estimator and
+contained subobjects that are estimators.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>params</strong> – Parameter names mapped to their values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mapping of string to any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Product.gradient_x">
+<code class="descname">gradient_x</code><span class="sig-paren">(</span><em>x</em>, <em>X_train</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skopt/learning/gaussian_process/kernels.html#Product.gradient_x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.Product.gradient_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes gradient of K(x, X_train) with respect to x</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array-like</em><em>, </em><em>shape=</em><em>(</em><em>n_features</em><em>,</em><em>)</em>) – A single test point.</p></li>
+<li><p><strong>Y</strong> (<em>array-like</em><em>, </em><em>shape=</em><em>(</em><em>n_samples</em><em>, </em><em>n_features</em><em>)</em>) – Training data used to fit the gaussian process.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>gradient_x</strong> – Gradient of K(x, X_train) with respect to x.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array-like, shape=(n_samples, n_features)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.Product.hyperparameters">
+<code class="descname">hyperparameters</code><a class="headerlink" href="#smac.epm.gp_kernels.Product.hyperparameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all hyperparameter specifications.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Product.is_stationary">
+<code class="descname">is_stationary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.Product.is_stationary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether the kernel is stationary.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.Product.n_dims">
+<code class="descname">n_dims</code><a class="headerlink" href="#smac.epm.gp_kernels.Product.n_dims" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of non-fixed hyperparameters of the kernel.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.Product.prior">
+<code class="descname">prior</code><em class="property"> = None</em><a class="headerlink" href="#smac.epm.gp_kernels.Product.prior" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Product.set_active_dims">
+<code class="descname">set_active_dims</code><span class="sig-paren">(</span><em>operate_on=None</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.Product.set_active_dims" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets dimensions this kernel should work on</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>operate_on</strong> (<em>None</em><em>, </em><em>list</em><em> or </em><em>array</em><em>, </em><em>shape</em><em> (</em><em>n_dims</em><em>,</em><em>)</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Product.set_params">
+<code class="descname">set_params</code><span class="sig-paren">(</span><em>**params</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.Product.set_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the parameters of this kernel.</p>
+<p>The method works on simple kernels as well as on nested kernels.
+The latter have parameters of the form <code class="docutils literal notranslate"><span class="pre">&lt;component&gt;__&lt;parameter&gt;</span></code>
+so that it’s possible to update each component of a nested object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.Product.theta">
+<code class="descname">theta</code><a class="headerlink" href="#smac.epm.gp_kernels.Product.theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the (flattened, log-transformed) non-fixed hyperparameters.</p>
+<p>Note that theta are typically the log-transformed values of the
+kernel’s hyperparameters as this representation of the search space
+is more amenable for hyperparameter search, as hyperparameters like
+length-scales naturally live on a log-scale.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>theta</strong> – The non-fixed, log-transformed hyperparameters of the kernel</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>array, shape (n_dims,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="smac.epm.gp_kernels.RBF">
+<em class="property">class </em><code class="descclassname">smac.epm.gp_kernels.</code><code class="descname">RBF</code><span class="sig-paren">(</span><em>length_scale=1.0</em>, <em>length_scale_bounds=(1e-05</em>, <em>100000.0)</em>, <em>operate_on=None</em>, <em>prior=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#RBF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.RBF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smac.epm.gp_kernels.MagicMixin" title="smac.epm.gp_kernels.MagicMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.gp_kernels.MagicMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.learning.gaussian_process.kernels.RBF</span></code></p>
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.RBF.anisotropic">
+<code class="descname">anisotropic</code><a class="headerlink" href="#smac.epm.gp_kernels.RBF.anisotropic" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.RBF.bounds">
+<code class="descname">bounds</code><a class="headerlink" href="#smac.epm.gp_kernels.RBF.bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the log-transformed bounds on the theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>bounds</strong> – The log-transformed bounds on the kernel’s hyperparameters theta</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>array, shape (n_dims, 2)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.RBF.clone_with_theta">
+<code class="descname">clone_with_theta</code><span class="sig-paren">(</span><em>theta</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.RBF.clone_with_theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a clone of self with given hyperparameters theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_dims</em><em>,</em><em>)</em>) – The hyperparameters</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.RBF.diag">
+<code class="descname">diag</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.RBF.diag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the diagonal of the kernel k(X, X).</p>
+<p>The result of this method is identical to np.diag(self(X)); however,
+it can be evaluated more efficiently since only the diagonal is
+evaluated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em>) – Left argument of the returned kernel k(X, Y)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>K_diag</strong> – Diagonal of kernel k(X, X)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array, shape (n_samples_X,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.RBF.get_params">
+<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.RBF.get_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get parameters of this kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>deep</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If True, will return the parameters for this estimator and
+contained subobjects that are estimators.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>params</strong> – Parameter names mapped to their values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mapping of string to any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.RBF.gradient_x">
+<code class="descname">gradient_x</code><span class="sig-paren">(</span><em>x</em>, <em>X_train</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skopt/learning/gaussian_process/kernels.html#RBF.gradient_x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.RBF.gradient_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes gradient of K(x, X_train) with respect to x</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array-like</em><em>, </em><em>shape=</em><em>(</em><em>n_features</em><em>,</em><em>)</em>) – A single test point.</p></li>
+<li><p><strong>Y</strong> (<em>array-like</em><em>, </em><em>shape=</em><em>(</em><em>n_samples</em><em>, </em><em>n_features</em><em>)</em>) – Training data used to fit the gaussian process.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>gradient_x</strong> – Gradient of K(x, X_train) with respect to x.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array-like, shape=(n_samples, n_features)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.RBF.hyperparameter_length_scale">
+<code class="descname">hyperparameter_length_scale</code><a class="headerlink" href="#smac.epm.gp_kernels.RBF.hyperparameter_length_scale" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.RBF.hyperparameters">
+<code class="descname">hyperparameters</code><a class="headerlink" href="#smac.epm.gp_kernels.RBF.hyperparameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all hyperparameter specifications.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.RBF.is_stationary">
+<code class="descname">is_stationary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.RBF.is_stationary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether the kernel is stationary.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.RBF.n_dims">
+<code class="descname">n_dims</code><a class="headerlink" href="#smac.epm.gp_kernels.RBF.n_dims" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of non-fixed hyperparameters of the kernel.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.RBF.prior">
+<code class="descname">prior</code><em class="property"> = None</em><a class="headerlink" href="#smac.epm.gp_kernels.RBF.prior" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.RBF.set_active_dims">
+<code class="descname">set_active_dims</code><span class="sig-paren">(</span><em>operate_on=None</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.RBF.set_active_dims" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets dimensions this kernel should work on</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>operate_on</strong> (<em>None</em><em>, </em><em>list</em><em> or </em><em>array</em><em>, </em><em>shape</em><em> (</em><em>n_dims</em><em>,</em><em>)</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.RBF.set_params">
+<code class="descname">set_params</code><span class="sig-paren">(</span><em>**params</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.RBF.set_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the parameters of this kernel.</p>
+<p>The method works on simple kernels as well as on nested kernels.
+The latter have parameters of the form <code class="docutils literal notranslate"><span class="pre">&lt;component&gt;__&lt;parameter&gt;</span></code>
+so that it’s possible to update each component of a nested object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.RBF.theta">
+<code class="descname">theta</code><a class="headerlink" href="#smac.epm.gp_kernels.RBF.theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the (flattened, log-transformed) non-fixed hyperparameters.</p>
+<p>Note that theta are typically the log-transformed values of the
+kernel’s hyperparameters as this representation of the search space
+is more amenable for hyperparameter search, as hyperparameters like
+length-scales naturally live on a log-scale.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>theta</strong> – The non-fixed, log-transformed hyperparameters of the kernel</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>array, shape (n_dims,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="smac.epm.gp_kernels.Sum">
+<em class="property">class </em><code class="descclassname">smac.epm.gp_kernels.</code><code class="descname">Sum</code><span class="sig-paren">(</span><em>k1</em>, <em>k2</em>, <em>operate_on=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#Sum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.Sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smac.epm.gp_kernels.MagicMixin" title="smac.epm.gp_kernels.MagicMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.gp_kernels.MagicMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.learning.gaussian_process.kernels.Sum</span></code></p>
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.Sum.bounds">
+<code class="descname">bounds</code><a class="headerlink" href="#smac.epm.gp_kernels.Sum.bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the log-transformed bounds on the theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>bounds</strong> – The log-transformed bounds on the kernel’s hyperparameters theta</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>array, shape (n_dims, 2)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Sum.clone_with_theta">
+<code class="descname">clone_with_theta</code><span class="sig-paren">(</span><em>theta</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.Sum.clone_with_theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a clone of self with given hyperparameters theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_dims</em><em>,</em><em>)</em>) – The hyperparameters</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Sum.diag">
+<code class="descname">diag</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sklearn/gaussian_process/kernels.html#Sum.diag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.Sum.diag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the diagonal of the kernel k(X, X).</p>
+<p>The result of this method is identical to np.diag(self(X)); however,
+it can be evaluated more efficiently since only the diagonal is
+evaluated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em>) – Left argument of the returned kernel k(X, Y)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>K_diag</strong> – Diagonal of kernel k(X, X)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array, shape (n_samples_X,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Sum.get_params">
+<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.Sum.get_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get parameters of this kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>deep</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If True, will return the parameters for this estimator and
+contained subobjects that are estimators.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>params</strong> – Parameter names mapped to their values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mapping of string to any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Sum.gradient_x">
+<code class="descname">gradient_x</code><span class="sig-paren">(</span><em>x</em>, <em>X_train</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skopt/learning/gaussian_process/kernels.html#Sum.gradient_x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.Sum.gradient_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes gradient of K(x, X_train) with respect to x</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array-like</em><em>, </em><em>shape=</em><em>(</em><em>n_features</em><em>,</em><em>)</em>) – A single test point.</p></li>
+<li><p><strong>Y</strong> (<em>array-like</em><em>, </em><em>shape=</em><em>(</em><em>n_samples</em><em>, </em><em>n_features</em><em>)</em>) – Training data used to fit the gaussian process.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>gradient_x</strong> – Gradient of K(x, X_train) with respect to x.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array-like, shape=(n_samples, n_features)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.Sum.hyperparameters">
+<code class="descname">hyperparameters</code><a class="headerlink" href="#smac.epm.gp_kernels.Sum.hyperparameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all hyperparameter specifications.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Sum.is_stationary">
+<code class="descname">is_stationary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.Sum.is_stationary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether the kernel is stationary.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.Sum.n_dims">
+<code class="descname">n_dims</code><a class="headerlink" href="#smac.epm.gp_kernels.Sum.n_dims" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of non-fixed hyperparameters of the kernel.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.Sum.prior">
+<code class="descname">prior</code><em class="property"> = None</em><a class="headerlink" href="#smac.epm.gp_kernels.Sum.prior" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Sum.set_active_dims">
+<code class="descname">set_active_dims</code><span class="sig-paren">(</span><em>operate_on=None</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.Sum.set_active_dims" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets dimensions this kernel should work on</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>operate_on</strong> (<em>None</em><em>, </em><em>list</em><em> or </em><em>array</em><em>, </em><em>shape</em><em> (</em><em>n_dims</em><em>,</em><em>)</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Sum.set_params">
+<code class="descname">set_params</code><span class="sig-paren">(</span><em>**params</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.Sum.set_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the parameters of this kernel.</p>
+<p>The method works on simple kernels as well as on nested kernels.
+The latter have parameters of the form <code class="docutils literal notranslate"><span class="pre">&lt;component&gt;__&lt;parameter&gt;</span></code>
+so that it’s possible to update each component of a nested object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.Sum.theta">
+<code class="descname">theta</code><a class="headerlink" href="#smac.epm.gp_kernels.Sum.theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the (flattened, log-transformed) non-fixed hyperparameters.</p>
+<p>Note that theta are typically the log-transformed values of the
+kernel’s hyperparameters as this representation of the search space
+is more amenable for hyperparameter search, as hyperparameters like
+length-scales naturally live on a log-scale.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>theta</strong> – The non-fixed, log-transformed hyperparameters of the kernel</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>array, shape (n_dims,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="smac.epm.gp_kernels.WhiteKernel">
+<em class="property">class </em><code class="descclassname">smac.epm.gp_kernels.</code><code class="descname">WhiteKernel</code><span class="sig-paren">(</span><em>noise_level=1.0</em>, <em>noise_level_bounds=(1e-05</em>, <em>100000.0)</em>, <em>operate_on=None</em>, <em>prior=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#WhiteKernel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.WhiteKernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smac.epm.gp_kernels.MagicMixin" title="smac.epm.gp_kernels.MagicMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.gp_kernels.MagicMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.learning.gaussian_process.kernels.WhiteKernel</span></code></p>
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.WhiteKernel.bounds">
+<code class="descname">bounds</code><a class="headerlink" href="#smac.epm.gp_kernels.WhiteKernel.bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the log-transformed bounds on the theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>bounds</strong> – The log-transformed bounds on the kernel’s hyperparameters theta</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>array, shape (n_dims, 2)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.WhiteKernel.clone_with_theta">
+<code class="descname">clone_with_theta</code><span class="sig-paren">(</span><em>theta</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.WhiteKernel.clone_with_theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a clone of self with given hyperparameters theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_dims</em><em>,</em><em>)</em>) – The hyperparameters</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.WhiteKernel.diag">
+<code class="descname">diag</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sklearn/gaussian_process/kernels.html#WhiteKernel.diag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.WhiteKernel.diag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the diagonal of the kernel k(X, X).</p>
+<p>The result of this method is identical to np.diag(self(X)); however,
+it can be evaluated more efficiently since only the diagonal is
+evaluated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em>) – Left argument of the returned kernel k(X, Y)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>K_diag</strong> – Diagonal of kernel k(X, X)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array, shape (n_samples_X,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.WhiteKernel.get_params">
+<code class="descname">get_params</code><span class="sig-paren">(</span><em>deep=True</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.WhiteKernel.get_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get parameters of this kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>deep</strong> (<em>boolean</em><em>, </em><em>optional</em>) – If True, will return the parameters for this estimator and
+contained subobjects that are estimators.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>params</strong> – Parameter names mapped to their values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mapping of string to any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.WhiteKernel.gradient_x">
+<code class="descname">gradient_x</code><span class="sig-paren">(</span><em>x</em>, <em>X_train</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/skopt/learning/gaussian_process/kernels.html#WhiteKernel.gradient_x"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.WhiteKernel.gradient_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes gradient of K(x, X_train) with respect to x</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array-like</em><em>, </em><em>shape=</em><em>(</em><em>n_features</em><em>,</em><em>)</em>) – A single test point.</p></li>
+<li><p><strong>Y</strong> (<em>array-like</em><em>, </em><em>shape=</em><em>(</em><em>n_samples</em><em>, </em><em>n_features</em><em>)</em>) – Training data used to fit the gaussian process.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>gradient_x</strong> – Gradient of K(x, X_train) with respect to x.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array-like, shape=(n_samples, n_features)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.WhiteKernel.hyperparameter_noise_level">
+<code class="descname">hyperparameter_noise_level</code><a class="headerlink" href="#smac.epm.gp_kernels.WhiteKernel.hyperparameter_noise_level" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.WhiteKernel.hyperparameters">
+<code class="descname">hyperparameters</code><a class="headerlink" href="#smac.epm.gp_kernels.WhiteKernel.hyperparameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all hyperparameter specifications.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.WhiteKernel.is_stationary">
+<code class="descname">is_stationary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.WhiteKernel.is_stationary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether the kernel is stationary.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.WhiteKernel.n_dims">
+<code class="descname">n_dims</code><a class="headerlink" href="#smac.epm.gp_kernels.WhiteKernel.n_dims" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of non-fixed hyperparameters of the kernel.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.WhiteKernel.prior">
+<code class="descname">prior</code><em class="property"> = None</em><a class="headerlink" href="#smac.epm.gp_kernels.WhiteKernel.prior" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.WhiteKernel.set_active_dims">
+<code class="descname">set_active_dims</code><span class="sig-paren">(</span><em>operate_on=None</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.WhiteKernel.set_active_dims" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets dimensions this kernel should work on</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>operate_on</strong> (<em>None</em><em>, </em><em>list</em><em> or </em><em>array</em><em>, </em><em>shape</em><em> (</em><em>n_dims</em><em>,</em><em>)</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.WhiteKernel.set_params">
+<code class="descname">set_params</code><span class="sig-paren">(</span><em>**params</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.gp_kernels.WhiteKernel.set_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the parameters of this kernel.</p>
+<p>The method works on simple kernels as well as on nested kernels.
+The latter have parameters of the form <code class="docutils literal notranslate"><span class="pre">&lt;component&gt;__&lt;parameter&gt;</span></code>
+so that it’s possible to update each component of a nested object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.WhiteKernel.theta">
+<code class="descname">theta</code><a class="headerlink" href="#smac.epm.gp_kernels.WhiteKernel.theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the (flattened, log-transformed) non-fixed hyperparameters.</p>
+<p>Note that theta are typically the log-transformed values of the
+kernel’s hyperparameters as this representation of the search space
+is more amenable for hyperparameter search, as hyperparameters like
+length-scales naturally live on a log-scale.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>theta</strong> – The non-fixed, log-transformed hyperparameters of the kernel</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>array, shape (n_dims,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="smac.epm.gp_kernels.get_conditional_hyperparameters">
+<code class="descclassname">smac.epm.gp_kernels.</code><code class="descname">get_conditional_hyperparameters</code><span class="sig-paren">(</span><em>X: numpy.ndarray, Y: Optional[numpy.ndarray]</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#get_conditional_hyperparameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.get_conditional_hyperparameters" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="smac.epm.random_epm.html" class="btn btn-neutral float-right" title="smac.epm.random_epm module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="smac.epm.gp_base_prior.html" class="btn btn-neutral float-left" title="smac.epm.gp_base_prior module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

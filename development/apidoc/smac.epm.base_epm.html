@@ -112,8 +112,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process.html">smac.epm.gaussian_process module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_default_priors.html">smac.epm.gp_default_priors module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.normalization.html">smac.epm.normalization module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
@@ -381,8 +380,8 @@ to var_threshold</p>
 the i-th entry corresponds to the i-th input dimension. Let’s say we
 have 2 dimension where the first dimension consists of 3 different
 categorical choices and the second dimension is continuous than we
-have to pass np.array([2, 0]). Note that we count starting from 0.</p></li>
-<li><p><strong>bounds</strong> (<em>list</em>) – Specifies the bounds for continuous features.</p></li>
+have to pass np.array([3, 0]). Note that we count starting from 0.</p></li>
+<li><p><strong>bounds</strong> (<em>list</em>) – bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims</p></li>
 <li><p><strong>seed</strong> (<em>int</em>) – The seed that is passed to the model library.</p></li>
 <li><p><strong>instance_features</strong> (<em>np.ndarray</em><em> (</em><em>I</em><em>, </em><em>K</em><em>)</em>) – Contains the K dimensional instance features
 of the I different instances</p></li>

@@ -110,8 +110,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gaussian_process.html">smac.epm.gaussian_process module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gp_default_priors.html">smac.epm.gp_default_priors module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.normalization.html">smac.epm.normalization module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
@@ -265,8 +264,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for smac.epm.base_epm</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">typing</span>
+<span></span><span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -275,6 +273,7 @@
 <span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="k">import</span> <span class="n">NotFittedError</span>
 
 <span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="k">import</span> <span class="n">VERY_SMALL_NUMBER</span>
+<span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="k">import</span> <span class="n">PickableLoggerAdapter</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2016, ML4AAD&quot;</span>
@@ -330,9 +329,9 @@
 <span class="sd">            the i-th entry corresponds to the i-th input dimension. Let&#39;s say we</span>
 <span class="sd">            have 2 dimension where the first dimension consists of 3 different</span>
 <span class="sd">            categorical choices and the second dimension is continuous than we</span>
-<span class="sd">            have to pass np.array([2, 0]). Note that we count starting from 0.</span>
+<span class="sd">            have to pass np.array([3, 0]). Note that we count starting from 0.</span>
 <span class="sd">        bounds : list</span>
-<span class="sd">            Specifies the bounds for continuous features.</span>
+<span class="sd">            bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims</span>
 <span class="sd">        seed : int</span>
 <span class="sd">            The seed that is passed to the model library.</span>
 <span class="sd">        instance_features : np.ndarray (I, K)</span>
@@ -368,7 +367,7 @@
         <span class="c1"># Initial types array which is used to reset the type array at every call to train()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_initial_types</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">PickableLoggerAdapter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
 <div class="viewcode-block" id="AbstractEPM.train"><a class="viewcode-back" href="../../../apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;AbstractEPM&#39;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Trains the EPM on X and Y.</span>

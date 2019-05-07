@@ -112,8 +112,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process.html">smac.epm.gaussian_process module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_default_priors.html">smac.epm.gp_default_priors module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.normalization.html">smac.epm.normalization module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
@@ -294,9 +293,9 @@ with their default value.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="smac.configspace.util.impute_default_values">
-<code class="descclassname">smac.configspace.util.</code><code class="descname">impute_default_values</code><span class="sig-paren">(</span><em>configuration_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>configs_array: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/configspace/util.html#impute_default_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.configspace.util.impute_default_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>Impute inactive hyperparameters in configuration array with their default.</p>
+<dt id="smac.configspace.util.impute_inactive_values">
+<code class="descclassname">smac.configspace.util.</code><code class="descname">impute_inactive_values</code><span class="sig-paren">(</span><em>configuration_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>configs_array: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/configspace/util.html#impute_inactive_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.configspace.util.impute_inactive_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Impute inactive hyperparameters in configuration array with a value outside their default range.</p>
 <p>Necessary to apply an EPM to the data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -306,8 +305,7 @@ with their default value.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Array with configuration hyperparameters. Inactive values are imputed
-with their default value.</p>
+<dd class="field-even"><p></p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>np.ndarray</p>

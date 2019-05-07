@@ -112,8 +112,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">smac.epm.gaussian_process module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_default_priors.html">smac.epm.gp_default_priors module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.normalization.html">smac.epm.normalization module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
@@ -276,7 +275,7 @@
 <span id="smac-epm-gaussian-process-module"></span><h1>smac.epm.gaussian_process module<a class="headerlink" href="#module-smac.epm.gaussian_process" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.epm.gaussian_process.GaussianProcess">
-<em class="property">class </em><code class="descclassname">smac.epm.gaussian_process.</code><code class="descname">GaussianProcess</code><span class="sig-paren">(</span><em>types: numpy.ndarray, bounds: List[Tuple[float, float]], seed: int, kernel: george.kernels.Kernel, prior: smac.epm.gp_base_prior.BasePrior = None, noise: float = 0.001, use_gradients: bool = False, normalize_output: bool = True, normalize_input: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">smac.epm.gaussian_process.</code><code class="descname">GaussianProcess</code><span class="sig-paren">(</span><em>types: numpy.ndarray, bounds: List[Tuple[float, float]], seed: int, kernel: skopt.learning.gaussian_process.kernels.Kernel, normalize_y: bool = True, n_opt_restarts=10, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.epm.base_gp.html#smac.epm.base_gp.BaseModel" title="smac.epm.base_gp.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_gp.BaseModel</span></code></a></p>
 <p>Gaussian process model.</p>
 <p>The GP hyperparameterŝ are obtained by optimizing the marginal log likelihood.</p>
@@ -297,12 +296,7 @@ have to pass np.array([2, 0]). Note that we count starting from 0.</p></li>
 <li><p><strong>kernel</strong> (<em>george kernel object</em>) – Specifies the kernel that is used for all Gaussian Process</p></li>
 <li><p><strong>prior</strong> (<em>prior object</em>) – Defines a prior for the hyperparameters of the GP. Make sure that
 it implements the Prior interface.</p></li>
-<li><p><strong>noise</strong> (<em>float</em>) – Noise term that is added to the diagonal of the covariance matrix
-for the Cholesky decomposition.</p></li>
-<li><p><strong>use_gradients</strong> (<em>bool</em>) – Use gradient information to optimize the negative log likelihood</p></li>
-<li><p><strong>normalize_output</strong> (<em>bool</em>) – Zero mean unit variance normalization of the output values</p></li>
-<li><p><strong>normalize_input</strong> (<em>bool</em>) – Normalize all inputs to be in [0, 1]. This is important to define good priors for the
-length scales.</p></li>
+<li><p><strong>normalize_y</strong> (<em>bool</em>) – Zero mean unit variance normalization of the output values</p></li>
 <li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</p></li>
 </ul>
 </dd>

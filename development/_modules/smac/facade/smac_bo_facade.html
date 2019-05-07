@@ -110,8 +110,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gaussian_process.html">smac.epm.gaussian_process module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gp_default_priors.html">smac.epm.gp_default_priors module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.normalization.html">smac.epm.normalization module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
@@ -266,11 +265,11 @@
             
   <h1>Source code for smac.facade.smac_bo_facade</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">george</span>
 
 <span class="kn">from</span> <span class="nn">smac.facade.smac_ac_facade</span> <span class="k">import</span> <span class="n">SMAC4AC</span>
-<span class="kn">from</span> <span class="nn">smac.epm.gp_default_priors</span> <span class="k">import</span> <span class="n">DefaultPrior</span>
 <span class="kn">from</span> <span class="nn">smac.epm.gaussian_process_mcmc</span> <span class="k">import</span> <span class="n">GaussianProcessMCMC</span><span class="p">,</span> <span class="n">GaussianProcess</span>
+<span class="kn">from</span> <span class="nn">smac.epm.gp_base_prior</span> <span class="k">import</span> <span class="n">HorseshoePrior</span><span class="p">,</span> <span class="n">LognormalPrior</span>
+<span class="kn">from</span> <span class="nn">smac.epm.gp_kernels</span> <span class="k">import</span> <span class="n">ConstantKernel</span><span class="p">,</span> <span class="n">Matern</span><span class="p">,</span> <span class="n">WhiteKernel</span><span class="p">,</span> <span class="n">HammingKernel</span>
 <span class="kn">from</span> <span class="nn">smac.utils.util_funcs</span> <span class="k">import</span> <span class="n">get_types</span><span class="p">,</span> <span class="n">get_rng</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.sobol_design</span> <span class="k">import</span> <span class="n">SobolDesign</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="k">import</span> <span class="n">RunHistory2EPM4LogScaledCost</span>
@@ -316,43 +315,74 @@
         <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;initial_design_kwargs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_kwargs</span>
 
         <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">model_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;model_kwargs&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+
             <span class="n">_</span><span class="p">,</span> <span class="n">rng</span> <span class="o">=</span> <span class="n">get_rng</span><span class="p">(</span><span class="n">rng</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rng&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">run_id</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;run_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
-            <span class="n">cov_amp</span> <span class="o">=</span> <span class="mi">2</span>
             <span class="n">types</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">get_types</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;scenario&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span> <span class="n">instance_features</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-            <span class="n">n_dims</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">types</span><span class="p">)</span>
 
-            <span class="n">initial_ls</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">n_dims</span><span class="p">])</span>
-            <span class="n">exp_kernel</span> <span class="o">=</span> <span class="n">george</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">Matern52Kernel</span><span class="p">(</span><span class="n">initial_ls</span><span class="p">,</span> <span class="n">ndim</span><span class="o">=</span><span class="n">n_dims</span><span class="p">)</span>
-            <span class="n">kernel</span> <span class="o">=</span> <span class="n">cov_amp</span> <span class="o">*</span> <span class="n">exp_kernel</span>
+            <span class="n">cov_amp</span> <span class="o">=</span> <span class="n">ConstantKernel</span><span class="p">(</span>
+                <span class="mf">2.0</span><span class="p">,</span>
+                <span class="n">constant_value_bounds</span><span class="o">=</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="p">)),</span>
+                <span class="n">prior</span><span class="o">=</span><span class="n">LognormalPrior</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">),</span>
+            <span class="p">)</span>
 
-            <span class="n">prior</span> <span class="o">=</span> <span class="n">DefaultPrior</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+            <span class="n">cont_dims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">types</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">cat_dims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">types</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
-            <span class="n">n_hypers</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">n_hypers</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">n_hypers</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cont_dims</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">exp_kernel</span> <span class="o">=</span> <span class="n">Matern</span><span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">cont_dims</span><span class="p">)]),</span>
+                    <span class="p">[(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cont_dims</span><span class="p">))],</span>
+                    <span class="n">nu</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span>
+                    <span class="n">operate_on</span><span class="o">=</span><span class="n">cont_dims</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat_dims</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">ham_kernel</span> <span class="o">=</span> <span class="n">HammingKernel</span><span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">cat_dims</span><span class="p">)]),</span>
+                    <span class="p">[(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cat_dims</span><span class="p">))],</span>
+                    <span class="n">operate_on</span><span class="o">=</span><span class="n">cat_dims</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="n">noise_kernel</span> <span class="o">=</span> <span class="n">WhiteKernel</span><span class="p">(</span>
+                <span class="n">noise_level</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">,</span>
+                <span class="n">noise_level_bounds</span><span class="o">=</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">25</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="p">)),</span>
+                <span class="n">prior</span><span class="o">=</span><span class="n">HorseshoePrior</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">),</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cont_dims</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat_dims</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># both</span>
+                <span class="n">kernel</span> <span class="o">=</span> <span class="n">cov_amp</span> <span class="o">*</span> <span class="p">(</span><span class="n">exp_kernel</span><span class="o">*</span><span class="n">ham_kernel</span><span class="p">)</span> <span class="o">+</span> <span class="n">noise_kernel</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">cont_dims</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat_dims</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># only cont</span>
+                <span class="n">kernel</span> <span class="o">=</span> <span class="n">cov_amp</span> <span class="o">*</span> <span class="n">exp_kernel</span> <span class="o">+</span> <span class="n">noise_kernel</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">cont_dims</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat_dims</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># only cont</span>
+                <span class="n">kernel</span> <span class="o">=</span> <span class="n">cov_amp</span> <span class="o">*</span> <span class="n">ham_kernel</span> <span class="o">+</span> <span class="n">noise_kernel</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
 
             <span class="k">if</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;gp&quot;</span><span class="p">:</span>
                 <span class="n">model_class</span> <span class="o">=</span> <span class="n">GaussianProcess</span>
                 <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_class</span>
-                <span class="n">model_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;model_kwargs&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
                 <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;kernel&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kernel</span>
-                <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;prior&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prior</span>
-                <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;normalize_input&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;normalize_output&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;normalize_input&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;normalize_y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;seed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">**</span> <span class="mi">20</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;gp_mcmc&quot;</span><span class="p">:</span>
                 <span class="n">model_class</span> <span class="o">=</span> <span class="n">GaussianProcessMCMC</span>
                 <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_class</span>
-                <span class="n">model_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;model_kwargs&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;integrate_acquisition_function&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
                 <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;kernel&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kernel</span>
-                <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;prior&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prior</span>
-                <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;n_hypers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_hypers</span>
-                <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;chain_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">200</span>
-                <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;burnin_steps&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span>
-                <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;normalize_input&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;normalize_output&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="n">n_mcmc_walkers</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">kernel</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">n_mcmc_walkers</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">n_mcmc_walkers</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;n_mcmc_walkers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_mcmc_walkers</span>
+                <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;chain_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">250</span>
+                <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;burnin_steps&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">250</span>
+                <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;normalize_y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;seed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">20</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown model type </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">model_type</span><span class="p">)</span>
@@ -365,7 +395,7 @@
 
         <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acquisition_function_optimizer&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">acquisition_function_optimizer_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acquisition_function_optimizer_kwargs&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
-            <span class="n">acquisition_function_optimizer_kwargs</span><span class="p">[</span><span class="s1">&#39;n_sls_iterations&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span>
+            <span class="n">acquisition_function_optimizer_kwargs</span><span class="p">[</span><span class="s1">&#39;n_sls_iterations&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;acquisition_function_optimizer_kwargs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">acquisition_function_optimizer_kwargs</span>
 
         <span class="c1"># only 1 configuration per SMBO iteration</span>

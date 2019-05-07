@@ -111,8 +111,7 @@
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.gaussian_process.html">smac.epm.gaussian_process module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.gp_default_priors.html">smac.epm.gp_default_priors module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.normalization.html">smac.epm.normalization module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
@@ -290,7 +289,6 @@
  | <a href="#U"><strong>U</strong></a>
  | <a href="#V"><strong>V</strong></a>
  | <a href="#W"><strong>W</strong></a>
- | <a href="#Z"><strong>Z</strong></a>
  
 </div>
 <h2 id="A">A</h2>
@@ -338,10 +336,10 @@
 </li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.SMACArgumentParser.add_mutually_exclusive_group">add_mutually_exclusive_group() (smac.utils.io.cmd_reader.SMACArgumentParser method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.SMACArgumentParser.add_parser">add_parser() (smac.utils.io.cmd_reader.SMACArgumentParser method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.SMACArgumentParser.add_subparsers">add_subparsers() (smac.utils.io.cmd_reader.SMACArgumentParser method)</a>
 </li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.ConfigurableHelpFormatter.add_text">add_text() (smac.utils.io.cmd_reader.ConfigurableHelpFormatter method)</a>
@@ -364,6 +362,12 @@
         <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.aggregate_func">(smac.optimizer.smbo.SMBO attribute)</a>
 </li>
         <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.aggregate_func">(smac.runhistory.runhistory.RunHistory attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Matern.anisotropic">anisotropic (smac.epm.gp_kernels.Matern attribute)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.RBF.anisotropic">(smac.epm.gp_kernels.RBF attribute)</a>
 </li>
       </ul></li>
       <li><a href="apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.BudgetExhaustedException.args">args (smac.tae.execute_ta_run.BudgetExhaustedException attribute)</a>
@@ -392,16 +396,28 @@
 </li>
       <li><a href="apidoc/smac.epm.base_gp.html#smac.epm.base_gp.BaseModel">BaseModel (class in smac.epm.base_gp)</a>
 </li>
-      <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.BasePrior">BasePrior (class in smac.epm.gp_base_prior)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="apidoc/smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances.bounds">bounds (smac.epm.rf_with_instances.RandomForestWithInstances attribute)</a>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.ConstantKernel.bounds">bounds (smac.epm.gp_kernels.ConstantKernel attribute)</a>
 
       <ul>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.HammingKernel.bounds">(smac.epm.gp_kernels.HammingKernel attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Matern.bounds">(smac.epm.gp_kernels.Matern attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Product.bounds">(smac.epm.gp_kernels.Product attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.RBF.bounds">(smac.epm.gp_kernels.RBF attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Sum.bounds">(smac.epm.gp_kernels.Sum attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.WhiteKernel.bounds">(smac.epm.gp_kernels.WhiteKernel attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances.bounds">(smac.epm.rf_with_instances.RandomForestWithInstances attribute)</a>
+</li>
         <li><a href="apidoc/smac.epm.rf_with_instances_hpo.html#smac.epm.rf_with_instances_hpo.RandomForestWithInstancesHPO.bounds">(smac.epm.rf_with_instances_hpo.RandomForestWithInstancesHPO attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.BudgetExhaustedException">BudgetExhaustedException</a>
 </li>
   </ul></td>
@@ -446,6 +462,26 @@
 </li>
       <li><a href="apidoc/smac.optimizer.random_configuration_chooser.html#smac.optimizer.random_configuration_chooser.ChooserProbCoolDown">ChooserProbCoolDown (class in smac.optimizer.random_configuration_chooser)</a>
 </li>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.ConstantKernel.clone_with_theta">clone_with_theta() (smac.epm.gp_kernels.ConstantKernel method)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.HammingKernel.clone_with_theta">(smac.epm.gp_kernels.HammingKernel method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.MagicMixin.clone_with_theta">(smac.epm.gp_kernels.MagicMixin method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Matern.clone_with_theta">(smac.epm.gp_kernels.Matern method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Product.clone_with_theta">(smac.epm.gp_kernels.Product method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.RBF.clone_with_theta">(smac.epm.gp_kernels.RBF method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Sum.clone_with_theta">(smac.epm.gp_kernels.Sum method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.WhiteKernel.clone_with_theta">(smac.epm.gp_kernels.WhiteKernel method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.smac_cli.html#smac.smac_cli.cmd_line_call">cmd_line_call() (in module smac.smac_cli)</a>
 </li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader">CMDReader (class in smac.utils.io.cmd_reader)</a>
@@ -454,8 +490,6 @@
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunKey.config_id">config_id (smac.runhistory.runhistory.RunKey attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.config_ids">config_ids (smac.runhistory.runhistory.RunHistory attribute)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.config_space">config_space (smac.optimizer.epils.EPILS_Solver attribute)</a>
@@ -475,6 +509,8 @@
 </li>
       </ul></li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.ConfigurableHelpFormatter">ConfigurableHelpFormatter (class in smac.utils.io.cmd_reader)</a>
+</li>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.ConstantKernel">ConstantKernel (class in smac.epm.gp_kernels)</a>
 </li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.SMACArgumentParser.convert_arg_line_to_args">convert_arg_line_to_args() (smac.utils.io.cmd_reader.SMACArgumentParser method)</a>
 </li>
@@ -518,14 +554,28 @@
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.EnumEncoder.default">default() (smac.runhistory.runhistory.EnumEncoder method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.initial_design.default_configuration_design.html#smac.initial_design.default_configuration_design.DefaultConfiguration">DefaultConfiguration (class in smac.initial_design.default_configuration_design)</a>
-</li>
-      <li><a href="apidoc/smac.epm.gp_default_priors.html#smac.epm.gp_default_priors.DefaultPrior">DefaultPrior (class in smac.epm.gp_default_priors)</a>
 </li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.DevHelpAction">DevHelpAction (class in smac.utils.io.cmd_reader)</a>
 </li>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.ConstantKernel.diag">diag() (smac.epm.gp_kernels.ConstantKernel method)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.HammingKernel.diag">(smac.epm.gp_kernels.HammingKernel method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Matern.diag">(smac.epm.gp_kernels.Matern method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Product.diag">(smac.epm.gp_kernels.Product method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.RBF.diag">(smac.epm.gp_kernels.RBF method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Sum.diag">(smac.epm.gp_kernels.Sum method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.WhiteKernel.diag">(smac.epm.gp_kernels.WhiteKernel method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.DiffOpt">DiffOpt (class in smac.optimizer.ei_optimization)</a>
 </li>
       <li><a href="apidoc/smac.utils.duplicate_filter_logging.html#smac.utils.duplicate_filter_logging.DuplicateFilter">DuplicateFilter (class in smac.utils.duplicate_filter_logging)</a>
@@ -624,6 +674,8 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.GammaPrior">GammaPrior (class in smac.epm.gp_base_prior)</a>
+</li>
       <li><a href="apidoc/smac.epm.gaussian_process.html#smac.epm.gaussian_process.GaussianProcess">GaussianProcess (class in smac.epm.gaussian_process)</a>
 </li>
       <li><a href="apidoc/smac.epm.gaussian_process_mcmc.html#smac.epm.gaussian_process_mcmc.GaussianProcessMCMC">GaussianProcessMCMC (class in smac.epm.gaussian_process_mcmc)</a>
@@ -633,6 +685,8 @@
       <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#smac.facade.experimental.psmac_facade.PSMAC.get_best_incumbents_ids">get_best_incumbents_ids() (smac.facade.experimental.psmac_facade.PSMAC method)</a>
 </li>
       <li><a href="apidoc/smac.utils.test_helpers.html#smac.utils.test_helpers.get_branin_config_space">get_branin_config_space() (in module smac.utils.test_helpers)</a>
+</li>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.get_conditional_hyperparameters">get_conditional_hyperparameters() (in module smac.epm.gp_kernels)</a>
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_cost">get_cost() (smac.runhistory.runhistory.RunHistory method)</a>
 </li>
@@ -646,6 +700,24 @@
         <li><a href="apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.get_one_exchange_neighbourhood">(in module smac.optimizer.ei_optimization)</a>
 </li>
         <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.get_one_exchange_neighbourhood">(in module smac.optimizer.epils)</a>
+</li>
+      </ul></li>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.ConstantKernel.get_params">get_params() (smac.epm.gp_kernels.ConstantKernel method)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.HammingKernel.get_params">(smac.epm.gp_kernels.HammingKernel method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.MagicMixin.get_params">(smac.epm.gp_kernels.MagicMixin method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Matern.get_params">(smac.epm.gp_kernels.Matern method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Product.get_params">(smac.epm.gp_kernels.Product method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.RBF.get_params">(smac.epm.gp_kernels.RBF method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Sum.get_params">(smac.epm.gp_kernels.Sum method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.WhiteKernel.get_params">(smac.epm.gp_kernels.WhiteKernel method)</a>
 </li>
       </ul></li>
       <li><a href="apidoc/smac.stats.stats.html#smac.stats.stats.Stats.get_remaing_time_budget">get_remaing_time_budget() (smac.stats.stats.Stats method)</a>
@@ -728,18 +800,34 @@
         <li><a href="apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4SqrtScaledCost.get_X_y">(smac.runhistory.runhistory2epm.RunHistory2EPM4SqrtScaledCost method)</a>
 </li>
       </ul></li>
-      <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.BasePrior.gradient">gradient() (smac.epm.gp_base_prior.BasePrior method)</a>
+      <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.GammaPrior.gradient">gradient() (smac.epm.gp_base_prior.GammaPrior method)</a>
 
       <ul>
         <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.HorseshoePrior.gradient">(smac.epm.gp_base_prior.HorseshoePrior method)</a>
 </li>
         <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.LognormalPrior.gradient">(smac.epm.gp_base_prior.LognormalPrior method)</a>
 </li>
-        <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.NormalPrior.gradient">(smac.epm.gp_base_prior.NormalPrior method)</a>
+        <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.Prior.gradient">(smac.epm.gp_base_prior.Prior method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.SoftTopHatPrior.gradient">(smac.epm.gp_base_prior.SoftTopHatPrior method)</a>
 </li>
         <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.TophatPrior.gradient">(smac.epm.gp_base_prior.TophatPrior method)</a>
 </li>
-        <li><a href="apidoc/smac.epm.gp_default_priors.html#smac.epm.gp_default_priors.DefaultPrior.gradient">(smac.epm.gp_default_priors.DefaultPrior method)</a>
+      </ul></li>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.ConstantKernel.gradient_x">gradient_x() (smac.epm.gp_kernels.ConstantKernel method)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.HammingKernel.gradient_x">(smac.epm.gp_kernels.HammingKernel method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Matern.gradient_x">(smac.epm.gp_kernels.Matern method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Product.gradient_x">(smac.epm.gp_kernels.Product method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.RBF.gradient_x">(smac.epm.gp_kernels.RBF method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Sum.gradient_x">(smac.epm.gp_kernels.Sum method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.WhiteKernel.gradient_x">(smac.epm.gp_kernels.WhiteKernel method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -748,10 +836,42 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.HammingKernel">HammingKernel (class in smac.epm.gp_kernels)</a>
+</li>
       <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.HorseshoePrior">HorseshoePrior (class in smac.epm.gp_base_prior)</a>
 </li>
       <li><a href="apidoc/smac.facade.experimental.hydra_facade.html#smac.facade.experimental.hydra_facade.Hydra">Hydra (class in smac.facade.experimental.hydra_facade)</a>
 </li>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.ConstantKernel.hyperparameter_constant_value">hyperparameter_constant_value (smac.epm.gp_kernels.ConstantKernel attribute)</a>
+</li>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.HammingKernel.hyperparameter_length_scale">hyperparameter_length_scale (smac.epm.gp_kernels.HammingKernel attribute)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Matern.hyperparameter_length_scale">(smac.epm.gp_kernels.Matern attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.RBF.hyperparameter_length_scale">(smac.epm.gp_kernels.RBF attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.WhiteKernel.hyperparameter_noise_level">hyperparameter_noise_level (smac.epm.gp_kernels.WhiteKernel attribute)</a>
+</li>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.ConstantKernel.hyperparameters">hyperparameters (smac.epm.gp_kernels.ConstantKernel attribute)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.HammingKernel.hyperparameters">(smac.epm.gp_kernels.HammingKernel attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.MagicMixin.hyperparameters">(smac.epm.gp_kernels.MagicMixin attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Matern.hyperparameters">(smac.epm.gp_kernels.Matern attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Product.hyperparameters">(smac.epm.gp_kernels.Product attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.RBF.hyperparameters">(smac.epm.gp_kernels.RBF attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Sum.hyperparameters">(smac.epm.gp_kernels.Sum attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.WhiteKernel.hyperparameters">(smac.epm.gp_kernels.WhiteKernel attribute)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances.hypers">hypers (smac.epm.rf_with_instances.RandomForestWithInstances attribute)</a>
@@ -774,7 +894,7 @@
         <li><a href="apidoc/smac.epm.rfr_imputator.html#smac.epm.rfr_imputator.RFRImputator.impute">(smac.epm.rfr_imputator.RFRImputator method)</a>
 </li>
       </ul></li>
-      <li><a href="apidoc/smac.configspace.util.html#smac.configspace.util.impute_default_values">impute_default_values() (in module smac.configspace.util)</a>
+      <li><a href="apidoc/smac.configspace.util.html#smac.configspace.util.impute_inactive_values">impute_inactive_values() (in module smac.configspace.util)</a>
 </li>
       <li><a href="apidoc/smac.stats.stats.html#smac.stats.stats.Stats.inc_changed">inc_changed (smac.stats.stats.Stats attribute)</a>
 </li>
@@ -812,8 +932,6 @@
       </ul></li>
       <li><a href="apidoc/smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign">InitialDesign (class in smac.initial_design.initial_design)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.utils.io.input_reader.html#smac.utils.io.input_reader.InputReader">InputReader (class in smac.utils.io.input_reader)</a>
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedKey.instance">instance (smac.runhistory.runhistory.InstSeedKey attribute)</a>
@@ -822,7 +940,11 @@
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunKey.instance_id">instance_id (smac.runhistory.runhistory.RunKey attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedKey">InstSeedKey (class in smac.runhistory.runhistory)</a>
+</li>
+      <li><a href="apidoc/smac.optimizer.acquisition.html#smac.optimizer.acquisition.IntegratedAcquisitionFunction">IntegratedAcquisitionFunction (class in smac.optimizer.acquisition)</a>
 </li>
       <li><a href="apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier">Intensifier (class in smac.intensification.intensification)</a>
 </li>
@@ -848,6 +970,22 @@
 </li>
       <li><a href="apidoc/smac.stats.stats.html#smac.stats.stats.Stats.is_budget_exhausted">is_budget_exhausted() (smac.stats.stats.Stats method)</a>
 </li>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.ConstantKernel.is_stationary">is_stationary() (smac.epm.gp_kernels.ConstantKernel method)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.HammingKernel.is_stationary">(smac.epm.gp_kernels.HammingKernel method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Matern.is_stationary">(smac.epm.gp_kernels.Matern method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Product.is_stationary">(smac.epm.gp_kernels.Product method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.RBF.is_stationary">(smac.epm.gp_kernels.RBF method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Sum.is_stationary">(smac.epm.gp_kernels.Sum method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.WhiteKernel.is_stationary">(smac.epm.gp_kernels.WhiteKernel method)</a>
+</li>
+      </ul></li>
       <li><a href="apidoc/smac.utils.logging.html#smac.utils.logging.PickableLoggerAdapter.isEnabledFor">isEnabledFor() (smac.utils.logging.PickableLoggerAdapter method)</a>
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.EnumEncoder.item_separator">item_separator (smac.runhistory.runhistory.EnumEncoder attribute)</a>
@@ -872,18 +1010,18 @@
 </li>
       <li><a href="apidoc/smac.initial_design.latin_hypercube_design.html#smac.initial_design.latin_hypercube_design.LHDesign">LHDesign (class in smac.initial_design.latin_hypercube_design)</a>
 </li>
-      <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.BasePrior.lnprob">lnprob() (smac.epm.gp_base_prior.BasePrior method)</a>
+      <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.GammaPrior.lnprob">lnprob() (smac.epm.gp_base_prior.GammaPrior method)</a>
 
       <ul>
         <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.HorseshoePrior.lnprob">(smac.epm.gp_base_prior.HorseshoePrior method)</a>
 </li>
         <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.LognormalPrior.lnprob">(smac.epm.gp_base_prior.LognormalPrior method)</a>
 </li>
-        <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.NormalPrior.lnprob">(smac.epm.gp_base_prior.NormalPrior method)</a>
+        <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.Prior.lnprob">(smac.epm.gp_base_prior.Prior method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.SoftTopHatPrior.lnprob">(smac.epm.gp_base_prior.SoftTopHatPrior method)</a>
 </li>
         <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.TophatPrior.lnprob">(smac.epm.gp_base_prior.TophatPrior method)</a>
-</li>
-        <li><a href="apidoc/smac.epm.gp_default_priors.html#smac.epm.gp_default_priors.DefaultPrior.lnprob">(smac.epm.gp_default_priors.DefaultPrior method)</a>
 </li>
       </ul></li>
       <li><a href="apidoc/smac.stats.stats.html#smac.stats.stats.Stats.load">load() (smac.stats.stats.Stats method)</a>
@@ -942,7 +1080,11 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.MagicMixin">MagicMixin (class in smac.epm.gp_kernels)</a>
+</li>
       <li><a href="apidoc/smac.smac_cli.html#smac.smac_cli.SMACCLI.main_cli">main_cli() (smac.smac_cli.SMACCLI method)</a>
+</li>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Matern">Matern (class in smac.epm.gp_kernels)</a>
 </li>
       <li><a href="apidoc/smac.epm.rfr_imputator.html#smac.epm.rfr_imputator.RFRImputator.max_iter">max_iter (smac.epm.rfr_imputator.RFRImputator attribute)</a>
 </li>
@@ -988,10 +1130,30 @@
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.ConstantKernel.n_dims">n_dims (smac.epm.gp_kernels.ConstantKernel attribute)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.HammingKernel.n_dims">(smac.epm.gp_kernels.HammingKernel attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.MagicMixin.n_dims">(smac.epm.gp_kernels.MagicMixin attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Matern.n_dims">(smac.epm.gp_kernels.Matern attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Product.n_dims">(smac.epm.gp_kernels.Product attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.RBF.n_dims">(smac.epm.gp_kernels.RBF attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Sum.n_dims">(smac.epm.gp_kernels.Sum attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.WhiteKernel.n_dims">(smac.epm.gp_kernels.WhiteKernel attribute)</a>
+</li>
+      </ul></li>
       <li><a href="apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.n_feats">n_feats (smac.epm.base_epm.AbstractEPM attribute)</a>
 </li>
       <li><a href="apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.n_params">n_params (smac.epm.base_epm.AbstractEPM attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances.n_points_per_tree">n_points_per_tree (smac.epm.rf_with_instances.RandomForestWithInstances attribute)</a>
 
       <ul>
@@ -1012,10 +1174,6 @@
         <li><a href="apidoc/smac.optimizer.random_configuration_chooser.html#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser.next_smbo_iteration">(smac.optimizer.random_configuration_chooser.RandomConfigurationChooser method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.NormalPrior">NormalPrior (class in smac.epm.gp_base_prior)</a>
-</li>
       <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.num_run">num_run (smac.optimizer.epils.EPILS_Solver attribute)</a>
 
       <ul>
@@ -1144,9 +1302,31 @@
 </li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.SMACArgumentParser.print_usage">print_usage() (smac.utils.io.cmd_reader.SMACArgumentParser method)</a>
 </li>
+      <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.Prior">Prior (class in smac.epm.gp_base_prior)</a>
+</li>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.ConstantKernel.prior">prior (smac.epm.gp_kernels.ConstantKernel attribute)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.HammingKernel.prior">(smac.epm.gp_kernels.HammingKernel attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.MagicMixin.prior">(smac.epm.gp_kernels.MagicMixin attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Matern.prior">(smac.epm.gp_kernels.Matern attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Product.prior">(smac.epm.gp_kernels.Product attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.RBF.prior">(smac.epm.gp_kernels.RBF attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Sum.prior">(smac.epm.gp_kernels.Sum attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.WhiteKernel.prior">(smac.epm.gp_kernels.WhiteKernel attribute)</a>
+</li>
+      </ul></li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.ProcessOutputDirAction">ProcessOutputDirAction (class in smac.utils.io.cmd_reader)</a>
 </li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.ProcessRunObjectiveAction">ProcessRunObjectiveAction (class in smac.utils.io.cmd_reader)</a>
+</li>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Product">Product (class in smac.epm.gp_kernels)</a>
 </li>
       <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#smac.facade.experimental.psmac_facade.PSMAC">PSMAC (class in smac.facade.experimental.psmac_facade)</a>
 </li>
@@ -1169,6 +1349,8 @@
       <li><a href="apidoc/smac.epm.rf_with_instances_hpo.html#smac.epm.rf_with_instances_hpo.RandomForestWithInstancesHPO">RandomForestWithInstancesHPO (class in smac.epm.rf_with_instances_hpo)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.RandomSearch">RandomSearch (class in smac.optimizer.ei_optimization)</a>
+</li>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.RBF">RBF (class in smac.epm.gp_kernels)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.pSMAC.html#smac.optimizer.pSMAC.read">read() (in module smac.optimizer.pSMAC)</a>
 </li>
@@ -1238,10 +1420,10 @@
         <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.rng">(smac.optimizer.smbo.SMBO attribute)</a>
 </li>
       </ul></li>
-      <li><a href="apidoc/smac.facade.roar_facade.html#smac.facade.roar_facade.ROAR">ROAR (class in smac.facade.roar_facade)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apidoc/smac.facade.roar_facade.html#smac.facade.roar_facade.ROAR">ROAR (class in smac.facade.roar_facade)</a>
+</li>
       <li><a href="apidoc/smac.initial_design.default_configuration_design.html#smac.initial_design.default_configuration_design.DefaultConfiguration.run">run() (smac.initial_design.default_configuration_design.DefaultConfiguration method)</a>
 
       <ul>
@@ -1326,18 +1508,18 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.BasePrior.sample_from_prior">sample_from_prior() (smac.epm.gp_base_prior.BasePrior method)</a>
+      <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.GammaPrior.sample_from_prior">sample_from_prior() (smac.epm.gp_base_prior.GammaPrior method)</a>
 
       <ul>
         <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.HorseshoePrior.sample_from_prior">(smac.epm.gp_base_prior.HorseshoePrior method)</a>
 </li>
         <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.LognormalPrior.sample_from_prior">(smac.epm.gp_base_prior.LognormalPrior method)</a>
 </li>
-        <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.NormalPrior.sample_from_prior">(smac.epm.gp_base_prior.NormalPrior method)</a>
+        <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.Prior.sample_from_prior">(smac.epm.gp_base_prior.Prior method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.SoftTopHatPrior.sample_from_prior">(smac.epm.gp_base_prior.SoftTopHatPrior method)</a>
 </li>
         <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.TophatPrior.sample_from_prior">(smac.epm.gp_base_prior.TophatPrior method)</a>
-</li>
-        <li><a href="apidoc/smac.epm.gp_default_priors.html#smac.epm.gp_default_priors.DefaultPrior.sample_from_prior">(smac.epm.gp_default_priors.DefaultPrior method)</a>
 </li>
       </ul></li>
       <li><a href="apidoc/smac.epm.gaussian_process.html#smac.epm.gaussian_process.GaussianProcess.sample_functions">sample_functions() (smac.epm.gaussian_process.GaussianProcess method)</a>
@@ -1384,10 +1566,44 @@
         <li><a href="apidoc/smac.initial_design.sobol_design.html#smac.initial_design.sobol_design.SobolDesign.select_configurations">(smac.initial_design.sobol_design.SobolDesign method)</a>
 </li>
       </ul></li>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.ConstantKernel.set_active_dims">set_active_dims() (smac.epm.gp_kernels.ConstantKernel method)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.HammingKernel.set_active_dims">(smac.epm.gp_kernels.HammingKernel method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.MagicMixin.set_active_dims">(smac.epm.gp_kernels.MagicMixin method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Matern.set_active_dims">(smac.epm.gp_kernels.Matern method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Product.set_active_dims">(smac.epm.gp_kernels.Product method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.RBF.set_active_dims">(smac.epm.gp_kernels.RBF method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Sum.set_active_dims">(smac.epm.gp_kernels.Sum method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.WhiteKernel.set_active_dims">(smac.epm.gp_kernels.WhiteKernel method)</a>
+</li>
+      </ul></li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.SMACArgumentParser.set_defaults">set_defaults() (smac.utils.io.cmd_reader.SMACArgumentParser method)</a>
 </li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.SMACArgumentParser.set_help_type">set_help_type() (smac.utils.io.cmd_reader.SMACArgumentParser method)</a>
 </li>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.ConstantKernel.set_params">set_params() (smac.epm.gp_kernels.ConstantKernel method)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.HammingKernel.set_params">(smac.epm.gp_kernels.HammingKernel method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Matern.set_params">(smac.epm.gp_kernels.Matern method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Product.set_params">(smac.epm.gp_kernels.Product method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.RBF.set_params">(smac.epm.gp_kernels.RBF method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Sum.set_params">(smac.epm.gp_kernels.Sum method)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.WhiteKernel.set_params">(smac.epm.gp_kernels.WhiteKernel method)</a>
+</li>
+      </ul></li>
       <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.slow_race_adaptive_capping_factor">slow_race_adaptive_capping_factor (smac.optimizer.epils.EPILS_Solver attribute)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.slow_race_minR">slow_race_minR (smac.optimizer.epils.EPILS_Solver attribute)</a>
@@ -1412,9 +1628,7 @@
 </li>
       <li><a href="apidoc/smac.epm.gp_base_prior.html#module-smac.epm.gp_base_prior">smac.epm.gp_base_prior (module)</a>
 </li>
-      <li><a href="apidoc/smac.epm.gp_default_priors.html#module-smac.epm.gp_default_priors">smac.epm.gp_default_priors (module)</a>
-</li>
-      <li><a href="apidoc/smac.epm.normalization.html#module-smac.epm.normalization">smac.epm.normalization (module)</a>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#module-smac.epm.gp_kernels">smac.epm.gp_kernels (module)</a>
 </li>
       <li><a href="apidoc/smac.epm.random_epm.html#module-smac.epm.random_epm">smac.epm.random_epm (module)</a>
 </li>
@@ -1462,6 +1676,8 @@
 </li>
       <li><a href="apidoc/smac.intensification.html#module-smac.intensification">smac.intensification (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.intensification.intensification.html#module-smac.intensification.intensification">smac.intensification.intensification (module)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.html#module-smac.optimizer">smac.optimizer (module)</a>
@@ -1474,8 +1690,6 @@
 </li>
       <li><a href="apidoc/smac.optimizer.objective.html#module-smac.optimizer.objective">smac.optimizer.objective (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.optimizer.pSMAC.html#module-smac.optimizer.pSMAC">smac.optimizer.pSMAC (module)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.random_configuration_chooser.html#module-smac.optimizer.random_configuration_chooser">smac.optimizer.random_configuration_chooser (module)</a>
@@ -1554,6 +1768,8 @@
 </li>
       <li><a href="apidoc/smac.initial_design.sobol_design.html#smac.initial_design.sobol_design.SobolDesign">SobolDesign (class in smac.initial_design.sobol_design)</a>
 </li>
+      <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.SoftTopHatPrior">SoftTopHatPrior (class in smac.epm.gp_base_prior)</a>
+</li>
       <li><a href="apidoc/smac.facade.experimental.epils_facade.html#smac.facade.experimental.epils_facade.EPILS.solver">solver (smac.facade.experimental.epils_facade.EPILS attribute)</a>
 
       <ul>
@@ -1622,6 +1838,8 @@
 </li>
       <li><a href="apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType.SUCCESS">SUCCESS (smac.tae.execute_ta_run.StatusType attribute)</a>
 </li>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Sum">Sum (class in smac.epm.gp_kernels)</a>
+</li>
       <li><a href="apidoc/smac.optimizer.objective.html#smac.optimizer.objective.sum_cost">sum_cost() (in module smac.optimizer.objective)</a>
 </li>
   </ul></td>
@@ -1648,6 +1866,22 @@
 </li>
       <li><a href="apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.target_names">target_names (smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances attribute)</a>
 </li>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.ConstantKernel.theta">theta (smac.epm.gp_kernels.ConstantKernel attribute)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.HammingKernel.theta">(smac.epm.gp_kernels.HammingKernel attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Matern.theta">(smac.epm.gp_kernels.Matern attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Product.theta">(smac.epm.gp_kernels.Product attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.RBF.theta">(smac.epm.gp_kernels.RBF attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Sum.theta">(smac.epm.gp_kernels.Sum attribute)</a>
+</li>
+        <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.WhiteKernel.theta">(smac.epm.gp_kernels.WhiteKernel attribute)</a>
+</li>
+      </ul></li>
       <li><a href="apidoc/smac.epm.rfr_imputator.html#smac.epm.rfr_imputator.RFRImputator.threshold">threshold (smac.epm.rfr_imputator.RFRImputator attribute)</a>
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue.time">time (smac.runhistory.runhistory.RunValue attribute)</a>
@@ -1676,6 +1910,8 @@
         <li><a href="apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.train">(smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajEntry.train_perf">train_perf (smac.utils.io.traj_logging.TrajEntry attribute)</a>
 </li>
       <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.trajectory">trajectory (smac.facade.smac_ac_facade.SMAC4AC attribute)</a>
@@ -1688,8 +1924,6 @@
         <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger.trajectory">(smac.utils.io.traj_logging.TrajLogger attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajEntry">TrajEntry (class in smac.utils.io.traj_logging)</a>
 </li>
       <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger">TrajLogger (class in smac.utils.io.traj_logging)</a>
@@ -1761,6 +1995,8 @@
 </li>
         <li><a href="apidoc/smac.optimizer.acquisition.html#smac.optimizer.acquisition.EIPS.update">(smac.optimizer.acquisition.EIPS method)</a>
 </li>
+        <li><a href="apidoc/smac.optimizer.acquisition.html#smac.optimizer.acquisition.IntegratedAcquisitionFunction.update">(smac.optimizer.acquisition.IntegratedAcquisitionFunction method)</a>
+</li>
         <li><a href="apidoc/smac.optimizer.acquisition.html#smac.optimizer.acquisition.LCB.update">(smac.optimizer.acquisition.LCB method)</a>
 </li>
         <li><a href="apidoc/smac.optimizer.acquisition.html#smac.optimizer.acquisition.LogEI.update">(smac.optimizer.acquisition.LogEI method)</a>
@@ -1828,6 +2064,8 @@
 </li>
       <li><a href="apidoc/smac.utils.logging.html#smac.utils.logging.PickableLoggerAdapter.warning">warning() (smac.utils.logging.PickableLoggerAdapter method)</a>
 </li>
+      <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.WhiteKernel">WhiteKernel (class in smac.epm.gp_kernels)</a>
+</li>
       <li><a href="apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.BudgetExhaustedException.with_traceback">with_traceback() (smac.tae.execute_ta_run.BudgetExhaustedException method)</a>
 
       <ul>
@@ -1861,22 +2099,6 @@
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader.write_scenario_options_to_doc">write_scenario_options_to_doc() (smac.utils.io.cmd_reader.CMDReader method)</a>
 </li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader.write_smac_options_to_doc">write_smac_options_to_doc() (smac.utils.io.cmd_reader.CMDReader method)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="Z">Z</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="apidoc/smac.epm.normalization.html#smac.epm.normalization.zero_mean_unit_var_normalization">zero_mean_unit_var_normalization() (in module smac.epm.normalization)</a>
-</li>
-      <li><a href="apidoc/smac.epm.normalization.html#smac.epm.normalization.zero_mean_unit_var_unnormalization">zero_mean_unit_var_unnormalization() (in module smac.epm.normalization)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="apidoc/smac.epm.normalization.html#smac.epm.normalization.zero_one_normalization">zero_one_normalization() (in module smac.epm.normalization)</a>
-</li>
-      <li><a href="apidoc/smac.epm.normalization.html#smac.epm.normalization.zero_one_unnormalization">zero_one_unnormalization() (in module smac.epm.normalization)</a>
 </li>
   </ul></td>
 </tr></table>

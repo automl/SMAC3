@@ -16,8 +16,7 @@ smac.epm package
    smac.epm.gaussian_process
    smac.epm.gaussian_process_mcmc
    smac.epm.gp_base_prior
-   smac.epm.gp_default_priors
-   smac.epm.normalization
+   smac.epm.gp_kernels
    smac.epm.random_epm
    smac.epm.rf_with_instances
    smac.epm.rf_with_instances_hpo

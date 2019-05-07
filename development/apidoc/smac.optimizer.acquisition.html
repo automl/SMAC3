@@ -112,8 +112,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process.html">smac.epm.gaussian_process module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_default_priors.html">smac.epm.gp_default_priors module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.normalization.html">smac.epm.normalization module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
@@ -391,6 +390,45 @@ respective attributes for the acquisition function object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>kwargs</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="smac.optimizer.acquisition.IntegratedAcquisitionFunction">
+<em class="property">class </em><code class="descclassname">smac.optimizer.acquisition.</code><code class="descname">IntegratedAcquisitionFunction</code><span class="sig-paren">(</span><em>model: smac.epm.base_epm.AbstractEPM</em>, <em>acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#IntegratedAcquisitionFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.acquisition.AbstractAcquisitionFunction</span></code></a></p>
+<p>Marginalize over Model hyperparameters to compute the integrated acquisition function.</p>
+<p>See “Practical Bayesian Optimization of Machine Learning Algorithms” by Jasper Snoek et al.
+(<a class="reference external" href="https://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf">https://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf</a>)
+for further details.</p>
+<p>Constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><em>AbstractEPM</em></a>) – The model needs to implement an additional attribute <code class="docutils literal notranslate"><span class="pre">models</span></code> which contains the different models to
+integrate over.</p></li>
+<li><p><strong>kwargs</strong> – Additional keyword arguments</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="smac.optimizer.acquisition.IntegratedAcquisitionFunction.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>model: smac.epm.base_epm.AbstractEPM</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#IntegratedAcquisitionFunction.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the acquisition functions values.</p>
+<p>This method will be called if the model is updated. E.g. entropy search uses it to update its approximation
+of P(x=x_min), EI uses it to update the current fmin.</p>
+<p>This implementation creates an acquisition function object for each model to integrate over and sets the
+respective attributes for each acquisition function object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><em>AbstractEPM</em></a>) – The model needs to implement an additional attribute <code class="docutils literal notranslate"><span class="pre">models</span></code> which contains the different models to
+integrate over.</p></li>
+<li><p><strong>kwargs</strong> – </p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

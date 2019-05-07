@@ -110,8 +110,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gaussian_process.html">smac.epm.gaussian_process module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gp_default_priors.html">smac.epm.gp_default_priors module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.normalization.html">smac.epm.normalization module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
@@ -269,14 +268,13 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 
-<span class="kn">import</span> <span class="nn">george</span>
 <span class="kn">import</span> <span class="nn">emcee</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">skopt.learning.gaussian_process</span>
+<span class="kn">import</span> <span class="nn">skopt.learning.gaussian_process.kernels</span>
 
 <span class="kn">from</span> <span class="nn">smac.epm.base_gp</span> <span class="k">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">smac.epm.gaussian_process</span> <span class="k">import</span> <span class="n">GaussianProcess</span>
-<span class="kn">from</span> <span class="nn">smac.epm</span> <span class="k">import</span> <span class="n">normalization</span>
-<span class="kn">from</span> <span class="nn">smac.epm.gp_base_prior</span> <span class="k">import</span> <span class="n">BasePrior</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -288,14 +286,13 @@
         <span class="n">types</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">bounds</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">kernel</span><span class="p">:</span> <span class="n">george</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">,</span>
-        <span class="n">prior</span><span class="p">:</span> <span class="n">BasePrior</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">n_hypers</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
-        <span class="n">chain_length</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
-        <span class="n">burnin_steps</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
-        <span class="n">normalize_output</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">normalize_input</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">noise</span><span class="p">:</span> <span class="nb">int</span><span class="o">=-</span><span class="mi">8</span><span class="p">,</span>
+        <span class="n">kernel</span><span class="p">:</span> <span class="n">skopt</span><span class="o">.</span><span class="n">learning</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">,</span>
+        <span class="n">n_mcmc_walkers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="n">chain_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+        <span class="n">burnin_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+        <span class="n">normalize_y</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">mcmc_sampler</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;emcee&#39;</span><span class="p">,</span>
+        <span class="n">average_samples</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -325,46 +322,43 @@
 <span class="sd">            Model seed.</span>
 <span class="sd">        kernel : george kernel object</span>
 <span class="sd">            Specifies the kernel that is used for all Gaussian Process</span>
-<span class="sd">        prior : prior object</span>
-<span class="sd">            Defines a prior for the hyperparameters of the GP. Make sure that</span>
-<span class="sd">            it implements the Prior interface. During MCMC sampling the</span>
-<span class="sd">            lnlikelihood is multiplied with the prior.</span>
-<span class="sd">        n_hypers : int</span>
+<span class="sd">        n_mcmc_walkers : int</span>
 <span class="sd">            The number of hyperparameter samples. This also determines the</span>
 <span class="sd">            number of walker for MCMC sampling as each walker will</span>
 <span class="sd">            return one hyperparameter sample.</span>
 <span class="sd">        chain_length : int</span>
-<span class="sd">            The length of the MCMC chain. We start n_hypers walker for</span>
+<span class="sd">            The length of the MCMC chain. We start n_mcmc_walkers walker for</span>
 <span class="sd">            chain_length steps and we use the last sample</span>
 <span class="sd">            in the chain as a hyperparameter sample.</span>
 <span class="sd">        burnin_steps : int</span>
 <span class="sd">            The number of burnin steps before the actual MCMC sampling starts.</span>
-<span class="sd">        normalize_output : bool</span>
+<span class="sd">        normalize_y : bool</span>
 <span class="sd">            Zero mean unit variance normalization of the output values</span>
-<span class="sd">        normalize_input : bool</span>
-<span class="sd">            Normalize all inputs to be in [0, 1]. This is important to define good priors for the</span>
-<span class="sd">            length scales.</span>
+<span class="sd">        mcmc_sampler : str</span>
+<span class="sd">            Choose a self-tuning MCMC sampler. Can be either ``emcee`` or ``nuts``.</span>
+<span class="sd">        average_samples : bool</span>
+<span class="sd">            Average the sampled hyperparameters if ``True``, uses the samples independently if ``False``.</span>
+<span class="sd">            This is equivalent to the posterior mean as used by</span>
+<span class="sd">            Letham et al. (2018, http://lethalletham.com/ConstrainedBO.pdf).</span>
 <span class="sd">        rng: np.random.RandomState</span>
 <span class="sd">            Random number generator</span>
-<span class="sd">        noise : float</span>
-<span class="sd">            Noise term that is added to the diagonal of the covariance matrix</span>
-<span class="sd">            for the Cholesky decomposition.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">=</span> <span class="n">kernel</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">=</span> <span class="n">noise</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_hypers</span> <span class="o">=</span> <span class="n">n_hypers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_mcmc_walkers</span> <span class="o">=</span> <span class="n">n_mcmc_walkers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">chain_length</span> <span class="o">=</span> <span class="n">chain_length</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">burned</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">burnin_steps</span> <span class="o">=</span> <span class="n">burnin_steps</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">models</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">normalize_output</span> <span class="o">=</span> <span class="n">normalize_output</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">normalize_input</span> <span class="o">=</span> <span class="n">normalize_input</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">normalize_y</span> <span class="o">=</span> <span class="n">normalize_y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mcmc_sampler</span> <span class="o">=</span> <span class="n">mcmc_sampler</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">average_samples</span> <span class="o">=</span> <span class="n">average_samples</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">is_trained</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Internal statistics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_ll_evals</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">do_optimize</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -383,64 +377,99 @@
 <span class="sd">            hyperparameter specified in the kernel.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize_input</span><span class="p">:</span>
-            <span class="c1"># Normalize input to be in [0, 1]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">=</span> <span class="n">normalization</span><span class="o">.</span><span class="n">zero_one_normalization</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">X</span>
-
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Shape mismatch: </span><span class="si">%s</span><span class="s1"> vs </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize_output</span><span class="p">:</span>
-            <span class="c1"># Normalize output to have zero mean and unit standard deviation</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_mean</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_std</span> <span class="o">=</span> <span class="n">normalization</span><span class="o">.</span><span class="n">zero_mean_unit_var_normalization</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_std</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot normalize output. All targets have the same value&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
-
-        <span class="c1"># Use the mean of the data as mean for the GP</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gp</span> <span class="o">=</span> <span class="n">george</span><span class="o">.</span><span class="n">GP</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mean</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gp</span> <span class="o">=</span> <span class="n">skopt</span><span class="o">.</span><span class="n">learning</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">GaussianProcessRegressor</span><span class="p">(</span>
+            <span class="n">kernel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">,</span>
+            <span class="n">normalize_y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">normalize_y</span><span class="p">,</span>
+            <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">n_restarts_optimizer</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># Do not use scikit-learn&#39;s optimization routine</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Governed by the kernel</span>
+            <span class="n">noise</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">do_optimize</span><span class="p">:</span>
-            <span class="c1"># We have one walker for each hyperparameter configuration</span>
-            <span class="n">sampler</span> <span class="o">=</span> <span class="n">emcee</span><span class="o">.</span><span class="n">EnsembleSampler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_hypers</span><span class="p">,</span>
-                                            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-                                            <span class="bp">self</span><span class="o">.</span><span class="n">_loglikelihood</span><span class="p">)</span>
-            <span class="n">sampler</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span>
-            <span class="c1"># Do a burn-in in the first iteration</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">burned</span><span class="p">:</span>
-                <span class="c1"># Initialize the walkers by sampling from the prior</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">p0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_hypers</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_all_priors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_all_priors</span><span class="p">(</span>
+                <span class="n">add_bound_priors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">add_soft_bounds</span><span class="o">=</span><span class="kc">True</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mcmc_sampler</span> <span class="o">==</span> <span class="s1">&#39;nuts&#39;</span> <span class="k">else</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mcmc_sampler</span> <span class="o">==</span> <span class="s1">&#39;emcee&#39;</span><span class="p">:</span>
+                <span class="n">sampler</span> <span class="o">=</span> <span class="n">emcee</span><span class="o">.</span><span class="n">EnsembleSampler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_mcmc_walkers</span><span class="p">,</span>
+                                                <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">theta</span><span class="p">),</span>
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">_ll</span><span class="p">)</span>
+                <span class="n">sampler</span><span class="o">.</span><span class="n">random_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span>
+                <span class="c1"># Do a burn-in in the first iteration</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">burned</span><span class="p">:</span>
+                    <span class="c1"># Initialize the walkers by sampling from the prior</span>
+                    <span class="n">dim_samples</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">dim</span><span class="p">,</span> <span class="n">prior</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_all_priors</span><span class="p">):</span>
+                        <span class="c1"># Always sample from the first prior</span>
+                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prior</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prior</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                                <span class="n">prior</span> <span class="o">=</span> <span class="kc">None</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">prior</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">dim_samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prior</span><span class="o">.</span><span class="n">sample_from_prior</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_mcmc_walkers</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">p0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">dim_samples</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+
+                    <span class="c1"># Run MCMC sampling</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">p0</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">run_mcmc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p0</span><span class="p">,</span>
+                                                     <span class="bp">self</span><span class="o">.</span><span class="n">burnin_steps</span><span class="p">,</span>
+                                                     <span class="n">rstate0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">)</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">burned</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="c1"># Start sampling &amp; save the current position, it will be the start point in the next iteration</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">p0</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">run_mcmc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">chain_length</span><span class="p">,</span> <span class="n">rstate0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">)</span>
+
+                <span class="c1"># Take the last samples from each walker</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hypers</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">chain</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;hypers&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hypers</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hypers</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)))</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mcmc_sampler</span> <span class="o">==</span> <span class="s1">&#39;nuts&#39;</span><span class="p">:</span>
+                <span class="c1"># Originally published as:</span>
+                <span class="c1"># http://www.stat.columbia.edu/~gelman/research/published/nuts.pdf</span>
+                <span class="c1"># A good explanation of HMC:</span>
+                <span class="c1"># https://theclevermachine.wordpress.com/2012/11/18/mcmc-hamiltonian-monte-carlo-a-k-a-hybrid-monte-carlo/</span>
+                <span class="c1"># A good explanation of HMC and NUTS can be found in:</span>
+                <span class="c1"># https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12681</span>
+
+                <span class="c1"># Do not require the installation of NUTS for SMAC</span>
+                <span class="c1"># This requires NUTS from https://github.com/mfeurer/NUTS</span>
+                <span class="kn">import</span> <span class="nn">nuts.nuts</span>
+
+                <span class="c1"># Perform initial fit to the data to obtain theta0</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">burned</span><span class="p">:</span>
+                    <span class="n">theta0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gp</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">theta</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">burned</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">p0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">sample_from_prior</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_hypers</span><span class="p">)</span>
-                <span class="c1"># Run MCMC sampling</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">p0</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">run_mcmc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p0</span><span class="p">,</span>
-                                                 <span class="bp">self</span><span class="o">.</span><span class="n">burnin_steps</span><span class="p">,</span>
-                                                 <span class="n">rstate0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">)</span>
+                    <span class="n">theta0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p0</span>
+                <span class="n">samples</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">nuts</span><span class="o">.</span><span class="n">nuts</span><span class="o">.</span><span class="n">nuts6</span><span class="p">(</span>
+                    <span class="n">f</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_ll_w_grad</span><span class="p">,</span>
+                    <span class="n">Madapt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">burnin_steps</span><span class="p">,</span>
+                    <span class="n">M</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">chain_length</span><span class="p">,</span>
+                    <span class="n">theta0</span><span class="o">=</span><span class="n">theta0</span><span class="p">,</span>
+                    <span class="c1"># Increasing this value results in longer running times</span>
+                    <span class="n">delta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                    <span class="n">adapt_mass</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="c1"># Rather low max depth to keep the number of required gradient steps low</span>
+                    <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                    <span class="n">rng</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;hypers&#39;</span><span class="p">,</span> <span class="s1">&#39;log space&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p0</span><span class="p">,</span> <span class="s1">&#39;regular space&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p0</span><span class="p">))</span>
+                <span class="n">indices</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">ind</span><span class="p">))</span> <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">)]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hypers</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">p0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hypers</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mcmc_sampler</span><span class="p">)</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">burned</span> <span class="o">=</span> <span class="kc">True</span>
-
-            <span class="c1"># Start sampling</span>
-            <span class="n">pos</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">run_mcmc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p0</span><span class="p">,</span>
-                                         <span class="bp">self</span><span class="o">.</span><span class="n">chain_length</span><span class="p">,</span>
-                                         <span class="n">rstate0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">)</span>
-
-            <span class="c1"># Save the current position, it will be the start point in</span>
-            <span class="c1"># the next iteration</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">p0</span> <span class="o">=</span> <span class="n">pos</span>
-
-            <span class="c1"># Take the last samples from each walker</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">hypers</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">chain</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">average_samples</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hypers</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">hypers</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)]</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">hypers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gp</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">get_parameter_vector</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">hypers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hypers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gp</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">theta</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">hypers</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">hypers</span><span class="p">]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">models</span> <span class="o">=</span> <span class="p">[]</span>
@@ -448,26 +477,40 @@
 
             <span class="c1"># Instantiate a GP for each hyperparameter configuration</span>
             <span class="n">kernel</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">)</span>
-            <span class="n">kernel</span><span class="o">.</span><span class="n">set_parameter_vector</span><span class="p">(</span><span class="n">sample</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-            <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">sample</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">kernel</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">sample</span>
             <span class="n">model</span> <span class="o">=</span> <span class="n">GaussianProcess</span><span class="p">(</span>
                 <span class="n">types</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">,</span>
                 <span class="n">bounds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span>
                 <span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span>
-                <span class="n">normalize_output</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">normalize_output</span><span class="p">,</span>
-                <span class="n">normalize_input</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">normalize_input</span><span class="p">,</span>
-                <span class="n">noise</span><span class="o">=</span><span class="n">noise</span><span class="p">,</span>
+                <span class="n">normalize_y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">normalize_y</span><span class="p">,</span>
+                <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">10000</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">_train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">do_optimize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">LinAlgError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">kernel</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">)</span>
+            <span class="n">kernel</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p0</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">GaussianProcess</span><span class="p">(</span>
+                <span class="n">types</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">,</span>
+                <span class="n">bounds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span>
+                <span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span>
+                <span class="n">normalize_y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">normalize_y</span><span class="p">,</span>
                 <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">10000</span><span class="p">),</span>
             <span class="p">)</span>
             <span class="n">model</span><span class="o">.</span><span class="n">_train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">do_optimize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">is_trained</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;#LL evaluations&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_ll_evals</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_loglikelihood</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_ll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return the loglikelihood (+ the prior) for a hyperparameter</span>
-<span class="sd">        configuration theta.</span>
+<span class="sd">        Returns the marginal log likelihood (+ the prior) for</span>
+<span class="sd">        a hyperparameter configuration theta.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -480,26 +523,81 @@
 <span class="sd">        float</span>
 <span class="sd">            lnlikelihood + prior</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_ll_evals</span> <span class="o">+=</span> <span class="mi">1</span>
 
         <span class="c1"># Bound the hyperparameter space to keep things sane. Note all</span>
         <span class="c1"># hyperparameters live on a log scale</span>
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">((</span><span class="o">-</span><span class="mi">20</span> <span class="o">&gt;</span> <span class="n">theta</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">theta</span> <span class="o">&gt;</span> <span class="mi">20</span><span class="p">)):</span>
-            <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
-
-        <span class="c1"># The last entry is always the noise</span>
-        <span class="n">sigma_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-        <span class="c1"># Update the kernel and compute the lnlikelihood.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gp</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">set_parameter_vector</span><span class="p">(</span><span class="n">theta</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">theta</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">20</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">theta</span> <span class="o">&gt;</span> <span class="mi">20</span><span class="p">):</span>
+                <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">theta</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">20</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">theta</span> <span class="o">&gt;</span> <span class="mi">20</span><span class="p">))</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+                <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">gp</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sigma_2</span><span class="p">))</span>
-        <span class="k">except</span><span class="p">:</span>
+            <span class="n">lml</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gp</span><span class="o">.</span><span class="n">log_marginal_likelihood</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">lnprob</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">gp</span><span class="o">.</span><span class="n">lnlikelihood</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Add prior</span>
+        <span class="k">for</span> <span class="n">dim</span><span class="p">,</span> <span class="n">priors</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_all_priors</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">prior</span> <span class="ow">in</span> <span class="n">priors</span><span class="p">:</span>
+                <span class="n">lml</span> <span class="o">+=</span> <span class="n">prior</span><span class="o">.</span><span class="n">lnprob</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="n">dim</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">lml</span><span class="p">):</span>
+            <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gp</span><span class="o">.</span><span class="n">lnlikelihood</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">lml</span>
+
+    <span class="k">def</span> <span class="nf">_ll_w_grad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the marginal log likelihood (+ the prior) for</span>
+<span class="sd">        a hyperparameter configuration theta.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        theta : np.ndarray(H)</span>
+<span class="sd">            Hyperparameter vector. Note that all hyperparameter are</span>
+<span class="sd">            on a log scale.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        float</span>
+<span class="sd">            lnlikelihood + prior</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_ll_evals</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># Bound the hyperparameter space to keep things sane. Note all hyperparameters live on a log scale</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">theta</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="n">theta</span><span class="p">[</span><span class="n">theta</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">50</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">50</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">theta</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="n">theta</span><span class="p">[</span><span class="n">theta</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">]</span> <span class="o">=</span> <span class="mi">50</span>
+
+        <span class="n">lml</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">grad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">theta</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="c1"># Add prior</span>
+        <span class="k">for</span> <span class="n">dim</span><span class="p">,</span> <span class="n">priors</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_all_priors</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">prior</span> <span class="ow">in</span> <span class="n">priors</span><span class="p">:</span>
+                <span class="n">lml</span> <span class="o">+=</span> <span class="n">prior</span><span class="o">.</span><span class="n">lnprob</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="n">dim</span><span class="p">])</span>
+                <span class="n">grad</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">+=</span> <span class="n">prior</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="n">dim</span><span class="p">])</span>
+
+        <span class="c1"># Check if one of the priors is invalid, if so, no need to compute the log marginal likelihood</span>
+        <span class="k">if</span> <span class="n">lml</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">1e24</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mf">1e25</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">theta</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">lml_</span><span class="p">,</span> <span class="n">grad_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gp</span><span class="o">.</span><span class="n">log_marginal_likelihood</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">eval_gradient</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">lml</span> <span class="o">+=</span> <span class="n">lml_</span>
+            <span class="n">grad</span> <span class="o">+=</span> <span class="n">grad_</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mf">1e25</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">theta</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="c1"># We add a minus here because scipy is minimizing</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">lml</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">grad</span><span class="p">))</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mf">1e25</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">theta</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">lml</span><span class="p">,</span> <span class="n">grad</span>
 
     <span class="k">def</span> <span class="nf">_predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_test</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
