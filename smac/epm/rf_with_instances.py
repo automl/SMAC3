@@ -4,7 +4,8 @@ import typing
 import numpy as np
 from pyrfr import regression
 
-from smac.epm.base_epm import AbstractEPM
+from smac.configspace import ConfigurationSpace
+from smac.epm.base_rf import BaseModel
 from smac.utils.constants import N_TREES, VERY_SMALL_NUMBER
 
 
@@ -16,7 +17,7 @@ __email__ = "kleinaa@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class RandomForestWithInstances(AbstractEPM):
+class RandomForestWithInstances(BaseModel):
 
     """Random forest that takes instance features into account.
 
@@ -37,20 +38,24 @@ class RandomForestWithInstances(AbstractEPM):
     logger : logging.logger
     """
 
-    def __init__(self, types: np.ndarray,
-                 bounds: typing.List[typing.Tuple[float, float]],
-                 seed: int,
-                 log_y: bool = False,
-                 num_trees: int = N_TREES,
-                 do_bootstrapping: bool = True,
-                 n_points_per_tree: int = -1,
-                 ratio_features: float = 5. / 6.,
-                 min_samples_split: int = 3,
-                 min_samples_leaf: int = 3,
-                 max_depth: int = 2**20,
-                 eps_purity: float = 1e-8,
-                 max_num_nodes: int = 2**20,
-                 **kwargs):
+    def __init__(
+        self,
+        configspace: ConfigurationSpace,
+        types: np.ndarray,
+        bounds: typing.List[typing.Tuple[float, float]],
+        seed: int,
+        log_y: bool = False,
+        num_trees: int = N_TREES,
+        do_bootstrapping: bool = True,
+        n_points_per_tree: int = -1,
+        ratio_features: float = 5. / 6.,
+        min_samples_split: int = 3,
+        min_samples_leaf: int = 3,
+        max_depth: int = 2**20,
+        eps_purity: float = 1e-8,
+        max_num_nodes: int = 2**20,
+        **kwargs
+    ):
         """
         Parameters
         ----------
@@ -88,7 +93,7 @@ class RandomForestWithInstances(AbstractEPM):
         max_num_nodes : int
             The maxmimum total number of nodes in a tree
         """
-        super().__init__(types, bounds, seed, **kwargs)
+        super().__init__(configspace, types, bounds, seed, **kwargs)
 
         self.log_y = log_y
         self.rng = regression.default_random_engine(seed)
@@ -131,7 +136,7 @@ class RandomForestWithInstances(AbstractEPM):
         -------
         self
         """
-
+        X = self._impute_inactive(X)
         self.X = X
         self.y = y.flatten()
 
@@ -194,6 +199,8 @@ class RandomForestWithInstances(AbstractEPM):
                 'Expected 2d array, got %dd array!' % len(X.shape))
         if X.shape[1] != self.types.shape[0]:
             raise ValueError('Rows in X should have %d entries but have %d!' % (self.types.shape[0], X.shape[1]))
+
+        X = self._impute_inactive(X)
 
         if self.log_y:
             all_preds = []
@@ -271,6 +278,8 @@ class RandomForestWithInstances(AbstractEPM):
             raise ValueError('Rows in X should have %d entries but have %d!' %
                              (len(self.bounds),
                               X.shape[1]))
+
+        X = self._impute_inactive(X)
 
         mean_ = np.zeros(X.shape[0])
         var = np.zeros(X.shape[0])

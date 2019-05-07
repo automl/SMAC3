@@ -5,6 +5,7 @@ import numpy as np
 import sklearn.datasets
 import sklearn.model_selection
 
+import smac.configspace
 from smac.epm.rf_with_instances_hpo import RandomForestWithInstancesHPO
 
 
@@ -12,13 +13,18 @@ def get_rf(n_dimensions, rs):
     bounds = [(0., 1.) for _ in range(n_dimensions)]
     types = np.zeros(n_dimensions)
 
+    configspace = smac.configspace.ConfigurationSpace()
+    for i in range(n_dimensions):
+        configspace.add_hyperparameter(smac.configspace.UniformFloatHyperparameter('x%d' % i, 0, 1))
+
     model = RandomForestWithInstancesHPO(
-        types=types, bounds=bounds, log_y=False, bootstrap=False, n_iters=5, n_splits=5, seed=1,
+        configspace=configspace, types=types, bounds=bounds, log_y=False, bootstrap=False, n_iters=5, n_splits=5, seed=1,
     )
     return model
 
 
 class TestRandomForestWithInstancesHPO(unittest.TestCase):
+
     def test_predict_wrong_X_dimensions(self):
         rs = np.random.RandomState(1)
         model = get_rf(10, rs)

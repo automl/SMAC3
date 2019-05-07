@@ -5,6 +5,7 @@ import numpy as np
 import sklearn.datasets
 import sklearn.model_selection
 
+from smac.configspace import ConfigurationSpace, UniformFloatHyperparameter
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
 from smac.epm.gp_base_prior import LognormalPrior, HorseshoePrior
 from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel
@@ -36,7 +37,12 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True, average_samples=False
     bounds = [(0., 1.) for _ in range(n_dimensions)]
     types = np.zeros(n_dimensions)
 
+    configspace = ConfigurationSpace()
+    for i in range(n_dimensions):
+        configspace.add_hyperparameter(UniformFloatHyperparameter('x%d' % i, 0, 1))
+
     model = GaussianProcessMCMC(
+        configspace=configspace,
         types=types,
         bounds=bounds,
         kernel=kernel,

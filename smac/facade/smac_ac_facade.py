@@ -277,8 +277,10 @@ class SMAC4AC(object):
             }.items():
                 if key not in model_def_kwargs:
                     model_def_kwargs[key] = value
+            model_def_kwargs['configspace'] = self.scenario.cs
             model = RandomForestWithInstances(**model_def_kwargs)
         elif inspect.isclass(model):
+            model_def_kwargs['configspace'] = self.scenario.cs
             model = model(**model_def_kwargs)
         else:
             raise TypeError(

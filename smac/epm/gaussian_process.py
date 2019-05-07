@@ -6,8 +6,8 @@ import skopt.learning.gaussian_process
 import skopt.learning.gaussian_process.kernels
 from scipy import optimize
 
+from smac.configspace import ConfigurationSpace
 from smac.epm.base_gp import BaseModel
-from smac.epm.gp_base_prior import Prior
 from smac.utils.constants import VERY_SMALL_NUMBER
 
 logger = logging.getLogger(__name__)
@@ -50,6 +50,7 @@ class GaussianProcess(BaseModel):
 
     def __init__(
         self,
+        configspace: ConfigurationSpace,
         types: np.ndarray,
         bounds: typing.List[typing.Tuple[float, float]],
         seed: int,
@@ -59,7 +60,7 @@ class GaussianProcess(BaseModel):
         **kwargs
     ):
 
-        super().__init__(types=types, bounds=bounds, seed=seed, **kwargs)
+        super().__init__(configspace=configspace, types=types, bounds=bounds, seed=seed, **kwargs)
 
         self.kernel = kernel
         self.gp = None
@@ -89,6 +90,7 @@ class GaussianProcess(BaseModel):
             the default hyperparameters of the kernel are used.
         """
 
+        X = self._impute_inactive(X)
         if self.normalize_y:
             y = self._normalize_y(y)
 
@@ -231,6 +233,7 @@ class GaussianProcess(BaseModel):
         if not self.is_trained:
             raise Exception('Model has to be trained first!')
 
+        X_test = self._impute_inactive(X_test)
         mu, var = self.gp.predict(X_test, return_cov=True)
         var = np.diag(var)
 
@@ -264,6 +267,7 @@ class GaussianProcess(BaseModel):
         if not self.is_trained:
             raise Exception('Model has to be trained first!')
 
+        X_test = self._impute_inactive(X_test)
         funcs = self.gp.sample_y(X_test, n_samples=n_funcs, random_state=self.rng)
         funcs = np.squeeze(funcs, axis=1)
 

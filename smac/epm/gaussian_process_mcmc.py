@@ -7,6 +7,7 @@ import numpy as np
 import skopt.learning.gaussian_process
 import skopt.learning.gaussian_process.kernels
 
+from smac.configspace import ConfigurationSpace
 from smac.epm.base_gp import BaseModel
 from smac.epm.gaussian_process import GaussianProcess
 
@@ -17,6 +18,7 @@ class GaussianProcessMCMC(BaseModel):
 
     def __init__(
         self,
+        configspace: ConfigurationSpace,
         types: np.ndarray,
         bounds: typing.List[typing.Tuple[float, float]],
         seed: int,
@@ -77,7 +79,7 @@ class GaussianProcessMCMC(BaseModel):
         rng: np.random.RandomState
             Random number generator
         """
-        super().__init__(types=types, bounds=bounds, seed=seed, **kwargs)
+        super().__init__(configspace=configspace, types=types, bounds=bounds, seed=seed, **kwargs)
 
         self.kernel = kernel
         self.n_mcmc_walkers = n_mcmc_walkers
@@ -213,6 +215,7 @@ class GaussianProcessMCMC(BaseModel):
             kernel = deepcopy(self.kernel)
             kernel.theta = sample
             model = GaussianProcess(
+                configspace=self.configspace,
                 types=self.types,
                 bounds=self.bounds,
                 kernel=kernel,
