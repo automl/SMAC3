@@ -289,15 +289,14 @@
 <span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
 <span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">inspect</span> <span class="k">import</span> <span class="n">signature</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.special</span> <span class="k">import</span> <span class="n">kv</span><span class="p">,</span> <span class="n">gamma</span>
 <span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="k">import</span> <span class="n">pdist</span><span class="p">,</span> <span class="n">cdist</span><span class="p">,</span> <span class="n">squareform</span>
 
 <span class="kn">from</span> <span class="nn">..metrics.pairwise</span> <span class="k">import</span> <span class="n">pairwise_kernels</span>
-<span class="kn">from</span> <span class="nn">..externals</span> <span class="k">import</span> <span class="n">six</span>
 <span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">clone</span>
-<span class="kn">from</span> <span class="nn">..utils.fixes</span> <span class="k">import</span> <span class="n">signature</span>
 
 
 <span class="k">def</span> <span class="nf">_check_length_scale</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">length_scale</span><span class="p">):</span>
@@ -358,7 +357,7 @@
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value_type</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">n_elements</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span> <span class="ow">or</span> <span class="n">bounds</span> <span class="o">!=</span> <span class="s2">&quot;fixed&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="n">bounds</span> <span class="o">!=</span> <span class="s2">&quot;fixed&quot;</span><span class="p">:</span>
             <span class="n">bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">n_elements</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># vector-valued parameter</span>
                 <span class="k">if</span> <span class="n">bounds</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -369,7 +368,7 @@
                                      <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">,</span> <span class="n">bounds</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 
         <span class="k">if</span> <span class="n">fixed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">fixed</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span> <span class="ow">and</span> <span class="n">bounds</span> <span class="o">==</span> <span class="s2">&quot;fixed&quot;</span>
+            <span class="n">fixed</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">bounds</span> <span class="o">==</span> <span class="s2">&quot;fixed&quot;</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Hyperparameter</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span>
             <span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value_type</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">n_elements</span><span class="p">,</span> <span class="n">fixed</span><span class="p">)</span>
 
@@ -383,7 +382,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">fixed</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">fixed</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">Kernel</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">with_metaclass</span><span class="p">(</span><span class="n">ABCMeta</span><span class="p">)):</span>
+<span class="k">class</span> <span class="nc">Kernel</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Base class for all kernels.</span>
 
 <span class="sd">    .. versionadded:: 0.18</span>
@@ -443,7 +442,7 @@
             <span class="c1"># Simple optimisation to gain speed (inspect is slow)</span>
             <span class="k">return</span> <span class="bp">self</span>
         <span class="n">valid_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">split</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">split</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="c1"># nested objects case</span>
@@ -485,10 +484,8 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a list of all hyperparameter specifications.&quot;&quot;&quot;</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">attr</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;hyperparameter_&quot;</span><span class="p">):</span>
-                <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">))</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+             <span class="k">if</span> <span class="n">attr</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;hyperparameter_&quot;</span><span class="p">)]</span>
         <span class="k">return</span> <span class="n">r</span>
 
     <span class="nd">@property</span>
@@ -553,10 +550,9 @@
 <span class="sd">        bounds : array, shape (n_dims, 2)</span>
 <span class="sd">            The log-transformed bounds on the kernel&#39;s hyperparameters theta</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">bounds</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">hyperparameter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hyperparameters</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">hyperparameter</span><span class="o">.</span><span class="n">fixed</span><span class="p">:</span>
-                <span class="n">bounds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hyperparameter</span><span class="o">.</span><span class="n">bounds</span><span class="p">)</span>
+        <span class="n">bounds</span> <span class="o">=</span> <span class="p">[</span><span class="n">hyperparameter</span><span class="o">.</span><span class="n">bounds</span>
+                  <span class="k">for</span> <span class="n">hyperparameter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hyperparameters</span>
+                  <span class="k">if</span> <span class="ow">not</span> <span class="n">hyperparameter</span><span class="o">.</span><span class="n">fixed</span><span class="p">]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bounds</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">bounds</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
@@ -627,7 +623,7 @@
         <span class="sd">&quot;&quot;&quot;Returns whether the kernel is stationary. &quot;&quot;&quot;</span>
 
 
-<span class="k">class</span> <span class="nc">NormalizedKernelMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">NormalizedKernelMixin</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Mixin for kernels which are normalized: k(X, X)=1.</span>
 
 <span class="sd">    .. versionadded:: 0.18</span>
@@ -653,7 +649,7 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
 
-<span class="k">class</span> <span class="nc">StationaryKernelMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">StationaryKernelMixin</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Mixin for kernels which are stationary: k(X, Y)= f(X-Y).</span>
 
 <span class="sd">    .. versionadded:: 0.18</span>
@@ -841,12 +837,11 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a list of all hyperparameter.&quot;&quot;&quot;</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">hyperparameter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span><span class="o">.</span><span class="n">hyperparameters</span><span class="p">:</span>
-            <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Hyperparameter</span><span class="p">(</span><span class="s2">&quot;k1__&quot;</span> <span class="o">+</span> <span class="n">hyperparameter</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                                    <span class="n">hyperparameter</span><span class="o">.</span><span class="n">value_type</span><span class="p">,</span>
-                                    <span class="n">hyperparameter</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span>
-                                    <span class="n">hyperparameter</span><span class="o">.</span><span class="n">n_elements</span><span class="p">))</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="p">[</span><span class="n">Hyperparameter</span><span class="p">(</span><span class="s2">&quot;k1__&quot;</span> <span class="o">+</span> <span class="n">hyperparameter</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                            <span class="n">hyperparameter</span><span class="o">.</span><span class="n">value_type</span><span class="p">,</span>
+                            <span class="n">hyperparameter</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span> <span class="n">hyperparameter</span><span class="o">.</span><span class="n">n_elements</span><span class="p">)</span>
+             <span class="k">for</span> <span class="n">hyperparameter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span><span class="o">.</span><span class="n">hyperparameters</span><span class="p">]</span>
+
         <span class="k">for</span> <span class="n">hyperparameter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">k2</span><span class="o">.</span><span class="n">hyperparameters</span><span class="p">:</span>
             <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Hyperparameter</span><span class="p">(</span><span class="s2">&quot;k2__&quot;</span> <span class="o">+</span> <span class="n">hyperparameter</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                                     <span class="n">hyperparameter</span><span class="o">.</span><span class="n">value_type</span><span class="p">,</span>
@@ -1428,7 +1423,7 @@
 <span class="sd">    .. versionadded:: 0.18</span>
 
 <span class="sd">    Parameters</span>
-<span class="sd">    -----------</span>
+<span class="sd">    ----------</span>
 <span class="sd">    length_scale : float or array with shape (n_features,), default: 1.0</span>
 <span class="sd">        The length scale of the kernel. If a float, an isotropic kernel is</span>
 <span class="sd">        used. If an array, an anisotropic kernel is used where each dimension</span>
@@ -1541,7 +1536,7 @@
 <span class="sd">    .. versionadded:: 0.18</span>
 
 <span class="sd">    Parameters</span>
-<span class="sd">    -----------</span>
+<span class="sd">    ----------</span>
 <span class="sd">    length_scale : float or array with shape (n_features,), default: 1.0</span>
 <span class="sd">        The length scale of the kernel. If a float, an isotropic kernel is</span>
 <span class="sd">        used. If an array, an anisotropic kernel is used where each dimension</span>
@@ -1565,7 +1560,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length_scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">length_scale_bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e5</span><span class="p">),</span>
                  <span class="n">nu</span><span class="o">=</span><span class="mf">1.5</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Matern</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">length_scale</span><span class="p">,</span> <span class="n">length_scale_bounds</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">length_scale</span><span class="p">,</span> <span class="n">length_scale_bounds</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nu</span> <span class="o">=</span> <span class="n">nu</span>
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eval_gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
