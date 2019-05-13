@@ -381,9 +381,9 @@
                 <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">n_tries</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="n">e</span>
                 <span class="c1"># Assume that the last entry of theta is the noise</span>
-                <span class="n">theta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">theta</span>
+                <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span>
                 <span class="n">theta</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">theta</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">do_optimize</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_all_priors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_all_priors</span><span class="p">(</span><span class="n">add_bound_priors</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
