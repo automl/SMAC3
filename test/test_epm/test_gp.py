@@ -205,9 +205,9 @@ class TestGP(unittest.TestCase):
         X, Y, n_dims = get_cont_data(rs)
 
         model = get_gp(n_dims, rs)
-        fixture = model.kernel.theta[-1]
+        fixture = np.exp(model.kernel.theta[-1])
         model._train(X[:10], Y[:10], do_optimize=False)
-        self.assertAlmostEqual(model.gp.kernel.theta[-1], fixture + 10)
+        self.assertAlmostEqual(np.exp(model.gp.kernel.theta[-1]), fixture + 10)
 
     @unittest.mock.patch.object(skopt.learning.gaussian_process.GaussianProcessRegressor, 'log_marginal_likelihood')
     def test_train_continue_on_linalg_error_2(self, fit_mock):

@@ -114,9 +114,9 @@ class GaussianProcess(BaseModel):
                 if i == n_tries:
                     raise e
                 # Assume that the last entry of theta is the noise
-                theta = self.kernel.theta
+                theta = np.exp(self.kernel.theta)
                 theta[-1] += 1
-                self.kernel.theta = theta
+                self.kernel.theta = np.log(theta)
 
         if do_optimize:
             self._all_priors = self._get_all_priors(add_bound_priors=False)
