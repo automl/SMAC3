@@ -6,6 +6,7 @@ from typing import  List, Union, Optional, Type, Callable
 import numpy as np
 
 # tae
+from smac.intensification.successive_halving import SuccessiveHalving
 from smac.tae.execute_ta_run import ExecuteTARun
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.execute_func import ExecuteTAFuncDict
@@ -75,6 +76,7 @@ class SMAC4AC(object):
                  runhistory: Optional[Union[Type[RunHistory], RunHistory]] = None,
                  runhistory_kwargs: Optional[dict] = None,
                  intensifier: Optional[Type[Intensifier]] = None,
+                 intensifier_type: Optional[str] = 'intensify',
                  intensifier_kwargs: Optional[dict] = None,
                  acquisition_function: Optional[Type[AbstractAcquisitionFunction]] = None,
                  acquisition_function_kwargs: Optional[dict] = None,
@@ -121,6 +123,10 @@ class SMAC4AC(object):
         intensifier : Intensifier
             intensification object to issue a racing to decide the current
             incumbent
+        intensifier_type : str
+            Which intensifier to use for racing, will be used when intensifier is None - Options:
+            * 'intensify' (SMAC intensification procedure)
+            * 'sh' (successive halving)
         intensifier_kwargs: Optional[dict]
             arguments passed to the constructor of '~intensifier'
         acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction
@@ -392,8 +398,22 @@ class SMAC4AC(object):
             }
         if intensifier_kwargs is not None:
             intensifier_def_kwargs.update(intensifier_kwargs)
+
         if intensifier is None:
-            intensifier = Intensifier(**intensifier_def_kwargs)
+            if intensifier_type == 'sh':
+                # getting successive halving specific parameters from scenario
+                intensifier_def_kwargs['min_budget'] = scenario.sh_min_budget
+                intensifier_def_kwargs['max_budget'] = scenario.sh_max_budget
+                intensifier_def_kwargs['eta'] = scenario.sh_eta
+                intensifier_def_kwargs['n_seeds'] = scenario.sh_n_seeds
+                intensifier_def_kwargs['instance_order'] = scenario.sh_instance_order
+                intensifier = SuccessiveHalving(**intensifier_def_kwargs)
+
+            elif intensifier_type == 'intensify':
+                intensifier = Intensifier(**intensifier_def_kwargs)
+            else:
+                intensifier = Intensifier(**intensifier_def_kwargs)
+
         elif inspect.isclass(intensifier):
             intensifier = intensifier(**intensifier_def_kwargs)
         else:

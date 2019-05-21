@@ -32,6 +32,7 @@ from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
 from smac.utils.constants import MAXINT
 
+from smac.intensification.successive_halving import SuccessiveHalving
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -68,7 +69,8 @@ class SMBO(object):
                  initial_design: InitialDesign,
                  runhistory: RunHistory,
                  runhistory2epm: AbstractRunHistory2EPM,
-                 intensifier: Intensifier,
+                 intensifier: SuccessiveHalving,
+                 # intensifier: Intensifier,
                  aggregate_func: callable,
                  num_run: int,
                  model: RandomForestWithInstances,
@@ -153,24 +155,28 @@ class SMBO(object):
         Detects whether we the optimization is restored from previous state.
         """
         self.stats.start_timing()
-        # Initialization, depends on input
-        if self.stats.ta_runs == 0 and self.incumbent is None:
-            self.incumbent = self.initial_design.run()
 
-        elif self.stats.ta_runs > 0 and self.incumbent is None:
-            raise ValueError("According to stats there have been runs performed, "
-                             "but the optimizer cannot detect an incumbent. Did "
-                             "you set the incumbent (e.g. after restoring state)?")
-        elif self.stats.ta_runs == 0 and self.incumbent is not None:
-            raise ValueError("An incumbent is specified, but there are no runs "
-                             "recorded in the Stats-object. If you're restoring "
-                             "a state, please provide the Stats-object.")
-        else:
-            # Restoring state!
-            self.logger.info("State Restored! Starting optimization with "
-                             "incumbent %s", self.incumbent)
-            self.logger.info("State restored with following budget:")
-            self.stats.print_stats()
+        # Run the initial deisgn only if intensifying using SMAC's procedure
+        # SH or HB methods dont require an 'incumbent' to compare in the beginning
+        if not isinstance(self.intensifier, SuccessiveHalving):
+            # Initialization, depends on input
+            if self.stats.ta_runs == 0 and self.incumbent is None:
+                self.incumbent = self.initial_design.run()
+
+            elif self.stats.ta_runs > 0 and self.incumbent is None:
+                raise ValueError("According to stats there have been runs performed, "
+                                 "but the optimizer cannot detect an incumbent. Did "
+                                 "you set the incumbent (e.g. after restoring state)?")
+            elif self.stats.ta_runs == 0 and self.incumbent is not None:
+                raise ValueError("An incumbent is specified, but there are no runs "
+                                 "recorded in the Stats-object. If you're restoring "
+                                 "a state, please provide the Stats-object.")
+            else:
+                # Restoring state!
+                self.logger.info("State Restored! Starting optimization with "
+                                 "incumbent %s", self.incumbent)
+                self.logger.info("State restored with following budget:")
+                self.stats.print_stats()
 
         # To be on the safe side -> never return "None" as incumbent
         if not self.incumbent:
@@ -218,7 +224,7 @@ class SMBO(object):
                             output_directory=self.scenario.output_dir_for_this_run,
                             logger=self.logger)
 
-            logging.debug("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
+            self.logger.debug("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
                 self.stats.get_remaing_time_budget(),
                 self.stats.get_remaining_ta_budget(),
                 self.stats.get_remaining_ta_runs()))

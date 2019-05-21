@@ -546,7 +546,29 @@ class CMDReader(object):
                default=0.5, type=float,
                help="[dev] probablity to run a random configuration"
                " instead of configuration optimized on the acquisition function")
-
+        ## Successive Halving
+        smac_opts.add_argument("--sh_min_budget", "--sh_min_budget",
+                dest='sh_min_budget',
+                default=None, type=int,
+                help="[dev] Set minimum budget for successive halving. Default is 1 (min. instances in 1st run)")
+        smac_opts.add_argument("--sh_max_budget", "--sh_max_budget",
+               dest='sh_max_budget',
+               default=None, type=int,
+               help="[dev] Set maximum budget for successive halving. Default is total instances")
+        smac_opts.add_argument("--sh_eta", "--sh_eta",
+               dest='sh_eta',
+               default=2, type=int,
+               help="[dev] Set budget increase factor for successive halving run. Default is 2")
+        smac_opts.add_argument("--sh_n_seeds", "--sh_n_seeds",
+               dest='sh_n_seeds',
+               default=None, type=int,
+               help="[dev] Set number of seeds to consider for successive halving run if algorithm is "
+                    "non-deterministic. Default is None")
+        smac_opts.add_argument("--sh_instance_order", "--sh_instance_order",
+               dest='sh_instance_order',
+               choices=["random", "budget_random", "none"],
+               default='random', type=str,
+               help="[dev] Set order of instances for successive halving run. Default is 'random'")
         self.parser.add_parser(self.smac_parser)
         self.smac_cmd_actions, self.smac_cmd_translations = CMDReader._extract_action_info(self.smac_parser._actions)
 
