@@ -7,6 +7,7 @@ import numpy as np
 
 from smac.intensification.intensification import Intensifier
 from smac.optimizer.ei_optimization import ChallengerList
+from smac.optimizer.objective import sum_cost
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT, MAX_CUTOFF
 from smac.configspace import Configuration
@@ -66,8 +67,9 @@ class SuccessiveHalving(Intensifier):
                  instances: typing.List[str], max_budget: int = None, min_budget: int = None, eta: float = 2,
                  cutoff: int = MAX_CUTOFF, instance_specifics: typing.Mapping[str, np.ndarray] = None,
                  deterministic: bool = False, run_obj_time: bool = True, n_seeds: int = None, instance_order='random',
+                 adaptive_capping_slackfactor: float = 1.2,
                  always_race_against: Configuration = None, run_limit: int = MAXINT, use_ta_time_bound: bool = False,
-                 minR: int = 1, maxR: int = 2000, adaptive_capping_slackfactor: float = 1.2, min_chall: int = 2):
+                 minR: int = 1, maxR: int = 2000, min_chall: int = 2):
 
         super().__init__(tae_runner, stats, traj_logger, rng, instances)
 
@@ -76,6 +78,7 @@ class SuccessiveHalving(Intensifier):
 
         self.stats = stats
         self.traj_logger = traj_logger
+
         # general attributes
         self.rs = rng
         self._num_run = 0
@@ -149,11 +152,17 @@ class SuccessiveHalving(Intensifier):
         self.max_sh_iter = np.floor(np.log(self.max_budget / self.min_budget) / np.log(eta))
         self.initial_challengers = int(np.round(self.eta ** (self.max_sh_iter + 1)))
 
+        # for adaptive capping
+        if self.budget_type == 'instance' and self.instance_order != 'budget_random' and self.run_obj_time:
+            self.adaptive_capping = True
+        else:
+            self.adaptive_capping = False
+        self.adaptive_capping_slackfactor = adaptive_capping_slackfactor
+
         # self.always_race_against = always_race_against
         # self.run_limit = run_limit
         # self.maxR = maxR
         # self.minR = minR
-        # self.adaptive_capping_slackfactor = adaptive_capping_slackfactor
         # if self.run_limit < 1:
         #     raise ValueError("run_limit must be > 1")
         # self.min_chall = min_chall
@@ -220,6 +229,14 @@ class SuccessiveHalving(Intensifier):
         if self.instance_order == 'budget_random':
             np.random.shuffle(all_instances)
 
+        # calculating the incumbent's performance for adaptive capping
+        # this check is required because there is no initial run to get the incumbent performance
+        if incumbent is not None:
+            inc_runs = run_history.get_runs_for_config(incumbent)
+            inc_sum_cost = sum_cost(config=incumbent, instance_seed_pairs=inc_runs, run_history=run_history)
+        else:
+            inc_sum_cost = np.inf
+
         # selecting the 1st budget for 1st round of successive halving
         sh_iter = self.max_sh_iter
         budget = self.max_budget / (self.eta ** sh_iter)
@@ -250,6 +267,18 @@ class SuccessiveHalving(Intensifier):
                 self.logger.debug(" Running challenger  -  %s" % str(challenger))
                 for instance, seed in available_insts:
 
+                    # selecting cutoff if running adaptive capping
+                    cutoff = self._adapt_cutoff(challenger=challenger,
+                                                incumbent=incumbent,
+                                                run_history=run_history,
+                                                inc_sum_cost=inc_sum_cost)
+                    if cutoff is not None and cutoff <= 0:
+                        # no time to validate challenger
+                        self.logger.debug("Stop challenger itensification due to adaptive capping.")
+                        break
+
+                    self.logger.debug('Cutoff for challenger: %s' % str(cutoff))
+
                     # run target algorithm for each instance-seed pair
                     self.logger.debug("Execute target algorithm")
                     try:
@@ -265,13 +294,22 @@ class SuccessiveHalving(Intensifier):
                                 config=challenger,
                                 instance=instance,
                                 seed=seed,
-                                cutoff=self.cutoff,
-                                instance_specific=self.instance_specifics.get(instance, "0"))
-                            self._ta_time += dur
+                                cutoff=cutoff,
+                                instance_specific=self.instance_specifics.get(instance, "0"),
+                                capped=(self.cutoff is not None) and
+                                       (cutoff < self.cutoff)
+                            )
+                        self._ta_time += dur
+
+                    except CappedRunException:
+                        # We move on to the next configuration if we reach maximum cutoff i.e., capped
+                        self.logger.debug("Budget exhausted by adaptive capping; "
+                                          "Interrupting current challenger and moving on to the next one")
+                        break
 
                     except BudgetExhaustedException:
                         # TODO revisit what to return if budget exhausted. What is the use of inc_perf in smbo?
-                        # We move on to the next configuration if we reach maximum cutoff
+                        # Returning the final incumbent selected so far because we ran out of optimization budget
                         self.logger.debug("Budget exhausted; "
                                           "Interrupting optimization run and returning current incumbent")
                         return incumbent, None
@@ -334,6 +372,53 @@ class SuccessiveHalving(Intensifier):
         top_configs = configs_sorted[:k]
         return top_configs
 
+    def _adapt_cutoff(self, challenger: Configuration,
+                      incumbent: Configuration,
+                      run_history: RunHistory,
+                      inc_sum_cost: float):
+
+        """Adaptive capping:
+        Compute cutoff based on time so far used for incumbent
+        and reduce cutoff for next run of challenger accordingly
+
+        !Only applicable if self.adaptive capping i.e.,
+            - objective is runtime
+            - sucessive halving is on instances and not cutoff
+            - instance order is not changed per budget
+
+        Parameters
+        ----------
+        challenger : Configuration
+            Configuration which challenges incumbent
+        incumbent : Configuration
+            Best configuration so far
+        run_history : RunHistory
+            Stores all runs we ran so far
+        inc_sum_cost: float
+            Sum of runtimes of all incumbent runs
+
+        Returns
+        -------
+        cutoff: int
+            Adapted cutoff
+        """
+
+        if not self.adaptive_capping:
+            return self.cutoff
+
+        # cost used by challenger for going over all its runs
+        # should be subset of runs of incumbent (not checked for efficiency
+        # reasons)
+        chall_inst_seeds = run_history.get_runs_for_config(challenger)
+        chal_sum_cost = sum_cost(config=challenger,
+                                 instance_seed_pairs=chall_inst_seeds,
+                                 run_history=run_history)
+        cutoff = min(self.cutoff,
+                     inc_sum_cost * self.adaptive_capping_slackfactor -
+                     chal_sum_cost
+                     )
+        return cutoff
+
     def _compare_configs(self, incumbent: Configuration, challenger: Configuration, run_history: RunHistory,
                          log_traj: bool, **kwargs):
         """
@@ -355,7 +440,7 @@ class SuccessiveHalving(Intensifier):
             best configuration among challenger and incumbent
             :param **kwargs:
         """
-        # NOTE run_history would overwrite the cost for runs since it doesnt record each budget separately (yet)
+        # NOTE run_history overwrites the cost for runs since it doesnt record each budget (cutoff) separately (yet?)
         # get incumbent & challenger performance
         inc_runs = run_history.get_runs_for_config(incumbent)
         inc_perf = run_history.aggregate_func(incumbent, run_history, inc_runs)
@@ -370,7 +455,7 @@ class SuccessiveHalving(Intensifier):
                              "(%.4f) in this run" % (inc_perf, chal_perf))
             return incumbent, inc_perf
         else:
-            self.logger.info("Imcumbent changed! Challenger (%.4f) is better than "
+            self.logger.info("Incumbent changed! Challenger (%.4f) is better than "
                              "incumbent (%.4f)" % (chal_perf, inc_perf))
             if log_traj:
                 self.stats.inc_changed += 1
