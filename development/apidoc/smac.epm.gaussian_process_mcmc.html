@@ -276,7 +276,7 @@
 <span id="smac-epm-gaussian-process-mcmc-module"></span><h1>smac.epm.gaussian_process_mcmc module<a class="headerlink" href="#module-smac.epm.gaussian_process_mcmc" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.epm.gaussian_process_mcmc.GaussianProcessMCMC">
-<em class="property">class </em><code class="descclassname">smac.epm.gaussian_process_mcmc.</code><code class="descname">GaussianProcessMCMC</code><span class="sig-paren">(</span><em>configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: numpy.ndarray, bounds: List[Tuple[float, float]], seed: int, kernel: skopt.learning.gaussian_process.kernels.Kernel, n_mcmc_walkers: int = 20, chain_length: int = 50, burnin_steps: int = 50, normalize_y: bool = True, mcmc_sampler: str = 'emcee', average_samples: bool = False, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process_mcmc.html#GaussianProcessMCMC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process_mcmc.GaussianProcessMCMC" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.epm.gaussian_process_mcmc.</code><code class="sig-name descname">GaussianProcessMCMC</code><span class="sig-paren">(</span><em class="sig-param">configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: numpy.ndarray, bounds: List[Tuple[float, float]], seed: int, kernel: skopt.learning.gaussian_process.kernels.Kernel, n_mcmc_walkers: int = 20, chain_length: int = 50, burnin_steps: int = 50, normalize_y: bool = True, mcmc_sampler: str = 'emcee', average_samples: bool = False, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process_mcmc.html#GaussianProcessMCMC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process_mcmc.GaussianProcessMCMC" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.epm.base_gp.html#smac.epm.base_gp.BaseModel" title="smac.epm.base_gp.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_gp.BaseModel</span></code></a></p>
 <p>Gaussian process model.</p>
 <p>The GP hyperparameters are integrated out by MCMC. If you use this class
@@ -313,66 +313,12 @@ Letham et al. (2018, <a class="reference external" href="http://lethalletham.com
 </ul>
 </dd>
 </dl>
-<dl class="method">
-<dt id="smac.epm.gaussian_process_mcmc.GaussianProcessMCMC.predict">
-<code class="descname">predict</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="headerlink" href="#smac.epm.gaussian_process_mcmc.GaussianProcessMCMC.predict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Predict means and variances for given X.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray of shape =</em><em> [</em><em>n_samples</em><em>, </em><em>n_features</em><em> (</em><em>config + instance features</em><em>)</em><em>]</em>) – Training samples</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>means</strong> (<em>np.ndarray of shape = [n_samples, n_objectives]</em>) – Predictive mean</p></li>
-<li><p><strong>vars</strong> (<em>np.ndarray  of shape = [n_samples, n_objectives]</em>) – Predictive variance</p></li>
-</ul>
-</p>
-</dd>
-</dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="smac.epm.gaussian_process_mcmc.GaussianProcessMCMC.predict_marginalized_over_instances">
-<code class="descname">predict_marginalized_over_instances</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="headerlink" href="#smac.epm.gaussian_process_mcmc.GaussianProcessMCMC.predict_marginalized_over_instances" title="Permalink to this definition">¶</a></dt>
-<dd><p>Predict mean and variance marginalized over all instances.</p>
-<p>Returns the predictive mean and variance marginalised over all
-instances for a set of configurations.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em>) – [n_samples, n_features (config)]</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>means</strong> (<em>np.ndarray of shape = [n_samples, 1]</em>) – Predictive mean</p></li>
-<li><p><strong>vars</strong> (<em>np.ndarray  of shape = [n_samples, 1]</em>) – Predictive variance</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="smac.epm.gaussian_process_mcmc.GaussianProcessMCMC.train">
-<code class="descname">train</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em>, <em>Y: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; smac.epm.base_epm.AbstractEPM<a class="headerlink" href="#smac.epm.gaussian_process_mcmc.GaussianProcessMCMC.train" title="Permalink to this definition">¶</a></dt>
-<dd><p>Trains the EPM on X and Y.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>n_samples</em><em>, </em><em>n_features</em><em> (</em><em>config + instance features</em><em>)</em><em>]</em>) – Input data points.</p></li>
-<li><p><strong>Y</strong> (<em>np.ndarray</em><em> [</em><em>n_samples</em><em>, </em><em>n_objectives</em><em>]</em>) – The corresponding target values. n_objectives must match the
-number of target names specified in the constructor.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>self</strong></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM">AbstractEPM</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
+<dl class="data">
+<dt id="smac.epm.gaussian_process_mcmc.logger">
+<code class="sig-prename descclassname">smac.epm.gaussian_process_mcmc.</code><code class="sig-name descname">logger</code><em class="property"> = &lt;Logger smac.epm.gaussian_process_mcmc (WARNING)&gt;</em><a class="headerlink" href="#smac.epm.gaussian_process_mcmc.logger" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 

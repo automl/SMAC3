@@ -276,19 +276,19 @@
 <span id="smac-facade-smac-bo-facade-module"></span><h1>smac.facade.smac_bo_facade module<a class="headerlink" href="#module-smac.facade.smac_bo_facade" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.facade.smac_bo_facade.SMAC4BO">
-<em class="property">class </em><code class="descclassname">smac.facade.smac_bo_facade.</code><code class="descname">SMAC4BO</code><span class="sig-paren">(</span><em>model_type='gp_mcmc'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_bo_facade.html#SMAC4BO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_bo_facade.SMAC4BO" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.facade.smac_bo_facade.</code><code class="sig-name descname">SMAC4BO</code><span class="sig-paren">(</span><em class="sig-param">model_type='gp_mcmc'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_bo_facade.html#SMAC4BO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_bo_facade.SMAC4BO" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC" title="smac.facade.smac_ac_facade.SMAC4AC"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.facade.smac_ac_facade.SMAC4AC</span></code></a></p>
 <p>Facade to use SMAC for BO using a GP</p>
 <p>see smac.facade.smac_Facade for API
 This facade overwrites options available via the SMAC facade</p>
 <dl class="attribute">
 <dt id="smac.facade.smac_bo_facade.SMAC4BO.logger">
-<code class="descname">logger</code><a class="headerlink" href="#smac.facade.smac_bo_facade.SMAC4BO.logger" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">logger</code><a class="headerlink" href="#smac.facade.smac_bo_facade.SMAC4BO.logger" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.facade.smac_bo_facade.SMAC4BO.stats">
-<code class="descname">stats</code><a class="headerlink" href="#smac.facade.smac_bo_facade.SMAC4BO.stats" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">stats</code><a class="headerlink" href="#smac.facade.smac_bo_facade.SMAC4BO.stats" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">Stats</a></p>
@@ -298,7 +298,7 @@ This facade overwrites options available via the SMAC facade</p>
 
 <dl class="attribute">
 <dt id="smac.facade.smac_bo_facade.SMAC4BO.solver">
-<code class="descname">solver</code><a class="headerlink" href="#smac.facade.smac_bo_facade.SMAC4BO.solver" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">solver</code><a class="headerlink" href="#smac.facade.smac_bo_facade.SMAC4BO.solver" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO" title="smac.optimizer.smbo.SMBO">SMBO</a></p>
@@ -308,7 +308,7 @@ This facade overwrites options available via the SMAC facade</p>
 
 <dl class="attribute">
 <dt id="smac.facade.smac_bo_facade.SMAC4BO.runhistory">
-<code class="descname">runhistory</code><a class="headerlink" href="#smac.facade.smac_bo_facade.SMAC4BO.runhistory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">runhistory</code><a class="headerlink" href="#smac.facade.smac_bo_facade.SMAC4BO.runhistory" title="Permalink to this definition">¶</a></dt>
 <dd><p>List with information about previous runs</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -319,7 +319,7 @@ This facade overwrites options available via the SMAC facade</p>
 
 <dl class="attribute">
 <dt id="smac.facade.smac_bo_facade.SMAC4BO.trajectory">
-<code class="descname">trajectory</code><a class="headerlink" href="#smac.facade.smac_bo_facade.SMAC4BO.trajectory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">trajectory</code><a class="headerlink" href="#smac.facade.smac_bo_facade.SMAC4BO.trajectory" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all incumbents</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -330,115 +330,6 @@ This facade overwrites options available via the SMAC facade</p>
 
 <p>Constructor
 see ~smac.facade.smac_facade for documentation</p>
-<dl class="method">
-<dt id="smac.facade.smac_bo_facade.SMAC4BO.get_X_y">
-<code class="descname">get_X_y</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.smac_bo_facade.SMAC4BO.get_X_y" title="Permalink to this definition">¶</a></dt>
-<dd><p>Simple interface to obtain all data in runhistory in <code class="docutils literal notranslate"><span class="pre">X,</span> <span class="pre">y</span></code> format.</p>
-<p>Uses
-<a class="reference internal" href="smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y" title="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y"><code class="xref py py-meth docutils literal notranslate"><span class="pre">smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()</span></code></a>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p><strong>X</strong> (<em>numpy.ndarray</em>) – matrix of all configurations (+ instance features)</p></li>
-<li><p><strong>y</strong> (<em>numpy.ndarray</em>) – vector of cost values; can include censored runs</p></li>
-<li><p><strong>cen</strong> (<em>numpy.ndarray</em>) – vector of bools indicating whether the y-value is censored</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="smac.facade.smac_bo_facade.SMAC4BO.get_runhistory">
-<code class="descname">get_runhistory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.smac_bo_facade.SMAC4BO.get_runhistory" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Returns the runhistory (i.e., all evaluated configurations and</dt><dd><p>the results).</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>Runhistory</strong></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="smac.facade.smac_bo_facade.SMAC4BO.get_tae_runner">
-<code class="descname">get_tae_runner</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.smac_bo_facade.SMAC4BO.get_tae_runner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns target algorithm evaluator (TAE) object which can run the
-target algorithm given a configuration</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>TAE</strong></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun">smac.tae.execute_ta_run.ExecuteTARun</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="smac.facade.smac_bo_facade.SMAC4BO.get_trajectory">
-<code class="descname">get_trajectory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.smac_bo_facade.SMAC4BO.get_trajectory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the trajectory (i.e., all incumbent configurations over
-time).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>Trajectory</strong></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>List of <a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajEntry" title="smac.utils.io.traj_logging.TrajEntry"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrajEntry</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="smac.facade.smac_bo_facade.SMAC4BO.optimize">
-<code class="descname">optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.smac_bo_facade.SMAC4BO.optimize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Optimizes the algorithm provided in scenario (given in constructor)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>incumbent</strong> – Best found configuration</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Configuration</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="smac.facade.smac_bo_facade.SMAC4BO.validate">
-<code class="descname">validate</code><span class="sig-paren">(</span><em>config_mode: Union[List[ConfigSpace.configuration_space.Configuration], numpy.ndarray, str] = 'inc', instance_mode: Union[List[str], str] = 'train+test', repetitions: int = 1, use_epm: bool = False, n_jobs: int = -1, backend: str = 'threading'</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.smac_bo_facade.SMAC4BO.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create validator-object and run validation, using
-scenario-information, runhistory from smbo and tae_runner from intensify</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>config_mode</strong> (<em>str</em><em> or </em><em>list&lt;Configuration&gt;</em>) – string or directly a list of Configuration
-str from [def, inc, def+inc, wallclock_time, cpu_time, all]
-time evaluates at cpu- or wallclock-timesteps of:
-[max_time/2^0, max_time/2^1, max_time/2^3, …, default]
-with max_time being the highest recorded time</p></li>
-<li><p><strong>instance_mode</strong> (<em>string</em>) – what instances to use for validation, from [train, test, train+test]</p></li>
-<li><p><strong>repetitions</strong> (<em>int</em>) – number of repetitions in nondeterministic algorithms (in
-deterministic will be fixed to 1)</p></li>
-<li><p><strong>use_epm</strong> (<em>bool</em>) – whether to use an EPM instead of evaluating all runs with the TAE</p></li>
-<li><p><strong>n_jobs</strong> (<em>int</em>) – number of parallel processes used by joblib</p></li>
-<li><p><strong>backend</strong> (<em>string</em>) – what backend to be used by joblib</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>runhistory</strong> – runhistory containing all specified runs</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">RunHistory</a></p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 </div>

@@ -276,87 +276,87 @@
 <span id="smac-optimizer-epils-module"></span><h1>smac.optimizer.epils module<a class="headerlink" href="#module-smac.optimizer.epils" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.optimizer.epils.EPILS_Solver">
-<em class="property">class </em><code class="descclassname">smac.optimizer.epils.</code><code class="descname">EPILS_Solver</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>stats: smac.stats.stats.Stats</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</em>, <em>intensifier: smac.intensification.intensification.Intensifier</em>, <em>aggregate_func: callable</em>, <em>num_run: int</em>, <em>model: smac.epm.rf_with_instances.RandomForestWithInstances</em>, <em>acq_optimizer: smac.optimizer.ei_optimization.LocalSearch</em>, <em>acquisition_func: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em>rng: mtrand.RandomState</em>, <em>restart_prob: float = 0.01</em>, <em>pertubation_steps: int = 3</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/epils.html#EPILS_Solver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.epils.</code><code class="sig-name descname">EPILS_Solver</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">initial_design: smac.initial_design.initial_design.InitialDesign</em>, <em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</em>, <em class="sig-param">intensifier: smac.intensification.intensification.Intensifier</em>, <em class="sig-param">aggregate_func: callable</em>, <em class="sig-param">num_run: int</em>, <em class="sig-param">model: smac.epm.rf_with_instances.RandomForestWithInstances</em>, <em class="sig-param">acq_optimizer: smac.optimizer.ei_optimization.LocalSearch</em>, <em class="sig-param">acquisition_func: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">rng: mtrand.RandomState</em>, <em class="sig-param">restart_prob: float = 0.01</em>, <em class="sig-param">pertubation_steps: int = 3</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/epils.html#EPILS_Solver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Interface that contains the main Bayesian optimization loop</p>
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.logger">
-<code class="descname">logger</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.logger" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">logger</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.logger" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.incumbent">
-<code class="descname">incumbent</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.incumbent" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">incumbent</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.incumbent" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.scenario">
-<code class="descname">scenario</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.scenario" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">scenario</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.scenario" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.config_space">
-<code class="descname">config_space</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.config_space" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">config_space</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.config_space" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.stats">
-<code class="descname">stats</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.stats" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">stats</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.stats" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.initial_design">
-<code class="descname">initial_design</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.initial_design" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">initial_design</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.initial_design" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.runhistory">
-<code class="descname">runhistory</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.runhistory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">runhistory</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.runhistory" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.rh2EPM">
-<code class="descname">rh2EPM</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.rh2EPM" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">rh2EPM</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.rh2EPM" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.intensifier">
-<code class="descname">intensifier</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.intensifier" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">intensifier</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.intensifier" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.aggregate_func">
-<code class="descname">aggregate_func</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.aggregate_func" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">aggregate_func</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.aggregate_func" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.num_run">
-<code class="descname">num_run</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.num_run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">num_run</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.num_run" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.model">
-<code class="descname">model</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.model" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">model</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.model" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.acq_optimizer">
-<code class="descname">acq_optimizer</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.acq_optimizer" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">acq_optimizer</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.acq_optimizer" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.acquisition_func">
-<code class="descname">acquisition_func</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.acquisition_func" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">acquisition_func</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.acquisition_func" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.rng">
-<code class="descname">rng</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.rng" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">rng</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.rng" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.max_neighbors">
-<code class="descname">max_neighbors</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.max_neighbors" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">max_neighbors</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.max_neighbors" title="Permalink to this definition">¶</a></dt>
 <dd><p>set to max(5, int(math.sqrt(len(self.config_space.get_hyperparameters()))))</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -367,17 +367,17 @@
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.restart_prob">
-<code class="descname">restart_prob</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.restart_prob" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">restart_prob</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.restart_prob" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.pertubation_steps">
-<code class="descname">pertubation_steps</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.pertubation_steps" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">pertubation_steps</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.pertubation_steps" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.slow_race_minR">
-<code class="descname">slow_race_minR</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.slow_race_minR" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">slow_race_minR</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.slow_race_minR" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set to 5</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -388,7 +388,7 @@
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.slow_race_adaptive_capping_factor">
-<code class="descname">slow_race_adaptive_capping_factor</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.slow_race_adaptive_capping_factor" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">slow_race_adaptive_capping_factor</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.slow_race_adaptive_capping_factor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set to 2</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -399,7 +399,7 @@
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.fast_race_minR">
-<code class="descname">fast_race_minR</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.fast_race_minR" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fast_race_minR</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.fast_race_minR" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set to 1</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -410,7 +410,7 @@
 
 <dl class="attribute">
 <dt id="smac.optimizer.epils.EPILS_Solver.fast_race_adaptive_capping_factor">
-<code class="descname">fast_race_adaptive_capping_factor</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.fast_race_adaptive_capping_factor" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fast_race_adaptive_capping_factor</code><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.fast_race_adaptive_capping_factor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set to 1.2</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -442,7 +442,7 @@
 </dl>
 <dl class="method">
 <dt id="smac.optimizer.epils.EPILS_Solver.local_search">
-<code class="descname">local_search</code><span class="sig-paren">(</span><em>start_point: ConfigSpace.configuration_space.Configuration</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/epils.html#EPILS_Solver.local_search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.local_search" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">local_search</code><span class="sig-paren">(</span><em class="sig-param">start_point: ConfigSpace.configuration_space.Configuration</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/epils.html#EPILS_Solver.local_search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.local_search" title="Permalink to this definition">¶</a></dt>
 <dd><p>Starts a local search from the given startpoint and quits
 if either the max number of steps is reached or no neighbor
 with an higher improvement was found.</p>
@@ -458,7 +458,7 @@ with an higher improvement was found.</p>
 
 <dl class="method">
 <dt id="smac.optimizer.epils.EPILS_Solver.run">
-<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/epils.html#EPILS_Solver.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/epils.html#EPILS_Solver.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epils.EPILS_Solver.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs the Bayesian optimization loop</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -474,7 +474,7 @@ with an higher improvement was found.</p>
 
 <dl class="function">
 <dt id="smac.optimizer.epils.get_one_exchange_neighbourhood">
-<code class="descclassname">smac.optimizer.epils.</code><code class="descname">get_one_exchange_neighbourhood</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.optimizer.epils.get_one_exchange_neighbourhood" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">smac.optimizer.epils.</code><code class="sig-name descname">get_one_exchange_neighbourhood</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.optimizer.epils.get_one_exchange_neighbourhood" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all configurations in a one-exchange neighborhood.</p>
 <p>The method is implemented as defined by:
 Frank Hutter, Holger H. Hoos and Kevin Leyton-Brown

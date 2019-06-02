@@ -2,10 +2,9 @@ smac.utils.io package
 =====================
 
 .. automodule:: smac.utils.io
-    :members:
-    :undoc-members:
-    :show-inheritance:
-    :inherited-members:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 
 .. toctree::
@@ -15,4 +14,3 @@ smac.utils.io package
    smac.utils.io.output_directory
    smac.utils.io.output_writer
    smac.utils.io.traj_logging
-

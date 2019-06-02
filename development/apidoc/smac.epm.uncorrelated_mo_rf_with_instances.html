@@ -276,7 +276,7 @@
 <span id="smac-epm-uncorrelated-mo-rf-with-instances-module"></span><h1>smac.epm.uncorrelated_mo_rf_with_instances module<a class="headerlink" href="#module-smac.epm.uncorrelated_mo_rf_with_instances" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances">
-<em class="property">class </em><code class="descclassname">smac.epm.uncorrelated_mo_rf_with_instances.</code><code class="descname">UncorrelatedMultiObjectiveRandomForestWithInstances</code><span class="sig-paren">(</span><em>target_names: List[str], configspace: ConfigSpace.configuration_space.ConfigurationSpace, bounds: List[Tuple[float, float]], types: numpy.ndarray, seed: int, rf_kwargs: Optional[Dict[str, Any]] = None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/uncorrelated_mo_rf_with_instances.html#UncorrelatedMultiObjectiveRandomForestWithInstances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.epm.uncorrelated_mo_rf_with_instances.</code><code class="sig-name descname">UncorrelatedMultiObjectiveRandomForestWithInstances</code><span class="sig-paren">(</span><em class="sig-param">target_names: List[str], configspace: ConfigSpace.configuration_space.ConfigurationSpace, bounds: List[Tuple[float, float]], types: numpy.ndarray, seed: int, rf_kwargs: Optional[Dict[str, Any]] = None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/uncorrelated_mo_rf_with_instances.html#UncorrelatedMultiObjectiveRandomForestWithInstances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_epm.AbstractEPM</span></code></a></p>
 <p>Wrapper for the random forest to predict multiple targets.</p>
 <p>Only the a list with the target names and the types array for the
@@ -285,17 +285,17 @@ the random forest can be passed via kwargs. Consult the documentation of
 the random forest for the hyperparameters and their meanings.</p>
 <dl class="attribute">
 <dt id="smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.target_names">
-<code class="descname">target_names</code><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.target_names" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">target_names</code><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.target_names" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.num_targets">
-<code class="descname">num_targets</code><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.num_targets" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">num_targets</code><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.num_targets" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.estimators">
-<code class="descname">estimators</code><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.estimators" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">estimators</code><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.estimators" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>Constructor</p>
@@ -311,26 +311,8 @@ of the list will be <code class="docutils literal notranslate"><span class="pre"
 </dd>
 </dl>
 <dl class="method">
-<dt id="smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.predict">
-<code class="descname">predict</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.predict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Predict means and variances for given X.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray of shape =</em><em> [</em><em>n_samples</em><em>, </em><em>n_features</em><em> (</em><em>config + instance features</em><em>)</em><em>]</em>) – Training samples</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>means</strong> (<em>np.ndarray of shape = [n_samples, n_objectives]</em>) – Predictive mean</p></li>
-<li><p><strong>vars</strong> (<em>np.ndarray  of shape = [n_samples, n_objectives]</em>) – Predictive variance</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.predict_marginalized_over_instances">
-<code class="descname">predict_marginalized_over_instances</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/uncorrelated_mo_rf_with_instances.html#UncorrelatedMultiObjectiveRandomForestWithInstances.predict_marginalized_over_instances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.predict_marginalized_over_instances" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">predict_marginalized_over_instances</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/uncorrelated_mo_rf_with_instances.html#UncorrelatedMultiObjectiveRandomForestWithInstances.predict_marginalized_over_instances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.predict_marginalized_over_instances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict mean and variance marginalized over all instances.</p>
 <p>Returns the predictive mean and variance marginalised over all
 instances for a set of configurations.</p>
@@ -344,27 +326,6 @@ instances for a set of configurations.</p>
 <li><p><strong>vars</strong> (<em>np.ndarray  of shape = [n_samples, n_objectives]</em>) – Predictive variance</p></li>
 </ul>
 </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.train">
-<code class="descname">train</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em>, <em>Y: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; smac.epm.base_epm.AbstractEPM<a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.train" title="Permalink to this definition">¶</a></dt>
-<dd><p>Trains the EPM on X and Y.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>n_samples</em><em>, </em><em>n_features</em><em> (</em><em>config + instance features</em><em>)</em><em>]</em>) – Input data points.</p></li>
-<li><p><strong>Y</strong> (<em>np.ndarray</em><em> [</em><em>n_samples</em><em>, </em><em>n_objectives</em><em>]</em>) – The corresponding target values. n_objectives must match the
-number of target names specified in the constructor.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>self</strong></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM">AbstractEPM</a></p>
 </dd>
 </dl>
 </dd></dl>

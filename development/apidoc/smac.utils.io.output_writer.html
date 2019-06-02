@@ -278,12 +278,12 @@
 <span id="smac-utils-io-output-writer-module"></span><h1>smac.utils.io.output_writer module<a class="headerlink" href="#module-smac.utils.io.output_writer" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.utils.io.output_writer.OutputWriter">
-<em class="property">class </em><code class="descclassname">smac.utils.io.output_writer.</code><code class="descname">OutputWriter</code><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.utils.io.output_writer.</code><code class="sig-name descname">OutputWriter</code><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Writing scenario to file.</p>
 <dl class="method">
 <dt id="smac.utils.io.output_writer.OutputWriter.save_configspace">
-<code class="descname">save_configspace</code><span class="sig-paren">(</span><em>cs: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em>fn: str</em>, <em>output_format: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.save_configspace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.save_configspace" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">save_configspace</code><span class="sig-paren">(</span><em class="sig-param">cs: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em class="sig-param">fn: str</em>, <em class="sig-param">output_format: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.save_configspace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.save_configspace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writing ConfigSpace to file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -299,7 +299,7 @@
 
 <dl class="method">
 <dt id="smac.utils.io.output_writer.OutputWriter.write_inst_features_file">
-<code class="descname">write_inst_features_file</code><span class="sig-paren">(</span><em>n_features: int</em>, <em>feat_dict</em>, <em>fn: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.write_inst_features_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.write_inst_features_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">write_inst_features_file</code><span class="sig-paren">(</span><em class="sig-param">n_features: int</em>, <em class="sig-param">feat_dict</em>, <em class="sig-param">fn: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.write_inst_features_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.write_inst_features_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes features to file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -314,7 +314,7 @@
 
 <dl class="method">
 <dt id="smac.utils.io.output_writer.OutputWriter.write_inst_file">
-<code class="descname">write_inst_file</code><span class="sig-paren">(</span><em>insts: List[str], fn: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.write_inst_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.write_inst_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">write_inst_file</code><span class="sig-paren">(</span><em class="sig-param">insts: List[str], fn: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.write_inst_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.write_inst_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes instance-list to file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -328,7 +328,7 @@
 
 <dl class="method">
 <dt id="smac.utils.io.output_writer.OutputWriter.write_scenario_file">
-<code class="descname">write_scenario_file</code><span class="sig-paren">(</span><em>scenario</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.write_scenario_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.write_scenario_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">write_scenario_file</code><span class="sig-paren">(</span><em class="sig-param">scenario</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.write_scenario_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.write_scenario_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write scenario to a file (format is compatible with input_reader).
 Will overwrite if file exists. If you have arguments that need special
 parsing when saving, specify so in the _parse_argument-function.

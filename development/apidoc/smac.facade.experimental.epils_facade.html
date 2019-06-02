@@ -278,17 +278,17 @@
 <span id="smac-facade-experimental-epils-facade-module"></span><h1>smac.facade.experimental.epils_facade module<a class="headerlink" href="#module-smac.facade.experimental.epils_facade" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.facade.experimental.epils_facade.EPILS">
-<em class="property">class </em><code class="descclassname">smac.facade.experimental.epils_facade.</code><code class="descname">EPILS</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>tae_runner=None</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory = None</em>, <em>intensifier: smac.intensification.intensification.Intensifier = None</em>, <em>acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction = None</em>, <em>model: smac.epm.base_epm.AbstractEPM = None</em>, <em>runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM = None</em>, <em>initial_design: smac.initial_design.initial_design.InitialDesign = None</em>, <em>initial_configurations: List[ConfigSpace.configuration_space.Configuration] = None</em>, <em>stats: smac.stats.stats.Stats = None</em>, <em>rng: mtrand.RandomState = None</em>, <em>run_id: int = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/epils_facade.html#EPILS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.epils_facade.EPILS" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.facade.experimental.epils_facade.</code><code class="sig-name descname">EPILS</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">tae_runner=None</em>, <em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory = None</em>, <em class="sig-param">intensifier: smac.intensification.intensification.Intensifier = None</em>, <em class="sig-param">acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction = None</em>, <em class="sig-param">model: smac.epm.base_epm.AbstractEPM = None</em>, <em class="sig-param">runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM = None</em>, <em class="sig-param">initial_design: smac.initial_design.initial_design.InitialDesign = None</em>, <em class="sig-param">initial_configurations: List[ConfigSpace.configuration_space.Configuration] = None</em>, <em class="sig-param">stats: smac.stats.stats.Stats = None</em>, <em class="sig-param">rng: mtrand.RandomState = None</em>, <em class="sig-param">run_id: int = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/epils_facade.html#EPILS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.epils_facade.EPILS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Facade to use EPILS mode</p>
 <dl class="attribute">
 <dt id="smac.facade.experimental.epils_facade.EPILS.logger">
-<code class="descname">logger</code><a class="headerlink" href="#smac.facade.experimental.epils_facade.EPILS.logger" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">logger</code><a class="headerlink" href="#smac.facade.experimental.epils_facade.EPILS.logger" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.facade.experimental.epils_facade.EPILS.stats">
-<code class="descname">stats</code><a class="headerlink" href="#smac.facade.experimental.epils_facade.EPILS.stats" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">stats</code><a class="headerlink" href="#smac.facade.experimental.epils_facade.EPILS.stats" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">Stats</a></p>
@@ -298,7 +298,7 @@
 
 <dl class="attribute">
 <dt id="smac.facade.experimental.epils_facade.EPILS.solver">
-<code class="descname">solver</code><a class="headerlink" href="#smac.facade.experimental.epils_facade.EPILS.solver" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">solver</code><a class="headerlink" href="#smac.facade.experimental.epils_facade.EPILS.solver" title="Permalink to this definition">¶</a></dt>
 <dd><p>Optimizer object, see <a class="reference internal" href="smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver" title="smac.optimizer.epils.EPILS_Solver"><code class="xref py py-class docutils literal notranslate"><span class="pre">EPILS_Solver</span></code></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -337,7 +337,7 @@ cannot be used together with initial_design</p></li>
 <p>Constructor</p>
 <dl class="method">
 <dt id="smac.facade.experimental.epils_facade.EPILS.get_X_y">
-<code class="descname">get_X_y</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/epils_facade.html#EPILS.get_X_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.epils_facade.EPILS.get_X_y" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_X_y</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/epils_facade.html#EPILS.get_X_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.epils_facade.EPILS.get_X_y" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simple interface to obtain all data in runhistory in X, y format
 Uses smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()</p>
 <dl class="field-list simple">
@@ -354,7 +354,7 @@ Uses smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()</p>
 
 <dl class="method">
 <dt id="smac.facade.experimental.epils_facade.EPILS.get_runhistory">
-<code class="descname">get_runhistory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/epils_facade.html#EPILS.get_runhistory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.epils_facade.EPILS.get_runhistory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_runhistory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/epils_facade.html#EPILS.get_runhistory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.epils_facade.EPILS.get_runhistory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the runhistory (i.e., all evaluated configurations and
 the results)</p>
 <dl class="field-list simple">
@@ -369,7 +369,7 @@ the results)</p>
 
 <dl class="method">
 <dt id="smac.facade.experimental.epils_facade.EPILS.get_tae_runner">
-<code class="descname">get_tae_runner</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/epils_facade.html#EPILS.get_tae_runner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.epils_facade.EPILS.get_tae_runner" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_tae_runner</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/epils_facade.html#EPILS.get_tae_runner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.epils_facade.EPILS.get_tae_runner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns target algorithm evaluator (TAE) object which can run the
 target algorithm given a configuration</p>
 <dl class="field-list simple">
@@ -384,7 +384,7 @@ target algorithm given a configuration</p>
 
 <dl class="method">
 <dt id="smac.facade.experimental.epils_facade.EPILS.get_trajectory">
-<code class="descname">get_trajectory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/epils_facade.html#EPILS.get_trajectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.epils_facade.EPILS.get_trajectory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_trajectory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/epils_facade.html#EPILS.get_trajectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.epils_facade.EPILS.get_trajectory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the trajectory (i.e., all incumbent configurations over time)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -400,7 +400,7 @@ target algorithm given a configuration</p>
 
 <dl class="method">
 <dt id="smac.facade.experimental.epils_facade.EPILS.optimize">
-<code class="descname">optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/epils_facade.html#EPILS.optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.epils_facade.EPILS.optimize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/epils_facade.html#EPILS.optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.epils_facade.EPILS.optimize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Optimizes the algorithm provided in scenario (given in constructor)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>

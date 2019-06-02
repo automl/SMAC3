@@ -276,28 +276,28 @@
 <span id="smac-stats-stats-module"></span><h1>smac.stats.stats module<a class="headerlink" href="#module-smac.stats.stats" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.stats.stats.Stats">
-<em class="property">class </em><code class="descclassname">smac.stats.stats.</code><code class="descname">Stats</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.stats.stats.</code><code class="sig-name descname">Stats</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>All statistics collected during configuration run.
 Written to output-directory to be restored</p>
 <dl class="attribute">
 <dt id="smac.stats.stats.Stats.ta_runs">
-<code class="descname">ta_runs</code><a class="headerlink" href="#smac.stats.stats.Stats.ta_runs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ta_runs</code><a class="headerlink" href="#smac.stats.stats.Stats.ta_runs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.stats.stats.Stats.wallclock_time_used">
-<code class="descname">wallclock_time_used</code><a class="headerlink" href="#smac.stats.stats.Stats.wallclock_time_used" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">wallclock_time_used</code><a class="headerlink" href="#smac.stats.stats.Stats.wallclock_time_used" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.stats.stats.Stats.ta_time_used">
-<code class="descname">ta_time_used</code><a class="headerlink" href="#smac.stats.stats.Stats.ta_time_used" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ta_time_used</code><a class="headerlink" href="#smac.stats.stats.Stats.ta_time_used" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.stats.stats.Stats.inc_changed">
-<code class="descname">inc_changed</code><a class="headerlink" href="#smac.stats.stats.Stats.inc_changed" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">inc_changed</code><a class="headerlink" href="#smac.stats.stats.Stats.inc_changed" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>Constructor</p>
@@ -311,27 +311,27 @@ Written to output-directory to be restored</p>
 </dl>
 <dl class="method">
 <dt id="smac.stats.stats.Stats.get_remaing_time_budget">
-<code class="descname">get_remaing_time_budget</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.get_remaing_time_budget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.get_remaing_time_budget" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_remaing_time_budget</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.get_remaing_time_budget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.get_remaing_time_budget" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subtracts the runtime configuration budget with the used wallclock
 time</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.stats.stats.Stats.get_remaining_ta_budget">
-<code class="descname">get_remaining_ta_budget</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.get_remaining_ta_budget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.get_remaining_ta_budget" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_remaining_ta_budget</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.get_remaining_ta_budget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.get_remaining_ta_budget" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subtracts the ta running budget with the used time</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.stats.stats.Stats.get_remaining_ta_runs">
-<code class="descname">get_remaining_ta_runs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.get_remaining_ta_runs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.get_remaining_ta_runs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_remaining_ta_runs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.get_remaining_ta_runs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.get_remaining_ta_runs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subtract the target algorithm runs in the scenario with the used ta
 runs</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.stats.stats.Stats.get_used_wallclock_time">
-<code class="descname">get_used_wallclock_time</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.get_used_wallclock_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.get_used_wallclock_time" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_used_wallclock_time</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.get_used_wallclock_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.get_used_wallclock_time" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns used wallclock time</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -345,7 +345,7 @@ runs</p>
 
 <dl class="method">
 <dt id="smac.stats.stats.Stats.is_budget_exhausted">
-<code class="descname">is_budget_exhausted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.is_budget_exhausted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.is_budget_exhausted" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">is_budget_exhausted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.is_budget_exhausted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.is_budget_exhausted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether the configuration budget for time budget, ta_budget
 and ta_runs is empty</p>
 <dl class="field-list simple">
@@ -360,7 +360,7 @@ and ta_runs is empty</p>
 
 <dl class="method">
 <dt id="smac.stats.stats.Stats.load">
-<code class="descname">load</code><span class="sig-paren">(</span><em>fn=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.load" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">fn=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load all attributes from dictionary in file into stats-object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -372,7 +372,7 @@ in the current scenario is used.</p>
 
 <dl class="method">
 <dt id="smac.stats.stats.Stats.print_stats">
-<code class="descname">print_stats</code><span class="sig-paren">(</span><em>debug_out: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.print_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.print_stats" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">print_stats</code><span class="sig-paren">(</span><em class="sig-param">debug_out: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.print_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.print_stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints all statistics</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -383,20 +383,20 @@ in the current scenario is used.</p>
 
 <dl class="method">
 <dt id="smac.stats.stats.Stats.save">
-<code class="descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.save" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.save" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save all relevant attributes to json-dictionary.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.stats.stats.Stats.start_timing">
-<code class="descname">start_timing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.start_timing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.start_timing" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">start_timing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.start_timing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.start_timing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Starts the timer (for the runtime configuration budget).
 Substracting wallclock time used so we can continue loaded Stats.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.stats.stats.Stats.update_average_configs_per_intensify">
-<code class="descname">update_average_configs_per_intensify</code><span class="sig-paren">(</span><em>n_configs: int</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.update_average_configs_per_intensify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.update_average_configs_per_intensify" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">update_average_configs_per_intensify</code><span class="sig-paren">(</span><em class="sig-param">n_configs: int</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.update_average_configs_per_intensify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.update_average_configs_per_intensify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates statistics how many configurations on average per used in
 intensify</p>
 <dl class="field-list simple">

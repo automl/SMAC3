@@ -274,25 +274,25 @@
 <span id="smac-smac-cli-module"></span><h1>smac.smac_cli module<a class="headerlink" href="#module-smac.smac_cli" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.smac_cli.SMACCLI">
-<em class="property">class </em><code class="descclassname">smac.smac_cli.</code><code class="descname">SMACCLI</code><a class="reference internal" href="../_modules/smac/smac_cli.html#SMACCLI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.smac_cli.SMACCLI" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.smac_cli.</code><code class="sig-name descname">SMACCLI</code><a class="reference internal" href="../_modules/smac/smac_cli.html#SMACCLI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.smac_cli.SMACCLI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Main class of SMAC</p>
 <p>Constructor</p>
 <dl class="method">
 <dt id="smac.smac_cli.SMACCLI.main_cli">
-<code class="descname">main_cli</code><span class="sig-paren">(</span><em>commandline_arguments: List[str] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/smac_cli.html#SMACCLI.main_cli"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.smac_cli.SMACCLI.main_cli" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">main_cli</code><span class="sig-paren">(</span><em class="sig-param">commandline_arguments: List[str] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/smac_cli.html#SMACCLI.main_cli"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.smac_cli.SMACCLI.main_cli" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main function of SMAC for CLI interface</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.smac_cli.SMACCLI.restore_state">
-<code class="descname">restore_state</code><span class="sig-paren">(</span><em>scen</em>, <em>args_</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/smac_cli.html#SMACCLI.restore_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.smac_cli.SMACCLI.restore_state" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">restore_state</code><span class="sig-paren">(</span><em class="sig-param">scen</em>, <em class="sig-param">args_</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/smac_cli.html#SMACCLI.restore_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.smac_cli.SMACCLI.restore_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read in files for state-restoration: runhistory, stats, trajectory.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.smac_cli.SMACCLI.restore_state_after_output_dir">
-<code class="descname">restore_state_after_output_dir</code><span class="sig-paren">(</span><em>scen</em>, <em>stats</em>, <em>traj_list_aclib</em>, <em>traj_list_old</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/smac_cli.html#SMACCLI.restore_state_after_output_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.smac_cli.SMACCLI.restore_state_after_output_dir" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">restore_state_after_output_dir</code><span class="sig-paren">(</span><em class="sig-param">scen</em>, <em class="sig-param">stats</em>, <em class="sig-param">traj_list_aclib</em>, <em class="sig-param">traj_list_old</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/smac_cli.html#SMACCLI.restore_state_after_output_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.smac_cli.SMACCLI.restore_state_after_output_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finish processing files for state-restoration. Trajectory
 is read in, but needs to be written to new output-folder. Therefore, the
 output-dir is created. This needs to be considered in the SMAC-facade.</p>
@@ -302,7 +302,7 @@ output-dir is created. This needs to be considered in the SMAC-facade.</p>
 
 <dl class="function">
 <dt id="smac.smac_cli.cmd_line_call">
-<code class="descclassname">smac.smac_cli.</code><code class="descname">cmd_line_call</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/smac_cli.html#cmd_line_call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.smac_cli.cmd_line_call" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">smac.smac_cli.</code><code class="sig-name descname">cmd_line_call</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/smac_cli.html#cmd_line_call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.smac_cli.cmd_line_call" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry point to be installable to /user/bin
 :return:</p>
 </dd></dl>

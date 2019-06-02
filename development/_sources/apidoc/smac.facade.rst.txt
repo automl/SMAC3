@@ -2,16 +2,15 @@ smac.facade package
 ===================
 
 .. automodule:: smac.facade
-    :members:
-    :undoc-members:
-    :show-inheritance:
-    :inherited-members:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Subpackages
 
 .. toctree::
 
-    smac.facade.experimental
+   smac.facade.experimental
 
 
 .. toctree::
@@ -21,4 +20,3 @@ Subpackages
    smac.facade.smac_ac_facade
    smac.facade.smac_bo_facade
    smac.facade.smac_hpo_facade
-

@@ -2,16 +2,15 @@ smac.utils package
 ==================
 
 .. automodule:: smac.utils
-    :members:
-    :undoc-members:
-    :show-inheritance:
-    :inherited-members:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Subpackages
 
 .. toctree::
 
-    smac.utils.io
+   smac.utils.io
 
 
 .. toctree::
@@ -23,4 +22,3 @@ Subpackages
    smac.utils.merge_foreign_data
    smac.utils.test_helpers
    smac.utils.validate
-

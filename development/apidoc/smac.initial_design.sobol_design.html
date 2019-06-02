@@ -276,12 +276,12 @@
 <span id="smac-initial-design-sobol-design-module"></span><h1>smac.initial_design.sobol_design module<a class="headerlink" href="#module-smac.initial_design.sobol_design" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.initial_design.sobol_design.SobolDesign">
-<em class="property">class </em><code class="descclassname">smac.initial_design.sobol_design.</code><code class="descname">SobolDesign</code><span class="sig-paren">(</span><em>tae_runner: smac.tae.execute_ta_run.ExecuteTARun</em>, <em>scenario: smac.scenario.scenario.Scenario</em>, <em>stats: smac.stats.stats.Stats</em>, <em>traj_logger: smac.utils.io.traj_logging.TrajLogger</em>, <em>runhistory: smac.runhistory.runhistory.RunHistory</em>, <em>rng: mtrand.RandomState</em>, <em>intensifier: smac.intensification.intensification.Intensifier</em>, <em>aggregate_func: Callable</em>, <em>configs: Optional[List[ConfigSpace.configuration_space.Configuration]] = None</em>, <em>n_configs_x_params: int = 10</em>, <em>max_config_fracs: float = 0.25</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/initial_design/sobol_design.html#SobolDesign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.sobol_design.SobolDesign" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.initial_design.sobol_design.</code><code class="sig-name descname">SobolDesign</code><span class="sig-paren">(</span><em class="sig-param">tae_runner: smac.tae.execute_ta_run.ExecuteTARun</em>, <em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">traj_logger: smac.utils.io.traj_logging.TrajLogger</em>, <em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">rng: mtrand.RandomState</em>, <em class="sig-param">intensifier: smac.intensification.intensification.Intensifier</em>, <em class="sig-param">aggregate_func: Callable</em>, <em class="sig-param">configs: Optional[List[ConfigSpace.configuration_space.Configuration]] = None</em>, <em class="sig-param">n_configs_x_params: int = 10</em>, <em class="sig-param">max_config_fracs: float = 0.25</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/initial_design/sobol_design.html#SobolDesign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.sobol_design.SobolDesign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign" title="smac.initial_design.initial_design.InitialDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.initial_design.initial_design.InitialDesign</span></code></a></p>
 <p>Sobol sequence design</p>
 <dl class="attribute">
 <dt id="smac.initial_design.sobol_design.SobolDesign.configs">
-<code class="descname">configs</code><a class="headerlink" href="#smac.initial_design.sobol_design.SobolDesign.configs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">configs</code><a class="headerlink" href="#smac.initial_design.sobol_design.SobolDesign.configs" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of configurations to be evaluated
 Don’t pass configs to the constructor;
 otherwise factorial design is overwritten</p>
@@ -294,17 +294,17 @@ otherwise factorial design is overwritten</p>
 
 <dl class="attribute">
 <dt id="smac.initial_design.sobol_design.SobolDesign.intensifier">
-<code class="descname">intensifier</code><a class="headerlink" href="#smac.initial_design.sobol_design.SobolDesign.intensifier" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">intensifier</code><a class="headerlink" href="#smac.initial_design.sobol_design.SobolDesign.intensifier" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.initial_design.sobol_design.SobolDesign.runhistory">
-<code class="descname">runhistory</code><a class="headerlink" href="#smac.initial_design.sobol_design.SobolDesign.runhistory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">runhistory</code><a class="headerlink" href="#smac.initial_design.sobol_design.SobolDesign.runhistory" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.initial_design.sobol_design.SobolDesign.aggregate_func">
-<code class="descname">aggregate_func</code><a class="headerlink" href="#smac.initial_design.sobol_design.SobolDesign.aggregate_func" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">aggregate_func</code><a class="headerlink" href="#smac.initial_design.sobol_design.SobolDesign.aggregate_func" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>Constructor</p>
@@ -329,25 +329,6 @@ instances.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
-<dt id="smac.initial_design.sobol_design.SobolDesign.run">
-<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.Configuration<a class="headerlink" href="#smac.initial_design.sobol_design.SobolDesign.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run the initial design.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>incumbent</strong> – Initial incumbent configuration</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Configuration</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="smac.initial_design.sobol_design.SobolDesign.select_configurations">
-<code class="descname">select_configurations</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[ConfigSpace.configuration_space.Configuration]<a class="headerlink" href="#smac.initial_design.sobol_design.SobolDesign.select_configurations" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 </div>
