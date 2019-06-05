@@ -69,8 +69,7 @@ class SMBO(object):
                  initial_design: InitialDesign,
                  runhistory: RunHistory,
                  runhistory2epm: AbstractRunHistory2EPM,
-                 intensifier: SuccessiveHalving,
-                 # intensifier: Intensifier,
+                 intensifier: Intensifier,
                  aggregate_func: callable,
                  num_run: int,
                  model: RandomForestWithInstances,
@@ -156,31 +155,46 @@ class SMBO(object):
         """
         self.stats.start_timing()
 
-        # Run the initial deisgn only if intensifying using SMAC's procedure
-        # SH or HB methods dont require an 'incumbent' to compare in the beginning
-        if not isinstance(self.intensifier, SuccessiveHalving):
-            # Initialization, depends on input
-            if self.stats.ta_runs == 0 and self.incumbent is None:
+        # Initialization, depends on input
+        if self.stats.ta_runs == 0 and self.incumbent is None:
+            logging.info('Running initial design')
+            # Run the initial deisgn only if intensifying using SMAC's procedure
+            # SH or HB methods get initialized by 1 run with random configurations
+            if not isinstance(self.intensifier, SuccessiveHalving):
+                # Intensifier initialization
                 self.incumbent = self.initial_design.run()
-
-            elif self.stats.ta_runs > 0 and self.incumbent is None:
-                raise ValueError("According to stats there have been runs performed, "
-                                 "but the optimizer cannot detect an incumbent. Did "
-                                 "you set the incumbent (e.g. after restoring state)?")
-            elif self.stats.ta_runs == 0 and self.incumbent is not None:
-                raise ValueError("An incumbent is specified, but there are no runs "
-                                 "recorded in the Stats-object. If you're restoring "
-                                 "a state, please provide the Stats-object.")
             else:
-                # Restoring state!
-                self.logger.info("State Restored! Starting optimization with "
-                                 "incumbent %s", self.incumbent)
-                self.logger.info("State restored with following budget:")
-                self.stats.print_stats()
+                # SH/HB initialization - get default configuration + random configurations
+                initial_configs = self.config_space.sample_configuration(self.intensifier.initial_challengers-1)
+                initial_configs = [self.config_space.get_default_configuration()] + initial_configs
+                time_left = self._get_timebound_for_intensification(time.time())
+
+                # 1 intensify run with random configurations
+                self.incumbent, _ = self.intensifier.intensify(
+                    challengers=initial_configs,
+                    incumbent=None,
+                    run_history=self.runhistory,
+                    aggregate_func=self.aggregate_func,
+                    time_bound=max(self.intensifier._min_time, time_left))
+
+        elif self.stats.ta_runs > 0 and self.incumbent is None:
+            raise ValueError("According to stats there have been runs performed, "
+                             "but the optimizer cannot detect an incumbent. Did "
+                             "you set the incumbent (e.g. after restoring state)?")
+        elif self.stats.ta_runs == 0 and self.incumbent is not None:
+            raise ValueError("An incumbent is specified, but there are no runs "
+                             "recorded in the Stats-object. If you're restoring "
+                             "a state, please provide the Stats-object.")
+        else:
+            # Restoring state!
+            self.logger.info("State Restored! Starting optimization with "
+                             "incumbent %s", self.incumbent)
+            self.logger.info("State restored with following budget:")
+            self.stats.print_stats()
 
         # To be on the safe side -> never return "None" as incumbent
         if not self.incumbent:
-            self.incumbent = self.scenario.cs.get_default_configuration()
+            self.incumbent = self.config_space.get_default_configuration()
 
     def run(self):
         """Runs the Bayesian optimization loop
@@ -347,7 +361,7 @@ class SMBO(object):
         """
         if isinstance(config_mode, str):
             traj_fn = os.path.join(self.scenario.output_dir_for_this_run, "traj_aclib2.json")
-            trajectory = TrajLogger.read_traj_aclib_format(fn=traj_fn, cs=self.scenario.cs)
+            trajectory = TrajLogger.read_traj_aclib_format(fn=traj_fn, cs=self.config_space)
         else:
             trajectory = None
         if self.scenario.output_dir_for_this_run:

@@ -13,7 +13,7 @@ SMAC's own "intensifier" approach.
 """
 
 if __name__ == '__main__':
-    logging.basicConfig(level=10)  # 10: debug; 20: info
+    logging.basicConfig(level=20)  # 10: debug; 20: info
 
     scenario = Scenario('scenario.txt')
     smac = SMAC4AC(scenario=scenario,      # scenario object

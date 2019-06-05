@@ -42,34 +42,13 @@ class SuccessiveHalving(Intensifier):
         whether the TA is deterministic or not
     run_obj_time: bool
         whether the run objective is runtime or not (if true, apply adaptive capping)
-    always_race_against: Configuration
-        if incumbent changes race this configuration always against new incumbent;
-        can sometimes prevent over-tuning
-    use_ta_time_bound: bool,
-        if true, trust time reported by the target algorithms instead of
-        measuring the wallclock time for limiting the time of intensification
-    run_limit : int
-        Maximum number of target algorithm runs per call to intensify.
-    maxR : int
-        Maximum number of runs per config (summed over all calls to
-        intensifiy).
-    minR : int
-        Minimum number of run per config (summed over all calls to
-        intensify).
-    adaptive_capping_slackfactor: float
-        slack factor of adpative capping (factor * adpative cutoff)
-    min_chall: int
-        minimal number of challengers to be considered
-        (even if time_bound is exhausted earlier)
     """
 
     def __init__(self, tae_runner: ExecuteTARun, stats: Stats, traj_logger: TrajLogger, rng: np.random.RandomState,
                  instances: typing.List[str], max_budget: int = None, min_budget: int = None, eta: float = 2,
                  cutoff: int = MAX_CUTOFF, instance_specifics: typing.Mapping[str, np.ndarray] = None,
                  deterministic: bool = False, run_obj_time: bool = True, n_seeds: int = None, instance_order='random',
-                 adaptive_capping_slackfactor: float = 1.2,
-                 always_race_against: Configuration = None, run_limit: int = MAXINT, use_ta_time_bound: bool = False,
-                 minR: int = 1, maxR: int = 2000, min_chall: int = 2):
+                 adaptive_capping_slackfactor: float = 1.2, **kwargs):
 
         super().__init__(tae_runner, stats, traj_logger, rng, instances)
 
@@ -106,16 +85,8 @@ class SuccessiveHalving(Intensifier):
         if instance_order == 'random':
             # randomize once
             np.random.shuffle(self.instances)
-        # TODO: find better way to do this - or can it just be the order in which user uploads the data?
-        # elif isinstance(self.instances, list):
-        #     # use user given order
-        #     assert len(self.instances) == len(instance_order), \
-        #         'instance_order (%d) should be same length as instances (%d)' % (len(instance_order),
-        #                                                                          len(self.instances))
-        #     self.instances = self.instances[instance_order]
 
         # set seed(s) for all SH runs
-        # TODO (multiple) seeds will be assigned based on budget - how many new seeds to select?
         # - currently user gives the number of seeds to consider
         self.n_seeds = n_seeds
         if self.deterministic:
@@ -137,7 +108,7 @@ class SuccessiveHalving(Intensifier):
         # determine budgets from given instances if none mentioned
         # - if only 1 instance/no instances were provided, then use cutoff as budget
         # - else, use instances as budget
-        if len(instances) <= 1:
+        if len(self.instances) <= 1:
             # budget with cutoff
             self.min_budget = self._min_time if min_budget is None else min_budget
             self.max_budget = self.cutoff if max_budget is None else max_budget
@@ -147,6 +118,10 @@ class SuccessiveHalving(Intensifier):
             self.min_budget = 1 if min_budget is None else min_budget
             self.max_budget = len(self.instances) if max_budget is None else max_budget
             self.budget_type = 'instance'
+
+            # max budget cannot be greater than number of instance-seed pairs
+            if self.max_budget > len(self.instances):
+                raise ValueError('Max budget cannot be greater than the number of instance-seed pairs')
 
         # number configurations to consider for a full successive halving iteration
         self.max_sh_iter = np.floor(np.log(self.max_budget / self.min_budget) / np.log(eta))
@@ -159,17 +134,8 @@ class SuccessiveHalving(Intensifier):
             self.adaptive_capping = False
         self.adaptive_capping_slackfactor = adaptive_capping_slackfactor
 
-        # self.always_race_against = always_race_against
-        # self.run_limit = run_limit
-        # self.maxR = maxR
-        # self.minR = minR
-        # if self.run_limit < 1:
-        #     raise ValueError("run_limit must be > 1")
-        # self.min_chall = min_chall
-        # self.use_ta_time_bound = use_ta_time_bound
-
     def intensify(self, challengers: typing.List[Configuration],
-                  incumbent: Configuration,
+                  incumbent: typing.Optional[Configuration],
                   run_history: RunHistory,
                   aggregate_func: typing.Callable,
                   time_bound: float = float(MAXINT),
@@ -212,11 +178,12 @@ class SuccessiveHalving(Intensifier):
 
         if isinstance(challengers, ChallengerList):
             challengers = challengers.challengers
+
         # in the 1st SH run, the incumbent is also added to the challenger configuration list to run,
         # since it was not run before, (set incumbent to None for a fair comparison)
-        if len(run_history.get_runs_for_config(incumbent)) == 0:
-            challengers = [incumbent] + challengers
-            incumbent = None
+        # if len(run_history.get_runs_for_config(incumbent)) == 0:
+        #     challengers = [incumbent] + challengers
+        #     incumbent = None
 
         # selecting first 'n' challengers for the current run, based on eta
         curr_challengers = challengers[:self.initial_challengers]
@@ -308,7 +275,6 @@ class SuccessiveHalving(Intensifier):
                         break
 
                     except BudgetExhaustedException:
-                        # TODO revisit what to return if budget exhausted. What is the use of inc_perf in smbo?
                         # Returning the final incumbent selected so far because we ran out of optimization budget
                         self.logger.debug("Budget exhausted; "
                                           "Interrupting optimization run and returning current incumbent")
