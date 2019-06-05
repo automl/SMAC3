@@ -258,7 +258,7 @@
 <span id="smac-initial-design-random-configuration-design-module"></span><h1>smac.initial_design.random_configuration_design module<a class="headerlink" href="#module-smac.initial_design.random_configuration_design" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.initial_design.random_configuration_design.RandomConfiguration">
-<em class="property">class </em><code class="descclassname">smac.initial_design.random_configuration_design.</code><code class="descname">RandomConfiguration</code><span class="sig-paren">(</span><em>tae_runner: smac.tae.execute_ta_run.ExecuteTARun</em>, <em>scenario: smac.scenario.scenario.Scenario</em>, <em>stats: smac.stats.stats.Stats</em>, <em>traj_logger: smac.utils.io.traj_logging.TrajLogger</em>, <em>rng: mtrand.RandomState</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/initial_design/random_configuration_design.html#RandomConfiguration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.random_configuration_design.RandomConfiguration" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.initial_design.random_configuration_design.</code><code class="sig-name descname">RandomConfiguration</code><span class="sig-paren">(</span><em class="sig-param">tae_runner: smac.tae.execute_ta_run.ExecuteTARun</em>, <em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">traj_logger: smac.utils.io.traj_logging.TrajLogger</em>, <em class="sig-param">rng: mtrand.RandomState</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/initial_design/random_configuration_design.html#RandomConfiguration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.random_configuration_design.RandomConfiguration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.initial_design.single_config_initial_design.html#smac.initial_design.single_config_initial_design.SingleConfigInitialDesign" title="smac.initial_design.single_config_initial_design.SingleConfigInitialDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.initial_design.single_config_initial_design.SingleConfigInitialDesign</span></code></a></p>
 <p>Initial design that evaluates a single random configuration</p>
 <p>Constructor</p>
@@ -277,7 +277,7 @@ design.</p></li>
 </dl>
 <dl class="method">
 <dt id="smac.initial_design.random_configuration_design.RandomConfiguration.run">
-<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.Configuration<a class="headerlink" href="#smac.initial_design.random_configuration_design.RandomConfiguration.run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.Configuration<a class="headerlink" href="#smac.initial_design.random_configuration_design.RandomConfiguration.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs the initial design by calling the target algorithm
 and adding new entries to the trajectory logger.</p>
 <dl class="field-list simple">

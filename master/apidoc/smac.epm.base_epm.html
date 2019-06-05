@@ -258,7 +258,7 @@
 <span id="smac-epm-base-epm-module"></span><h1>smac.epm.base_epm module<a class="headerlink" href="#module-smac.epm.base_epm" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.epm.base_epm.AbstractEPM">
-<em class="property">class </em><code class="descclassname">smac.epm.base_epm.</code><code class="descname">AbstractEPM</code><span class="sig-paren">(</span><em>types: numpy.ndarray, bounds: List[Tuple[float, float]], instance_features: numpy.ndarray = None, pca_components: float = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.epm.base_epm.</code><code class="sig-name descname">AbstractEPM</code><span class="sig-paren">(</span><em class="sig-param">types: numpy.ndarray, bounds: List[Tuple[float, float]], instance_features: numpy.ndarray = None, pca_components: float = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Abstract implementation of the EPM API.</p>
 <p><strong>Note:</strong> The input dimensionality of Y for training and the output dimensions
@@ -266,7 +266,7 @@ of all predictions (also called <code class="docutils literal notranslate"><span
 implementation of this abstract class.</p>
 <dl class="attribute">
 <dt id="smac.epm.base_epm.AbstractEPM.instance_features">
-<code class="descname">instance_features</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.instance_features" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">instance_features</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.instance_features" title="Permalink to this definition">¶</a></dt>
 <dd><p>Contains the K dimensional instance features
 of the I different instances</p>
 <dl class="field-list simple">
@@ -278,7 +278,7 @@ of the I different instances</p>
 
 <dl class="attribute">
 <dt id="smac.epm.base_epm.AbstractEPM.pca">
-<code class="descname">pca</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.pca" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">pca</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.pca" title="Permalink to this definition">¶</a></dt>
 <dd><p>Object to perform PCA</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -289,7 +289,7 @@ of the I different instances</p>
 
 <dl class="attribute">
 <dt id="smac.epm.base_epm.AbstractEPM.pca_components">
-<code class="descname">pca_components</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.pca_components" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">pca_components</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.pca_components" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of components to keep or None</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -300,7 +300,7 @@ of the I different instances</p>
 
 <dl class="attribute">
 <dt id="smac.epm.base_epm.AbstractEPM.n_feats">
-<code class="descname">n_feats</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.n_feats" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">n_feats</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.n_feats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of instance features</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -311,7 +311,7 @@ of the I different instances</p>
 
 <dl class="attribute">
 <dt id="smac.epm.base_epm.AbstractEPM.n_params">
-<code class="descname">n_params</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.n_params" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">n_params</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.n_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of parameters in a configuration (only available after train has
 been called)</p>
 <dl class="field-list simple">
@@ -323,7 +323,7 @@ been called)</p>
 
 <dl class="attribute">
 <dt id="smac.epm.base_epm.AbstractEPM.scaler">
-<code class="descname">scaler</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.scaler" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">scaler</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.scaler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Object to scale data to be withing [0, 1]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -334,7 +334,7 @@ been called)</p>
 
 <dl class="attribute">
 <dt id="smac.epm.base_epm.AbstractEPM.var_threshold">
-<code class="descname">var_threshold</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.var_threshold" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">var_threshold</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.var_threshold" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lower bound vor variance. If estimated variance &lt; var_threshold, the set
 to var_threshold</p>
 <dl class="field-list simple">
@@ -346,7 +346,7 @@ to var_threshold</p>
 
 <dl class="attribute">
 <dt id="smac.epm.base_epm.AbstractEPM.types">
-<code class="descname">types</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.types" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">types</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.types" title="Permalink to this definition">¶</a></dt>
 <dd><p>If set, contains a list with feature types (cat,const) of input vector</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -375,7 +375,7 @@ set n_feats (&gt; pca_dims).</p></li>
 </dl>
 <dl class="method">
 <dt id="smac.epm.base_epm.AbstractEPM.predict">
-<code class="descname">predict</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.predict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict means and variances for given X.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -393,7 +393,7 @@ set n_feats (&gt; pca_dims).</p></li>
 
 <dl class="method">
 <dt id="smac.epm.base_epm.AbstractEPM.predict_marginalized_over_instances">
-<code class="descname">predict_marginalized_over_instances</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM.predict_marginalized_over_instances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.predict_marginalized_over_instances" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">predict_marginalized_over_instances</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM.predict_marginalized_over_instances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.predict_marginalized_over_instances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict mean and variance marginalized over all instances.</p>
 <p>Returns the predictive mean and variance marginalised over all
 instances for a set of configurations.</p>
@@ -413,7 +413,7 @@ instances for a set of configurations.</p>
 
 <dl class="method">
 <dt id="smac.epm.base_epm.AbstractEPM.train">
-<code class="descname">train</code><span class="sig-paren">(</span><em>X: numpy.ndarray</em>, <em>Y: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; smac.epm.base_epm.AbstractEPM<a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.train" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">Y: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; smac.epm.base_epm.AbstractEPM<a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Trains the EPM on X and Y.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

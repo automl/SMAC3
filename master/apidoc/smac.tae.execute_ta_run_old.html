@@ -258,7 +258,7 @@
 <span id="smac-tae-execute-ta-run-old-module"></span><h1>smac.tae.execute_ta_run_old module<a class="headerlink" href="#module-smac.tae.execute_ta_run_old" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.tae.execute_ta_run_old.ExecuteTARunOld">
-<em class="property">class </em><code class="descclassname">smac.tae.execute_ta_run_old.</code><code class="descname">ExecuteTARunOld</code><span class="sig-paren">(</span><em>ta</em>, <em>stats=None</em>, <em>runhistory=None</em>, <em>run_obj: str = 'runtime'</em>, <em>par_factor: int = 1</em>, <em>cost_for_crash: float = 2147483647.0</em>, <em>abort_on_first_run_crash: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run_old.html#ExecuteTARunOld"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run_old.ExecuteTARunOld" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.tae.execute_ta_run_old.</code><code class="sig-name descname">ExecuteTARunOld</code><span class="sig-paren">(</span><em class="sig-param">ta</em>, <em class="sig-param">stats=None</em>, <em class="sig-param">runhistory=None</em>, <em class="sig-param">run_obj: str = 'runtime'</em>, <em class="sig-param">par_factor: int = 1</em>, <em class="sig-param">cost_for_crash: float = 2147483647.0</em>, <em class="sig-param">abort_on_first_run_crash: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run_old.html#ExecuteTARunOld"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run_old.ExecuteTARunOld" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.tae.execute_ta_run.ExecuteTARun</span></code></a></p>
 <p>Executes a target algorithm run with a given configuration on a given
 instance and some resource limitations. Uses the original SMAC/PILS format
@@ -280,7 +280,7 @@ that returned NaN or inf)</p></li>
 </dl>
 <dl class="method">
 <dt id="smac.tae.execute_ta_run_old.ExecuteTARunOld.run">
-<code class="descname">run</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em>, <em>instance: str = None</em>, <em>cutoff: float = None</em>, <em>seed: int = 12345</em>, <em>instance_specific: str = '0'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run_old.html#ExecuteTARunOld.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run_old.ExecuteTARunOld.run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">instance: str = None</em>, <em class="sig-param">cutoff: float = None</em>, <em class="sig-param">seed: int = 12345</em>, <em class="sig-param">instance_specific: str = '0'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run_old.html#ExecuteTARunOld.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run_old.ExecuteTARunOld.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs target algorithm &lt;self.ta&gt; with configuration &lt;config&gt; on
 instance &lt;instance&gt; with instance specifics &lt;specifics&gt; for at most
 &lt;cutoff&gt; seconds and random seed &lt;seed&gt;</p>
@@ -308,7 +308,7 @@ instance &lt;instance&gt; with instance specifics &lt;specifics&gt; for at most
 
 <dl class="method">
 <dt id="smac.tae.execute_ta_run_old.ExecuteTARunOld.start">
-<code class="descname">start</code><span class="sig-paren">(</span><em>config: ConfigSpace.configuration_space.Configuration</em>, <em>instance: str</em>, <em>cutoff: float = None</em>, <em>seed: int = 12345</em>, <em>instance_specific: str = '0'</em>, <em>capped: bool = False</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.tae.execute_ta_run_old.ExecuteTARunOld.start" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">start</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">instance: str</em>, <em class="sig-param">cutoff: float = None</em>, <em class="sig-param">seed: int = 12345</em>, <em class="sig-param">instance_specific: str = '0'</em>, <em class="sig-param">capped: bool = False</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.tae.execute_ta_run_old.ExecuteTARunOld.start" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper function for ExecuteTARun.run() to check configuration
 budget before the runs and to update stats after run</p>
 <dl class="field-list simple">

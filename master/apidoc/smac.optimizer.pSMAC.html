@@ -256,9 +256,24 @@
             
   <div class="section" id="module-smac.optimizer.pSMAC">
 <span id="smac-optimizer-psmac-module"></span><h1>smac.optimizer.pSMAC module<a class="headerlink" href="#module-smac.optimizer.pSMAC" title="Permalink to this headline">¶</a></h1>
+<dl class="data">
+<dt id="smac.optimizer.pSMAC.RUNHISTORY_FILEPATTERN">
+<code class="sig-prename descclassname">smac.optimizer.pSMAC.</code><code class="sig-name descname">RUNHISTORY_FILEPATTERN</code><em class="property"> = 'runhistory.json'</em><a class="headerlink" href="#smac.optimizer.pSMAC.RUNHISTORY_FILEPATTERN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="data">
+<dt id="smac.optimizer.pSMAC.RUNHISTORY_RE">
+<code class="sig-prename descclassname">smac.optimizer.pSMAC.</code><code class="sig-name descname">RUNHISTORY_RE</code><em class="property"> = 'runhistory\\.json$'</em><a class="headerlink" href="#smac.optimizer.pSMAC.RUNHISTORY_RE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="data">
+<dt id="smac.optimizer.pSMAC.VALIDATEDRUNHISTORY_RE">
+<code class="sig-prename descclassname">smac.optimizer.pSMAC.</code><code class="sig-name descname">VALIDATEDRUNHISTORY_RE</code><em class="property"> = 'validated_runhistory\\.json$'</em><a class="headerlink" href="#smac.optimizer.pSMAC.VALIDATEDRUNHISTORY_RE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="function">
 <dt id="smac.optimizer.pSMAC.read">
-<code class="descclassname">smac.optimizer.pSMAC.</code><code class="descname">read</code><span class="sig-paren">(</span><em>run_history: smac.runhistory.runhistory.RunHistory, output_dirs: Union[str, List[str]], configuration_space: ConfigSpace.configuration_space.ConfigurationSpace, logger: logging.Logger</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/pSMAC.html#read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.pSMAC.read" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">smac.optimizer.pSMAC.</code><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param">run_history: smac.runhistory.runhistory.RunHistory, output_dirs: Union[str, List[str]], configuration_space: ConfigSpace.configuration_space.ConfigurationSpace, logger: logging.Logger</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/pSMAC.html#read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.pSMAC.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update runhistory with run results from concurrent runs of pSMAC.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -278,7 +293,7 @@ for files matching the runhistory regular expression.</p></li>
 
 <dl class="function">
 <dt id="smac.optimizer.pSMAC.write">
-<code class="descclassname">smac.optimizer.pSMAC.</code><code class="descname">write</code><span class="sig-paren">(</span><em>run_history: smac.runhistory.runhistory.RunHistory</em>, <em>output_directory: str</em>, <em>logger: logging.Logger</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/pSMAC.html#write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.pSMAC.write" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">smac.optimizer.pSMAC.</code><code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param">run_history: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">output_directory: str</em>, <em class="sig-param">logger: logging.Logger</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/pSMAC.html#write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.pSMAC.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the runhistory to the output directory.</p>
 <p>Overwrites previously outputted runhistories.</p>
 <dl class="field-list simple">

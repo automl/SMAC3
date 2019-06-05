@@ -258,17 +258,17 @@
 <span id="smac-facade-smac-facade-module"></span><h1>smac.facade.smac_facade module<a class="headerlink" href="#module-smac.facade.smac_facade" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.facade.smac_facade.SMAC">
-<em class="property">class </em><code class="descclassname">smac.facade.smac_facade.</code><code class="descname">SMAC</code><span class="sig-paren">(</span><em>scenario: smac.scenario.scenario.Scenario</em>, <em>tae_runner: Union[smac.tae.execute_ta_run.ExecuteTARun</em>, <em>Callable</em>, <em>None] = None</em>, <em>runhistory: Optional[smac.runhistory.runhistory.RunHistory] = None</em>, <em>intensifier: Optional[smac.intensification.intensification.Intensifier] = None</em>, <em>acquisition_function: Optional[smac.optimizer.acquisition.AbstractAcquisitionFunction] = None</em>, <em>acquisition_function_optimizer: Optional[smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer] = None</em>, <em>model: Optional[smac.epm.base_epm.AbstractEPM] = None</em>, <em>runhistory2epm: Optional[smac.runhistory.runhistory2epm.AbstractRunHistory2EPM] = None</em>, <em>initial_design: Optional[smac.initial_design.initial_design.InitialDesign] = None</em>, <em>initial_configurations: Optional[List[ConfigSpace.configuration_space.Configuration]] = None</em>, <em>stats: Optional[smac.stats.stats.Stats] = None</em>, <em>restore_incumbent: Optional[ConfigSpace.configuration_space.Configuration] = None</em>, <em>rng: Union[int</em>, <em>mtrand.RandomState</em>, <em>None] = None</em>, <em>smbo_class: Optional[smac.optimizer.smbo.SMBO] = None</em>, <em>run_id: Optional[int] = None</em>, <em>random_configuration_chooser: Optional[smac.optimizer.random_configuration_chooser.RandomConfigurationChooser] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_facade.html#SMAC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_facade.SMAC" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.facade.smac_facade.</code><code class="sig-name descname">SMAC</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">tae_runner: Union[smac.tae.execute_ta_run.ExecuteTARun</em>, <em class="sig-param">Callable</em>, <em class="sig-param">None] = None</em>, <em class="sig-param">runhistory: Optional[smac.runhistory.runhistory.RunHistory] = None</em>, <em class="sig-param">intensifier: Optional[smac.intensification.intensification.Intensifier] = None</em>, <em class="sig-param">acquisition_function: Optional[smac.optimizer.acquisition.AbstractAcquisitionFunction] = None</em>, <em class="sig-param">acquisition_function_optimizer: Optional[smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer] = None</em>, <em class="sig-param">model: Optional[smac.epm.base_epm.AbstractEPM] = None</em>, <em class="sig-param">runhistory2epm: Optional[smac.runhistory.runhistory2epm.AbstractRunHistory2EPM] = None</em>, <em class="sig-param">initial_design: Optional[smac.initial_design.initial_design.InitialDesign] = None</em>, <em class="sig-param">initial_configurations: Optional[List[ConfigSpace.configuration_space.Configuration]] = None</em>, <em class="sig-param">stats: Optional[smac.stats.stats.Stats] = None</em>, <em class="sig-param">restore_incumbent: Optional[ConfigSpace.configuration_space.Configuration] = None</em>, <em class="sig-param">rng: Union[int</em>, <em class="sig-param">mtrand.RandomState</em>, <em class="sig-param">None] = None</em>, <em class="sig-param">smbo_class: Optional[smac.optimizer.smbo.SMBO] = None</em>, <em class="sig-param">run_id: Optional[int] = None</em>, <em class="sig-param">random_configuration_chooser: Optional[smac.optimizer.random_configuration_chooser.RandomConfigurationChooser] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_facade.html#SMAC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_facade.SMAC" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Facade to use SMAC default mode</p>
 <dl class="attribute">
 <dt id="smac.facade.smac_facade.SMAC.logger">
-<code class="descname">logger</code><a class="headerlink" href="#smac.facade.smac_facade.SMAC.logger" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">logger</code><a class="headerlink" href="#smac.facade.smac_facade.SMAC.logger" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.facade.smac_facade.SMAC.stats">
-<code class="descname">stats</code><a class="headerlink" href="#smac.facade.smac_facade.SMAC.stats" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">stats</code><a class="headerlink" href="#smac.facade.smac_facade.SMAC.stats" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">Stats</a></p>
@@ -278,7 +278,7 @@
 
 <dl class="attribute">
 <dt id="smac.facade.smac_facade.SMAC.solver">
-<code class="descname">solver</code><a class="headerlink" href="#smac.facade.smac_facade.SMAC.solver" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">solver</code><a class="headerlink" href="#smac.facade.smac_facade.SMAC.solver" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO" title="smac.optimizer.smbo.SMBO">SMBO</a></p>
@@ -288,7 +288,7 @@
 
 <dl class="attribute">
 <dt id="smac.facade.smac_facade.SMAC.runhistory">
-<code class="descname">runhistory</code><a class="headerlink" href="#smac.facade.smac_facade.SMAC.runhistory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">runhistory</code><a class="headerlink" href="#smac.facade.smac_facade.SMAC.runhistory" title="Permalink to this definition">¶</a></dt>
 <dd><p>List with information about previous runs</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -299,7 +299,7 @@
 
 <dl class="attribute">
 <dt id="smac.facade.smac_facade.SMAC.trajectory">
-<code class="descname">trajectory</code><a class="headerlink" href="#smac.facade.smac_facade.SMAC.trajectory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">trajectory</code><a class="headerlink" href="#smac.facade.smac_facade.SMAC.trajectory" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all incumbents</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -349,7 +349,7 @@ chosen.</p></li>
 </dl>
 <dl class="method">
 <dt id="smac.facade.smac_facade.SMAC.get_X_y">
-<code class="descname">get_X_y</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_facade.html#SMAC.get_X_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_facade.SMAC.get_X_y" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_X_y</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_facade.html#SMAC.get_X_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_facade.SMAC.get_X_y" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simple interface to obtain all data in runhistory in <code class="docutils literal notranslate"><span class="pre">X,</span> <span class="pre">y</span></code> format.</p>
 <p>Uses
 <a class="reference internal" href="smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y" title="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y"><code class="xref py py-meth docutils literal notranslate"><span class="pre">smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()</span></code></a>.</p>
@@ -367,7 +367,7 @@ chosen.</p></li>
 
 <dl class="method">
 <dt id="smac.facade.smac_facade.SMAC.get_runhistory">
-<code class="descname">get_runhistory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_facade.html#SMAC.get_runhistory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_facade.SMAC.get_runhistory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_runhistory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_facade.html#SMAC.get_runhistory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_facade.SMAC.get_runhistory" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Returns the runhistory (i.e., all evaluated configurations and</dt><dd><p>the results).</p>
 </dd>
@@ -384,7 +384,7 @@ chosen.</p></li>
 
 <dl class="method">
 <dt id="smac.facade.smac_facade.SMAC.get_tae_runner">
-<code class="descname">get_tae_runner</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_facade.html#SMAC.get_tae_runner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_facade.SMAC.get_tae_runner" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_tae_runner</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_facade.html#SMAC.get_tae_runner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_facade.SMAC.get_tae_runner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns target algorithm evaluator (TAE) object which can run the
 target algorithm given a configuration</p>
 <dl class="field-list simple">
@@ -399,7 +399,7 @@ target algorithm given a configuration</p>
 
 <dl class="method">
 <dt id="smac.facade.smac_facade.SMAC.get_trajectory">
-<code class="descname">get_trajectory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_facade.html#SMAC.get_trajectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_facade.SMAC.get_trajectory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_trajectory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_facade.html#SMAC.get_trajectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_facade.SMAC.get_trajectory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the trajectory (i.e., all incumbent configurations over
 time).</p>
 <dl class="field-list simple">
@@ -414,7 +414,7 @@ time).</p>
 
 <dl class="method">
 <dt id="smac.facade.smac_facade.SMAC.optimize">
-<code class="descname">optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_facade.html#SMAC.optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_facade.SMAC.optimize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_facade.html#SMAC.optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_facade.SMAC.optimize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Optimizes the algorithm provided in scenario (given in constructor)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -428,7 +428,7 @@ time).</p>
 
 <dl class="method">
 <dt id="smac.facade.smac_facade.SMAC.validate">
-<code class="descname">validate</code><span class="sig-paren">(</span><em>config_mode: Union[List[ConfigSpace.configuration_space.Configuration], numpy.ndarray, str] = 'inc', instance_mode: Union[List[str], str] = 'train+test', repetitions: int = 1, use_epm: bool = False, n_jobs: int = -1, backend: str = 'threading'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_facade.html#SMAC.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_facade.SMAC.validate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">config_mode: Union[List[ConfigSpace.configuration_space.Configuration], numpy.ndarray, str] = 'inc', instance_mode: Union[List[str], str] = 'train+test', repetitions: int = 1, use_epm: bool = False, n_jobs: int = -1, backend: str = 'threading'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_facade.html#SMAC.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_facade.SMAC.validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create validator-object and run validation, using
 scenario-information, runhistory from smbo and tae_runner from intensify</p>
 <dl class="field-list simple">

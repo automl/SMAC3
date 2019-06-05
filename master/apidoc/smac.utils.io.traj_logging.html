@@ -260,55 +260,55 @@
 <span id="smac-utils-io-traj-logging-module"></span><h1>smac.utils.io.traj_logging module<a class="headerlink" href="#module-smac.utils.io.traj_logging" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.utils.io.traj_logging.TrajEntry">
-<em class="property">class </em><code class="descclassname">smac.utils.io.traj_logging.</code><code class="descname">TrajEntry</code><span class="sig-paren">(</span><em>train_perf</em>, <em>incumbent_id</em>, <em>incumbent</em>, <em>ta_runs</em>, <em>ta_time_used</em>, <em>wallclock_time</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.utils.io.traj_logging.</code><code class="sig-name descname">TrajEntry</code><span class="sig-paren">(</span><em class="sig-param">train_perf</em>, <em class="sig-param">incumbent_id</em>, <em class="sig-param">incumbent</em>, <em class="sig-param">ta_runs</em>, <em class="sig-param">ta_time_used</em>, <em class="sig-param">wallclock_time</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
 <p>Create new instance of TrajEntry(train_perf, incumbent_id, incumbent, ta_runs, ta_time_used, wallclock_time)</p>
 <dl class="method">
 <dt id="smac.utils.io.traj_logging.TrajEntry.count">
-<code class="descname">count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.count" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.count" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return number of occurrences of value.</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt id="smac.utils.io.traj_logging.TrajEntry.incumbent">
-<code class="descname">incumbent</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.incumbent" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">incumbent</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.incumbent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for field number 2</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt id="smac.utils.io.traj_logging.TrajEntry.incumbent_id">
-<code class="descname">incumbent_id</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.incumbent_id" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">incumbent_id</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.incumbent_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for field number 1</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.utils.io.traj_logging.TrajEntry.index">
-<code class="descname">index</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.index" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">index</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.index" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return first index of value.</p>
 <p>Raises ValueError if the value is not present.</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt id="smac.utils.io.traj_logging.TrajEntry.ta_runs">
-<code class="descname">ta_runs</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.ta_runs" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">ta_runs</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.ta_runs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for field number 3</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt id="smac.utils.io.traj_logging.TrajEntry.ta_time_used">
-<code class="descname">ta_time_used</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.ta_time_used" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">ta_time_used</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.ta_time_used" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for field number 4</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt id="smac.utils.io.traj_logging.TrajEntry.train_perf">
-<code class="descname">train_perf</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.train_perf" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">train_perf</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.train_perf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for field number 0</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt id="smac.utils.io.traj_logging.TrajEntry.wallclock_time">
-<code class="descname">wallclock_time</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.wallclock_time" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">wallclock_time</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.wallclock_time" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for field number 5</p>
 </dd></dl>
 
@@ -316,37 +316,37 @@
 
 <dl class="class">
 <dt id="smac.utils.io.traj_logging.TrajLogger">
-<em class="property">class </em><code class="descclassname">smac.utils.io.traj_logging.</code><code class="descname">TrajLogger</code><span class="sig-paren">(</span><em>output_dir</em>, <em>stats</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.utils.io.traj_logging.</code><code class="sig-name descname">TrajLogger</code><span class="sig-paren">(</span><em class="sig-param">output_dir</em>, <em class="sig-param">stats</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Writes trajectory logs files and creates output directory if not exists already</p>
 <dl class="attribute">
 <dt id="smac.utils.io.traj_logging.TrajLogger.stats">
-<code class="descname">stats</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.stats" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">stats</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.stats" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.utils.io.traj_logging.TrajLogger.logger">
-<code class="descname">logger</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.logger" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">logger</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.logger" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.utils.io.traj_logging.TrajLogger.output_dir">
-<code class="descname">output_dir</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.output_dir" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">output_dir</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.output_dir" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.utils.io.traj_logging.TrajLogger.aclib_traj_fn">
-<code class="descname">aclib_traj_fn</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.aclib_traj_fn" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">aclib_traj_fn</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.aclib_traj_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.utils.io.traj_logging.TrajLogger.old_traj_fn">
-<code class="descname">old_traj_fn</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.old_traj_fn" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">old_traj_fn</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.old_traj_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="smac.utils.io.traj_logging.TrajLogger.trajectory">
-<code class="descname">trajectory</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.trajectory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">trajectory</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.trajectory" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>Constructor</p>
@@ -360,7 +360,7 @@
 </dl>
 <dl class="method">
 <dt id="smac.utils.io.traj_logging.TrajLogger.add_entry">
-<code class="descname">add_entry</code><span class="sig-paren">(</span><em>train_perf: float</em>, <em>incumbent_id: int</em>, <em>incumbent: ConfigSpace.configuration_space.Configuration</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger.add_entry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.add_entry" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_entry</code><span class="sig-paren">(</span><em class="sig-param">train_perf: float</em>, <em class="sig-param">incumbent_id: int</em>, <em class="sig-param">incumbent: ConfigSpace.configuration_space.Configuration</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger.add_entry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.add_entry" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds entries to trajectory files (several formats) with using the
 same timestamps for each entry</p>
 <dl class="field-list simple">
@@ -374,9 +374,9 @@ same timestamps for each entry</p>
 </dl>
 </dd></dl>
 
-<dl class="staticmethod">
+<dl class="method">
 <dt id="smac.utils.io.traj_logging.TrajLogger.read_traj_aclib_format">
-<em class="property">static </em><code class="descname">read_traj_aclib_format</code><span class="sig-paren">(</span><em>fn: str</em>, <em>cs: ConfigSpace.configuration_space.ConfigurationSpace</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger.read_traj_aclib_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.read_traj_aclib_format" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">read_traj_aclib_format</code><span class="sig-paren">(</span><em class="sig-param">fn: str</em>, <em class="sig-param">cs: ConfigSpace.configuration_space.ConfigurationSpace</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger.read_traj_aclib_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.read_traj_aclib_format" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads trajectory from file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
