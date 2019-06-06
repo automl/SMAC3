@@ -38,15 +38,21 @@ class SuccessiveHalving(Intensifier):
         mapping from instance name to instance specific string
     cutoff : int
         runtime cutoff of TA runs
-    deterministic: bool
+    max_budget : int
+        maximum budget allowed for 1 run of successive halving
+    min_budget : int
+        minimum budget allowed for 1 run of successive halving
+    eta : int
+        'halving' factor after each iteration in a successive halving run
+    deterministic : bool
         whether the TA is deterministic or not
     run_obj_time: bool
         whether the run objective is runtime or not (if true, apply adaptive capping)
     """
 
     def __init__(self, tae_runner: ExecuteTARun, stats: Stats, traj_logger: TrajLogger, rng: np.random.RandomState,
-                 instances: typing.List[str], max_budget: int = None, min_budget: int = None, eta: float = 2,
-                 cutoff: int = MAX_CUTOFF, instance_specifics: typing.Mapping[str, np.ndarray] = None,
+                 instances: typing.List[str], instance_specifics: typing.Mapping[str, np.ndarray] = None,
+                 cutoff: int = MAX_CUTOFF, max_budget: float = None, min_budget: float = None, eta: float = 2,
                  deterministic: bool = False, run_obj_time: bool = True, n_seeds: int = None, instance_order='random',
                  adaptive_capping_slackfactor: float = 1.2, **kwargs):
 
@@ -95,7 +101,7 @@ class SuccessiveHalving(Intensifier):
             if self.n_seeds is None:
                 seeds = [self.rs.randint(low=0, high=MAXINT, size=1)[0]]
             else:
-                seeds = [self.rs.randint(low=0, high=MAXINT, size=n_seeds)[0]]
+                seeds = self.rs.randint(low=0, high=MAXINT, size=self.n_seeds)
         # storing instances & seeds as tuples
         self.instances = [InstSeedKey(i, s) for s in seeds for i in self.instances]
 
@@ -115,8 +121,8 @@ class SuccessiveHalving(Intensifier):
             self.budget_type = 'cutoff'
         else:
             # budget with instances
-            self.min_budget = 1 if min_budget is None else min_budget
-            self.max_budget = len(self.instances) if max_budget is None else max_budget
+            self.min_budget = 1 if min_budget is None else int(min_budget)
+            self.max_budget = len(self.instances) if max_budget is None else int(max_budget)
             self.budget_type = 'instance'
 
             # max budget cannot be greater than number of instance-seed pairs
@@ -179,12 +185,6 @@ class SuccessiveHalving(Intensifier):
         if isinstance(challengers, ChallengerList):
             challengers = challengers.challengers
 
-        # in the 1st SH run, the incumbent is also added to the challenger configuration list to run,
-        # since it was not run before, (set incumbent to None for a fair comparison)
-        # if len(run_history.get_runs_for_config(incumbent)) == 0:
-        #     challengers = [incumbent] + challengers
-        #     incumbent = None
-
         # selecting first 'n' challengers for the current run, based on eta
         curr_challengers = challengers[:self.initial_challengers]
         # challengers can repeated only if optimizing across multiple seeds
@@ -207,7 +207,7 @@ class SuccessiveHalving(Intensifier):
         # selecting the 1st budget for 1st round of successive halving
         sh_iter = self.max_sh_iter
         budget = self.max_budget / (self.eta ** sh_iter)
-        budget = int(max(budget, self.min_budget))
+        budget = max(budget, self.min_budget)
         prev_budget = 0
 
         first_run = False
@@ -223,7 +223,7 @@ class SuccessiveHalving(Intensifier):
             # selecting instance subset for this budget, depending on the kind og budget
             if self.budget_type == 'instance':
                 # run only on new instances
-                available_insts = all_instances[prev_budget:budget]
+                available_insts = all_instances[int(prev_budget):int(budget)]
             else:
                 available_insts = all_instances
 
@@ -304,7 +304,8 @@ class SuccessiveHalving(Intensifier):
         self.logger.debug("Best challenger from successive halving run - %s" % (str(best_challenger)))
 
         # compare challenger with current incumbent
-        new_incumbent, inc_perf = self._compare_configs(incumbent, best_challenger, run_history, log_traj)
+        new_incumbent, inc_perf = self._compare_configs(incumbent, best_challenger,
+                                                        run_history, aggregate_func, log_traj)
 
         return new_incumbent, inc_perf
 
@@ -385,8 +386,9 @@ class SuccessiveHalving(Intensifier):
                      )
         return cutoff
 
-    def _compare_configs(self, incumbent: Configuration, challenger: Configuration, run_history: RunHistory,
-                         log_traj: bool, **kwargs):
+    def _compare_configs(self, incumbent: Configuration, challenger: Configuration,
+                         run_history: RunHistory, aggregate_func: typing.Callable,
+                         log_traj: bool = True, **kwargs):
         """
         compares challenger and incumbent based on all runs seen so far
 
@@ -398,8 +400,11 @@ class SuccessiveHalving(Intensifier):
             best configuration so far
         run_history: RunHistory
             stores all runs we ran so far
+        aggregate_func: typing.Callable
+            Aggregate performance across instances
         log_traj : bool
             flag to specify if incumbent trajectory is to be recorded
+
         Returns
         -------
         new_incumbent: Configuration
@@ -409,23 +414,28 @@ class SuccessiveHalving(Intensifier):
         # NOTE run_history overwrites the cost for runs since it doesnt record each budget (cutoff) separately (yet?)
         # get incumbent & challenger performance
         inc_runs = run_history.get_runs_for_config(incumbent)
-        inc_perf = run_history.aggregate_func(incumbent, run_history, inc_runs)
+        inc_perf = aggregate_func(incumbent, run_history, inc_runs)
         chal_runs = run_history.get_runs_for_config(challenger)
-        chal_perf = run_history.aggregate_func(challenger, run_history, chal_runs)
+        chal_perf = aggregate_func(challenger, run_history, chal_runs)
 
-        if incumbent == challenger:
-            self.logger.info("Incumbent remains unchanged.")
-            return incumbent, inc_perf
-        elif not np.isnan(inc_perf) and inc_perf < chal_perf:
-            self.logger.info("Incumbent remains unchanged. Incumbent is still better (%.4f) than challenger "
-                             "(%.4f) in this run" % (inc_perf, chal_perf))
-            return incumbent, inc_perf
+        if not set(inc_runs) - set(chal_runs):
+
+            if incumbent == challenger:
+                self.logger.info("Incumbent remains unchanged.")
+                return incumbent, inc_perf
+            elif not np.isnan(inc_perf) and inc_perf < chal_perf:
+                self.logger.info("Incumbent remains unchanged. Incumbent is still better (%.4f) than challenger "
+                                 "(%.4f) in this run" % (inc_perf, chal_perf))
+                return incumbent, inc_perf
+            else:
+                self.logger.info("Incumbent changed! Challenger (%.4f) is better than "
+                                 "incumbent (%.4f)" % (chal_perf, inc_perf))
+                if log_traj:
+                    self.stats.inc_changed += 1
+                    self.traj_logger.add_entry(train_perf=chal_perf,
+                                               incumbent_id=self.stats.inc_changed,
+                                               incumbent=challenger)
+                return challenger, chal_perf
         else:
-            self.logger.info("Incumbent changed! Challenger (%.4f) is better than "
-                             "incumbent (%.4f)" % (chal_perf, inc_perf))
-            if log_traj:
-                self.stats.inc_changed += 1
-                self.traj_logger.add_entry(train_perf=chal_perf,
-                                           incumbent_id=self.stats.inc_changed,
-                                           incumbent=challenger)
-            return challenger, chal_perf
+            self.logger.info("Trying to compare configurations with different sets of runs is not allowed!")
+            return None, None

@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     scenario = Scenario('scenario.txt')
     smac = SMAC4AC(scenario=scenario,      # scenario object
-                   intensifier_type='intensify')  # intensifier to use - 'intensify' or 'sh'
+                   intensifier_type='sh')  # intensifier to use - 'intensify' or 'sh'
 
     # Start optimization
     try:
