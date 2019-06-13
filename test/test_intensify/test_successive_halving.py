@@ -59,7 +59,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             tae_runner=None, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
-            instances=[1])
+            instances=[1], min_budget=1)
 
         self.rh.add(config=self.config1, cost=1, time=2,
                     status=StatusType.SUCCESS, instance_id=1,
@@ -87,7 +87,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             tae_runner=None, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
-            instances=[1])
+            instances=[1], min_budget=1)
 
         self.rh.add(config=self.config1, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=1,
@@ -115,7 +115,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             tae_runner=None, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
-            instances=[1])
+            instances=[1], min_budget=1)
 
         self.rh.add(config=self.config2, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=2,
@@ -138,7 +138,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             tae_runner=None, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
-            instances=[1])
+            instances=[1], min_budget=1)
 
         self.rh.add(config=self.config1, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=1,
@@ -171,7 +171,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             tae_runner=None, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
-            instances=[1])
+            instances=[1], min_budget=1)
         self.rh.add(config=self.config1, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=1,
                     seed=None,
