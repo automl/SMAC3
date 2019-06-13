@@ -362,6 +362,7 @@ class SMAC4AC(object):
             tae_runner = tae_runner(**tae_def_kwargs)
         elif callable(tae_runner):
             tae_def_kwargs['ta'] = tae_runner
+            tae_def_kwargs['use_pynisher'] = scenario.limit_resources  # TODO check where to add this param - not relevant to ExecuteTARunOld
             tae_runner = ExecuteTAFuncDict(**tae_def_kwargs)
         else:
             raise TypeError("Argument 'tae_runner' is %s, but must be "

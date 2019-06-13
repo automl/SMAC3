@@ -69,11 +69,12 @@ class AbstractTAFunc(ExecuteTARun):
         signature = inspect.signature(ta).parameters
         self._accepts_seed = len(signature) > 1
         self._accepts_instance = len(signature) > 2
+        self._accepts_cutoff = len(signature) > 3
 
         if memory_limit is not None:
             memory_limit = int(math.ceil(memory_limit))
         self.memory_limit = memory_limit
-        
+
         self.use_pynisher = use_pynisher
 
     def run(self, config, instance=None,
@@ -114,24 +115,27 @@ class AbstractTAFunc(ExecuteTARun):
             additional_info: dict
                 all further additional run information
         """
-        # walltime for pynisher has to be a rounded up integer
-        if cutoff is not None:
-            cutoff = int(math.ceil(cutoff))
-            if cutoff > 65535:
-                raise ValueError("%d is outside the legal range of [0, 65535] "
-                                 "for cutoff (when using pynisher, due to OS limitations)" % cutoff)
-
-        arguments = {'logger': logging.getLogger("pynisher"),
-                     'wall_time_in_s': cutoff,
-                     'mem_in_mb': self.memory_limit}
 
         obj_kwargs = {}
         if self._accepts_seed:
             obj_kwargs['seed'] = seed
         if self._accepts_instance:
             obj_kwargs['instance'] = instance
+        if self._accepts_cutoff:
+            obj_kwargs['cutoff'] = cutoff
 
         if self.use_pynisher:
+
+            # walltime for pynisher has to be a rounded up integer
+            if cutoff is not None:
+                cutoff = int(math.ceil(cutoff))
+                if cutoff > 65535:
+                    raise ValueError("%d is outside the legal range of [0, 65535] "
+                                     "for cutoff (when using pynisher, due to OS limitations)" % cutoff)
+
+            arguments = {'logger': logging.getLogger("pynisher"),
+                         'wall_time_in_s': cutoff,
+                         'mem_in_mb': self.memory_limit}
 
             obj = pynisher.enforce_limits(**arguments)(self.ta)
     
@@ -210,6 +214,8 @@ class ExecuteTAFuncDict(AbstractTAFunc):
         Memory limit (in MB) that will be applied to the target algorithm.
     par_factor : int, optional
         Penalized average runtime factor. Only used when `run_obj='runtime'`
+    use_pynisher: bool, optional
+        use pynisher to limit resources;
     """
 
     def _call_ta(self, obj, config, **kwargs):

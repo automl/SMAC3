@@ -1,3 +1,11 @@
+"""
+An example for the usage of SMAC within Python.
+We optimize a simple Random Forest on multiple user datasets (loaded from a file).
+
+multiple instances; quality objective; no cutoff limits
+"""
+
+
 import logging
 import os
 
@@ -23,13 +31,12 @@ def load_data_from_file(container_path: str, delimiter=','):
     :param container_path: folder where we can find X and y files
     :return: 2 numpy arrays containing X and y
     """
-    with open(container_path+'/X.csv', 'r') as f:
-        X = np.loadtxt(f, delimiter=delimiter)
-    with open(container_path+'/y.csv', 'r') as f:
-        y = np.loadtxt(f, delimiter=delimiter)
+    X = np.loadtxt(container_path+'/X.csv', delimiter=delimiter)
+    y = np.loadtxt(container_path+'/y.csv', delimiter=delimiter)
     return X, y
 
 
+# Target Algorithm
 def rf_from_cfg(cfg, instance, seed, **kwargs):
     """
         Creates a random forest regressor from sklearn and fits the given data on it.
@@ -125,7 +132,7 @@ cs.add_hyperparameters([num_trees, min_weight_frac_leaf, criterion,
 
 # SMAC scenario object
 scenario = Scenario({"run_obj": "quality",     # we optimize quality (alternative runtime)
-                     "wallclock-limit": 100,   # max number of function evaluations; in this example set to a low number
+                     "wallclock-limit": 100,   # max duration to run the optimization (in seconds)
                      "cs": cs,                 # configuration space
                      "deterministic": "true",
                      "memory_limit": 3072,     # adapt this to reasonable value for your hardware
@@ -135,7 +142,7 @@ scenario = Scenario({"run_obj": "quality",     # we optimize quality (alternativ
 # To optimize, we pass the function to the SMAC-object
 smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
                 tae_runner=rf_from_cfg,
-                intensifier_type='sh')    # intensifier to use - 'intensify' or 'sh'
+                intensifier_type='intensify')    # intensifier to use - 'intensify' or 'sh'
 
 def_value = eval_on_instances(cs.get_default_configuration(), smac, instances)
 print("Value for default configuration: %.4f" % def_value)

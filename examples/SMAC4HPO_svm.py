@@ -2,6 +2,8 @@
 An example for the usage of SMAC within Python.
 We optimize a simple SVM on the IRIS-benchmark.
 
+single instance; quality objective; no cutoff
+
 Note: SMAC-documentation uses linenumbers to generate docs from this file.
 """
 
@@ -103,7 +105,8 @@ print("Default Value: %.2f" % (def_value))
 # Optimize, using a SMAC-object
 print("Optimizing! Depending on your machine, this might take a few minutes.")
 smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
-        tae_runner=svm_from_cfg)
+                tae_runner=svm_from_cfg,
+                intensifier_type='intensify')  # intensifier to use - 'intensify' or 'sh'
 
 incumbent = smac.optimize()
 

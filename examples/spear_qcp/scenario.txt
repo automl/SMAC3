@@ -8,3 +8,4 @@ cutoff_time = 5
 wallclock-limit = 100
 instance_file = instances.txt
 feature_file = features.txt
+sh_min_budget = 2
