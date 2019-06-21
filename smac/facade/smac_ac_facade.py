@@ -30,6 +30,7 @@ from smac.initial_design.sobol_design import SobolDesign
 
 # intensification
 from smac.intensification.intensification import Intensifier
+from smac.intensification.successive_halving import SuccessiveHalving
 # optimizer
 from smac.optimizer.smbo import SMBO
 from smac.optimizer.objective import average_cost
@@ -76,7 +77,6 @@ class SMAC4AC(object):
                  runhistory: Optional[Union[Type[RunHistory], RunHistory]] = None,
                  runhistory_kwargs: Optional[dict] = None,
                  intensifier: Optional[Type[Intensifier]] = None,
-                 intensifier_type: Optional[str] = 'intensify',
                  intensifier_kwargs: Optional[dict] = None,
                  acquisition_function: Optional[Type[AbstractAcquisitionFunction]] = None,
                  acquisition_function_kwargs: Optional[dict] = None,
@@ -123,10 +123,6 @@ class SMAC4AC(object):
         intensifier : Intensifier
             intensification object to issue a racing to decide the current
             incumbent
-        intensifier_type : str
-            Which intensifier to use for racing, will be used when intensifier is None - Options:
-            * 'intensify' (SMAC intensification procedure)
-            * 'sh' (successive halving)
         intensifier_kwargs: Optional[dict]
             arguments passed to the constructor of '~intensifier'
         acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction
@@ -228,6 +224,11 @@ class SMAC4AC(object):
 
         # initialize empty runhistory
         runhistory_def_kwargs = {'aggregate_func': aggregate_func}
+        if intensifier is not None and isinstance(intensifier, SuccessiveHalving):
+            # if Successive Halving / Hyperband is used, then RunHistory overwrites data for
+            # same instance-seed pairs (to save runs of higher budgets)
+            # - will only be used when cutoff is used as a budget
+            runhistory_def_kwargs['overwrite_existing_runs'] = True
         if runhistory_kwargs is not None:
             runhistory_def_kwargs.update(runhistory_kwargs)
         if runhistory is None:
@@ -362,7 +363,7 @@ class SMAC4AC(object):
             tae_runner = tae_runner(**tae_def_kwargs)
         elif callable(tae_runner):
             tae_def_kwargs['ta'] = tae_runner
-            tae_def_kwargs['use_pynisher'] = scenario.limit_resources  # TODO check where to add this param - not relevant to ExecuteTARunOld
+            tae_def_kwargs['use_pynisher'] = scenario.limit_resources
             tae_runner = ExecuteTAFuncDict(**tae_def_kwargs)
         else:
             raise TypeError("Argument 'tae_runner' is %s, but must be "
@@ -401,20 +402,7 @@ class SMAC4AC(object):
             intensifier_def_kwargs.update(intensifier_kwargs)
 
         if intensifier is None:
-            if intensifier_type == 'sh':
-                # getting successive halving specific parameters from scenario
-                intensifier_def_kwargs['min_budget'] = scenario.sh_min_budget
-                intensifier_def_kwargs['max_budget'] = scenario.sh_max_budget
-                intensifier_def_kwargs['eta'] = scenario.sh_eta
-                intensifier_def_kwargs['n_seeds'] = scenario.sh_n_seeds
-                intensifier_def_kwargs['instance_order'] = scenario.sh_instance_order
-                intensifier = SuccessiveHalving(**intensifier_def_kwargs)
-
-            elif intensifier_type == 'intensify':
-                intensifier = Intensifier(**intensifier_def_kwargs)
-            else:
-                intensifier = Intensifier(**intensifier_def_kwargs)
-
+            intensifier = Intensifier(**intensifier_def_kwargs)
         elif inspect.isclass(intensifier):
             intensifier = intensifier(**intensifier_def_kwargs)
         else:
@@ -441,6 +429,12 @@ class SMAC4AC(object):
             'n_configs_x_params': 0,
             'max_config_fracs': 0.0
             }
+        if isinstance(intensifier, SuccessiveHalving):
+            # If running successive halving, then you need multiple configurations for the initial design
+            n_configs = intensifier.initial_challengers / len(self.scenario.cs.get_hyperparameters())
+            init_design_def_kwargs['n_configs_x_params'] = n_configs
+            init_design_def_kwargs['run_first_config'] = False
+            init_design_def_kwargs['fill_random_configs'] = True
         if initial_design_kwargs is not None:
             init_design_def_kwargs.update(initial_design_kwargs)
         if initial_configurations is not None:

@@ -9,19 +9,22 @@ SMAC's own "intensifier" approach.
 Multiple instances; runtime objective -> adaptive capping; SMAC limits cutoff
 """
 
-
 import logging
 
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.scenario.scenario import Scenario
 
+from smac.intensification.successive_halving import SuccessiveHalving
 
 if __name__ == '__main__':
     logging.basicConfig(level=20)  # 10: debug; 20: info
 
     scenario = Scenario('scenario.txt')
-    smac = SMAC4AC(scenario=scenario,      # scenario object
-                   intensifier_type='intensify')  # intensifier to use - 'intensify' or 'sh'
+    intensifier_kwargs = {'min_budget': 1}
+    smac = SMAC4AC(scenario=scenario,  # scenario object
+                   intensifier_kwargs=intensifier_kwargs,  # parameters for Successive Halving
+                   intensifier=SuccessiveHalving)   # intensifier to use - Default is SMAC's intensify approach
+                                                    # change intensifier to successive halving by passing the class
 
     # Start optimization
     try:

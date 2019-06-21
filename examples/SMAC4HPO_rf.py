@@ -94,6 +94,7 @@ def eval_on_instances(config, smac, instances):
 
     return cost / len(instances)
 
+
 # Load dataset
 # boston = load_boston()
 # If using multiple instances, they are normally sent to SMAC through the scenario object as
@@ -104,7 +105,7 @@ sample_X, sample_y = load_data_from_file(instances[0][0], delimiter=' ')
 
 logger = logging.getLogger("RF-example")
 logging.basicConfig(level=logging.INFO)
-#logging.basicConfig(level=logging.DEBUG)  # Enable to show debug-output
+# logging.basicConfig(level=logging.DEBUG)  # Enable to show debug-output
 logger.info("Running random forest example for SMAC. If you experience "
             "difficulties, try to decrease the memory-limit.")
 
@@ -141,8 +142,7 @@ scenario = Scenario({"run_obj": "quality",     # we optimize quality (alternativ
 
 # To optimize, we pass the function to the SMAC-object
 smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
-                tae_runner=rf_from_cfg,
-                intensifier_type='intensify')    # intensifier to use - 'intensify' or 'sh'
+                tae_runner=rf_from_cfg)
 
 def_value = eval_on_instances(cs.get_default_configuration(), smac, instances)
 print("Value for default configuration: %.4f" % def_value)

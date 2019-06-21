@@ -45,11 +45,9 @@ class SMAC4HPO(SMAC4AC):
         kwargs['initial_design_kwargs'] = init_kwargs
 
         # Intensification parameters - which intensifier to use and respective parameters
-        intensifier_type = kwargs.get('intensifier_type')
         intensifier_kwargs = kwargs.get('intensifier_kwargs', dict())
         intensifier_kwargs['min_chall'] = 1
         kwargs['intensifier_kwargs'] = intensifier_kwargs
-        kwargs['intensifier_type'] = intensifier_type
         scenario.intensification_percentage = 1e-10
 
         model_class = RandomForestWithInstances

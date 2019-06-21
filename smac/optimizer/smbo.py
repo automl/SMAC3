@@ -16,6 +16,7 @@ from smac.epm.gp_base_prior import LognormalPrior, HorseshoePrior
 from smac.epm.util_funcs import get_types
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.intensification import Intensifier
+from smac.intensification.successive_halving import SuccessiveHalving
 from smac.optimizer import pSMAC
 from smac.optimizer.acquisition import AbstractAcquisitionFunction, EI, LogEI,\
     LCB, PI
@@ -32,7 +33,6 @@ from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
 from smac.utils.constants import MAXINT
 
-from smac.intensification.successive_halving import SuccessiveHalving
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -158,24 +158,8 @@ class SMBO(object):
         # Initialization, depends on input
         if self.stats.ta_runs == 0 and self.incumbent is None:
             logging.info('Running initial design')
-            # Run the initial deisgn only if intensifying using SMAC's procedure
-            # SH or HB methods get initialized by 1 run with random configurations
-            if not isinstance(self.intensifier, SuccessiveHalving):
-                # Intensifier initialization
-                self.incumbent = self.initial_design.run()
-            else:
-                # SH/HB initialization - get default configuration + random configurations
-                initial_configs = self.config_space.sample_configuration(self.intensifier.initial_challengers-1)
-                initial_configs = [self.config_space.get_default_configuration()] + initial_configs
-                time_left = self._get_timebound_for_intensification(time.time())
-
-                # 1 intensify run with random configurations
-                self.incumbent, _ = self.intensifier.intensify(
-                    challengers=initial_configs,
-                    incumbent=None,
-                    run_history=self.runhistory,
-                    aggregate_func=self.aggregate_func,
-                    time_bound=max(self.intensifier._min_time, time_left))
+            # Intensifier initialization
+            self.incumbent = self.initial_design.run()
 
         elif self.stats.ta_runs > 0 and self.incumbent is None:
             raise ValueError("According to stats there have been runs performed, "

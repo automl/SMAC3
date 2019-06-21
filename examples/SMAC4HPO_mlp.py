@@ -11,6 +11,7 @@ import warnings
 import numpy as np
 from sklearn.model_selection import cross_val_score
 from sklearn.neural_network import MLPClassifier
+from sklearn import metrics
 from sklearn.datasets import load_digits
 from sklearn.exceptions import ConvergenceWarning
 
@@ -21,6 +22,7 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
 
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_hpo_facade import SMAC4HPO
+from smac.intensification.successive_halving import SuccessiveHalving
 
 digits = load_digits()
 
@@ -117,21 +119,20 @@ scenario = Scenario({"run_obj": "quality",     # we optimize quality (alternativ
                      "cs": cs,                 # configuration space
                      "cutoff": cutoff,         # max duration to run target algorithm (num epochs in this case)
                      "deterministic": "true",
-                     "sh_min_budget": 5,       # Successive Halving min budget
-                     "sh_max_budget": cutoff,  # Successive Halving max budget (num epochs in this case)
                      "limit_resources": False,  # Disables pynisher to pass cutoff directly to the target algorithm.
                                                 # Timeouts have to be taken care within the TA
                      })
 
+# intensifier parameters
+intensifier_kwargs = {'min_budget': 5, 'max_budget': cutoff}
 # To optimize, we pass the function to the SMAC-object
 smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
-                tae_runner=mlp_from_cfg,
-                intensifier_type='sh')  # intensifier to use - 'intensify' or 'sh'
+                tae_runner=mlp_from_cfg)  # you can also change the intensifier to use like this!
 
 # Example call of the function with default values
 # It returns: Status, Cost, Runtime, Additional Infos
 def_value = smac.get_tae_runner().run(cs.get_default_configuration(), '1', cutoff, 0)[1]
-print("Value for default configuration: %.4f" % -1*def_value)
+print("Value for default configuration: %.4f" % (-1*def_value))
 
 # Start optimization
 try:
@@ -140,4 +141,4 @@ finally:
     incumbent = smac.solver.incumbent
 
 inc_value = smac.get_tae_runner().run(incumbent, '1', cutoff, 0)[1]
-print("Optimized Value: %.4f" % -1*inc_value)
+print("Optimized Value: %.4f" % (-1*inc_value))

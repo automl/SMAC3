@@ -51,118 +51,6 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
-    def test_compare_configs_chall(self):
-        """
-            challenger is better
-        """
-        intensifier = SuccessiveHalving(
-            tae_runner=None, stats=self.stats,
-            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
-            rng=np.random.RandomState(12345),
-            instances=[1], min_budget=1)
-
-        self.rh.add(config=self.config1, cost=1, time=2,
-                    status=StatusType.SUCCESS, instance_id=1,
-                    seed=None,
-                    additional_info=None)
-
-        self.rh.add(config=self.config2, cost=0, time=1,
-                    status=StatusType.SUCCESS, instance_id=1,
-                    seed=None,
-                    additional_info=None)
-
-        conf, _ = intensifier._compare_configs(incumbent=self.config1,
-                                               challenger=self.config2,
-                                               run_history=self.rh,
-                                               aggregate_func=average_cost)
-
-        # challenger has enough runs and is better
-        self.assertEqual(conf, self.config2)
-
-    def test_compare_configs_inc(self):
-        """
-            incumbent is better
-        """
-        intensifier = SuccessiveHalving(
-            tae_runner=None, stats=self.stats,
-            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
-            rng=np.random.RandomState(12345),
-            instances=[1], min_budget=1)
-
-        self.rh.add(config=self.config1, cost=1, time=1,
-                    status=StatusType.SUCCESS, instance_id=1,
-                    seed=None,
-                    additional_info=None)
-
-        self.rh.add(config=self.config2, cost=2, time=2,
-                    status=StatusType.SUCCESS, instance_id=1,
-                    seed=None,
-                    additional_info=None)
-
-        conf, _ = intensifier._compare_configs(incumbent=self.config1,
-                                               challenger=self.config2,
-                                               run_history=self.rh,
-                                               aggregate_func=average_cost)
-
-        # challenger worse than inc
-        self.assertEqual(conf, self.config1)
-
-    def test_compare_configs_no_inc(self):
-        """
-            comparing configs with no incumbent run
-        """
-        intensifier = SuccessiveHalving(
-            tae_runner=None, stats=self.stats,
-            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
-            rng=np.random.RandomState(12345),
-            instances=[1], min_budget=1)
-
-        self.rh.add(config=self.config2, cost=1, time=1,
-                    status=StatusType.SUCCESS, instance_id=2,
-                    seed=None,
-                    additional_info=None)
-
-        conf, _ = intensifier._compare_configs(incumbent=self.config1,
-                                               challenger=self.config2,
-                                               run_history=self.rh,
-                                               aggregate_func=average_cost)
-
-        # challenger config2 should be returned since there is no incumbent
-        self.assertEqual(conf, self.config2)
-
-    def test_compare_configs_unknow(self):
-        """
-            comparing configs with different sets of runs
-        """
-        intensifier = SuccessiveHalving(
-            tae_runner=None, stats=self.stats,
-            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
-            rng=np.random.RandomState(12345),
-            instances=[1], min_budget=1)
-
-        self.rh.add(config=self.config1, cost=1, time=1,
-                    status=StatusType.SUCCESS, instance_id=1,
-                    seed=None,
-                    additional_info=None)
-
-        self.rh.add(config=self.config1, cost=1, time=2,
-                    status=StatusType.SUCCESS, instance_id=2,
-                    seed=None,
-                    additional_info=None)
-
-        self.rh.add(config=self.config1, cost=1, time=1,
-                    status=StatusType.SUCCESS, instance_id=2,
-                    seed=None,
-                    additional_info=None)
-
-        conf, _ = intensifier._compare_configs(incumbent=self.config1,
-                                               challenger=self.config2,
-                                               run_history=self.rh,
-                                               aggregate_func=average_cost)
-
-        # undecided - config is none
-        self.assertIsNone(conf)
-
     def test_top_k(self):
         """
             test _top_k()
@@ -188,49 +76,6 @@ class TestSuccessiveHalving(unittest.TestCase):
                                   k=1, run_history=self.rh)
 
         self.assertEqual(conf, [self.config1])
-
-    def test_adaptive_capping(self):
-        """
-            test _adapt_cutoff()
-        """
-        intensifier = SuccessiveHalving(
-            tae_runner=None, stats=self.stats,
-            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
-            rng=np.random.RandomState(12345),
-            instances=list(range(5)),
-            deterministic=False)
-
-        for i in range(5):
-            self.rh.add(config=self.config1, cost=i + 1, time=i + 1,
-                        status=StatusType.SUCCESS, instance_id=i,
-                        seed=i,
-                        additional_info=None)
-        for i in range(3):
-            self.rh.add(config=self.config2, cost=i + 1, time=i + 1,
-                        status=StatusType.SUCCESS, instance_id=i,
-                        seed=i,
-                        additional_info=None)
-
-        inst_seed_pairs = self.rh.get_runs_for_config(self.config1)
-        # cost used by incumbent for going over all runs in inst_seed_pairs
-        inc_sum_cost = sum_cost(config=self.config1, instance_seed_pairs=inst_seed_pairs,
-                                run_history=self.rh)
-
-        cutoff = intensifier._adapt_cutoff(challenger=self.config2,
-                                           incumbent=self.config1,
-                                           run_history=self.rh,
-                                           inc_sum_cost=inc_sum_cost)
-        # 15*1.2 - 6
-        self.assertEqual(cutoff, 12)
-
-        intensifier.cutoff = 5
-
-        cutoff = intensifier._adapt_cutoff(challenger=self.config2,
-                                           incumbent=self.config1,
-                                           run_history=self.rh,
-                                           inc_sum_cost=inc_sum_cost)
-        # scenario cutoff
-        self.assertEqual(cutoff, 5)
 
     @attr('slow')
     def test_intensify_1(self):
@@ -265,7 +110,7 @@ class TestSuccessiveHalving(unittest.TestCase):
     @attr('slow')
     def test_intensify_2(self):
         """
-           test intensify with adaptive capping & cutoff as budget
+           test intensify with adaptive capping
         """
 
         def target(x):
@@ -274,6 +119,7 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="runtime")
         taf.runhistory = self.rh
+        taf.runhistory.overwrite_existing_runs = True
 
         intensifier = SuccessiveHalving(
             tae_runner=taf, stats=self.stats,
@@ -316,7 +162,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             tae_runner=taf, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), deterministic=False,
-            instances=list(range(2)), n_seeds=2, cutoff=1, instance_order=None)
+            instances=[0, 1], n_seeds=2, cutoff=1, instance_order=None)
 
         # config1 should still be the incumbent - over all instance seed pairs
         inc, _ = intensifier.intensify(challengers=[self.config1, self.config2],
@@ -342,7 +188,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             tae_runner=taf, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
-            instances=list(range(2)),
+            instances=[0, 1],
             deterministic=True)
 
         for i in range(2):

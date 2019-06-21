@@ -100,19 +100,18 @@ scenario = Scenario({"run_obj": "quality",   # we optimize quality (alternativel
 # Example call of the function
 # It returns: Status, Cost, Runtime, Additional Infos
 def_value = svm_from_cfg(cs.get_default_configuration())
-print("Default Value: %.2f" % (def_value))
+print("Default Value: %.2f" % def_value)
 
 # Optimize, using a SMAC-object
 print("Optimizing! Depending on your machine, this might take a few minutes.")
 smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
-                tae_runner=svm_from_cfg,
-                intensifier_type='intensify')  # intensifier to use - 'intensify' or 'sh'
+                tae_runner=svm_from_cfg)
 
 incumbent = smac.optimize()
 
 inc_value = svm_from_cfg(incumbent)
 
-print("Optimized Value: %.2f" % (inc_value))
+print("Optimized Value: %.2f" % inc_value)
 
 
 # We can also validate our results (though this makes a lot more sense with instances)
