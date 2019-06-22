@@ -268,7 +268,8 @@ class SuccessiveHalving(Intensifier):
                                                           inc_sum_cost=inc_sum_cost,
                                                           first_run=first_run)
 
-                if len(curr_challengers) == 0:
+                # if all challengers were capped, then stop intensification
+                if not curr_challengers:
                     self.logger.info("All configurations have been eliminated!"
                                      "Interrupting optimization run and returning current incumbent")
                     inc_perf = run_history.get_cost(incumbent)
