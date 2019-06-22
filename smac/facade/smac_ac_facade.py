@@ -6,7 +6,6 @@ from typing import  List, Union, Optional, Type, Callable
 import numpy as np
 
 # tae
-from smac.intensification.successive_halving import SuccessiveHalving
 from smac.tae.execute_ta_run import ExecuteTARun
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.execute_func import ExecuteTAFuncDict

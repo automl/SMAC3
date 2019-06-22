@@ -218,8 +218,6 @@ class SuccessiveHalving(Intensifier):
         # challengers can be repeated only if optimizing across multiple seeds
         if self.n_seeds is None or self.n_seeds == 1:
             curr_challengers = set(curr_challengers) - set(run_history.get_all_configs())
-        # to track capped configurations & remove them later
-        capped_configs = []
 
         # randomize instances per successive halving run, if user specifies
         all_instances = self.instances
@@ -228,7 +226,6 @@ class SuccessiveHalving(Intensifier):
 
         # calculating the incumbent's performance for adaptive capping
         # this check is required because there is no initial run to get the incumbent performance
-        # (only if first run)
         if incumbent is not None:
             inc_runs = run_history.get_runs_for_config(incumbent)
             inc_sum_cost = sum_cost(config=incumbent, instance_seed_pairs=inc_runs, run_history=run_history)
@@ -250,7 +247,7 @@ class SuccessiveHalving(Intensifier):
         while budget <= self.max_budget:
 
             self.logger.info('Running with budget [%.2f / %d] with %d challengers' % (budget, self.max_budget,
-                                                                                    len(curr_challengers)))
+                                                                                      len(curr_challengers)))
             # selecting instance subset for this budget, depending on the kind of budget
             if self.budget_type == 'instance':
                 # run only on new instances
@@ -261,72 +258,35 @@ class SuccessiveHalving(Intensifier):
             # determine 'k' for the next iteration
             next_n_chal = int(np.round(len(curr_challengers) / self.eta))
 
-            # for every challenger generated, execute target algorithm
-            for challenger in curr_challengers:
+            try:
+                # Race all challengers
+                curr_challengers = self._race_challengers(challengers=curr_challengers,
+                                                          incumbent=incumbent,
+                                                          instances=available_insts,
+                                                          run_history=run_history,
+                                                          budget=budget,
+                                                          inc_sum_cost=inc_sum_cost,
+                                                          first_run=first_run)
 
-                # for every instance in the instance subset
-                self.logger.debug(" Running challenger  -  %s" % str(challenger))
-                for instance, seed in available_insts:
+                if len(curr_challengers) == 0:
+                    self.logger.info("All configurations have been eliminated!"
+                                     "Interrupting optimization run and returning current incumbent")
+                    inc_perf = run_history.get_cost(incumbent)
+                    return incumbent, inc_perf
 
-                    # selecting cutoff if running adaptive capping
-                    cutoff = self._adapt_cutoff(challenger=challenger,
-                                                incumbent=incumbent,
-                                                run_history=run_history,
-                                                inc_sum_cost=inc_sum_cost)
-                    if cutoff is not None and cutoff <= 0:
-                        # no time to validate challenger
-                        self.logger.debug("Stop challenger itensification due to adaptive capping.")
-                        break
-
-                    # setting cutoff based on the type of budget & adaptive capping
-                    tae_cutoff = min(cutoff, budget) if self.budget_type == 'cutoff' else cutoff
-
-                    self.logger.debug('Cutoff for challenger: %s' % str(cutoff))
-
-                    # run target algorithm for each instance-seed pair
-                    self.logger.debug("Execute target algorithm")
-                    try:
-                        status, cost, dur, res = self.tae_runner.start(
-                            config=challenger,
-                            instance=instance,
-                            seed=seed,
-                            cutoff=tae_cutoff,
-                            instance_specific=self.instance_specifics.get(instance, "0"),
-                            capped=(self.cutoff is not None) and
-                                   (cutoff < self.cutoff)
-                        )
-                        self._ta_time += dur
-
-                    except CappedRunException:
-                        # We move on to the next configuration if we reach maximum cutoff i.e., capped
-                        self.logger.info("Budget exhausted by adaptive capping; "
-                                          "Interrupting current challenger and moving on to the next one")
-                        capped_configs.append(challenger)
-                        break
-
-                    except BudgetExhaustedException:
-                        # Returning the final incumbent selected so far because we ran out of optimization budget
-                        self.logger.debug("Budget exhausted; "
-                                          "Interrupting optimization run and returning current incumbent")
-                        inc_perf = run_history.get_cost(incumbent)
-                        return incumbent, inc_perf
-
-                    self._num_run += 1
-
-                # count every challenger exactly once per SH run
-                if first_run:
-                    self._chall_indx += 1
-
-            # eliminate capped configuration from the race & reset capped_configs
-            _ = [curr_challengers.remove(c) for c in capped_configs]
-            capped_configs = []
+            except BudgetExhaustedException:
+                # Returning the final incumbent selected so far because we ran out of optimization budget
+                self.logger.debug("Budget exhausted; "
+                                  "Interrupting optimization run and returning current incumbent")
+                inc_perf = run_history.get_cost(incumbent)
+                return incumbent, inc_perf
 
             # selecting the top 'k' challengers for the next iteration
-            if next_n_chal >= 1:
+            if next_n_chal > 0:
                 curr_challengers = self._top_k(curr_challengers, run_history, k=next_n_chal)
             else:
                 # returning at least 1 configuration for next iteration since the incumbent has to run on all instances
-                self.logger.debug('Ran out of configurations! Returning the best from what was seen so far.')
+                self.logger.info('Ran out of configurations! Returning the best from what was seen so far.')
                 curr_challengers = self._top_k(curr_challengers, run_history, k=1)
 
             first_run = False
@@ -336,13 +296,8 @@ class SuccessiveHalving(Intensifier):
             budget = budget * self.eta
 
         # select best challenger from the SH run
-        if len(curr_challengers) >= 1:
-            best_challenger = curr_challengers[0]
-            self.logger.debug("Best challenger from successive halving run - %s" % (str(best_challenger)))
-        else:
-            inc_perf = run_history.get_cost(incumbent)
-            self.logger.debug("All challenger configurations have been eliminated! Returning current incumbent.")
-            return incumbent, inc_perf
+        best_challenger = curr_challengers[0]
+        self.logger.debug("Best challenger from successive halving run - %s" % (str(best_challenger)))
 
         # compare challenger with current incumbent
         if incumbent is None:
@@ -352,7 +307,7 @@ class SuccessiveHalving(Intensifier):
             self.logger.info("incumbent configuration: %s" % str(best_challenger))
         else:
             new_incumbent = self._compare_configs(incumbent, best_challenger,
-                                                            run_history, aggregate_func, log_traj)
+                                                  run_history, aggregate_func, log_traj)
             if new_incumbent is None:
                 # if compare config returned none, then it is undecided. So returns incumbent
                 new_incumbent = incumbent
@@ -363,6 +318,95 @@ class SuccessiveHalving(Intensifier):
             n_configs=self._chall_indx)
 
         return new_incumbent, inc_perf
+
+    def _race_challengers(self, challengers: typing.List[Configuration],
+                          incumbent: Configuration,
+                          instances: typing.List[InstSeedKey],
+                          run_history: RunHistory,
+                          budget: float,
+                          inc_sum_cost: float,
+                          first_run: bool):
+        """
+        Aggressively race challengers for the given instances
+
+        Parameters
+        ----------
+        challengers: typing.List[Configuration]
+            List of challenger configurations to race
+        incumbent:
+            Current incumbent configuration
+        instances: typing.List[InstSeedKey]
+            List of instance-seed pairs to use for racing challengers
+        run_history: RunHistory
+            Stores all runs we ran so far
+        budget: float
+            Successive Halving budget
+        inc_sum_cost: float
+            total sum cost of the incumbent (used to determine adaptive capping cutoff)
+        first_run: bool
+            to logs configurations to stats (set to true only for new configurations)
+
+        Returns
+        -------
+        challengers: typing.List[Configuration]
+            All challengers that were successfully executed, without being capped
+        """
+
+        # to track capped configurations & remove them later
+        capped_configs = []
+
+        # for every challenger generated, execute target algorithm
+        for challenger in challengers:
+
+            # for every instance in the instance subset
+            self.logger.debug(" Running challenger  -  %s" % str(challenger))
+            for instance, seed in instances:
+
+                # selecting cutoff if running adaptive capping
+                cutoff = self._adapt_cutoff(challenger=challenger,
+                                            incumbent=incumbent,
+                                            run_history=run_history,
+                                            inc_sum_cost=inc_sum_cost)
+                if cutoff is not None and cutoff <= 0:
+                    # no time to validate challenger
+                    self.logger.debug("Stop challenger itensification due to adaptive capping.")
+                    break
+
+                # setting cutoff based on the type of budget & adaptive capping
+                tae_cutoff = min(cutoff, budget) if self.budget_type == 'cutoff' else cutoff
+
+                self.logger.debug('Cutoff for challenger: %s' % str(cutoff))
+
+                # run target algorithm for each instance-seed pair
+                self.logger.debug("Execute target algorithm")
+                try:
+                    status, cost, dur, res = self.tae_runner.start(
+                        config=challenger,
+                        instance=instance,
+                        seed=seed,
+                        cutoff=tae_cutoff,
+                        instance_specific=self.instance_specifics.get(instance, "0"),
+                        capped=(self.cutoff is not None) and
+                               (cutoff < self.cutoff)
+                    )
+                    self._ta_time += dur
+                    self._num_run += 1
+
+                except CappedRunException:
+                    # We move on to the next configuration if we reach maximum cutoff i.e., capped
+                    self.logger.debug("Budget exhausted by adaptive capping; "
+                                      "Interrupting current challenger and moving on to the next one")
+                    capped_configs.append(challenger)
+                    break
+
+            # count every challenger exactly once per SH run
+            if first_run:
+                self._chall_indx += 1
+
+        # eliminate capped configuration from the race & reset capped_configs
+        _ = [challengers.remove(c) for c in capped_configs]
+
+        return challengers
 
     def _top_k(self, configs: typing.List[Configuration],
                run_history: RunHistory,

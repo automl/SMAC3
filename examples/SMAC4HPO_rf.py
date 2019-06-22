@@ -19,6 +19,7 @@ from smac.configspace import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformFloatHyperparameter, UniformIntegerHyperparameter
 
+from smac.intensification.successive_halving import SuccessiveHalving
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_hpo_facade import SMAC4HPO
 
@@ -142,7 +143,8 @@ scenario = Scenario({"run_obj": "quality",     # we optimize quality (alternativ
 
 # To optimize, we pass the function to the SMAC-object
 smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
-                tae_runner=rf_from_cfg)
+                tae_runner=rf_from_cfg,
+                intensifier=SuccessiveHalving)
 
 def_value = eval_on_instances(cs.get_default_configuration(), smac, instances)
 print("Value for default configuration: %.4f" % def_value)
