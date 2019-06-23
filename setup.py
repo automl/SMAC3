@@ -7,6 +7,12 @@ with open('requirements.txt') as fh:
     requirements = fh.read()
 requirements = requirements.split('\n')
 requirements = [requirement.strip() for requirement in requirements]
+requirements.extend([
+    'pyDOE',
+    'sobol_seq',
+    'emcee>=2.1.0',
+    'scikit-optimize',
+])
 
 
 def get_version():
