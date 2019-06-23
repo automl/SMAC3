@@ -9,7 +9,6 @@ __author__ = 'Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua M
 __MANDATORY_PACKAGES__ = """
 numpy>=1.7.1
 scipy>=0.18.1
-six
 psutil
 pynisher>=0.4.1
 ConfigSpace>=0.4.6,<0.5
