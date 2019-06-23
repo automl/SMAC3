@@ -36,6 +36,7 @@ def get_author():
 setup(
     python_requires=">=3.5.2",
     install_requires=requirements,
+    package_data={'smac': ['requirements.txt']},
     author=get_author(),
     version=get_version(),
     test_suite="nose.collector",
