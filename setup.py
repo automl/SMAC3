@@ -32,7 +32,7 @@ setup(
     python_requires=">=3.5.2",
     install_requires=requirements,
     extras_require=extras_require,
-    package_data={'smac': ['requirements.txt']},
+    package_data={'smac': ['requirements.txt', 'extras_require.json']},
     author=get_author(),
     version=get_version(),
     test_suite="nose.collector",

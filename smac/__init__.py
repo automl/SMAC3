@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 
@@ -9,6 +10,10 @@ __author__ = 'Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua M
 
 with open(os.path.join(os.path.dirname(__file__), 'requirements.txt')) as fh:
     dependencies.verify_packages(fh.read())
+
+with open(os.path.join(os.path.dirname(__file__), 'extras_require.json')) as fh:
+    optional_dependencies = {key: dependencies.are_valid_packages(packages)
+                             for key, packages in json.load(fh).items()}
 
 if sys.version_info < (3, 5, 2):
     raise ValueError("SMAC requires Python 3.5.2 or newer.")
