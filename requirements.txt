@@ -6,3 +6,4 @@ ConfigSpace>=0.4.6,<0.5
 scikit-learn>=0.18.0
 pyrfr>=0.8.0
 joblib
+lazy_import

@@ -2,7 +2,7 @@ import typing
 
 import numpy as np
 
-from pyDOE import lhs
+import pyDOE
 
 from ConfigSpace.configuration_space import Configuration
 from ConfigSpace.hyperparameters import Constant
@@ -48,7 +48,7 @@ class LHDesign(InitialDesign):
             if isinstance(p, Constant):
                 constants += 1
 
-        lhd = lhs(n=len(params)-constants, samples=self.init_budget)
+        lhd = pyDOE.lhs(n=len(params)-constants, samples=self.init_budget)
 
         return self._transform_continuous_designs(design=lhd,
                                                   origin='LHD',
