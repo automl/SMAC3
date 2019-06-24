@@ -4,6 +4,7 @@ import numpy as np
 import time
 import typing
 
+import smac
 from smac.configspace import ConfigurationSpace, Configuration, Constant,\
      CategoricalHyperparameter, UniformFloatHyperparameter, \
      UniformIntegerHyperparameter, InCondition
@@ -24,10 +25,9 @@ from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
 from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer, \
     RandomSearch
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, RunHistory2EPM4LogCost
+from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
-from smac.tae.execute_ta_run import FirstRunCrashedException
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
 from smac.utils.constants import MAXINT
@@ -512,7 +512,10 @@ class SMBO(object):
         cs = ConfigurationSpace()
         cs.seed(self.rng.randint(0,2**20))
 
-        model = CategoricalHyperparameter("model", choices=("RF", "GP"))
+        if 'gp' in smac.extras_installed:
+            model = CategoricalHyperparameter("model", choices=("RF", "GP"))
+        else:
+            model = Constant("model", value="RF")
 
         num_trees = Constant("num_trees", value=10)
         bootstrap = CategoricalHyperparameter("do_bootstrapping", choices=(True, False), default_value=True)
