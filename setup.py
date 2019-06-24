@@ -8,6 +8,7 @@ with open('requirements.txt') as fh:
     requirements = [line.strip() for line in fh.readlines()]
 with open('extras_require.json') as fh:
     extras_require = json.load(fh)
+    extras_require['all'] = set(sum(extras_require.values(), []))
 
 
 def get_version():
