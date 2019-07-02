@@ -134,10 +134,15 @@ class InitialDesign:
             if config.origin is None:
                 config.origin = 'Initial design'
 
+        # add this incumbent right away to have an entry to time point 0
+        self.traj_logger.add_entry(train_perf=2**31,
+                                   incumbent_id=1,
+                                   incumbent=configs[0])
+
         # run first design
-        # ensures that first design is part of trajectory file
         inc = None
         if self.run_first_config:
+            # ensures that first design is part of trajectory file
             inc = self._run_first_configuration(configs[0], self.scenario)
             configs.pop(0)
 
@@ -166,11 +171,6 @@ class InitialDesign:
         """
         if initial_incumbent.origin is None:
             initial_incumbent.origin = 'Initial design'
-
-        # add this incumbent right away to have an entry to time point 0
-        self.traj_logger.add_entry(train_perf=2 ** 31,
-                                   incumbent_id=1,
-                                   incumbent=initial_incumbent)
 
         rand_inst = self.rng.choice(self.scenario.train_insts)
 
@@ -222,11 +222,11 @@ class InitialDesign:
                 design = design_
             elif isinstance(param, CategoricalHyperparameter):
                 v_design = design[:, idx]
-                v_design[v_design == 1] = 1 - 10 ** -10
+                v_design[v_design == 1] = 1 - 10**-10
                 design[:, idx] = np.array(v_design * len(param.choices), dtype=np.int)
             elif isinstance(param, OrdinalHyperparameter):
                 v_design = design[:, idx]
-                v_design[v_design == 1] = 1 - 10 ** -10
+                v_design[v_design == 1] = 1 - 10**-10
                 design[:, idx] = np.array(v_design * len(param.sequence), dtype=np.int)
             else:
                 raise ValueError("Hyperparamer not supported in LHD")

@@ -5,8 +5,6 @@ It requires the scenario object for the initialization, which can be provided ei
 or by creating a scenario object in the code.
 This example also allows you to use "Successive Halving" as an alternate intensification procedure to
 SMAC's own "intensifier" approach.
-
-Multiple instances; runtime objective -> adaptive capping; SMAC limits cutoff
 """
 
 import logging
@@ -20,7 +18,7 @@ if __name__ == '__main__':
     logging.basicConfig(level=20)  # 10: debug; 20: info
 
     scenario = Scenario('scenario.txt')
-    intensifier_kwargs = {'min_budget': 1}
+    intensifier_kwargs = {'min_budget': 1, 'eta': 2}
     smac = SMAC4AC(scenario=scenario,  # scenario object
                    intensifier_kwargs=intensifier_kwargs,  # parameters for Successive Halving
                    intensifier=SuccessiveHalving)   # intensifier to use - Default is SMAC's intensify approach

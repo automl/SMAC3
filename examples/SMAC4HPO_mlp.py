@@ -1,8 +1,6 @@
 """
 An example for the usage of SMAC within Python.
-We optimize a simple MLP on the MNIST digits dataset.
-
-single instance; quality objective; cutoff passed to target algorithm -> no limits from SMAC
+We optimize a simple MLP on the MNIST digits dataset using "Hyperband" intensification.
 """
 
 import logging
@@ -22,7 +20,7 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
 
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_hpo_facade import SMAC4HPO
-from smac.intensification.successive_halving import SuccessiveHalving
+from smac.intensification.hyperband import Hyperband
 
 digits = load_digits()
 
@@ -115,19 +113,21 @@ cutoff = 50
 
 # SMAC scenario object
 scenario = Scenario({"run_obj": "quality",     # we optimize quality (alternative runtime)
-                     "wallclock-limit": 300,   # max duration to run the optimization (in seconds)
+                     "wallclock-limit": 100,   # max duration to run the optimization (in seconds)
                      "cs": cs,                 # configuration space
-                     "cutoff": cutoff,         # max duration to run target algorithm (num epochs in this case)
                      "deterministic": "true",
                      "limit_resources": False,  # Disables pynisher to pass cutoff directly to the target algorithm.
                                                 # Timeouts have to be taken care within the TA
                      })
 
 # intensifier parameters
-intensifier_kwargs = {'min_budget': 5, 'max_budget': cutoff}
+intensifier_kwargs = {'min_budget': 5, 'max_budget': cutoff, 'eta': 3}
 # To optimize, we pass the function to the SMAC-object
 smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
-                tae_runner=mlp_from_cfg)  # you can also change the intensifier to use like this!
+                tae_runner=mlp_from_cfg,
+                intensifier=Hyperband,                  # you can also change the intensifier to use like this!
+                                                        # This example currently uses Hyperband intensification,
+                intensifier_kwargs=intensifier_kwargs)  # all parameters related to intensifier can be passed like this
 
 # Example call of the function with default values
 # It returns: Status, Cost, Runtime, Additional Infos
