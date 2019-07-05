@@ -140,7 +140,7 @@ class Hyperband(SuccessiveHalving):
             challengers = challengers.challengers
 
         self.logger.info('Hyperband iteration-step: %d-%d  with initial budget: %d' % (
-            self.hb_iters + 1, self.s_max - self.s + 1, sh_min_budget))
+            self.hb_iters+1, self.s_max-self.s+1, sh_min_budget))
 
         # creating a new Successive Halving intensifier with the current running budget
         sh_intensifier = SuccessiveHalving(self.tae_runner, self.stats, self.traj_logger, self.rs, self.instances,
@@ -148,8 +148,6 @@ class Hyperband(SuccessiveHalving):
                                            sh_min_budget, self.max_budget, self.eta, n_challengers,
                                            self.run_obj_time, self.n_seeds, self.instance_order,
                                            self.adaptive_capping_slackfactor)
-        # ensuring successive halving runs all the challengers given by hyperband
-        sh_intensifier.initial_challengers = len(challengers)
 
         # run 1 iteration of successive halving
         incumbent, inc_perf = sh_intensifier.intensify(challengers=challengers,
