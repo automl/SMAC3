@@ -62,7 +62,7 @@ SMAC3 is available on pipy.
 
 ```
 git clone https://github.com/automl/SMAC3.git && cd SMAC3
-cat requirements.txt | xargs -n 1 -L 1 pip install
+pip install -r requirements.txt
 python setup.py install
 ```
 
