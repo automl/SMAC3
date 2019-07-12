@@ -13,9 +13,9 @@ when to use which facade. These recommendations are based on our experience and 
 +=======================+======================+=======================+=========================+
 | # parameter           | low                  | low/medium/high       | low/medium/high         |
 +-----------------------+----------------------+-----------------------+-------------------------+
-| categorical parameter | no                   | supported             | supported               |
+| categorical parameter | yes                  | supported             | supported               |
 +-----------------------+----------------------+-----------------------+-------------------------+
-| conditional parameter | no                   | supported             | supported               |
+| conditional parameter | yes                  | supported             | supported               |
 +-----------------------+----------------------+-----------------------+-------------------------+
 | instances             | no                   | None or CV-folds      | yes                     |
 +-----------------------+----------------------+-----------------------+-------------------------+
@@ -29,6 +29,7 @@ Some examples of typical use cases:
 *SMAC4BO*: Bayesian Optimization using a *Gaussian Process* and *Expected Improvement*
    - Optimizing the objective value of Branin and other low dimensional artificial test functions
    - Finding the best learning rate for training a neural network wrt. RMSE on a validation dataset
+   - Optimizing the choice of kernel and penalty of a SVM wrt. RMSE on a validation dataset
 
 *SMAC4HPO*: Bayesian optimization using a *Random Forest*
   - Finding the optimal choice of machine learning algorithm and its hyperparameters wrt. validation error
