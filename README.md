@@ -79,17 +79,16 @@ SMAC3 comes with a set of optional dependencies that can be installed using
 [setuptools extras](https://setuptools.readthedocs.io/en/latest/setuptools.html#declaring-extras-optional-features-with-their-own-dependencies):
 
 - `lhd`: Latin hypercube design
-- `sobol`: Sobol sequence design
 - `gp`: Gaussian process models
 
-One or more of these can be installed from PyPI or manually:
+These can be installed from PyPI or manually:
 
 ```
 # from PyPI
 pip install smac[gp]
 
 # manually
-pip install .[sobol,lhd]
+pip install .[gp,lhd]
 ```
 
 For convenience there is also an `all` meta-dependency that installs all optional dependencies:
