@@ -23,6 +23,7 @@ from smac.utils.validate import Validator
 
 from test import requires_extra
 
+
 class ConfigurationMock(object):
     def __init__(self, value=None):
         self.value = value
@@ -325,7 +326,7 @@ class TestSMBO(unittest.TestCase):
     @requires_extra('gp')
     def test_gp_comp_builder(self):
         seed = 42
-        smbo = SMAC(self.scenario, rng=seed).solver
+        smbo = SMAC4AC(self.scenario, rng=seed).solver
         conf = {"model":"GP", "acq_func":"EI"}
         acqf, model = smbo._component_builder(conf)
 

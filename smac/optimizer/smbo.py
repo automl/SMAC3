@@ -12,7 +12,6 @@ from smac.configspace.util import convert_configurations_to_array
 from smac.epm.base_epm import AbstractEPM
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
-from smac.epm.gp_kernels import ConstantKernel, HammingKernel, WhiteKernel, Matern
 from smac.epm.gp_base_prior import LognormalPrior, HorseshoePrior
 from smac.epm.util_funcs import get_types
 from smac.initial_design.initial_design import InitialDesign
@@ -426,6 +425,8 @@ class SMBO(object):
             )
 
         elif conf["model"] == "GP":
+            from smac.epm.gp_kernels import ConstantKernel, HammingKernel, WhiteKernel, Matern
+
             cov_amp = ConstantKernel(
                 2.0,
                 constant_value_bounds=(np.exp(-10), np.exp(2)),

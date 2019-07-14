@@ -5,7 +5,6 @@ import scipy.optimize
 import numpy as np
 import sklearn.datasets
 import sklearn.model_selection
-import skopt.learning.gaussian_process
 
 from smac.configspace import (
     ConfigurationSpace,
@@ -15,12 +14,13 @@ from smac.configspace import (
 )
 from smac.epm.gaussian_process import GaussianProcess
 from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
-from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel, HammingKernel
 
 from test import requires_extra
 
 
 def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True) -> GaussianProcess:
+    from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel
+
     cov_amp = ConstantKernel(
         2.0,
         constant_value_bounds=(1e-10, 2),
@@ -75,6 +75,8 @@ def get_cat_data(rs):
 
 
 def get_mixed_gp(cat_dims, cont_dims, rs, noise=1e-3, normalize_y=True):
+    from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel, HammingKernel
+
     cat_dims = np.array(cat_dims, dtype=np.int)
     cont_dims = np.array(cont_dims, dtype=np.int)
     n_dimensions = len(cat_dims) + len(cont_dims)
@@ -189,7 +191,7 @@ class TestGP(unittest.TestCase):
         self.assertFalse(np.any(theta_ == fixture))
         np.testing.assert_array_almost_equal(theta, theta_)
 
-    @unittest.mock.patch.object(skopt.learning.gaussian_process.GaussianProcessRegressor, 'fit')
+    @unittest.mock.patch('skopt.learning.gaussian_process.GaussianProcessRegressor.fit')
     def test_train_continue_on_linalg_error(self, fit_mock):
         # Check that training does not stop on a linalg error, but that uncertainty is increased!
 
@@ -212,7 +214,7 @@ class TestGP(unittest.TestCase):
         model._train(X[:10], Y[:10], do_optimize=False)
         self.assertAlmostEqual(np.exp(model.gp.kernel.theta[-1]), fixture + 10)
 
-    @unittest.mock.patch.object(skopt.learning.gaussian_process.GaussianProcessRegressor, 'log_marginal_likelihood')
+    @unittest.mock.patch('skopt.learning.gaussian_process.GaussianProcessRegressor.log_marginal_likelihood')
     def test_train_continue_on_linalg_error_2(self, fit_mock):
         # Check that training does not stop on a linalg error during hyperparameter optimization
 

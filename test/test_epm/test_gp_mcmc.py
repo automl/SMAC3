@@ -7,12 +7,13 @@ import sklearn.model_selection
 from smac.configspace import ConfigurationSpace, UniformFloatHyperparameter
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
 from smac.epm.gp_base_prior import LognormalPrior, HorseshoePrior
-from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel
 
 from test import requires_extra
 
 
 def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True, average_samples=False, n_iter=50):
+    from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel
+
     cov_amp = ConstantKernel(
         2.0,
         constant_value_bounds=(1e-10, 2),

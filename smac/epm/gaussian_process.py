@@ -2,8 +2,7 @@ import logging
 import typing
 
 import numpy as np
-import skopt.learning.gaussian_process
-import skopt.learning.gaussian_process.kernels
+from lazy_import import lazy_callable
 from scipy import optimize
 
 from smac.configspace import ConfigurationSpace
@@ -11,6 +10,9 @@ from smac.epm.base_gp import BaseModel
 from smac.utils.constants import VERY_SMALL_NUMBER
 
 logger = logging.getLogger(__name__)
+Kernel = lazy_callable('skopt.learning.gaussian_process.kernels.Kernel')
+GaussianProcessRegressor = lazy_callable(
+    'skopt.learning.gaussian_process.GaussianProcessRegressor')
 
 
 class GaussianProcess(BaseModel):
@@ -54,7 +56,7 @@ class GaussianProcess(BaseModel):
         types: np.ndarray,
         bounds: typing.List[typing.Tuple[float, float]],
         seed: int,
-        kernel: skopt.learning.gaussian_process.kernels.Kernel,
+        kernel: Kernel,
         normalize_y: bool=True,
         n_opt_restarts=10,
         **kwargs
@@ -99,7 +101,7 @@ class GaussianProcess(BaseModel):
         n_tries = 10
         for i in range(n_tries):
             try:
-                self.gp = skopt.learning.gaussian_process.GaussianProcessRegressor(
+                self.gp = GaussianProcessRegressor(
                     kernel=self.kernel,
                     normalize_y=False,
                     optimizer=None,
