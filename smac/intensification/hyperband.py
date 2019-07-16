@@ -2,12 +2,10 @@ import sys
 import time
 import logging
 import typing
-from collections import OrderedDict
 
 import numpy as np
 
 from smac.intensification.successive_halving import SuccessiveHalving
-from smac.optimizer.ei_optimization import ChallengerList
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT, MAX_CUTOFF
 from smac.configspace import Configuration
@@ -21,7 +19,9 @@ __license__ = "3-clause BSD"
 
 
 class Hyperband(SuccessiveHalving):
-    """Races multiple challengers against an incumbent using Hyperband method
+    """ Races multiple challengers against an incumbent using Hyperband method
+
+    Implementating from "BOHB: Robust and Efficient Hyperparameter Optimization at Scale" (Falkner et al. 2018)
 
     Parameters
     ----------
@@ -40,11 +40,11 @@ class Hyperband(SuccessiveHalving):
         runtime cutoff of TA runs
     deterministic : bool
         whether the TA is deterministic or not
-    min_budget : int
+    min_budget : float
         minimum budget allowed for 1 run of successive halving
-    max_budget : int
+    max_budget : float
         maximum budget allowed for 1 run of successive halving
-    eta : int
+    eta : float
         'halving' factor after each iteration in a successive halving run. Defaults to 3
     run_obj_time : bool
         whether the run objective is runtime or not (if true, apply adaptive capping)
@@ -53,8 +53,8 @@ class Hyperband(SuccessiveHalving):
     instance_order : str
         how to order instances. Can be set to:
         None - use as is given by the user
-        random - shuffle once and use across all SH run (default)
-        budget_random - shuffle before every SH run
+        shuffle_once - shuffle once and use across all SH run (default)
+        shuffle - shuffle before every SH run
     adaptive_capping_slackfactor : float
         slack factor of adpative capping (factor * adpative cutoff)
     """
@@ -72,7 +72,7 @@ class Hyperband(SuccessiveHalving):
                  eta: float = 3,
                  run_obj_time: bool = True,
                  n_seeds: int = None,
-                 instance_order='random',
+                 instance_order='shuffle_once',
                  adaptive_capping_slackfactor: float = 1.2, **kwargs):
         super().__init__(tae_runner, stats, traj_logger, rng, instances,
                          instance_specifics, cutoff, deterministic,
@@ -135,9 +135,6 @@ class Hyperband(SuccessiveHalving):
         # n_challengers = int(np.ceil(((self.s_max+1) / (self.s + 1)) * self.eta**self.s))
         # NOTE From HpBandster package
         n_challengers = int(np.floor((self.s_max+1) / (self.s + 1)) * self.eta**self.s)
-
-        if isinstance(challengers, ChallengerList):
-            challengers = challengers.challengers
 
         self.logger.info('Hyperband iteration-step: %d-%d  with initial budget: %d' % (
             self.hb_iters+1, self.s_max-self.s+1, sh_min_budget))

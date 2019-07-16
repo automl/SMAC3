@@ -80,24 +80,24 @@ class TestSuccessiveHalving(unittest.TestCase):
     @attr('slow')
     def test_intensify_1(self):
         """
-           test intensify without adaptive capping
+           test intensify with quality objective & instance as budget
         """
 
-        def target(x):
-            return (x['a'] + 1) / 1000.
+        def target(x, instance, seed, cutoff):
+            return (x['a'] + 1 + cutoff) / 1000.
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj='quality')
         taf.runhistory = self.rh
 
         intensifier = SuccessiveHalving(
             tae_runner=taf, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
-            rng=np.random.RandomState(12345), deterministic=True,
-            instances=[1], min_budget=0.1, max_budget=1)
+            rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
+            instances=[1], min_budget=1, max_budget=3, eta=2)
 
         self.rh.add(config=self.config1, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=1,
-                    seed=0,
+                    seed=0, budget=3,
                     additional_info=None)
 
         inc, _ = intensifier.intensify(challengers=[self.config2],
@@ -110,7 +110,7 @@ class TestSuccessiveHalving(unittest.TestCase):
     @attr('slow')
     def test_intensify_2(self):
         """
-           test intensify with adaptive capping
+           test intensify with runtime objective and adaptive capping
         """
 
         def target(x):
@@ -125,7 +125,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             tae_runner=taf, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), deterministic=True,
-            instances=[1], min_budget=0.25, max_budget=1)
+            instances=[1], min_budget=1, max_budget=1)
 
         self.rh.add(config=self.config1, cost=.001, time=0.001,
                     status=StatusType.SUCCESS, instance_id=1,
@@ -187,7 +187,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         intensifier = SuccessiveHalving(
             tae_runner=taf, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
-            rng=np.random.RandomState(12345),
+            rng=np.random.RandomState(12345), run_obj_time=False,
             instances=[0, 1],
             deterministic=True)
 
@@ -204,3 +204,37 @@ class TestSuccessiveHalving(unittest.TestCase):
                                        aggregate_func=average_cost)
 
         self.assertEqual(inc, self.config2)
+
+    @attr('slow')
+    def test_intensify_5(self):
+        """
+            test intensify with shuffling instance order every run
+        """
+
+        def target(x: Configuration, seed: int, instance: str):
+            return 2*x['a'] + x['b'] + instance
+
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="quality")
+        taf.runhistory = self.rh
+
+        intensifier = SuccessiveHalving(
+            tae_runner=taf, stats=self.stats,
+            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
+            rng=np.random.RandomState(12345), run_obj_time=False,
+            instances=[0, 1, 2], instance_order='shuffle', eta=3,
+            deterministic=True)
+
+        # config1 should become the new incumbent
+        inc, _ = intensifier.intensify(challengers=[self.config1, self.config2],
+                                       incumbent=None,
+                                       run_history=self.rh,
+                                       aggregate_func=average_cost)
+
+        # config1 stays the incumbent, but the previously rejected config2 is still executed
+        inc, _ = intensifier.intensify(challengers=[self.config3, self.config2],
+                                       incumbent=inc,
+                                       run_history=self.rh,
+                                       aggregate_func=average_cost)
+
+        self.assertEqual(inc, self.config1)
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config2)), 3)

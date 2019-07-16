@@ -4,6 +4,7 @@ import logging
 import typing
 from collections import OrderedDict
 from itertools import islice
+import warnings
 
 import numpy as np
 
@@ -25,13 +26,16 @@ __license__ = "3-clause BSD"
 class SuccessiveHalving(Intensifier):
     """Races multiple challengers against an incumbent using Successive Halving method
 
+    Implementating from "BOHB: Robust and Efficient Hyperparameter Optimization at Scale" (Falkner et al. 2018)
+    (refer supplementary)
+
     Parameters
     ----------
-    tae_runner : tae.executre_ta_run_*.ExecuteTARun* Object
+    tae_runner : smac.tae.execute_ta_run.ExecuteTARun Object
         target algorithm run executor
-    stats: Stats
+    stats: smac.stats.stats.Stats
         stats object
-    traj_logger: TrajLogger
+    traj_logger: smac.utils.io.traj_logging.TrajLogger
         TrajLogger object to log all new incumbents
     rng : np.random.RandomState
     instances : typing.List[str]
@@ -42,11 +46,11 @@ class SuccessiveHalving(Intensifier):
         runtime cutoff of TA runs
     deterministic : bool
         whether the TA is deterministic or not
-    min_budget : int
+    min_budget : float
         minimum budget allowed for 1 run of successive halving
-    max_budget : int
+    max_budget : float
         maximum budget allowed for 1 run of successive halving
-    eta : int
+    eta : float
         'halving' factor after each iteration in a successive halving run. Defaults to 3
     run_obj_time : bool
         whether the run objective is runtime or not (if true, apply adaptive capping)
@@ -55,8 +59,8 @@ class SuccessiveHalving(Intensifier):
     instance_order : str
         how to order instances. Can be set to:
         None - use as is given by the user
-        random - shuffle once and use across all SH run (default)
-        budget_random - shuffle before every SH run
+        shuffle_once - shuffle once and use across all SH run (default)
+        shuffle - shuffle before every SH run
     adaptive_capping_slackfactor : float
         slack factor of adpative capping (factor * adpative cutoff)
     """
@@ -75,8 +79,9 @@ class SuccessiveHalving(Intensifier):
                  init_chal: int = None,
                  run_obj_time: bool = True,
                  n_seeds: int = None,
-                 instance_order: str = 'random',
-                 adaptive_capping_slackfactor: float = 1.2, **kwargs):
+                 instance_order: str = 'shuffle_once',
+                 adaptive_capping_slackfactor: float = 1.2,
+                 **kwargs):
 
         super().__init__(tae_runner, stats, traj_logger, rng, instances,
                          instance_specifics=instance_specifics, cutoff=cutoff,
@@ -90,9 +95,10 @@ class SuccessiveHalving(Intensifier):
         self.cutoff = MAX_CUTOFF if self.cutoff is None else self.cutoff
 
         # instance related info
-        self.n_seeds = n_seeds
+        self.n_seeds = n_seeds if n_seeds else 1
         self.instance_order = instance_order
 
+        ## Initialize instances
         # if instances are coming from Hyperband, skip the instance preprocessing section
         # it is already taken care by Hyperband
         if instances is not None and isinstance(instances[0], InstSeedKey):
@@ -103,19 +109,16 @@ class SuccessiveHalving(Intensifier):
             self.instances = list(OrderedDict.fromkeys(instances))
 
             # determine instance order
-            if self.instance_order == 'random':
+            if self.instance_order == 'shuffle_once':
                 # randomize once
-                np.random.shuffle(self.instances)
+                self.rs.shuffle(self.instances)
 
             # set seed(s) for all SH runs
             # - currently user gives the number of seeds to consider
             if self.deterministic:
                 seeds = [0]
             else:
-                if self.n_seeds is None:
-                    seeds = [self.rs.randint(low=0, high=MAXINT)]
-                else:
-                    seeds = self.rs.randint(low=0, high=MAXINT, size=self.n_seeds)
+                seeds = self.rs.randint(low=0, high=MAXINT, size=self.n_seeds)
             # storing instances & seeds as tuples
             self.instances = [InstSeedKey(i, s) for s in seeds for i in self.instances]
 
@@ -124,10 +127,11 @@ class SuccessiveHalving(Intensifier):
             raise ValueError('eta must be greater than 1')
         self.eta = eta
 
+        ## Initialize budgets
         # determine budgets from given instances if none mentioned
-        # - if only 1 instance/no instances were provided, then use cutoff as budget
+        # - if only 1 instance was provided & quality objective, then use cutoff as budget
         # - else, use instances as budget
-        if len(self.instances) <= 1:
+        if not self.run_obj_time and len(self.instances) <= 1:
             # budget with cutoff
             # cannot run successive halving with cutoff as budget if budget limits are not provided!
             if min_budget is None or \
@@ -137,8 +141,11 @@ class SuccessiveHalving(Intensifier):
             self.min_budget = min_budget
             self.max_budget = self.cutoff if max_budget is None else max_budget
             self.budget_type = 'cutoff'
+
         else:
             # budget with instances
+            if self.run_obj_time and len(self.instances) <= 1:
+                warnings.warn("Successive Halving has objective 'runtime' but only 1 instance-seed pair.")
             self.min_budget = 1 if min_budget is None else int(min_budget)
             self.max_budget = len(self.instances) if max_budget is None else int(max_budget)
             self.budget_type = 'instance'
@@ -146,15 +153,22 @@ class SuccessiveHalving(Intensifier):
             # max budget cannot be greater than number of instance-seed pairs
             if self.max_budget > len(self.instances):
                 raise ValueError('Max budget cannot be greater than the number of instance-seed pairs')
+            if self.max_budget < len(self.instances):
+                warnings.warn('Max budget (%d) does not include all instance-seed pairs (%d)' %
+                              (self.max_budget, len(self.instances)))
+
+        if self.min_budget == self.max_budget:
+            warnings.warn('Min budget (%.2f) is equal to Max budget (%.2f)' %
+                          (self.min_budget, self.max_budget))
 
         self.logger.debug("Running Successive Halving with '%s' as budget" % self.budget_type.upper())
 
         # number configurations to consider for a full successive halving iteration
         self.max_sh_iter = np.floor(np.log(self.max_budget / self.min_budget) / np.log(eta))
-        self.init_chal = int(np.round(self.eta ** (self.max_sh_iter + 1))) if init_chal is None else init_chal
+        self.init_chal = int(np.round(self.eta**self.max_sh_iter)) if init_chal is None else init_chal
 
         # for adaptive capping
-        if self.budget_type == 'instance' and self.instance_order != 'budget_random' and self.run_obj_time:
+        if self.budget_type == 'instance' and self.instance_order != 'shuffle' and self.run_obj_time:
             self.adaptive_capping = True
         else:
             self.adaptive_capping = False
@@ -202,24 +216,26 @@ class SuccessiveHalving(Intensifier):
             raise ValueError("time_bound must be >= %f" % self._min_time)
 
         if isinstance(challengers, ChallengerList):
-            challengers = challengers.challengers
+            # converting to list for indexing purposes
+            challengers = list(challengers)
 
         # select first 'n' challengers
-        # challengers can be repeated only if optimizing across multiple seeds
+        # challengers can be repeated only if optimizing across multiple seeds or changing instance orders every run
         # else select first 'n' new challengers
-        if self.n_seeds is None or self.n_seeds == 1:
+        if self.n_seeds > 1 or self.instance_order == 'shuffle':
+            curr_challengers = challengers[:self.init_chal]
+        else:
             new_challengers = (c for c in challengers if c not in set(run_history.get_all_configs()))
             curr_challengers = list(islice(new_challengers, self.init_chal))
-        else:
-            curr_challengers = challengers[:self.init_chal]
 
         # randomize instances per successive halving run, if user specifies
         all_instances = self.instances
-        if self.instance_order == 'budget_random':
-            np.random.shuffle(all_instances)
+        if self.instance_order == 'shuffle':
+            self.rs.shuffle(all_instances)
 
         # calculating the incumbent's performance for adaptive capping
-        # this check is required because there is no initial run to get the incumbent performance
+        #   - this check is required because there is incumbent performance
+        #     for the first ever 'intensify' run from initial design
         if incumbent is not None:
             inc_runs = run_history.get_runs_for_config(incumbent)
             inc_sum_cost = sum_cost(config=incumbent, instance_seed_pairs=inc_runs, run_history=run_history)

@@ -150,6 +150,26 @@ class RunhistoryTest(unittest.TestCase):
 
         self.assertTrue(rh.get_cost(config1) == 15)
 
+    def test_multiple_budgets(self):
+
+        rh = RunHistory(aggregate_func=average_cost)
+        cs = get_config_space()
+        config1 = Configuration(cs,
+                                values={'a': 1, 'b': 2})
+
+        rh.add(config=config1, cost=10, time=20,
+               status=StatusType.SUCCESS, instance_id=1,
+               seed=1, budget=1)
+
+        self.assertTrue(rh.get_cost(config1) == 10)
+
+        # only the higher budget gets included in the config cost
+        rh.add(config=config1, cost=20, time=20,
+               status=StatusType.SUCCESS, instance_id=1,
+               seed=1, budget=2)
+
+        self.assertTrue(rh.get_cost(config1) == 20)
+
     def test_json_origin(self):
 
         for origin in ['test_origin', None]:
