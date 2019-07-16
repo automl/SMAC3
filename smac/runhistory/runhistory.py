@@ -20,11 +20,11 @@ __version__ = "0.0.1"
 # RunKey = collections.namedtuple(
 #     'RunKey', ['config_id', 'instance_id', 'seed', 'budget'])
 # NOTE class instead of collection to have a default value for budget in RunKey
-class RunKey(typing.NamedTuple):
-    config_id: typing.Any
-    instance_id: typing.Any
-    seed: typing.Any
-    budget: 'RunKey' = 0
+class RunKey(collections.namedtuple('RunKey', ['config_id', 'instance_id', 'seed', 'budget'])):
+    __slots__ = ()
+
+    def __new__(cls, config_id, instance_id, seed, budget=0.0):
+        return super().__new__(cls, config_id, instance_id, seed, budget)
 
 
 InstSeedKey = collections.namedtuple(

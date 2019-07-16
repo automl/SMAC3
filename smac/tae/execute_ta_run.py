@@ -218,7 +218,8 @@ class ExecuteTARun(object):
             self.runhistory.add(config=config,
                                 cost=cost, time=runtime, status=status,
                                 instance_id=instance, seed=seed,
-                                budget=cutoff if self.run_obj == "quality" else 0,
+                                budget=cutoff if (self.run_obj == "quality" and
+                                                 cutoff is not None) else 0,
                                 additional_info=additional_info)
             self.stats.n_configs = len(self.runhistory.config_ids)
 
