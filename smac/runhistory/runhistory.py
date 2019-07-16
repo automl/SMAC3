@@ -119,7 +119,7 @@ class RunHistory(object):
         # for fast access, we have also an unordered data structure
         # to get all instance seed pairs of a configuration
         # self._configid_to_inst_seed = {}  # type: typing.Dict[int, InstSeedKey]
-        self._configid_to_inst_seed_budget = {}  # type: typing.Dict[int, InstSeedBudgetKey]
+        self._configid_to_inst_seed_budget = {}  # type: typing.Dict[int, typing.Dict[InstSeedKey, typing.List[float]]]
 
         self.config_ids = {}  # type: typing.Dict[Configuration, int]
         self.ids_config = {}  # type: typing.Dict[int, Configuration]
@@ -205,16 +205,19 @@ class RunHistory(object):
         if origin in (DataOrigin.INTERNAL, DataOrigin.EXTERNAL_SAME_INSTANCES) \
                 and status != StatusType.CAPPED:
             # also add to fast data structure
-            isb_k = InstSeedBudgetKey(k.instance_id, k.seed, k.budget)
-            self._configid_to_inst_seed_budget[k.config_id] = self._configid_to_inst_seed_budget.get(k.config_id, [])
-            if isb_k not in self._configid_to_inst_seed_budget[k.config_id]:
-                self._configid_to_inst_seed_budget[k.config_id].append(isb_k)
+            is_k = InstSeedKey(k.instance_id, k.seed)
+            self._configid_to_inst_seed_budget[k.config_id] = self._configid_to_inst_seed_budget.get(k.config_id, {})
+            if is_k not in self._configid_to_inst_seed_budget[k.config_id].keys():
+                # add new inst-seed-key with budget to main dict
+                self._configid_to_inst_seed_budget[k.config_id][is_k] = [k.budget]
+            elif k.budget not in is_k:
+                # append new budget to existing inst-seed-key dict
+                self._configid_to_inst_seed_budget[k.config_id][is_k].append(k.budget)
 
-            if not self.overwrite_existing_runs:
-                # if not a new budget, then update cost directly for new budget
-
+            # if budget is used, then update cost instead of incremental updates
+            if not self.overwrite_existing_runs and k.budget == 0:
                 # assumes an average across runs as cost function aggregation
-                self.incremental_update_cost(self.ids_config[k.config_id], v.cost, k.budget)
+                self.incremental_update_cost(self.ids_config[k.config_id], v.cost)
             else:
                 self.update_cost(config=self.ids_config[k.config_id])
 
@@ -228,11 +231,11 @@ class RunHistory(object):
         config: Configuration
             configuration to update cost based on all runs in runhistory
         """
-        inst_seeds = set(self.get_runs_for_config(config))
-        perf = self.aggregate_func(config, self, inst_seeds)
+        inst_seed_budgets = set(self.get_runs_for_config(config))
+        perf = self.aggregate_func(config, self, inst_seed_budgets)
         config_id = self.config_ids[config]
         self.cost_per_config[config_id] = perf
-        self.runs_per_config[config_id] = len(inst_seeds)
+        self.runs_per_config[config_id] = len(inst_seed_budgets)
 
     def compute_all_costs(self, instances: typing.List[str]=None):
         """Computes the cost of all configurations from scratch and overwrites
@@ -246,15 +249,15 @@ class RunHistory(object):
         self.cost_per_config = {}
         self.runs_per_config = {}
         for config, config_id in self.config_ids.items():
-            inst_seeds = set(self.get_runs_for_config(config))
+            inst_seed_budgets = set(self.get_runs_for_config(config))
             if instances is not None:
-                inst_seeds = list(
-                    filter(lambda x: x.instance in instances, inst_seeds))
+                inst_seed_budgets = list(
+                    filter(lambda x: x.instance in instances, inst_seed_budgets))
 
-            if inst_seeds:  # can be empty if never saw any runs on <instances>
-                perf = self.aggregate_func(config, self, inst_seeds)
+            if inst_seed_budgets:  # can be empty if never saw any runs on <instances>
+                perf = self.aggregate_func(config, self, inst_seed_budgets)
                 self.cost_per_config[config_id] = perf
-                self.runs_per_config[config_id] = len(inst_seeds)
+                self.runs_per_config[config_id] = len(inst_seed_budgets)
 
     def incremental_update_cost(self, config: Configuration, cost: float):
         """Incrementally updates the performance of a configuration by using a
@@ -290,23 +293,6 @@ class RunHistory(object):
         config_id = self.config_ids[config]
         return self.cost_per_config.get(config_id, np.nan)
 
-    def _get_max_budget_runs(self, runs: typing.List[InstSeedBudgetKey]):
-        """ Filters only the max budget from the given list of keys
-
-        Parameters
-        ----------
-        runs: List<InstSeedBudgetKey>
-        Returns
-        -------
-        filtered_runs: List<InstSeedBudgetKey>
-        """
-        filtered_runs = {}  # dictionary of {InstSeedKey, budget}
-        for r in runs:
-            is_k = InstSeedKey(r.instance, r.seed)
-            filtered_runs[is_k] = max(r.budget, filtered_runs.get(is_k, -1))
-        runs_ = [InstSeedBudgetKey(k.instance, k.seed, v) for k, v in filtered_runs.items()]
-        return runs_
-
     def get_runs_for_config(self, config: Configuration, max_budget: bool = True):
         """Return all runs (instance seed pairs) for a configuration.
 
@@ -321,10 +307,15 @@ class RunHistory(object):
         instance_seed_pairs : list<tuples of instance, seed>
         """
         config_id = self.config_ids.get(config)
-        runs = self._configid_to_inst_seed_budget.get(config_id, [])
+        runs = self._configid_to_inst_seed_budget.get(config_id, {})
+
         # select only the max budget run if specified
         if max_budget:
-            runs = self._get_max_budget_runs(runs)
+            for k, v in runs.items():
+                runs[k] = [max(v)]
+
+        # convert to inst-seed-budget key
+        runs = [InstSeedBudgetKey(k.instance, k.seed, budget) for k, v in runs.items() for budget in v]
         return runs
 
     def get_instance_costs_for_config(self, config: Configuration):
