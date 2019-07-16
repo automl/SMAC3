@@ -67,7 +67,7 @@ class RunhistoryTest(unittest.TestCase):
 
         self.assertEqual(len(rh.data), 1)
         self.assertEqual(len(rh.get_runs_for_config(config)), 1)
-        self.assertEqual(len(rh._configid_to_inst_seed[1]), 1)
+        self.assertEqual(len(rh._configid_to_inst_seed_budget[1]), 1)
         self.assertEqual(list(rh.data.values())[0].cost, 1)
 
     def test_get_config_runs(self):

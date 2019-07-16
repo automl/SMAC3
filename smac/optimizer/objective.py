@@ -35,8 +35,8 @@ def _runtime(config: Configuration, run_history: RunHistory,
         instance_seed_pairs = run_history.get_runs_for_config(config)
 
     runtimes = []
-    for i, r in instance_seed_pairs:
-        k = RunKey(id_, i, r)
+    for i, r, b in instance_seed_pairs:
+        k = RunKey(id_, i, r, b)
         runtimes.append(run_history.data[k].time)
     return runtimes
 
@@ -93,8 +93,8 @@ def _cost(config: Configuration, run_history: RunHistory,
         instance_seed_pairs = run_history.get_runs_for_config(config)
 
     costs = []
-    for i, r in instance_seed_pairs:
-        k = RunKey(id_, i, r)
+    for i, r, b in instance_seed_pairs:
+        k = RunKey(id_, i, r, b)
         costs.append(run_history.data[k].cost)
     return costs
 

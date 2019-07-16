@@ -18,11 +18,15 @@ __version__ = "0.0.1"
 
 
 RunKey = collections.namedtuple(
-    'RunKey', ['config_id', 'instance_id', 'seed'])
+    'RunKey', ['config_id', 'instance_id', 'seed', 'budget'])
 
 
 InstSeedKey = collections.namedtuple(
     'InstSeedKey', ['instance', 'seed'])
+
+
+InstSeedBudgetKey = collections.namedtuple(
+    'InstSeedBudgetKey', ['instance', 'seed', 'budget'])
 
 
 RunValue = collections.namedtuple(
@@ -114,7 +118,8 @@ class RunHistory(object):
 
         # for fast access, we have also an unordered data structure
         # to get all instance seed pairs of a configuration
-        self._configid_to_inst_seed = {}  # type: typing.Dict[int, InstSeedKey]
+        # self._configid_to_inst_seed = {}  # type: typing.Dict[int, InstSeedKey]
+        self._configid_to_inst_seed_budget = {}  # type: typing.Dict[int, InstSeedBudgetKey]
 
         self.config_ids = {}  # type: typing.Dict[Configuration, int]
         self.ids_config = {}  # type: typing.Dict[int, Configuration]
@@ -136,6 +141,7 @@ class RunHistory(object):
     def add(self, config: Configuration, cost: float, time: float,
             status: StatusType, instance_id: str=None,
             seed: int=None,
+            budget: float=0,
             additional_info: dict=None,
             origin: DataOrigin=DataOrigin.INTERNAL):
         """Adds a data of a new target algorithm (TA) run;
@@ -156,6 +162,8 @@ class RunHistory(object):
                 String representing an instance (default: None)
             seed: int
                 Random seed used by TA (default: None)
+            budget: float
+                budget (cutoff) used in intensifier to limit TA (default: 0)
             additional_info: dict
                 Additional run infos (could include further returned
                 information from TA or fields such as start time and host_id)
@@ -170,7 +178,7 @@ class RunHistory(object):
             config_id = self.config_ids.get(config)
             self.ids_config[self._n_id] = config
 
-        k = RunKey(config_id, instance_id, seed)
+        k = RunKey(config_id, instance_id, seed, budget)
         v = RunValue(cost, time, status, additional_info)
 
         # Each runkey is supposed to be used only once. Repeated tries to add
@@ -197,21 +205,22 @@ class RunHistory(object):
         if origin in (DataOrigin.INTERNAL, DataOrigin.EXTERNAL_SAME_INSTANCES) \
                 and status != StatusType.CAPPED:
             # also add to fast data structure
-            is_k = InstSeedKey(k.instance_id, k.seed)
-            self._configid_to_inst_seed[
-                k.config_id] = self._configid_to_inst_seed.get(k.config_id, [])
-            if is_k not in self._configid_to_inst_seed[k.config_id]:
-                self._configid_to_inst_seed[k.config_id].append(is_k)
+            isb_k = InstSeedBudgetKey(k.instance_id, k.seed, k.budget)
+            self._configid_to_inst_seed_budget[k.config_id] = self._configid_to_inst_seed_budget.get(k.config_id, [])
+            if isb_k not in self._configid_to_inst_seed_budget[k.config_id]:
+                self._configid_to_inst_seed_budget[k.config_id].append(isb_k)
 
             if not self.overwrite_existing_runs:
+                # if not a new budget, then update cost directly for new budget
+
                 # assumes an average across runs as cost function aggregation
-                self.incremental_update_cost(self.ids_config[k.config_id], v.cost)
+                self.incremental_update_cost(self.ids_config[k.config_id], v.cost, k.budget)
             else:
                 self.update_cost(config=self.ids_config[k.config_id])
 
     def update_cost(self, config: Configuration):
         """Store the performance of a configuration across the instances in
-        self.cost_perf_config and also updates self.runs_per_config;
+        self.cost_per_config and also updates self.runs_per_config;
         uses self.aggregate_func
 
         Parameters
@@ -234,7 +243,6 @@ class RunHistory(object):
         instances: typing.List[str]
             list of instances; if given, cost is only computed wrt to this instance set
         """
-
         self.cost_per_config = {}
         self.runs_per_config = {}
         for config, config_id in self.config_ids.items():
@@ -282,24 +290,45 @@ class RunHistory(object):
         config_id = self.config_ids[config]
         return self.cost_per_config.get(config_id, np.nan)
 
-    def get_runs_for_config(self, config: Configuration):
+    def _get_max_budget_runs(self, runs: typing.List[InstSeedBudgetKey]):
+        """ Filters only the max budget from the given list of keys
+
+        Parameters
+        ----------
+        runs: List<InstSeedBudgetKey>
+        Returns
+        -------
+        filtered_runs: List<InstSeedBudgetKey>
+        """
+        filtered_runs = {}  # dictionary of {InstSeedKey, budget}
+        for r in runs:
+            is_k = InstSeedKey(r.instance, r.seed)
+            filtered_runs[is_k] = max(r.budget, filtered_runs.get(is_k, -1))
+        runs_ = [InstSeedBudgetKey(k.instance, k.seed, v) for k, v in filtered_runs.items()]
+        return runs_
+
+    def get_runs_for_config(self, config: Configuration, max_budget: bool = True):
         """Return all runs (instance seed pairs) for a configuration.
 
         Parameters
         ----------
         config : Configuration from ConfigSpace
             Parameter configuration
-
+        max_budget : bool
+            Select only the max budget run from each configuration (default=True)
         Returns
         -------
         instance_seed_pairs : list<tuples of instance, seed>
         """
         config_id = self.config_ids.get(config)
-        return self._configid_to_inst_seed.get(config_id, [])
+        runs = self._configid_to_inst_seed_budget.get(config_id, [])
+        # select only the max budget run if specified
+        if max_budget:
+            runs = self._get_max_budget_runs(runs)
+        return runs
 
     def get_instance_costs_for_config(self, config: Configuration):
-        """
-            Returns the average cost per instance (across seeds)
+        """ Returns the average cost per instance (across seeds)
             for a configuration
             Parameters
             ----------
@@ -310,17 +339,15 @@ class RunHistory(object):
             -------
             cost_per_inst: dict<instance name<str>, cost<float>>
         """
-        config_id = self.config_ids.get(config)
-        runs_ = self._configid_to_inst_seed.get(config_id, [])
+        runs_ = self.get_runs_for_config(config)
         cost_per_inst = {}
-        for inst, seed in runs_:
-            cost_per_inst[inst] = cost_per_inst.get(inst,[])
-            rkey = RunKey(config_id, inst, seed)
+        for inst, seed, budget in runs_:
+            cost_per_inst[inst] = cost_per_inst.get(inst, [])
+            rkey = RunKey(self.config_ids[config], inst, seed, budget)
             vkey = self.data[rkey]
             cost_per_inst[inst].append(vkey.cost)
         cost_per_inst = dict([(inst, np.mean(costs)) for inst, costs in cost_per_inst.items()])
         return cost_per_inst
-
 
     def get_all_configs(self):
         """Return all configurations in this RunHistory object
@@ -355,7 +382,8 @@ class RunHistory(object):
         """
         data = [([int(k.config_id),
                   str(k.instance_id) if k.instance_id is not None else None,
-                  int(k.seed)], list(v))
+                  int(k.seed),
+                  float(k.budget)], list(v))
                 for k, v in self.data.items()
                 if save_external or self.external[k] == DataOrigin.INTERNAL]
         config_ids_to_serialize = set([entry[0][0] for entry in data])
@@ -416,6 +444,7 @@ class RunHistory(object):
                      status=StatusType(v[2]),
                      instance_id=k[1],
                      seed=int(k[2]),
+                     budget=float(k[3]),
                      additional_info=v[3])
 
     def update_from_json(self, fn: str, cs: ConfigurationSpace,
@@ -445,7 +474,7 @@ class RunHistory(object):
             Runhistory with additional data to be added to self
         origin: DataOrigin
             If set to ``INTERNAL`` or ``EXTERNAL_FULL`` the data will be
-            added to the internal data structure self._configid_to_inst_seed
+            added to the internal data structure self._configid_to_inst_seed_budget
             and be available :meth:`through get_runs_for_config`.
         """
 
@@ -454,10 +483,10 @@ class RunHistory(object):
         # correctly by assigning an ID to unknown configurations and re-using
         #  the ID
         for key, value in runhistory.data.items():
-            config_id, instance_id, seed = key
+            config_id, instance_id, seed, budget = key
             cost, time, status, additional_info = value
             config = runhistory.ids_config[config_id]
             self.add(config=config, cost=cost, time=time,
                      status=status, instance_id=instance_id,
-                     seed=seed, additional_info=additional_info,
+                     seed=seed, budget=budget, additional_info=additional_info,
                      origin=origin)
