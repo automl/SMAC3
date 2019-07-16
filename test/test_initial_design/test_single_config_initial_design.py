@@ -23,7 +23,7 @@ class TestSingleInitialDesign(unittest.TestCase):
             name="x1", lower=1, upper=10, default_value=2)
         )
         self.scenario = Scenario({'cs': self.cs, 'run_obj': 'quality',
-                                  'output_dir': ''})
+                                  'output_dir': '', 'cutoff': 1})
         self.ta = ExecuteTAFuncDict(lambda x: x["x1"]**2)
 
     def test_single_default_config_design(self):
@@ -64,6 +64,7 @@ class TestSingleInitialDesign(unittest.TestCase):
             rng=rng,
             instances=[None],
             run_obj_time=False,
+            cutoff=1
         )
 
         configs = [Configuration(configuration_space=self.cs, values={"x1":4}),
@@ -102,6 +103,7 @@ class TestSingleInitialDesign(unittest.TestCase):
             instances=[None],
             run_obj_time=False,
             deterministic=True,
+            cutoff=1
         )
 
         configs = None

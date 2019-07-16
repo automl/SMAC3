@@ -17,8 +17,14 @@ __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-RunKey = collections.namedtuple(
-    'RunKey', ['config_id', 'instance_id', 'seed', 'budget'])
+# RunKey = collections.namedtuple(
+#     'RunKey', ['config_id', 'instance_id', 'seed', 'budget'])
+# NOTE class instead of collection to have a default value for budget in RunKey
+class RunKey(typing.NamedTuple):
+    config_id: typing.Any
+    instance_id: typing.Any
+    seed: typing.Any
+    budget: 'RunKey' = 0
 
 
 InstSeedKey = collections.namedtuple(
@@ -374,7 +380,7 @@ class RunHistory(object):
         data = [([int(k.config_id),
                   str(k.instance_id) if k.instance_id is not None else None,
                   int(k.seed),
-                  float(k.budget)], list(v))
+                  float(k.budget) if k[3] is not None else 0], list(v))
                 for k, v in self.data.items()
                 if save_external or self.external[k] == DataOrigin.INTERNAL]
         config_ids_to_serialize = set([entry[0][0] for entry in data])
@@ -435,7 +441,7 @@ class RunHistory(object):
                      status=StatusType(v[2]),
                      instance_id=k[1],
                      seed=int(k[2]),
-                     budget=float(k[3]),
+                     budget=float(k[3]) if len(k) == 4 else 0,
                      additional_info=v[3])
 
     def update_from_json(self, fn: str, cs: ConfigurationSpace,

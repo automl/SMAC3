@@ -352,7 +352,7 @@ class Intensifier(object):
 
             # Line 12
             # Run challenger on all <config,seed> to run
-            for instance, seed in to_run:
+            for instance, seed, _ in to_run:
 
                 cutoff = self._adapt_cutoff(challenger=challenger,
                                             incumbent=incumbent,

@@ -28,17 +28,17 @@ class TestPSMAC(unittest.TestCase):
 
     def test_write(self):
         # The nulls make sure that we correctly emit the python None value
-        fixture = '{"data": [[[1, "branin", 1], [1, 1, {"__enum__": ' \
+        fixture = '{"data": [[[1, "branin", 1, 0.0], [1, 1, {"__enum__": ' \
                   '"StatusType.SUCCESS"}, null]], ' \
-                  '[[1, "branini", 1], [1, 1, {"__enum__": ' \
+                  '[[1, "branini", 1, 0.0], [1, 1, {"__enum__": ' \
                   '"StatusType.SUCCESS"}, null]], ' \
-                  '[[2, "branini", 1], [1, 1, {"__enum__": ' \
+                  '[[2, "branini", 1, 0.0], [1, 1, {"__enum__": ' \
                   '"StatusType.SUCCESS"}, null]], ' \
-                  '[[2, null, 1], [1, 1, {"__enum__": ' \
+                  '[[2, null, 1, 0.0], [1, 1, {"__enum__": ' \
                   '"StatusType.SUCCESS"}, null]], ' \
-                  '[[3, "branin-hoo", 1], [1, 1, {"__enum__": ' \
+                  '[[3, "branin-hoo", 1, 0.0], [1, 1, {"__enum__": ' \
                   '"StatusType.SUCCESS"}, null]], ' \
-                  '[[4, null, 1], [1, 1, {"__enum__": ' \
+                  '[[4, null, 1, 0.0], [1, 1, {"__enum__": ' \
                   '"StatusType.SUCCESS"}, null]]],' \
                   '"config_origins": {},' \
                   '"configs": {' \

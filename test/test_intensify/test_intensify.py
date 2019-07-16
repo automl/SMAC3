@@ -18,7 +18,7 @@ from smac.optimizer.objective import average_cost, sum_cost
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
-
+from smac.utils.constants import MAX_CUTOFF
 
 def get_config_space():
     cs = ConfigurationSpace()
@@ -192,11 +192,11 @@ class TestIntensify(unittest.TestCase):
             tae_runner=taf, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
-            instances=[1])
+            instances=[1], run_obj_time=False)
 
         self.rh.add(config=self.config1, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=1,
-                    seed=None,
+                    seed=None, budget=MAX_CUTOFF,
                     additional_info=None)
 
         inc = intensifier._race_challenger(challenger=self.config2,
@@ -309,13 +309,13 @@ class TestIntensify(unittest.TestCase):
             tae_runner=taf, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
-            instances=list(range(10)),
+            instances=list(range(10)), run_obj_time=False,
             deterministic=True)
 
         for i in range(10):
             self.rh.add(config=self.config1, cost=i+1, time=1,
                     status=StatusType.SUCCESS, instance_id=i,
-                    seed=12345,
+                    seed=12345, budget=MAX_CUTOFF,
                     additional_info=None)
 
         # tie on first instances and then challenger should always win
@@ -350,13 +350,13 @@ class TestIntensify(unittest.TestCase):
             tae_runner=taf, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
-            instances=list(range(10)),
+            instances=list(range(10)), run_obj_time=False,
             deterministic=False)
 
         for i in range(10):
             self.rh.add(config=self.config1, cost=i+1, time=1,
                     status=StatusType.SUCCESS, instance_id=i,
-                    seed=i,
+                    seed=i, budget=MAX_CUTOFF,
                     additional_info=None)
 
         # tie on first instances and then challenger should always win

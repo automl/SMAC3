@@ -66,7 +66,7 @@ class TestHyperband(unittest.TestCase):
         intensifier = Hyperband(
             tae_runner=taf, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
-            rng=np.random.RandomState(12345), deterministic=True,
+            rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
             instances=[1], min_budget=0.1, max_budget=1, eta=2)
 
         self.rh.add(config=self.config1, cost=1, time=1,
@@ -79,7 +79,7 @@ class TestHyperband(unittest.TestCase):
                                        run_history=self.rh,
                                        aggregate_func=average_cost)
 
-        self.assertEqual(inc, self.config2)
+        self.assertEqual(inc, self.config1)
 
     @attr('slow')
     def test_intensify_2(self):
@@ -99,7 +99,7 @@ class TestHyperband(unittest.TestCase):
         intensifier = Hyperband(
             tae_runner=taf, stats=taf.stats,
             traj_logger=TrajLogger(output_dir=None, stats=taf.stats),
-            rng=np.random.RandomState(12345), deterministic=True,
+            rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
             instances=[1], min_budget=0.5, max_budget=1, eta=2)
 
         # 1st hyperband run - should run only 2 configurations
