@@ -71,7 +71,7 @@ class SuccessiveHalving(Intensifier):
                  rng: np.random.RandomState,
                  instances: typing.List[str],
                  instance_specifics: typing.Mapping[str, np.ndarray] = None,
-                 cutoff: int = MAX_CUTOFF,
+                 cutoff: int = None,
                  deterministic: bool = False,
                  min_budget: float = None,
                  max_budget: float = None,
@@ -90,9 +90,6 @@ class SuccessiveHalving(Intensifier):
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
-
-        # setting cutoff by default, if not provided
-        self.cutoff = MAX_CUTOFF if self.cutoff is None else self.cutoff
 
         # instance related info
         self.n_seeds = n_seeds if n_seeds else 1
@@ -128,7 +125,6 @@ class SuccessiveHalving(Intensifier):
         self.eta = eta
 
         ## Initialize budgets
-        # determine budgets from given instances if none mentioned
         # - if only 1 instance was provided & quality objective, then use cutoff as budget
         # - else, use instances as budget
         if not self.run_obj_time and len(self.instances) <= 1:
@@ -136,11 +132,18 @@ class SuccessiveHalving(Intensifier):
             # cannot run successive halving with cutoff as budget if budget limits are not provided!
             if min_budget is None or \
                     (max_budget is None and cutoff is None):
-                raise ValueError("Successive Halving with cutoff as budget (i.e., only 1 instance) requires parameters "
-                                 "min_budget and max_budget/cutoff for intensification!")
+                raise ValueError("Successive Halving with runtime-cutoff as budget (i.e., only 1 instance) "
+                                 "requires parameters min_budget and max_budget/cutoff for intensification!")
+
+            # if both cutoff and max_budget are provided, then warn user
+            if self.cutoff is not None and max_budget is not None:
+                warnings.warn('Successive Halving with runtime-cutoff as budget: '
+                              'Both max budget (%d) and runtime-cutoff (%d) were provided. Max budget will be used.' %
+                              (self.max_budget, len(self.instances)))
+
             self.min_budget = min_budget
-            self.max_budget = self.cutoff if max_budget is None else max_budget
-            self.budget_type = 'cutoff'
+            self.max_budget = max_budget if max_budget else self.cutoff
+            self.cutoff_as_budget = True
 
         else:
             # budget with instances
@@ -148,7 +151,7 @@ class SuccessiveHalving(Intensifier):
                 warnings.warn("Successive Halving has objective 'runtime' but only 1 instance-seed pair.")
             self.min_budget = 1 if min_budget is None else int(min_budget)
             self.max_budget = len(self.instances) if max_budget is None else int(max_budget)
-            self.budget_type = 'instance'
+            self.cutoff_as_budget = False
 
             # max budget cannot be greater than number of instance-seed pairs
             if self.max_budget > len(self.instances):
@@ -161,14 +164,14 @@ class SuccessiveHalving(Intensifier):
             warnings.warn('Min budget (%.2f) is equal to Max budget (%.2f)' %
                           (self.min_budget, self.max_budget))
 
-        self.logger.debug("Running Successive Halving with '%s' as budget" % self.budget_type.upper())
+        self.logger.debug("Running Successive Halving with '%s' as budget" % self.cutoff_as_budget)
 
         # number configurations to consider for a full successive halving iteration
         self.max_sh_iter = np.floor(np.log(self.max_budget / self.min_budget) / np.log(eta))
         self.init_chal = int(np.round(self.eta**self.max_sh_iter)) if init_chal is None else init_chal
 
         # for adaptive capping
-        if self.budget_type == 'instance' and self.instance_order != 'shuffle' and self.run_obj_time:
+        if not self.cutoff_as_budget and self.instance_order != 'shuffle' and self.run_obj_time:
             self.adaptive_capping = True
         else:
             self.adaptive_capping = False
@@ -234,8 +237,8 @@ class SuccessiveHalving(Intensifier):
             self.rs.shuffle(all_instances)
 
         # calculating the incumbent's performance for adaptive capping
-        #   - this check is required because there is incumbent performance
-        #     for the first ever 'intensify' run from initial design
+        #   - this check is required because there is no incumbent performance
+        #     for the first ever 'intensify' run (from initial design)
         if incumbent is not None:
             inc_runs = run_history.get_runs_for_config(incumbent)
             inc_sum_cost = sum_cost(config=incumbent, instance_seed_pairs=inc_runs, run_history=run_history)
@@ -253,17 +256,14 @@ class SuccessiveHalving(Intensifier):
         self.logger.debug('---' * 40)
         self.logger.debug('Successive Halving run begins.')
 
-        # run intesification till budget is max
+        # run intensification till budget is max
         while budget <= self.max_budget:
 
             self.logger.info('Running with budget [%.2f / %d] with %d challengers' % (budget, self.max_budget,
                                                                                       len(curr_challengers)))
             # selecting instance subset for this budget, depending on the kind of budget
-            if self.budget_type == 'instance':
-                # run only on new instances
-                available_insts = all_instances[int(prev_budget):int(budget)]
-            else:
-                available_insts = all_instances
+            available_insts = all_instances[int(prev_budget):int(budget)] if not self.cutoff_as_budget \
+                else all_instances
 
             # determine 'k' for the next iteration
             next_n_chal = int(np.round(len(curr_challengers) / self.eta))
@@ -385,13 +385,13 @@ class SuccessiveHalving(Intensifier):
                                             incumbent=incumbent,
                                             run_history=run_history,
                                             inc_sum_cost=inc_sum_cost)
-                if cutoff <= 0:
+                if cutoff is not None and cutoff <= 0:
                     # ran out of time to validate challenger
                     self.logger.debug("Stop challenger itensification due to adaptive capping.")
                     break
 
                 # setting cutoff based on the type of budget & adaptive capping
-                tae_cutoff = min(cutoff, budget) if self.budget_type == 'cutoff' else cutoff
+                tae_cutoff = budget if self.cutoff_as_budget else cutoff
 
                 self.logger.debug('Cutoff for challenger: %s' % str(cutoff))
 
@@ -446,7 +446,6 @@ class SuccessiveHalving(Intensifier):
         challengers: typing.List[Configuration]
             top challenger configurations, sorted in increasing costs
         """
-        # NOTE run_history overwrites the cost for runs since it doesnt record each budget (cutoff) separately
         # extracting costs for each given configuration
         config_costs = {}
         for c in configs:

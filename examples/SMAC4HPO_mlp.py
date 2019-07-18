@@ -26,7 +26,7 @@ digits = load_digits()
 
 
 # Target Algorithm
-def mlp_from_cfg(cfg, seed, instance, cutoff, **kwargs):
+def mlp_from_cfg(cfg, seed, instance, budget, **kwargs):
     """
         Creates a MLP classifier from sklearn and fits the given data on it.
         This is the function-call we try to optimize. Chosen values are stored in
@@ -40,7 +40,7 @@ def mlp_from_cfg(cfg, seed, instance, cutoff, **kwargs):
             used to initialize the rf's random generator
         instance: str
             used to represent the instance to use (just a placeholder for this example)
-        cutoff: float
+        budget: float
             used to set max iterations for the MLP
 
         Returns:
@@ -65,7 +65,7 @@ def mlp_from_cfg(cfg, seed, instance, cutoff, **kwargs):
             activation=cfg['activation'],
             learning_rate=lr,
             learning_rate_init=lr_init,
-            max_iter=int(np.ceil(cutoff)),
+            max_iter=int(np.ceil(budget)),
             random_state=seed)
 
         # returns the cross validation accuracy

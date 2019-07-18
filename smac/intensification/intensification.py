@@ -70,7 +70,7 @@ class Intensifier(object):
                  traj_logger: TrajLogger, rng: np.random.RandomState,
                  instances: typing.List[str],
                  instance_specifics: typing.Mapping[str, np.ndarray]=None,
-                 cutoff: int=MAX_CUTOFF, deterministic:bool=False,
+                 cutoff: int=None, deterministic:bool=False,
                  run_obj_time: bool=True,
                  always_race_against: Configuration=None,
                  run_limit: int=MAXINT,
@@ -434,6 +434,8 @@ class Intensifier(object):
         if not self.run_obj_time:
             return self.cutoff
 
+        curr_cutoff = self.cutoff if self.cutoff is not None else np.inf
+
         # cost used by challenger for going over all its runs
         # should be subset of runs of incumbent (not checked for efficiency
         # reasons)
@@ -441,7 +443,7 @@ class Intensifier(object):
         chal_sum_cost = sum_cost(config=challenger,
                                  instance_seed_pairs=chall_inst_seeds,
                                  run_history=run_history)
-        cutoff = min(self.cutoff,
+        cutoff = min(curr_cutoff,
                      inc_sum_cost * self.adaptive_capping_slackfactor -
                      chal_sum_cost
                      )

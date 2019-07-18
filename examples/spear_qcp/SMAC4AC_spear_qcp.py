@@ -19,9 +19,9 @@ if __name__ == '__main__':
 
     scenario = Scenario('scenario.txt')
     intensifier_kwargs = {'min_budget': 1, 'eta': 2}
-    smac = SMAC4AC(scenario=scenario)#,  # scenario object
-                   # intensifier_kwargs=intensifier_kwargs,  # parameters for Successive Halving
-                   # intensifier=SuccessiveHalving)   # intensifier to use - Default is SMAC's intensify approach
+    smac = SMAC4AC(scenario=scenario,  # scenario object
+                   intensifier_kwargs=intensifier_kwargs,  # parameters for Successive Halving
+                   intensifier=SuccessiveHalving)   # intensifier to use - Default is SMAC's intensify approach
                                                     # change intensifier to successive halving by passing the class
 
     # Start optimization

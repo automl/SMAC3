@@ -196,7 +196,7 @@ class TestIntensify(unittest.TestCase):
 
         self.rh.add(config=self.config1, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=1,
-                    seed=None, budget=MAX_CUTOFF,
+                    seed=None,
                     additional_info=None)
 
         inc = intensifier._race_challenger(challenger=self.config2,
@@ -315,7 +315,7 @@ class TestIntensify(unittest.TestCase):
         for i in range(10):
             self.rh.add(config=self.config1, cost=i+1, time=1,
                     status=StatusType.SUCCESS, instance_id=i,
-                    seed=12345, budget=MAX_CUTOFF,
+                    seed=12345,
                     additional_info=None)
 
         # tie on first instances and then challenger should always win
@@ -356,7 +356,7 @@ class TestIntensify(unittest.TestCase):
         for i in range(10):
             self.rh.add(config=self.config1, cost=i+1, time=1,
                     status=StatusType.SUCCESS, instance_id=i,
-                    seed=i, budget=MAX_CUTOFF,
+                    seed=i,
                     additional_info=None)
 
         # tie on first instances and then challenger should always win

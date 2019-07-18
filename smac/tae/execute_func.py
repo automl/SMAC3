@@ -7,7 +7,7 @@ import numpy as np
 import pynisher
 
 from smac.tae.execute_ta_run import StatusType, ExecuteTARun
-from smac.utils.constants import MAXINT
+from smac.utils.constants import MAXINT, MAX_CUTOFF
 
 __author__ = "Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -69,7 +69,7 @@ class AbstractTAFunc(ExecuteTARun):
         signature = inspect.signature(ta).parameters
         self._accepts_seed = len(signature) > 1
         self._accepts_instance = len(signature) > 2
-        self._accepts_cutoff = len(signature) > 3
+        self._accepts_budget = len(signature) > 3
 
         if memory_limit is not None:
             memory_limit = int(math.ceil(memory_limit))
@@ -121,15 +121,15 @@ class AbstractTAFunc(ExecuteTARun):
             obj_kwargs['seed'] = seed
         if self._accepts_instance:
             obj_kwargs['instance'] = instance
-        if self._accepts_cutoff:
-            obj_kwargs['cutoff'] = cutoff
+        if self._accepts_budget:
+            obj_kwargs['budget'] = cutoff
 
         if self.use_pynisher:
 
             # walltime for pynisher has to be a rounded up integer
             if cutoff is not None:
                 cutoff = int(math.ceil(cutoff))
-                if cutoff > 65535:
+                if cutoff > MAX_CUTOFF:
                     raise ValueError("%d is outside the legal range of [0, 65535] "
                                      "for cutoff (when using pynisher, due to OS limitations)" % cutoff)
 

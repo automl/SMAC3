@@ -65,7 +65,7 @@ class Hyperband(SuccessiveHalving):
                  rng: np.random.RandomState,
                  instances: typing.List[str],
                  instance_specifics: typing.Mapping[str, np.ndarray] = None,
-                 cutoff: int = MAX_CUTOFF,
+                 cutoff: int = None,
                  deterministic: bool = False,
                  min_budget: float = None,
                  max_budget: float = None,

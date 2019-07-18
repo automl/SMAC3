@@ -80,11 +80,11 @@ class TestSuccessiveHalving(unittest.TestCase):
     @attr('slow')
     def test_intensify_1(self):
         """
-           test intensify with quality objective & instance as budget
+           test intensify with quality objective & cutoff as budget
         """
 
-        def target(x, instance, seed, cutoff):
-            return (x['a'] + 1 + cutoff) / 1000.
+        def target(x, instance, seed, budget):
+            return (x['a'] + 1 + budget) / 1000.
 
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj='quality')
         taf.runhistory = self.rh
