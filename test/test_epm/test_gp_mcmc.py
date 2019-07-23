@@ -1,4 +1,3 @@
-import unittest
 import unittest.mock
 
 import numpy as np
@@ -8,10 +7,13 @@ import sklearn.model_selection
 from smac.configspace import ConfigurationSpace, UniformFloatHyperparameter
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
 from smac.epm.gp_base_prior import LognormalPrior, HorseshoePrior
-from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel
+
+from test import requires_extra
 
 
 def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True, average_samples=False, n_iter=50):
+    from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel
+
     cov_amp = ConstantKernel(
         2.0,
         constant_value_bounds=(1e-10, 2),
@@ -57,6 +59,7 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True, average_samples=False
     return model
 
 
+@requires_extra('gp')
 class TestGPMCMC(unittest.TestCase):
     def test_predict_wrong_X_dimensions(self):
         rs = np.random.RandomState(1)

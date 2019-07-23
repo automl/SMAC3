@@ -1,6 +1,6 @@
 import typing
 
-from sobol_seq import i4_sobol_generate
+import sobol_seq
 
 from ConfigSpace.configuration_space import Configuration
 from ConfigSpace.hyperparameters import Constant
@@ -43,7 +43,7 @@ class SobolDesign(InitialDesign):
             if isinstance(p, Constant):
                 constants += 1
 
-        sobol = i4_sobol_generate(len(params) - constants, self.init_budget)
+        sobol = sobol_seq.i4_sobol_generate(len(params) - constants, self.init_budget)
 
         return self._transform_continuous_designs(design=sobol,
                                                   origin='Sobol',

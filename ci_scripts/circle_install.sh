@@ -8,12 +8,9 @@ source activate testenv
 
 # install documentation building dependencies
 pip install --upgrade numpy
-pip install --upgrade matplotlib setuptools nose coverage sphinx pillow sphinx-gallery sphinx_bootstrap_theme cython numpydoc
-# And finally, all other dependencies
-cat requirements.txt | xargs -n 1 -L 1 pip install
+pip install --upgrade matplotlib setuptools nose coverage sphinx pillow sphinx-gallery sphinx_bootstrap_theme numpydoc
 
-python setup.py clean
-python setup.py develop
+pip install -e .[all]
 
 # pipefail is necessary to propagate exit codes
 set -o pipefail && cd doc && make html 2>&1 | tee ~/log.txt

@@ -4,14 +4,16 @@ import typing
 
 import emcee
 import numpy as np
-import skopt.learning.gaussian_process
-import skopt.learning.gaussian_process.kernels
+from lazy_import import lazy_callable
 
 from smac.configspace import ConfigurationSpace
 from smac.epm.base_gp import BaseModel
 from smac.epm.gaussian_process import GaussianProcess
 
 logger = logging.getLogger(__name__)
+Kernel = lazy_callable('skopt.learning.gaussian_process.kernels.Kernel')
+GaussianProcessRegressor = lazy_callable(
+    'skopt.learning.gaussian_process.GaussianProcessRegressor')
 
 
 class GaussianProcessMCMC(BaseModel):
@@ -22,7 +24,7 @@ class GaussianProcessMCMC(BaseModel):
         types: np.ndarray,
         bounds: typing.List[typing.Tuple[float, float]],
         seed: int,
-        kernel: skopt.learning.gaussian_process.kernels.Kernel,
+        kernel: Kernel,
         n_mcmc_walkers: int = 20,
         chain_length: int = 50,
         burnin_steps: int = 50,
@@ -115,7 +117,7 @@ class GaussianProcessMCMC(BaseModel):
             hyperparameter specified in the kernel.
         """
         X = self._impute_inactive(X)
-        self.gp = skopt.learning.gaussian_process.GaussianProcessRegressor(
+        self.gp = GaussianProcessRegressor(
             kernel=self.kernel,
             normalize_y=self.normalize_y,
             optimizer=None,
