@@ -269,8 +269,7 @@
 <span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">skopt.learning.gaussian_process</span>
-<span class="kn">import</span> <span class="nn">skopt.learning.gaussian_process.kernels</span>
+<span class="kn">from</span> <span class="nn">lazy_import</span> <span class="k">import</span> <span class="n">lazy_callable</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="k">import</span> <span class="n">optimize</span>
 
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">ConfigurationSpace</span>
@@ -278,6 +277,9 @@
 <span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="k">import</span> <span class="n">VERY_SMALL_NUMBER</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">Kernel</span> <span class="o">=</span> <span class="n">lazy_callable</span><span class="p">(</span><span class="s1">&#39;skopt.learning.gaussian_process.kernels.Kernel&#39;</span><span class="p">)</span>
+<span class="n">GaussianProcessRegressor</span> <span class="o">=</span> <span class="n">lazy_callable</span><span class="p">(</span>
+    <span class="s1">&#39;skopt.learning.gaussian_process.GaussianProcessRegressor&#39;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="GaussianProcess"><a class="viewcode-back" href="../../../apidoc/smac.epm.gaussian_process.html#smac.epm.gaussian_process.GaussianProcess">[docs]</a><span class="k">class</span> <span class="nc">GaussianProcess</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -321,7 +323,7 @@
         <span class="n">types</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">bounds</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">kernel</span><span class="p">:</span> <span class="n">skopt</span><span class="o">.</span><span class="n">learning</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">,</span>
+        <span class="n">kernel</span><span class="p">:</span> <span class="n">Kernel</span><span class="p">,</span>
         <span class="n">normalize_y</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">n_opt_restarts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span>
@@ -366,7 +368,7 @@
         <span class="n">n_tries</span> <span class="o">=</span> <span class="mi">10</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_tries</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">gp</span> <span class="o">=</span> <span class="n">skopt</span><span class="o">.</span><span class="n">learning</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">GaussianProcessRegressor</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gp</span> <span class="o">=</span> <span class="n">GaussianProcessRegressor</span><span class="p">(</span>
                     <span class="n">kernel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">,</span>
                     <span class="n">normalize_y</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                     <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>

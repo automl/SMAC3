@@ -275,6 +275,15 @@
     <span class="sa">r</span><span class="s1">&#39;^(?P&lt;name&gt;[\w\-]+)</span><span class="si">%s</span><span class="s1">?(,</span><span class="si">%s</span><span class="s1">)?$&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">SUBPATTERN</span> <span class="o">%</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">SUBPATTERN</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span>
 
 
+<div class="viewcode-block" id="are_valid_packages"><a class="viewcode-back" href="../../../apidoc/smac.utils.dependencies.html#smac.utils.dependencies.are_valid_packages">[docs]</a><span class="k">def</span> <span class="nf">are_valid_packages</span><span class="p">(</span><span class="n">packages</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">verify_packages</span><span class="p">(</span><span class="n">packages</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="n">MissingPackageError</span><span class="p">,</span> <span class="n">IncorrectPackageVersionError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
 <div class="viewcode-block" id="verify_packages"><a class="viewcode-back" href="../../../apidoc/smac.utils.dependencies.html#smac.utils.dependencies.verify_packages">[docs]</a><span class="k">def</span> <span class="nf">verify_packages</span><span class="p">(</span><span class="n">packages</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">packages</span><span class="p">:</span>
         <span class="k">return</span>

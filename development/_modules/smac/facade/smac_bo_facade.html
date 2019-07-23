@@ -270,7 +270,6 @@
 <span class="kn">from</span> <span class="nn">smac.facade.smac_ac_facade</span> <span class="k">import</span> <span class="n">SMAC4AC</span>
 <span class="kn">from</span> <span class="nn">smac.epm.gaussian_process_mcmc</span> <span class="k">import</span> <span class="n">GaussianProcessMCMC</span><span class="p">,</span> <span class="n">GaussianProcess</span>
 <span class="kn">from</span> <span class="nn">smac.epm.gp_base_prior</span> <span class="k">import</span> <span class="n">HorseshoePrior</span><span class="p">,</span> <span class="n">LognormalPrior</span>
-<span class="kn">from</span> <span class="nn">smac.epm.gp_kernels</span> <span class="k">import</span> <span class="n">ConstantKernel</span><span class="p">,</span> <span class="n">Matern</span><span class="p">,</span> <span class="n">WhiteKernel</span><span class="p">,</span> <span class="n">HammingKernel</span>
 <span class="kn">from</span> <span class="nn">smac.epm.util_funcs</span> <span class="k">import</span> <span class="n">get_types</span><span class="p">,</span> <span class="n">get_rng</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.sobol_design</span> <span class="k">import</span> <span class="n">SobolDesign</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="k">import</span> <span class="n">RunHistory2EPM4LogScaledCost</span>
@@ -316,6 +315,8 @@
         <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;initial_design_kwargs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_kwargs</span>
 
         <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">smac.epm.gp_kernels</span> <span class="k">import</span> <span class="n">ConstantKernel</span><span class="p">,</span> <span class="n">Matern</span><span class="p">,</span> <span class="n">WhiteKernel</span><span class="p">,</span> <span class="n">HammingKernel</span>
+
             <span class="n">model_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;model_kwargs&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
 
             <span class="n">_</span><span class="p">,</span> <span class="n">rng</span> <span class="o">=</span> <span class="n">get_rng</span><span class="p">(</span><span class="n">rng</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rng&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">run_id</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;run_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>

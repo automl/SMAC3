@@ -271,6 +271,7 @@
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 
+<span class="kn">import</span> <span class="nn">smac</span>
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">ConfigurationSpace</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">Constant</span><span class="p">,</span>\
      <span class="n">CategoricalHyperparameter</span><span class="p">,</span> <span class="n">UniformFloatHyperparameter</span><span class="p">,</span> \
      <span class="n">UniformIntegerHyperparameter</span><span class="p">,</span> <span class="n">InCondition</span>
@@ -278,7 +279,6 @@
 <span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="k">import</span> <span class="n">AbstractEPM</span>
 <span class="kn">from</span> <span class="nn">smac.epm.rf_with_instances</span> <span class="k">import</span> <span class="n">RandomForestWithInstances</span>
 <span class="kn">from</span> <span class="nn">smac.epm.gaussian_process_mcmc</span> <span class="k">import</span> <span class="n">GaussianProcessMCMC</span>
-<span class="kn">from</span> <span class="nn">smac.epm.gp_kernels</span> <span class="k">import</span> <span class="n">ConstantKernel</span><span class="p">,</span> <span class="n">HammingKernel</span><span class="p">,</span> <span class="n">WhiteKernel</span><span class="p">,</span> <span class="n">Matern</span>
 <span class="kn">from</span> <span class="nn">smac.epm.gp_base_prior</span> <span class="k">import</span> <span class="n">LognormalPrior</span><span class="p">,</span> <span class="n">HorseshoePrior</span>
 <span class="kn">from</span> <span class="nn">smac.epm.util_funcs</span> <span class="k">import</span> <span class="n">get_types</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.initial_design</span> <span class="k">import</span> <span class="n">InitialDesign</span>
@@ -291,10 +291,9 @@
 <span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="k">import</span> <span class="n">AcquisitionFunctionMaximizer</span><span class="p">,</span> \
     <span class="n">RandomSearch</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
-<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="k">import</span> <span class="n">AbstractRunHistory2EPM</span><span class="p">,</span> <span class="n">RunHistory2EPM4LogCost</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="k">import</span> <span class="n">AbstractRunHistory2EPM</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="k">import</span> <span class="n">Stats</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">FirstRunCrashedException</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="k">import</span> <span class="n">TrajLogger</span>
 <span class="kn">from</span> <span class="nn">smac.utils.validate</span> <span class="k">import</span> <span class="n">Validator</span>
 <span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="k">import</span> <span class="n">MAXINT</span>
@@ -693,6 +692,8 @@
             <span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">conf</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;GP&quot;</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">smac.epm.gp_kernels</span> <span class="k">import</span> <span class="n">ConstantKernel</span><span class="p">,</span> <span class="n">HammingKernel</span><span class="p">,</span> <span class="n">WhiteKernel</span><span class="p">,</span> <span class="n">Matern</span>
+
             <span class="n">cov_amp</span> <span class="o">=</span> <span class="n">ConstantKernel</span><span class="p">(</span>
                 <span class="mf">2.0</span><span class="p">,</span>
                 <span class="n">constant_value_bounds</span><span class="o">=</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="p">)),</span>
@@ -779,7 +780,10 @@
         <span class="n">cs</span> <span class="o">=</span> <span class="n">ConfigurationSpace</span><span class="p">()</span>
         <span class="n">cs</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="o">**</span><span class="mi">20</span><span class="p">))</span>
 
-        <span class="n">model</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;RF&quot;</span><span class="p">,</span> <span class="s2">&quot;GP&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="s1">&#39;gp&#39;</span> <span class="ow">in</span> <span class="n">smac</span><span class="o">.</span><span class="n">extras_installed</span><span class="p">:</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;RF&quot;</span><span class="p">,</span> <span class="s2">&quot;GP&quot;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">Constant</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;RF&quot;</span><span class="p">)</span>
 
         <span class="n">num_trees</span> <span class="o">=</span> <span class="n">Constant</span><span class="p">(</span><span class="s2">&quot;num_trees&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
         <span class="n">bootstrap</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;do_bootstrapping&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span> <span class="n">default_value</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>

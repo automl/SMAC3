@@ -269,7 +269,7 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">pyDOE</span> <span class="k">import</span> <span class="n">lhs</span>
+<span class="kn">import</span> <span class="nn">pyDOE</span>
 
 <span class="kn">from</span> <span class="nn">ConfigSpace.configuration_space</span> <span class="k">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace.hyperparameters</span> <span class="k">import</span> <span class="n">Constant</span>
@@ -315,7 +315,7 @@
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">Constant</span><span class="p">):</span>
                 <span class="n">constants</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="n">lhd</span> <span class="o">=</span> <span class="n">lhs</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span><span class="o">-</span><span class="n">constants</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">init_budget</span><span class="p">)</span>
+        <span class="n">lhd</span> <span class="o">=</span> <span class="n">pyDOE</span><span class="o">.</span><span class="n">lhs</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span><span class="o">-</span><span class="n">constants</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">init_budget</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform_continuous_designs</span><span class="p">(</span><span class="n">design</span><span class="o">=</span><span class="n">lhd</span><span class="p">,</span>
                                                   <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;LHD&#39;</span><span class="p">,</span>

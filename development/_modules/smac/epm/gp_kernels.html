@@ -271,11 +271,12 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">sklearn.gaussian_process.kernels</span>
-<span class="kn">import</span> <span class="nn">skopt.learning.gaussian_process.kernels</span>
 <span class="kn">import</span> <span class="nn">scipy.optimize</span>
 <span class="kn">import</span> <span class="nn">scipy.spatial.distance</span>
 <span class="kn">import</span> <span class="nn">scipy.special</span>
 
+<span class="kn">from</span> <span class="nn">lazy_import</span> <span class="k">import</span> <span class="n">lazy_module</span>
+<span class="n">kernels</span> <span class="o">=</span> <span class="n">lazy_module</span><span class="p">(</span><span class="s1">&#39;skopt.learning.gaussian_process.kernels&#39;</span><span class="p">)</span>
 
 <span class="c1"># This file contains almost no type annotations to simplify comparing it to the original scikit-learn version!</span>
 
@@ -330,22 +331,22 @@
         <span class="k">return</span> <span class="n">rval</span>
 
     <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">skopt</span><span class="o">.</span><span class="n">learning</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">Sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ConstantKernel</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">Sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">skopt</span><span class="o">.</span><span class="n">learning</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">Sum</span><span class="p">(</span><span class="n">ConstantKernel</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Sum</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">skopt</span><span class="o">.</span><span class="n">learning</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">Product</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ConstantKernel</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">Product</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">skopt</span><span class="o">.</span><span class="n">learning</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">Product</span><span class="p">(</span><span class="n">ConstantKernel</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Product</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
@@ -446,7 +447,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">len_active</span> <span class="o">=</span> <span class="kc">None</span></div></div>
 
 
-<div class="viewcode-block" id="Sum"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Sum">[docs]</a><span class="k">class</span> <span class="nc">Sum</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">skopt</span><span class="o">.</span><span class="n">learning</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">Sum</span><span class="p">):</span>
+<div class="viewcode-block" id="Sum"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Sum">[docs]</a><span class="k">class</span> <span class="nc">Sum</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Sum</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">operate_on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">has_conditions</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Sum</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">k1</span><span class="o">=</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="o">=</span><span class="n">k2</span><span class="p">)</span>
@@ -490,7 +491,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k2</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Product"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Product">[docs]</a><span class="k">class</span> <span class="nc">Product</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">skopt</span><span class="o">.</span><span class="n">learning</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">Product</span><span class="p">):</span>
+<div class="viewcode-block" id="Product"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Product">[docs]</a><span class="k">class</span> <span class="nc">Product</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Product</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">operate_on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">has_conditions</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Product</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">k1</span><span class="o">=</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="o">=</span><span class="n">k2</span><span class="p">)</span>
@@ -535,7 +536,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">k2</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ConstantKernel"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.ConstantKernel">[docs]</a><span class="k">class</span> <span class="nc">ConstantKernel</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">skopt</span><span class="o">.</span><span class="n">learning</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">ConstantKernel</span><span class="p">):</span>
+<div class="viewcode-block" id="ConstantKernel"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.ConstantKernel">[docs]</a><span class="k">class</span> <span class="nc">ConstantKernel</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">ConstantKernel</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
@@ -598,7 +599,7 @@
             <span class="k">return</span> <span class="n">K</span></div>
 
 
-<div class="viewcode-block" id="Matern"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Matern">[docs]</a><span class="k">class</span> <span class="nc">Matern</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">skopt</span><span class="o">.</span><span class="n">learning</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">Matern</span><span class="p">):</span>
+<div class="viewcode-block" id="Matern"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Matern">[docs]</a><span class="k">class</span> <span class="nc">Matern</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Matern</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -706,7 +707,7 @@
             <span class="k">return</span> <span class="n">K</span></div>
 
 
-<div class="viewcode-block" id="RBF"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.RBF">[docs]</a><span class="k">class</span> <span class="nc">RBF</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">skopt</span><span class="o">.</span><span class="n">learning</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">RBF</span><span class="p">):</span>
+<div class="viewcode-block" id="RBF"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.RBF">[docs]</a><span class="k">class</span> <span class="nc">RBF</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">RBF</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -781,7 +782,7 @@
             <span class="k">return</span> <span class="n">K</span></div>
 
 
-<div class="viewcode-block" id="WhiteKernel"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.WhiteKernel">[docs]</a><span class="k">class</span> <span class="nc">WhiteKernel</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">skopt</span><span class="o">.</span><span class="n">learning</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">WhiteKernel</span><span class="p">):</span>
+<div class="viewcode-block" id="WhiteKernel"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.WhiteKernel">[docs]</a><span class="k">class</span> <span class="nc">WhiteKernel</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">WhiteKernel</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -843,7 +844,7 @@
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span></div>
 
 
-<div class="viewcode-block" id="HammingKernel"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.HammingKernel">[docs]</a><span class="k">class</span> <span class="nc">HammingKernel</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">skopt</span><span class="o">.</span><span class="n">learning</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">HammingKernel</span><span class="p">):</span>
+<div class="viewcode-block" id="HammingKernel"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.HammingKernel">[docs]</a><span class="k">class</span> <span class="nc">HammingKernel</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">HammingKernel</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
