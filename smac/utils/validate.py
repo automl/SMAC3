@@ -553,7 +553,7 @@ class Validator(object):
                     configs.append(entry["incumbent"])
                     counter *= 2
             if not self.traj[0]["incumbent"] in configs:
-                configs.append(traj[0]["incumbent"])  # add first
+                configs.append(self.traj[0]["incumbent"])  # add first
         if mode == "all":
             for entry in self.traj:
                 if not entry["incumbent"] in configs:
