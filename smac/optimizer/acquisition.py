@@ -510,3 +510,65 @@ class LCB(AbstractAcquisitionFunction):
         std = np.sqrt(var_)
         beta = 2*np.log((X.shape[1] * self.num_data**2) / self.par)
         return -(m - np.sqrt(beta)*std)
+
+
+
+
+class probCLCB(AbstractAcquisitionFunction):
+    def __init__(self,
+                 model: AbstractEPM,
+                 par: float=1.0):
+
+        """Computes the lower confidence bound for a given x over the best so far value as
+        acquisition value.
+
+        :math:`LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})`
+
+        Returns -LCB(X) as the acquisition_function optimizer maximizes the acquisition value.
+
+        Parameters
+        ----------
+        model : AbstractEPM
+            A model that implements at least
+                 - predict_marginalized_over_instances(X)
+        par : float, default=0.0
+            Controls the balance between exploration and exploitation of the
+            acquisition function.
+        """
+        super(probCLCB, self).__init__(model)
+        self.long_name = 'Probability Constrained Lower Confidence Bound'
+        self.par = par
+        self.eta = None  # to be compatible with the existing update calls in SMBO
+        self.num_data = None
+
+    def _compute(self, X: np.ndarray):
+        """Computes the LCB value.
+
+        Parameters
+        ----------
+        X: np.ndarray(N, D)
+           Points to evaluate LCB. N is the number of points and D the dimension for the points
+
+        Returns
+        -------
+        np.ndarray(N,1)
+            Expected Improvement of X
+        """
+        
+        #  probability interval [0 infeasibe; 1 feasible]
+        prob_feasibility = self.classifier.predict_proba(X)[:,1] 
+
+        if self.num_data is None:
+            raise ValueError('No current number of Datapoints specified. Call update('
+                             'num_data=<int>) to inform the acquisition function '
+                             'about the number of datapoints.')
+        if len(X.shape) == 1:
+            X = X[:, np.newaxis]
+        m, var_ = self.model.predict_marginalized_over_instances(X)
+        std = np.sqrt(var_)
+        beta = 2*np.log((X.shape[1] * self.num_data**2) / self.par)
+
+        lcb_value = -(m - np.sqrt(beta)*std)
+        prob_feasibility = np.expand_dims(prob_feasibility, axis=1)
+        
+        return lcb_value*prob_feasibility

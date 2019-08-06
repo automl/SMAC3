@@ -32,7 +32,7 @@ class SMAC4BO(SMAC4AC):
 
     """
 
-    def __init__(self, model_type='gp_mcmc', **kwargs):
+    def __init__(self, model_type='gp', **kwargs): #mcmc', **kwargs):
         """
         Constructor
         see ~smac.facade.smac_facade for documentation

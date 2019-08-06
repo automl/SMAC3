@@ -476,7 +476,7 @@ class SMAC4AC(object):
             }
         if scenario.run_obj == 'quality':
             r2e_def_kwargs.update({
-                'success_states': [StatusType.SUCCESS, StatusType.CRASHED],
+                'success_states': [StatusType.SUCCESS],#, StatusType.CRASHED],
                 'impute_censored_data': False,
                 'impute_state': None,
             })
