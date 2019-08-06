@@ -175,7 +175,7 @@ class TestGPMCMC(unittest.TestCase):
         self.assertAlmostEqual(y_hat[0][0], 54.613410745846785, delta=0.1)
         # Massive variance due to internally used law of total variances, also a massive difference locally and on
         # travis-ci
-        self.assertLessEqual(abs(var_hat[0][0]) - 860, 100, msg=str(var_hat))
+        self.assertLessEqual(abs(var_hat[0][0]) - 860, 200, msg=str(var_hat))
 
     def test_gp_on_sklearn_data(self):
         X, y = sklearn.datasets.load_boston(return_X_y=True)
