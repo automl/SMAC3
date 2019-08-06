@@ -122,7 +122,7 @@ class GaussianProcessMCMC(BaseModel):
 
         self.gp = GaussianProcessRegressor(
             kernel=self.kernel,
-            normalize_y=self.normalize_y,
+            normalize_y=False,
             optimizer=None,
             n_restarts_optimizer=-1,  # Do not use scikit-learn's optimization routine
             alpha=0,  # Governed by the kernel
