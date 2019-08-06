@@ -117,6 +117,9 @@ class GaussianProcessMCMC(BaseModel):
             hyperparameter specified in the kernel.
         """
         X = self._impute_inactive(X)
+        if self.normalize_y:
+            y = self._normalize_y(y)
+
         self.gp = GaussianProcessRegressor(
             kernel=self.kernel,
             normalize_y=self.normalize_y,
@@ -198,10 +201,10 @@ class GaussianProcessMCMC(BaseModel):
                     max_depth=10,
                     rng=self.rng,
                 )
-                print('hypers', 'log space', self.p0, 'regular space', np.exp(self.p0))
                 indices = [int(np.rint(ind)) for ind in np.linspace(start=0, stop=len(samples) - 1, num=10)]
                 self.hypers = samples[indices]
                 self.p0 = self.hypers.mean(axis=0)
+                print('hypers', 'log space', self.p0, 'regular space', np.exp(self.p0))
             else:
                 raise ValueError(self.mcmc_sampler)
 
@@ -215,6 +218,11 @@ class GaussianProcessMCMC(BaseModel):
         self.models = []
         for sample in self.hypers:
 
+            if (sample < -50).any():
+                sample[sample < -50] = -50
+            if (sample > 50).any():
+                sample[sample > 50] = 50
+
             # Instantiate a GP for each hyperparameter configuration
             kernel = deepcopy(self.kernel)
             kernel.theta = sample
@@ -223,7 +231,7 @@ class GaussianProcessMCMC(BaseModel):
                 types=self.types,
                 bounds=self.bounds,
                 kernel=kernel,
-                normalize_y=self.normalize_y,
+                normalize_y=False,
                 seed=self.rng.randint(low=0, high=10000),
             )
             try:
@@ -236,14 +244,21 @@ class GaussianProcessMCMC(BaseModel):
             kernel = deepcopy(self.kernel)
             kernel.theta = self.p0
             model = GaussianProcess(
+                configspace=self.configspace,
                 types=self.types,
                 bounds=self.bounds,
                 kernel=kernel,
-                normalize_y=self.normalize_y,
+                normalize_y=False,
                 seed=self.rng.randint(low=0, high=10000),
             )
             model._train(X, y, do_optimize=False)
             self.models.append(model)
+
+        if self.normalize_y:
+            for model in self.models:
+                model.normalize_y = True
+                model.mean_y_ = self.mean_y_
+                model.std_y_ = self.std_y_
 
         self.is_trained = True
         print('#LL evaluations', self._n_ll_evals)
@@ -268,12 +283,10 @@ class GaussianProcessMCMC(BaseModel):
 
         # Bound the hyperparameter space to keep things sane. Note all
         # hyperparameters live on a log scale
-        if np.ndim(theta) == 0:
-            if (theta < -20) or (theta > 20):
-                return -np.inf
-        else:
-            if ((theta < -20) | (theta > 20)).any():
-                return -np.inf
+        if (theta < -50).any():
+            theta[theta < -50] = -50
+        if (theta > 50).any():
+            theta[theta > 50] = 50
 
         try:
             lml = self.gp.log_marginal_likelihood(theta)
