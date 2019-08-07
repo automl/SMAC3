@@ -192,8 +192,8 @@ class PSMAC(object):
         else:
             _, val_ids, _, est_ids = self.get_best_incumbents_ids(incs)  # determine the best incumbents
             if val_ids:
-                return incs[val_ids]
-            return incs[est_ids]
+                return [inc for i, inc in enumerate(incs) if i in val_ids]
+            return [inc for i, inc in enumerate(incs) if i in est_ids]
 
     def get_best_incumbents_ids(self, incs: typing.List[Configuration]):
         """
