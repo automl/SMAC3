@@ -165,12 +165,12 @@ class AbstractRunHistory2EPM(object):
     def transform(self, runhistory: RunHistory):
         """Returns vector representation of runhistory; if imputation is
         disabled, censored (TIMEOUT with time < cutoff) will be skipped
-    
+
         Parameters
         ----------
         runhistory : smac.runhistory.runhistory.RunHistory
             Runhistory containing all evaluated configurations/instances
-    
+
         Returns
         -------
         X: numpy.ndarray
@@ -179,16 +179,16 @@ class AbstractRunHistory2EPM(object):
             cost values
         """
         self.logger.debug("Transform runhistory into X,y format")
-    
+
         # consider only successfully finished runs
         s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
                       if runhistory.data[run].status in self.success_states}
-    
+
         # Store a list of instance IDs
         s_instance_id_list = [k.instance_id for k in s_run_dict.keys()]
         X, Y = self._build_matrix(run_dict=s_run_dict, runhistory=runhistory,
                                   instances=s_instance_id_list, store_statistics=True)
-    
+
         # Also get TIMEOUT runs
         t_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
                       if runhistory.data[run].status == StatusType.TIMEOUT and
@@ -207,12 +207,13 @@ class AbstractRunHistory2EPM(object):
         store_statistics = True if self.min_y is None else False
         tX, tY = self._build_matrix(run_dict=t_run_dict, runhistory=runhistory,
                                     instances=t_instance_id_list, store_statistics=store_statistics)
-    
+
         # if we don't have successful runs,
         # we have to return all timeout runs
         if not s_run_dict:
+            # TODO extend to return 4 variables
             return tX, tY
-    
+
         if self.impute_censored_data:
             # Get all censored runs
             c_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
@@ -226,7 +227,7 @@ class AbstractRunHistory2EPM(object):
             else:
                 # Store a list of instance IDs
                 c_instance_id_list = [k.instance_id for k in c_run_dict.keys()]
-    
+
                 # better empirical results by using PAR1 instead of PAR10
                 # for censored data imputation
                 cen_X, cen_Y = self._build_matrix(run_dict=c_run_dict,
@@ -234,7 +235,7 @@ class AbstractRunHistory2EPM(object):
                                                   instances=c_instance_id_list,
                                                   return_time_as_y=True,
                                                   store_statistics=False,)
-    
+
                 # Also impute TIMEOUTS
                 tX, tY = self._build_matrix(run_dict=t_run_dict,
                                             runhistory=runhistory,
@@ -245,12 +246,12 @@ class AbstractRunHistory2EPM(object):
                 cen_Y = np.concatenate((cen_Y, tY))
                 self.logger.debug("%d TIMOUTS, %d censored, %d regular" %
                                   (tX.shape[0], cen_X.shape[0], X.shape[0]))
-    
+
                 # return imp_Y in PAR depending on the used threshold in
                 # imputor
                 imp_Y = self.imputor.impute(censored_X=cen_X, censored_y=cen_Y,
                                             uncensored_X=X, uncensored_y=Y)
-    
+
                 # Shuffle data to mix censored and imputed data
                 X = np.vstack((X, cen_X))
                 Y = np.concatenate((Y, imp_Y))
