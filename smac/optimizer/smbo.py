@@ -30,7 +30,7 @@ from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
 from smac.utils.constants import MAXINT
-from sklearn.svm import SVC ## Riccardo Code
+from sklearn.svm import SVC
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -199,10 +199,8 @@ class SMBO(object):
                   
             self.logger.debug("Search for next configuration")
             # get all found configurations sorted according to acq
-            
-            #challengers = self.choose_next(X, Y)
-            
-            challengers = self.choose_next(X,cX, Y, feasible) # pass here binary feasibility
+            challengers = self.choose_next(X, cX, Y, feasible)
+
             time_spent = time.time() - start_time
             time_left = self._get_timebound_for_intensification(time_spent)
 
@@ -263,8 +261,11 @@ class SMBO(object):
                 runhistory=self.runhistory, stats=self.stats, num_points=1
             )
         binary_feasible = feasible.astype("int")
-        clf = SVC(gamma='auto', probability=True)
-        clf.fit(cX, binary_feasible)
+        if self.acquisition_func == 'Probability Constrained Lower Confidence Bound':
+            clf = SVC(gamma='auto', probability=True)
+            clf.fit(cX, binary_feasible)
+        else:
+            clf = None
 
         self.model.train(X, Y)
 
@@ -275,7 +276,7 @@ class SMBO(object):
             incumbent_value = self._get_incumbent_value()
 
         self.acquisition_func.update(model=self.model, eta=incumbent_value, num_data=len(self.runhistory.data),
-                                     classifier = clf) # <-- pass svm-C model
+                                     classifier = clf)
 
         challengers = self.acq_optimizer.maximize(
             runhistory=self.runhistory,

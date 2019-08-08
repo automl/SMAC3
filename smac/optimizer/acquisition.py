@@ -554,9 +554,12 @@ class probCLCB(AbstractAcquisitionFunction):
         np.ndarray(N,1)
             Expected Improvement of X
         """
-        
+
         #  probability interval [0 infeasibe; 1 feasible]
-        prob_feasibility = self.classifier.predict_proba(X)[:,1] 
+        if self.classifier==None:
+            prob_feasibility = np.ones((X.shape[0],))
+        else:
+            prob_feasibility = self.classifier.predict_proba(X)[:,1] 
 
         if self.num_data is None:
             raise ValueError('No current number of Datapoints specified. Call update('
@@ -570,5 +573,5 @@ class probCLCB(AbstractAcquisitionFunction):
 
         lcb_value = -(m - np.sqrt(beta)*std)
         prob_feasibility = np.expand_dims(prob_feasibility, axis=1)
-        
+
         return lcb_value*prob_feasibility
