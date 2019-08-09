@@ -199,7 +199,7 @@ class SMBO(object):
                   
             self.logger.debug("Search for next configuration")
             # get all found configurations sorted according to acq
-            challengers = self.choose_next(X, cX, Y, feasible)
+            challengers = self.choose_next(X, Y, feasible, cX)
 
             time_spent = time.time() - start_time
             time_left = self._get_timebound_for_intensification(time_spent)
@@ -230,8 +230,8 @@ class SMBO(object):
 
         return self.incumbent
 
-    def choose_next(self, X: np.ndarray, cX: np.ndarray, Y: np.ndarray, feasible: np.ndarray,
-                    incumbent_value: float=None): # binary feasibility
+    def choose_next(self, X: np.ndarray,  Y: np.ndarray, feasible: np.ndarray=np.ones((1,)),cX: np.ndarray=np.ndarray((1,)), 
+                    incumbent_value: float=None):
         """Choose next candidate solution with Bayesian optimization. The
         suggested configurations depend on the argument ``acq_optimizer`` to
         the ``SMBO`` class.

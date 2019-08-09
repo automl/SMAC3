@@ -559,7 +559,7 @@ class probCLCB(AbstractAcquisitionFunction):
         if self.classifier==None:
             prob_feasibility = np.ones((X.shape[0],))
         else:
-            prob_feasibility = self.classifier.predict_proba(X)[:,1] 
+            prob_feasibility = self.classifier.predict_proba(X)[:,0] 
 
         if self.num_data is None:
             raise ValueError('No current number of Datapoints specified. Call update('
