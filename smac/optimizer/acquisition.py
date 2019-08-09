@@ -73,12 +73,18 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
         X = convert_configurations_to_array(configurations)
         if len(X.shape) == 1:
             X = X[np.newaxis, :]
-
+        #Constrained_optimization through probabilistic classification model
+        if self.classifier==None:
+            prob_feasibility = np.ones((X.shape[0],))
+        else:
+            prob_feasibility = self.classifier.predict_proba(X)[:,0] 
+        prob_feasibility = np.expand_dims(prob_feasibility, axis=1)
+        
         acq = self._compute(X)
         if np.any(np.isnan(acq)):
             idx = np.where(np.isnan(acq))[0]
             acq[idx, :] = -np.finfo(np.float).max
-        return acq
+        return acq * prob_feasibility
 
     @abc.abstractmethod
     def _compute(self, X: np.ndarray):
@@ -556,10 +562,10 @@ class probCLCB(AbstractAcquisitionFunction):
         """
 
         #  probability interval [0 infeasibe; 1 feasible]
-        if self.classifier==None:
-            prob_feasibility = np.ones((X.shape[0],))
-        else:
-            prob_feasibility = self.classifier.predict_proba(X)[:,0] 
+#        if self.classifier==None:
+#            prob_feasibility = np.ones((X.shape[0],))
+#        else:
+#            prob_feasibility = self.classifier.predict_proba(X)[:,0] 
 
         if self.num_data is None:
             raise ValueError('No current number of Datapoints specified. Call update('
@@ -572,6 +578,5 @@ class probCLCB(AbstractAcquisitionFunction):
         beta = 2*np.log((X.shape[1] * self.num_data**2) / self.par)
 
         lcb_value = -(m - np.sqrt(beta)*std)
-        prob_feasibility = np.expand_dims(prob_feasibility, axis=1)
 
-        return lcb_value*prob_feasibility
+        return lcb_value#*self.prob_feasibility

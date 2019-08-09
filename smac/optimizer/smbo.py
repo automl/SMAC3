@@ -261,7 +261,8 @@ class SMBO(object):
                 runhistory=self.runhistory, stats=self.stats, num_points=1
             )
         binary_feasible = feasible.astype("int")
-        if self.acquisition_func == 'Probability Constrained Lower Confidence Bound':
+        # Start constrained optimizatin whether we choose infeasible point!
+        if not(binary_feasible.all()==1):
             clf = SVC(gamma='auto', probability=True)
             clf.fit(cX, binary_feasible)
         else:
