@@ -118,6 +118,12 @@ class GaussianProcessMCMC(BaseModel):
         """
         X = self._impute_inactive(X)
         if self.normalize_y:
+            # A note on normalization for the Gaussian process with MCMC:
+            # Scikit-learn uses a different "normalization" than we use in SMAC3. Scikit-learn normalizes the data to
+            # have zero mean, while we normalize it to have zero mean unit variance. To make sure the scikit-learn GP
+            # behaves the same when we use it directly or indirectly (through the gaussian_process.py file), we
+            # normalize the data here. Then, after the individual GPs are fit, we inject the statistics into them so
+            # they unnormalize the data at prediction time.
             y = self._normalize_y(y)
 
         self.gp = GaussianProcessRegressor(
@@ -255,6 +261,8 @@ class GaussianProcessMCMC(BaseModel):
             self.models.append(model)
 
         if self.normalize_y:
+            # Inject the normalization statistics into the individual models. Setting normalize_y to True makes the
+            # individual GPs unnormalize the data at predict time.
             for model in self.models:
                 model.normalize_y = True
                 model.mean_y_ = self.mean_y_
