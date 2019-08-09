@@ -93,7 +93,7 @@ class RunhistoryTest(unittest.TestCase):
                     seed=45,
                     additional_info={"start_time": 20})
 
-        X, y = rh2epm.transform(self.rh)
+        X, y, _, _ = rh2epm.transform(self.rh)
         self.assertTrue(
             np.allclose(X, np.array([[0.005, 0.995], [0.995, 0.995]]), atol=0.001))
         # ln(20 * 10)
@@ -104,7 +104,7 @@ class RunhistoryTest(unittest.TestCase):
                     seed=12354,
                     additional_info={"start_time": 10})
 
-        X, y = rh2epm.transform(self.rh)
+        X, y, _, _ = rh2epm.transform(self.rh)
         np.testing.assert_array_almost_equal(X, np.array([[0.005, 0.995],
                                                           [0.995, 0.005],
                                                           [0.995, 0.995]]),
@@ -196,7 +196,7 @@ class RunhistoryTest(unittest.TestCase):
                     seed=45,
                     additional_info={"start_time": 20})
 
-        X, y = rh2epm.transform(self.rh)
+        X, y, _, _ = rh2epm.transform(self.rh)
         self.assertTrue(
             np.allclose(X, np.array([[0.005, 0.995], [0.995, 0.995]]), atol=0.001))
         self.assertTrue(np.allclose(y, np.array([[1.], [200.]]), atol=0.001))
@@ -206,7 +206,7 @@ class RunhistoryTest(unittest.TestCase):
                     seed=12354,
                     additional_info={"start_time": 10})
 
-        X, y = rh2epm.transform(self.rh)
+        X, y, _, _ = rh2epm.transform(self.rh)
         np.testing.assert_array_almost_equal(X, np.array([[0.005, 0.995],
                                                           [0.995, 0.005],
                                                           [0.995, 0.995]]),
@@ -236,7 +236,7 @@ class RunhistoryTest(unittest.TestCase):
                     seed=45,
                     additional_info={"start_time": 20})
 
-        X, y = rh2epm.transform(self.rh)
+        X, y, _ , _ = rh2epm.transform(self.rh)
         np.testing.assert_allclose(X, np.array([[0.005, 0.995], [0.995, 0.995]]), atol=0.001)
         # log_10(20 * 10)
         np.testing.assert_allclose(y, np.array([[1.], [200.]]), atol=0.001)
@@ -246,7 +246,7 @@ class RunhistoryTest(unittest.TestCase):
                     seed=12354,
                     additional_info={"start_time": 10})
 
-        X, y = rh2epm.transform(self.rh)
+        X, y, _, _ = rh2epm.transform(self.rh)
         # last entry gets skipped since imputation is disabled
         self.assertTrue(np.allclose(
             X, np.array([[0.005, 0.995], [0.995, 0.995]]), atol=0.001))
@@ -279,7 +279,7 @@ class RunhistoryTest(unittest.TestCase):
                     seed=45,
                     additional_info={"start_time": 20})
 
-        X, y = rh2epm.transform(self.rh)
+        X, y, _, _ = rh2epm.transform(self.rh)
         self.assertTrue(
             np.allclose(X, np.array([[0.005, 0.995], [0.995, 0.995]]), atol=0.001))
         # log_10(20 * 10)
