@@ -83,7 +83,7 @@ class RunhistoryTest(unittest.TestCase):
                     seed=None,
                     additional_info=None)
 
-        X, y = rh2epm.transform(self.rh)
+        X, y, _, _ = rh2epm.transform(self.rh)
         self.assertTrue(np.allclose(X, np.array([[0.005, 0.995]]), atol=0.001))
         self.assertTrue(np.allclose(y, np.array([[0.]])))  # 10^0 = 1
 
@@ -126,7 +126,7 @@ class RunhistoryTest(unittest.TestCase):
                     seed=None,
                     additional_info=None)
 
-        X, y = rh2epm.transform(self.rh)
+        X, y, _, _ = rh2epm.transform(self.rh)
         self.assertTrue(np.allclose(X, np.array([[0.005, 0.995]]), atol=0.001))
         self.assertTrue(np.allclose(y, np.array([[0.]])))  # 10^0 = 1
 
@@ -186,7 +186,7 @@ class RunhistoryTest(unittest.TestCase):
                     seed=None,
                     additional_info=None)
 
-        X, y = rh2epm.transform(self.rh)
+        X, y, _, _ = rh2epm.transform(self.rh)
         self.assertTrue(np.allclose(X, np.array([[0.005, 0.995]]), atol=0.001))
         self.assertTrue(np.allclose(y, np.array([[1.]])))
 
@@ -226,7 +226,7 @@ class RunhistoryTest(unittest.TestCase):
                     seed=None,
                     additional_info=None)
 
-        X, y = rh2epm.transform(self.rh)
+        X, y, _, _ = rh2epm.transform(self.rh)
         self.assertTrue(np.allclose(X, np.array([[0.005, 0.995]]), atol=0.001))
         self.assertTrue(np.allclose(y, np.array([[1.]])))
 
@@ -268,7 +268,7 @@ class RunhistoryTest(unittest.TestCase):
                     seed=None,
                     additional_info=None)
 
-        X, y = rh2epm.transform(self.rh)
+        X, y, _, _ = rh2epm.transform(self.rh)
         self.assertTrue(np.allclose(X, np.array([[0.005, 0.995]]), atol=0.001))
         # should use the cost field and not runtime
         self.assertTrue(np.allclose(y, np.array([[1.]])))

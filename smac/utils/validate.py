@@ -310,7 +310,7 @@ class Validator(object):
                                          impute_censored_data=impute_censored_data,
                                          imputor=imputor,
                                          impute_state=impute_state)
-            X, y = rh2epm.transform(runhistory)
+            X, y,_, _ = rh2epm.transform(runhistory)
             self.logger.debug("Training model with data of shape X: %s, y:%s",
                               str(X.shape), str(y.shape))
             # Train random forest

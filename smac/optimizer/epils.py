@@ -165,7 +165,7 @@ class EPILS_Solver(object):
 
             # model training
             self.logger.info("Model Training")
-            X, Y = self.rh2EPM.transform(self.runhistory)
+            X, Y, _, _ = self.rh2EPM.transform(self.runhistory)
             self.model.train(X, Y)            
             self.acquisition_func.update(model=self.model, eta=self.runhistory.get_cost(self.incumbent))
 
