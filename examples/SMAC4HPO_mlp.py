@@ -51,9 +51,9 @@ def mlp_from_cfg(cfg, seed, instance, budget, **kwargs):
     """
     # For deactivated parameters, the configuration stores None-values.
     # This is not accepted by the MLP, so we replace them with placeholder values.
-    lr = cfg['learning_rate'] if 'learning_rate' in cfg.keys() else 'constant'
-    lr_init = cfg['learning_rate_init'] if 'learning_rate_init' in cfg.keys() else 0.001
-    batch_size = cfg['batch_size'] if 'batch_size' in cfg.keys() else 200
+    lr = cfg['learning_rate'] if cfg['learning_rate'] else 'constant'
+    lr_init = cfg['learning_rate_init'] if cfg['learning_rate_init'] else 0.001
+    batch_size = cfg['batch_size'] if cfg['batch_size'] else 200
 
     with warnings.catch_warnings():
         warnings.filterwarnings('ignore', category=ConvergenceWarning)
@@ -74,9 +74,8 @@ def mlp_from_cfg(cfg, seed, instance, budget, **kwargs):
     return -1 * np.mean(score)  # Because minimize!
 
 
-logger = logging.getLogger("RF-example")
+logger = logging.getLogger("MLP-example")
 logging.basicConfig(level=logging.INFO)
-# logging.basicConfig(level=logging.DEBUG)  # Enable to show debug-output
 logger.info("Running MLP example for SMAC. If you experience "
             "difficulties, try to decrease the memory-limit.")
 
@@ -87,20 +86,20 @@ cs = ConfigurationSpace()
 
 # We can add multiple hyperparameters at once:
 n_layer = UniformIntegerHyperparameter("n_layer", 1, 5, default_value=2)
-n_neurons = UniformIntegerHyperparameter("n_neurons", 1, 1000, log=True, default_value=10)
+n_neurons = UniformIntegerHyperparameter("n_neurons", 8, 1024, log=True, default_value=10)
 activation = CategoricalHyperparameter("activation", ['logistic', 'tanh', 'relu'],
-                                           default_value='relu')
+                                       default_value='relu')
 solver = CategoricalHyperparameter('solver', ['lbfgs', 'sgd', 'adam'], default_value='adam')
 batch_size = UniformIntegerHyperparameter('batch_size', 30, 300, default_value=200)
 learning_rate = CategoricalHyperparameter('learning_rate', ['constant', 'invscaling', 'adaptive'],
-                                              default_value='constant')
-learning_rate_init = UniformFloatHyperparameter('learning_rate_init', 0.0001, 0.5, default_value=0.001)
+                                          default_value='constant')
+learning_rate_init = UniformFloatHyperparameter('learning_rate_init', 0.0001, 1.0, default_value=0.001, log=True)
 cs.add_hyperparameters([n_layer, n_neurons, activation, solver, batch_size, learning_rate, learning_rate_init])
 
 # Adding conditions to restrict the hyperparameter space
 # Since learning rate is used when solver is 'sgd'
-use_lr = CS.conditions.InCondition(child=learning_rate, parent=solver, values=['sgd'])
-# Since learning rate initialization will only be accounted when using 'sgd' or 'adam'
+use_lr = CS.conditions.EqualsCondition(child=learning_rate, parent=solver, value='sgd')
+# Since learning rate initialization will only be accounted for when using 'sgd' or 'adam'
 use_lr_init = CS.conditions.InCondition(child=learning_rate_init, parent=solver, values=['sgd', 'adam'])
 # Since batch size will not be considered when optimizer is 'lbfgs'
 use_batch_size = CS.conditions.InCondition(child=batch_size, parent=solver, values=['sgd', 'adam'])
