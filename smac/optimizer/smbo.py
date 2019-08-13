@@ -16,7 +16,6 @@ from smac.epm.gp_base_prior import LognormalPrior, HorseshoePrior
 from smac.epm.util_funcs import get_types
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.intensification import Intensifier
-from smac.intensification.successive_halving import SuccessiveHalving
 from smac.optimizer import pSMAC
 from smac.optimizer.acquisition import AbstractAcquisitionFunction, EI, LogEI,\
     LCB, PI
