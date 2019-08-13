@@ -155,7 +155,7 @@ class SMBO(object):
 
         # Initialization, depends on input
         if self.stats.ta_runs == 0 and self.incumbent is None:
-            logging.info('Running initial design')
+            self.logger.info('Running initial design')
             # Intensifier initialization
             self.incumbent = self.initial_design.run()
 
