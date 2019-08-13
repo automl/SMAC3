@@ -4,14 +4,16 @@ import typing
 
 import emcee
 import numpy as np
-import skopt.learning.gaussian_process
-import skopt.learning.gaussian_process.kernels
+from lazy_import import lazy_callable
 
 from smac.configspace import ConfigurationSpace
 from smac.epm.base_gp import BaseModel
 from smac.epm.gaussian_process import GaussianProcess
 
 logger = logging.getLogger(__name__)
+Kernel = lazy_callable('skopt.learning.gaussian_process.kernels.Kernel')
+GaussianProcessRegressor = lazy_callable(
+    'skopt.learning.gaussian_process.GaussianProcessRegressor')
 
 
 class GaussianProcessMCMC(BaseModel):
@@ -22,7 +24,7 @@ class GaussianProcessMCMC(BaseModel):
         types: np.ndarray,
         bounds: typing.List[typing.Tuple[float, float]],
         seed: int,
-        kernel: skopt.learning.gaussian_process.kernels.Kernel,
+        kernel: Kernel,
         n_mcmc_walkers: int = 20,
         chain_length: int = 50,
         burnin_steps: int = 50,
@@ -115,9 +117,18 @@ class GaussianProcessMCMC(BaseModel):
             hyperparameter specified in the kernel.
         """
         X = self._impute_inactive(X)
-        self.gp = skopt.learning.gaussian_process.GaussianProcessRegressor(
+        if self.normalize_y:
+            # A note on normalization for the Gaussian process with MCMC:
+            # Scikit-learn uses a different "normalization" than we use in SMAC3. Scikit-learn normalizes the data to
+            # have zero mean, while we normalize it to have zero mean unit variance. To make sure the scikit-learn GP
+            # behaves the same when we use it directly or indirectly (through the gaussian_process.py file), we
+            # normalize the data here. Then, after the individual GPs are fit, we inject the statistics into them so
+            # they unnormalize the data at prediction time.
+            y = self._normalize_y(y)
+
+        self.gp = GaussianProcessRegressor(
             kernel=self.kernel,
-            normalize_y=self.normalize_y,
+            normalize_y=False,
             optimizer=None,
             n_restarts_optimizer=-1,  # Do not use scikit-learn's optimization routine
             alpha=0,  # Governed by the kernel
@@ -196,10 +207,10 @@ class GaussianProcessMCMC(BaseModel):
                     max_depth=10,
                     rng=self.rng,
                 )
-                print('hypers', 'log space', self.p0, 'regular space', np.exp(self.p0))
                 indices = [int(np.rint(ind)) for ind in np.linspace(start=0, stop=len(samples) - 1, num=10)]
                 self.hypers = samples[indices]
                 self.p0 = self.hypers.mean(axis=0)
+                print('hypers', 'log space', self.p0, 'regular space', np.exp(self.p0))
             else:
                 raise ValueError(self.mcmc_sampler)
 
@@ -213,6 +224,11 @@ class GaussianProcessMCMC(BaseModel):
         self.models = []
         for sample in self.hypers:
 
+            if (sample < -50).any():
+                sample[sample < -50] = -50
+            if (sample > 50).any():
+                sample[sample > 50] = 50
+
             # Instantiate a GP for each hyperparameter configuration
             kernel = deepcopy(self.kernel)
             kernel.theta = sample
@@ -221,7 +237,7 @@ class GaussianProcessMCMC(BaseModel):
                 types=self.types,
                 bounds=self.bounds,
                 kernel=kernel,
-                normalize_y=self.normalize_y,
+                normalize_y=False,
                 seed=self.rng.randint(low=0, high=10000),
             )
             try:
@@ -234,14 +250,23 @@ class GaussianProcessMCMC(BaseModel):
             kernel = deepcopy(self.kernel)
             kernel.theta = self.p0
             model = GaussianProcess(
+                configspace=self.configspace,
                 types=self.types,
                 bounds=self.bounds,
                 kernel=kernel,
-                normalize_y=self.normalize_y,
+                normalize_y=False,
                 seed=self.rng.randint(low=0, high=10000),
             )
             model._train(X, y, do_optimize=False)
             self.models.append(model)
+
+        if self.normalize_y:
+            # Inject the normalization statistics into the individual models. Setting normalize_y to True makes the
+            # individual GPs unnormalize the data at predict time.
+            for model in self.models:
+                model.normalize_y = True
+                model.mean_y_ = self.mean_y_
+                model.std_y_ = self.std_y_
 
         self.is_trained = True
         print('#LL evaluations', self._n_ll_evals)
@@ -266,12 +291,10 @@ class GaussianProcessMCMC(BaseModel):
 
         # Bound the hyperparameter space to keep things sane. Note all
         # hyperparameters live on a log scale
-        if np.ndim(theta) == 0:
-            if (theta < -20) or (theta > 20):
-                return -np.inf
-        else:
-            if ((theta < -20) | (theta > 20)).any():
-                return -np.inf
+        if (theta < -50).any():
+            theta[theta < -50] = -50
+        if (theta > 50).any():
+            theta[theta > 50] = 50
 
         try:
             lml = self.gp.log_marginal_likelihood(theta)

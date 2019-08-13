@@ -21,6 +21,8 @@ from smac.utils import test_helpers
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
 
+from test import requires_extra
+
 
 class ConfigurationMock(object):
     def __init__(self, value=None):
@@ -312,7 +314,7 @@ class TestSMBO(unittest.TestCase):
             smbo.start()
             self.assertEqual(smbo.incumbent, smbo.scenario.cs.get_default_configuration())
 
-    def test_comp_builder(self):
+    def test_rf_comp_builder(self):
         seed = 42
         smbo = SMAC4AC(self.scenario, rng=seed).solver
         conf = {"model": "RF", "acq_func": "EI"}
@@ -321,7 +323,11 @@ class TestSMBO(unittest.TestCase):
         self.assertTrue(isinstance(acqf, EI))
         self.assertTrue(isinstance(model, RandomForestWithInstances))
 
-        conf = {"model": "GP", "acq_func": "EI"}
+    @requires_extra('gp')
+    def test_gp_comp_builder(self):
+        seed = 42
+        smbo = SMAC4AC(self.scenario, rng=seed).solver
+        conf = {"model":"GP", "acq_func":"EI"}
         acqf, model = smbo._component_builder(conf)
 
         self.assertTrue(isinstance(acqf, EI))

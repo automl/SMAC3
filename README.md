@@ -54,7 +54,7 @@ used in SMAC3 requires SWIG (>= 3.0).
 
 ## Installation via pip
 
-SMAC3 is available on pipy.
+SMAC3 is available on PyPI.
 
 ```pip install smac```
 
@@ -63,7 +63,7 @@ SMAC3 is available on pipy.
 ```
 git clone https://github.com/automl/SMAC3.git && cd SMAC3
 cat requirements.txt | xargs -n 1 -L 1 pip install
-python setup.py install
+pip install .
 ```
 
 ## Installation in Anaconda
@@ -72,6 +72,29 @@ If you use Anaconda as your Python environment, you have to install three
 packages **before** you can install SMAC:
 
 ```conda install gxx_linux-64 gcc_linux-64 swig```
+
+## Optional dependencies
+
+SMAC3 comes with a set of optional dependencies that can be installed using
+[setuptools extras](https://setuptools.readthedocs.io/en/latest/setuptools.html#declaring-extras-optional-features-with-their-own-dependencies):
+
+- `lhd`: Latin hypercube design
+- `gp`: Gaussian process models
+
+These can be installed from PyPI or manually:
+
+```
+# from PyPI
+pip install smac[gp]
+
+# manually
+pip install .[gp,lhd]
+```
+
+For convenience there is also an `all` meta-dependency that installs all optional dependencies:
+```
+pip install smac[all]
+```
 
 # License
 

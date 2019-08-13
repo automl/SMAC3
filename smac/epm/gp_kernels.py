@@ -4,11 +4,12 @@ from typing import Optional
 
 import numpy as np
 import sklearn.gaussian_process.kernels
-import skopt.learning.gaussian_process.kernels
 import scipy.optimize
 import scipy.spatial.distance
 import scipy.special
 
+from lazy_import import lazy_module
+kernels = lazy_module('skopt.learning.gaussian_process.kernels')
 
 # This file contains almost no type annotations to simplify comparing it to the original scikit-learn version!
 
@@ -63,22 +64,22 @@ class MagicMixin:
         return rval
 
     def __add__(self, b):
-        if not isinstance(b, skopt.learning.gaussian_process.kernels.Kernel):
+        if not isinstance(b, kernels.Kernel):
             return Sum(self, ConstantKernel(b))
         return Sum(self, b)
 
     def __radd__(self, b):
-        if not isinstance(b, skopt.learning.gaussian_process.kernels.Kernel):
+        if not isinstance(b, kernels.Kernel):
             return Sum(ConstantKernel(b), self)
         return Sum(b, self)
 
     def __mul__(self, b):
-        if not isinstance(b, skopt.learning.gaussian_process.kernels.Kernel):
+        if not isinstance(b, kernels.Kernel):
             return Product(self, ConstantKernel(b))
         return Product(self, b)
 
     def __rmul__(self, b):
-        if not isinstance(b, skopt.learning.gaussian_process.kernels.Kernel):
+        if not isinstance(b, kernels.Kernel):
             return Product(ConstantKernel(b), self)
         return Product(b, self)
 
@@ -179,7 +180,7 @@ class MagicMixin:
             self.len_active = None
 
 
-class Sum(MagicMixin, skopt.learning.gaussian_process.kernels.Sum):
+class Sum(MagicMixin, kernels.Sum):
 
     def __init__(self, k1, k2, operate_on=None, has_conditions=False):
         super(Sum, self).__init__(k1=k1, k2=k2)
@@ -223,7 +224,7 @@ class Sum(MagicMixin, skopt.learning.gaussian_process.kernels.Sum):
             return self.k1(X, Y, active=active) + self.k2(X, Y, active=active)
 
 
-class Product(MagicMixin, skopt.learning.gaussian_process.kernels.Product):
+class Product(MagicMixin, kernels.Product):
 
     def __init__(self, k1, k2, operate_on=None, has_conditions=False):
         super(Product, self).__init__(k1=k1, k2=k2)
@@ -268,7 +269,7 @@ class Product(MagicMixin, skopt.learning.gaussian_process.kernels.Product):
             return self.k1(X, Y, active=active) * self.k2(X, Y, active=active)
 
 
-class ConstantKernel(MagicMixin, skopt.learning.gaussian_process.kernels.ConstantKernel):
+class ConstantKernel(MagicMixin, kernels.ConstantKernel):
 
     def __init__(
             self,
@@ -331,7 +332,7 @@ class ConstantKernel(MagicMixin, skopt.learning.gaussian_process.kernels.Constan
             return K
 
 
-class Matern(MagicMixin, skopt.learning.gaussian_process.kernels.Matern):
+class Matern(MagicMixin, kernels.Matern):
 
     def __init__(
         self,
@@ -439,7 +440,7 @@ class Matern(MagicMixin, skopt.learning.gaussian_process.kernels.Matern):
             return K
 
 
-class RBF(MagicMixin, skopt.learning.gaussian_process.kernels.RBF):
+class RBF(MagicMixin, kernels.RBF):
 
     def __init__(
         self,
@@ -514,7 +515,7 @@ class RBF(MagicMixin, skopt.learning.gaussian_process.kernels.RBF):
             return K
 
 
-class WhiteKernel(MagicMixin, skopt.learning.gaussian_process.kernels.WhiteKernel):
+class WhiteKernel(MagicMixin, kernels.WhiteKernel):
 
     def __init__(
         self,
@@ -576,7 +577,7 @@ class WhiteKernel(MagicMixin, skopt.learning.gaussian_process.kernels.WhiteKerne
             return np.zeros((X.shape[0], Y.shape[0]))
 
 
-class HammingKernel(MagicMixin, skopt.learning.gaussian_process.kernels.HammingKernel):
+class HammingKernel(MagicMixin, kernels.HammingKernel):
 
     def __init__(
         self,

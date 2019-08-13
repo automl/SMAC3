@@ -3,7 +3,6 @@ import numpy as np
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
 from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
-from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel, HammingKernel
 from smac.epm.util_funcs import get_types, get_rng
 from smac.initial_design.sobol_design import SobolDesign
 from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
@@ -49,6 +48,8 @@ class SMAC4BO(SMAC4AC):
         kwargs['initial_design_kwargs'] = init_kwargs
 
         if kwargs.get('model') is None:
+            from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel, HammingKernel
+
             model_kwargs = kwargs.get('model_kwargs', dict())
 
             _, rng = get_rng(rng=kwargs.get("rng", None), run_id=kwargs.get("run_id", None), logger=None)

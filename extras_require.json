@@ -1,0 +1,9 @@
+{
+  "gp": [
+    "emcee>=2.1.0",
+    "scikit-optimize"
+  ],
+  "lhd": [
+    "pyDOE"
+  ]
+}

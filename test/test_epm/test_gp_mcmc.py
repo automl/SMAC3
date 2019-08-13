@@ -1,4 +1,3 @@
-import unittest
 import unittest.mock
 
 import numpy as np
@@ -8,10 +7,13 @@ import sklearn.model_selection
 from smac.configspace import ConfigurationSpace, UniformFloatHyperparameter
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
 from smac.epm.gp_base_prior import LognormalPrior, HorseshoePrior
-from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel
+
+from test import requires_extra
 
 
 def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True, average_samples=False, n_iter=50):
+    from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel
+
     cov_amp = ConstantKernel(
         2.0,
         constant_value_bounds=(1e-10, 2),
@@ -57,6 +59,7 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True, average_samples=False
     return model
 
 
+@requires_extra('gp')
 class TestGPMCMC(unittest.TestCase):
     def test_predict_wrong_X_dimensions(self):
         rs = np.random.RandomState(1)
@@ -172,7 +175,7 @@ class TestGPMCMC(unittest.TestCase):
         self.assertAlmostEqual(y_hat[0][0], 54.613410745846785, delta=0.1)
         # Massive variance due to internally used law of total variances, also a massive difference locally and on
         # travis-ci
-        self.assertLessEqual(abs(var_hat[0][0] - 5555), 100, msg=str(var_hat))
+        self.assertLessEqual(abs(var_hat[0][0]) - 860, 200, msg=str(var_hat))
 
     def test_gp_on_sklearn_data(self):
         X, y = sklearn.datasets.load_boston(return_X_y=True)
@@ -182,7 +185,7 @@ class TestGPMCMC(unittest.TestCase):
         model = get_gp(X.shape[1], rs, noise=1e-10, normalize_y=True)
         cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
 
-        maes = [6.529696318466649324, 7.3709784671630151423]
+        maes = [6.829207681798763524, 7.5125099471964293836]
 
         for i, (train_split, test_split) in enumerate(cv.split(X, y)):
             X_train = X[train_split]
@@ -201,9 +204,13 @@ class TestGPMCMC(unittest.TestCase):
         rng = np.random.RandomState(1)
         gp = get_gp(n_dimensions=1, rs=rng, noise=1e-10, normalize_y=False)
         gp._train(X, y, do_optimize=False)
+        self.assertFalse(gp.models[0].normalize_y)
+        self.assertFalse(hasattr(gp.models[0], 'mean_y_'))
         mu_hat, var_hat = gp.predict(X_test)
         gp_norm = get_gp(n_dimensions=1, rs=rng, noise=1e-10, normalize_y=True)
         gp_norm._train(X, y, do_optimize=False)
+        self.assertTrue(gp_norm.models[0].normalize_y)
+        self.assertTrue(hasattr(gp_norm.models[0], 'mean_y_'))
         mu_hat_prime, var_hat_prime = gp_norm.predict(X_test)
         np.testing.assert_array_almost_equal(mu_hat, mu_hat_prime, decimal=4)
         np.testing.assert_array_almost_equal(var_hat, var_hat_prime, decimal=4)
