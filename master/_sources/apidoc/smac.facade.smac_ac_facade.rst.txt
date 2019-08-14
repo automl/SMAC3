@@ -1,0 +1,7 @@
+smac.facade.smac\_ac\_facade module
+===================================
+
+.. automodule:: smac.facade.smac_ac_facade
+   :members:
+   :undoc-members:
+   :show-inheritance:

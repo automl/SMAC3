@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.optimizer.ei_optimization module &mdash; SMAC 0.10.0 documentation</title>
+  <title>smac.optimizer.ei_optimization module &mdash; SMAC 0.11.0 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.10.0
+                0.11.0
               </div>
             
           
@@ -91,6 +91,7 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage_recomendation.html">Usage Recommendation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../manual.html">Manual</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../basic_usage.html">Basic Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../options.html">Options and file formats</a></li>
@@ -106,26 +107,42 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.epm.html">smac.epm package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.base_epm.html">smac.epm.base_epm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_gp.html">smac.epm.base_gp module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.base_imputor.html">smac.epm.base_imputor module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_rf.html">smac.epm.base_rf module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process.html">smac.epm.gaussian_process module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.facade.html">smac.facade package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.epils_facade.html">smac.facade.epils_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.experimental.html">smac.facade.experimental package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.epils_facade.html">smac.facade.experimental.epils_facade module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.hydra_facade.html">smac.facade.experimental.hydra_facade module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.psmac_facade.html">smac.facade.experimental.psmac_facade module</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_facade.html">smac.facade.smac_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.initial_design.html">smac.initial_design package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="smac.initial_design.default_configuration_design.html">smac.initial_design.default_configuration_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.factorial_design.html">smac.initial_design.factorial_design module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.initial_design.initial_design.html">smac.initial_design.initial_design module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.multi_config_initial_design.html">smac.initial_design.multi_config_initial_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.latin_hypercube_design.html">smac.initial_design.latin_hypercube_design module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.initial_design.random_configuration_design.html">smac.initial_design.random_configuration_design module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.single_config_initial_design.html">smac.initial_design.single_config_initial_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.sobol_design.html">smac.initial_design.sobol_design module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.intensification.html">smac.intensification package</a><ul>
@@ -159,6 +176,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
 </ul>
 </li>
@@ -172,11 +190,11 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.constants.html">smac.utils.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.dependencies.html">smac.utils.dependencies module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.logging.html">smac.utils.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.utils.util_funcs.html">smac.utils.util_funcs module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.validate.html">smac.utils.validate module</a></li>
 </ul>
 </li>
@@ -258,7 +276,7 @@
 <span id="smac-optimizer-ei-optimization-module"></span><h1>smac.optimizer.ei_optimization module<a class="headerlink" href="#module-smac.optimizer.ei_optimization" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.ei_optimization.</code><code class="sig-name descname">AcquisitionFunctionMaximizer</code><span class="sig-paren">(</span><em class="sig-param">acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em class="sig-param">rng: Union[bool</em>, <em class="sig-param">mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#AcquisitionFunctionMaximizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.ei_optimization.</code><code class="sig-name descname">AcquisitionFunctionMaximizer</code><span class="sig-paren">(</span><em class="sig-param">acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em class="sig-param">rng: Union[bool</em>, <em class="sig-param">numpy.random.mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#AcquisitionFunctionMaximizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Abstract class for acquisition maximization.</p>
 <p>In order to use this class it has to be subclassed and the method
@@ -317,7 +335,7 @@ in each iteration which are never looked at.</p>
 
 <dl class="class">
 <dt id="smac.optimizer.ei_optimization.DiffOpt">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.ei_optimization.</code><code class="sig-name descname">DiffOpt</code><span class="sig-paren">(</span><em class="sig-param">acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em class="sig-param">rng: Union[bool</em>, <em class="sig-param">mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#DiffOpt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.DiffOpt" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.ei_optimization.</code><code class="sig-name descname">DiffOpt</code><span class="sig-paren">(</span><em class="sig-param">acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em class="sig-param">rng: Union[bool</em>, <em class="sig-param">numpy.random.mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#DiffOpt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.DiffOpt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</span></code></a></p>
 <p>Get candidate solutions via DifferentialEvolutionSolvers.</p>
 <dl class="field-list simple">
@@ -329,33 +347,11 @@ in each iteration which are never looked at.</p>
 </ul>
 </dd>
 </dl>
-<dl class="method">
-<dt id="smac.optimizer.ei_optimization.DiffOpt.maximize">
-<code class="sig-name descname">maximize</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">num_points: int</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; Iterable[ConfigSpace.configuration_space.Configuration]<a class="headerlink" href="#smac.optimizer.ei_optimization.DiffOpt.maximize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Maximize acquisition function using <code class="docutils literal notranslate"><span class="pre">_maximize</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</p></li>
-<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</p></li>
-<li><p><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</p></li>
-<li><p><strong>**kwargs</strong> – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>An iterable consisting of <code class="xref py py-class docutils literal notranslate"><span class="pre">smac.configspace.Configuration</span></code>.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>iterable</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.ei_optimization.</code><code class="sig-name descname">InterleavedLocalAndRandomSearch</code><span class="sig-paren">(</span><em class="sig-param">acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em class="sig-param">rng: Union[bool</em>, <em class="sig-param">mtrand.RandomState] = None</em>, <em class="sig-param">max_steps: Optional[int] = None</em>, <em class="sig-param">n_steps_plateau_walk: int = 10</em>, <em class="sig-param">n_sls_iterations: int = 10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#InterleavedLocalAndRandomSearch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.ei_optimization.</code><code class="sig-name descname">InterleavedLocalAndRandomSearch</code><span class="sig-paren">(</span><em class="sig-param">acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em class="sig-param">rng: Union[bool</em>, <em class="sig-param">numpy.random.mtrand.RandomState] = None</em>, <em class="sig-param">max_steps: Optional[int] = None</em>, <em class="sig-param">n_steps_plateau_walk: int = 10</em>, <em class="sig-param">n_sls_iterations: int = 10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#InterleavedLocalAndRandomSearch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</span></code></a></p>
 <p>Implements SMAC’s default acquisition function optimization.</p>
 <p>This optimizer performs local search from the previous best points
@@ -405,7 +401,7 @@ is called at the end of this function</p></li>
 
 <dl class="class">
 <dt id="smac.optimizer.ei_optimization.LocalSearch">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.ei_optimization.</code><code class="sig-name descname">LocalSearch</code><span class="sig-paren">(</span><em class="sig-param">acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em class="sig-param">rng: Union[bool</em>, <em class="sig-param">mtrand.RandomState] = None</em>, <em class="sig-param">max_steps: Optional[int] = None</em>, <em class="sig-param">n_steps_plateau_walk: int = 10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#LocalSearch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.LocalSearch" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.ei_optimization.</code><code class="sig-name descname">LocalSearch</code><span class="sig-paren">(</span><em class="sig-param">acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em class="sig-param">rng: Union[bool</em>, <em class="sig-param">numpy.random.mtrand.RandomState] = None</em>, <em class="sig-param">max_steps: Optional[int] = None</em>, <em class="sig-param">n_steps_plateau_walk: int = 10</em>, <em class="sig-param">vectorization_min_obtain: int = 2</em>, <em class="sig-param">vectorization_max_obtain: int = 64</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#LocalSearch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.LocalSearch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</span></code></a></p>
 <p>Implementation of SMAC’s local search.</p>
 <dl class="field-list simple">
@@ -416,36 +412,18 @@ is called at the end of this function</p></li>
 <li><p><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </p></li>
 <li><p><strong>max_steps</strong> (<em>int</em>) – Maximum number of iterations that the local search will perform</p></li>
 <li><p><strong>n_steps_plateau_walk</strong> (<em>int</em>) – number of steps during a plateau walk before local search terminates</p></li>
+<li><p><strong>vectorization_min_obtain</strong> (<em>int</em>) – Minimal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
+reduce the overhead of SMAC</p></li>
+<li><p><strong>vectorization_max_obtain</strong> (<em>int</em>) – Maximal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
+reduce the overhead of SMAC</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
-<dt id="smac.optimizer.ei_optimization.LocalSearch.maximize">
-<code class="sig-name descname">maximize</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">num_points: int</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; Iterable[ConfigSpace.configuration_space.Configuration]<a class="headerlink" href="#smac.optimizer.ei_optimization.LocalSearch.maximize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Maximize acquisition function using <code class="docutils literal notranslate"><span class="pre">_maximize</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</p></li>
-<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</p></li>
-<li><p><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</p></li>
-<li><p><strong>**kwargs</strong> – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>An iterable consisting of <code class="xref py py-class docutils literal notranslate"><span class="pre">smac.configspace.Configuration</span></code>.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>iterable</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="smac.optimizer.ei_optimization.RandomSearch">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.ei_optimization.</code><code class="sig-name descname">RandomSearch</code><span class="sig-paren">(</span><em class="sig-param">acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em class="sig-param">rng: Union[bool</em>, <em class="sig-param">mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#RandomSearch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.RandomSearch" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.ei_optimization.</code><code class="sig-name descname">RandomSearch</code><span class="sig-paren">(</span><em class="sig-param">acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em class="sig-param">rng: Union[bool</em>, <em class="sig-param">numpy.random.mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#RandomSearch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.RandomSearch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</span></code></a></p>
 <p>Get candidate solutions via random sampling of configurations.</p>
 <dl class="field-list simple">
@@ -457,28 +435,6 @@ is called at the end of this function</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
-<dt id="smac.optimizer.ei_optimization.RandomSearch.maximize">
-<code class="sig-name descname">maximize</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">num_points: int</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; Iterable[ConfigSpace.configuration_space.Configuration]<a class="headerlink" href="#smac.optimizer.ei_optimization.RandomSearch.maximize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Maximize acquisition function using <code class="docutils literal notranslate"><span class="pre">_maximize</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</p></li>
-<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</p></li>
-<li><p><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</p></li>
-<li><p><strong>**kwargs</strong> – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>An iterable consisting of <code class="xref py py-class docutils literal notranslate"><span class="pre">smac.configspace.Configuration</span></code>.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>iterable</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="function">

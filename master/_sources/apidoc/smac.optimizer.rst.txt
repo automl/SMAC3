@@ -1,11 +1,10 @@
-smac\.optimizer package
-=======================
+smac.optimizer package
+======================
 
 .. automodule:: smac.optimizer
-    :members:
-    :undoc-members:
-    :show-inheritance:
-    :inherited-members:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 
 .. toctree::
@@ -17,4 +16,3 @@ smac\.optimizer package
    smac.optimizer.pSMAC
    smac.optimizer.random_configuration_chooser
    smac.optimizer.smbo
-

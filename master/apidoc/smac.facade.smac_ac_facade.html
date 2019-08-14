@@ -1,0 +1,544 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>smac.facade.smac_ac_facade module &mdash; SMAC 0.11.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="smac.facade.smac_bo_facade module" href="smac.facade.smac_bo_facade.html" />
+    <link rel="prev" title="smac.facade.roar_facade module" href="smac.facade.roar_facade.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> SMAC
+          
+
+          
+            
+            <img src="../_static/SMAC3.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage_recomendation.html">Usage Recommendation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual.html">Manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basic_usage.html">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../options.html">Options and file formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tae.html">Target Algorithm Evaluator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../psmac.html">Parallel SMAC (pSMAC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../validation.html">Validation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="smac.configspace.html">smac.configspace package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.configspace.util.html">smac.configspace.util module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.epm.html">smac.epm package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_epm.html">smac.epm.base_epm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_gp.html">smac.epm.base_gp module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_imputor.html">smac.epm.base_imputor module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_rf.html">smac.epm.base_rf module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process.html">smac.epm.gaussian_process module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="smac.facade.html">smac.facade package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.experimental.html">smac.facade.experimental package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.epils_facade.html">smac.facade.experimental.epils_facade module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.hydra_facade.html">smac.facade.experimental.hydra_facade module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.psmac_facade.html">smac.facade.experimental.psmac_facade module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">smac.facade.smac_ac_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.initial_design.html">smac.initial_design package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.default_configuration_design.html">smac.initial_design.default_configuration_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.factorial_design.html">smac.initial_design.factorial_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.initial_design.html">smac.initial_design.initial_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.latin_hypercube_design.html">smac.initial_design.latin_hypercube_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.random_configuration_design.html">smac.initial_design.random_configuration_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.sobol_design.html">smac.initial_design.sobol_design module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.optimizer.html">smac.optimizer package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.runhistory.html">smac.runhistory package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.runhistory.runhistory.html">smac.runhistory.runhistory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.runhistory.runhistory2epm.html">smac.runhistory.runhistory2epm module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.scenario.html">smac.scenario package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.scenario.scenario.html">smac.scenario.scenario module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.stats.html">smac.stats package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.stats.stats.html">smac.stats.stats module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.tae.html">smac.tae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.utils.html">smac.utils package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.io.html">smac.utils.io package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.cmd_reader.html">smac.utils.io.cmd_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.input_reader.html">smac.utils.io.input_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.output_directory.html">smac.utils.io.output_directory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.output_writer.html">smac.utils.io.output_writer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.traj_logging.html">smac.utils.io.traj_logging module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.constants.html">smac.utils.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.dependencies.html">smac.utils.dependencies module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.logging.html">smac.utils.logging module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.validate.html">smac.utils.validate module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.smac_cli.html">smac.smac_cli module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SMAC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../api.html">API Documentation</a> &raquo;</li>
+        
+          <li><a href="smac.facade.html">smac.facade package</a> &raquo;</li>
+        
+      <li>smac.facade.smac_ac_facade module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/apidoc/smac.facade.smac_ac_facade.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-smac.facade.smac_ac_facade">
+<span id="smac-facade-smac-ac-facade-module"></span><h1>smac.facade.smac_ac_facade module<a class="headerlink" href="#module-smac.facade.smac_ac_facade" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="smac.facade.smac_ac_facade.SMAC4AC">
+<em class="property">class </em><code class="sig-prename descclassname">smac.facade.smac_ac_facade.</code><code class="sig-name descname">SMAC4AC</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario, tae_runner: Union[Type[smac.tae.execute_ta_run.ExecuteTARun], Callable, None] = None, tae_runner_kwargs: Optional[dict] = None, runhistory: Union[Type[smac.runhistory.runhistory.RunHistory], smac.runhistory.runhistory.RunHistory, None] = None, runhistory_kwargs: Optional[dict] = None, intensifier: Optional[Type[smac.intensification.intensification.Intensifier]] = None, intensifier_kwargs: Optional[dict] = None, acquisition_function: Optional[Type[smac.optimizer.acquisition.AbstractAcquisitionFunction]] = None, acquisition_function_kwargs: Optional[dict] = None, integrate_acquisition_function: bool = False, acquisition_function_optimizer: Optional[Type[smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer]] = None, acquisition_function_optimizer_kwargs: Optional[dict] = None, model: Optional[Type[smac.epm.base_epm.AbstractEPM]] = None, model_kwargs: Optional[dict] = None, runhistory2epm: Optional[Type[smac.runhistory.runhistory2epm.AbstractRunHistory2EPM]] = None, runhistory2epm_kwargs: Optional[dict] = None, initial_design: Optional[Type[smac.initial_design.initial_design.InitialDesign]] = None, initial_design_kwargs: Optional[dict] = None, initial_configurations: Optional[List[ConfigSpace.configuration_space.Configuration]] = None, stats: Optional[smac.stats.stats.Stats] = None, restore_incumbent: Optional[ConfigSpace.configuration_space.Configuration] = None, rng: Union[int, numpy.random.mtrand.RandomState, None] = None, smbo_class: Optional[smac.optimizer.smbo.SMBO] = None, run_id: Optional[int] = None, random_configuration_chooser: Optional[Type[smac.optimizer.random_configuration_chooser.RandomConfigurationChooser]] = None, random_configuration_chooser_kwargs: Optional[dict] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_ac_facade.html#SMAC4AC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_ac_facade.SMAC4AC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Facade to use SMAC default mode for Algorithm configuration</p>
+<dl class="attribute">
+<dt id="smac.facade.smac_ac_facade.SMAC4AC.logger">
+<code class="sig-name descname">logger</code><a class="headerlink" href="#smac.facade.smac_ac_facade.SMAC4AC.logger" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.facade.smac_ac_facade.SMAC4AC.stats">
+<code class="sig-name descname">stats</code><a class="headerlink" href="#smac.facade.smac_ac_facade.SMAC4AC.stats" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">Stats</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.facade.smac_ac_facade.SMAC4AC.solver">
+<code class="sig-name descname">solver</code><a class="headerlink" href="#smac.facade.smac_ac_facade.SMAC4AC.solver" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO" title="smac.optimizer.smbo.SMBO">SMBO</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.facade.smac_ac_facade.SMAC4AC.runhistory">
+<code class="sig-name descname">runhistory</code><a class="headerlink" href="#smac.facade.smac_ac_facade.SMAC4AC.runhistory" title="Permalink to this definition">¶</a></dt>
+<dd><p>List with information about previous runs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">RunHistory</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.facade.smac_ac_facade.SMAC4AC.trajectory">
+<code class="sig-name descname">trajectory</code><a class="headerlink" href="#smac.facade.smac_ac_facade.SMAC4AC.trajectory" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of all incumbents</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>Constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – Scenario object</p></li>
+<li><p><strong>tae_runner</strong> (<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><em>ExecuteTARun</em></a><em> or </em><em>callable</em>) – Callable or implementation of
+<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExecuteTARun</span></code></a>. In case a
+callable is passed it will be wrapped by
+<a class="reference internal" href="smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict" title="smac.tae.execute_func.ExecuteTAFuncDict"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExecuteTAFuncDict</span></code></a>.
+If not set, it will be initialized with the
+<a class="reference internal" href="smac.tae.execute_ta_run_old.html#smac.tae.execute_ta_run_old.ExecuteTARunOld" title="smac.tae.execute_ta_run_old.ExecuteTARunOld"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExecuteTARunOld</span></code></a>.</p></li>
+<li><p><strong>tae_runner_kwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – arguments passed to constructor of ‘~tae_runner’</p></li>
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory to store all algorithm runs</p></li>
+<li><p><strong>runhistory_kwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – arguments passed to constructor of runhistory.
+We strongly advise against changing the aggregation function,
+since it will break some code assumptions</p></li>
+<li><p><strong>intensifier</strong> (<a class="reference internal" href="smac.intensification.intensification.html#smac.intensification.intensification.Intensifier" title="smac.intensification.intensification.Intensifier"><em>Intensifier</em></a>) – intensification object to issue a racing to decide the current
+incumbent</p></li>
+<li><p><strong>intensifier_kwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – arguments passed to the constructor of ‘~intensifier’</p></li>
+<li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – Class or object that implements the <a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionFunction</span></code></a>.
+Will use <a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.EI" title="smac.optimizer.acquisition.EI"><code class="xref py py-class docutils literal notranslate"><span class="pre">EI</span></code></a> or <a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.LogEI" title="smac.optimizer.acquisition.LogEI"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogEI</span></code></a> if not set.
+<cite>~acquisition_function_kwargs</cite> is passed to the class constructor.</p></li>
+<li><p><strong>acquisition_function_kwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – dictionary to pass specific arguments to ~acquisition_function</p></li>
+<li><p><strong>integrate_acquisition_function</strong> (<em>bool</em><em>, </em><em>default=False</em>) – Whether to integrate the acquisition function. Works only with models which can sample their
+hyperparameters (i.e. GaussianProcessMCMC).</p></li>
+<li><p><strong>acquisition_function_optimizer</strong> (<a class="reference internal" href="smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><em>AcquisitionFunctionMaximizer</em></a>) – Object that implements the <a class="reference internal" href="smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">AcquisitionFunctionMaximizer</span></code></a>.
+Will use <a class="reference internal" href="smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch" title="smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch</span></code></a> if not set.</p></li>
+<li><p><strong>acquisition_function_optimizer_kwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – Arguments passed to constructor of ‘~acquisition_function_optimizer’</p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><em>AbstractEPM</em></a>) – Model that implements train() and predict(). Will use a
+<a class="reference internal" href="smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances" title="smac.epm.rf_with_instances.RandomForestWithInstances"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomForestWithInstances</span></code></a> if not set.</p></li>
+<li><p><strong>model_kwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – Arguments passed to constructor of ‘~model’</p></li>
+<li><p><strong>runhistory2epm</strong> (<em>RunHistory2EMP</em>) – Object that implements the AbstractRunHistory2EPM. If None,
+will use <a class="reference internal" href="smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost" title="smac.runhistory.runhistory2epm.RunHistory2EPM4Cost"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunHistory2EPM4Cost</span></code></a>
+if objective is cost or
+<a class="reference internal" href="smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost" title="smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunHistory2EPM4LogCost</span></code></a>
+if objective is runtime.</p></li>
+<li><p><strong>runhistory2epm_kwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – Arguments passed to the constructor of ‘~runhistory2epm’</p></li>
+<li><p><strong>initial_design</strong> (<a class="reference internal" href="smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign" title="smac.initial_design.initial_design.InitialDesign"><em>InitialDesign</em></a>) – initial sampling design</p></li>
+<li><p><strong>initial_design_kwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – arguments passed to constructor of <a href="#id1"><span class="problematic" id="id2">`</span></a>~initial_design’</p></li>
+<li><p><strong>initial_configurations</strong> (<em>List</em><em>[</em><em>Configuration</em><em>]</em>) – list of initial configurations for initial design –
+cannot be used together with initial_design</p></li>
+<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – optional stats object</p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</p></li>
+<li><p><strong>restore_incumbent</strong> (<em>Configuration</em>) – incumbent used if restoring to previous state</p></li>
+<li><p><strong>smbo_class</strong> (<a class="reference internal" href="smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO" title="smac.optimizer.smbo.SMBO"><em>SMBO</em></a>) – Class implementing the SMBO interface which will be used to
+instantiate the optimizer class.</p></li>
+<li><p><strong>run_id</strong> (<em>int</em><em> (</em><em>optional</em><em>)</em>) – Run ID will be used as subfolder for output_dir. If no <code class="docutils literal notranslate"><span class="pre">run_id</span></code> is given, a random <code class="docutils literal notranslate"><span class="pre">run_id</span></code> will be
+chosen.</p></li>
+<li><p><strong>random_configuration_chooser</strong> (<a class="reference internal" href="smac.optimizer.random_configuration_chooser.html#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser"><em>RandomConfigurationChooser</em></a>) – How often to choose a random configuration during the intensification procedure.</p></li>
+<li><p><strong>random_configuration_chooser_kwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – arguments of constructor for ‘~random_configuration_chooser’</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="smac.facade.smac_ac_facade.SMAC4AC.get_X_y">
+<code class="sig-name descname">get_X_y</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_ac_facade.html#SMAC4AC.get_X_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_ac_facade.SMAC4AC.get_X_y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple interface to obtain all data in runhistory in <code class="docutils literal notranslate"><span class="pre">X,</span> <span class="pre">y</span></code> format.</p>
+<p>Uses
+<a class="reference internal" href="smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y" title="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y"><code class="xref py py-meth docutils literal notranslate"><span class="pre">smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>X</strong> (<em>numpy.ndarray</em>) – matrix of all configurations (+ instance features)</p></li>
+<li><p><strong>y</strong> (<em>numpy.ndarray</em>) – vector of cost values; can include censored runs</p></li>
+<li><p><strong>cen</strong> (<em>numpy.ndarray</em>) – vector of bools indicating whether the y-value is censored</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.facade.smac_ac_facade.SMAC4AC.get_runhistory">
+<code class="sig-name descname">get_runhistory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_ac_facade.html#SMAC4AC.get_runhistory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_ac_facade.SMAC4AC.get_runhistory" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Returns the runhistory (i.e., all evaluated configurations and</dt><dd><p>the results).</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>Runhistory</strong></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.facade.smac_ac_facade.SMAC4AC.get_tae_runner">
+<code class="sig-name descname">get_tae_runner</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_ac_facade.html#SMAC4AC.get_tae_runner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_ac_facade.SMAC4AC.get_tae_runner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns target algorithm evaluator (TAE) object which can run the
+target algorithm given a configuration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>TAE</strong></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun">smac.tae.execute_ta_run.ExecuteTARun</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.facade.smac_ac_facade.SMAC4AC.get_trajectory">
+<code class="sig-name descname">get_trajectory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_ac_facade.html#SMAC4AC.get_trajectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_ac_facade.SMAC4AC.get_trajectory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the trajectory (i.e., all incumbent configurations over
+time).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>Trajectory</strong></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>List of <a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajEntry" title="smac.utils.io.traj_logging.TrajEntry"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrajEntry</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.facade.smac_ac_facade.SMAC4AC.optimize">
+<code class="sig-name descname">optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_ac_facade.html#SMAC4AC.optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_ac_facade.SMAC4AC.optimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optimizes the algorithm provided in scenario (given in constructor)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>incumbent</strong> – Best found configuration</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Configuration</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.facade.smac_ac_facade.SMAC4AC.validate">
+<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">config_mode: Union[List[ConfigSpace.configuration_space.Configuration], numpy.ndarray, str] = 'inc', instance_mode: Union[List[str], str] = 'train+test', repetitions: int = 1, use_epm: bool = False, n_jobs: int = -1, backend: str = 'threading'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_ac_facade.html#SMAC4AC.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_ac_facade.SMAC4AC.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create validator-object and run validation, using
+scenario-information, runhistory from smbo and tae_runner from intensify</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_mode</strong> (<em>str</em><em> or </em><em>list&lt;Configuration&gt;</em>) – string or directly a list of Configuration
+str from [def, inc, def+inc, wallclock_time, cpu_time, all]
+time evaluates at cpu- or wallclock-timesteps of:
+[max_time/2^0, max_time/2^1, max_time/2^3, …, default]
+with max_time being the highest recorded time</p></li>
+<li><p><strong>instance_mode</strong> (<em>string</em>) – what instances to use for validation, from [train, test, train+test]</p></li>
+<li><p><strong>repetitions</strong> (<em>int</em>) – number of repetitions in nondeterministic algorithms (in
+deterministic will be fixed to 1)</p></li>
+<li><p><strong>use_epm</strong> (<em>bool</em>) – whether to use an EPM instead of evaluating all runs with the TAE</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em>) – number of parallel processes used by joblib</p></li>
+<li><p><strong>backend</strong> (<em>string</em>) – what backend to be used by joblib</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>runhistory</strong> – runhistory containing all specified runs</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">RunHistory</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="smac.facade.smac_bo_facade.html" class="btn btn-neutral float-right" title="smac.facade.smac_bo_facade module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="smac.facade.roar_facade.html" class="btn btn-neutral float-left" title="smac.facade.roar_facade module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

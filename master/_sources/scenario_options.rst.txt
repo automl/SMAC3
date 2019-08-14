@@ -2,7 +2,7 @@
 :always_race_default: Race new incumbents always against default configuration.
 :cost_for_crash: Defines the cost-value for crashed runs on scenarios with quality as run-obj. Default: 2147483647.0.
 :cutoff: Maximum runtime, after which the target algorithm is cancelled. **Required if *run_obj* is runtime.**
-:deterministic: If true, the optimization process will be repeatable.
+:deterministic: If true, SMAC assumes that the target function or algorithm is deterministic (the same static seed of 0 is always passed to the function/algorithm). If false, different random seeds are passed to the target function/algorithm.
 :execdir: Specifies the path to the execution-directory. Default: ..
 :feature_fn: Specifies the file with the instance-features.
 :initial_incumbent: DEFAULT is the default from the PCS. Default: DEFAULT.

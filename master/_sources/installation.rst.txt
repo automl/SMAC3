@@ -54,4 +54,4 @@ command line:
     git clone https://github.com/automl/SMAC3
     cd SMAC3
     cat requirements.txt | xargs -n 1 -L 1 pip install
-    python setup.py install
+    pip install .
