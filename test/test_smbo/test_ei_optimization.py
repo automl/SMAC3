@@ -10,10 +10,12 @@ import os
 import numpy as np
 from scipy.spatial.distance import euclidean
 
-from smac.facade.smac_facade import SMAC
 from smac.configspace import pcs
+from smac.optimizer.objective import average_cost
 from smac.optimizer.acquisition import EI
 from smac.optimizer.ei_optimization import LocalSearch, RandomSearch
+from smac.runhistory.runhistory import RunHistory
+from smac.tae.execute_ta_run import StatusType
 from smac.configspace import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformFloatHyperparameter, UniformIntegerHyperparameter
@@ -40,6 +42,7 @@ def rosenbrock_4d(cfg):
 
     return(val)
 
+
 class TestLocalSearch(unittest.TestCase):
     def setUp(self):
         current_dir = os.path.dirname(__file__)
@@ -58,18 +61,19 @@ class TestLocalSearch(unittest.TestCase):
 
     def test_local_search(self):
 
-        def acquisition_function(point):
-            point = [p.get_array() for p in point]
-            opt = np.array([1, 1, 1, 1])
-            dist = [euclidean(point, opt)]
-            return np.array([-np.min(dist)])
+        def acquisition_function(points):
+            rval = []
+            for point in points:
+                opt = np.array([1, 1, 1, 1])
+                rval.append([-euclidean(point.get_array(), opt)])
+            return np.array(rval)
 
-        l = LocalSearch(acquisition_function, self.cs, max_steps=100000)
+        l = LocalSearch(acquisition_function, self.cs, max_steps=100)
 
         start_point = self.cs.sample_configuration()
         acq_val_start_point = acquisition_function([start_point])
 
-        acq_val_incumbent, _ = l._one_iter(start_point)
+        acq_val_incumbent, _ = l._do_search(start_point)[0]
 
         # Local search needs to find something that is as least as good as the
         # start point
@@ -90,8 +94,8 @@ class TestLocalSearch(unittest.TestCase):
             config_space = pcs.read(fh.readlines())
             config_space.seed(seed)
 
-        def acquisition_function(point):
-            return np.array([np.count_nonzero(point[0].get_array())])
+        def acquisition_function(points):
+            return np.array([[np.count_nonzero(point.get_array())] for point in points])
 
         start_point = config_space.get_default_configuration()
         _get_initial_points_patch.return_value = [start_point]
@@ -106,7 +110,7 @@ class TestLocalSearch(unittest.TestCase):
             np.ones(len(config_space.get_hyperparameters()))
         )
 
-    @unittest.mock.patch.object(LocalSearch, '_one_iter')
+    @unittest.mock.patch.object(LocalSearch, '_do_search')
     @unittest.mock.patch.object(LocalSearch, '_get_initial_points')
     def test_get_next_by_local_search(
             self,
@@ -115,13 +119,12 @@ class TestLocalSearch(unittest.TestCase):
     ):
         # Without known incumbent
         class SideEffect(object):
-            def __init__(self):
-                self.call_number = 0
 
             def __call__(self, *args, **kwargs):
-                rval = 9 - self.call_number
-                self.call_number += 1
-                return (rval, ConfigurationMock(rval))
+                rval = []
+                for i in range(len(args[0])):
+                    rval.append((i, ConfigurationMock(i)))
+                return rval
 
         patch.side_effect = SideEffect()
         cs = test_helpers.get_branin_config_space()
@@ -137,29 +140,58 @@ class TestLocalSearch(unittest.TestCase):
 
         rval = ls._maximize(runhistory, None, 9)
         self.assertEqual(len(rval), 9)
-        self.assertEqual(patch.call_count, 9)
+        self.assertEqual(patch.call_count, 1)
         for i in range(9):
             self.assertIsInstance(rval[i][1], ConfigurationMock)
-            self.assertEqual(rval[i][1].value, 9 - i)
-            self.assertEqual(rval[i][0], 9 - i)
+            self.assertEqual(rval[i][1].value, 8 - i)
+            self.assertEqual(rval[i][0], 8 - i)
             self.assertEqual(rval[i][1].origin, 'Local Search')
 
-        # With known incumbent
+        # Check that the known 'incumbent' is transparently passed through
         patch.side_effect = SideEffect()
         _get_initial_points_patch.return_value = ['Incumbent'] + rand_confs
         rval = ls._maximize(runhistory, None, 10)
         self.assertEqual(len(rval), 10)
-        self.assertEqual(patch.call_count, 19)
+        self.assertEqual(patch.call_count, 2)
         # Only the first local search in each iteration starts from the
         # incumbent
-        self.assertEqual(patch.call_args_list[9][0][0], 'Incumbent')
+        self.assertEqual(patch.call_args_list[1][0][0][0], 'Incumbent')
         for i in range(10):
             self.assertEqual(rval[i][1].origin, 'Local Search')
 
+    def test_local_search_finds_minimum(self):
+
+        class AcquisitionFunction:
+
+            model = None
+
+            def __call__(self, arrays):
+                rval = []
+                for array in arrays:
+                    rval.append([-rosenbrock_4d(array)])
+                return np.array(rval)
+
+        ls = LocalSearch(
+            acquisition_function=AcquisitionFunction(),
+            config_space=self.cs,
+            n_steps_plateau_walk=10,
+            max_steps=np.inf,
+        )
+
+        runhistory = RunHistory(aggregate_func=average_cost)
+        self.cs.seed(1)
+        random_configs = self.cs.sample_configuration(size=100)
+        costs = [rosenbrock_4d(random_config) for random_config in random_configs]
+        self.assertGreater(np.min(costs), 100)
+        for random_config, cost in zip(random_configs, costs):
+            runhistory.add(config=random_config, cost=cost, time=0, status=StatusType.SUCCESS)
+        minimizer = ls.maximize(runhistory, None, 10)
+        minima = [-rosenbrock_4d(m) for m in minimizer]
+        self.assertGreater(minima[0], -0.05)
 
 
 class TestRandomSearch(unittest.TestCase):
-    @unittest.mock.patch('smac.optimizer.ei_optimization.convert_configurations_to_array')
+    @unittest.mock.patch('smac.optimizer.acquisition.convert_configurations_to_array')
     @unittest.mock.patch.object(EI, '__call__')
     @unittest.mock.patch.object(ConfigurationSpace, 'sample_configuration')
     def test_get_next_by_random_search_sorted(self,
@@ -205,6 +237,7 @@ class TestRandomSearch(unittest.TestCase):
             self.assertIsInstance(rval[i][1], ConfigurationMock)
             self.assertEqual(rval[i][1].origin, 'Random Search')
             self.assertEqual(rval[i][0], 0)
+
 
 if __name__ == "__main__":
     unittest.main()

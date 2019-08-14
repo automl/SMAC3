@@ -4,8 +4,9 @@ import typing
 import numpy as np
 from pyrfr import regression
 
-from smac.epm.base_epm import AbstractEPM
-from smac.utils.constants import N_TREES
+from smac.configspace import ConfigurationSpace
+from smac.epm.base_rf import BaseModel
+from smac.utils.constants import N_TREES, VERY_SMALL_NUMBER
 
 
 __author__ = "Aaron Klein"
@@ -16,7 +17,7 @@ __email__ = "kleinaa@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class RandomForestWithInstances(AbstractEPM):
+class RandomForestWithInstances(BaseModel):
 
     """Random forest that takes instance features into account.
 
@@ -37,20 +38,24 @@ class RandomForestWithInstances(AbstractEPM):
     logger : logging.logger
     """
 
-    def __init__(self, types: np.ndarray,
-                 bounds: typing.List[typing.Tuple[float, float]],
-                 log_y: bool=False,
-                 num_trees: int=N_TREES,
-                 do_bootstrapping: bool=True,
-                 n_points_per_tree: int=-1,
-                 ratio_features: float=5. / 6.,
-                 min_samples_split: int=3,
-                 min_samples_leaf: int=3,
-                 max_depth: int=2**20,
-                 eps_purity: float=1e-8,
-                 max_num_nodes: int=2**20,
-                 seed: int=42,
-                 **kwargs):
+    def __init__(
+        self,
+        configspace: ConfigurationSpace,
+        types: np.ndarray,
+        bounds: typing.List[typing.Tuple[float, float]],
+        seed: int,
+        log_y: bool = False,
+        num_trees: int = N_TREES,
+        do_bootstrapping: bool = True,
+        n_points_per_tree: int = -1,
+        ratio_features: float = 5. / 6.,
+        min_samples_split: int = 3,
+        min_samples_leaf: int = 3,
+        max_depth: int = 2**20,
+        eps_purity: float = 1e-8,
+        max_num_nodes: int = 2**20,
+        **kwargs
+    ):
         """
         Parameters
         ----------
@@ -62,6 +67,8 @@ class RandomForestWithInstances(AbstractEPM):
             have to pass np.array([2, 0]). Note that we count starting from 0.
         bounds : list
             Specifies the bounds for continuous features.
+        seed : int
+            The seed that is passed to the random_forest_run library.
         log_y: bool
             y values (passed to this RF) are expected to be log(y) transformed;
             this will be considered during predicting
@@ -85,10 +92,8 @@ class RandomForestWithInstances(AbstractEPM):
             different
         max_num_nodes : int
             The maxmimum total number of nodes in a tree
-        seed : int
-            The seed that is passed to the random_forest_run library.
         """
-        super().__init__(types, bounds, **kwargs)
+        super().__init__(configspace, types, bounds, seed, **kwargs)
 
         self.log_y = log_y
         self.rng = regression.default_random_engine(seed)
@@ -112,8 +117,7 @@ class RandomForestWithInstances(AbstractEPM):
         # This list well be read out by save_iteration() in the solver
         self.hypers = [num_trees, max_num_nodes, do_bootstrapping,
                        n_points_per_tree, ratio_features, min_samples_split,
-                       min_samples_leaf, max_depth, eps_purity, seed]
-        self.seed = seed
+                       min_samples_leaf, max_depth, eps_purity, self.seed]
 
         self.logger = logging.getLogger(self.__module__ + "." +
                                         self.__class__.__name__)
@@ -125,14 +129,14 @@ class RandomForestWithInstances(AbstractEPM):
         ----------
         X : np.ndarray [n_samples, n_features (config + instance features)]
             Input data points.
-        Y : np.ndarray [n_samples, ]
+        y : np.ndarray [n_samples, ]
             The corresponding target values.
 
         Returns
         -------
         self
         """
-
+        X = self._impute_inactive(X)
         self.X = X
         self.y = y.flatten()
 
@@ -196,21 +200,38 @@ class RandomForestWithInstances(AbstractEPM):
         if X.shape[1] != self.types.shape[0]:
             raise ValueError('Rows in X should have %d entries but have %d!' % (self.types.shape[0], X.shape[1]))
 
-        means, vars_ = [], []
-        for row_X in X:
-            if self.log_y:
+        X = self._impute_inactive(X)
+
+        if self.log_y:
+            all_preds = []
+            third_dimension = 0
+
+            # Gather data in a list of 2d arrays and get statistics about the required size of the 3d array
+            for row_X in X:
                 preds_per_tree = self.rf.all_leaf_values(row_X)
-                means_per_tree = []
-                for preds in preds_per_tree:
-                    # within one tree, we want to use the
-                    # arithmetic mean and not the geometric mean
-                    means_per_tree.append(np.log(np.mean(np.exp(preds))))
-                mean = np.mean(means_per_tree)
-                var = np.var(means_per_tree) # variance over trees as uncertainty estimate
-            else:
-                mean, var = self.rf.predict_mean_var(row_X)
-            means.append(mean)
-            vars_.append(var)
+                all_preds.append(preds_per_tree)
+                max_num_leaf_data = max(map(len, preds_per_tree))
+                third_dimension = max(max_num_leaf_data, third_dimension)
+
+            # Transform list of 2d arrays into a 3d array
+            preds_as_array = np.zeros((X.shape[0], self.rf_opts.num_trees, third_dimension)) * np.NaN
+            for i, preds_per_tree in enumerate(all_preds):
+                for j, pred in enumerate(preds_per_tree):
+                    preds_as_array[i, j, :len(pred)] = pred
+
+            # Do all necessary computation with vectorized functions
+            preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+
+            # Compute the mean and the variance across the different trees
+            means = preds_as_array.mean(axis=1)
+            vars_ = preds_as_array.var(axis=1)
+        else:
+            means, vars_ = [], []
+            for row_X in X:
+                mean_, var = self.rf.predict_mean_var(row_X)
+                means.append(mean_)
+                vars_.append(var)
+
         means = np.array(means)
         vars_ = np.array(vars_)
 
@@ -245,20 +266,22 @@ class RandomForestWithInstances(AbstractEPM):
 
         if self.instance_features is None or \
                 len(self.instance_features) == 0:
-            mean, var = self.predict(X)
+            mean_, var = self.predict(X)
             var[var < self.var_threshold] = self.var_threshold
             var[np.isnan(var)] = self.var_threshold
-            return mean, var
+            return mean_, var
 
         if len(X.shape) != 2:
             raise ValueError(
                 'Expected 2d array, got %dd array!' % len(X.shape))
-        if X.shape[1] != self.bounds.shape[0]:
+        if X.shape[1] != len(self.bounds):
             raise ValueError('Rows in X should have %d entries but have %d!' %
-                             (self.bounds.shape[0],
+                             (len(self.bounds),
                               X.shape[1]))
 
-        mean = np.zeros(X.shape[0])
+        X = self._impute_inactive(X)
+
+        mean_ = np.zeros(X.shape[0])
         var = np.zeros(X.shape[0])
         for i, x in enumerate(X):
 
@@ -287,11 +310,11 @@ class RandomForestWithInstances(AbstractEPM):
                 var_x = self.var_threshold
 
             var[i] = var_x
-            mean[i] = mean_x
+            mean_[i] = mean_x
 
-        if len(mean.shape) == 1:
-            mean = mean.reshape((-1, 1))
+        if len(mean_.shape) == 1:
+            mean_ = mean_.reshape((-1, 1))
         if len(var.shape) == 1:
             var = var.reshape((-1, 1))
 
-        return mean, var
+        return mean_, var

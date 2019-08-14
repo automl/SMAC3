@@ -1,21 +1,21 @@
 import typing
 
-from pyDOE import lhs
+import numpy as np
+
+import pyDOE
 
 from ConfigSpace.configuration_space import Configuration
-from ConfigSpace.hyperparameters import FloatHyperparameter
-from ConfigSpace.util import deactivate_inactive_hyperparameters
+from ConfigSpace.hyperparameters import Constant
 
-from smac.initial_design.multi_config_initial_design import \
-    MultiConfigInitialDesign
+from smac.initial_design.initial_design import InitialDesign
 
 __author__ = "Marius Lindauer"
-__copyright__ = "Copyright 2018, ML4AAD"
+__copyright__ = "Copyright 2019, AutoML"
 __license__ = "3-clause BSD"
 
 
-class LHDesign(MultiConfigInitialDesign):
-    """ Latin Hypercube design
+class LHDesign(InitialDesign):
+    """Latin Hypercube design
 
     Attributes
     ----------
@@ -40,25 +40,16 @@ class LHDesign(MultiConfigInitialDesign):
         cs = self.scenario.cs
         params = cs.get_hyperparameters()
 
-        lhd = lhs(n=len(params), samples=self.init_budget)
+        # seeding of lhd design
+        np.random.seed(self.rng.randint(1,2*20))
 
-        for idx, param in enumerate(params):
-            if isinstance(param, FloatHyperparameter):
-                lhd[:,idx] = lhd[:,idx] * (param.upper - param.lower) + param.lower
-            else:
-                raise ValueError("only FloatHyperparameters supported in LHD")
+        constants = 0
+        for p in params:
+            if isinstance(p, Constant):
+                constants += 1
 
-        self.logger.debug("Initial Design")
-        configs = []
-        # add middle point in space
+        lhd = pyDOE.lhs(n=len(params)-constants, samples=self.init_budget)
 
-        for design in lhd:
-            conf_dict = dict([(p.name,v) for p,v in zip(params,design)])
-            conf = deactivate_inactive_hyperparameters(conf_dict, cs)
-            conf.origin = "LHD"
-            configs.append(conf)
-            self.logger.debug(conf)
-
-        self.logger.debug("Size of lhd: %d" %(len(configs)))
-
-        return configs
+        return self._transform_continuous_designs(design=lhd,
+                                                  origin='LHD',
+                                                  cs=cs)

@@ -1,3 +1,30 @@
+# 0.11.0
+
+## Major changes
+
+* Local search now starts from observed configurations with high acquisition function values, low cost and the from 
+  unobserved configurations with high acquisition function values found by random search (#509)
+* Reduces the number of mandatory requirements (#516)
+* Make Gaussian processes more resilient to linalg error by more aggressively adding noise to the diagonal (#511)
+* Inactive hyperparameters are now imputed with a value outside of the modeled range (-1) (#508)
+* Replace the GP library George by scikit-learn (#505)
+* Renames facades to better reflect their use cases (#492), and adds a table to help deciding which facade to use (#495)
+* SMAC facades now accept class arguments instead of object arguments (#486)
+
+## Minor changes
+
+* Vectorize local search for improved speed (#500)
+* Extend the Sobol and LHD initial design to work for non-continuous hyperparameters as well applying an idea similar
+  to inverse transform sampling (#494)
+  
+
+## Bug fixes
+
+* Fixes a regression in the validation scripts (#519)
+* Fixes a unit test regression with numpy 1.17 (#523)
+* Fixes an error message (#510)
+* Fixes an error making random search behave identical for all seeds
+
 # 0.10.0
 
 ## Major changes

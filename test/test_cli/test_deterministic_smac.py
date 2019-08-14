@@ -1,6 +1,5 @@
 import json
 import os
-import sys
 import unittest
 import shutil
 from nose.plugins.attrib import attr
@@ -8,7 +7,6 @@ from nose.plugins.attrib import attr
 from unittest import mock
 
 from smac.smac_cli import SMACCLI
-from smac.optimizer import ei_optimization
 from ConfigSpace.util import get_one_exchange_neighbourhood
 
 
@@ -88,27 +86,27 @@ class TestDeterministicSMAC(unittest.TestCase):
                     "--seed", "2",
                     "--random_configuration_chooser", "test/test_cli/random_configuration_chooser_impl.py",
                     "--output_dir", self.output_dir_3,
-                    "--mode", 'SMAC']
+                    "--mode", 'SMAC4AC']
         cli = SMACCLI()
-        with mock.patch("smac.smac_cli.SMAC") as MSMAC:
+        with mock.patch("smac.smac_cli.SMAC4AC") as MSMAC:
             MSMAC.return_value.optimize.return_value = True
             cli.main_cli(testargs[1:])
             MSMAC.assert_called_once_with(
                 initial_configurations=None, restore_incumbent=None, run_id=2,
                 runhistory=None, stats=None, scenario=mock.ANY, rng=mock.ANY)
 
-        testargs[-1] = 'BOGP'
+        testargs[-1] = 'SMAC4BO'
         cli = SMACCLI()
-        with mock.patch("smac.smac_cli.BOGP") as MSMAC:
+        with mock.patch("smac.smac_cli.SMAC4BO") as MSMAC:
             MSMAC.return_value.optimize.return_value = True
             cli.main_cli(testargs[1:])
             MSMAC.assert_called_once_with(
                 initial_configurations=None, restore_incumbent=None, run_id=2,
                 runhistory=None, stats=None, scenario=mock.ANY, rng=mock.ANY)
 
-        testargs[-1] = 'BORF'
+        testargs[-1] = 'SMAC4HPO'
         cli = SMACCLI()
-        with mock.patch("smac.smac_cli.BORF") as MSMAC:
+        with mock.patch("smac.smac_cli.SMAC4HPO") as MSMAC:
             MSMAC.return_value.optimize.return_value = True
             cli.main_cli(testargs[1:])
             MSMAC.assert_called_once_with(

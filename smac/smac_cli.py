@@ -6,13 +6,13 @@ import typing
 
 from smac.utils.io.cmd_reader import CMDReader
 from smac.scenario.scenario import Scenario
-from smac.facade.smac_facade import SMAC
+from smac.facade.smac_ac_facade import SMAC4AC
 from smac.facade.roar_facade import ROAR
-from smac.facade.epils_facade import EPILS
-from smac.facade.hydra_facade import Hydra
-from smac.facade.psmac_facade import PSMAC
-from smac.facade.borf_facade import BORF
-from smac.facade.bogp_facade import BOGP
+from smac.facade.experimental.epils_facade import EPILS
+from smac.facade.experimental.hydra_facade import Hydra
+from smac.facade.experimental.psmac_facade import PSMAC
+from smac.facade.smac_hpo_facade import SMAC4HPO
+from smac.facade.smac_bo_facade import SMAC4BO
 from smac.runhistory.runhistory import RunHistory
 from smac.stats.stats import Stats
 from smac.optimizer.objective import average_cost
@@ -108,8 +108,8 @@ class SMACCLI(object):
                     fn=traj_fn, cs=scen.cs)
                 initial_configs.append(trajectory[-1]["incumbent"])
 
-        if main_args_.mode == "SMAC":
-            optimizer = SMAC(
+        if main_args_.mode == "SMAC4AC":
+            optimizer = SMAC4AC(
                 scenario=scen,
                 rng=np.random.RandomState(main_args_.seed),
                 runhistory=rh,
@@ -117,8 +117,8 @@ class SMACCLI(object):
                 stats=stats,
                 restore_incumbent=incumbent,
                 run_id=main_args_.seed)
-        elif main_args_.mode == "BORF":
-            optimizer = BORF(
+        elif main_args_.mode == "SMAC4HPO":
+            optimizer = SMAC4HPO(
                 scenario=scen,
                 rng=np.random.RandomState(main_args_.seed),
                 runhistory=rh,
@@ -126,8 +126,8 @@ class SMACCLI(object):
                 stats=stats,
                 restore_incumbent=incumbent,
                 run_id=main_args_.seed)
-        elif main_args_.mode == "BOGP":
-            optimizer = BOGP(
+        elif main_args_.mode == "SMAC4BO":
+            optimizer = SMAC4BO(
                 scenario=scen,
                 rng=np.random.RandomState(main_args_.seed),
                 runhistory=rh,

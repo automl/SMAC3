@@ -16,8 +16,8 @@ from smac.runhistory import runhistory, runhistory2epm
 from smac.scenario import scenario
 from smac.epm import rfr_imputator
 from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.epm.util_funcs import get_types
 from smac.optimizer.objective import average_cost
-from smac.utils.util_funcs import get_types
 
 
 def generate_config(cs, rs):
@@ -97,8 +97,12 @@ class ImputorTest(unittest.TestCase):
 
         types, bounds = get_types(self.cs, None)
         self.model = RandomForestWithInstances(
-                types=types, bounds=bounds,
-                instance_features=None, seed=1234567980)
+            configspace=self.cs,
+            types=types,
+            bounds=bounds,
+            instance_features=None,
+            seed=1234567980,
+        )
 
     @attr('slow')
     def testRandomImputation(self):
@@ -136,9 +140,13 @@ class ImputorTest(unittest.TestCase):
             print(cen_X)
             print(uncen_X)
             print('~'*120)
-            self.model = RandomForestWithInstances(types=types, bounds=bounds,
-                                                   instance_features=None,
-                                                   seed=1234567980)
+            self.model = RandomForestWithInstances(
+                configspace=cs,
+                types=types,
+                bounds=bounds,
+                instance_features=None,
+                seed=1234567980,
+            )
             imputor = rfr_imputator.RFRImputator(rng=rs,
                                                  cutoff=cutoff,
                                                  threshold=cutoff*10,

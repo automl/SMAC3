@@ -3,7 +3,7 @@ import typing
 
 import numpy as np
 
-from smac.facade.borf_facade import BORF
+from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.scenario.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.runhistory.runhistory import RunKey
@@ -18,15 +18,15 @@ __license__ = "3-clause BSD"
 
 def fmin_smac(func: typing.Callable,
               x0: typing.List[float],
-              bounds: typing.List[typing.List[float]],
-              maxfun: int=-1,
-              rng: np.random.RandomState=None,
-              scenario_args: typing.Mapping[str, typing.Any]=None,
+              bounds: typing.List[typing.Iterable[float]],
+              maxfun: int = -1,
+              rng: typing.Union[np.random.RandomState, int] = None,
+              scenario_args: typing.Mapping[str, typing.Any] = None,
               **kwargs):
     """
-    Minimize a function func using the BORF facade
+    Minimize a function func using the SMAC4HPO facade
     (i.e., a modified version of SMAC).
-    This function is a convenience wrapper for the BORF class.
+    This function is a convenience wrapper for the SMAC4HPO class.
 
     Parameters
     ----------
@@ -54,7 +54,7 @@ def fmin_smac(func: typing.Callable,
         Estimated position of the minimum.
     f : float
         Value of `func` at the minimum.
-    s : :class:`smac.facade.smac_facade.SMAC`
+    s : :class:`smac.facade.smac_hpo_facade.SMAC4HPO`
         SMAC objects which enables the user to get
         e.g., the trajectory and runhistory.
 
@@ -72,9 +72,6 @@ def fmin_smac(func: typing.Callable,
                                                default_value=x0[idx])
         cs.add_hyperparameter(parameter)
 
-    # Create target algorithm runner
-    ta = ExecuteTAFuncArray(ta=func)
-
     # create scenario
     scenario_dict = {
         "run_obj": "quality",
@@ -90,7 +87,14 @@ def fmin_smac(func: typing.Callable,
         scenario_dict["runcount_limit"] = maxfun
     scenario = Scenario(scenario_dict)
 
-    smac = BORF(scenario=scenario, tae_runner=ta, rng=rng, **kwargs)
+    smac = SMAC4HPO(
+        scenario=scenario,
+        tae_runner=ExecuteTAFuncArray,
+        tae_runner_kwargs={'ta': func},
+        rng=rng,
+        **kwargs
+    )
+
     smac.logger = logging.getLogger(smac.__module__ + "." + smac.__class__.__name__)
     incumbent = smac.optimize()
     config_id = smac.solver.runhistory.config_ids[incumbent]

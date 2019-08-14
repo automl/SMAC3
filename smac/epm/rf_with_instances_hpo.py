@@ -45,13 +45,14 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
 
     def __init__(
         self,
+        configspace: ConfigurationSpace,
         types: np.ndarray,
         bounds: typing.List[typing.Tuple[float, float]],
-        log_y: bool=False,
-        bootstrap: bool=False,
-        n_iters: int=50,
-        n_splits: int=10,
-        seed: int=42,
+        seed: int,
+        log_y: bool = False,
+        bootstrap: bool = False,
+        n_iters: int = 50,
+        n_splits: int = 10,
     ):
         """Parameters
         ----------
@@ -76,9 +77,11 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
             The seed that is passed to the random_forest_run library.
         """
         super().__init__(
-            types,
-            bounds,
-            log_y,
+            configspace=configspace,
+            types=types,
+            seed=seed,
+            bounds=bounds,
+            log_y=log_y,
             num_trees=N_TREES,
             do_bootstrapping=bootstrap,
             n_points_per_tree=N_POINTS_PER_TREE,
@@ -88,11 +91,8 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
             max_depth=MAX_DEPTH,
             eps_purity=EPSILON_IMPURITY,
             max_num_nodes=MAX_NUM_NODES,
-            seed=seed,
         )
 
-        self.types = types
-        self.bounds = bounds
         self.log_y = log_y
         self.n_iters = n_iters
         self.n_splits = n_splits
@@ -136,6 +136,7 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
         self
         """
 
+        X = self._impute_inactive(X)
         self.X = X
         self.y = y.flatten()
 

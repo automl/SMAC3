@@ -6,6 +6,10 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.exceptions import NotFittedError
 
+from smac.configspace import ConfigurationSpace
+from smac.utils.constants import VERY_SMALL_NUMBER
+from smac.utils.logging import PickableLoggerAdapter
+
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
@@ -45,8 +49,10 @@ class AbstractEPM(object):
     """
 
     def __init__(self,
+                 configspace: ConfigurationSpace,
                  types: np.ndarray,
                  bounds: typing.List[typing.Tuple[float, float]],
+                 seed: int,
                  instance_features: np.ndarray=None,
                  pca_components: float=None,
                  ):
@@ -54,14 +60,18 @@ class AbstractEPM(object):
 
         Parameters
         ----------
+        configspace : ConfigurationSpace
+            Configuration space to tune for.
         types : np.ndarray (D)
             Specifies the number of categorical values of an input dimension where
             the i-th entry corresponds to the i-th input dimension. Let's say we
             have 2 dimension where the first dimension consists of 3 different
             categorical choices and the second dimension is continuous than we
-            have to pass np.array([2, 0]). Note that we count starting from 0.
+            have to pass np.array([3, 0]). Note that we count starting from 0.
         bounds : list
-            Specifies the bounds for continuous features.
+            bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
+        seed : int
+            The seed that is passed to the model library.
         instance_features : np.ndarray (I, K)
             Contains the K dimensional instance features
             of the I different instances
@@ -70,6 +80,8 @@ class AbstractEPM(object):
             dimensionality of instance features. Requires to
             set n_feats (> pca_dims).
         """
+        self.configspace = configspace
+        self.seed = seed
         self.instance_features = instance_features
         self.pca_components = pca_components
 
@@ -87,12 +99,14 @@ class AbstractEPM(object):
             self.scaler = MinMaxScaler()
 
         # Never use a lower variance than this
-        self.var_threshold = 10 ** -5
+        self.var_threshold = VERY_SMALL_NUMBER
 
         self.bounds = bounds
         self.types = types
         # Initial types array which is used to reset the type array at every call to train()
         self._initial_types = types.copy()
+
+        self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
 
     def train(self, X: np.ndarray, Y: np.ndarray) -> 'AbstractEPM':
         """Trains the EPM on X and Y.
@@ -114,7 +128,7 @@ class AbstractEPM(object):
         if len(X.shape) != 2:
             raise ValueError('Expected 2d array, got %dd array!' % len(X.shape))
         if X.shape[1] != len(self.types):
-            raise ValueError('Feature mismatch: X should have %d features, but has %d' % (X.shape[1], len(self.types)))
+            raise ValueError('Feature mismatch: X should have %d features, but has %d' % (len(self.types), X.shape[1]))
         if X.shape[0] != Y.shape[0]:
             raise ValueError('X.shape[0] (%s) != y.shape[0] (%s)' % (X.shape[0], Y.shape[0]))
 
@@ -238,8 +252,10 @@ class AbstractEPM(object):
 
         if len(X.shape) != 2:
             raise ValueError('Expected 2d array, got %dd array!' % len(X.shape))
-        if X.shape[1] != len(self.types):
-            raise ValueError('Rows in X should have %d entries but have %d!' % (len(self.types), X.shape[1]))
+        if X.shape[1] != self.bounds.shape[0]:
+            raise ValueError('Rows in X should have %d entries but have %d!' %
+                             (self.bounds.shape[0],
+                              X.shape[1]))
 
         if self.instance_features is None or \
                 len(self.instance_features) == 0:

@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
+import json
 import os
 from setuptools import setup
 
 
 with open('requirements.txt') as fh:
-    requirements = fh.read()
-requirements = requirements.split('\n')
-requirements = [requirement.strip() for requirement in requirements]
+    requirements = [line.strip() for line in fh.readlines()]
+with open('extras_require.json') as fh:
+    extras_require = json.load(fh)
+    extras_require['all'] = set(sum(extras_require.values(), []))
 
 
 def get_version():
@@ -30,6 +32,8 @@ def get_author():
 setup(
     python_requires=">=3.5.2",
     install_requires=requirements,
+    extras_require=extras_require,
+    package_data={'smac': ['requirements.txt', 'extras_require.json']},
     author=get_author(),
     version=get_version(),
     test_suite="nose.collector",

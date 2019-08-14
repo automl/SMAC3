@@ -1,11 +1,11 @@
 import unittest
 import unittest.mock
 
-import george
 import numpy as np
 import sklearn.datasets
 import sklearn.model_selection
 
+import smac.configspace
 from smac.epm.rf_with_instances_hpo import RandomForestWithInstancesHPO
 
 
@@ -13,13 +13,18 @@ def get_rf(n_dimensions, rs):
     bounds = [(0., 1.) for _ in range(n_dimensions)]
     types = np.zeros(n_dimensions)
 
+    configspace = smac.configspace.ConfigurationSpace()
+    for i in range(n_dimensions):
+        configspace.add_hyperparameter(smac.configspace.UniformFloatHyperparameter('x%d' % i, 0, 1))
+
     model = RandomForestWithInstancesHPO(
-        types=types, bounds=bounds, log_y=False, bootstrap=False, n_iters=5, n_splits=5,
+        configspace=configspace, types=types, bounds=bounds, log_y=False, bootstrap=False, n_iters=5, n_splits=5, seed=1,
     )
     return model
 
 
 class TestRandomForestWithInstancesHPO(unittest.TestCase):
+
     def test_predict_wrong_X_dimensions(self):
         rs = np.random.RandomState(1)
         model = get_rf(10, rs)
@@ -93,7 +98,6 @@ class TestRandomForestWithInstancesHPO(unittest.TestCase):
         y_hat, var_hat = model.predict(np.array([[10., 10., 10.]]))
         self.assertAlmostEqual(y_hat[0][0], 109.2)
         # No variance because the data point is outside of the observed data
-        print(var_hat)
         self.assertAlmostEqual(var_hat[0][0], 0)
 
     def test_rf_on_sklearn_data(self):
@@ -104,7 +108,7 @@ class TestRandomForestWithInstancesHPO(unittest.TestCase):
         model = get_rf(X.shape[1], rs)
         cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
 
-        maes = [9.129075955836567871, 9.367454539503001523]
+        maes = [9.212142058553677762, 9.002105421756146103]
 
         for i, (train_split, test_split) in enumerate(cv.split(X, y)):
             X_train = X[train_split]

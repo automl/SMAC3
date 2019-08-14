@@ -3,7 +3,7 @@ import unittest.mock
 
 import numpy as np
 
-from smac.optimizer.acquisition import EI, LogEI, EIPS, PI, LCB
+from smac.optimizer.acquisition import EI, LogEI, EIPS, PI, LCB, IntegratedAcquisitionFunction
 
 
 class ConfigurationMock(object):
@@ -37,6 +37,78 @@ class MockModelDual(object):
                         self.num_targets).reshape((-1, 2)), \
                np.array([np.mean(X, axis=1).reshape((1, -1))] *
                         self.num_targets).reshape((-1, 2))
+
+
+class TestIntegratedAcquisitionFunction(unittest.TestCase):
+    def setUp(self):
+        self.model = unittest.mock.Mock()
+        self.model.models = [MockModel(), MockModel(), MockModel()]
+        self.ei = EI(self.model)
+
+    def test_update(self):
+        iaf = IntegratedAcquisitionFunction(model=self.model, acquisition_function=self.ei)
+        iaf.update(model=self.model, eta=2)
+        for func in iaf._functions:
+            self.assertEqual(func.eta, 2)
+
+        with self.assertRaisesRegex(
+            ValueError,
+            'IntegratedAcquisitionFunction requires at least one model to integrate!',
+        ):
+            iaf.update(model=MockModel())
+
+        with self.assertRaisesRegex(
+            ValueError,
+            'IntegratedAcquisitionFunction requires at least one model to integrate!',
+        ):
+            self.model.models = []
+            iaf.update(model=self.model)
+
+    def test_compute(self):
+        class CountingMock:
+            counter = 0
+            long_name = 'CountingMock'
+
+            def _compute(self, *args, **kwargs):
+                self.counter += 1
+                return self.counter
+
+            def update(self, **kwargs):
+                pass
+
+        iaf = IntegratedAcquisitionFunction(model=self.model, acquisition_function=CountingMock())
+        iaf.update(model=self.model)
+        configurations = [ConfigurationMock([1.0, 1.0, 1.0])]
+        rval = iaf(configurations)
+        self.assertEqual(rval, 1)
+
+        # Test that every counting mock is called only once!
+        for counting_mock in iaf._functions:
+            self.assertEqual(counting_mock.counter, 1)
+
+    def test_compute_with_different_numbers_of_models(self):
+        class CountingMock:
+            counter = 0
+            long_name = 'CountingMock'
+
+            def _compute(self, *args, **kwargs):
+                self.counter += 1
+                return self.counter
+
+            def update(self, **kwargs):
+                pass
+
+        for i in range(1, 3):
+            self.model.models = [MockModel()] * i
+            iaf = IntegratedAcquisitionFunction(model=self.model, acquisition_function=self.ei)
+            iaf.update(model=self.model, eta=1)
+            configurations = [ConfigurationMock([1.0, 1.0, 1.0])]
+            rval = iaf(configurations)
+            self.assertEqual(rval.shape, (1, 1))
+
+            configurations = [ConfigurationMock([1.0, 1.0, 1.0]), ConfigurationMock([1.0, 2.0, 3.0])]
+            rval = iaf(configurations)
+            self.assertEqual(rval.shape, (2, 1))
 
 
 class TestEI(unittest.TestCase):
@@ -108,14 +180,14 @@ class TestLogEI(unittest.TestCase):
     def setUp(self):
         self.model = MockModel()
         self.ei = LogEI(self.model)
-        
+
     def test_1xD(self):
         self.ei.update(model=self.model, eta=1.0)
         configurations = [ConfigurationMock([1.0, 1.0, 1.0])]
         acq = self.ei(configurations)
         self.assertEqual(acq.shape, (1, 1))
         self.assertAlmostEqual(acq[0][0], 0.6480973967332011)
-        
+
     def test_NxD(self):
         self.ei.update(model=self.model, eta=1.0)
         configurations = [ConfigurationMock([0.1, 0.0, 0.0]),

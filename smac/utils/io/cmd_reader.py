@@ -6,12 +6,11 @@ import os
 import re
 import shlex
 import sys
-from smac.configspace import pcs, pcs_new
-from smac.configspace import json as pcs_json
-from smac.utils.constants import MAXINT, N_TREES
-from smac.utils.io.input_reader import InputReader
 import time
 import typing
+
+from smac.utils.constants import MAXINT, N_TREES
+from smac.utils.io.input_reader import InputReader
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
@@ -20,6 +19,7 @@ __license__ = "3-clause BSD"
 in_reader = InputReader()
 parsed_scen_args = {}
 logger = None
+
 
 def truthy(x):
     """Convert x into its truth value"""
@@ -134,19 +134,8 @@ class ReadPCSFileAction(Action):
         fn = values
         if fn:
             if os.path.isfile(fn):
-                # Three possible formats: json, pcs and pcs_new. We prefer json.
-                with open(fn) as fp:
-                    if fn.endswith('.json'):
-                        parsed_scen_args['cs'] = pcs_json.read(fp.read())
-                        logger.debug("Loading pcs as json from: %s", fn)
-                    else:
-                        pcs_str = fp.readlines()
-                        try:
-                            parsed_scen_args["cs"] = pcs.read(pcs_str)
-                        except:
-                            logger.debug("Could not parse pcs file with old format; trying new format ...")
-                            parsed_scen_args["cs"] = pcs_new.read(pcs_str)
-                    parsed_scen_args["cs"].seed(42)
+                parsed_scen_args['cs'] = in_reader.read_pcs_file(fn)
+                parsed_scen_args["cs"].seed(42)
             else:
                 parser.exit(1, "Could not find pcs file: {}".format(fn))
         setattr(namespace, self.dest, values)
@@ -380,7 +369,8 @@ class CMDReader(object):
                               default=logging.INFO, choices=["INFO", "DEBUG"],
                               help="Verbosity level.")
         opt_opts.add_argument("--mode",
-                              default="SMAC", choices=["SMAC", "ROAR", "EPILS", "Hydra", "PSMAC", "BORF", "BOGP"],
+                              default="SMAC4AC", choices=["SMAC4AC", "ROAR", "EPILS", "Hydra", "PSMAC", "SMAC4HPO",
+                                                          "SMAC4BO"],
                               help="Configuration mode.")
         opt_opts.add_argument("--restore-state", "--restore_state", dest="restore_state",
                               default=None,
@@ -573,8 +563,9 @@ class CMDReader(object):
                                help="[dev] Specifies the path to the execution-directory.")
         scen_opts.add_argument("--deterministic", dest="deterministic",
                                default=False, type=truthy,
-                               help="[dev] If true, the optimization process will be "
-                                    "repeatable.")
+                               help="[dev] If true, SMAC assumes that the target function or algorithm is deterministic"
+                               " (the same static seed of 0 is always passed to the function/algorithm)."
+                               " If false, different random seeds are passed to the target function/algorithm.")
         scen_opts.add_argument("--run-obj", "--run_obj", dest="run_obj",
                                type=str, action=ProcessRunObjectiveAction,
                                required=True, choices=['runtime', 'quality'],

@@ -9,7 +9,7 @@ if ! [[ -z ${DOCPUSH+x} ]]; then
     if [[ "$DOCPUSH" == "true" ]]; then
 
         # install documentation building dependencies
-        pip install --upgrade matplotlib seaborn setuptools nose coverage sphinx pillow sphinx-gallery sphinx_bootstrap_theme cython numpydoc nbformat nbconvert mock
+        pip install --upgrade sphinx_rtd_theme
 
         # $1 is the branch name
         # $2 is the global variable where we set the script status
@@ -20,7 +20,7 @@ if ! [[ -z ${DOCPUSH+x} ]]; then
         fi
 
         # create the documentation
-        cd doc && make html 2>&1
+        cd doc && make buildapi && make html 2>&1
 
         # create directory with branch name
         # the documentation for dev/stable from git will be stored here

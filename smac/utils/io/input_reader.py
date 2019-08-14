@@ -1,5 +1,6 @@
 import numpy as np
-from smac.configspace import pcs
+from smac.configspace import pcs, pcs_new
+from smac.configspace import json as pcs_json
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -172,8 +173,11 @@ class InputReader(object):
                 instances[tmp[0]] = np.array(tmp[1:], dtype=np.double)
         return [f.strip() for f in lines[0].rstrip("\n").split(",")[1:]], instances
 
-    def read_pcs_file(self, fn: str):
-        """Encapsulates generating configuration space object
+    @staticmethod
+    def read_pcs_file(fn: str, logger=None):
+        """Encapsulates generating configuration space object from file.
+
+        Automatically detects whether the cs is saved in json, pcs or pcs_new.
 
         Parameters
         ----------
@@ -184,5 +188,18 @@ class InputReader(object):
         -------
             ConfigSpace: ConfigSpace
         """
-        space = pcs.read(fn)
-        return space
+        # Three possible formats: json, pcs and pcs_new. We prefer json.
+        with open(fn) as fp:
+            if fn.endswith('.json'):
+                cs = pcs_json.read(fp.read())
+                if logger:
+                    logger.debug("Loading pcs as json from: %s", fn)
+            else:
+                pcs_str = fp.readlines()
+                try:
+                    cs = pcs.read(pcs_str)
+                except NotImplementedError:
+                    if logger:
+                        logger.debug("Could not parse pcs file with old format; trying new format ...")
+                    cs = pcs_new.read(pcs_str)
+        return cs
