@@ -409,6 +409,18 @@ to the obtained values.</p>
 <dt id="smac.epm.gp_base_prior.SoftTopHatPrior">
 <em class="property">class </em><code class="sig-prename descclassname">smac.epm.gp_base_prior.</code><code class="sig-name descname">SoftTopHatPrior</code><span class="sig-paren">(</span><em class="sig-param">lower_bound=-10</em>, <em class="sig-param">upper_bound=10</em>, <em class="sig-param">exponent=2</em>, <em class="sig-param">rng: numpy.random.mtrand.RandomState = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#SoftTopHatPrior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.SoftTopHatPrior" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.epm.gp_base_prior.Prior" title="smac.epm.gp_base_prior.Prior"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.gp_base_prior.Prior</span></code></a></p>
+<p>Abstract base class to define the interface for priors
+of GP hyperparameter.</p>
+<p>This class is adapted from RoBO:</p>
+<p>Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
+RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
+In: NIPS 2017 Bayesian Optimization Workshop</p>
+<p>[16.04.2019]: Whenever lnprob or the gradient is computed for a scalar input, we use math.* rather than np.*</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</p>
+</dd>
+</dl>
 <dl class="method">
 <dt id="smac.epm.gp_base_prior.SoftTopHatPrior.gradient">
 <code class="sig-name descname">gradient</code><span class="sig-paren">(</span><em class="sig-param">theta: float</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#SoftTopHatPrior.gradient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.SoftTopHatPrior.gradient" title="Permalink to this definition">¶</a></dt>
