@@ -1,4 +1,3 @@
-import sys
 import time
 import logging
 import typing
@@ -12,10 +11,10 @@ from smac.intensification.intensification import Intensifier
 from smac.optimizer.ei_optimization import ChallengerList
 from smac.optimizer.objective import sum_cost
 from smac.stats.stats import Stats
-from smac.utils.constants import MAXINT, MAX_CUTOFF
+from smac.utils.constants import MAXINT
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory, InstSeedKey
-from smac.tae.execute_ta_run import StatusType, BudgetExhaustedException, CappedRunException, ExecuteTARun
+from smac.tae.execute_ta_run import BudgetExhaustedException, CappedRunException, ExecuteTARun
 from smac.utils.io.traj_logging import TrajLogger
 
 __author__ = "Ashwin Raaghav Narayanan"
@@ -95,7 +94,7 @@ class SuccessiveHalving(Intensifier):
         self.n_seeds = n_seeds if n_seeds else 1
         self.instance_order = instance_order
 
-        ## Initialize instances
+        ## Instances
         # if instances are coming from Hyperband, skip the instance preprocessing section
         # it is already taken care by Hyperband
         if instances is not None and isinstance(instances[0], InstSeedKey):
@@ -124,7 +123,7 @@ class SuccessiveHalving(Intensifier):
             raise ValueError('eta must be greater than 1')
         self.eta = eta
 
-        ## Initialize budgets
+        ## Budgets
         # - if only 1 instance was provided & quality objective, then use cutoff as budget
         # - else, use instances as budget
         if not self.run_obj_time and len(self.instances) <= 1:
@@ -159,10 +158,6 @@ class SuccessiveHalving(Intensifier):
             if self.max_budget < len(self.instances):
                 warnings.warn('Max budget (%d) does not include all instance-seed pairs (%d)' %
                               (self.max_budget, len(self.instances)))
-
-        if self.min_budget == self.max_budget:
-            warnings.warn('Min budget (%.2f) is equal to Max budget (%.2f)' %
-                          (self.min_budget, self.max_budget))
 
         self.logger.debug("Running Successive Halving with '%s' as budget" % self.cutoff_as_budget)
 
@@ -215,9 +210,6 @@ class SuccessiveHalving(Intensifier):
         self._chall_indx = 0
         self._num_run = 0
 
-        if time_bound < self._min_time:
-            raise ValueError("time_bound must be >= %f" % self._min_time)
-
         if isinstance(challengers, ChallengerList):
             # converting to list for indexing purposes
             challengers = list(challengers)
@@ -246,27 +238,25 @@ class SuccessiveHalving(Intensifier):
             inc_sum_cost = np.inf
 
         # selecting the 1st budget for 1st round of successive halving
-        sh_iter = self.max_sh_iter
-        budget = self.max_budget / (self.eta ** sh_iter)
-        budget = max(budget, self.min_budget)
-        prev_budget = 0
+        budgets = self.max_budget * np.power(self.eta, -np.linspace(self.max_sh_iter, 0, self.max_sh_iter+1))
 
         first_run = True
 
         self.logger.debug('---' * 40)
-        self.logger.debug('Successive Halving run begins.')
+        self.logger.debug('Successive Halving run begins. Budgets: %s' % budgets)
 
         # run intensification till budget is max
-        while budget <= self.max_budget:
+        for i in range(len(budgets)):
 
-            self.logger.info('Running with budget [%.2f / %d] with %d challengers' % (budget, self.max_budget,
-                                                                                      len(curr_challengers)))
+            self.logger.info('Running with budget [%.2f / %d] with %d challengers' %
+                             (budgets[i], self.max_budget, len(curr_challengers)))
             # selecting instance subset for this budget, depending on the kind of budget
-            available_insts = all_instances[int(prev_budget):int(budget)] if not self.cutoff_as_budget \
+            prev_budget = budgets[i - 1] if i > 0 else 0
+            available_insts = all_instances[int(prev_budget):int(budgets[i])] if not self.cutoff_as_budget \
                 else all_instances
 
-            # determine 'k' for the next iteration
-            next_n_chal = int(np.round(len(curr_challengers) / self.eta))
+            # determine 'k' for the next iteration - at least 1
+            next_n_chal = max(1, int(np.round(len(curr_challengers) / self.eta)))
 
             try:
                 # Race all challengers
@@ -274,7 +264,7 @@ class SuccessiveHalving(Intensifier):
                                                           incumbent=incumbent,
                                                           instances=available_insts,
                                                           run_history=run_history,
-                                                          budget=budget,
+                                                          budget=budgets[i],
                                                           inc_sum_cost=inc_sum_cost,
                                                           first_run=first_run)
 
@@ -293,18 +283,9 @@ class SuccessiveHalving(Intensifier):
                 return incumbent, inc_perf
 
             # selecting the top 'k' challengers for the next iteration
-            if next_n_chal > 0:
-                curr_challengers = self._top_k(curr_challengers, run_history, k=next_n_chal)
-            else:
-                # returning at least 1 configuration for next iteration since the incumbent has to run on all instances
-                self.logger.info('Ran out of configurations! Returning the best from what was seen so far.')
-                curr_challengers = self._top_k(curr_challengers, run_history, k=1)
+            curr_challengers = self._top_k(curr_challengers, run_history, k=next_n_chal)
 
             first_run = False
-
-            # increase budget for next iteration
-            prev_budget = budget
-            budget = budget * self.eta
 
         # select best challenger from the SH run
         best_challenger = curr_challengers[0]
@@ -326,9 +307,8 @@ class SuccessiveHalving(Intensifier):
         else:
             new_incumbent = self._compare_configs(incumbent, best_challenger,
                                                   run_history, aggregate_func, log_traj)
-            if new_incumbent is None:
-                # if compare config returned none, then it is undecided. So returns incumbent
-                new_incumbent = incumbent
+            # if compare config returned none, then it is undecided. So return old incumbent
+            new_incumbent = incumbent if new_incumbent is None else new_incumbent
             # getting new incumbent cost
             inc_perf = run_history.get_cost(new_incumbent)
 
