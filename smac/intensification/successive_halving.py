@@ -278,13 +278,13 @@ class SuccessiveHalving(Intensifier):
         self.logger.debug('Successive Halving run begins. Budgets: %s' % budgets)
 
         # run intensification till budget is max
-        for i in range(len(budgets)):
+        for i, curr_budget in enumerate(budgets):
 
             self.logger.info('Running with budget [%.2f / %d] with %d challengers' %
-                             (budgets[i], self.max_budget, len(curr_challengers)))
+                             (curr_budget, self.max_budget, len(curr_challengers)))
             # selecting instance subset for this budget, depending on the kind of budget
             prev_budget = budgets[i - 1] if i > 0 else 0
-            available_insts = all_instances[int(prev_budget):int(budgets[i])] if not self.cutoff_as_budget \
+            available_insts = all_instances[int(prev_budget):int(curr_budget)] if not self.cutoff_as_budget \
                 else all_instances
 
             # determine 'k' for the next iteration - at least 1
