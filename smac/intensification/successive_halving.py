@@ -251,8 +251,9 @@ class SuccessiveHalving(Intensifier):
         if self.n_seeds > 1 or self.instance_order == 'shuffle':
             curr_challengers = challengers[:self.init_chal]
         else:
-            new_challengers = (c for c in challengers if c not in set(run_history.get_all_configs()))
-            curr_challengers = list(islice(new_challengers, self.init_chal))
+            used_configs = set(run_history.get_all_configs())
+            new_config_gen = (c for c in challengers if c not in used_configs)
+            curr_challengers = list(islice(new_config_gen, self.init_chal))
 
         # randomize instances per successive halving run, if user specifies
         all_instances = self.instances
@@ -301,7 +302,7 @@ class SuccessiveHalving(Intensifier):
 
                 # if all challengers were capped, then stop intensification
                 if not curr_challengers:
-                    self.logger.info("All configurations have been eliminated!"
+                    self.logger.info("All configurations have been eliminated by capping!"
                                      "Interrupting optimization run and returning current incumbent")
                     inc_perf = run_history.get_cost(incumbent)
                     return incumbent, inc_perf
