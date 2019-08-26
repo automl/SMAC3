@@ -11,8 +11,8 @@ from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 from smac.scenario.scenario import Scenario
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.intensification.successive_halving import SuccessiveHalving
-from smac.runhistory.runhistory import RunHistory, RunKey
-from smac.optimizer.objective import average_cost, sum_cost
+from smac.runhistory.runhistory import RunHistory
+from smac.optimizer.objective import average_cost
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
@@ -89,7 +89,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         """
 
         with self.assertRaises(ValueError):  # runtime cutoff as budget requires min budget to be provided
-            intensifier = SuccessiveHalving(
+            SuccessiveHalving(
                 tae_runner=None, stats=self.stats,
                 traj_logger=TrajLogger(output_dir=None, stats=self.stats),
                 rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
@@ -144,8 +144,8 @@ class TestSuccessiveHalving(unittest.TestCase):
                     additional_info=None)
 
         with self.assertRaises(AssertionError):
-            conf = intensifier._top_k(configs=[self.config2, self.config1, self.config3],
-                                      k=1, run_history=self.rh)
+            intensifier._top_k(configs=[self.config2, self.config1, self.config3],
+                               k=1, run_history=self.rh)
 
     @attr('slow')
     def test_intensify_1(self):
