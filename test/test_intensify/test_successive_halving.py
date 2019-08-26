@@ -51,9 +51,53 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
-    def test_top_k(self):
+    def test_init_1(self):
         """
-            test _top_k()
+            test parameter initializations for successive halving - instance as budget
+        """
+        intensifier = SuccessiveHalving(
+            tae_runner=None, stats=self.stats,
+            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
+            rng=np.random.RandomState(12345), deterministic=False, run_obj_time=False,
+            instances=[1, 2, 3], n_seeds=2, min_budget=None, max_budget=None, eta=2)
+
+        self.assertEqual(len(intensifier.instances), 6)  # since instance-seed pairs
+        self.assertEqual(intensifier.min_budget, 1)
+        self.assertEqual(intensifier.max_budget, 6)
+        self.assertEqual(intensifier.init_chal, 4)  # 2 iterations
+        self.assertEqual(intensifier.cutoff_as_budget, False)
+
+    def test_init_2(self):
+        """
+            test parameter initialiations for successive halving - cutoff as budget
+        """
+        intensifier = SuccessiveHalving(
+            tae_runner=None, stats=self.stats,
+            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
+            rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
+            cutoff=10, instances=[1], min_budget=1, max_budget=None, eta=2)
+
+        self.assertEqual(len(intensifier.instances), 1)  # since instance-seed pairs
+        self.assertEqual(intensifier.min_budget, 1)
+        self.assertEqual(intensifier.max_budget, 10)
+        self.assertEqual(intensifier.init_chal, 8)  # 4 iterations
+        self.assertEqual(intensifier.cutoff_as_budget, True)
+
+    def test_init_3(self):
+        """
+            test parameter initialiations for successive halving - runtime cutoff as budget (no param provided)
+        """
+
+        with self.assertRaises(ValueError):  # runtime cutoff as budget requires min budget to be provided
+            intensifier = SuccessiveHalving(
+                tae_runner=None, stats=self.stats,
+                traj_logger=TrajLogger(output_dir=None, stats=self.stats),
+                rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
+                cutoff=10, instances=[1])
+
+    def test_top_k_1(self):
+        """
+            test _top_k() for configs with same instance-seed-budget keys
         """
         intensifier = SuccessiveHalving(
             tae_runner=None, stats=self.stats,
@@ -64,18 +108,44 @@ class TestSuccessiveHalving(unittest.TestCase):
                     status=StatusType.SUCCESS, instance_id=1,
                     seed=None,
                     additional_info=None)
+        self.rh.add(config=self.config1, cost=1, time=1,
+                    status=StatusType.SUCCESS, instance_id=2,
+                    seed=None,
+                    additional_info=None)
+        self.rh.add(config=self.config2, cost=2, time=2,
+                    status=StatusType.SUCCESS, instance_id=1,
+                    seed=None,
+                    additional_info=None)
         self.rh.add(config=self.config2, cost=2, time=2,
                     status=StatusType.SUCCESS, instance_id=2,
                     seed=None,
                     additional_info=None)
-        self.rh.add(config=self.config3, cost=10, time=10,
-                    status=StatusType.SUCCESS, instance_id=3,
-                    seed=None,
-                    additional_info=None)
-        conf = intensifier._top_k(configs=[self.config2, self.config1, self.config3],
+        conf = intensifier._top_k(configs=[self.config2, self.config1],
                                   k=1, run_history=self.rh)
 
         self.assertEqual(conf, [self.config1])
+
+    def test_top_k_2(self):
+        """
+            test _top_k() for configs with different instance-seed-budget keys
+        """
+        intensifier = SuccessiveHalving(
+            tae_runner=None, stats=self.stats,
+            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
+            rng=np.random.RandomState(12345),
+            instances=[1, 2], min_budget=1)
+        self.rh.add(config=self.config1, cost=1, time=1,
+                    status=StatusType.SUCCESS, instance_id=1,
+                    seed=None,
+                    additional_info=None)
+        self.rh.add(config=self.config2, cost=10, time=10,
+                    status=StatusType.SUCCESS, instance_id=2,
+                    seed=None,
+                    additional_info=None)
+
+        with self.assertRaises(AssertionError):
+            conf = intensifier._top_k(configs=[self.config2, self.config1, self.config3],
+                                      k=1, run_history=self.rh)
 
     @attr('slow')
     def test_intensify_1(self):
@@ -229,6 +299,9 @@ class TestSuccessiveHalving(unittest.TestCase):
                                        incumbent=None,
                                        run_history=self.rh,
                                        aggregate_func=average_cost)
+
+        self.assertEqual(inc, self.config1)
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config2)), 1)
 
         # config1 stays the incumbent, but the previously rejected config2 is still executed
         inc, _ = intensifier.intensify(challengers=[self.config3, self.config2],

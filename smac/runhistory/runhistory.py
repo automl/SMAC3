@@ -17,8 +17,6 @@ __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-# RunKey = collections.namedtuple(
-#     'RunKey', ['config_id', 'instance_id', 'seed', 'budget'])
 # NOTE class instead of collection to have a default value for budget in RunKey
 class RunKey(collections.namedtuple('RunKey', ['config_id', 'instance_id', 'seed', 'budget'])):
     __slots__ = ()
@@ -124,7 +122,6 @@ class RunHistory(object):
 
         # for fast access, we have also an unordered data structure
         # to get all instance seed pairs of a configuration
-        # self._configid_to_inst_seed = {}  # type: typing.Dict[int, InstSeedKey]
         self._configid_to_inst_seed_budget = {}  # type: typing.Dict[int, typing.Dict[InstSeedKey, typing.List[float]]]
 
         self.config_ids = {}  # type: typing.Dict[Configuration, int]
@@ -310,7 +307,7 @@ class RunHistory(object):
             Select only the max budget run from each configuration (default=True)
         Returns
         -------
-        instance_seed_pairs : list<tuples of instance, seed>
+        instance_seed_budget_pairs : list<tuples of instance, seed, budget>
         """
         config_id = self.config_ids.get(config)
         runs = self._configid_to_inst_seed_budget.get(config_id, {})

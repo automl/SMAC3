@@ -32,8 +32,8 @@ def mlp_from_cfg(cfg, seed, instance, budget, **kwargs):
         This is the function-call we try to optimize. Chosen values are stored in
         the configuration (cfg).
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         cfg: Configuration
             configuration chosen by smac
         seed: int or RandomState
@@ -43,9 +43,9 @@ def mlp_from_cfg(cfg, seed, instance, budget, **kwargs):
         budget: float
             used to set max iterations for the MLP
 
-        Returns:
-        -----------
-        np.mean(accuracy): float
+        Returns
+        -------
+        float
             mean of accuracy of MLP test predictions
             per cv-fold
     """
@@ -71,7 +71,7 @@ def mlp_from_cfg(cfg, seed, instance, budget, **kwargs):
         # returns the cross validation accuracy
         score = cross_val_score(mlp, digits.data, digits.target, cv=5)
 
-    return -1 * np.mean(score)  # Because minimize!
+    return 1 - np.mean(score)  # Because minimize!
 
 
 logger = logging.getLogger("MLP-example")

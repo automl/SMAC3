@@ -9,7 +9,7 @@ objective of a configuration on the instances and seeds it already ran on."""
 
 
 def _runtime(config: Configuration, run_history: RunHistory,
-             instance_seed_pairs=None):
+             instance_seed_budget_keys=None):
     """Return array of all runtimes for the given config for further calculations.
 
     Parameters
@@ -18,8 +18,8 @@ def _runtime(config: Configuration, run_history: RunHistory,
         configuration to calculate objective for
     run_history : RunHistory
         RunHistory object from which the objective value is computed.
-    instance_seed_pairs : list, optional (default=None)
-        list of tuples of instance-seeds pairs. If None, the run_history is
+    instance_seed_budget_keys : list, optional (default=None)
+        list of tuples of instance-seed-budget triplets. If None, the run_history is
         queried for all runs of the given configuration.
 
     Returns
@@ -31,18 +31,18 @@ def _runtime(config: Configuration, run_history: RunHistory,
     except KeyError:  # challenger was not running so far
         return []
 
-    if instance_seed_pairs is None:
-        instance_seed_pairs = run_history.get_runs_for_config(config)
+    if instance_seed_budget_keys is None:
+        instance_seed_budget_keys = run_history.get_runs_for_config(config)
 
     runtimes = []
-    for i, r, b in instance_seed_pairs:
+    for i, r, b in instance_seed_budget_keys:
         k = RunKey(id_, i, r, b)
         runtimes.append(run_history.data[k].time)
     return runtimes
 
 
 def total_runtime(config: Configuration, run_history: RunHistory,
-                  instance_seed_pairs=None):
+                  instance_seed_budget_keys=None):
     """Return the total cost of a configuration.
 
     This is the sum of costs of all instance-seed pairs.
@@ -53,8 +53,8 @@ def total_runtime(config: Configuration, run_history: RunHistory,
         Configuration to calculate objective for
     run_history : RunHistory
         RunHistory object from which the objective value is computed.
-    instance_seed_pairs : list, optional (default=None)
-        List of tuples of instance-seeds pairs. If None, the run_history is
+    instance_seed_budget_keys : list, optional (default=None)
+        List of tuples of instance-seeds-budget triplets. If None, the run_history is
         queried for all runs of the given configuration.
 
     Returns
@@ -62,11 +62,11 @@ def total_runtime(config: Configuration, run_history: RunHistory,
     Runtime: float
         Sum of all costs
     """
-    return np.sum(_runtime(config, run_history, instance_seed_pairs))
+    return np.sum(_runtime(config, run_history, instance_seed_budget_keys))
 
 
 def _cost(config: Configuration, run_history: RunHistory,
-          instance_seed_pairs=None):
+          instance_seed_budget_keys=None):
     """Return array of all costs for the given config for further calculations.
 
     Parameters
@@ -75,8 +75,8 @@ def _cost(config: Configuration, run_history: RunHistory,
         Configuration to calculate objective for
     run_history : RunHistory
         RunHistory object from which the objective value is computed.
-    instance_seed_pairs : list, optional (default=None)
-        List of tuples of instance-seeds pairs. If None, the run_history is
+    instance_seed_budget_keys : list, optional (default=None)
+        List of tuples of instance-seeds-budget keys. If None, the run_history is
         queried for all runs of the given configuration.
 
     Returns
@@ -89,17 +89,17 @@ def _cost(config: Configuration, run_history: RunHistory,
     except KeyError:  # challenger was not running so far
         return []
 
-    if instance_seed_pairs is None:
-        instance_seed_pairs = run_history.get_runs_for_config(config)
+    if instance_seed_budget_keys is None:
+        instance_seed_budget_keys = run_history.get_runs_for_config(config)
 
     costs = []
-    for i, r, b in instance_seed_pairs:
+    for i, r, b in instance_seed_budget_keys:
         k = RunKey(id_, i, r, b)
         costs.append(run_history.data[k].cost)
     return costs
 
 
-def average_cost(config, run_history, instance_seed_pairs=None):
+def average_cost(config, run_history, instance_seed_budget_keys=None):
     """Return the average cost of a configuration.
 
     This is the mean of costs of all instance-seed pairs.
@@ -110,8 +110,8 @@ def average_cost(config, run_history, instance_seed_pairs=None):
         Configuration to calculate objective for
     run_history : RunHistory
         RunHistory object from which the objective value is computed.
-    instance_seed_pairs : list, optional (default=None)
-        List of tuples of instance-seeds pairs. If None, the run_history is
+    instance_seed_budget_keys : list, optional (default=None)
+        List of tuples of instance-seeds-budget keys. If None, the run_history is
         queried for all runs of the given configuration.
 
     Returns
@@ -119,11 +119,11 @@ def average_cost(config, run_history, instance_seed_pairs=None):
     Cost: float
         Average cost
     """
-    return np.mean(_cost(config, run_history, instance_seed_pairs))
+    return np.mean(_cost(config, run_history, instance_seed_budget_keys))
 
 
 def sum_cost(config: Configuration, run_history: RunHistory,
-             instance_seed_pairs=None):
+             instance_seed_budget_keys=None):
     """Return the sum of costs of a configuration.
 
     This is the sum of costs of all instance-seed pairs.
@@ -134,8 +134,8 @@ def sum_cost(config: Configuration, run_history: RunHistory,
         Configuration to calculate objective for
     run_history : RunHistory
         RunHistory object from which the objective value is computed.
-    instance_seed_pairs : list, optional (default=None)
-        List of tuples of instance-seeds pairs. If None, the run_history is
+    instance_seed_budget_keys : list, optional (default=None)
+        List of tuples of instance-seeds-budget keys. If None, the run_history is
         queried for all runs of the given configuration.
 
     Returns
@@ -143,4 +143,4 @@ def sum_cost(config: Configuration, run_history: RunHistory,
     sum_cost: float
         Sum of costs of config
     """
-    return np.sum(_cost(config, run_history, instance_seed_pairs))
+    return np.sum(_cost(config, run_history, instance_seed_budget_keys))

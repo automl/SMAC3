@@ -86,7 +86,13 @@ class Hyperband(SuccessiveHalving):
         # to track completed hyperband iterations
         self.hb_iters = 0
 
-        # hyperband configuration settings
+        # hyperband configuration
+        self._init_hb_params()
+
+    def _init_hb_params(self):
+        """
+        initialize Hyperband related parameters
+        """
         # setting initial running budget for future iterations (s & s_max from Algorithm 1)
         self.s_max = np.floor(np.log(self.max_budget / self.min_budget) / np.log(self.eta))
         self.s = np.floor(np.log(self.max_budget / self.min_budget) / np.log(self.eta))

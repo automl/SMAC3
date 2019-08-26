@@ -79,6 +79,7 @@ class TestHyperband(unittest.TestCase):
                                        run_history=self.rh,
                                        aggregate_func=average_cost)
 
+        self.assertEqual(intensifier.s_max, 3)
         self.assertEqual(inc, self.config1)
 
     @attr('slow')
@@ -102,6 +103,11 @@ class TestHyperband(unittest.TestCase):
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
             instances=[1], min_budget=0.5, max_budget=1, eta=2)
 
+        # ensuring correct parameter initialization
+        self.assertEqual(intensifier.s, intensifier.s_max)
+        self.assertEqual(intensifier.s_max, 1)
+        self.assertEqual(intensifier.hb_iters, 0)
+
         # 1st hyperband run - should run only 2 configurations
         challengers = [self.config1, self.config3, self.config2]
         inc, _ = intensifier.intensify(challengers=challengers,
@@ -110,6 +116,7 @@ class TestHyperband(unittest.TestCase):
                                        aggregate_func=average_cost)
         # check configuration runs - should have only 1 SH run with 2 configs
         # 3 runs (0.5 -> 2 runs, 1 -> 1 run)
+        self.assertEqual(intensifier.s, intensifier.s_max-1)
         self.assertEqual(taf.stats.ta_runs, 3)
         self.assertEqual(taf.stats.n_configs, 2)
 
@@ -125,5 +132,6 @@ class TestHyperband(unittest.TestCase):
         self.assertEqual(taf.stats.n_configs, 3)
         # hyperband completes 1 run & s reset to s_max
         self.assertEqual(intensifier.s, intensifier.s_max)
+        self.assertEqual(intensifier.hb_iters, 1)
         # correct incumbent selected
         self.assertEqual(inc, self.config1)

@@ -344,7 +344,7 @@ class Intensifier(object):
             inst_seed_pairs = list(inc_inst_seeds - set(missing_runs))
             # cost used by incumbent for going over all runs in inst_seed_pairs
             inc_sum_cost = sum_cost(config=incumbent,
-                                    instance_seed_pairs=inst_seed_pairs,
+                                    instance_seed_budget_keys=inst_seed_pairs,
                                     run_history=run_history)
             
             if len(to_run) == 0:
@@ -441,7 +441,7 @@ class Intensifier(object):
         # reasons)
         chall_inst_seeds = run_history.get_runs_for_config(challenger)
         chal_sum_cost = sum_cost(config=challenger,
-                                 instance_seed_pairs=chall_inst_seeds,
+                                 instance_seed_budget_keys=chall_inst_seeds,
                                  run_history=run_history)
         cutoff = min(curr_cutoff,
                      inc_sum_cost * self.adaptive_capping_slackfactor -

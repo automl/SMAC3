@@ -18,7 +18,7 @@ from smac.optimizer.objective import average_cost, sum_cost
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
-from smac.utils.constants import MAX_CUTOFF
+
 
 def get_config_space():
     cs = ConfigurationSpace()
@@ -458,7 +458,7 @@ class TestIntensify(unittest.TestCase):
 
         inst_seed_pairs = self.rh.get_runs_for_config(self.config1)
         # cost used by incumbent for going over all runs in inst_seed_pairs
-        inc_sum_cost = sum_cost(config=self.config1, instance_seed_pairs=inst_seed_pairs,
+        inc_sum_cost = sum_cost(config=self.config1, instance_seed_budget_keys=inst_seed_pairs,
                                     run_history=self.rh)
 
         cutoff = intensifier._adapt_cutoff(challenger=self.config2,
