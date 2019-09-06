@@ -7,7 +7,6 @@ from itertools import islice
 import numpy as np
 
 from smac.intensification.intensification import Intensifier
-from smac.optimizer.ei_optimization import ChallengerList
 from smac.optimizer.objective import sum_cost
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT

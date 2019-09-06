@@ -222,7 +222,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             tae_runner=taf, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), deterministic=True, cutoff=1,
-            instances=[1,2], min_budget=1, max_budget=2, eta=2, instance_order=None)
+            instances=[1, 2], min_budget=1, max_budget=2, eta=2, instance_order=None)
 
         self.rh.add(config=self.config1, cost=.001, time=0.001,
                     status=StatusType.SUCCESS, instance_id=1, seed=0,
