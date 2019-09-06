@@ -65,7 +65,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(intensifier.min_budget, 1)
         self.assertEqual(intensifier.max_budget, 6)
         self.assertEqual(intensifier.init_chal, 4)  # 2 iterations
-        self.assertEqual(intensifier.cutoff_as_budget, False)
+        self.assertFalse(intensifier.cutoff_as_budget)
 
     def test_init_2(self):
         """
@@ -75,7 +75,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             tae_runner=None, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
-            cutoff=10, instances=[1], min_budget=1, max_budget=None, eta=2)
+            cutoff=30, instances=[1], min_budget=1, max_budget=10, eta=2)
 
         self.assertEqual(len(intensifier.instances), 1)  # since instance-seed pairs
         self.assertEqual(intensifier.min_budget, 1)
@@ -88,12 +88,37 @@ class TestSuccessiveHalving(unittest.TestCase):
             test parameter initialiations for successive halving - runtime cutoff as budget (no param provided)
         """
 
-        with self.assertRaises(ValueError):  # runtime cutoff as budget requires min budget to be provided
+        with self.assertRaisesRegex(ValueError,
+                                    "requires parameters min_budget and max_budget/cutoff for intensification!"):
             SuccessiveHalving(
                 tae_runner=None, stats=self.stats,
                 traj_logger=TrajLogger(output_dir=None, stats=self.stats),
                 rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
                 cutoff=10, instances=[1])
+
+    def test_init_4(self):
+        """
+            test parameter initialiations for successive halving - eta < 1
+        """
+
+        with self.assertRaisesRegex(ValueError, 'eta must be greater than 1'):
+            SuccessiveHalving(
+                tae_runner=None, stats=self.stats,
+                traj_logger=TrajLogger(output_dir=None, stats=self.stats),
+                rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
+                cutoff=10, instances=[1], eta=0)
+
+    def test_init_5(self):
+        """
+            test parameter initialiations for successive halving - eta < 1
+        """
+
+        with self.assertRaisesRegex(ValueError, 'eta must be greater than 1'):
+            SuccessiveHalving(
+                tae_runner=None, stats=self.stats,
+                traj_logger=TrajLogger(output_dir=None, stats=self.stats),
+                rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
+                cutoff=10, instances=[1], eta=0)
 
     def test_top_k_1(self):
         """
@@ -143,7 +168,7 @@ class TestSuccessiveHalving(unittest.TestCase):
                     seed=None,
                     additional_info=None)
 
-        with self.assertRaises(AssertionError):
+        with self.assertRaisesRegex(AssertionError, 'Cannot compare configs'):
             intensifier._top_k(configs=[self.config2, self.config1, self.config3],
                                k=1, run_history=self.rh)
 
@@ -176,6 +201,8 @@ class TestSuccessiveHalving(unittest.TestCase):
                                        aggregate_func=average_cost)
 
         self.assertEqual(inc, self.config2)
+        self.assertEqual(self.stats.ta_runs, 2)
+        self.assertEqual(self.stats.inc_changed, 1)
 
     @attr('slow')
     def test_intensify_2(self):
@@ -194,23 +221,27 @@ class TestSuccessiveHalving(unittest.TestCase):
         intensifier = SuccessiveHalving(
             tae_runner=taf, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
-            rng=np.random.RandomState(12345), deterministic=True,
-            instances=[1], min_budget=1, max_budget=1)
+            rng=np.random.RandomState(12345), deterministic=True, cutoff=1,
+            instances=[1,2], min_budget=1, max_budget=2, eta=2, instance_order=None)
 
         self.rh.add(config=self.config1, cost=.001, time=0.001,
-                    status=StatusType.SUCCESS, instance_id=1,
-                    seed=0,
+                    status=StatusType.SUCCESS, instance_id=1, seed=0,
+                    additional_info=None)
+        self.rh.add(config=self.config1, cost=.001, time=0.001,
+                    status=StatusType.SUCCESS, instance_id=2, seed=0,
                     additional_info=None)
 
-        # config2 should have a timeout (due to adaptive capping)
-        # and config1 should still be the incumbent
-        inc, _ = intensifier.intensify(challengers=[self.config2],
+        # config2 should be capped and config1 should still be the incumbent
+        inc, _ = intensifier.intensify(challengers=[self.config2, self.config3],
                                        incumbent=self.config1,
                                        run_history=self.rh,
                                        aggregate_func=average_cost)
 
-        # self.assertTrue(False)
         self.assertEqual(inc, self.config1)
+        self.assertEqual(self.stats.ta_runs, 2)
+        self.assertEqual(self.stats.inc_changed, 0)
+        self.assertEqual(list(self.rh.data.values())[2][2], StatusType.CAPPED)
+        self.assertEqual(list(self.rh.data.values())[3][2], StatusType.CAPPED)
 
     @attr('slow')
     def test_intensify_3(self):
@@ -241,6 +272,8 @@ class TestSuccessiveHalving(unittest.TestCase):
                                        aggregate_func=average_cost)
 
         self.assertEqual(inc, self.config1)
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config1)), 4)
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config2)), 1)
 
     @attr('slow')
     def test_intensify_4(self):
@@ -274,6 +307,7 @@ class TestSuccessiveHalving(unittest.TestCase):
                                        aggregate_func=average_cost)
 
         self.assertEqual(inc, self.config2)
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config2)), 2)
 
     @attr('slow')
     def test_intensify_5(self):

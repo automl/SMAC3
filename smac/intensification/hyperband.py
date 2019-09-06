@@ -7,7 +7,7 @@ import numpy as np
 
 from smac.intensification.successive_halving import SuccessiveHalving
 from smac.stats.stats import Stats
-from smac.utils.constants import MAXINT, MAX_CUTOFF
+from smac.utils.constants import MAXINT
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
 from smac.tae.execute_ta_run import ExecuteTARun

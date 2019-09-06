@@ -46,8 +46,6 @@ def mlp_from_cfg(cfg, seed, instance, budget, **kwargs):
         Returns
         -------
         float
-            mean of accuracy of MLP test predictions
-            per cv-fold
     """
     # For deactivated parameters, the configuration stores None-values.
     # This is not accepted by the MLP, so we replace them with placeholder values.

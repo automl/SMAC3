@@ -3,7 +3,6 @@ import logging
 import typing
 from collections import OrderedDict
 from itertools import islice
-import warnings
 
 import numpy as np
 
@@ -13,7 +12,7 @@ from smac.optimizer.objective import sum_cost
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
 from smac.configspace import Configuration
-from smac.runhistory.runhistory import RunHistory, InstSeedKey
+from smac.runhistory.runhistory import RunHistory
 from smac.tae.execute_ta_run import BudgetExhaustedException, CappedRunException, ExecuteTARun
 from smac.utils.io.traj_logging import TrajLogger
 
@@ -41,13 +40,13 @@ class SuccessiveHalving(Intensifier):
         list of all instance ids
     instance_specifics : typing.Mapping[str,np.ndarray]
         mapping from instance name to instance specific string
-    cutoff : int
+    cutoff : typing.Union[int, None]
         runtime cutoff of TA runs
     deterministic : bool
         whether the TA is deterministic or not
-    min_budget : float
+    min_budget : typing.Union[float, None]
         minimum budget allowed for 1 run of successive halving
-    max_budget : float
+    max_budget : typing.Union[float, None]
         maximum budget allowed for 1 run of successive halving
     eta : float
         'halving' factor after each iteration in a successive halving run. Defaults to 3
@@ -79,10 +78,10 @@ class SuccessiveHalving(Intensifier):
                  rng: np.random.RandomState,
                  instances: typing.List[str],
                  instance_specifics: typing.Mapping[str, np.ndarray] = None,
-                 cutoff: int = None,
+                 cutoff: typing.Union[int, None] = None,
                  deterministic: bool = False,
-                 min_budget: float = None,
-                 max_budget: float = None,
+                 min_budget: typing.Union[float, None] = None,
+                 max_budget: typing.Union[float, None] = None,
                  eta: float = 3,
                  init_chal: int = None,
                  run_obj_time: bool = True,
@@ -106,7 +105,7 @@ class SuccessiveHalving(Intensifier):
 
         # if instances are coming from Hyperband, skip the instance preprocessing section
         # it is already taken care by Hyperband
-        if instances is not None and isinstance(instances[0], InstSeedKey):
+        if instances is not None and isinstance(instances[0], tuple):
             self.instances = instances
         else:
             instances = [] if instances is None else instances
@@ -125,7 +124,7 @@ class SuccessiveHalving(Intensifier):
             else:
                 seeds = self.rs.randint(low=0, high=MAXINT, size=self.n_seeds)
             # storing instances & seeds as tuples
-            self.instances = [InstSeedKey(i, s) for s in seeds for i in self.instances]
+            self.instances = [(i, s) for s in seeds for i in self.instances]
 
         # successive halving parameters
         self._init_sh_params(min_budget, max_budget, eta, init_chal)
@@ -137,17 +136,17 @@ class SuccessiveHalving(Intensifier):
             self.adaptive_capping = False
 
     def _init_sh_params(self, min_budget: float,
-                        max_budget: float,
-                        eta: float,
+                        max_budget: typing.Union[float, None],
+                        eta: typing.Union[float, None],
                         init_chal: int):
         """
         initialize Successive Halving parameters
 
         Parameters
         ----------
-        min_budget : float
+        min_budget : typing.Union[float, None]
             minimum budget allowed for 1 run of successive halving
-        max_budget : float
+        max_budget : typing.Union[float, None]
             maximum budget allowed for 1 run of successive halving
         eta : float
             'halving' factor after each iteration in a successive halving run
@@ -161,21 +160,23 @@ class SuccessiveHalving(Intensifier):
 
         # BUDGETS
 
+        if max_budget is not None and min_budget is not None \
+                and max_budget < min_budget:
+            raise ValueError('Max budget has to be larger than min budget')
+
         # - if only 1 instance was provided & quality objective, then use cutoff as budget
         # - else, use instances as budget
         if not self.run_obj_time and len(self.instances) <= 1:
             # budget with cutoff
-            # cannot run successive halving with cutoff as budget if budget limits are not provided!
             if min_budget is None or \
                     (max_budget is None and self.cutoff is None):
                 raise ValueError("Successive Halving with runtime-cutoff as budget (i.e., only 1 instance) "
                                  "requires parameters min_budget and max_budget/cutoff for intensification!")
 
-            # if both cutoff and max_budget are provided, then warn user
             if self.cutoff is not None and max_budget is not None:
-                warnings.warn('Successive Halving with runtime-cutoff as budget: '
-                              'Both max budget (%d) and runtime-cutoff (%d) were provided. Max budget will be used.' %
-                              (self.max_budget, len(self.instances)))
+                self.logger.warn('Successive Halving with runtime-cutoff as budget: '
+                                 'Both max budget (%d) and runtime-cutoff (%d) were provided. Max budget will be used.' %
+                                 (max_budget, self.cutoff))
 
             self.min_budget = min_budget
             self.max_budget = max_budget if max_budget else self.cutoff
@@ -184,23 +185,23 @@ class SuccessiveHalving(Intensifier):
         else:
             # budget with instances
             if self.run_obj_time and len(self.instances) <= 1:
-                warnings.warn("Successive Halving has objective 'runtime' but only 1 instance-seed pair.")
+                self.logger.warn("Successive Halving has objective 'runtime' but only 1 instance-seed pair.")
             self.min_budget = 1 if min_budget is None else int(min_budget)
             self.max_budget = len(self.instances) if max_budget is None else int(max_budget)
             self.cutoff_as_budget = False
 
-            # max budget cannot be greater than number of instance-seed pairs
             if self.max_budget > len(self.instances):
                 raise ValueError('Max budget cannot be greater than the number of instance-seed pairs')
             if self.max_budget < len(self.instances):
-                warnings.warn('Max budget (%d) does not include all instance-seed pairs (%d)' %
-                              (self.max_budget, len(self.instances)))
+                self.logger.warn('Max budget (%d) does not include all instance-seed pairs (%d)' %
+                                 (self.max_budget, len(self.instances)))
 
         self.logger.debug("Running Successive Halving with '%s' as budget" % self.cutoff_as_budget)
 
-        # number configurations to consider for a full successive halving iteration
+        # precomputing stuff for SH
         self.max_sh_iter = np.floor(np.log(self.max_budget / self.min_budget) / np.log(eta))
         self.init_chal = int(np.round(self.eta**self.max_sh_iter)) if init_chal is None else init_chal
+        self.budgets = self.max_budget * np.power(self.eta, -np.linspace(self.max_sh_iter, 0, self.max_sh_iter + 1))
 
     def intensify(self, challengers: typing.List[Configuration],
                   incumbent: typing.Optional[Configuration],
@@ -240,6 +241,7 @@ class SuccessiveHalving(Intensifier):
         self._ta_time = 0
         self._chall_indx = 0
         self._num_run = 0
+        first_run = True
 
         if isinstance(challengers, ChallengerList):
             # converting to list for indexing purposes
@@ -269,21 +271,16 @@ class SuccessiveHalving(Intensifier):
         else:
             inc_sum_cost = np.inf
 
-        # selecting the 1st budget for 1st round of successive halving
-        budgets = self.max_budget * np.power(self.eta, -np.linspace(self.max_sh_iter, 0, self.max_sh_iter+1))
-
-        first_run = True
-
         self.logger.debug('---' * 40)
-        self.logger.debug('Successive Halving run begins. Budgets: %s' % budgets)
+        self.logger.debug('Successive Halving run begins. Budgets: %s' % self.budgets)
 
         # run intensification till budget is max
-        for i, curr_budget in enumerate(budgets):
+        for i, curr_budget in enumerate(self.budgets):
 
             self.logger.info('Running with budget [%.2f / %d] with %d challengers' %
                              (curr_budget, self.max_budget, len(curr_challengers)))
             # selecting instance subset for this budget, depending on the kind of budget
-            prev_budget = budgets[i - 1] if i > 0 else 0
+            prev_budget = self.budgets[i - 1] if i > 0 else 0
             available_insts = all_instances[int(prev_budget):int(curr_budget)] if not self.cutoff_as_budget \
                 else all_instances
 
@@ -296,7 +293,7 @@ class SuccessiveHalving(Intensifier):
                                                           incumbent=incumbent,
                                                           instances=available_insts,
                                                           run_history=run_history,
-                                                          budget=budgets[i],
+                                                          budget=self.budgets[i],
                                                           inc_sum_cost=inc_sum_cost,
                                                           first_run=first_run)
 
@@ -351,7 +348,7 @@ class SuccessiveHalving(Intensifier):
 
     def _race_challengers(self, challengers: typing.List[Configuration],
                           incumbent: Configuration,
-                          instances: typing.List[InstSeedKey],
+                          instances: typing.List[typing.Tuple[str, int]],
                           run_history: RunHistory,
                           budget: float,
                           inc_sum_cost: float,
@@ -365,7 +362,7 @@ class SuccessiveHalving(Intensifier):
             List of challenger configurations to race
         incumbent:
             Current incumbent configuration
-        instances: typing.List[InstSeedKey]
+        instances: typing.List[typing.Tuple[str, int]]
             List of instance-seed pairs to use for racing challengers
         run_history: RunHistory
             Stores all runs we ran so far

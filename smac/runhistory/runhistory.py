@@ -25,10 +25,6 @@ class RunKey(collections.namedtuple('RunKey', ['config_id', 'instance_id', 'seed
         return super().__new__(cls, config_id, instance_id, seed, budget)
 
 
-InstSeedKey = collections.namedtuple(
-    'InstSeedKey', ['instance', 'seed'])
-
-
 InstSeedBudgetKey = collections.namedtuple(
     'InstSeedBudgetKey', ['instance', 'seed', 'budget'])
 
@@ -122,7 +118,7 @@ class RunHistory(object):
 
         # for fast access, we have also an unordered data structure
         # to get all instance seed pairs of a configuration
-        self._configid_to_inst_seed_budget = {}  # type: typing.Dict[int, typing.Dict[InstSeedKey, typing.List[float]]]
+        self._configid_to_inst_seed_budget = {}  # type: typing.Dict[int, typing.Dict[InstSeedBudgetKey, typing.List[float]]]
 
         self.config_ids = {}  # type: typing.Dict[Configuration, int]
         self.ids_config = {}  # type: typing.Dict[int, Configuration]
@@ -208,7 +204,7 @@ class RunHistory(object):
         if origin in (DataOrigin.INTERNAL, DataOrigin.EXTERNAL_SAME_INSTANCES) \
                 and status != StatusType.CAPPED:
             # also add to fast data structure
-            is_k = InstSeedKey(k.instance_id, k.seed)
+            is_k = InstSeedBudgetKey(k.instance_id, k.seed, k.budget)
             self._configid_to_inst_seed_budget[k.config_id] = self._configid_to_inst_seed_budget.get(k.config_id, {})
             if is_k not in self._configid_to_inst_seed_budget[k.config_id].keys():
                 # add new inst-seed-key with budget to main dict
