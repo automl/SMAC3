@@ -325,7 +325,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             tae_runner=taf, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), run_obj_time=False,
-            instances=[0, 1, 2], instance_order='shuffle', eta=3,
+            instances=[0, 1], instance_order='shuffle', eta=2,
             deterministic=True)
 
         # config1 should become the new incumbent
@@ -344,4 +344,4 @@ class TestSuccessiveHalving(unittest.TestCase):
                                        aggregate_func=average_cost)
 
         self.assertEqual(inc, self.config1)
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config2)), 3)
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config2)), 2)

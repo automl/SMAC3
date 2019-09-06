@@ -243,19 +243,15 @@ class SuccessiveHalving(Intensifier):
         self._num_run = 0
         first_run = True
 
-        if isinstance(challengers, ChallengerList):
-            # converting to list for indexing purposes
-            challengers = list(challengers)
-
-        # select first 'n' challengers
+        # converting to iterator for consistency
+        if isinstance(challengers, list):
+            challengers = (c for c in challengers)
         # challengers can be repeated only if optimizing across multiple seeds or changing instance orders every run
-        # else select first 'n' new challengers
-        if self.n_seeds > 1 or self.instance_order == 'shuffle':
-            curr_challengers = challengers[:self.init_chal]
-        else:
+        if not (self.n_seeds > 1 or self.instance_order == 'shuffle'):
             used_configs = set(run_history.get_all_configs())
-            new_config_gen = (c for c in challengers if c not in used_configs)
-            curr_challengers = list(islice(new_config_gen, self.init_chal))
+            challengers = (c for c in challengers if c not in used_configs)
+        # select first 'n' challengers
+        curr_challengers = list(islice(challengers, self.init_chal))
 
         # randomize instances per successive halving run, if user specifies
         all_instances = self.instances
