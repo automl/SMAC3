@@ -20,7 +20,7 @@ class TestSingleInitialDesign(unittest.TestCase):
     def setUp(self):
         self.cs = ConfigurationSpace()
         self.cs.add_hyperparameter(UniformFloatHyperparameter(
-            name="x1", lower=1, upper=10, default_value=2)
+            name="x1", lower=1, upper=10, default_value=1)
         )
         self.scenario = Scenario({'cs': self.cs, 'run_obj': 'quality',
                                   'output_dir': ''})
@@ -123,4 +123,4 @@ class TestSingleInitialDesign(unittest.TestCase):
         inc = dc.run()
         self.assertTrue(stats.ta_runs == 2)  # two runs per config
         self.assertTrue(len(rh.data) == 2)  # two runs per config
-        self.assertTrue(rh.get_cost(inc) == 4)
+        self.assertTrue(rh.get_cost(inc) == 1)
