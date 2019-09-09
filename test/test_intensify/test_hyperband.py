@@ -3,7 +3,6 @@ from nose.plugins.attrib import attr
 
 import logging
 import numpy as np
-import time
 
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter

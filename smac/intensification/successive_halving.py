@@ -174,8 +174,8 @@ class SuccessiveHalving(Intensifier):
 
             if self.cutoff is not None and max_budget is not None:
                 self.logger.warn('Successive Halving with runtime-cutoff as budget: '
-                                 'Both max budget (%d) and runtime-cutoff (%d) were provided. Max budget will be used.' %
-                                 (max_budget, self.cutoff))
+                                 'Both max budget (%d) and runtime-cutoff (%d) were provided. '
+                                 'Max budget will be used.' % (max_budget, self.cutoff))
 
             self.min_budget = min_budget
             self.max_budget = max_budget if max_budget else self.cutoff

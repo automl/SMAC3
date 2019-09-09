@@ -142,10 +142,10 @@ class RunHistory(object):
         self.overwrite_existing_runs = overwrite_existing_runs
 
     def add(self, config: Configuration, cost: float, time: float,
-            status: StatusType, instance_id: str=None,
-            seed: int=None,
-            budget: float=0,
-            additional_info: dict=None,
+            status: StatusType, instance_id: str = None,
+            seed: int = None,
+            budget: float = 0,
+            additional_info: dict = None,
             origin: DataOrigin=DataOrigin.INTERNAL):
         """Adds a data of a new target algorithm (TA) run;
         it will update data if the same key values are used

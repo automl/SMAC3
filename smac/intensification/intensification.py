@@ -10,7 +10,7 @@ import numpy as np
 
 from smac.optimizer.objective import sum_cost
 from smac.stats.stats import Stats
-from smac.utils.constants import MAXINT, MAX_CUTOFF
+from smac.utils.constants import MAXINT
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
 from smac.tae.execute_ta_run import StatusType, BudgetExhaustedException, CappedRunException, ExecuteTARun
@@ -69,14 +69,15 @@ class Intensifier(object):
     def __init__(self, tae_runner: ExecuteTARun, stats: Stats,
                  traj_logger: TrajLogger, rng: np.random.RandomState,
                  instances: typing.List[str],
-                 instance_specifics: typing.Mapping[str, np.ndarray]=None,
-                 cutoff: int=None, deterministic:bool=False,
-                 run_obj_time: bool=True,
-                 always_race_against: Configuration=None,
-                 run_limit: int=MAXINT,
-                 use_ta_time_bound: bool=False,
-                 minR: int=1, maxR: int=2000,
-                 adaptive_capping_slackfactor: float=1.2,
+                 instance_specifics: typing.Mapping[str, np.ndarray] = None,
+                 cutoff: int = None, deterministic: bool = False,
+                 run_obj_time: bool = True,
+                 always_race_against: Configuration = None,
+                 run_limit: int = MAXINT,
+                 use_ta_time_bound: bool = False,
+                 minR: int = 1,
+                 maxR: int = 2000,
+                 adaptive_capping_slackfactor: float = 1.2,
                  min_chall: int=2):
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
