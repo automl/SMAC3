@@ -9,7 +9,6 @@ import warnings
 import numpy as np
 from sklearn.model_selection import cross_val_score
 from sklearn.neural_network import MLPClassifier
-from sklearn import metrics
 from sklearn.datasets import load_digits
 from sklearn.exceptions import ConvergenceWarning
 
