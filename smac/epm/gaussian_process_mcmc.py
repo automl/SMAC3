@@ -176,7 +176,6 @@ class GaussianProcessMCMC(BaseModel):
 
                 # Take the last samples from each walker
                 self.hypers = sampler.chain[:, -1]
-                print('hypers', self.hypers.mean(axis=0), np.exp(self.hypers.mean(axis=0)))
             elif self.mcmc_sampler == 'nuts':
                 # Originally published as:
                 # http://www.stat.columbia.edu/~gelman/research/published/nuts.pdf
@@ -210,7 +209,6 @@ class GaussianProcessMCMC(BaseModel):
                 indices = [int(np.rint(ind)) for ind in np.linspace(start=0, stop=len(samples) - 1, num=10)]
                 self.hypers = samples[indices]
                 self.p0 = self.hypers.mean(axis=0)
-                print('hypers', 'log space', self.p0, 'regular space', np.exp(self.p0))
             else:
                 raise ValueError(self.mcmc_sampler)
 
@@ -269,7 +267,6 @@ class GaussianProcessMCMC(BaseModel):
                 model.std_y_ = self.std_y_
 
         self.is_trained = True
-        print('#LL evaluations', self._n_ll_evals)
 
     def _ll(self, theta: np.ndarray) -> float:
         """
