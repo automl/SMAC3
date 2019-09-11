@@ -5,7 +5,7 @@ from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
 from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
 from smac.epm.util_funcs import get_types, get_rng
 from smac.initial_design.sobol_design import SobolDesign
-from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
+from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
 
 
 __author__ = "Marius Lindauer"
@@ -19,6 +19,10 @@ class SMAC4BO(SMAC4AC):
 
     see smac.facade.smac_Facade for API
     This facade overwrites options available via the SMAC facade
+
+    Hyperparameters are chosen according to the best configuration for Gaussian process maximum likelihood found in
+    "Towards Assessing the Impact of Bayesian Optimization's Own Hyperparameters" by Lindauer et al., presented at the
+    DSO workshop 2019 (https://arxiv.org/abs/1908.06674).
 
     Attributes
     ----------
@@ -40,10 +44,10 @@ class SMAC4BO(SMAC4AC):
         scenario = kwargs['scenario']
 
         kwargs['initial_design'] = kwargs.get('initial_design', SobolDesign)
-        kwargs['runhistory2epm'] = kwargs.get('runhistory2epm', RunHistory2EPM4LogScaledCost)
+        kwargs['runhistory2epm'] = kwargs.get('runhistory2epm', RunHistory2EPM4Cost)
 
         init_kwargs = kwargs.get('initial_design_kwargs', dict())
-        init_kwargs['n_configs_x_params'] = init_kwargs.get('n_configs_x_params', 10)
+        init_kwargs['n_configs_x_params'] = init_kwargs.get('n_configs_x_params', 8)
         init_kwargs['max_config_fracs'] = init_kwargs.get('max_config_fracs', 0.25)
         kwargs['initial_design_kwargs'] = init_kwargs
 
@@ -68,7 +72,7 @@ class SMAC4BO(SMAC4AC):
             if len(cont_dims) > 0:
                 exp_kernel = Matern(
                     np.ones([len(cont_dims)]),
-                    [(np.exp(-10), np.exp(2)) for _ in range(len(cont_dims))],
+                    [(np.exp(-6.754111155189306), np.exp(0.0858637988771976)) for _ in range(len(cont_dims))],
                     nu=2.5,
                     operate_on=cont_dims,
                 )
@@ -76,7 +80,7 @@ class SMAC4BO(SMAC4AC):
             if len(cat_dims) > 0:
                 ham_kernel = HammingKernel(
                     np.ones([len(cat_dims)]),
-                    [(np.exp(-10), np.exp(2)) for _ in range(len(cat_dims))],
+                    [(np.exp(-6.754111155189306), np.exp(0.0858637988771976)) for _ in range(len(cat_dims))],
                     operate_on=cat_dims,
                 )
 
@@ -125,7 +129,7 @@ class SMAC4BO(SMAC4AC):
 
         if kwargs.get('random_configuration_chooser') is None:
             random_config_chooser_kwargs = kwargs.get('random_configuration_chooser_kwargs', dict())
-            random_config_chooser_kwargs['prob'] = random_config_chooser_kwargs.get('prob', 0.0)
+            random_config_chooser_kwargs['prob'] = random_config_chooser_kwargs.get('prob', 0.08447232371720552)
             kwargs['random_configuration_chooser_kwargs'] = random_config_chooser_kwargs
 
         if kwargs.get('acquisition_function_optimizer') is None:
