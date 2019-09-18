@@ -57,9 +57,9 @@ class SuccessiveHalving(Intensifier):
         Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0
     instance_order : str
         how to order instances. Can be set to: [None, shuffle_once, shuffle]
-        None - use as is given by the user
-        shuffle_once - shuffle once and use across all SH run (default)
-        shuffle - shuffle before every SH run
+        * None - use as is given by the user
+        * shuffle_once - shuffle once and use across all SH run (default)
+        * shuffle - shuffle before every SH run
     adaptive_capping_slackfactor : float
         slack factor of adpative capping (factor * adpative cutoff)
 
