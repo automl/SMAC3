@@ -165,7 +165,7 @@ class AbstractTAFunc(ExecuteTARun):
             runtime = float(obj.wall_clock_time)
         else:
             start_time = time.time()
-            result = self.ta(config, **obj_kwargs)
+            result = self._call_ta_raw(config, **obj_kwargs)
             
             if result is not None:
                 status = StatusType.SUCCESS
@@ -185,6 +185,14 @@ class AbstractTAFunc(ExecuteTARun):
 
     def _call_ta(self, obj, config, instance, seed):
         raise NotImplementedError()
+
+    def _call_ta_raw(self, config, **kwargs):
+        try:
+            result = self.ta(config, **kwargs)
+        except Exception as e:
+            self.logger.exception(e)
+            result = None
+        return result
 
     def serialize(self, x):
         """ to serialize results from the TA if required """
