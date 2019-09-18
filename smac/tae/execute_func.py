@@ -201,12 +201,12 @@ class AbstractTAFunc(ExecuteTARun):
             json.dumps(x)
             return x
         except TypeError:
-            if not isinstance(x, dict):
+            if isinstance(x, dict):
+                raise TypeError("TA returned a 'dict' with some non-serializable items.")
+            else:
                 self.logger.warning("TA returned result of type %s but it should be a serializable type. "
                                     "Attempting to convert to 'float'." % type(x))
                 return float(x)
-            else:
-                raise TypeError("TA returned a 'dict' with some non-serializable items.")
 
 
 class ExecuteTAFuncDict(AbstractTAFunc):
