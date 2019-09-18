@@ -19,7 +19,7 @@ __license__ = "3-clause BSD"
 class Hyperband(SuccessiveHalving):
     """ Races multiple challengers against an incumbent using Hyperband method
 
-    Implementating from "BOHB: Robust and Efficient Hyperparameter Optimization at Scale" (Falkner et al. 2018)
+    Implementation from "BOHB: Robust and Efficient Hyperparameter Optimization at Scale" (Falkner et al. 2018)
 
     Parameters
     ----------
