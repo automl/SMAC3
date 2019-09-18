@@ -2,6 +2,7 @@ import logging
 import inspect
 import math
 import time
+import json
 
 import numpy as np
 import pynisher
@@ -76,6 +77,9 @@ class AbstractTAFunc(ExecuteTARun):
         
         self.use_pynisher = use_pynisher
 
+        self.logger = logging.getLogger(
+            self.__module__ + '.' + self.__class__.__name__)
+
     def run(self, config, instance=None,
             cutoff=None,
             seed=12345,
@@ -143,6 +147,7 @@ class AbstractTAFunc(ExecuteTARun):
             else:
                 result = rval
                 additional_run_info = {}
+
     
             if obj.exit_status is pynisher.TimeoutException:
                 status = StatusType.TIMEOUT
@@ -172,10 +177,28 @@ class AbstractTAFunc(ExecuteTARun):
             runtime = time.time() - start_time
             additional_run_info = {}
 
+        # check serializability of results - if not, then attempt to convert it
+        cost = self.serialize(cost)
+        additional_run_info = self.serialize(additional_run_info)
+
         return status, cost, runtime, additional_run_info
 
     def _call_ta(self, obj, config, instance, seed):
         raise NotImplementedError()
+
+    def serialize(self, x):
+        """ to serialize results from the TA if required """
+
+        try:
+            json.dumps(x)
+            return x
+        except TypeError:
+            if not isinstance(x, dict):
+                self.logger.warning("TA returned result of type %s but it should be a serializable type. "
+                                    "Attempting to convert to 'float'." % type(x))
+                return float(x)
+            else:
+                raise TypeError("TA returned a 'dict' with some non-serializable items.")
 
 
 class ExecuteTAFuncDict(AbstractTAFunc):

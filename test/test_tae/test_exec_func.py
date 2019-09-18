@@ -76,7 +76,6 @@ class TestExecuteFunc(unittest.TestCase):
         self.assertGreaterEqual(rval[2], 0.0)
         self.assertEqual(rval[3], dict())
 
-
     @unittest.mock.patch.object(Configuration, 'get_dictionary')
     def test_run_execute_func_for_fmin(self, mock):
         mock.return_value = {'x1': 2, 'x2': 1}
@@ -153,3 +152,13 @@ class TestExecuteFunc(unittest.TestCase):
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
         self.assertRaises(ValueError, taf.run, config=2, cutoff=65536)
 
+    def test_non_serializable(self):
+        target = lambda x: np.int32(x)
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
+        rval = taf.run(config=2)
+
+        self.assertEqual(type(rval[1]), float)
+        self.assertEqual(rval[0], StatusType.SUCCESS)
+        self.assertEqual(rval[1], 2.0)
+        self.assertGreaterEqual(rval[2], 0.0)
+        self.assertEqual(rval[3], dict())
