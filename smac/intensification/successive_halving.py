@@ -40,7 +40,7 @@ class SuccessiveHalving(Intensifier):
     instance_specifics : typing.Mapping[str,np.ndarray]
         mapping from instance name to instance specific string
     cutoff : typing.Union[int, None]
-        runtime cutoff of TA runs
+        cutoff of TA runs
     deterministic : bool
         whether the TA is deterministic or not
     min_budget : typing.Union[float, None]
@@ -56,7 +56,7 @@ class SuccessiveHalving(Intensifier):
     n_seeds : int
         Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0
     instance_order : str
-        how to order instances. Can be set to:
+        how to order instances. Can be set to: [None, shuffle_once, shuffle]
         None - use as is given by the user
         shuffle_once - shuffle once and use across all SH run (default)
         shuffle - shuffle before every SH run
@@ -65,10 +65,8 @@ class SuccessiveHalving(Intensifier):
 
     Returns
     --------
-    Configuration
-        new incumbent configuration
-    float
-        empirical performance of incumbent configuration
+    typing.Tuple(Configuration, float)
+        incumbent configuration and its performance
     """
 
     def __init__(self, tae_runner: ExecuteTARun,
@@ -231,10 +229,7 @@ class SuccessiveHalving(Intensifier):
 
         Returns
         -------
-        incumbent: Configuration()
-            current (maybe new) incumbent configuration
-        inc_perf: float
-            empirical performance of incumbent configuration
+        typing.Tuple(Configuration, float)
         """
         self.start_time = time.time()
         self._ta_time = 0
@@ -370,7 +365,7 @@ class SuccessiveHalving(Intensifier):
 
         Returns
         -------
-        challengers: typing.List[Configuration]
+        typing.List[Configuration]
             All challengers that were successfully executed, without being capped
         """
 
@@ -447,7 +442,7 @@ class SuccessiveHalving(Intensifier):
 
         Returns
         -------
-        challengers: typing.List[Configuration]
+        typing.List[Configuration]
             top challenger configurations, sorted in increasing costs
         """
         # extracting costs for each given configuration
