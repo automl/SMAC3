@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.facade.smac_bo_facade &mdash; SMAC 0.11.1dev documentation</title>
+  <title>smac.facade.smac_bo_facade &mdash; SMAC 0.11.1 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.11.1dev
+                0.11.1
               </div>
             
           
@@ -290,6 +290,16 @@
 <span class="sd">    Hyperparameters are chosen according to the best configuration for Gaussian process maximum likelihood found in</span>
 <span class="sd">    &quot;Towards Assessing the Impact of Bayesian Optimization&#39;s Own Hyperparameters&quot; by Lindauer et al., presented at the</span>
 <span class="sd">    DSO workshop 2019 (https://arxiv.org/abs/1908.06674).</span>
+
+<span class="sd">    Changes are:</span>
+<span class="sd">    * Instead of having an initial design of size 10*D as suggested by Jones et al. 1998 (actually, they suggested</span>
+<span class="sd">      10*D+1), we use an initial design of 8*D.</span>
+<span class="sd">    * More restrictive lower and upper bounds on the length scale for the Matern and Hamming Kernel than the ones</span>
+<span class="sd">      suggested by Klein et al. 2017 in the RoBO package. In practice, they are ``np.exp(-6.754111155189306)``</span>
+<span class="sd">      instead of ``np.exp(-10)`` for the lower bound and ``np.exp(0.0858637988771976)`` instead of</span>
+<span class="sd">      ``np.exp(2)`` for the upper bound.</span>
+<span class="sd">    * The initial design is set to be a Sobol grid</span>
+<span class="sd">    * The random fraction is set to ``0.08447232371720552``, it was ``0.0`` before.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
