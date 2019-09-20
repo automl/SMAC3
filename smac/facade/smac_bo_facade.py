@@ -24,6 +24,16 @@ class SMAC4BO(SMAC4AC):
     "Towards Assessing the Impact of Bayesian Optimization's Own Hyperparameters" by Lindauer et al., presented at the
     DSO workshop 2019 (https://arxiv.org/abs/1908.06674).
 
+    Changes are:
+    * Instead of having an initial design of size 10*D as suggested by Jones et al. 1998 (actually, they suggested
+      10*D+1), we use an initial design of 8*D.
+    * More restrictive lower and upper bounds on the length scale for the Matern and Hamming Kernel than the ones
+      suggested by Klein et al. 2017 in the RoBO package. In practice, they are ``np.exp(-6.754111155189306)``
+      instead of ``np.exp(-10)`` for the lower bound and ``np.exp(0.0858637988771976)`` instead of
+      ``np.exp(2)`` for the upper bound.
+    * The initial design is set to be a Sobol grid
+    * The random fraction is set to ``0.08447232371720552``, it was ``0.0`` before.
+
     Attributes
     ----------
     logger
