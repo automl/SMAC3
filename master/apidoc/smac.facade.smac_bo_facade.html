@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.facade.smac_bo_facade module &mdash; SMAC 0.11.0 documentation</title>
+  <title>smac.facade.smac_bo_facade module &mdash; SMAC 0.11.1 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.11.0
+                0.11.1
               </div>
             
           
@@ -281,6 +281,22 @@
 <p>Facade to use SMAC for BO using a GP</p>
 <p>see smac.facade.smac_Facade for API
 This facade overwrites options available via the SMAC facade</p>
+<p>Hyperparameters are chosen according to the best configuration for Gaussian process maximum likelihood found in
+“Towards Assessing the Impact of Bayesian Optimization’s Own Hyperparameters” by Lindauer et al., presented at the
+DSO workshop 2019 (<a class="reference external" href="https://arxiv.org/abs/1908.06674">https://arxiv.org/abs/1908.06674</a>).</p>
+<p>Changes are:
+* Instead of having an initial design of size 10*D as suggested by Jones et al. 1998 (actually, they suggested</p>
+<blockquote>
+<div><p>10*D+1), we use an initial design of 8*D.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>More restrictive lower and upper bounds on the length scale for the Matern and Hamming Kernel than the ones
+suggested by Klein et al. 2017 in the RoBO package. In practice, they are <code class="docutils literal notranslate"><span class="pre">np.exp(-6.754111155189306)</span></code>
+instead of <code class="docutils literal notranslate"><span class="pre">np.exp(-10)</span></code> for the lower bound and <code class="docutils literal notranslate"><span class="pre">np.exp(0.0858637988771976)</span></code> instead of
+<code class="docutils literal notranslate"><span class="pre">np.exp(2)</span></code> for the upper bound.</p></li>
+<li><p>The initial design is set to be a Sobol grid</p></li>
+<li><p>The random fraction is set to <code class="docutils literal notranslate"><span class="pre">0.08447232371720552</span></code>, it was <code class="docutils literal notranslate"><span class="pre">0.0</span></code> before.</p></li>
+</ul>
 <dl class="attribute">
 <dt id="smac.facade.smac_bo_facade.SMAC4BO.logger">
 <code class="sig-name descname">logger</code><a class="headerlink" href="#smac.facade.smac_bo_facade.SMAC4BO.logger" title="Permalink to this definition">¶</a></dt>

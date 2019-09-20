@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.facade.smac_bo_facade &mdash; SMAC 0.11.0 documentation</title>
+  <title>smac.facade.smac_bo_facade &mdash; SMAC 0.11.1 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.11.0
+                0.11.1
               </div>
             
           
@@ -272,7 +272,7 @@
 <span class="kn">from</span> <span class="nn">smac.epm.gp_base_prior</span> <span class="k">import</span> <span class="n">HorseshoePrior</span><span class="p">,</span> <span class="n">LognormalPrior</span>
 <span class="kn">from</span> <span class="nn">smac.epm.util_funcs</span> <span class="k">import</span> <span class="n">get_types</span><span class="p">,</span> <span class="n">get_rng</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.sobol_design</span> <span class="k">import</span> <span class="n">SobolDesign</span>
-<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="k">import</span> <span class="n">RunHistory2EPM4LogScaledCost</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="k">import</span> <span class="n">RunHistory2EPM4Cost</span>
 
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
@@ -286,6 +286,20 @@
 
 <span class="sd">    see smac.facade.smac_Facade for API</span>
 <span class="sd">    This facade overwrites options available via the SMAC facade</span>
+
+<span class="sd">    Hyperparameters are chosen according to the best configuration for Gaussian process maximum likelihood found in</span>
+<span class="sd">    &quot;Towards Assessing the Impact of Bayesian Optimization&#39;s Own Hyperparameters&quot; by Lindauer et al., presented at the</span>
+<span class="sd">    DSO workshop 2019 (https://arxiv.org/abs/1908.06674).</span>
+
+<span class="sd">    Changes are:</span>
+<span class="sd">    * Instead of having an initial design of size 10*D as suggested by Jones et al. 1998 (actually, they suggested</span>
+<span class="sd">      10*D+1), we use an initial design of 8*D.</span>
+<span class="sd">    * More restrictive lower and upper bounds on the length scale for the Matern and Hamming Kernel than the ones</span>
+<span class="sd">      suggested by Klein et al. 2017 in the RoBO package. In practice, they are ``np.exp(-6.754111155189306)``</span>
+<span class="sd">      instead of ``np.exp(-10)`` for the lower bound and ``np.exp(0.0858637988771976)`` instead of</span>
+<span class="sd">      ``np.exp(2)`` for the upper bound.</span>
+<span class="sd">    * The initial design is set to be a Sobol grid</span>
+<span class="sd">    * The random fraction is set to ``0.08447232371720552``, it was ``0.0`` before.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -307,10 +321,10 @@
         <span class="n">scenario</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;scenario&#39;</span><span class="p">]</span>
 
         <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;initial_design&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;initial_design&#39;</span><span class="p">,</span> <span class="n">SobolDesign</span><span class="p">)</span>
-        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;runhistory2epm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runhistory2epm&#39;</span><span class="p">,</span> <span class="n">RunHistory2EPM4LogScaledCost</span><span class="p">)</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;runhistory2epm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runhistory2epm&#39;</span><span class="p">,</span> <span class="n">RunHistory2EPM4Cost</span><span class="p">)</span>
 
         <span class="n">init_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;initial_design_kwargs&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
-        <span class="n">init_kwargs</span><span class="p">[</span><span class="s1">&#39;n_configs_x_params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;n_configs_x_params&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">init_kwargs</span><span class="p">[</span><span class="s1">&#39;n_configs_x_params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;n_configs_x_params&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
         <span class="n">init_kwargs</span><span class="p">[</span><span class="s1">&#39;max_config_fracs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;max_config_fracs&#39;</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span>
         <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;initial_design_kwargs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_kwargs</span>
 
@@ -335,7 +349,7 @@
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cont_dims</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">exp_kernel</span> <span class="o">=</span> <span class="n">Matern</span><span class="p">(</span>
                     <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">cont_dims</span><span class="p">)]),</span>
-                    <span class="p">[(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cont_dims</span><span class="p">))],</span>
+                    <span class="p">[(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">6.754111155189306</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">0.0858637988771976</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cont_dims</span><span class="p">))],</span>
                     <span class="n">nu</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span>
                     <span class="n">operate_on</span><span class="o">=</span><span class="n">cont_dims</span><span class="p">,</span>
                 <span class="p">)</span>
@@ -343,7 +357,7 @@
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat_dims</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">ham_kernel</span> <span class="o">=</span> <span class="n">HammingKernel</span><span class="p">(</span>
                     <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">cat_dims</span><span class="p">)]),</span>
-                    <span class="p">[(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cat_dims</span><span class="p">))],</span>
+                    <span class="p">[(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">6.754111155189306</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">0.0858637988771976</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cat_dims</span><span class="p">))],</span>
                     <span class="n">operate_on</span><span class="o">=</span><span class="n">cat_dims</span><span class="p">,</span>
                 <span class="p">)</span>
 
@@ -392,7 +406,7 @@
 
         <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;random_configuration_chooser&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">random_config_chooser_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;random_configuration_chooser_kwargs&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
-            <span class="n">random_config_chooser_kwargs</span><span class="p">[</span><span class="s1">&#39;prob&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">random_config_chooser_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;prob&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+            <span class="n">random_config_chooser_kwargs</span><span class="p">[</span><span class="s1">&#39;prob&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">random_config_chooser_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;prob&#39;</span><span class="p">,</span> <span class="mf">0.08447232371720552</span><span class="p">)</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;random_configuration_chooser_kwargs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">random_config_chooser_kwargs</span>
 
         <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acquisition_function_optimizer&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

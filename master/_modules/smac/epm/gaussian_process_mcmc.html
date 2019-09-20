@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.epm.gaussian_process_mcmc &mdash; SMAC 0.11.0 documentation</title>
+  <title>smac.epm.gaussian_process_mcmc &mdash; SMAC 0.11.1 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.11.0
+                0.11.1
               </div>
             
           
@@ -443,7 +443,6 @@
 
                 <span class="c1"># Take the last samples from each walker</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">hypers</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">chain</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;hypers&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hypers</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hypers</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)))</span>
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mcmc_sampler</span> <span class="o">==</span> <span class="s1">&#39;nuts&#39;</span><span class="p">:</span>
                 <span class="c1"># Originally published as:</span>
                 <span class="c1"># http://www.stat.columbia.edu/~gelman/research/published/nuts.pdf</span>
@@ -477,7 +476,6 @@
                 <span class="n">indices</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">ind</span><span class="p">))</span> <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">)]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">hypers</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">p0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hypers</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;hypers&#39;</span><span class="p">,</span> <span class="s1">&#39;log space&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p0</span><span class="p">,</span> <span class="s1">&#39;regular space&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p0</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mcmc_sampler</span><span class="p">)</span>
 
@@ -536,7 +534,6 @@
                 <span class="n">model</span><span class="o">.</span><span class="n">std_y_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_y_</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">is_trained</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;#LL evaluations&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_ll_evals</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_ll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
