@@ -1,3 +1,10 @@
+# 0.11.1
+
+## Changes
+
+* Updated the default hyperparameters of the Gaussian process facade to follow recent research (#529)
+* Enabled `flake8` code style checks for newly merged code (#525)
+
 # 0.11.0
 
 ## Major changes
