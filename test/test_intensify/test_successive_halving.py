@@ -81,7 +81,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(intensifier.min_budget, 1)
         self.assertEqual(intensifier.max_budget, 10)
         self.assertEqual(intensifier.init_chal, 8)  # 4 iterations
-        self.assertEqual(intensifier.cutoff_as_budget, True)
+        self.assertTrue(intensifier.cutoff_as_budget)
 
     def test_init_3(self):
         """

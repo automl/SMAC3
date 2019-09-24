@@ -81,9 +81,10 @@ class TestSingleInitialDesign(unittest.TestCase):
         )
 
         inc = dc.run()
-        self.assertTrue(stats.ta_runs == 4)  # two runs per config
-        self.assertTrue(len(rh.data) == 4)  # two runs per config
-        self.assertTrue(rh.get_cost(inc) == 4)
+        self.assertEqual(stats.ta_runs, 4)  # two runs per config
+        self.assertEqual(len(rh.data), 4)  # two runs per config
+        self.assertEqual(rh.get_cost(inc), 4)
+        self.assertEqual(len(rh.get_all_configs()), 2)
 
     def test_fill_config_design(self):
         stats = Stats(scenario=self.scenario)
@@ -121,6 +122,7 @@ class TestSingleInitialDesign(unittest.TestCase):
         )
 
         inc = dc.run()
-        self.assertTrue(stats.ta_runs == 2)  # two runs per config
-        self.assertTrue(len(rh.data) == 2)  # two runs per config
-        self.assertTrue(rh.get_cost(inc) == 1)
+        self.assertEqual(stats.ta_runs, 2)  # two runs per config
+        self.assertEqual(len(rh.data), 2)  # two runs per config
+        self.assertEqual(rh.get_cost(inc), 1)
+        self.assertEqual(len(rh.get_all_configs()), 2)

@@ -34,25 +34,25 @@ class Hyperband(SuccessiveHalving):
         list of all instance ids
     instance_specifics : typing.Mapping[str,np.ndarray]
         mapping from instance name to instance specific string
-    cutoff : int
+    cutoff : typing.Optional[int]
         runtime cutoff of TA runs
     deterministic : bool
         whether the TA is deterministic or not
-    min_budget : float
+    min_budget : typing.Optional[float]
         minimum budget allowed for 1 run of successive halving
-    max_budget : float
+    max_budget : typing.Optional[float]
         maximum budget allowed for 1 run of successive halving
     eta : float
         'halving' factor after each iteration in a successive halving run. Defaults to 3
     run_obj_time : bool
         whether the run objective is runtime or not (if true, apply adaptive capping)
-    n_seeds : int
+    n_seeds : typing.Optional[int]
         Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0
-    instance_order : str
-        how to order instances. Can be set to:
-        None - use as is given by the user
-        shuffle_once - shuffle once and use across all SH run (default)
-        shuffle - shuffle before every SH run
+    instance_order : typing.Optional[str]
+        how to order instances. Can be set to: [None, shuffle_once, shuffle]
+        * None - use as is given by the user
+        * shuffle_once - shuffle once and use across all SH run (default)
+        * shuffle - shuffle before every SH run
     adaptive_capping_slackfactor : float
         slack factor of adpative capping (factor * adpative cutoff)
     """
@@ -63,15 +63,17 @@ class Hyperband(SuccessiveHalving):
                  rng: np.random.RandomState,
                  instances: typing.List[str],
                  instance_specifics: typing.Mapping[str, np.ndarray] = None,
-                 cutoff: int = None,
+                 cutoff: typing.Optional[int] = None,
                  deterministic: bool = False,
-                 min_budget: float = None,
-                 max_budget: float = None,
+                 min_budget: typing.Optional[float] = None,
+                 max_budget: typing.Optional[float] = None,
                  eta: float = 3,
                  run_obj_time: bool = True,
-                 n_seeds: int = None,
+                 n_seeds: typing.Optional[int] = None,
                  instance_order='shuffle_once',
-                 adaptive_capping_slackfactor: float = 1.2, **kwargs):
+                 adaptive_capping_slackfactor: float = 1.2,
+                 **kwargs):
+
         super().__init__(tae_runner, stats, traj_logger, rng, instances,
                          instance_specifics, cutoff, deterministic,
                          min_budget, max_budget, eta, None,  # initial challengers passed as None
@@ -87,7 +89,7 @@ class Hyperband(SuccessiveHalving):
         # hyperband configuration
         self._init_hb_params()
 
-    def _init_hb_params(self):
+    def _init_hb_params(self) -> None:
         """
         initialize Hyperband related parameters
         """
@@ -100,7 +102,7 @@ class Hyperband(SuccessiveHalving):
                   run_history: RunHistory,
                   aggregate_func: typing.Callable,
                   time_bound: float = float(MAXINT),
-                  log_traj: bool = True):
+                  log_traj: bool = True) -> typing.Tuple[Configuration, float]:
         """
         Running intensification via hyperband to determine the incumbent configuration.
         *Side effect:* adds runs to run_history
@@ -124,9 +126,9 @@ class Hyperband(SuccessiveHalving):
 
         Returns
         -------
-        incumbent: Configuration()
-            current (maybe new) incumbent configuration
-        inc_perf: float
+        Configuration
+            new incumbent configuration
+        float
             empirical performance of incumbent configuration
         """
         # NOTE Since hyperband requires sampling for new configurations between its iterations,
@@ -135,9 +137,7 @@ class Hyperband(SuccessiveHalving):
         # compute min budget for new SH run
         sh_min_budget = self.eta**-self.s * self.max_budget
         # sample challengers for next iteration
-        # NOTE From BOHB paper
-        # n_challengers = int(np.ceil(((self.s_max+1) / (self.s + 1)) * self.eta**self.s))
-        # NOTE From HpBandster package
+        # NOTE from HpBandster package
         n_challengers = int(np.floor((self.s_max+1) / (self.s + 1)) * self.eta**self.s)
 
         self.logger.info('Hyperband iteration-step: %d-%d  with initial budget: %d' % (

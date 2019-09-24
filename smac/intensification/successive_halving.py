@@ -39,34 +39,29 @@ class SuccessiveHalving(Intensifier):
         list of all instance ids
     instance_specifics : typing.Mapping[str,np.ndarray]
         mapping from instance name to instance specific string
-    cutoff : typing.Union[int, None]
+    cutoff : typing.Optional[int]
         cutoff of TA runs
     deterministic : bool
         whether the TA is deterministic or not
-    min_budget : typing.Union[float, None]
+    min_budget : typing.Optional[float]
         minimum budget allowed for 1 run of successive halving
-    max_budget : typing.Union[float, None]
+    max_budget : typing.Optional[float]
         maximum budget allowed for 1 run of successive halving
     eta : float
         'halving' factor after each iteration in a successive halving run. Defaults to 3
-    init_chal : int
+    init_chal : typing.Optional[int]
         number of challengers to consider for the initial budget. If None, calculated internally
     run_obj_time : bool
         whether the run objective is runtime or not (if true, apply adaptive capping)
-    n_seeds : int
+    n_seeds : typing.Optional[int]
         Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0
-    instance_order : str
+    instance_order : typing.Optional[str]
         how to order instances. Can be set to: [None, shuffle_once, shuffle]
         * None - use as is given by the user
         * shuffle_once - shuffle once and use across all SH run (default)
         * shuffle - shuffle before every SH run
     adaptive_capping_slackfactor : float
         slack factor of adpative capping (factor * adpative cutoff)
-
-    Returns
-    --------
-    typing.Tuple(Configuration, float)
-        incumbent configuration and its performance
     """
 
     def __init__(self, tae_runner: ExecuteTARun,
@@ -75,15 +70,15 @@ class SuccessiveHalving(Intensifier):
                  rng: np.random.RandomState,
                  instances: typing.List[str],
                  instance_specifics: typing.Mapping[str, np.ndarray] = None,
-                 cutoff: typing.Union[int, None] = None,
+                 cutoff: typing.Optional[int] = None,
                  deterministic: bool = False,
-                 min_budget: typing.Union[float, None] = None,
-                 max_budget: typing.Union[float, None] = None,
+                 min_budget: typing.Optional[float] = None,
+                 max_budget: typing.Optional[float] = None,
                  eta: float = 3,
-                 init_chal: int = None,
+                 init_chal: typing.Optional[int] = None,
                  run_obj_time: bool = True,
-                 n_seeds: int = None,
-                 instance_order: str = 'shuffle_once',
+                 n_seeds: typing.Optional[int] = None,
+                 instance_order: typing.Optional[str] = 'shuffle_once',
                  adaptive_capping_slackfactor: float = 1.2,
                  **kwargs):
 
@@ -135,7 +130,7 @@ class SuccessiveHalving(Intensifier):
     def _init_sh_params(self, min_budget: float,
                         max_budget: typing.Union[float, None],
                         eta: typing.Union[float, None],
-                        init_chal: int):
+                        init_chal: int) -> None:
         """
         initialize Successive Halving parameters
 
@@ -205,7 +200,7 @@ class SuccessiveHalving(Intensifier):
                   run_history: RunHistory,
                   aggregate_func: typing.Callable,
                   time_bound: float = float(MAXINT),
-                  log_traj: bool = True):
+                  log_traj: bool = True) -> typing.Tuple[Configuration, float]:
         """
         Running intensification via successive halving to determine the incumbent configuration.
         *Side effect:* adds runs to run_history
@@ -229,7 +224,7 @@ class SuccessiveHalving(Intensifier):
 
         Returns
         -------
-        typing.Tuple(Configuration, float)
+        typing.Tuple[Configuration, float]
         """
         self.start_time = time.time()
         self._ta_time = 0
@@ -338,11 +333,11 @@ class SuccessiveHalving(Intensifier):
 
     def _race_challengers(self, challengers: typing.List[Configuration],
                           incumbent: Configuration,
-                          instances: typing.List[typing.Tuple[str, int]],
+                          instances: typing.List[str],
                           run_history: RunHistory,
                           budget: float,
                           inc_sum_cost: float,
-                          first_run: bool):
+                          first_run: bool) -> typing.List[Configuration]:
         """
         Aggressively race challengers for the given instances
 
@@ -352,7 +347,7 @@ class SuccessiveHalving(Intensifier):
             List of challenger configurations to race
         incumbent:
             Current incumbent configuration
-        instances: typing.List[typing.Tuple[str, int]]
+        instances: typing.List[str]
             List of instance-seed pairs to use for racing challengers
         run_history: RunHistory
             Stores all runs we ran so far
@@ -427,7 +422,7 @@ class SuccessiveHalving(Intensifier):
 
     def _top_k(self, configs: typing.List[Configuration],
                run_history: RunHistory,
-               k: int):
+               k: int) -> typing.List[Configuration]:
         """
         selects the top 'k' configurations from the given list based on their performance in this budget
 

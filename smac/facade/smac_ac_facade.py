@@ -223,11 +223,6 @@ class SMAC4AC(object):
 
         # initialize empty runhistory
         runhistory_def_kwargs = {'aggregate_func': aggregate_func}
-        if intensifier is not None and isinstance(intensifier, SuccessiveHalving):
-            # if Successive Halving / Hyperband is used, then RunHistory overwrites data for
-            # same instance-seed pairs (to save runs of higher budgets)
-            # - will only be used when cutoff is used as a budget
-            runhistory_def_kwargs['overwrite_existing_runs'] = True
         if runhistory_kwargs is not None:
             runhistory_def_kwargs.update(runhistory_kwargs)
         if runhistory is None:
