@@ -13,6 +13,7 @@ from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.tae.execute_ta_run import StatusType
 
+
 class TestExecuteFunc(unittest.TestCase):
 
     def setUp(self):
@@ -161,10 +162,7 @@ class TestExecuteFunc(unittest.TestCase):
         def target(x):
             return np.int32(x)
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
-        rval = taf.run(config=2)
 
-        self.assertEqual(type(rval[1]), float)
-        self.assertEqual(rval[0], StatusType.SUCCESS)
-        self.assertEqual(rval[1], 2.0)
-        self.assertGreaterEqual(rval[2], 0.0)
-        self.assertEqual(rval[3], dict())
+        with self.assertRaisesRegex(TypeError, "TA returned result of type <class 'numpy.int32'> "
+                                               "but it should be a serializable type."):
+            taf.run(config=2)

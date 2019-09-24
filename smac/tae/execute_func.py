@@ -136,11 +136,10 @@ class AbstractTAFunc(ExecuteTARun):
             obj_kwargs['instance'] = instance
 
         if self.use_pynisher:
-
+            # call ta
             obj = pynisher.enforce_limits(**arguments)(self.ta)
-    
             rval = self._call_ta(obj, config, **obj_kwargs)
-    
+
             if isinstance(rval, tuple):
                 result = rval[0]
                 additional_run_info = rval[1]
@@ -148,7 +147,7 @@ class AbstractTAFunc(ExecuteTARun):
                 result = rval
                 additional_run_info = {}
 
-    
+            # get status, cost, time
             if obj.exit_status is pynisher.TimeoutException:
                 status = StatusType.TIMEOUT
                 cost = self.crash_cost
@@ -165,8 +164,21 @@ class AbstractTAFunc(ExecuteTARun):
             runtime = float(obj.wall_clock_time)
         else:
             start_time = time.time()
-            result = self._call_ta_raw(config, **obj_kwargs)
-            
+            # call ta
+            try:
+                rval = self._call_ta(self.ta, config, **obj_kwargs)
+                if isinstance(rval, tuple):
+                    result = rval[0]
+                    additional_run_info = rval[1]
+                else:
+                    result = rval
+                    additional_run_info = {}
+            except Exception as e:
+                self.logger.exception(e)
+                result = None
+                additional_run_info = {}
+
+            # get status, cost, time
             if result is not None:
                 status = StatusType.SUCCESS
                 cost = result
@@ -175,38 +187,22 @@ class AbstractTAFunc(ExecuteTARun):
                 cost = self.crash_cost
             
             runtime = time.time() - start_time
-            additional_run_info = {}
 
-        # check serializability of results - if not, then attempt to convert it
-        cost = self.serialize(cost)
-        additional_run_info = self.serialize(additional_run_info)
+        # check serializability of results
+        try:
+            json.dumps(cost)
+        except TypeError:
+            raise TypeError("TA returned result of type %s but it should be a serializable type." % type(cost))
+        try:
+            json.dumps(additional_run_info)
+        except TypeError:
+            raise TypeError("TA returned 'additional_run_info' with some non-serializable items. "
+                            "Please ensure all objects returned are serializable.")
 
         return status, cost, runtime, additional_run_info
 
     def _call_ta(self, obj, config, instance, seed):
         raise NotImplementedError()
-
-    def _call_ta_raw(self, config, **kwargs):
-        try:
-            result = self.ta(config, **kwargs)
-        except Exception as e:
-            self.logger.exception(e)
-            result = None
-        return result
-
-    def serialize(self, x):
-        """ to serialize results from the TA if required """
-
-        try:
-            json.dumps(x)
-            return x
-        except TypeError:
-            if isinstance(x, dict):
-                raise TypeError("TA returned a 'dict' with some non-serializable items.")
-            else:
-                self.logger.warning("TA returned result of type %s but it should be a serializable type. "
-                                    "Attempting to convert to 'float'." % type(x))
-                return float(x)
 
 
 class ExecuteTAFuncDict(AbstractTAFunc):
