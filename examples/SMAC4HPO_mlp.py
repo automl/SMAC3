@@ -117,7 +117,7 @@ scenario = Scenario({"run_obj": "quality",     # we optimize quality (alternativ
                      })
 
 # intensifier parameters
-intensifier_kwargs = {'min_budget': 5, 'max_budget': cutoff, 'eta': 3}
+intensifier_kwargs = {'initial_budget': 5, 'max_budget': cutoff, 'eta': 3}
 # To optimize, we pass the function to the SMAC-object
 smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
                 tae_runner=mlp_from_cfg,

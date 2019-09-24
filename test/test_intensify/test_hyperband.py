@@ -66,7 +66,7 @@ class TestHyperband(unittest.TestCase):
             tae_runner=taf, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
-            instances=[1], min_budget=0.1, max_budget=1, eta=2)
+            instances=[1], initial_budget=0.1, max_budget=1, eta=2)
 
         self.rh.add(config=self.config1, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=1,
@@ -100,7 +100,7 @@ class TestHyperband(unittest.TestCase):
             tae_runner=taf, stats=taf.stats,
             traj_logger=TrajLogger(output_dir=None, stats=taf.stats),
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
-            instances=[1], min_budget=0.5, max_budget=1, eta=2)
+            instances=[1], initial_budget=0.5, max_budget=1, eta=2)
 
         # ensuring correct parameter initialization
         self.assertEqual(intensifier.s, intensifier.s_max)

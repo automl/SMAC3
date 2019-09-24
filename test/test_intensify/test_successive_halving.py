@@ -59,10 +59,10 @@ class TestSuccessiveHalving(unittest.TestCase):
             tae_runner=None, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), deterministic=False, run_obj_time=False,
-            instances=[1, 2, 3], n_seeds=2, min_budget=None, max_budget=None, eta=2)
+            instances=[1, 2, 3], n_seeds=2, initial_budget=None, max_budget=None, eta=2)
 
         self.assertEqual(len(intensifier.instances), 6)  # since instance-seed pairs
-        self.assertEqual(intensifier.min_budget, 1)
+        self.assertEqual(intensifier.initial_budget, 1)
         self.assertEqual(intensifier.max_budget, 6)
         self.assertEqual(intensifier.num_initial_challengers, 4)  # 2 iterations
         self.assertFalse(intensifier.cutoff_as_budget)
@@ -75,10 +75,10 @@ class TestSuccessiveHalving(unittest.TestCase):
             tae_runner=None, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
-            cutoff=30, instances=[1], min_budget=1, max_budget=10, eta=2)
+            cutoff=30, instances=[1], initial_budget=1, max_budget=10, eta=2)
 
         self.assertEqual(len(intensifier.instances), 1)  # since instance-seed pairs
-        self.assertEqual(intensifier.min_budget, 1)
+        self.assertEqual(intensifier.initial_budget, 1)
         self.assertEqual(intensifier.max_budget, 10)
         self.assertEqual(intensifier.num_initial_challengers, 8)  # 4 iterations
         self.assertTrue(intensifier.cutoff_as_budget)
@@ -89,7 +89,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         """
 
         with self.assertRaisesRegex(ValueError,
-                                    "requires parameters min_budget and max_budget/cutoff for intensification!"):
+                                    "requires parameters initial_budget and max_budget/cutoff for intensification!"):
             SuccessiveHalving(
                 tae_runner=None, stats=self.stats,
                 traj_logger=TrajLogger(output_dir=None, stats=self.stats),
@@ -128,7 +128,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             tae_runner=None, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
-            instances=[1], min_budget=1)
+            instances=[1], initial_budget=1)
         self.rh.add(config=self.config1, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=1,
                     seed=None,
@@ -158,7 +158,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             tae_runner=None, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
-            instances=[1, 2], min_budget=1)
+            instances=[1, 2], initial_budget=1)
         self.rh.add(config=self.config1, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=1,
                     seed=None,
@@ -188,7 +188,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             tae_runner=taf, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
-            instances=[1], min_budget=1, max_budget=3, eta=2)
+            instances=[1], initial_budget=1, max_budget=3, eta=2)
 
         self.rh.add(config=self.config1, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=1,
@@ -222,7 +222,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             tae_runner=taf, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), deterministic=True, cutoff=1,
-            instances=[1, 2], min_budget=1, max_budget=2, eta=2, instance_order=None)
+            instances=[1, 2], initial_budget=1, max_budget=2, eta=2, instance_order=None)
 
         self.rh.add(config=self.config1, cost=.001, time=0.001,
                     status=StatusType.SUCCESS, instance_id=1, seed=0,
