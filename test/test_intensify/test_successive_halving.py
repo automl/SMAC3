@@ -64,7 +64,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(len(intensifier.instances), 6)  # since instance-seed pairs
         self.assertEqual(intensifier.min_budget, 1)
         self.assertEqual(intensifier.max_budget, 6)
-        self.assertEqual(intensifier.init_chal, 4)  # 2 iterations
+        self.assertEqual(intensifier.num_initial_challengers, 4)  # 2 iterations
         self.assertFalse(intensifier.cutoff_as_budget)
 
     def test_init_2(self):
@@ -80,7 +80,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(len(intensifier.instances), 1)  # since instance-seed pairs
         self.assertEqual(intensifier.min_budget, 1)
         self.assertEqual(intensifier.max_budget, 10)
-        self.assertEqual(intensifier.init_chal, 8)  # 4 iterations
+        self.assertEqual(intensifier.num_initial_challengers, 8)  # 4 iterations
         self.assertTrue(intensifier.cutoff_as_budget)
 
     def test_init_3(self):
