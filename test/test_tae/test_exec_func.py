@@ -81,6 +81,17 @@ class TestExecuteFunc(unittest.TestCase):
         self.assertGreaterEqual(rval[2], 0.0)
         self.assertEqual(rval[3], dict())
 
+        def target(x, seed, instance):
+            return x ** 2, {'key': seed, 'instance': instance}
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, use_pynisher=False)
+        rval = taf.run(config=2, instance='test')
+        self.assertTrue(taf._accepts_instance)
+        self.assertTrue(taf._accepts_seed)
+        self.assertEqual(rval[0], StatusType.SUCCESS)
+        self.assertEqual(rval[1], 4)
+        self.assertGreaterEqual(rval[2], 0.0)
+        self.assertEqual(rval[3], {'key': 12345, 'instance': 'test'})
+
         def target(x):
             return None
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats, use_pynisher=False)
