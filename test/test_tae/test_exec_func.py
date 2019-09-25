@@ -57,6 +57,18 @@ class TestExecuteFunc(unittest.TestCase):
         self.assertGreaterEqual(rval[2], 0.0)
         self.assertEqual(rval[3], {'key': 12345, 'instance': 'test'})
 
+        def target(x):
+            raise Exception(x)
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, use_pynisher=False)
+        rval = taf.run(config=2)
+        self.assertFalse(taf._accepts_instance)
+        self.assertFalse(taf._accepts_seed)
+        self.assertEqual(rval[0], StatusType.CRASHED)
+        self.assertEqual(rval[1], 2147483647.0)
+        self.assertGreaterEqual(rval[2], 0.0)
+        self.assertEqual(rval[3], dict())
+
+
     def test_run_wo_pynisher(self):
         def target(x):
             return x**2
@@ -71,6 +83,17 @@ class TestExecuteFunc(unittest.TestCase):
 
         def target(x):
             return None
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, use_pynisher=False)
+        rval = taf.run(config=2)
+        self.assertFalse(taf._accepts_instance)
+        self.assertFalse(taf._accepts_seed)
+        self.assertEqual(rval[0], StatusType.CRASHED)
+        self.assertEqual(rval[1], 2147483647.0)
+        self.assertGreaterEqual(rval[2], 0.0)
+        self.assertEqual(rval[3], dict())
+
+        def target(x):
+            raise Exception(x)
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats, use_pynisher=False)
         rval = taf.run(config=2)
         self.assertFalse(taf._accepts_instance)
@@ -159,10 +182,19 @@ class TestExecuteFunc(unittest.TestCase):
         self.assertRaises(ValueError, taf.run, config=2, cutoff=65536)
 
     def test_non_serializable(self):
+        # cost non serializable
         def target(x):
             return np.int32(x)
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
 
         with self.assertRaisesRegex(TypeError, "TA returned result of type <class 'numpy.int32'> "
                                                "but it should be a serializable type."):
+            taf.run(config=2)
+
+        # additional info non serializable
+        def target(x):
+            return x, {'x': np.int32(x)}
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
+
+        with self.assertRaisesRegex(TypeError, "TA returned 'additional_run_info' with some non-serializable items."):
             taf.run(config=2)
