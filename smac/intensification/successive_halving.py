@@ -98,7 +98,7 @@ class SuccessiveHalving(Intensifier):
         # if instances are coming from Hyperband, skip the instance preprocessing section
         # it is already taken care by Hyperband
         if instances is not None and isinstance(instances[0], tuple):
-            self.instances = instances
+            self.instances = list(instances)
         else:
             instances = [] if instances is None else instances
             # removing duplicates in the user provided instances
@@ -422,7 +422,8 @@ class SuccessiveHalving(Intensifier):
                 self._chall_indx += 1
 
         # eliminate capped configuration from the race & reset capped_configs
-        _ = [challengers.remove(c) for c in capped_configs]
+        for c in capped_configs:
+            challengers.remove(c)
 
         return challengers
 
