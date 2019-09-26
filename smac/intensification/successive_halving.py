@@ -104,6 +104,10 @@ class SuccessiveHalving(Intensifier):
             # removing duplicates in the user provided instances
             instances = list(OrderedDict.fromkeys(instances))
 
+            # NOTE Remove after solving how to handle multiple seeds and 1 instance
+            if len(instances) == 1 and self.n_seeds > 1:
+                raise NotImplementedError('This case (multiple seeds and 1 instance) cannot be handled yet!')
+
             # determine instance order
             if self.instance_order == 'shuffle_once':
                 # randomize once
