@@ -2,6 +2,7 @@ import logging
 import inspect
 import math
 import time
+import json
 
 import numpy as np
 import pynisher
@@ -76,6 +77,9 @@ class AbstractTAFunc(ExecuteTARun):
         
         self.use_pynisher = use_pynisher
 
+        self.logger = logging.getLogger(
+            self.__module__ + '.' + self.__class__.__name__)
+
     def run(self, config, instance=None,
             cutoff=None,
             seed=12345,
@@ -132,18 +136,18 @@ class AbstractTAFunc(ExecuteTARun):
             obj_kwargs['instance'] = instance
 
         if self.use_pynisher:
-
+            # call ta
             obj = pynisher.enforce_limits(**arguments)(self.ta)
-    
             rval = self._call_ta(obj, config, **obj_kwargs)
-    
+
             if isinstance(rval, tuple):
                 result = rval[0]
                 additional_run_info = rval[1]
             else:
                 result = rval
                 additional_run_info = {}
-    
+
+            # get status, cost, time
             if obj.exit_status is pynisher.TimeoutException:
                 status = StatusType.TIMEOUT
                 cost = self.crash_cost
@@ -160,8 +164,21 @@ class AbstractTAFunc(ExecuteTARun):
             runtime = float(obj.wall_clock_time)
         else:
             start_time = time.time()
-            result = self.ta(config, **obj_kwargs)
-            
+            # call ta
+            try:
+                rval = self._call_ta(self.ta, config, **obj_kwargs)
+                if isinstance(rval, tuple):
+                    result = rval[0]
+                    additional_run_info = rval[1]
+                else:
+                    result = rval
+                    additional_run_info = {}
+            except Exception as e:
+                self.logger.exception(e)
+                result = None
+                additional_run_info = {}
+
+            # get status, cost, time
             if result is not None:
                 status = StatusType.SUCCESS
                 cost = result
@@ -170,7 +187,22 @@ class AbstractTAFunc(ExecuteTARun):
                 cost = self.crash_cost
             
             runtime = time.time() - start_time
-            additional_run_info = {}
+
+        # check serializability of results
+        try:
+            json.dumps(cost)
+        except TypeError as e:
+            self.logger.exception(e)
+            raise TypeError("Target Algorithm returned 'cost' {} (type {}) but it is not serializable. "
+                            "Please ensure all objects returned are JSON serializable.".format(result, type(result))) \
+                from e
+        try:
+            json.dumps(additional_run_info)
+        except TypeError as e:
+            self.logger.exception(e)
+            raise TypeError("Target Algorithm returned 'additional_run_info' ({}) with some non-serializable items. "
+                            "Please ensure all objects returned are JSON serializable.".format(additional_run_info)) \
+                from e
 
         return status, cost, runtime, additional_run_info
 
