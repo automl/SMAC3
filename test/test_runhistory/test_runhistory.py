@@ -74,32 +74,54 @@ class RunhistoryTest(unittest.TestCase):
         '''
             get some config runs from runhistory
         '''
-
+        # return max budget only
         rh = RunHistory(aggregate_func=average_cost)
         cs = get_config_space()
         config1 = Configuration(cs,
                                 values={'a': 1, 'b': 2})
         config2 = Configuration(cs,
                                 values={'a': 1, 'b': 3})
-        rh.add(config=config1, cost=10, time=20,
-               status=StatusType.SUCCESS, instance_id=1,
-               seed=1)
+        rh.add(config=config1, cost=10, time=20, status=StatusType.SUCCESS,
+               instance_id=1, seed=1, budget=1)
+        rh.add(config=config1, cost=10, time=20, status=StatusType.SUCCESS,
+               instance_id=1, seed=1, budget=2)
+        rh.add(config=config1, cost=10, time=20, status=StatusType.SUCCESS,
+               instance_id=2, seed=2, budget=1)
 
-        rh.add(config=config2, cost=10, time=20,
-               status=StatusType.SUCCESS, instance_id=1,
-               seed=1)
-
-        rh.add(config=config1, cost=10, time=20,
-               status=StatusType.SUCCESS, instance_id=2,
-               seed=2)
+        rh.add(config=config2, cost=10, time=20, status=StatusType.SUCCESS,
+               instance_id=1, seed=1, budget=1)
 
         ist = rh.get_runs_for_config(config=config1)
-        #print(ist)
-        #print(ist[0])
-        #print(ist[1])
+
         self.assertEqual(len(ist), 2)
         self.assertEqual(ist[0].instance, 1)
         self.assertEqual(ist[1].instance, 2)
+        self.assertEqual(ist[0].budget, 2)
+        self.assertEqual(ist[1].budget, 1)
+
+        # multiple budgets
+        rh = RunHistory(aggregate_func=average_cost)
+        cs = get_config_space()
+        config1 = Configuration(cs,
+                                values={'a': 1, 'b': 2})
+        config2 = Configuration(cs,
+                                values={'a': 1, 'b': 3})
+        rh.add(config=config1, cost=5, time=10, status=StatusType.SUCCESS,
+               instance_id=1, seed=1, budget=1)
+        rh.add(config=config1, cost=10, time=20, status=StatusType.SUCCESS,
+               instance_id=1, seed=1, budget=2)
+
+        rh.add(config=config2, cost=5, time=10, status=StatusType.SUCCESS,
+               instance_id=1, seed=1, budget=1)
+        rh.add(config=config2, cost=10, time=20, status=StatusType.SUCCESS,
+               instance_id=1, seed=1, budget=2)
+
+        ist = rh.get_runs_for_config(config=config1, max_budget=False)
+
+        self.assertEqual(len(ist), 2)
+        self.assertEqual(ist[0].instance, 1)
+        self.assertEqual(ist[0].budget, 1)
+        self.assertEqual(ist[1].budget, 2)
 
     def test_full_update(self):
         rh = RunHistory(aggregate_func=average_cost)

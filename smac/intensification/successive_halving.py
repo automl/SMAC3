@@ -188,14 +188,17 @@ class SuccessiveHalving(Intensifier):
                 self.logger.warning('Max budget (%d) does not include all instance-seed pairs (%d)' %
                                     (self.max_budget, len(self.instances)))
 
-        self.logger.debug("Running Successive Halving with '%s' as budget" % self.cutoff_as_budget)
+        budget_type = 'CUTOFF' if self.cutoff_as_budget else 'INSTANCES'
+        self.logger.info("Running Successive Halving with '%s' as budget. "
+                         "Initial budget: %.2f, Max. budget: %.2f, eta: %.2f" %
+                         (budget_type, self.initial_budget, self.max_budget, self.eta))
 
         # precomputing stuff for SH
         # max. no. of SH iterations possible given the budgets
         max_sh_iter = np.floor(np.log(self.max_budget / self.initial_budget) / np.log(self.eta))
         # initial number of challengers to sample
         if num_initial_challengers is None:
-            self.num_initial_challengers = int(np.round(self.eta ** max_sh_iter))
+            self.num_initial_challengers = np.floor(self.eta ** max_sh_iter)
         else:
             self.num_initial_challengers = int(num_initial_challengers)
         # list of budgets that will be used in intensification
@@ -276,17 +279,17 @@ class SuccessiveHalving(Intensifier):
                 else all_instances
 
             # determine 'k' for the next iteration - at least 1
-            next_n_chal = max(1, int(np.round(len(curr_challengers) / self.eta)))
+            next_n_chal = max(1, np.floor(len(curr_challengers) / self.eta))
 
             try:
                 # Race all challengers
-                curr_challengers = self._race_challengers(challengers=curr_challengers,
-                                                          incumbent=incumbent,
-                                                          instances=available_insts,
-                                                          run_history=run_history,
-                                                          budget=self.budgets[i],
-                                                          inc_sum_cost=inc_sum_cost,
-                                                          first_run=first_run)
+                curr_challengers = self._run_challengers(challengers=curr_challengers,
+                                                         incumbent=incumbent,
+                                                         instances=available_insts,
+                                                         run_history=run_history,
+                                                         budget=self.budgets[i],
+                                                         inc_sum_cost=inc_sum_cost,
+                                                         first_run=first_run)
 
                 # if all challengers were capped, then stop intensification
                 if not curr_challengers:
@@ -337,15 +340,15 @@ class SuccessiveHalving(Intensifier):
 
         return new_incumbent, inc_perf
 
-    def _race_challengers(self, challengers: typing.List[Configuration],
-                          incumbent: Configuration,
-                          instances: typing.List[typing.Tuple[str, int]],
-                          run_history: RunHistory,
-                          budget: float,
-                          inc_sum_cost: float,
-                          first_run: bool) -> typing.List[Configuration]:
+    def _run_challengers(self, challengers: typing.List[Configuration],
+                         incumbent: Configuration,
+                         instances: typing.List[typing.Tuple[str, int]],
+                         run_history: RunHistory,
+                         budget: float,
+                         inc_sum_cost: float,
+                         first_run: bool) -> typing.List[Configuration]:
         """
-        Aggressively race challengers for the given instances
+        Runs all the challengers for the given instance-seed pairs
 
         Parameters
         ----------

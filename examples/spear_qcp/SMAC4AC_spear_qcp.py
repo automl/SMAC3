@@ -29,5 +29,4 @@ if __name__ == '__main__':
     finally:
         incumbent = smac.solver.incumbent
 
-    # inc_value = smac.get_tae_runner().run(incumbent)[1]
     print("Optimized configuration %s" % str(incumbent))

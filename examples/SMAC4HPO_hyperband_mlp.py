@@ -103,10 +103,6 @@ use_batch_size = CS.conditions.InCondition(child=batch_size, parent=solver, valu
 # We can also add  multiple conditions on hyperparameters at once:
 cs.add_conditions([use_lr, use_batch_size, use_lr_init])
 
-# setting cutoff
-# normally, it is a runtime cutoff, but in this case, we use cutoff to represent the number of epochs for MLP
-cutoff = 50
-
 # SMAC scenario object
 scenario = Scenario({"run_obj": "quality",     # we optimize quality (alternative runtime)
                      "wallclock-limit": 100,   # max duration to run the optimization (in seconds)
@@ -116,6 +112,9 @@ scenario = Scenario({"run_obj": "quality",     # we optimize quality (alternativ
                                                 # Timeouts have to be taken care within the TA
                      })
 
+# setting cutoff
+# normally, it is a runtime cutoff, but in this case, we use cutoff to represent the number of epochs for MLP
+cutoff = 50
 # intensifier parameters
 intensifier_kwargs = {'initial_budget': 5, 'max_budget': cutoff, 'eta': 3}
 # To optimize, we pass the function to the SMAC-object

@@ -85,9 +85,10 @@ class TestSuccessiveHalving(unittest.TestCase):
 
     def test_init_3(self):
         """
-            test parameter initialiations for successive halving - runtime cutoff as budget (no param provided)
+            test wrong parameter initialiations for successive halving
         """
 
+        # runtime cutoff as budget (no param provided)
         with self.assertRaisesRegex(ValueError,
                                     "requires parameters initial_budget and max_budget/cutoff for intensification!"):
             SuccessiveHalving(
@@ -96,11 +97,7 @@ class TestSuccessiveHalving(unittest.TestCase):
                 rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
                 cutoff=10, instances=[1])
 
-    def test_init_4(self):
-        """
-            test parameter initialiations for successive halving - eta < 1
-        """
-
+        # eta < 1
         with self.assertRaisesRegex(ValueError, 'eta must be greater than 1'):
             SuccessiveHalving(
                 tae_runner=None, stats=self.stats,
@@ -108,17 +105,14 @@ class TestSuccessiveHalving(unittest.TestCase):
                 rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
                 cutoff=10, instances=[1], eta=0)
 
-    def test_init_5(self):
-        """
-            test parameter initialiations for successive halving - eta < 1
-        """
-
-        with self.assertRaisesRegex(ValueError, 'eta must be greater than 1'):
+        # max budget > instance-seed pairs
+        with self.assertRaisesRegex(ValueError,
+                                    "Max budget cannot be greater than the number of instance-seed pairs"):
             SuccessiveHalving(
                 tae_runner=None, stats=self.stats,
                 traj_logger=TrajLogger(output_dir=None, stats=self.stats),
                 rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
-                cutoff=10, instances=[1], eta=0)
+                cutoff=10, instances=[1, 2, 3], initial_budget=1, max_budget=5, n_seeds=1)
 
     def test_top_k_1(self):
         """
@@ -224,14 +218,12 @@ class TestSuccessiveHalving(unittest.TestCase):
             rng=np.random.RandomState(12345), deterministic=True, cutoff=1,
             instances=[1, 2], initial_budget=1, max_budget=2, eta=2, instance_order=None)
 
-        self.rh.add(config=self.config1, cost=.001, time=0.001,
-                    status=StatusType.SUCCESS, instance_id=1, seed=0,
-                    additional_info=None)
-        self.rh.add(config=self.config1, cost=.001, time=0.001,
-                    status=StatusType.SUCCESS, instance_id=2, seed=0,
-                    additional_info=None)
+        for i in range(2):
+            self.rh.add(config=self.config1, cost=.001, time=0.001,
+                        status=StatusType.SUCCESS, instance_id=i+1, seed=0,
+                        additional_info=None)
 
-        # config2 should be capped and config1 should still be the incumbent
+        # config2 & config3 should be capped and config1 should still be the incumbent
         inc, _ = intensifier.intensify(challengers=[self.config2, self.config3],
                                        incumbent=self.config1,
                                        run_history=self.rh,
