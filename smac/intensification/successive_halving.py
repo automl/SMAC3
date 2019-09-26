@@ -249,7 +249,7 @@ class SuccessiveHalving(Intensifier):
             # converting to generator for consistency
             chal_generator = (c for c in challengers)
         # select first 'n' challengers
-        curr_challengers = list(islice(chal_generator, self.num_initial_challengers))
+        curr_challengers = list(islice(chal_generator, int(self.num_initial_challengers)))
 
         # randomize instances per successive halving run, if user specifies
         all_instances = self.instances
