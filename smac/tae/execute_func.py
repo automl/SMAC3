@@ -191,13 +191,16 @@ class AbstractTAFunc(ExecuteTARun):
         # check serializability of results
         try:
             json.dumps(cost)
-        except TypeError:
-            raise TypeError("TA returned result of type %s but it should be a serializable type." % type(cost))
+        except TypeError as e:
+            self.logger.exception(e)
+            raise TypeError("Target Algorithm returned 'cost' {} (type {}) but it is not serializable. "
+                            "Please ensure all objects returned are JSON serializable.".format(result, type(result)))
         try:
             json.dumps(additional_run_info)
-        except TypeError:
-            raise TypeError("TA returned 'additional_run_info' with some non-serializable items. "
-                            "Please ensure all objects returned are serializable.")
+        except TypeError as e:
+            self.logger.exception(e)
+            raise TypeError("Target Algorithm returned 'additional_run_info' ({}) with some non-serializable items. "
+                            "Please ensure all objects returned are JSON serializable.".format(additional_run_info))
 
         return status, cost, runtime, additional_run_info
 

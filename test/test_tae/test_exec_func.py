@@ -59,7 +59,7 @@ class TestExecuteFunc(unittest.TestCase):
 
         def target(x):
             raise Exception(x)
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, use_pynisher=False)
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
         rval = taf.run(config=2)
         self.assertFalse(taf._accepts_instance)
         self.assertFalse(taf._accepts_seed)
@@ -67,7 +67,6 @@ class TestExecuteFunc(unittest.TestCase):
         self.assertEqual(rval[1], 2147483647.0)
         self.assertGreaterEqual(rval[2], 0.0)
         self.assertEqual(rval[3], dict())
-
 
     def test_run_wo_pynisher(self):
         def target(x):
@@ -197,15 +196,14 @@ class TestExecuteFunc(unittest.TestCase):
         def target(x):
             return np.int32(x)
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
-
-        with self.assertRaisesRegex(TypeError, "TA returned result of type <class 'numpy.int32'> "
-                                               "but it should be a serializable type."):
+        msg = "Please ensure all objects returned are JSON serializable."
+        with self.assertRaisesRegex(TypeError, msg):
             taf.run(config=2)
 
         # additional info non serializable
         def target(x):
             return x, {'x': np.int32(x)}
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
-
-        with self.assertRaisesRegex(TypeError, "TA returned 'additional_run_info' with some non-serializable items."):
+        msg = "Please ensure all objects returned are JSON serializable."
+        with self.assertRaisesRegex(TypeError, msg):
             taf.run(config=2)
