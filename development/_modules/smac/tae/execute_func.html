@@ -269,6 +269,7 @@
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">json</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pynisher</span>
@@ -343,6 +344,9 @@
         
         <span class="bp">self</span><span class="o">.</span><span class="n">use_pynisher</span> <span class="o">=</span> <span class="n">use_pynisher</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
 <div class="viewcode-block" id="AbstractTAFunc.run"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_func.html#smac.tae.execute_func.AbstractTAFunc.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">cutoff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">seed</span><span class="o">=</span><span class="mi">12345</span><span class="p">,</span>
@@ -399,18 +403,18 @@
             <span class="n">obj_kwargs</span><span class="p">[</span><span class="s1">&#39;instance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">instance</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_pynisher</span><span class="p">:</span>
-
+            <span class="c1"># call ta</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="n">pynisher</span><span class="o">.</span><span class="n">enforce_limits</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">ta</span><span class="p">)</span>
-    
             <span class="n">rval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_ta</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">obj_kwargs</span><span class="p">)</span>
-    
+
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rval</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="n">rval</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">additional_run_info</span> <span class="o">=</span> <span class="n">rval</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="n">rval</span>
                 <span class="n">additional_run_info</span> <span class="o">=</span> <span class="p">{}</span>
-    
+
+            <span class="c1"># get status, cost, time</span>
             <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">exit_status</span> <span class="ow">is</span> <span class="n">pynisher</span><span class="o">.</span><span class="n">TimeoutException</span><span class="p">:</span>
                 <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">TIMEOUT</span>
                 <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crash_cost</span>
@@ -427,8 +431,21 @@
             <span class="n">runtime</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">wall_clock_time</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ta</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">obj_kwargs</span><span class="p">)</span>
-            
+            <span class="c1"># call ta</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">rval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_ta</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ta</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">obj_kwargs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rval</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">rval</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">additional_run_info</span> <span class="o">=</span> <span class="n">rval</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">rval</span>
+                    <span class="n">additional_run_info</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">additional_run_info</span> <span class="o">=</span> <span class="p">{}</span>
+
+            <span class="c1"># get status, cost, time</span>
             <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span>
                 <span class="n">cost</span> <span class="o">=</span> <span class="n">result</span>
@@ -437,7 +454,22 @@
                 <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crash_cost</span>
             
             <span class="n">runtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-            <span class="n">additional_run_info</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># check serializability of results</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Target Algorithm returned &#39;cost&#39; </span><span class="si">{}</span><span class="s2"> (type </span><span class="si">{}</span><span class="s2">) but it is not serializable. &quot;</span>
+                            <span class="s2">&quot;Please ensure all objects returned are JSON serializable.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">result</span><span class="p">)))</span> \
+                <span class="kn">from</span> <span class="nn">e</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">additional_run_info</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Target Algorithm returned &#39;additional_run_info&#39; (</span><span class="si">{}</span><span class="s2">) with some non-serializable items. &quot;</span>
+                            <span class="s2">&quot;Please ensure all objects returned are JSON serializable.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">additional_run_info</span><span class="p">))</span> \
+                <span class="kn">from</span> <span class="nn">e</span>
 
         <span class="k">return</span> <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">additional_run_info</span></div>
 
