@@ -5,7 +5,7 @@ import sys
 import lazy_import
 from smac.utils import dependencies
 
-__version__ = '0.11.0'
+__version__ = '0.11.2dev'
 __author__ = 'Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter'
 
 
