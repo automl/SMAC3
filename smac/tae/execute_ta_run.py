@@ -212,9 +212,14 @@ class ExecuteTARun(object):
             status, cost, runtime, str(additional_info)))
 
         if self.runhistory:
+            # NOTE: cutoff is not adapted if run objective is 'quality', hence, recording it as 'budget'
+            # if there is no budget/budget as instance, cutoff still remains constant throughout the optimization
+            # so it should not affect existing behaviour
             self.runhistory.add(config=config,
                                 cost=cost, time=runtime, status=status,
                                 instance_id=instance, seed=seed,
+                                budget=cutoff if (self.run_obj == "quality" and
+                                                  cutoff is not None) else 0,
                                 additional_info=additional_info)
             self.stats.n_configs = len(self.runhistory.config_ids)
 

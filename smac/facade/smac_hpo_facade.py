@@ -44,7 +44,7 @@ class SMAC4HPO(SMAC4AC):
         init_kwargs['max_config_fracs'] = init_kwargs.get('max_config_fracs', 0.25)
         kwargs['initial_design_kwargs'] = init_kwargs
 
-        # only 1 configuration per SMBO iteration
+        # Intensification parameters - which intensifier to use and respective parameters
         intensifier_kwargs = kwargs.get('intensifier_kwargs', dict())
         intensifier_kwargs['min_chall'] = 1
         kwargs['intensifier_kwargs'] = intensifier_kwargs

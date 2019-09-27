@@ -192,7 +192,7 @@ class TestIntensify(unittest.TestCase):
             tae_runner=taf, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
-            instances=[1])
+            instances=[1], run_obj_time=False)
 
         self.rh.add(config=self.config1, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=1,
@@ -309,7 +309,7 @@ class TestIntensify(unittest.TestCase):
             tae_runner=taf, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
-            instances=list(range(10)),
+            instances=list(range(10)), run_obj_time=False,
             deterministic=True)
 
         for i in range(10):
@@ -350,7 +350,7 @@ class TestIntensify(unittest.TestCase):
             tae_runner=taf, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
-            instances=list(range(10)),
+            instances=list(range(10)), run_obj_time=False,
             deterministic=False)
 
         for i in range(10):
@@ -458,7 +458,7 @@ class TestIntensify(unittest.TestCase):
 
         inst_seed_pairs = self.rh.get_runs_for_config(self.config1)
         # cost used by incumbent for going over all runs in inst_seed_pairs
-        inc_sum_cost = sum_cost(config=self.config1, instance_seed_pairs=inst_seed_pairs,
+        inc_sum_cost = sum_cost(config=self.config1, instance_seed_budget_keys=inst_seed_pairs,
                                     run_history=self.rh)
 
         cutoff = intensifier._adapt_cutoff(challenger=self.config2,

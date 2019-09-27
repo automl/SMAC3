@@ -8,7 +8,7 @@ import numpy as np
 import pynisher
 
 from smac.tae.execute_ta_run import StatusType, ExecuteTARun
-from smac.utils.constants import MAXINT
+from smac.utils.constants import MAXINT, MAX_CUTOFF
 
 __author__ = "Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -70,11 +70,12 @@ class AbstractTAFunc(ExecuteTARun):
         signature = inspect.signature(ta).parameters
         self._accepts_seed = len(signature) > 1
         self._accepts_instance = len(signature) > 2
+        self._accepts_budget = len(signature) > 3
 
         if memory_limit is not None:
             memory_limit = int(math.ceil(memory_limit))
         self.memory_limit = memory_limit
-        
+
         self.use_pynisher = use_pynisher
 
         self.logger = logging.getLogger(
@@ -118,24 +119,27 @@ class AbstractTAFunc(ExecuteTARun):
             additional_info: dict
                 all further additional run information
         """
-        # walltime for pynisher has to be a rounded up integer
-        if cutoff is not None:
-            cutoff = int(math.ceil(cutoff))
-            if cutoff > 65535:
-                raise ValueError("%d is outside the legal range of [0, 65535] "
-                                 "for cutoff (when using pynisher, due to OS limitations)" % cutoff)
-
-        arguments = {'logger': logging.getLogger("pynisher"),
-                     'wall_time_in_s': cutoff,
-                     'mem_in_mb': self.memory_limit}
 
         obj_kwargs = {}
         if self._accepts_seed:
             obj_kwargs['seed'] = seed
         if self._accepts_instance:
             obj_kwargs['instance'] = instance
+        if self._accepts_budget:
+            obj_kwargs['budget'] = cutoff
 
         if self.use_pynisher:
+            # walltime for pynisher has to be a rounded up integer
+            if cutoff is not None:
+                cutoff = int(math.ceil(cutoff))
+                if cutoff > MAX_CUTOFF:
+                    raise ValueError("%d is outside the legal range of [0, 65535] "
+                                     "for cutoff (when using pynisher, due to OS limitations)" % cutoff)
+
+            arguments = {'logger': logging.getLogger("pynisher"),
+                         'wall_time_in_s': cutoff,
+                         'mem_in_mb': self.memory_limit}
+
             # call ta
             obj = pynisher.enforce_limits(**arguments)(self.ta)
             rval = self._call_ta(obj, config, **obj_kwargs)
@@ -242,6 +246,8 @@ class ExecuteTAFuncDict(AbstractTAFunc):
         Memory limit (in MB) that will be applied to the target algorithm.
     par_factor : int, optional
         Penalized average runtime factor. Only used when `run_obj='runtime'`
+    use_pynisher: bool, optional
+        use pynisher to limit resources;
     """
 
     def _call_ta(self, obj, config, **kwargs):

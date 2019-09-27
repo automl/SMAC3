@@ -29,6 +29,7 @@ from smac.initial_design.sobol_design import SobolDesign
 
 # intensification
 from smac.intensification.intensification import Intensifier
+from smac.intensification.successive_halving import SuccessiveHalving
 # optimizer
 from smac.optimizer.smbo import SMBO
 from smac.optimizer.objective import average_cost
@@ -356,6 +357,7 @@ class SMAC4AC(object):
             tae_runner = tae_runner(**tae_def_kwargs)
         elif callable(tae_runner):
             tae_def_kwargs['ta'] = tae_runner
+            tae_def_kwargs['use_pynisher'] = scenario.limit_resources
             tae_runner = ExecuteTAFuncDict(**tae_def_kwargs)
         else:
             raise TypeError("Argument 'tae_runner' is %s, but must be "
@@ -392,6 +394,7 @@ class SMAC4AC(object):
             }
         if intensifier_kwargs is not None:
             intensifier_def_kwargs.update(intensifier_kwargs)
+
         if intensifier is None:
             intensifier = Intensifier(**intensifier_def_kwargs)
         elif inspect.isclass(intensifier):
@@ -420,6 +423,12 @@ class SMAC4AC(object):
             'n_configs_x_params': 0,
             'max_config_fracs': 0.0
             }
+        if isinstance(intensifier, SuccessiveHalving):
+            # If running successive halving, then you need multiple configurations for the initial design
+            n_configs = intensifier.num_initial_challengers / len(self.scenario.cs.get_hyperparameters())
+            init_design_def_kwargs['n_configs_x_params'] = n_configs
+            init_design_def_kwargs['run_first_config'] = False
+            init_design_def_kwargs['fill_random_configs'] = True
         if initial_design_kwargs is not None:
             init_design_def_kwargs.update(initial_design_kwargs)
         if initial_configurations is not None:

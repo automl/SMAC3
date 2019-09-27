@@ -10,7 +10,7 @@ import numpy as np
 
 from smac.optimizer.objective import sum_cost
 from smac.stats.stats import Stats
-from smac.utils.constants import MAXINT, MAX_CUTOFF
+from smac.utils.constants import MAXINT
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
 from smac.tae.execute_ta_run import StatusType, BudgetExhaustedException, CappedRunException, ExecuteTARun
@@ -69,14 +69,15 @@ class Intensifier(object):
     def __init__(self, tae_runner: ExecuteTARun, stats: Stats,
                  traj_logger: TrajLogger, rng: np.random.RandomState,
                  instances: typing.List[str],
-                 instance_specifics: typing.Mapping[str, np.ndarray]=None,
-                 cutoff: int=MAX_CUTOFF, deterministic:bool=False,
-                 run_obj_time: bool=True,
-                 always_race_against: Configuration=None,
-                 run_limit: int=MAXINT,
-                 use_ta_time_bound: bool=False,
-                 minR: int=1, maxR: int=2000,
-                 adaptive_capping_slackfactor: float=1.2,
+                 instance_specifics: typing.Mapping[str, np.ndarray] = None,
+                 cutoff: int = None, deterministic: bool = False,
+                 run_obj_time: bool = True,
+                 always_race_against: Configuration = None,
+                 run_limit: int = MAXINT,
+                 use_ta_time_bound: bool = False,
+                 minR: int = 1,
+                 maxR: int = 2000,
+                 adaptive_capping_slackfactor: float = 1.2,
                  min_chall: int=2):
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
@@ -344,7 +345,7 @@ class Intensifier(object):
             inst_seed_pairs = list(inc_inst_seeds - set(missing_runs))
             # cost used by incumbent for going over all runs in inst_seed_pairs
             inc_sum_cost = sum_cost(config=incumbent,
-                                    instance_seed_pairs=inst_seed_pairs,
+                                    instance_seed_budget_keys=inst_seed_pairs,
                                     run_history=run_history)
             
             if len(to_run) == 0:
@@ -352,7 +353,7 @@ class Intensifier(object):
 
             # Line 12
             # Run challenger on all <config,seed> to run
-            for instance, seed in to_run:
+            for instance, seed, _ in to_run:
 
                 cutoff = self._adapt_cutoff(challenger=challenger,
                                             incumbent=incumbent,
@@ -434,14 +435,16 @@ class Intensifier(object):
         if not self.run_obj_time:
             return self.cutoff
 
+        curr_cutoff = self.cutoff if self.cutoff is not None else np.inf
+
         # cost used by challenger for going over all its runs
         # should be subset of runs of incumbent (not checked for efficiency
         # reasons)
         chall_inst_seeds = run_history.get_runs_for_config(challenger)
         chal_sum_cost = sum_cost(config=challenger,
-                                 instance_seed_pairs=chall_inst_seeds,
+                                 instance_seed_budget_keys=chall_inst_seeds,
                                  run_history=run_history)
-        cutoff = min(self.cutoff,
+        cutoff = min(curr_cutoff,
                      inc_sum_cost * self.adaptive_capping_slackfactor -
                      chal_sum_cost
                      )

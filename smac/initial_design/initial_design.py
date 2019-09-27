@@ -42,9 +42,11 @@ class InitialDesign:
                  rng: np.random.RandomState,
                  intensifier: Intensifier,
                  aggregate_func: typing.Callable,
-                 configs: typing.Optional[typing.List[Configuration]]=None,
-                 n_configs_x_params: int=10,
-                 max_config_fracs: float=0.25,
+                 configs: typing.Optional[typing.List[Configuration]] = None,
+                 n_configs_x_params: int = 10,
+                 max_config_fracs: float = 0.25,
+                 run_first_config: bool = True,
+                 fill_random_configs: bool = False
                  ):
         """Constructor
 
@@ -76,6 +78,10 @@ class InitialDesign:
             how many configurations will be used at most in the initial design (X*D)
         max_config_fracs: float
             use at most X*budget in the initial design. Not active if a time limit is given.
+        run_first_config: bool
+            specify if target algorithm has to be run once on the first configuration before the intensify call
+        fill_random_configs: bool
+            fill budget with random configurations if initial incumbent sampling returns only 1 configuration
         """
 
         self.tae_runner = tae_runner
@@ -87,18 +93,28 @@ class InitialDesign:
         self.intensifier = intensifier
         self.runhistory = runhistory
         self.aggregate_func = aggregate_func
+        self.run_first_config = run_first_config
+        self.fill_random_configs = fill_random_configs
 
         self.logger = self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         n_params = len(self.scenario.cs.get_hyperparameters())
         self.init_budget = int(max(1, min(n_configs_x_params * n_params,
-                          (max_config_fracs * scenario.ta_run_limit))))
-        self.logger.info("Running initial design for %d configurations" %(self.init_budget))
+                                          (max_config_fracs * scenario.ta_run_limit))))
+        self.logger.info("Running initial design for %d configurations" % self.init_budget)
 
     def select_configurations(self) -> typing.List[Configuration]:
 
         if self.configs is None:
-            return self._select_configurations()
+            configs = self._select_configurations()
+            # add random configurations if _select_configurations() returns less than expected budget
+            if self.fill_random_configs and len(configs) < self.init_budget:
+                random_configs = self.scenario.cs.sample_configuration(size=self.init_budget - len(configs))
+                if isinstance(random_configs, list):
+                    configs.extend(random_configs)
+                else:
+                    configs.append(random_configs)
+            return configs
         else:
             return self.configs
 
@@ -118,19 +134,27 @@ class InitialDesign:
             if config.origin is None:
                 config.origin = 'Initial design'
 
-        # run first design
-        # ensures that first design is part of trajectory file
-        inc = self._run_first_configuration(configs[0], self.scenario)
+        # add this incumbent right away to have an entry to time point 0
+        self.traj_logger.add_entry(train_perf=2**31,
+                                   incumbent_id=1,
+                                   incumbent=configs[0])
 
-        if len(set(configs)) > 1:
+        # run first design
+        inc = None
+        if self.run_first_config:
+            # ensures that first design is part of trajectory file
+            inc = self._run_first_configuration(configs[0], self.scenario)
+            configs.pop(0)
+
+        if len(set(configs)) >= 1:
             # intensify will skip all challenger that are identical with the incumbent;
             # if <configs> has only identical configurations,
             # intensifiy will not do any configuration runs
             # (also not on the incumbent)
             # therefore, at least two different configurations have to be in <configs>
             inc, _ = self.intensifier.intensify(
-                challengers=configs[1:],
-                incumbent=configs[0],
+                challengers=configs,
+                incumbent=inc,
                 run_history=self.runhistory,
                 aggregate_func=self.aggregate_func,
             )
@@ -147,11 +171,6 @@ class InitialDesign:
         """
         if initial_incumbent.origin is None:
             initial_incumbent.origin = 'Initial design'
-
-        # add this incumbent right away to have an entry to time point 0
-        self.traj_logger.add_entry(train_perf=2 ** 31,
-                                   incumbent_id=1,
-                                   incumbent=initial_incumbent)
 
         rand_inst = self.rng.choice(self.scenario.train_insts)
 
@@ -199,7 +218,7 @@ class InitialDesign:
                 # add a vector with zeros
                 design_ = np.zeros(np.array(design.shape) + np.array((0, 1)))
                 design_[:, :idx] = design[:, :idx]
-                design_[:, idx+1:] = design[:, idx:]
+                design_[:, idx + 1:] = design[:, idx:]
                 design = design_
             elif isinstance(param, CategoricalHyperparameter):
                 v_design = design[:, idx]

@@ -152,8 +152,11 @@ class SMBO(object):
         Detects whether we the optimization is restored from previous state.
         """
         self.stats.start_timing()
+
         # Initialization, depends on input
         if self.stats.ta_runs == 0 and self.incumbent is None:
+            self.logger.info('Running initial design')
+            # Intensifier initialization
             self.incumbent = self.initial_design.run()
 
         elif self.stats.ta_runs > 0 and self.incumbent is None:
@@ -173,7 +176,7 @@ class SMBO(object):
 
         # To be on the safe side -> never return "None" as incumbent
         if not self.incumbent:
-            self.incumbent = self.scenario.cs.get_default_configuration()
+            self.incumbent = self.config_space.get_default_configuration()
 
     def run(self):
         """Runs the Bayesian optimization loop
@@ -217,7 +220,7 @@ class SMBO(object):
                             output_directory=self.scenario.output_dir_for_this_run,
                             logger=self.logger)
 
-            logging.debug("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
+            self.logger.debug("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
                 self.stats.get_remaing_time_budget(),
                 self.stats.get_remaining_ta_budget(),
                 self.stats.get_remaining_ta_runs()))
@@ -340,7 +343,7 @@ class SMBO(object):
         """
         if isinstance(config_mode, str):
             traj_fn = os.path.join(self.scenario.output_dir_for_this_run, "traj_aclib2.json")
-            trajectory = TrajLogger.read_traj_aclib_format(fn=traj_fn, cs=self.scenario.cs)
+            trajectory = TrajLogger.read_traj_aclib_format(fn=traj_fn, cs=self.config_space)
         else:
             trajectory = None
         if self.scenario.output_dir_for_this_run:

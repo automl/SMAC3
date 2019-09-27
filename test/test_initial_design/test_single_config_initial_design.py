@@ -20,7 +20,7 @@ class TestSingleInitialDesign(unittest.TestCase):
     def setUp(self):
         self.cs = ConfigurationSpace()
         self.cs.add_hyperparameter(UniformFloatHyperparameter(
-            name="x1", lower=1, upper=10, default_value=2)
+            name="x1", lower=1, upper=10, default_value=1)
         )
         self.scenario = Scenario({'cs': self.cs, 'run_obj': 'quality',
                                   'output_dir': ''})
@@ -45,8 +45,8 @@ class TestSingleInitialDesign(unittest.TestCase):
         )
 
         inc = dc.run()
-        self.assertTrue(stats.ta_runs==1)
-        self.assertTrue(len(rh.data)==0)
+        self.assertTrue(stats.ta_runs == 1)
+        self.assertTrue(len(rh.data) == 0)
 
     def test_multi_config_design(self):
         stats = Stats(scenario=self.scenario)
@@ -81,6 +81,48 @@ class TestSingleInitialDesign(unittest.TestCase):
         )
 
         inc = dc.run()
-        self.assertTrue(stats.ta_runs==4)  # two runs per config
-        self.assertTrue(len(rh.data)==4)  # two runs per config
-        self.assertTrue(rh.get_cost(inc) == 4)
+        self.assertEqual(stats.ta_runs, 4)  # two runs per config
+        self.assertEqual(len(rh.data), 4)  # two runs per config
+        self.assertEqual(rh.get_cost(inc), 4)
+        self.assertEqual(len(rh.get_all_configs()), 2)
+
+    def test_fill_config_design(self):
+        stats = Stats(scenario=self.scenario)
+        stats.start_timing()
+        self.ta.stats = stats
+        tj = TrajLogger(output_dir=None, stats=stats)
+        rh = RunHistory(aggregate_func=average_cost)
+        self.ta.runhistory = rh
+        rng = np.random.RandomState(seed=12345)
+
+        intensifier = Intensifier(
+            tae_runner=self.ta,
+            stats=stats,
+            traj_logger=tj,
+            rng=rng,
+            instances=[None],
+            run_obj_time=False,
+            deterministic=True,
+        )
+
+        configs = None
+
+        dc = DefaultConfiguration(
+            tae_runner=self.ta,
+            scenario=self.scenario,
+            stats=stats,
+            traj_logger=tj,
+            runhistory=rh,
+            rng=rng,
+            configs=configs,
+            intensifier=intensifier,
+            aggregate_func=average_cost,
+            n_configs_x_params=2,
+            fill_random_configs=True,
+        )
+
+        inc = dc.run()
+        self.assertEqual(stats.ta_runs, 2)  # two runs per config
+        self.assertEqual(len(rh.data), 2)  # two runs per config
+        self.assertEqual(rh.get_cost(inc), 1)
+        self.assertEqual(len(rh.get_all_configs()), 2)

@@ -426,6 +426,12 @@ class CMDReader(object):
                                default=True, type=truthy,
                                help="If true, *SMAC* will abort if the first run of "
                                     "the target algorithm crashes.")
+        smac_opts.add_argument("--limit-resources", "--limit_resources",
+                               dest='limit_resources',
+                               default=True, type=truthy,
+                               help="If true, *SMAC* will use pynisher to limit time and memory for "
+                                    "the target algorithm. Allows SMAC to use all resources available. "
+                                    "Applicable only to func TAEs. Set to 'True' by default. (Use with caution!)")
 
         smac_opts.add_argument("--minr", "--minR", dest='minR',
                                default=1, type=int,
@@ -546,7 +552,6 @@ class CMDReader(object):
                default=0.5, type=float,
                help="[dev] probablity to run a random configuration"
                " instead of configuration optimized on the acquisition function")
-
         self.parser.add_parser(self.smac_parser)
         self.smac_cmd_actions, self.smac_cmd_translations = CMDReader._extract_action_info(self.smac_parser._actions)
 
