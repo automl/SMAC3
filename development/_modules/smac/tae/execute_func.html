@@ -144,7 +144,9 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
@@ -275,7 +277,7 @@
 <span class="kn">import</span> <span class="nn">pynisher</span>
 
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">StatusType</span><span class="p">,</span> <span class="n">ExecuteTARun</span>
-<span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="k">import</span> <span class="n">MAXINT</span>
+<span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="k">import</span> <span class="n">MAXINT</span><span class="p">,</span> <span class="n">MAX_CUTOFF</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer, Matthias Feurer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
@@ -337,11 +339,12 @@
         <span class="n">signature</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">ta</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_accepts_seed</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">signature</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_accepts_instance</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">signature</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_accepts_budget</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">signature</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span>
 
         <span class="k">if</span> <span class="n">memory_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">memory_limit</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">memory_limit</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">memory_limit</span> <span class="o">=</span> <span class="n">memory_limit</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">use_pynisher</span> <span class="o">=</span> <span class="n">use_pynisher</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
@@ -385,24 +388,27 @@
 <span class="sd">            additional_info: dict</span>
 <span class="sd">                all further additional run information</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># walltime for pynisher has to be a rounded up integer</span>
-        <span class="k">if</span> <span class="n">cutoff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">cutoff</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">cutoff</span><span class="p">))</span>
-            <span class="k">if</span> <span class="n">cutoff</span> <span class="o">&gt;</span> <span class="mi">65535</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2"> is outside the legal range of [0, 65535] &quot;</span>
-                                 <span class="s2">&quot;for cutoff (when using pynisher, due to OS limitations)&quot;</span> <span class="o">%</span> <span class="n">cutoff</span><span class="p">)</span>
-
-        <span class="n">arguments</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;logger&#39;</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;pynisher&quot;</span><span class="p">),</span>
-                     <span class="s1">&#39;wall_time_in_s&#39;</span><span class="p">:</span> <span class="n">cutoff</span><span class="p">,</span>
-                     <span class="s1">&#39;mem_in_mb&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory_limit</span><span class="p">}</span>
 
         <span class="n">obj_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accepts_seed</span><span class="p">:</span>
             <span class="n">obj_kwargs</span><span class="p">[</span><span class="s1">&#39;seed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">seed</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accepts_instance</span><span class="p">:</span>
             <span class="n">obj_kwargs</span><span class="p">[</span><span class="s1">&#39;instance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">instance</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accepts_budget</span><span class="p">:</span>
+            <span class="n">obj_kwargs</span><span class="p">[</span><span class="s1">&#39;budget&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cutoff</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_pynisher</span><span class="p">:</span>
+            <span class="c1"># walltime for pynisher has to be a rounded up integer</span>
+            <span class="k">if</span> <span class="n">cutoff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">cutoff</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">cutoff</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">cutoff</span> <span class="o">&gt;</span> <span class="n">MAX_CUTOFF</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2"> is outside the legal range of [0, 65535] &quot;</span>
+                                     <span class="s2">&quot;for cutoff (when using pynisher, due to OS limitations)&quot;</span> <span class="o">%</span> <span class="n">cutoff</span><span class="p">)</span>
+
+            <span class="n">arguments</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;logger&#39;</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;pynisher&quot;</span><span class="p">),</span>
+                         <span class="s1">&#39;wall_time_in_s&#39;</span><span class="p">:</span> <span class="n">cutoff</span><span class="p">,</span>
+                         <span class="s1">&#39;mem_in_mb&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory_limit</span><span class="p">}</span>
+
             <span class="c1"># call ta</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="n">pynisher</span><span class="o">.</span><span class="n">enforce_limits</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">ta</span><span class="p">)</span>
             <span class="n">rval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_ta</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">obj_kwargs</span><span class="p">)</span>
@@ -509,6 +515,8 @@
 <span class="sd">        Memory limit (in MB) that will be applied to the target algorithm.</span>
 <span class="sd">    par_factor : int, optional</span>
 <span class="sd">        Penalized average runtime factor. Only used when `run_obj=&#39;runtime&#39;`</span>
+<span class="sd">    use_pynisher: bool, optional</span>
+<span class="sd">        use pynisher to limit resources;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">_call_ta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>

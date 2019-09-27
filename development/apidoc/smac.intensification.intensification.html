@@ -36,8 +36,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.optimizer package" href="smac.optimizer.html" />
-    <link rel="prev" title="smac.intensification package" href="smac.intensification.html" /> 
+    <link rel="next" title="smac.intensification.successive_halving module" href="smac.intensification.successive_halving.html" />
+    <link rel="prev" title="smac.intensification.hyperband module" href="smac.intensification.hyperband.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -146,7 +146,9 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="smac.intensification.html">smac.intensification package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.optimizer.html">smac.optimizer package</a><ul>
@@ -276,7 +278,7 @@
 <span id="smac-intensification-intensification-module"></span><h1>smac.intensification.intensification module<a class="headerlink" href="#module-smac.intensification.intensification" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.intensification.intensification.Intensifier">
-<em class="property">class </em><code class="sig-prename descclassname">smac.intensification.intensification.</code><code class="sig-name descname">Intensifier</code><span class="sig-paren">(</span><em class="sig-param">tae_runner: smac.tae.execute_ta_run.ExecuteTARun, stats: smac.stats.stats.Stats, traj_logger: smac.utils.io.traj_logging.TrajLogger, rng: numpy.random.mtrand.RandomState, instances: List[str], instance_specifics: Mapping[str, numpy.ndarray] = None, cutoff: int = 65535, deterministic: bool = False, run_obj_time: bool = True, always_race_against: ConfigSpace.configuration_space.Configuration = None, run_limit: int = 2147483647, use_ta_time_bound: bool = False, minR: int = 1, maxR: int = 2000, adaptive_capping_slackfactor: float = 1.2, min_chall: int = 2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.intensification.intensification.</code><code class="sig-name descname">Intensifier</code><span class="sig-paren">(</span><em class="sig-param">tae_runner: smac.tae.execute_ta_run.ExecuteTARun, stats: smac.stats.stats.Stats, traj_logger: smac.utils.io.traj_logging.TrajLogger, rng: numpy.random.mtrand.RandomState, instances: List[str], instance_specifics: Mapping[str, numpy.ndarray] = None, cutoff: int = None, deterministic: bool = False, run_obj_time: bool = True, always_race_against: ConfigSpace.configuration_space.Configuration = None, run_limit: int = 2147483647, use_ta_time_bound: bool = False, minR: int = 1, maxR: int = 2000, adaptive_capping_slackfactor: float = 1.2, min_chall: int = 2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Races challengers against an incumbent (a.k.a. SMAC’s intensification
 procedure).</p>
@@ -346,10 +348,10 @@ intensify).</p></li>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="smac.optimizer.html" class="btn btn-neutral float-right" title="smac.optimizer package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="smac.intensification.successive_halving.html" class="btn btn-neutral float-right" title="smac.intensification.successive_halving module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="smac.intensification.html" class="btn btn-neutral float-left" title="smac.intensification package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="smac.intensification.hyperband.html" class="btn btn-neutral float-left" title="smac.intensification.hyperband module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

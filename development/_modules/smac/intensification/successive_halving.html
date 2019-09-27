@@ -1,0 +1,782 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>smac.intensification.successive_halving &mdash; SMAC 0.11.2dev documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> SMAC
+          
+
+          
+            
+            <img src="../../../_static/SMAC3.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.11.2dev
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage_recomendation.html">Usage Recommendation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../manual.html">Manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../basic_usage.html">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../options.html">Options and file formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tae.html">Target Algorithm Evaluator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../psmac.html">Parallel SMAC (pSMAC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../validation.html">Validation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.configspace.html">smac.configspace package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.configspace.util.html">smac.configspace.util module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.epm.html">smac.epm package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.base_epm.html">smac.epm.base_epm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.base_gp.html">smac.epm.base_gp module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.base_imputor.html">smac.epm.base_imputor module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.base_rf.html">smac.epm.base_rf module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gaussian_process.html">smac.epm.gaussian_process module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.facade.html">smac.facade package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.html">smac.facade.experimental package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.epils_facade.html">smac.facade.experimental.epils_facade module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.hydra_facade.html">smac.facade.experimental.hydra_facade module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.psmac_facade.html">smac.facade.experimental.psmac_facade module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.initial_design.html">smac.initial_design package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.initial_design.default_configuration_design.html">smac.initial_design.default_configuration_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.initial_design.factorial_design.html">smac.initial_design.factorial_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.initial_design.initial_design.html">smac.initial_design.initial_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.initial_design.latin_hypercube_design.html">smac.initial_design.latin_hypercube_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.initial_design.random_configuration_design.html">smac.initial_design.random_configuration_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.initial_design.sobol_design.html">smac.initial_design.sobol_design module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.runhistory.html">smac.runhistory package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.runhistory.runhistory.html">smac.runhistory.runhistory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.runhistory.runhistory2epm.html">smac.runhistory.runhistory2epm module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.scenario.html">smac.scenario package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.scenario.scenario.html">smac.scenario.scenario module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.stats.html">smac.stats package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.stats.stats.html">smac.stats.stats module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.tae.html">smac.tae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.utils.html">smac.utils package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.io.html">smac.utils.io package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.utils.io.cmd_reader.html">smac.utils.io.cmd_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.utils.io.input_reader.html">smac.utils.io.input_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.utils.io.output_directory.html">smac.utils.io.output_directory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.utils.io.output_writer.html">smac.utils.io.output_writer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.utils.io.traj_logging.html">smac.utils.io.traj_logging module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.constants.html">smac.utils.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.dependencies.html">smac.utils.dependencies module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.logging.html">smac.utils.logging module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.validate.html">smac.utils.validate module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.smac_cli.html">smac.smac_cli module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../faq.html">F.A.Q.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SMAC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>smac.intensification.successive_halving</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for smac.intensification.successive_halving</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">islice</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="k">import</span> <span class="n">Intensifier</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="k">import</span> <span class="n">sum_cost</span>
+<span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="k">import</span> <span class="n">Stats</span>
+<span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="k">import</span> <span class="n">MAXINT</span>
+<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">BudgetExhaustedException</span><span class="p">,</span> <span class="n">CappedRunException</span><span class="p">,</span> <span class="n">ExecuteTARun</span>
+<span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="k">import</span> <span class="n">TrajLogger</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Ashwin Raaghav Narayanan&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2018, ML4AAD&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
+
+
+<div class="viewcode-block" id="SuccessiveHalving"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving">[docs]</a><span class="k">class</span> <span class="nc">SuccessiveHalving</span><span class="p">(</span><span class="n">Intensifier</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Races multiple challengers against an incumbent using Successive Halving method</span>
+
+<span class="sd">    Implementation from &quot;BOHB: Robust and Efficient Hyperparameter Optimization at Scale&quot; (Falkner et al. 2018)</span>
+<span class="sd">    (refer supplementary)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tae_runner : smac.tae.execute_ta_run.ExecuteTARun Object</span>
+<span class="sd">        target algorithm run executor</span>
+<span class="sd">    stats: smac.stats.stats.Stats</span>
+<span class="sd">        stats object</span>
+<span class="sd">    traj_logger: smac.utils.io.traj_logging.TrajLogger</span>
+<span class="sd">        TrajLogger object to log all new incumbents</span>
+<span class="sd">    rng : np.random.RandomState</span>
+<span class="sd">    instances : typing.List[str]</span>
+<span class="sd">        list of all instance ids</span>
+<span class="sd">    instance_specifics : typing.Mapping[str,np.ndarray]</span>
+<span class="sd">        mapping from instance name to instance specific string</span>
+<span class="sd">    cutoff : typing.Optional[int]</span>
+<span class="sd">        cutoff of TA runs</span>
+<span class="sd">    deterministic : bool</span>
+<span class="sd">        whether the TA is deterministic or not</span>
+<span class="sd">    initial_budget : typing.Optional[float]</span>
+<span class="sd">        minimum budget allowed for 1 run of successive halving</span>
+<span class="sd">    max_budget : typing.Optional[float]</span>
+<span class="sd">        maximum budget allowed for 1 run of successive halving</span>
+<span class="sd">    eta : float</span>
+<span class="sd">        &#39;halving&#39; factor after each iteration in a successive halving run. Defaults to 3</span>
+<span class="sd">    num_initial_challengers : typing.Optional[int]</span>
+<span class="sd">        number of challengers to consider for the initial budget. If None, calculated internally</span>
+<span class="sd">    run_obj_time : bool</span>
+<span class="sd">        whether the run objective is runtime or not (if true, apply adaptive capping)</span>
+<span class="sd">    n_seeds : typing.Optional[int]</span>
+<span class="sd">        Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0</span>
+<span class="sd">    instance_order : typing.Optional[str]</span>
+<span class="sd">        how to order instances. Can be set to: [None, shuffle_once, shuffle]</span>
+<span class="sd">        * None - use as is given by the user</span>
+<span class="sd">        * shuffle_once - shuffle once and use across all SH run (default)</span>
+<span class="sd">        * shuffle - shuffle before every SH run</span>
+<span class="sd">    adaptive_capping_slackfactor : float</span>
+<span class="sd">        slack factor of adpative capping (factor * adpative cutoff)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tae_runner</span><span class="p">:</span> <span class="n">ExecuteTARun</span><span class="p">,</span>
+                 <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">,</span>
+                 <span class="n">traj_logger</span><span class="p">:</span> <span class="n">TrajLogger</span><span class="p">,</span>
+                 <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span>
+                 <span class="n">instances</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                 <span class="n">instance_specifics</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">cutoff</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">deterministic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">initial_budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">max_budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+                 <span class="n">num_initial_challengers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">run_obj_time</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">n_seeds</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">instance_order</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;shuffle_once&#39;</span><span class="p">,</span>
+                 <span class="n">adaptive_capping_slackfactor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">tae_runner</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">traj_logger</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">instances</span><span class="p">,</span>
+                         <span class="n">instance_specifics</span><span class="o">=</span><span class="n">instance_specifics</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">cutoff</span><span class="p">,</span>
+                         <span class="n">deterministic</span><span class="o">=</span><span class="n">deterministic</span><span class="p">,</span> <span class="n">run_obj_time</span><span class="o">=</span><span class="n">run_obj_time</span><span class="p">,</span>
+                         <span class="n">adaptive_capping_slackfactor</span><span class="o">=</span><span class="n">adaptive_capping_slackfactor</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="c1"># INSTANCES</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_seeds</span> <span class="o">=</span> <span class="n">n_seeds</span> <span class="k">if</span> <span class="n">n_seeds</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instance_order</span> <span class="o">=</span> <span class="n">instance_order</span>
+
+        <span class="c1"># if instances are coming from Hyperband, skip the instance preprocessing section</span>
+        <span class="c1"># it is already taken care by Hyperband</span>
+        <span class="k">if</span> <span class="n">instances</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">instances</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">instances</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">instances</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">instances</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">instances</span>
+            <span class="c1"># removing duplicates in the user provided instances</span>
+            <span class="n">instances</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">OrderedDict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">instances</span><span class="p">))</span>
+
+            <span class="c1"># NOTE Remove after solving how to handle multiple seeds and 1 instance</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_seeds</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;This case (multiple seeds and 1 instance) cannot be handled yet!&#39;</span><span class="p">)</span>
+
+            <span class="c1"># determine instance order</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_order</span> <span class="o">==</span> <span class="s1">&#39;shuffle_once&#39;</span><span class="p">:</span>
+                <span class="c1"># randomize once</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
+
+            <span class="c1"># set seed(s) for all SH runs</span>
+            <span class="c1"># - currently user gives the number of seeds to consider</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">deterministic</span><span class="p">:</span>
+                <span class="n">seeds</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">seeds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">MAXINT</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_seeds</span><span class="p">)</span>
+            <span class="c1"># storing instances &amp; seeds as tuples</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">instances</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">seeds</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">]</span>
+
+        <span class="c1"># successive halving parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_sh_params</span><span class="p">(</span><span class="n">initial_budget</span><span class="p">,</span> <span class="n">max_budget</span><span class="p">,</span> <span class="n">eta</span><span class="p">,</span> <span class="n">num_initial_challengers</span><span class="p">)</span>
+
+        <span class="c1"># adaptive capping</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff_as_budget</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_order</span> <span class="o">!=</span> <span class="s1">&#39;shuffle&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_obj_time</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">adaptive_capping</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">adaptive_capping</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">_init_sh_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+                        <span class="n">max_budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+                        <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                        <span class="n">num_initial_challengers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        initialize Successive Halving parameters</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        initial_budget : typing.Optional[float]</span>
+<span class="sd">            minimum budget allowed for 1 run of successive halving</span>
+<span class="sd">        max_budget : typing.Optional[float]</span>
+<span class="sd">            maximum budget allowed for 1 run of successive halving</span>
+<span class="sd">        eta : float</span>
+<span class="sd">            &#39;halving&#39; factor after each iteration in a successive halving run</span>
+<span class="sd">        num_initial_challengers : typing.Optional[int]</span>
+<span class="sd">            number of challengers to consider for the initial budget</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">eta</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;eta must be greater than 1&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">=</span> <span class="n">eta</span>
+
+        <span class="c1"># BUDGETS</span>
+
+        <span class="k">if</span> <span class="n">max_budget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">initial_budget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> \
+                <span class="ow">and</span> <span class="n">max_budget</span> <span class="o">&lt;</span> <span class="n">initial_budget</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Max budget has to be larger than min budget&#39;</span><span class="p">)</span>
+
+        <span class="c1"># - if only 1 instance was provided &amp; quality objective, then use cutoff as budget</span>
+        <span class="c1"># - else, use instances as budget</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_obj_time</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instances</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># budget with cutoff</span>
+            <span class="k">if</span> <span class="n">initial_budget</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> \
+                    <span class="p">(</span><span class="n">max_budget</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Successive Halving with runtime-cutoff as budget (i.e., only 1 instance) &quot;</span>
+                                 <span class="s2">&quot;requires parameters initial_budget and max_budget/cutoff for intensification!&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">max_budget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Successive Halving with runtime-cutoff as budget: &#39;</span>
+                                    <span class="s1">&#39;Both max budget (</span><span class="si">%d</span><span class="s1">) and runtime-cutoff (</span><span class="si">%d</span><span class="s1">) were provided. &#39;</span>
+                                    <span class="s1">&#39;Max budget will be used.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">max_budget</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">initial_budget</span> <span class="o">=</span> <span class="n">initial_budget</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span> <span class="o">=</span> <span class="n">max_budget</span> <span class="k">if</span> <span class="n">max_budget</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cutoff_as_budget</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># budget with instances</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_obj_time</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instances</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Successive Halving has objective &#39;runtime&#39; but only 1 instance-seed pair.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initial_budget</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">initial_budget</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">initial_budget</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instances</span><span class="p">)</span> <span class="k">if</span> <span class="n">max_budget</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_budget</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cutoff_as_budget</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instances</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Max budget cannot be greater than the number of instance-seed pairs&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instances</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Max budget (</span><span class="si">%d</span><span class="s1">) does not include all instance-seed pairs (</span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span>
+                                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instances</span><span class="p">)))</span>
+
+        <span class="n">budget_type</span> <span class="o">=</span> <span class="s1">&#39;CUTOFF&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff_as_budget</span> <span class="k">else</span> <span class="s1">&#39;INSTANCES&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Running Successive Halving with &#39;</span><span class="si">%s</span><span class="s2">&#39; as budget. &quot;</span>
+                         <span class="s2">&quot;Initial budget: </span><span class="si">%.2f</span><span class="s2">, Max. budget: </span><span class="si">%.2f</span><span class="s2">, eta: </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span>
+                         <span class="p">(</span><span class="n">budget_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_budget</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="p">))</span>
+
+        <span class="c1"># precomputing stuff for SH</span>
+        <span class="c1"># max. no. of SH iterations possible given the budgets</span>
+        <span class="n">max_sh_iter</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_budget</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="p">))</span>
+        <span class="c1"># initial number of challengers to sample</span>
+        <span class="k">if</span> <span class="n">num_initial_challengers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_initial_challengers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">**</span> <span class="n">max_sh_iter</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_initial_challengers</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_initial_challengers</span><span class="p">)</span>
+        <span class="c1"># list of budgets that will be used in intensification</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">budgets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">max_sh_iter</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">max_sh_iter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+
+<div class="viewcode-block" id="SuccessiveHalving.intensify"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving.intensify">[docs]</a>    <span class="k">def</span> <span class="nf">intensify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">challengers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
+                  <span class="n">incumbent</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
+                  <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
+                  <span class="n">aggregate_func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
+                  <span class="n">time_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">),</span>
+                  <span class="n">log_traj</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Running intensification via successive halving to determine the incumbent configuration.</span>
+<span class="sd">        *Side effect:* adds runs to run_history</span>
+
+<span class="sd">        Implementation of successive halving (Jamieson &amp; Talwalkar, 2016)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        challengers : typing.List[Configuration]</span>
+<span class="sd">            promising configurations</span>
+<span class="sd">        incumbent : Configuration</span>
+<span class="sd">            best configuration so far</span>
+<span class="sd">        run_history : RunHistory</span>
+<span class="sd">            stores all runs we ran so far</span>
+<span class="sd">        aggregate_func: typing.Callable</span>
+<span class="sd">            aggregate error across instances</span>
+<span class="sd">        time_bound : float, optional (default=2 ** 31 - 1)</span>
+<span class="sd">            time in [sec] available to perform intensify</span>
+<span class="sd">        log_traj: bool</span>
+<span class="sd">            whether to log changes of incumbents in trajectory</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        typing.Tuple[Configuration, float]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ta_time</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_num_run</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">first_run</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># challengers can be repeated only if optimizing across multiple seeds or changing instance orders every run</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_seeds</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_order</span> <span class="o">==</span> <span class="s1">&#39;shuffle&#39;</span><span class="p">):</span>
+            <span class="n">used_configs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">run_history</span><span class="o">.</span><span class="n">get_all_configs</span><span class="p">())</span>
+            <span class="n">chal_generator</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">challengers</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">used_configs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># converting to generator for consistency</span>
+            <span class="n">chal_generator</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">challengers</span><span class="p">)</span>
+        <span class="c1"># select first &#39;n&#39; challengers</span>
+        <span class="n">curr_challengers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">islice</span><span class="p">(</span><span class="n">chal_generator</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_initial_challengers</span><span class="p">)))</span>
+
+        <span class="c1"># randomize instances per successive halving run, if user specifies</span>
+        <span class="n">all_instances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instances</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_order</span> <span class="o">==</span> <span class="s1">&#39;shuffle&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">all_instances</span><span class="p">)</span>
+
+        <span class="c1"># calculating the incumbent&#39;s performance for adaptive capping</span>
+        <span class="c1">#   - this check is required because there is no incumbent performance</span>
+        <span class="c1">#     for the first ever &#39;intensify&#39; run (from initial design)</span>
+        <span class="k">if</span> <span class="n">incumbent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">inc_runs</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
+            <span class="n">inc_sum_cost</span> <span class="o">=</span> <span class="n">sum_cost</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">instance_seed_budget_keys</span><span class="o">=</span><span class="n">inc_runs</span><span class="p">,</span> <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">inc_sum_cost</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;---&#39;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Successive Halving run begins. Budgets: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">budgets</span><span class="p">)</span>
+
+        <span class="c1"># run intensification till budget is max</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">curr_budget</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">budgets</span><span class="p">):</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Running with budget [</span><span class="si">%.2f</span><span class="s1"> / </span><span class="si">%d</span><span class="s1">] with </span><span class="si">%d</span><span class="s1"> challengers&#39;</span> <span class="o">%</span>
+                             <span class="p">(</span><span class="n">curr_budget</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">curr_challengers</span><span class="p">)))</span>
+            <span class="c1"># selecting instance subset for this budget, depending on the kind of budget</span>
+            <span class="n">prev_budget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">budgets</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="n">available_insts</span> <span class="o">=</span> <span class="n">all_instances</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">prev_budget</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">curr_budget</span><span class="p">)]</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff_as_budget</span> \
+                <span class="k">else</span> <span class="n">all_instances</span>
+
+            <span class="c1"># determine &#39;k&#39; for the next iteration - at least 1</span>
+            <span class="n">next_n_chal</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">curr_challengers</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="p">))</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Race all challengers</span>
+                <span class="n">curr_challengers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_challengers</span><span class="p">(</span><span class="n">challengers</span><span class="o">=</span><span class="n">curr_challengers</span><span class="p">,</span>
+                                                         <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
+                                                         <span class="n">instances</span><span class="o">=</span><span class="n">available_insts</span><span class="p">,</span>
+                                                         <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
+                                                         <span class="n">budget</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">budgets</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                                         <span class="n">inc_sum_cost</span><span class="o">=</span><span class="n">inc_sum_cost</span><span class="p">,</span>
+                                                         <span class="n">first_run</span><span class="o">=</span><span class="n">first_run</span><span class="p">)</span>
+
+                <span class="c1"># if all challengers were capped, then stop intensification</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">curr_challengers</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;All configurations have been eliminated by capping!&quot;</span>
+                                     <span class="s2">&quot;Interrupting optimization run and returning current incumbent&quot;</span><span class="p">)</span>
+                    <span class="n">inc_perf</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">incumbent</span><span class="p">,</span> <span class="n">inc_perf</span>
+
+            <span class="k">except</span> <span class="n">BudgetExhaustedException</span><span class="p">:</span>
+                <span class="c1"># Returning the final incumbent selected so far because we ran out of optimization budget</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Budget exhausted; &quot;</span>
+                                  <span class="s2">&quot;Interrupting optimization run and returning current incumbent&quot;</span><span class="p">)</span>
+                <span class="n">inc_perf</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">incumbent</span><span class="p">,</span> <span class="n">inc_perf</span>
+
+            <span class="c1"># selecting the top &#39;k&#39; challengers for the next iteration</span>
+            <span class="n">curr_challengers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_top_k</span><span class="p">(</span><span class="n">curr_challengers</span><span class="p">,</span> <span class="n">run_history</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">next_n_chal</span><span class="p">)</span>
+
+            <span class="n">first_run</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># select best challenger from the SH run</span>
+        <span class="n">best_challenger</span> <span class="o">=</span> <span class="n">curr_challengers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Best challenger from successive halving run - </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">best_challenger</span><span class="p">)))</span>
+
+        <span class="c1"># compare challenger with current incumbent</span>
+        <span class="k">if</span> <span class="n">incumbent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># first intensify run from initial design</span>
+            <span class="n">new_incumbent</span> <span class="o">=</span> <span class="n">best_challenger</span>
+            <span class="n">inc_perf</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="n">best_challenger</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;First Incumbent found! Cost of incumbent is (</span><span class="si">%.4f</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">inc_perf</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;incumbent configuration: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">best_challenger</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">log_traj</span><span class="p">:</span>
+                <span class="c1"># adding incumbent entry</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># first incumbent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">traj_logger</span><span class="o">.</span><span class="n">add_entry</span><span class="p">(</span><span class="n">train_perf</span><span class="o">=</span><span class="n">inc_perf</span><span class="p">,</span>
+                                           <span class="n">incumbent_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span><span class="p">,</span>
+                                           <span class="n">incumbent</span><span class="o">=</span><span class="n">new_incumbent</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compare_configs</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">best_challenger</span><span class="p">,</span>
+                                                  <span class="n">run_history</span><span class="p">,</span> <span class="n">aggregate_func</span><span class="p">,</span> <span class="n">log_traj</span><span class="p">)</span>
+            <span class="c1"># if compare config returned none, then it is undecided. So return old incumbent</span>
+            <span class="n">new_incumbent</span> <span class="o">=</span> <span class="n">incumbent</span> <span class="k">if</span> <span class="n">new_incumbent</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">new_incumbent</span>
+            <span class="c1"># getting new incumbent cost</span>
+            <span class="n">inc_perf</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="n">new_incumbent</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">update_average_configs_per_intensify</span><span class="p">(</span>
+            <span class="n">n_configs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">new_incumbent</span><span class="p">,</span> <span class="n">inc_perf</span></div>
+
+    <span class="k">def</span> <span class="nf">_run_challengers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">challengers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
+                         <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+                         <span class="n">instances</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span>
+                         <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
+                         <span class="n">budget</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                         <span class="n">inc_sum_cost</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                         <span class="n">first_run</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs all the challengers for the given instance-seed pairs</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        challengers: typing.List[Configuration]</span>
+<span class="sd">            List of challenger configurations to race</span>
+<span class="sd">        incumbent:</span>
+<span class="sd">            Current incumbent configuration</span>
+<span class="sd">        instances: typing.Tuple[str, int]</span>
+<span class="sd">            List of instance-seed pairs to use for racing challengers</span>
+<span class="sd">        run_history: RunHistory</span>
+<span class="sd">            Stores all runs we ran so far</span>
+<span class="sd">        budget: float</span>
+<span class="sd">            Successive Halving budget</span>
+<span class="sd">        inc_sum_cost: float</span>
+<span class="sd">            total sum cost of the incumbent (used to determine adaptive capping cutoff)</span>
+<span class="sd">        first_run: bool</span>
+<span class="sd">            to logs configurations to stats (set to true only for new configurations)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        typing.List[Configuration]</span>
+<span class="sd">            All challengers that were successfully executed, without being capped</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># to track capped configurations &amp; remove them later</span>
+        <span class="n">capped_configs</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># for every challenger generated, execute target algorithm</span>
+        <span class="k">for</span> <span class="n">challenger</span> <span class="ow">in</span> <span class="n">challengers</span><span class="p">:</span>
+
+            <span class="c1"># for every instance in the instance subset</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot; Running challenger  -  </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">challenger</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">instance</span><span class="p">,</span> <span class="n">seed</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">:</span>
+
+                <span class="c1"># selecting cutoff if running adaptive capping</span>
+                <span class="n">cutoff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_cutoff</span><span class="p">(</span><span class="n">challenger</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
+                                            <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
+                                            <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
+                                            <span class="n">inc_sum_cost</span><span class="o">=</span><span class="n">inc_sum_cost</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">cutoff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">cutoff</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># ran out of time to validate challenger</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Stop challenger itensification due to adaptive capping.&quot;</span><span class="p">)</span>
+                    <span class="k">break</span>
+
+                <span class="c1"># setting cutoff based on the type of budget &amp; adaptive capping</span>
+                <span class="n">tae_cutoff</span> <span class="o">=</span> <span class="n">budget</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff_as_budget</span> <span class="k">else</span> <span class="n">cutoff</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Cutoff for challenger: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">cutoff</span><span class="p">))</span>
+
+                <span class="c1"># run target algorithm for each instance-seed pair</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Execute target algorithm&quot;</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">dur</span><span class="p">,</span> <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tae_runner</span><span class="o">.</span><span class="n">start</span><span class="p">(</span>
+                        <span class="n">config</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
+                        <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span>
+                        <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
+                        <span class="n">cutoff</span><span class="o">=</span><span class="n">tae_cutoff</span><span class="p">,</span>
+                        <span class="n">instance_specific</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance_specifics</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">),</span>
+                        <span class="n">capped</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span>
+                               <span class="p">(</span><span class="n">cutoff</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span><span class="p">)</span>
+                    <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_ta_time</span> <span class="o">+=</span> <span class="n">dur</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_num_run</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="k">except</span> <span class="n">CappedRunException</span><span class="p">:</span>
+                    <span class="c1"># We move on to the next configuration if we reach maximum cutoff i.e., capped</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Budget exhausted by adaptive capping; &quot;</span>
+                                      <span class="s2">&quot;Interrupting current challenger and moving on to the next one&quot;</span><span class="p">)</span>
+                    <span class="n">capped_configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">challenger</span><span class="p">)</span>
+                    <span class="k">break</span>
+
+            <span class="c1"># count every challenger exactly once per SH run</span>
+            <span class="k">if</span> <span class="n">first_run</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># eliminate capped configuration from the race &amp; reset capped_configs</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">capped_configs</span><span class="p">:</span>
+            <span class="n">challengers</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">challengers</span>
+
+    <span class="k">def</span> <span class="nf">_top_k</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
+               <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
+               <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        selects the top &#39;k&#39; configurations from the given list based on their performance in this budget</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        configs: typing.List[Configuration]</span>
+<span class="sd">            list of configurations to filter from</span>
+<span class="sd">        run_history: RunHistory</span>
+<span class="sd">            stores all runs we ran so far</span>
+<span class="sd">        k: int</span>
+<span class="sd">            number of configurations to select</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        typing.List[Configuration]</span>
+<span class="sd">            top challenger configurations, sorted in increasing costs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># extracting costs for each given configuration</span>
+        <span class="n">config_costs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># sample list instance-seed-budget key to act as base</span>
+        <span class="n">run_key</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">configs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">:</span>
+            <span class="c1"># ensuring that all configurations being compared are run on the same set of instance, seed &amp; budget</span>
+            <span class="n">cur_run_key</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">cur_run_key</span> <span class="o">!=</span> <span class="n">run_key</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Cannot compare configs that were run on different instances-seeds-budgets&#39;</span><span class="p">)</span>
+            <span class="n">config_costs</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+        <span class="n">configs_sorted</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">config_costs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">config_costs</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>
+        <span class="c1"># select top configurations only</span>
+        <span class="n">top_configs</span> <span class="o">=</span> <span class="n">configs_sorted</span><span class="p">[:</span><span class="n">k</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">top_configs</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

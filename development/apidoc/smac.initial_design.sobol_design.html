@@ -146,7 +146,9 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.optimizer.html">smac.optimizer package</a><ul>
@@ -276,7 +278,7 @@
 <span id="smac-initial-design-sobol-design-module"></span><h1>smac.initial_design.sobol_design module<a class="headerlink" href="#module-smac.initial_design.sobol_design" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.initial_design.sobol_design.SobolDesign">
-<em class="property">class </em><code class="sig-prename descclassname">smac.initial_design.sobol_design.</code><code class="sig-name descname">SobolDesign</code><span class="sig-paren">(</span><em class="sig-param">tae_runner: smac.tae.execute_ta_run.ExecuteTARun</em>, <em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">traj_logger: smac.utils.io.traj_logging.TrajLogger</em>, <em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">rng: numpy.random.mtrand.RandomState</em>, <em class="sig-param">intensifier: smac.intensification.intensification.Intensifier</em>, <em class="sig-param">aggregate_func: Callable</em>, <em class="sig-param">configs: Optional[List[ConfigSpace.configuration_space.Configuration]] = None</em>, <em class="sig-param">n_configs_x_params: int = 10</em>, <em class="sig-param">max_config_fracs: float = 0.25</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/initial_design/sobol_design.html#SobolDesign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.sobol_design.SobolDesign" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.initial_design.sobol_design.</code><code class="sig-name descname">SobolDesign</code><span class="sig-paren">(</span><em class="sig-param">tae_runner: smac.tae.execute_ta_run.ExecuteTARun</em>, <em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">traj_logger: smac.utils.io.traj_logging.TrajLogger</em>, <em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">rng: numpy.random.mtrand.RandomState</em>, <em class="sig-param">intensifier: smac.intensification.intensification.Intensifier</em>, <em class="sig-param">aggregate_func: Callable</em>, <em class="sig-param">configs: Optional[List[ConfigSpace.configuration_space.Configuration]] = None</em>, <em class="sig-param">n_configs_x_params: int = 10</em>, <em class="sig-param">max_config_fracs: float = 0.25</em>, <em class="sig-param">run_first_config: bool = True</em>, <em class="sig-param">fill_random_configs: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/initial_design/sobol_design.html#SobolDesign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.sobol_design.SobolDesign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign" title="smac.initial_design.initial_design.InitialDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.initial_design.initial_design.InitialDesign</span></code></a></p>
 <p>Sobol sequence design</p>
 <dl class="attribute">
@@ -326,6 +328,8 @@ instances.</p></li>
 <li><p><strong>configs</strong> (<em>typing.Optional</em><em>[</em><em>typing.List</em><em>[</em><em>Configuration</em><em>]</em><em>]</em>) – List of initial configurations.</p></li>
 <li><p><strong>n_configs_x_params</strong> (<em>int</em>) – how many configurations will be used at most in the initial design (X*D)</p></li>
 <li><p><strong>max_config_fracs</strong> (<em>float</em>) – use at most X*budget in the initial design. Not active if a time limit is given.</p></li>
+<li><p><strong>run_first_config</strong> (<em>bool</em>) – specify if target algorithm has to be run once on the first configuration before the intensify call</p></li>
+<li><p><strong>fill_random_configs</strong> (<em>bool</em>) – fill budget with random configurations if initial incumbent sampling returns only 1 configuration</p></li>
 </ul>
 </dd>
 </dl>

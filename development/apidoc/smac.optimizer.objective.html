@@ -146,7 +146,9 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="smac.optimizer.html">smac.optimizer package</a><ul class="current">
@@ -276,7 +278,7 @@
 <span id="smac-optimizer-objective-module"></span><h1>smac.optimizer.objective module<a class="headerlink" href="#module-smac.optimizer.objective" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="smac.optimizer.objective.average_cost">
-<code class="sig-prename descclassname">smac.optimizer.objective.</code><code class="sig-name descname">average_cost</code><span class="sig-paren">(</span><em class="sig-param">config</em>, <em class="sig-param">run_history</em>, <em class="sig-param">instance_seed_pairs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/objective.html#average_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.objective.average_cost" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">smac.optimizer.objective.</code><code class="sig-name descname">average_cost</code><span class="sig-paren">(</span><em class="sig-param">config</em>, <em class="sig-param">run_history</em>, <em class="sig-param">instance_seed_budget_keys=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/objective.html#average_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.objective.average_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the average cost of a configuration.</p>
 <p>This is the mean of costs of all instance-seed pairs.</p>
 <dl class="field-list simple">
@@ -284,7 +286,7 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<em>Configuration</em>) – Configuration to calculate objective for</p></li>
 <li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – RunHistory object from which the objective value is computed.</p></li>
-<li><p><strong>instance_seed_pairs</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – List of tuples of instance-seeds pairs. If None, the run_history is
+<li><p><strong>instance_seed_budget_keys</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – List of tuples of instance-seeds-budget keys. If None, the run_history is
 queried for all runs of the given configuration.</p></li>
 </ul>
 </dd>
@@ -299,7 +301,7 @@ queried for all runs of the given configuration.</p></li>
 
 <dl class="function">
 <dt id="smac.optimizer.objective.sum_cost">
-<code class="sig-prename descclassname">smac.optimizer.objective.</code><code class="sig-name descname">sum_cost</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">run_history: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">instance_seed_pairs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/objective.html#sum_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.objective.sum_cost" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">smac.optimizer.objective.</code><code class="sig-name descname">sum_cost</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">run_history: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">instance_seed_budget_keys=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/objective.html#sum_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.objective.sum_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the sum of costs of a configuration.</p>
 <p>This is the sum of costs of all instance-seed pairs.</p>
 <dl class="field-list simple">
@@ -307,7 +309,7 @@ queried for all runs of the given configuration.</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<em>Configuration</em>) – Configuration to calculate objective for</p></li>
 <li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – RunHistory object from which the objective value is computed.</p></li>
-<li><p><strong>instance_seed_pairs</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – List of tuples of instance-seeds pairs. If None, the run_history is
+<li><p><strong>instance_seed_budget_keys</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – List of tuples of instance-seeds-budget keys. If None, the run_history is
 queried for all runs of the given configuration.</p></li>
 </ul>
 </dd>
@@ -322,7 +324,7 @@ queried for all runs of the given configuration.</p></li>
 
 <dl class="function">
 <dt id="smac.optimizer.objective.total_runtime">
-<code class="sig-prename descclassname">smac.optimizer.objective.</code><code class="sig-name descname">total_runtime</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">run_history: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">instance_seed_pairs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/objective.html#total_runtime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.objective.total_runtime" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">smac.optimizer.objective.</code><code class="sig-name descname">total_runtime</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">run_history: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">instance_seed_budget_keys=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/objective.html#total_runtime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.objective.total_runtime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the total cost of a configuration.</p>
 <p>This is the sum of costs of all instance-seed pairs.</p>
 <dl class="field-list simple">
@@ -330,7 +332,7 @@ queried for all runs of the given configuration.</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<em>Configuration</em>) – Configuration to calculate objective for</p></li>
 <li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – RunHistory object from which the objective value is computed.</p></li>
-<li><p><strong>instance_seed_pairs</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – List of tuples of instance-seeds pairs. If None, the run_history is
+<li><p><strong>instance_seed_budget_keys</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – List of tuples of instance-seeds-budget triplets. If None, the run_history is
 queried for all runs of the given configuration.</p></li>
 </ul>
 </dd>

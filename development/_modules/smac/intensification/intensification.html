@@ -144,7 +144,9 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
@@ -277,7 +279,7 @@
 
 <span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="k">import</span> <span class="n">sum_cost</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="k">import</span> <span class="n">Stats</span>
-<span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="k">import</span> <span class="n">MAXINT</span><span class="p">,</span> <span class="n">MAX_CUTOFF</span>
+<span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="k">import</span> <span class="n">MAXINT</span>
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">StatusType</span><span class="p">,</span> <span class="n">BudgetExhaustedException</span><span class="p">,</span> <span class="n">CappedRunException</span><span class="p">,</span> <span class="n">ExecuteTARun</span>
@@ -336,14 +338,15 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tae_runner</span><span class="p">:</span> <span class="n">ExecuteTARun</span><span class="p">,</span> <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">,</span>
                  <span class="n">traj_logger</span><span class="p">:</span> <span class="n">TrajLogger</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span>
                  <span class="n">instances</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-                 <span class="n">instance_specifics</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">cutoff</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="n">MAX_CUTOFF</span><span class="p">,</span> <span class="n">deterministic</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                 <span class="n">run_obj_time</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                 <span class="n">always_race_against</span><span class="p">:</span> <span class="n">Configuration</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">run_limit</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="n">MAXINT</span><span class="p">,</span>
-                 <span class="n">use_ta_time_bound</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                 <span class="n">minR</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">maxR</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
-                 <span class="n">adaptive_capping_slackfactor</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span>
+                 <span class="n">instance_specifics</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">cutoff</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">deterministic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">run_obj_time</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">always_race_against</span><span class="p">:</span> <span class="n">Configuration</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">run_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">MAXINT</span><span class="p">,</span>
+                 <span class="n">use_ta_time_bound</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">minR</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="n">maxR</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span>
+                 <span class="n">adaptive_capping_slackfactor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2</span><span class="p">,</span>
                  <span class="n">min_chall</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
@@ -611,7 +614,7 @@
             <span class="n">inst_seed_pairs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">inc_inst_seeds</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">missing_runs</span><span class="p">))</span>
             <span class="c1"># cost used by incumbent for going over all runs in inst_seed_pairs</span>
             <span class="n">inc_sum_cost</span> <span class="o">=</span> <span class="n">sum_cost</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
-                                    <span class="n">instance_seed_pairs</span><span class="o">=</span><span class="n">inst_seed_pairs</span><span class="p">,</span>
+                                    <span class="n">instance_seed_budget_keys</span><span class="o">=</span><span class="n">inst_seed_pairs</span><span class="p">,</span>
                                     <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">)</span>
             
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_run</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -619,7 +622,7 @@
 
             <span class="c1"># Line 12</span>
             <span class="c1"># Run challenger on all &lt;config,seed&gt; to run</span>
-            <span class="k">for</span> <span class="n">instance</span><span class="p">,</span> <span class="n">seed</span> <span class="ow">in</span> <span class="n">to_run</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">to_run</span><span class="p">:</span>
 
                 <span class="n">cutoff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_cutoff</span><span class="p">(</span><span class="n">challenger</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
                                             <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
@@ -701,14 +704,16 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_obj_time</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span>
 
+        <span class="n">curr_cutoff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+
         <span class="c1"># cost used by challenger for going over all its runs</span>
         <span class="c1"># should be subset of runs of incumbent (not checked for efficiency</span>
         <span class="c1"># reasons)</span>
         <span class="n">chall_inst_seeds</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">challenger</span><span class="p">)</span>
         <span class="n">chal_sum_cost</span> <span class="o">=</span> <span class="n">sum_cost</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
-                                 <span class="n">instance_seed_pairs</span><span class="o">=</span><span class="n">chall_inst_seeds</span><span class="p">,</span>
+                                 <span class="n">instance_seed_budget_keys</span><span class="o">=</span><span class="n">chall_inst_seeds</span><span class="p">,</span>
                                  <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">)</span>
-        <span class="n">cutoff</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span><span class="p">,</span>
+        <span class="n">cutoff</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">curr_cutoff</span><span class="p">,</span>
                      <span class="n">inc_sum_cost</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaptive_capping_slackfactor</span> <span class="o">-</span>
                      <span class="n">chal_sum_cost</span>
                      <span class="p">)</span>

@@ -1,0 +1,7 @@
+smac.intensification.successive\_halving module
+===============================================
+
+.. automodule:: smac.intensification.successive_halving
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -144,7 +144,9 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
@@ -311,7 +313,7 @@
         <span class="n">init_kwargs</span><span class="p">[</span><span class="s1">&#39;max_config_fracs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;max_config_fracs&#39;</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span>
         <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;initial_design_kwargs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_kwargs</span>
 
-        <span class="c1"># only 1 configuration per SMBO iteration</span>
+        <span class="c1"># Intensification parameters - which intensifier to use and respective parameters</span>
         <span class="n">intensifier_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;intensifier_kwargs&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
         <span class="n">intensifier_kwargs</span><span class="p">[</span><span class="s1">&#39;min_chall&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;intensifier_kwargs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">intensifier_kwargs</span>

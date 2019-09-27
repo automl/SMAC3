@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.epm.gaussian_process_mcmc module &mdash; SMAC 0.11.2dev documentation</title>
+  <title>smac.intensification.hyperband module &mdash; SMAC 0.11.2dev documentation</title>
   
 
   
@@ -36,8 +36,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.epm.gp_base_prior module" href="smac.epm.gp_base_prior.html" />
-    <link rel="prev" title="smac.epm.gaussian_process module" href="smac.epm.gaussian_process.html" /> 
+    <link rel="next" title="smac.intensification.intensification module" href="smac.intensification.intensification.html" />
+    <link rel="prev" title="smac.intensification package" href="smac.intensification.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -105,13 +105,13 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.configspace.util.html">smac.configspace.util module</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="smac.epm.html">smac.epm package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="smac.epm.html">smac.epm package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.base_epm.html">smac.epm.base_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.base_gp.html">smac.epm.base_gp module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.base_imputor.html">smac.epm.base_imputor module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.base_rf.html">smac.epm.base_rf module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process.html">smac.epm.gaussian_process module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">smac.epm.gaussian_process_mcmc module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
@@ -145,8 +145,8 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.initial_design.sobol_design.html">smac.initial_design.sobol_design module</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="smac.intensification.html">smac.intensification package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="smac.intensification.html">smac.intensification package</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
@@ -253,15 +253,15 @@
         
           <li><a href="../api.html">API Documentation</a> &raquo;</li>
         
-          <li><a href="smac.epm.html">smac.epm package</a> &raquo;</li>
+          <li><a href="smac.intensification.html">smac.intensification package</a> &raquo;</li>
         
-      <li>smac.epm.gaussian_process_mcmc module</li>
+      <li>smac.intensification.hyperband module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/apidoc/smac.epm.gaussian_process_mcmc.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/apidoc/smac.intensification.hyperband.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -274,47 +274,65 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-smac.epm.gaussian_process_mcmc">
-<span id="smac-epm-gaussian-process-mcmc-module"></span><h1>smac.epm.gaussian_process_mcmc module<a class="headerlink" href="#module-smac.epm.gaussian_process_mcmc" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-smac.intensification.hyperband">
+<span id="smac-intensification-hyperband-module"></span><h1>smac.intensification.hyperband module<a class="headerlink" href="#module-smac.intensification.hyperband" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="smac.epm.gaussian_process_mcmc.GaussianProcessMCMC">
-<em class="property">class </em><code class="sig-prename descclassname">smac.epm.gaussian_process_mcmc.</code><code class="sig-name descname">GaussianProcessMCMC</code><span class="sig-paren">(</span><em class="sig-param">configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: numpy.ndarray, bounds: List[Tuple[float, float]], seed: int, kernel: &lt;lazy_import.LazyCallable object at 0x7f7cff39d610&gt;, n_mcmc_walkers: int = 20, chain_length: int = 50, burnin_steps: int = 50, normalize_y: bool = True, mcmc_sampler: str = 'emcee', average_samples: bool = False, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process_mcmc.html#GaussianProcessMCMC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process_mcmc.GaussianProcessMCMC" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.epm.base_gp.html#smac.epm.base_gp.BaseModel" title="smac.epm.base_gp.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_gp.BaseModel</span></code></a></p>
-<p>Gaussian process model.</p>
-<p>The GP hyperparameters are integrated out by MCMC. If you use this class
-make sure that you also use an integrated acquisition function to
-integrate over the GP’s hyperparameter as proposed by Snoek et al.</p>
-<p>This code is based on the implementation of RoBO:</p>
-<p>Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
-RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
-In: NIPS 2017 Bayesian Optimization Workshop</p>
+<dt id="smac.intensification.hyperband.Hyperband">
+<em class="property">class </em><code class="sig-prename descclassname">smac.intensification.hyperband.</code><code class="sig-name descname">Hyperband</code><span class="sig-paren">(</span><em class="sig-param">tae_runner: smac.tae.execute_ta_run.ExecuteTARun, stats: smac.stats.stats.Stats, traj_logger: smac.utils.io.traj_logging.TrajLogger, rng: numpy.random.mtrand.RandomState, instances: List[str], instance_specifics: Mapping[str, numpy.ndarray] = None, cutoff: Optional[int] = None, deterministic: bool = False, initial_budget: Optional[float] = None, max_budget: Optional[float] = None, eta: float = 3, run_obj_time: bool = True, n_seeds: Optional[int] = None, instance_order='shuffle_once', adaptive_capping_slackfactor: float = 1.2, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/hyperband.html#Hyperband"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.hyperband.Hyperband" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving" title="smac.intensification.successive_halving.SuccessiveHalving"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.intensification.successive_halving.SuccessiveHalving</span></code></a></p>
+<p>Races multiple challengers against an incumbent using Hyperband method</p>
+<p>Implementation from “BOHB: Robust and Efficient Hyperparameter Optimization at Scale” (Falkner et al. 2018)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>types</strong> (<em>np.ndarray</em><em> (</em><em>D</em><em>)</em>) – Specifies the number of categorical values of an input dimension where
-the i-th entry corresponds to the i-th input dimension. Let’s say we
-have 2 dimension where the first dimension consists of 3 different
-categorical choices and the second dimension is continuous than we
-have to pass np.array([2, 0]). Note that we count starting from 0.</p></li>
-<li><p><strong>bounds</strong> (<em>list</em>) – Specifies the bounds for continuous features.</p></li>
-<li><p><strong>seed</strong> (<em>int</em>) – Model seed.</p></li>
-<li><p><strong>kernel</strong> (<em>george kernel object</em>) – Specifies the kernel that is used for all Gaussian Process</p></li>
-<li><p><strong>n_mcmc_walkers</strong> (<em>int</em>) – The number of hyperparameter samples. This also determines the
-number of walker for MCMC sampling as each walker will
-return one hyperparameter sample.</p></li>
-<li><p><strong>chain_length</strong> (<em>int</em>) – The length of the MCMC chain. We start n_mcmc_walkers walker for
-chain_length steps and we use the last sample
-in the chain as a hyperparameter sample.</p></li>
-<li><p><strong>burnin_steps</strong> (<em>int</em>) – The number of burnin steps before the actual MCMC sampling starts.</p></li>
-<li><p><strong>normalize_y</strong> (<em>bool</em>) – Zero mean unit variance normalization of the output values</p></li>
-<li><p><strong>mcmc_sampler</strong> (<em>str</em>) – Choose a self-tuning MCMC sampler. Can be either <code class="docutils literal notranslate"><span class="pre">emcee</span></code> or <code class="docutils literal notranslate"><span class="pre">nuts</span></code>.</p></li>
-<li><p><strong>average_samples</strong> (<em>bool</em>) – Average the sampled hyperparameters if <code class="docutils literal notranslate"><span class="pre">True</span></code>, uses the samples independently if <code class="docutils literal notranslate"><span class="pre">False</span></code>.
-This is equivalent to the posterior mean as used by
-Letham et al. (2018, <a class="reference external" href="http://lethalletham.com/ConstrainedBO.pdf">http://lethalletham.com/ConstrainedBO.pdf</a>).</p></li>
-<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</p></li>
+<li><p><strong>tae_runner</strong> (<em>tae.executre_ta_run_*.ExecuteTARun* Object</em>) – target algorithm run executor</p></li>
+<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – stats object</p></li>
+<li><p><strong>traj_logger</strong> (<a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger"><em>TrajLogger</em></a>) – TrajLogger object to log all new incumbents</p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – </p></li>
+<li><p><strong>instances</strong> (<em>typing.List</em><em>[</em><em>str</em><em>]</em>) – list of all instance ids</p></li>
+<li><p><strong>instance_specifics</strong> (<em>typing.Mapping</em><em>[</em><em>str</em><em>,</em><em>np.ndarray</em><em>]</em>) – mapping from instance name to instance specific string</p></li>
+<li><p><strong>cutoff</strong> (<em>typing.Optional</em><em>[</em><em>int</em><em>]</em>) – runtime cutoff of TA runs</p></li>
+<li><p><strong>deterministic</strong> (<em>bool</em>) – whether the TA is deterministic or not</p></li>
+<li><p><strong>initial_budget</strong> (<em>typing.Optional</em><em>[</em><em>float</em><em>]</em>) – minimum budget allowed for 1 run of successive halving</p></li>
+<li><p><strong>max_budget</strong> (<em>typing.Optional</em><em>[</em><em>float</em><em>]</em>) – maximum budget allowed for 1 run of successive halving</p></li>
+<li><p><strong>eta</strong> (<em>float</em>) – ‘halving’ factor after each iteration in a successive halving run. Defaults to 3</p></li>
+<li><p><strong>run_obj_time</strong> (<em>bool</em>) – whether the run objective is runtime or not (if true, apply adaptive capping)</p></li>
+<li><p><strong>n_seeds</strong> (<em>typing.Optional</em><em>[</em><em>int</em><em>]</em>) – Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0</p></li>
+<li><p><strong>instance_order</strong> (<em>typing.Optional</em><em>[</em><em>str</em><em>]</em>) – how to order instances. Can be set to: [None, shuffle_once, shuffle]
+* None - use as is given by the user
+* shuffle_once - shuffle once and use across all SH run (default)
+* shuffle - shuffle before every SH run</p></li>
+<li><p><strong>adaptive_capping_slackfactor</strong> (<em>float</em>) – slack factor of adpative capping (factor * adpative cutoff)</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="smac.intensification.hyperband.Hyperband.intensify">
+<code class="sig-name descname">intensify</code><span class="sig-paren">(</span><em class="sig-param">challengers: List[ConfigSpace.configuration_space.Configuration], incumbent: Optional[ConfigSpace.configuration_space.Configuration], run_history: smac.runhistory.runhistory.RunHistory, aggregate_func: Callable, time_bound: float = 2147483647.0, log_traj: bool = True</em><span class="sig-paren">)</span> &#x2192; Tuple[ConfigSpace.configuration_space.Configuration, float]<a class="reference internal" href="../_modules/smac/intensification/hyperband.html#Hyperband.intensify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.hyperband.Hyperband.intensify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Running intensification via hyperband to determine the incumbent configuration.
+<em>Side effect:</em> adds runs to run_history</p>
+<p>Implementation of hyperband (Li et al., 2017)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>challengers</strong> (<em>typing.List</em><em>[</em><em>Configuration</em><em>]</em>) – promising configurations</p></li>
+<li><p><strong>incumbent</strong> (<em>Configuration</em>) – best configuration so far</p></li>
+<li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – stores all runs we ran so far</p></li>
+<li><p><strong>aggregate_func</strong> (<em>typing.Callable</em>) – aggregate error across instances</p></li>
+<li><p><strong>time_bound</strong> (<em>float</em><em>, </em><em>optional</em><em> (</em><em>default=2 ** 31 - 1</em><em>)</em>) – time in [sec] available to perform intensify</p></li>
+<li><p><strong>log_traj</strong> (<em>bool</em>) – whether to log changes of incumbents in trajectory</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>Configuration</em> – new incumbent configuration</p></li>
+<li><p><em>float</em> – empirical performance of incumbent configuration</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -327,10 +345,10 @@ Letham et al. (2018, <a class="reference external" href="http://lethalletham.com
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="smac.epm.gp_base_prior.html" class="btn btn-neutral float-right" title="smac.epm.gp_base_prior module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="smac.intensification.intensification.html" class="btn btn-neutral float-right" title="smac.intensification.intensification module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="smac.epm.gaussian_process.html" class="btn btn-neutral float-left" title="smac.epm.gaussian_process module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="smac.intensification.html" class="btn btn-neutral float-left" title="smac.intensification package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

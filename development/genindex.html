@@ -145,7 +145,9 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
@@ -372,6 +374,8 @@
         <li><a href="apidoc/smac.epm.rf_with_instances_hpo.html#smac.epm.rf_with_instances_hpo.RandomForestWithInstancesHPO.bounds">(smac.epm.rf_with_instances_hpo.RandomForestWithInstancesHPO attribute)</a>
 </li>
       </ul></li>
+      <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedBudgetKey.budget">budget() (smac.runhistory.runhistory.InstSeedBudgetKey property)</a>
+</li>
       <li><a href="apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.BudgetExhaustedException">BudgetExhaustedException</a>
 </li>
   </ul></td>
@@ -425,8 +429,6 @@
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader">CMDReader (class in smac.utils.io.cmd_reader)</a>
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.compute_all_costs">compute_all_costs() (smac.runhistory.runhistory.RunHistory method)</a>
-</li>
-      <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunKey.config_id">config_id() (smac.runhistory.runhistory.RunKey property)</a>
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.config_ids">config_ids (smac.runhistory.runhistory.RunHistory attribute)</a>
 </li>
@@ -660,6 +662,8 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apidoc/smac.intensification.hyperband.html#smac.intensification.hyperband.Hyperband">Hyperband (class in smac.intensification.hyperband)</a>
+</li>
       <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.MagicMixin.hyperparameters">hyperparameters() (smac.epm.gp_kernels.MagicMixin property)</a>
 </li>
       <li><a href="apidoc/smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances.hypers">hypers (smac.epm.rf_with_instances.RandomForestWithInstances attribute)</a>
@@ -710,13 +714,17 @@
 </li>
       <li><a href="apidoc/smac.utils.io.input_reader.html#smac.utils.io.input_reader.InputReader">InputReader (class in smac.utils.io.input_reader)</a>
 </li>
-      <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedKey.instance">instance() (smac.runhistory.runhistory.InstSeedKey property)</a>
+      <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedBudgetKey.instance">instance() (smac.runhistory.runhistory.InstSeedBudgetKey property)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedKey.instance">(smac.runhistory.runhistory.InstSeedKey property)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.instance_features">instance_features (smac.epm.base_epm.AbstractEPM attribute)</a>
 </li>
-      <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunKey.instance_id">instance_id() (smac.runhistory.runhistory.RunKey property)</a>
+      <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedBudgetKey">InstSeedBudgetKey (class in smac.runhistory.runhistory)</a>
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedKey">InstSeedKey (class in smac.runhistory.runhistory)</a>
 </li>
@@ -738,8 +746,14 @@
         <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.intensifier">(smac.optimizer.smbo.SMBO attribute)</a>
 </li>
       </ul></li>
-      <li><a href="apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier.intensify">intensify() (smac.intensification.intensification.Intensifier method)</a>
+      <li><a href="apidoc/smac.intensification.hyperband.html#smac.intensification.hyperband.Hyperband.intensify">intensify() (smac.intensification.hyperband.Hyperband method)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier.intensify">(smac.intensification.intensification.Intensifier method)</a>
 </li>
+        <li><a href="apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving.intensify">(smac.intensification.successive_halving.SuccessiveHalving method)</a>
+</li>
+      </ul></li>
       <li><a href="apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch">InterleavedLocalAndRandomSearch (class in smac.optimizer.ei_optimization)</a>
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.DataOrigin.INTERNAL">INTERNAL (smac.runhistory.runhistory.DataOrigin attribute)</a>
@@ -1178,10 +1192,10 @@
         <li><a href="apidoc/smac.epm.rfr_imputator.html#smac.epm.rfr_imputator.RFRImputator.seed">(smac.epm.rfr_imputator.RFRImputator attribute)</a>
 </li>
       </ul></li>
-      <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedKey.seed">seed() (smac.runhistory.runhistory.InstSeedKey property)</a>
+      <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedBudgetKey.seed">seed() (smac.runhistory.runhistory.InstSeedBudgetKey property)</a>
 
       <ul>
-        <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunKey.seed">(smac.runhistory.runhistory.RunKey property)</a>
+        <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedKey.seed">(smac.runhistory.runhistory.InstSeedKey property)</a>
 </li>
       </ul></li>
       <li><a href="apidoc/smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign.select_configurations">select_configurations() (smac.initial_design.initial_design.InitialDesign method)</a>
@@ -1266,7 +1280,11 @@
 </li>
       <li><a href="apidoc/smac.intensification.html#module-smac.intensification">smac.intensification (module)</a>
 </li>
+      <li><a href="apidoc/smac.intensification.hyperband.html#module-smac.intensification.hyperband">smac.intensification.hyperband (module)</a>
+</li>
       <li><a href="apidoc/smac.intensification.intensification.html#module-smac.intensification.intensification">smac.intensification.intensification (module)</a>
+</li>
+      <li><a href="apidoc/smac.intensification.successive_halving.html#module-smac.intensification.successive_halving">smac.intensification.successive_halving (module)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.html#module-smac.optimizer">smac.optimizer (module)</a>
 </li>
@@ -1280,10 +1298,10 @@
 </li>
       <li><a href="apidoc/smac.optimizer.pSMAC.html#module-smac.optimizer.pSMAC">smac.optimizer.pSMAC (module)</a>
 </li>
-      <li><a href="apidoc/smac.optimizer.random_configuration_chooser.html#module-smac.optimizer.random_configuration_chooser">smac.optimizer.random_configuration_chooser (module)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apidoc/smac.optimizer.random_configuration_chooser.html#module-smac.optimizer.random_configuration_chooser">smac.optimizer.random_configuration_chooser (module)</a>
+</li>
       <li><a href="apidoc/smac.optimizer.smbo.html#module-smac.optimizer.smbo">smac.optimizer.smbo (module)</a>
 </li>
       <li><a href="apidoc/smac.runhistory.html#module-smac.runhistory">smac.runhistory (module)</a>
@@ -1411,6 +1429,8 @@
       <li><a href="apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType">StatusType (class in smac.tae.execute_ta_run)</a>
 </li>
       <li><a href="apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType.SUCCESS">SUCCESS (smac.tae.execute_ta_run.StatusType attribute)</a>
+</li>
+      <li><a href="apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving">SuccessiveHalving (class in smac.intensification.successive_halving)</a>
 </li>
       <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Sum">Sum (class in smac.epm.gp_kernels)</a>
 </li>

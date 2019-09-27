@@ -144,7 +144,9 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../apidoc/smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
@@ -693,6 +695,12 @@
                                <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">truthy</span><span class="p">,</span>
                                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;If true, *SMAC* will abort if the first run of &quot;</span>
                                     <span class="s2">&quot;the target algorithm crashes.&quot;</span><span class="p">)</span>
+        <span class="n">smac_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--limit-resources&quot;</span><span class="p">,</span> <span class="s2">&quot;--limit_resources&quot;</span><span class="p">,</span>
+                               <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;limit_resources&#39;</span><span class="p">,</span>
+                               <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">truthy</span><span class="p">,</span>
+                               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;If true, *SMAC* will use pynisher to limit time and memory for &quot;</span>
+                                    <span class="s2">&quot;the target algorithm. Allows SMAC to use all resources available. &quot;</span>
+                                    <span class="s2">&quot;Applicable only to func TAEs. Set to &#39;True&#39; by default. (Use with caution!)&quot;</span><span class="p">)</span>
 
         <span class="n">smac_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--minr&quot;</span><span class="p">,</span> <span class="s2">&quot;--minR&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;minR&#39;</span><span class="p">,</span>
                                <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
@@ -813,7 +821,6 @@
                <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;[dev] probablity to run a random configuration&quot;</span>
                <span class="s2">&quot; instead of configuration optimized on the acquisition function&quot;</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">smac_parser</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">smac_cmd_actions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">smac_cmd_translations</span> <span class="o">=</span> <span class="n">CMDReader</span><span class="o">.</span><span class="n">_extract_action_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">smac_parser</span><span class="o">.</span><span class="n">_actions</span><span class="p">)</span>
 
