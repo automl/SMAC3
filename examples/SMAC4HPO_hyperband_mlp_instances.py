@@ -2,8 +2,10 @@
 An example for the usage of SMAC within Python.
 We optimize a simple MLP on the MNIST digits dataset using "Hyperband" intensification.
 
-In this example, we use runtime/cutoff (here training epochs) as the budget in hyperband and
-optimize the average accuracy on a 5-fold cross validation.
+In this example, we use instances as the budget in hyperband and optimize the average cross validation accuracy.
+An "Instance" represents a specific scenario/condition (eg: different datasets, subsets, transformations)
+for the algorithm to run. SMAC then returns the algorithm that had the best performance across all the instances.
+In this case, an instance is the number of folds used in cross validation.
 """
 
 import logging
@@ -41,7 +43,7 @@ def mlp_from_cfg(cfg, seed, instance, budget, **kwargs):
         seed: int or RandomState
             used to initialize the rf's random generator
         instance: str
-            used to represent the instance to use (just a placeholder for this example)
+            used to represent the instance to use (number of folds in this case)
         budget: float
             used to set max iterations for the MLP
 
@@ -69,7 +71,7 @@ def mlp_from_cfg(cfg, seed, instance, budget, **kwargs):
             random_state=seed)
 
         # returns the cross validation accuracy
-        score = cross_val_score(mlp, digits.data, digits.target, cv=5)
+        score = cross_val_score(mlp, digits.data, digits.target, cv=int(instance))
 
     return 1 - np.mean(score)  # Because minimize!
 
@@ -106,6 +108,9 @@ use_batch_size = CS.conditions.InCondition(child=batch_size, parent=solver, valu
 # We can also add  multiple conditions on hyperparameters at once:
 cs.add_conditions([use_lr, use_batch_size, use_lr_init])
 
+# Defining instances (number of folds for CV)
+instances = [['2'], ['3'], ['5'], ['10']]
+
 # SMAC scenario object
 scenario = Scenario({"run_obj": "quality",      # we optimize quality (alternative runtime)
                      "wallclock-limit": 100,    # max duration to run the optimization (in seconds)
@@ -113,13 +118,16 @@ scenario = Scenario({"run_obj": "quality",      # we optimize quality (alternati
                      "deterministic": "true",
                      "limit_resources": False,  # Disables pynisher to pass cutoff directly to the target algorithm.
                                                 # Timeouts have to be taken care within the TA
+                     "cutoff": 10,              # Cutoff denotes the number of epochs for MLP.
+                                                # It constant across all instances
+                     "instances": instances     # Optimize across all given instances
                      })
 
-# setting cutoff
-# normally, it is a runtime cutoff, but in this case, we use cutoff to represent the number of epochs for MLP
-cutoff = 50
 # intensifier parameters
-intensifier_kwargs = {'initial_budget': 5, 'max_budget': cutoff, 'eta': 3}
+# if no argument provided for budgets, hyperband decides them based on the number of instances available
+intensifier_kwargs = {'initial_budget': 1, 'max_budget': 4, 'eta': 2,
+                      'instance_order': None}  # You can also shuffle the order of using instances by this parameter
+
 # To optimize, we pass the function to the SMAC-object
 smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
                 tae_runner=mlp_from_cfg,
@@ -129,8 +137,11 @@ smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
 
 # Example call of the function with default values
 # It returns: Status, Cost, Runtime, Additional Infos
-def_value = smac.get_tae_runner().run(cs.get_default_configuration(), '1', cutoff, 0)[1]
-print("Value for default configuration: %.4f" % def_value)
+def_costs = []
+for i in instances:
+    cost = smac.get_tae_runner().run(cs.get_default_configuration(), i[0], 10, 0)[1]
+    def_costs.append(cost)
+print("Value for default configuration: %.4f" % (np.mean(def_costs)))
 
 # Start optimization
 try:
@@ -138,5 +149,8 @@ try:
 finally:
     incumbent = smac.solver.incumbent
 
-inc_value = smac.get_tae_runner().run(incumbent, '1', cutoff, 0)[1]
-print("Optimized Value: %.4f" % inc_value)
+inc_costs = []
+for i in instances:
+    cost = smac.get_tae_runner().run(incumbent, i[0], 10, 0)[1]
+    inc_costs.append(cost)
+print("Optimized Value: %.4f" % (np.mean(inc_costs)))
