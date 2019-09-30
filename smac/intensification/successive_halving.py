@@ -26,6 +26,25 @@ class SuccessiveHalving(Intensifier):
     Implementation from "BOHB: Robust and Efficient Hyperparameter Optimization at Scale" (Falkner et al. 2018)
     (refer supplementary)
 
+    Successive Halving intensifier can operate on two kinds of budgets:
+    1. **'Instances' as budget**:
+        When multiple instances are provided or when run objective is "runtime", this is the criterion used as budgets
+        for successive halving iterations i.e., for each budget, the challengers are tested across an
+        increasing number of instances and their combined performance across all instances is used for evaluation.
+
+        If `initial_budget` and `max_budget` are not provided, then they are set to 1 and total number
+        of available instances respectively by default.
+    2. **'Runtime' as budget**:
+        Runtime/Cutoff is used when there is only one instance provided or when run objective is "quality".
+        i.e., the budget determines how long the challenger is allowed to run.
+        Keep in mind that this need not necessarily be wallclock time.
+        Since the cutoff can be passed to the target algorithm as an argument, you can set anything as the cutoff,
+        (eg: number of epochs for training a neural network) as long as you disable SMAC's internal resource limiter
+        by setting `limit_resources=False` in scenario.
+
+        `initial_budget` is a required parameter for this type of budget.
+        If `max_budget` is not provided, then `cutoff` is used as the default maximum budget.
+
     Parameters
     ----------
     tae_runner : smac.tae.execute_ta_run.ExecuteTARun Object

@@ -21,6 +21,9 @@ class Hyperband(SuccessiveHalving):
 
     Implementation from "BOHB: Robust and Efficient Hyperparameter Optimization at Scale" (Falkner et al. 2018)
 
+    Hyperband is an extension of the Successive Halving intensifier. Please refer to `SuccessiveHalving` documentation
+    for more detailed information about the different types of budgets possible and the way instances are handled.
+
     Parameters
     ----------
     tae_runner : tae.executre_ta_run_*.ExecuteTARun* Object
