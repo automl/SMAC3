@@ -175,7 +175,7 @@ class TestGPMCMC(unittest.TestCase):
         self.assertAlmostEqual(y_hat[0][0], 54.613410745846785, delta=0.1)
         # Massive variance due to internally used law of total variances, also a massive difference locally and on
         # travis-ci
-        self.assertLessEqual(abs(var_hat[0][0]) - 860, 200, msg=str(var_hat))
+        self.assertLessEqual(abs(var_hat[0][0]) - 2900, 200, msg=str(var_hat))
 
     def test_gp_on_sklearn_data(self):
         X, y = sklearn.datasets.load_boston(return_X_y=True)
@@ -185,7 +185,7 @@ class TestGPMCMC(unittest.TestCase):
         model = get_gp(X.shape[1], rs, noise=1e-10, normalize_y=True)
         cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
 
-        maes = [6.829207681798763524, 7.5125099471964293836]
+        maes = [6.8415654571493572196, 7.4943401900804901103]
 
         for i, (train_split, test_split) in enumerate(cv.split(X, y)):
             X_train = X[train_split]
