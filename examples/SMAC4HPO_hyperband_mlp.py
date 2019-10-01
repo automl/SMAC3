@@ -76,8 +76,6 @@ def mlp_from_cfg(cfg, seed, instance, budget, **kwargs):
 
 logger = logging.getLogger("MLP-example")
 logging.basicConfig(level=logging.INFO)
-logger.info("Running MLP example for SMAC. If you experience "
-            "difficulties, try to decrease the memory-limit.")
 
 # Build Configuration Space which defines all parameters and their ranges.
 # To illustrate different parameter types,

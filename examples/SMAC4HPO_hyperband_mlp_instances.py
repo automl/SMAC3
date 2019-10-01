@@ -12,7 +12,7 @@ import logging
 import warnings
 
 import numpy as np
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_score, StratifiedKFold
 from sklearn.neural_network import MLPClassifier
 from sklearn.datasets import load_digits
 from sklearn.exceptions import ConvergenceWarning
@@ -71,15 +71,14 @@ def mlp_from_cfg(cfg, seed, instance, budget, **kwargs):
             random_state=seed)
 
         # returns the cross validation accuracy
-        score = cross_val_score(mlp, digits.data, digits.target, cv=int(instance))
+        cv = StratifiedKFold(n_splits=int(instance), random_state=seed)  # to make CV splits consistent
+        score = cross_val_score(mlp, digits.data, digits.target, cv=cv)
 
     return 1 - np.mean(score)  # Because minimize!
 
 
 logger = logging.getLogger("MLP-example")
 logging.basicConfig(level=logging.INFO)
-logger.info("Running MLP example for SMAC. If you experience "
-            "difficulties, try to decrease the memory-limit.")
 
 # Build Configuration Space which defines all parameters and their ranges.
 # To illustrate different parameter types,
@@ -116,17 +115,21 @@ scenario = Scenario({"run_obj": "quality",      # we optimize quality (alternati
                      "wallclock-limit": 100,    # max duration to run the optimization (in seconds)
                      "cs": cs,                  # configuration space
                      "deterministic": "true",
-                     "limit_resources": False,  # Disables pynisher to pass cutoff directly to the target algorithm.
-                                                # Timeouts have to be taken care within the TA
+                     "limit_resources": False,  # Disables pynisher to use an arbitrary cutoff.
+                                                # Timeouts have to be taken care from within the TA
                      "cutoff": 10,              # Cutoff denotes the number of epochs for MLP.
-                                                # It constant across all instances
+                                                # It is constant for all instances
                      "instances": instances     # Optimize across all given instances
                      })
 
 # intensifier parameters
 # if no argument provided for budgets, hyperband decides them based on the number of instances available
 intensifier_kwargs = {'initial_budget': 1, 'max_budget': 4, 'eta': 2,
-                      'instance_order': None}  # You can also shuffle the order of using instances by this parameter
+                      'instance_order': None,  # You can also shuffle the order of using instances by this parameter.
+                                               # 'shuffle' will shuffle instances before each SH run and
+                                               # 'shuffle_once' will shuffle instances once before the 1st
+                                               # SH iteration begins
+                      }
 
 # To optimize, we pass the function to the SMAC-object
 smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
