@@ -65,40 +65,49 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(intensifier.initial_budget, 1)
         self.assertEqual(intensifier.max_budget, 6)
         self.assertEqual(intensifier.num_initial_challengers, 4)  # 2 iterations
-        self.assertFalse(intensifier.runtime_as_budget)
+        self.assertTrue(intensifier.instance_as_budget)
 
     def test_init_2(self):
         """
-            test parameter initialiations for successive halving - cutoff as budget
+            test parameter initialiations for successive halving - runtime as budget
         """
         intensifier = SuccessiveHalving(
             tae_runner=None, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
-            cutoff=30, instances=[1], initial_budget=1, max_budget=10, eta=2)
+            instances=[1], initial_budget=1, max_budget=10, eta=2)
 
         self.assertEqual(len(intensifier.instances), 1)  # since instance-seed pairs
         self.assertEqual(intensifier.initial_budget, 1)
         self.assertEqual(intensifier.max_budget, 10)
         self.assertEqual(intensifier.num_initial_challengers, 8)  # 4 iterations
-        self.assertTrue(intensifier.runtime_as_budget)
+        self.assertFalse(intensifier.instance_as_budget)
 
     def test_init_3(self):
         """
             test wrong parameter initialiations for successive halving
         """
 
-        # runtime cutoff as budget (no param provided)
+        # runtime as budget (no param provided)
         with self.assertRaisesRegex(ValueError,
-                                    "requires parameters initial_budget and max_budget/cutoff for intensification!"):
+                                    "requires parameters initial_budget and max_budget for intensification!"):
             SuccessiveHalving(
                 tae_runner=None, stats=self.stats,
                 traj_logger=TrajLogger(output_dir=None, stats=self.stats),
                 rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
                 cutoff=10, instances=[1])
 
+        # runtime as budget (both max budget & cutoff param provided)
+        with self.assertRaisesRegex(ValueError,
+                                    "cutoff should not be provided."):
+            SuccessiveHalving(
+                tae_runner=None, stats=self.stats,
+                traj_logger=TrajLogger(output_dir=None, stats=self.stats),
+                rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
+                cutoff=10, instances=[1], max_budget=5, initial_budget=1)
+
         # eta < 1
-        with self.assertRaisesRegex(ValueError, 'eta must be greater than 1'):
+        with self.assertRaisesRegex(ValueError, "eta must be greater than 1"):
             SuccessiveHalving(
                 tae_runner=None, stats=self.stats,
                 traj_logger=TrajLogger(output_dir=None, stats=self.stats),

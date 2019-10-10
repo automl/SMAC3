@@ -37,16 +37,15 @@ class SuccessiveHalving(Intensifier):
         If `initial_budget` and `max_budget` are not provided, then they are set to 1 and total number
         of available instances respectively by default.
     2. **'Runtime' as budget**:
-        Runtime/Cutoff is used when there is only one instance provided and when run objective is "quality",
+        Runtime is used when there is only one instance provided and when run objective is "quality",
         i.e., budget determines how long the challenger is allowed to run.
-        This is interpreted as wallclock time by SMAc's internal resource limiter by default.
-        But the cutoff can also be passed to the target algorithm as an argument to make it an arbitrary runtime limit,
-        (eg: number of epochs for training a neural network) as long as you disable SMAC's internal resource limiter
-        by setting `limit_resources=False` in scenario.
+        The budget is passed to the target algorithm as an argument to make it an arbitrary runtime limit,
+        (eg: number of epochs for training a neural network).
+        Since this deals with runtime, SMAC's internal resource limiter has to be disabled by setting
+        `limit_resources=False`.
 
-        `initial_budget` is a required parameter for this type of budget.
-        If `max_budget` is not provided, then `cutoff` is used as the default maximum budget.
-        If both are provided, `cutoff` is ignored.
+        `initial_budget` and `max_budget` are required parameters for this type of budget.
+        `cutoff` should NOT be provided.
 
     Parameters
     ----------
@@ -148,7 +147,7 @@ class SuccessiveHalving(Intensifier):
         self._init_sh_params(initial_budget, max_budget, eta, num_initial_challengers)
 
         # adaptive capping
-        if not self.runtime_as_budget and self.instance_order != 'shuffle' and self.run_obj_time:
+        if self.instance_as_budget and self.instance_order != 'shuffle' and self.run_obj_time:
             self.adaptive_capping = True
         else:
             self.adaptive_capping = False
@@ -186,19 +185,17 @@ class SuccessiveHalving(Intensifier):
         # - else, use instances as budget
         if not self.run_obj_time and len(self.instances) <= 1:
             # budget with cutoff
-            if initial_budget is None or \
-                    (max_budget is None and self.cutoff is None):
-                raise ValueError("Successive Halving with runtime-cutoff as budget (i.e., only 1 instance) "
-                                 "requires parameters initial_budget and max_budget/cutoff for intensification!")
+            if initial_budget is None or max_budget is None:
+                raise ValueError("Successive Halving with runtime-limit as budget (i.e., only 1 instance) "
+                                 "requires parameters initial_budget and max_budget for intensification!")
 
-            if self.cutoff is not None and max_budget is not None:
-                self.logger.warning('Successive Halving with runtime-cutoff as budget: '
-                                    'Both max budget (%d) and runtime-cutoff (%d) were provided. '
-                                    'Max budget will be used.' % (max_budget, self.cutoff))
+            if self.cutoff is not None:
+                raise ValueError('In Successive Halving with runtime-limit as budget (i.e., only 1 instance), '
+                                 'cutoff should not be provided.')
 
             self.initial_budget = initial_budget
-            self.max_budget = max_budget if max_budget else self.cutoff
-            self.runtime_as_budget = True
+            self.max_budget = max_budget
+            self.instance_as_budget = False
 
         else:
             # budget with instances
@@ -206,7 +203,7 @@ class SuccessiveHalving(Intensifier):
                 self.logger.warning("Successive Halving has objective 'runtime' but only 1 instance-seed pair.")
             self.initial_budget = 1 if initial_budget is None else int(initial_budget)
             self.max_budget = len(self.instances) if max_budget is None else int(max_budget)
-            self.runtime_as_budget = False
+            self.instance_as_budget = True
 
             if self.max_budget > len(self.instances):
                 raise ValueError('Max budget cannot be greater than the number of instance-seed pairs')
@@ -214,7 +211,7 @@ class SuccessiveHalving(Intensifier):
                 self.logger.warning('Max budget (%d) does not include all instance-seed pairs (%d)' %
                                     (self.max_budget, len(self.instances)))
 
-        budget_type = 'CUTOFF' if self.runtime_as_budget else 'INSTANCES'
+        budget_type = 'INSTANCES' if self.instance_as_budget else 'RUNTIME'
         self.logger.info("Running Successive Halving with '%s' as budget. "
                          "Initial budget: %.2f, Max. budget: %.2f, eta: %.2f" %
                          (budget_type, self.initial_budget, self.max_budget, self.eta))
@@ -301,7 +298,7 @@ class SuccessiveHalving(Intensifier):
                              (curr_budget, self.max_budget, len(curr_challengers)))
             # selecting instance subset for this budget, depending on the kind of budget
             prev_budget = self.all_budgets[i - 1] if i > 0 else 0
-            available_insts = all_instances[int(prev_budget):int(curr_budget)] if not self.runtime_as_budget \
+            available_insts = all_instances[int(prev_budget):int(curr_budget)] if self.instance_as_budget \
                 else all_instances
 
             # determine 'k' for the next iteration - at least 1
@@ -420,7 +417,7 @@ class SuccessiveHalving(Intensifier):
                     break
 
                 # setting cutoff based on the type of budget & adaptive capping
-                tae_cutoff = budget if self.runtime_as_budget else cutoff
+                tae_cutoff = cutoff if self.instance_as_budget else budget
 
                 self.logger.debug('Cutoff for challenger: %s' % str(cutoff))
 

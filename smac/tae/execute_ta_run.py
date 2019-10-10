@@ -213,7 +213,7 @@ class ExecuteTARun(object):
 
         if self.runhistory:
             # NOTE: cutoff is not adapted if run objective is 'quality', hence, recording it as 'budget'
-            # if there is no budget/budget as instance, cutoff still remains constant throughout the optimization
+            # if budget is instance, cutoff still remains constant throughout the optimization
             # so it should not affect existing behaviour
             self.runhistory.add(config=config,
                                 cost=cost, time=runtime, status=status,
