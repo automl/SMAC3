@@ -44,6 +44,7 @@ def generate_instances(a: int, b: int):
     return data, target
 
 
+# Target Algorithm
 def svm_from_cfg(cfg, seed, instance):
     """ Creates a SVM based on a configuration and evaluates it on the
     digits dataset using cross-validation.
@@ -106,6 +107,7 @@ scenario = Scenario({"run_obj": "quality",      # we optimize quality (alternati
                      "deterministic": "true",
                      "limit_resources": True,   # Uses pynisher to limit memory and runtime
                      "memory_limit": 3072,      # adapt this to reasonable value for your hardware
+                     "cutoff": 3,               # runtime limit for the target algorithm
                      "instances": instances     # Optimize across all given instances
                      })
 

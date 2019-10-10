@@ -1,6 +1,7 @@
 import logging
 import math
 from enum import Enum
+import typing
 
 import numpy as np
 
@@ -118,8 +119,9 @@ class ExecuteTARun(object):
 
     def start(self, config: Configuration,
               instance: str,
-              cutoff: float=None,
+              cutoff: typing.Optional[float]=None,
               seed: int=12345,
+              budget: typing.Optional[float]=0.0,
               instance_specific: str="0",
               capped: bool=False):
         """Wrapper function for ExecuteTARun.run() to check configuration
@@ -131,10 +133,13 @@ class ExecuteTARun(object):
                 Mainly a dictionary param -> value
             instance : string
                 Problem instance
-            cutoff : float
+            cutoff : float, optional
                 Runtime cutoff
             seed : int
                 Random seed
+            budget : float, optional
+                A positive, real-valued number representing an arbitrary limit to the target algorithm
+                Handled by the target algorithm internally
             instance_specific: str
                 Instance specific information (e.g., domain file or solution)
             capped: bool
@@ -169,6 +174,7 @@ class ExecuteTARun(object):
                                                           instance=instance,
                                                           cutoff=cutoff,
                                                           seed=seed,
+                                                          budget=budget,
                                                           instance_specific=instance_specific)
 
         # update SMAC stats
@@ -212,14 +218,10 @@ class ExecuteTARun(object):
             status, cost, runtime, str(additional_info)))
 
         if self.runhistory:
-            # NOTE: cutoff is not adapted if run objective is 'quality', hence, recording it as 'budget'
-            # if budget is instance, cutoff still remains constant throughout the optimization
-            # so it should not affect existing behaviour
             self.runhistory.add(config=config,
                                 cost=cost, time=runtime, status=status,
                                 instance_id=instance, seed=seed,
-                                budget=cutoff if (self.run_obj == "quality" and
-                                                  cutoff is not None) else 0,
+                                budget=budget,
                                 additional_info=additional_info)
             self.stats.n_configs = len(self.runhistory.config_ids)
 
@@ -237,9 +239,11 @@ class ExecuteTARun(object):
 
         return status, cost, runtime, additional_info
 
-    def run(self, config: Configuration, instance: str,
-            cutoff: int=None,
+    def run(self, config: Configuration,
+            instance: str,
+            cutoff: typing.Optional[float]=None,
             seed: int=12345,
+            budget: typing.Optional[float]=0.0,
             instance_specific: str="0"):
         """Runs target algorithm <self.ta> with configuration <config> on
         instance <instance> with instance specifics <specifics> for at most
@@ -251,11 +255,14 @@ class ExecuteTARun(object):
                 dictionary param -> value
             instance : string
                 problem instance
-            cutoff : int, optional
+            cutoff : float, optional
                 Wallclock time limit of the target algorithm. If no value is
                 provided no limit will be enforced.
             seed : int
                 random seed
+            budget : float, optional
+                A positive, real-valued number representing an arbitrary limit to the target algorithm
+                Handled by the target algorithm internally
             instance_specific: str
                 instance specific information (e.g., domain file or solution)
 

@@ -97,15 +97,6 @@ class TestSuccessiveHalving(unittest.TestCase):
                 rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
                 cutoff=10, instances=[1])
 
-        # runtime as budget (both max budget & cutoff param provided)
-        with self.assertRaisesRegex(ValueError,
-                                    "cutoff should not be provided."):
-            SuccessiveHalving(
-                tae_runner=None, stats=self.stats,
-                traj_logger=TrajLogger(output_dir=None, stats=self.stats),
-                rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
-                cutoff=10, instances=[1], max_budget=5, initial_budget=1)
-
         # eta < 1
         with self.assertRaisesRegex(ValueError, "eta must be greater than 1"):
             SuccessiveHalving(
@@ -178,11 +169,13 @@ class TestSuccessiveHalving(unittest.TestCase):
     @attr('slow')
     def test_intensify_1(self):
         """
-           test intensify with quality objective & cutoff as budget
+           test intensify with quality objective & arbitrary budget
         """
 
-        def target(x, instance, seed, budget):
-            return (x['a'] + 1 + budget) / 1000.
+        def target(x: Configuration, instance: str, seed: int, budget: float):
+            if x['b'] == 100:
+                time.sleep(1)
+            return (x['a'] + x['b'] + budget) / 1000.
 
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj='quality')
         taf.runhistory = self.rh
@@ -191,24 +184,27 @@ class TestSuccessiveHalving(unittest.TestCase):
             tae_runner=taf, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
-            instances=[1], initial_budget=1, max_budget=3, eta=2)
+            cutoff=1, instances=[1], initial_budget=1, max_budget=3, eta=2)
 
         self.rh.add(config=self.config1, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=1,
                     seed=0, budget=3,
                     additional_info=None)
 
-        inc, _ = intensifier.intensify(challengers=[self.config2],
+        inc, _ = intensifier.intensify(challengers=[self.config2, self.config3],
                                        incumbent=self.config1,
                                        run_history=self.rh,
                                        aggregate_func=average_cost)
 
         self.assertEqual(inc, self.config2)
-        self.assertEqual(self.stats.ta_runs, 2)
+        self.assertEqual(self.stats.ta_runs, 3)
+        self.assertEqual(len(self.rh.config_ids.keys()), 3)
+        self.assertEqual(list(self.rh.data.values())[2][2], StatusType.TIMEOUT)  # config3 is timed out
+        self.assertEqual(list(self.rh.data.keys())[2][0], self.rh.config_ids[self.config3])
         self.assertEqual(self.stats.inc_changed, 1)
 
     @attr('slow')
-    def test_intensify_2(self):
+    def test_intensify_3(self):
         """
            test intensify with runtime objective and adaptive capping
         """
@@ -245,7 +241,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(list(self.rh.data.values())[3][2], StatusType.CAPPED)
 
     @attr('slow')
-    def test_intensify_3(self):
+    def test_intensify_4(self):
         """
             test intensify with multiple instance-seed pairs
         """
@@ -277,47 +273,13 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(len(self.rh.get_runs_for_config(self.config2)), 1)
 
     @attr('slow')
-    def test_intensify_4(self):
-        """
-            test intensify with solution quality as objective
-        """
-
-        def target(x: Configuration, seed: int, instance: str):
-            return 1
-
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="quality")
-        taf.runhistory = self.rh
-
-        intensifier = SuccessiveHalving(
-            tae_runner=taf, stats=self.stats,
-            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
-            rng=np.random.RandomState(12345), run_obj_time=False,
-            instances=[0, 1],
-            deterministic=True)
-
-        for i in range(2):
-            self.rh.add(config=self.config1, cost=i + 1, time=1,
-                        status=StatusType.SUCCESS, instance_id=i,
-                        seed=12345,
-                        additional_info=None)
-
-        # config2 should become the new incumbent since the objective is quality
-        inc, _ = intensifier.intensify(challengers=[self.config2],
-                                       incumbent=None,
-                                       run_history=self.rh,
-                                       aggregate_func=average_cost)
-
-        self.assertEqual(inc, self.config2)
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config2)), 2)
-
-    @attr('slow')
     def test_intensify_5(self):
         """
             test intensify with shuffling instance order every run
         """
 
-        def target(x: Configuration, seed: int, instance: str):
-            return 2*x['a'] + x['b'] + instance
+        def target(x: Configuration, instance: str, seed: int):
+            return 2*x['a'] + x['b'] + int(instance)
 
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="quality")
         taf.runhistory = self.rh

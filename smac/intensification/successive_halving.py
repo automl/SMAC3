@@ -37,21 +37,17 @@ class SuccessiveHalving(Intensifier):
         If `initial_budget` and `max_budget` are not provided, then they are set to 1 and total number
         of available instances respectively by default.
 
-    2. **'Runtime' as budget**:
-        Runtime is used when there is only one instance provided and when run objective is "quality",
-        i.e., budget determines how long the challenger is allowed to run.
-        The budget is passed to the target algorithm as an argument to make it an arbitrary runtime limit,
-        (eg: number of epochs for training a neural network).
-        Since this deals with runtime, SMAC's internal resource limiter has to be disabled by setting
-        `limit_resources=False`.
+    2. **'Real-valued' budget**:
+        This is used when there is only one instance provided and when run objective is "quality",
+        i.e., budget is a positive, real-valued number that can be passed to the target algorithm as an argument.
+        It can be used to control anything by the target algorithm, Eg: number of epochs for training a neural network.
 
         `initial_budget` and `max_budget` are required parameters for this type of budget.
-        `cutoff` should NOT be provided.
 
     Examples for successive halving (and hyperband) can be found here:
     * Runtime objective and multiple instances *(instances as budget)*: `examples/spear_qcp/SMAC4AC_spear_qcp.py`
     * Quality objective and multiple instances *(instances as budget)*: `examples/SMAC4HPO_svm_hyperband_instances.py`
-    * Quality objective and single instance *(runtime as budget)*: `examples/SMAC4HPO_mlp_hyperband.py`
+    * Quality objective and single instance *(real-valued budget)*: `examples/SMAC4HPO_mlp_hyperband.py`
 
     Parameters
     ----------
@@ -192,12 +188,8 @@ class SuccessiveHalving(Intensifier):
         if not self.run_obj_time and len(self.instances) <= 1:
             # budget with cutoff
             if initial_budget is None or max_budget is None:
-                raise ValueError("Successive Halving with runtime-limit as budget (i.e., only 1 instance) "
+                raise ValueError("Successive Halving with real-valued budget (i.e., only 1 instance) "
                                  "requires parameters initial_budget and max_budget for intensification!")
-
-            if self.cutoff is not None:
-                raise ValueError('In Successive Halving with runtime-limit as budget (i.e., only 1 instance), '
-                                 'cutoff should not be provided.')
 
             self.initial_budget = initial_budget
             self.max_budget = max_budget
@@ -217,9 +209,9 @@ class SuccessiveHalving(Intensifier):
                 self.logger.warning('Max budget (%d) does not include all instance-seed pairs (%d)' %
                                     (self.max_budget, len(self.instances)))
 
-        budget_type = 'INSTANCES' if self.instance_as_budget else 'RUNTIME'
-        self.logger.info("Running Successive Halving with '%s' as budget. "
-                         "Initial budget: %.2f, Max. budget: %.2f, eta: %.2f" %
+        budget_type = 'INSTANCES' if self.instance_as_budget else 'REAL-VALUED'
+        self.logger.info("Successive Halving configuration: budget type = %s, "
+                         "Initial budget = %.2f, Max. budget = %.2f, eta = %.2f" %
                          (budget_type, self.initial_budget, self.max_budget, self.eta))
 
         # precomputing stuff for SH
@@ -422,9 +414,6 @@ class SuccessiveHalving(Intensifier):
                     self.logger.debug("Stop challenger itensification due to adaptive capping.")
                     break
 
-                # setting cutoff based on the type of budget & adaptive capping
-                tae_cutoff = cutoff if self.instance_as_budget else budget
-
                 self.logger.debug('Cutoff for challenger: %s' % str(cutoff))
 
                 # run target algorithm for each instance-seed pair
@@ -434,7 +423,8 @@ class SuccessiveHalving(Intensifier):
                         config=challenger,
                         instance=instance,
                         seed=seed,
-                        cutoff=tae_cutoff,
+                        cutoff=cutoff,
+                        budget=0.0 if self.instance_as_budget else budget,
                         instance_specific=self.instance_specifics.get(instance, "0"),
                         capped=(self.cutoff is not None) and
                                (cutoff < self.cutoff)

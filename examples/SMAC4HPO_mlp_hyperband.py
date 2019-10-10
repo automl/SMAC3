@@ -28,6 +28,8 @@ digits = load_digits()
 
 
 # Target Algorithm
+# The signature of the function determines what arguments are passed to it
+# i.e., budget is passed to the target algorithm if it is present in the signature
 def mlp_from_cfg(cfg, seed, instance, budget, **kwargs):
     """
         Creates a MLP classifier from sklearn and fits the given data on it.
@@ -70,7 +72,7 @@ def mlp_from_cfg(cfg, seed, instance, budget, **kwargs):
 
         # returns the cross validation accuracy
         cv = StratifiedKFold(n_splits=5, random_state=seed)  # to make CV splits consistent
-        score = cross_val_score(mlp, digits.data, digits.target, cv=cv)
+        score = cross_val_score(mlp, digits.data, digits.target, cv=cv, error_score='raise')
 
     return 1 - np.mean(score)  # Because minimize!
 
@@ -110,8 +112,11 @@ scenario = Scenario({"run_obj": "quality",      # we optimize quality (alternati
                      "wallclock-limit": 100,    # max duration to run the optimization (in seconds)
                      "cs": cs,                  # configuration space
                      "deterministic": "true",
-                     "limit_resources": False,  # Disables pynisher to pass budget directly to the TA
-                                                # Timeouts & memouts have to be taken care within the TA
+                     "limit_resources": True,   # Uses pynisher to limit memory and runtime
+                                                # Alternatively, you can also disable this.
+                                                # Then you should handle runtime and memory yourself in the TA
+                     "cutoff": 30,              # runtime limit for target algorithm
+                     "memory_limit": 3072,      # adapt this to reasonable value for your hardware
                      })
 
 # max budget for hyperband can be anything. Here, we set it to maximum no. of epochs to train the MLP for
@@ -127,7 +132,8 @@ smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
 
 # Example call of the function with default values
 # It returns: Status, Cost, Runtime, Additional Infos
-def_value = smac.get_tae_runner().run(cs.get_default_configuration(), '1', max_iters, 0)[1]
+def_value = smac.get_tae_runner().run(config=cs.get_default_configuration(),
+                                      instance='1', budget=max_iters, seed=0)[1]
 print("Value for default configuration: %.4f" % def_value)
 
 # Start optimization
@@ -136,5 +142,6 @@ try:
 finally:
     incumbent = smac.solver.incumbent
 
-inc_value = smac.get_tae_runner().run(incumbent, '1', max_iters, 0)[1]
+inc_value = smac.get_tae_runner().run(config=incumbent, instance='1',
+                                      budget=max_iters, seed=0)[1]
 print("Optimized Value: %.4f" % inc_value)
