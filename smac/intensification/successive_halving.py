@@ -27,15 +27,16 @@ class SuccessiveHalving(Intensifier):
     "BOHB: Robust and Efficient Hyperparameter Optimization at Scale" (Falkner et al. 2018)
     Supplementary reference: http://proceedings.mlr.press/v80/falkner18a/falkner18a-supp.pdf
 
-    Successive Halving intensifier can operate on two kinds of budgets:
+    Successive Halving intensifier (and Hyperband) can operate on two kinds of budgets:
     1. **'Instances' as budget**:
-        When multiple instances are provided or when run objective is "runtime", this is the criterion used as budgets
-        for successive halving iterations i.e., budget determines how many instances the challengers are evaluated on
-        at a time. Top challengers for the next iteration are selected based on the combined performance across
+        When multiple instances are provided or when run objective is "runtime", this is the criterion used as budget
+        for successive halving iterations i.e., the budget determines how many instances the challengers are evaluated
+        on at a time. Top challengers for the next iteration are selected based on the combined performance across
         all instances used.
 
         If `initial_budget` and `max_budget` are not provided, then they are set to 1 and total number
         of available instances respectively by default.
+
     2. **'Runtime' as budget**:
         Runtime is used when there is only one instance provided and when run objective is "quality",
         i.e., budget determines how long the challenger is allowed to run.
@@ -46,6 +47,11 @@ class SuccessiveHalving(Intensifier):
 
         `initial_budget` and `max_budget` are required parameters for this type of budget.
         `cutoff` should NOT be provided.
+
+    Examples for successive halving (and hyperband) can be found here:
+    * Runtime objective and multiple instances *(instances as budget)*: `examples/spear_qcp/SMAC4AC_spear_qcp.py`
+    * Quality objective and multiple instances *(instances as budget)*: `examples/SMAC4HPO_svm_hyperband_instances.py`
+    * Quality objective and single instance *(runtime as budget)*: `examples/SMAC4HPO_mlp_hyperband.py`
 
     Parameters
     ----------
