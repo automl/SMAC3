@@ -21,11 +21,11 @@ class ExecuteTARunOld(ExecuteTARun):
     """
 
     def run(self, config: Configuration,
-            instance: typing.Optional[str]=None,
-            cutoff: typing.Optional[float]=None,
-            seed: int=12345,
-            budget: typing.Optional[float]=0.0,
-            instance_specific: str="0"):
+            instance: typing.Optional[str] = None,
+            cutoff: typing.Optional[float] = None,
+            seed: int = 12345,
+            budget: typing.Optional[float] = 0.0,
+            instance_specific: str = "0"):
         """Runs target algorithm <self.ta> with configuration <config> on
         instance <instance> with instance specifics <specifics> for at most
         <cutoff> seconds and random seed <seed>

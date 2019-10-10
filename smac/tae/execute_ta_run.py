@@ -81,9 +81,9 @@ class ExecuteTARun(object):
     """
 
     def __init__(self, ta, stats=None, runhistory=None,
-                 run_obj: str="runtime", par_factor: int=1,
-                 cost_for_crash: float=float(MAXINT),
-                 abort_on_first_run_crash: bool=True):
+                 run_obj: str = "runtime", par_factor: int = 1,
+                 cost_for_crash: float = float(MAXINT),
+                 abort_on_first_run_crash: bool = True):
         """Constructor
 
         Parameters
@@ -119,11 +119,11 @@ class ExecuteTARun(object):
 
     def start(self, config: Configuration,
               instance: str,
-              cutoff: typing.Optional[float]=None,
-              seed: int=12345,
-              budget: typing.Optional[float]=0.0,
-              instance_specific: str="0",
-              capped: bool=False):
+              cutoff: typing.Optional[float] = None,
+              seed: int = 12345,
+              budget: typing.Optional[float] = 0.0,
+              instance_specific: str = "0",
+              capped: bool = False):
         """Wrapper function for ExecuteTARun.run() to check configuration
         budget before the runs and to update stats after run
 
@@ -241,10 +241,10 @@ class ExecuteTARun(object):
 
     def run(self, config: Configuration,
             instance: str,
-            cutoff: typing.Optional[float]=None,
-            seed: int=12345,
-            budget: typing.Optional[float]=0.0,
-            instance_specific: str="0"):
+            cutoff: typing.Optional[float] = None,
+            seed: int = 12345,
+            budget: typing.Optional[float] = 0.0,
+            instance_specific: str = "0"):
         """Runs target algorithm <self.ta> with configuration <config> on
         instance <instance> with instance specifics <specifics> for at most
         <cutoff> seconds and random seed <seed>

@@ -32,12 +32,12 @@ class AbstractTAFunc(ExecuteTARun):
     """
 
     def __init__(self, ta, stats=None, runhistory=None,
-                 run_obj: str="quality",
-                 memory_limit: typing.Optional[int]=None,
-                 par_factor: int=1,
-                 cost_for_crash: float=float(MAXINT),
-                 abort_on_first_run_crash: bool=False,
-                 use_pynisher: bool=True):
+                 run_obj: str = "quality",
+                 memory_limit: typing.Optional[int] = None,
+                 par_factor: int = 1,
+                 cost_for_crash: float = float(MAXINT),
+                 abort_on_first_run_crash: bool = False,
+                 use_pynisher: bool = True):
 
         super().__init__(ta=ta, stats=stats, runhistory=runhistory,
                          run_obj=run_obj, par_factor=par_factor,
@@ -86,11 +86,11 @@ class AbstractTAFunc(ExecuteTARun):
             self.__module__ + '.' + self.__class__.__name__)
 
     def run(self, config: Configuration,
-            instance: typing.Optional[str]=None,
-            cutoff: typing.Optional[float]=None,
-            seed: int=12345,
-            budget: typing.Optional[float]=0.0,
-            instance_specific: str="0"):
+            instance: typing.Optional[str] = None,
+            cutoff: typing.Optional[float] = None,
+            seed: int = 12345,
+            budget: typing.Optional[float] = 0.0,
+            instance_specific: str = "0"):
         """Runs target algorithm <self.ta> with configuration <config> for at
         most <cutoff> seconds, allowing it to use at most <memory_limit> RAM.
 
