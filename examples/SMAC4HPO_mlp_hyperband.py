@@ -110,7 +110,7 @@ scenario = Scenario({"run_obj": "quality",      # we optimize quality (alternati
                      "wallclock-limit": 100,    # max duration to run the optimization (in seconds)
                      "cs": cs,                  # configuration space
                      "deterministic": "true",
-                     "limit_resources": False,  # Disables pynisher to pass runtime budget directly to the TA.
+                     "limit_resources": False,  # Disables pynisher to pass budget directly to the TA
                                                 # Timeouts & memouts have to be taken care within the TA
                      })
 
@@ -123,9 +123,9 @@ smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
                 tae_runner=mlp_from_cfg,
                 intensifier=Hyperband,                  # you can also change the intensifier to use like this!
                                                         # This example currently uses Hyperband intensification,
-                intensifier_kwargs=intensifier_kwargs)  # all parameters related to intensifier can be passed like this
+                intensifier_kwargs=intensifier_kwargs)  # all arguments related to intensifier can be passed like this
 
-# Example call of the function with default valuestarget algorithm
+# Example call of the function with default values
 # It returns: Status, Cost, Runtime, Additional Infos
 def_value = smac.get_tae_runner().run(cs.get_default_configuration(), '1', max_iters, 0)[1]
 print("Value for default configuration: %.4f" % def_value)
