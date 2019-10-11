@@ -71,7 +71,7 @@ def sgd_from_cfg(cfg, seed, instance):
         warnings.filterwarnings('ignore', category=ConvergenceWarning)
 
         # SGD classifier using given configuration
-        clf = SGDClassifier(loss='log', penalty='elasticnet', alpha=cfg['alpha'],
+        clf = SGDClassifier(loss='log', penalty='elasticnet', alpha=cfg['alpha'], l1_ratio=cfg['l1_ratio'],
                             learning_rate=cfg['learning_rate'], eta0=cfg['eta0'],
                             max_iter=30, early_stopping=True, random_state=seed)
 
@@ -91,11 +91,12 @@ cs = ConfigurationSpace()
 
 # We define a few possible parameters for the SGD classifier
 alpha = UniformFloatHyperparameter("alpha", 0, 1, default_value=1.0)
+l1_ratio = UniformFloatHyperparameter("l1_ratio", 0, 1, default_value=0.5)
 learning_rate = CategoricalHyperparameter("learning_rate", choices=['constant', 'invscaling', 'adaptive'],
                                           default_value='constant')
 eta0 = UniformFloatHyperparameter("eta0", 0.00001, 1, default_value=0.1, log=True)
 # Add the parameters to configuration space
-cs.add_hyperparameters([alpha, learning_rate, eta0])
+cs.add_hyperparameters([alpha, l1_ratio, learning_rate, eta0])
 
 # SMAC scenario object
 scenario = Scenario({"run_obj": "quality",      # we optimize quality (alternative to runtime)
