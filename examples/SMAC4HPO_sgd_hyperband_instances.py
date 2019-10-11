@@ -1,6 +1,6 @@
 """
-An example for the usage of SMAC within Python.
-We optimize a SVM on the MNIST digits dataset as multiple binary classification problems
+An example for the usage of Hyperband intensifier in SMAC with multiple instances.
+We optimize a SGD classifier on the digits dataset as multiple binary classification problems
 using "Hyperband" intensification. We split the digits dataset (10 classes) into 45 binary datasets.
 
 In this example, we use instances as the budget in hyperband and optimize the average cross validation accuracy.
@@ -10,15 +10,17 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.
 """
 
 import logging
-import numpy as np
-from sklearn import svm, datasets
-from sklearn.model_selection import cross_val_score, StratifiedKFold
+import warnings
 import itertools
+import numpy as np
+from sklearn import datasets
+from sklearn.linear_model import SGDClassifier
+from sklearn.model_selection import cross_val_score, StratifiedKFold
+from sklearn.exceptions import ConvergenceWarning
 
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatHyperparameter
-from ConfigSpace.conditions import EqualsCondition
 
 # Import SMAC-utilities
 from smac.scenario.scenario import Scenario
@@ -45,8 +47,8 @@ def generate_instances(a: int, b: int):
 
 
 # Target Algorithm
-def svm_from_cfg(cfg, seed, instance):
-    """ Creates a SVM based on a configuration and evaluates it on the
+def sgd_from_cfg(cfg, seed, instance):
+    """ Creates a SGD classifier based on a configuration and evaluates it on the
     digits dataset using cross-validation.
 
     Parameters:
@@ -62,23 +64,22 @@ def svm_from_cfg(cfg, seed, instance):
     Returns:
     --------
     float
-        A crossvalidated mean score for the svm on the loaded data-set.
+        A crossvalidated mean score for the SGD classifier on the loaded data-set.
     """
-    # For deactivated parameters, the configuration stores None-values.
-    # This is not accepted by the SVM, so we remove them.
-    cfg = {k: cfg[k] for k in cfg if cfg[k]}
-    # And for gamma, we set it to a fixed value or to "auto" (if used)
-    if "gamma" in cfg:
-        cfg["gamma"] = cfg["gamma_value"] if cfg["gamma"] == "value" else "auto"
-        cfg.pop("gamma_value", None)  # Remove "gamma_value"
 
-    clf = svm.SVC(**cfg, random_state=seed)
+    with warnings.catch_warnings():
+        warnings.filterwarnings('ignore', category=ConvergenceWarning)
 
-    # get instance
-    data, target = generate_instances(int(instance[0]), int(instance[1]))
+        # SGD classifier using given configuration
+        clf = SGDClassifier(loss='log', penalty='elasticnet', alpha=cfg['alpha'],
+                            learning_rate=cfg['learning_rate'], eta0=cfg['eta0'],
+                            max_iter=30, early_stopping=True, random_state=seed)
 
-    cv = StratifiedKFold(n_splits=4, random_state=seed)  # to make CV splits consistent
-    scores = cross_val_score(clf, data, target, cv=cv)
+        # get instance
+        data, target = generate_instances(int(instance[0]), int(instance[1]))
+
+        cv = StratifiedKFold(n_splits=4, random_state=seed)  # to make CV splits consistent
+        scores = cross_val_score(clf, data, target, cv=cv)
     return 1-np.mean(scores)  # Minimize!
 
 
@@ -88,17 +89,13 @@ logging.basicConfig(level=logging.INFO)  # logging.DEBUG for debug output
 # Build Configuration Space which defines all parameters and their ranges
 cs = ConfigurationSpace()
 
-# We define a few possible types of SVM-kernels and common parameters to all kernels
-kernel = CategoricalHyperparameter("kernel", ["linear", "rbf"], default_value="rbf")
-C = UniformFloatHyperparameter("C", 0.001, 1000.0, default_value=1.0)
-cs.add_hyperparameters([C, kernel])
-# This also works for parameters that are a mix of categorical and values from a range of numbers
-gamma = CategoricalHyperparameter("gamma", ["auto", "value"], default_value="value")  # only rbf
-gamma_value = UniformFloatHyperparameter("gamma_value", 0.0001, 8, default_value=1)
-cs.add_hyperparameters([gamma, gamma_value])
-# Adding conditions to limit activation of parameters when they are not relevant
-cs.add_condition(EqualsCondition(child=gamma_value, parent=gamma, value="value"))
-cs.add_condition(EqualsCondition(child=gamma, parent=kernel, value="rbf"))
+# We define a few possible parameters for the SGD classifier
+alpha = UniformFloatHyperparameter("alpha", 0, 1, default_value=1.0)
+learning_rate = CategoricalHyperparameter("learning_rate", choices=['constant', 'invscaling', 'adaptive'],
+                                          default_value='constant')
+eta0 = UniformFloatHyperparameter("eta0", 0.00001, 1, default_value=0.1, log=True)
+# Add the parameters to configuration space
+cs.add_hyperparameters([alpha, learning_rate, eta0])
 
 # SMAC scenario object
 scenario = Scenario({"run_obj": "quality",      # we optimize quality (alternative to runtime)
@@ -122,7 +119,7 @@ intensifier_kwargs = {'initial_budget': 1, 'max_budget': 45, 'eta': 3,
 
 # To optimize, we pass the function to the SMAC-object
 smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
-                tae_runner=svm_from_cfg,
+                tae_runner=sgd_from_cfg,
                 intensifier=Hyperband,                  # you can also change the intensifier to use like this!
                                                         # This example currently uses Hyperband intensification,
                 intensifier_kwargs=intensifier_kwargs)  # all parameters related to intensifier can be passed like this

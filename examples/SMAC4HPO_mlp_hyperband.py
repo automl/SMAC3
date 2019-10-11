@@ -1,5 +1,5 @@
 """
-An example for the usage of SMAC within Python.
+An example for the usage of Hyperband intensifier in SMAC.
 We optimize a simple MLP on the digits dataset using "Hyperband" intensification.
 
 In this example, we use a real-valued budget in hyperband (number of epochs to train the MLP) and
