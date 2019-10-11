@@ -1,4 +1,5 @@
 import sys
+import typing
 from subprocess import Popen, PIPE
 
 from smac.configspace import Configuration
@@ -19,12 +20,12 @@ class ExecuteTARunOld(ExecuteTARun):
     (SMAC < v2.10)
     """
 
-    def run(self, config:Configuration, 
-            instance:str=None,
-            cutoff:float=None,
-            seed:int=12345,
-            instance_specific:str="0"
-            ):
+    def run(self, config: Configuration,
+            instance: typing.Optional[str] = None,
+            cutoff: typing.Optional[float] = None,
+            seed: int = 12345,
+            budget: typing.Optional[float] = 0.0,
+            instance_specific: str = "0"):
         """Runs target algorithm <self.ta> with configuration <config> on
         instance <instance> with instance specifics <specifics> for at most
         <cutoff> seconds and random seed <seed>
@@ -33,12 +34,15 @@ class ExecuteTARunOld(ExecuteTARun):
         ----------
             config : Configuration
                 Dictionary param -> value
-            instance : string
+            instance : string, optional
                 Problem instance
             cutoff : float
                 Runtime cutoff
             seed : int
                 Random seed
+            budget : float, optional
+                A positive, real-valued number representing an arbitrary limit to the target algorithm.
+                Handled by the target algorithm internally. Currently ignored
             instance_specific: str
                 Instance specific information (e.g., domain file or solution)
         Returns
@@ -59,9 +63,9 @@ class ExecuteTARunOld(ExecuteTARun):
             cutoff = 99999999999999.
 
         stdout_, stderr_ = self._call_ta(config=config, 
-                              instance=instance, 
-                              instance_specific=instance_specific, 
-                              cutoff=cutoff, seed=seed)
+                                         instance=instance,
+                                         instance_specific=instance_specific,
+                                         cutoff=cutoff, seed=seed)
 
         status = "CRASHED"
         quality = 1234567890
@@ -114,14 +118,13 @@ class ExecuteTARunOld(ExecuteTARun):
         return status, cost, float(runtime), additional_info
     
     def _call_ta(self, 
-                 config:Configuration,
-                 instance:str, 
-                 instance_specific:str, 
-                 cutoff:float,
-                 seed:int):
+                 config: Configuration,
+                 instance: str,
+                 instance_specific: str,
+                 cutoff: float,
+                 seed: int):
 
-        # TODO: maybe replace fixed instance specific and cutoff_length (0) to
-        # other value
+        # TODO: maybe replace fixed instance specific and cutoff_length (0) to other value
         cmd = []
         cmd.extend(self.ta)
         cmd.extend([instance, instance_specific, str(cutoff), "0", str(seed)])
@@ -134,7 +137,7 @@ class ExecuteTARunOld(ExecuteTARun):
                   universal_newlines=True)
         stdout_, stderr_ = p.communicate()
 
-        self.logger.debug("Stdout: %s" % (stdout_))
-        self.logger.debug("Stderr: %s" % (stderr_))
+        self.logger.debug("Stdout: %s" % stdout_)
+        self.logger.debug("Stderr: %s" % stderr_)
         
         return stdout_, stderr_

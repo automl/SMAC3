@@ -3,11 +3,13 @@ import inspect
 import math
 import time
 import json
+import typing
 
 import numpy as np
 import pynisher
 
 from smac.tae.execute_ta_run import StatusType, ExecuteTARun
+from smac.configspace import Configuration
 from smac.utils.constants import MAXINT, MAX_CUTOFF
 
 __author__ = "Marius Lindauer, Matthias Feurer"
@@ -29,11 +31,13 @@ class AbstractTAFunc(ExecuteTARun):
     use_pynisher
     """
 
-    def __init__(self, ta, stats=None, runhistory=None, run_obj:str="quality",
-                 memory_limit:int=None, par_factor:int=1,
-                 cost_for_crash:float=float(MAXINT),
-                 abort_on_first_run_crash: bool=False,
-                 use_pynisher:bool=True):
+    def __init__(self, ta, stats=None, runhistory=None,
+                 run_obj: str = "quality",
+                 memory_limit: typing.Optional[int] = None,
+                 par_factor: int = 1,
+                 cost_for_crash: float = float(MAXINT),
+                 abort_on_first_run_crash: bool = False,
+                 use_pynisher: bool = True):
 
         super().__init__(ta=ta, stats=stats, runhistory=runhistory,
                          run_obj=run_obj, par_factor=par_factor,
@@ -68,9 +72,9 @@ class AbstractTAFunc(ExecuteTARun):
         """
 
         signature = inspect.signature(ta).parameters
-        self._accepts_seed = len(signature) > 1
-        self._accepts_instance = len(signature) > 2
-        self._accepts_budget = len(signature) > 3
+        self._accepts_seed = 'seed' in signature.keys()
+        self._accepts_instance = 'instance' in signature.keys()
+        self._accepts_budget = 'budget' in signature.keys()
 
         if memory_limit is not None:
             memory_limit = int(math.ceil(memory_limit))
@@ -81,10 +85,12 @@ class AbstractTAFunc(ExecuteTARun):
         self.logger = logging.getLogger(
             self.__module__ + '.' + self.__class__.__name__)
 
-    def run(self, config, instance=None,
-            cutoff=None,
-            seed=12345,
-            instance_specific="0"):
+    def run(self, config: Configuration,
+            instance: typing.Optional[str] = None,
+            cutoff: typing.Optional[float] = None,
+            seed: int = 12345,
+            budget: typing.Optional[float] = 0.0,
+            instance_specific: str = "0"):
         """Runs target algorithm <self.ta> with configuration <config> for at
         most <cutoff> seconds, allowing it to use at most <memory_limit> RAM.
 
@@ -94,18 +100,18 @@ class AbstractTAFunc(ExecuteTARun):
 
         Parameters
         ----------
-            config : dictionary (or similar)
+            config : Configuration, dictionary (or similar)
                 Dictionary param -> value
-            instance : str
+            instance : str, optional
                 Problem instance
-            cutoff : int, optional
+            cutoff : float, optional
                 Wallclock time limit of the target algorithm. If no value is
-                provided no limit will be enforced.
-            memory_limit : int, optional
-                Memory limit in MB enforced on the target algorithm If no
-                value is provided no limit will be enforced.
+                provided no limit will be enforced. It is casted to integer internally.
             seed : int
                 Random seed
+            budget : float, optional
+                A positive, real-valued number representing an arbitrary limit to the target algorithm
+                Handled by the target algorithm internally
             instance_specific: str
                 Instance specific information (e.g., domain file or solution)
         Returns
@@ -126,7 +132,7 @@ class AbstractTAFunc(ExecuteTARun):
         if self._accepts_instance:
             obj_kwargs['instance'] = instance
         if self._accepts_budget:
-            obj_kwargs['budget'] = cutoff
+            obj_kwargs['budget'] = budget
 
         if self.use_pynisher:
             # walltime for pynisher has to be a rounded up integer

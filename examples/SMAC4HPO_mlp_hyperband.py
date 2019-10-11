@@ -1,13 +1,16 @@
 """
-An example for the usage of SMAC within Python.
-We optimize a simple MLP on the MNIST digits dataset using "Hyperband" intensification.
+An example for the usage of Hyperband intensifier in SMAC.
+We optimize a simple MLP on the digits dataset using "Hyperband" intensification.
+
+In this example, we use a real-valued budget in hyperband (number of epochs to train the MLP) and
+optimize the average accuracy on a 5-fold cross validation.
 """
 
 import logging
 import warnings
 
 import numpy as np
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_score, StratifiedKFold
 from sklearn.neural_network import MLPClassifier
 from sklearn.datasets import load_digits
 from sklearn.exceptions import ConvergenceWarning
@@ -25,6 +28,8 @@ digits = load_digits()
 
 
 # Target Algorithm
+# The signature of the function determines what arguments are passed to it
+# i.e., budget is passed to the target algorithm if it is present in the signature
 def mlp_from_cfg(cfg, seed, instance, budget, **kwargs):
     """
         Creates a MLP classifier from sklearn and fits the given data on it.
@@ -66,15 +71,14 @@ def mlp_from_cfg(cfg, seed, instance, budget, **kwargs):
             random_state=seed)
 
         # returns the cross validation accuracy
-        score = cross_val_score(mlp, digits.data, digits.target, cv=5)
+        cv = StratifiedKFold(n_splits=5, random_state=seed)  # to make CV splits consistent
+        score = cross_val_score(mlp, digits.data, digits.target, cv=cv, error_score='raise')
 
     return 1 - np.mean(score)  # Because minimize!
 
 
 logger = logging.getLogger("MLP-example")
 logging.basicConfig(level=logging.INFO)
-logger.info("Running MLP example for SMAC. If you experience "
-            "difficulties, try to decrease the memory-limit.")
 
 # Build Configuration Space which defines all parameters and their ranges.
 # To illustrate different parameter types,
@@ -82,10 +86,10 @@ logger.info("Running MLP example for SMAC. If you experience "
 cs = ConfigurationSpace()
 
 # We can add multiple hyperparameters at once:
-n_layer = UniformIntegerHyperparameter("n_layer", 1, 5, default_value=2)
+n_layer = UniformIntegerHyperparameter("n_layer", 1, 5, default_value=1)
 n_neurons = UniformIntegerHyperparameter("n_neurons", 8, 1024, log=True, default_value=10)
 activation = CategoricalHyperparameter("activation", ['logistic', 'tanh', 'relu'],
-                                       default_value='relu')
+                                       default_value='tanh')
 solver = CategoricalHyperparameter('solver', ['lbfgs', 'sgd', 'adam'], default_value='adam')
 batch_size = UniformIntegerHyperparameter('batch_size', 30, 300, default_value=200)
 learning_rate = CategoricalHyperparameter('learning_rate', ['constant', 'invscaling', 'adaptive'],
@@ -104,30 +108,33 @@ use_batch_size = CS.conditions.InCondition(child=batch_size, parent=solver, valu
 cs.add_conditions([use_lr, use_batch_size, use_lr_init])
 
 # SMAC scenario object
-scenario = Scenario({"run_obj": "quality",     # we optimize quality (alternative runtime)
-                     "wallclock-limit": 100,   # max duration to run the optimization (in seconds)
-                     "cs": cs,                 # configuration space
+scenario = Scenario({"run_obj": "quality",      # we optimize quality (alternative to runtime)
+                     "wallclock-limit": 100,    # max duration to run the optimization (in seconds)
+                     "cs": cs,                  # configuration space
                      "deterministic": "true",
-                     "limit_resources": False,  # Disables pynisher to pass cutoff directly to the target algorithm.
-                                                # Timeouts have to be taken care within the TA
+                     "limit_resources": True,   # Uses pynisher to limit memory and runtime
+                                                # Alternatively, you can also disable this.
+                                                # Then you should handle runtime and memory yourself in the TA
+                     "cutoff": 30,              # runtime limit for target algorithm
+                     "memory_limit": 3072,      # adapt this to reasonable value for your hardware
                      })
 
-# setting cutoff
-# normally, it is a runtime cutoff, but in this case, we use cutoff to represent the number of epochs for MLP
-cutoff = 50
+# max budget for hyperband can be anything. Here, we set it to maximum no. of epochs to train the MLP for
+max_iters = 50
 # intensifier parameters
-intensifier_kwargs = {'initial_budget': 5, 'max_budget': cutoff, 'eta': 3}
+intensifier_kwargs = {'initial_budget': 5, 'max_budget': max_iters, 'eta': 3}
 # To optimize, we pass the function to the SMAC-object
 smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
                 tae_runner=mlp_from_cfg,
                 intensifier=Hyperband,                  # you can also change the intensifier to use like this!
                                                         # This example currently uses Hyperband intensification,
-                intensifier_kwargs=intensifier_kwargs)  # all parameters related to intensifier can be passed like this
+                intensifier_kwargs=intensifier_kwargs)  # all arguments related to intensifier can be passed like this
 
 # Example call of the function with default values
 # It returns: Status, Cost, Runtime, Additional Infos
-def_value = smac.get_tae_runner().run(cs.get_default_configuration(), '1', cutoff, 0)[1]
-print("Value for default configuration: %.4f" % (-1*def_value))
+def_value = smac.get_tae_runner().run(config=cs.get_default_configuration(),
+                                      instance='1', budget=max_iters, seed=0)[1]
+print("Value for default configuration: %.4f" % def_value)
 
 # Start optimization
 try:
@@ -135,5 +142,6 @@ try:
 finally:
     incumbent = smac.solver.incumbent
 
-inc_value = smac.get_tae_runner().run(incumbent, '1', cutoff, 0)[1]
-print("Optimized Value: %.4f" % (-1*inc_value))
+inc_value = smac.get_tae_runner().run(config=incumbent, instance='1',
+                                      budget=max_iters, seed=0)[1]
+print("Optimized Value: %.4f" % inc_value)
