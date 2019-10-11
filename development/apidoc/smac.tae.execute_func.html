@@ -278,7 +278,7 @@
 <span id="smac-tae-execute-func-module"></span><h1>smac.tae.execute_func module<a class="headerlink" href="#module-smac.tae.execute_func" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.tae.execute_func.AbstractTAFunc">
-<em class="property">class </em><code class="sig-prename descclassname">smac.tae.execute_func.</code><code class="sig-name descname">AbstractTAFunc</code><span class="sig-paren">(</span><em class="sig-param">ta</em>, <em class="sig-param">stats=None</em>, <em class="sig-param">runhistory=None</em>, <em class="sig-param">run_obj: str = 'quality'</em>, <em class="sig-param">memory_limit: int = None</em>, <em class="sig-param">par_factor: int = 1</em>, <em class="sig-param">cost_for_crash: float = 2147483647.0</em>, <em class="sig-param">abort_on_first_run_crash: bool = False</em>, <em class="sig-param">use_pynisher: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#AbstractTAFunc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.tae.execute_func.</code><code class="sig-name descname">AbstractTAFunc</code><span class="sig-paren">(</span><em class="sig-param">ta</em>, <em class="sig-param">stats=None</em>, <em class="sig-param">runhistory=None</em>, <em class="sig-param">run_obj: str = 'quality'</em>, <em class="sig-param">memory_limit: Optional[int] = None</em>, <em class="sig-param">par_factor: int = 1</em>, <em class="sig-param">cost_for_crash: float = 2147483647.0</em>, <em class="sig-param">abort_on_first_run_crash: bool = False</em>, <em class="sig-param">use_pynisher: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#AbstractTAFunc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.tae.execute_ta_run.ExecuteTARun</span></code></a></p>
 <p>Baseclass to execute target algorithms which are python functions.</p>
 <p><strong>Note:*</strong> Do not use directly</p>
@@ -309,7 +309,7 @@ that returned NaN or inf)</p></li>
 </dl>
 <dl class="method">
 <dt id="smac.tae.execute_func.AbstractTAFunc.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">config</em>, <em class="sig-param">instance=None</em>, <em class="sig-param">cutoff=None</em>, <em class="sig-param">seed=12345</em>, <em class="sig-param">instance_specific='0'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#AbstractTAFunc.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc.run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">instance: Optional[str] = None</em>, <em class="sig-param">cutoff: Optional[float] = None</em>, <em class="sig-param">seed: int = 12345</em>, <em class="sig-param">budget: Optional[float] = 0.0</em>, <em class="sig-param">instance_specific: str = '0'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#AbstractTAFunc.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs target algorithm &lt;self.ta&gt; with configuration &lt;config&gt; for at
 most &lt;cutoff&gt; seconds, allowing it to use at most &lt;memory_limit&gt; RAM.</p>
 <p>Whether the target algorithm is called with the &lt;instance&gt; and
@@ -318,13 +318,13 @@ the target algorithm.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>config</strong> (<em>dictionary</em><em> (or </em><em>similar</em><em>)</em>) – Dictionary param -&gt; value</p></li>
-<li><p><strong>instance</strong> (<em>str</em>) – Problem instance</p></li>
-<li><p><strong>cutoff</strong> (<em>int</em><em>, </em><em>optional</em>) – Wallclock time limit of the target algorithm. If no value is
-provided no limit will be enforced.</p></li>
-<li><p><strong>memory_limit</strong> (<em>int</em><em>, </em><em>optional</em>) – Memory limit in MB enforced on the target algorithm If no
-value is provided no limit will be enforced.</p></li>
+<li><p><strong>config</strong> (<em>Configuration</em><em>, </em><em>dictionary</em><em> (or </em><em>similar</em><em>)</em>) – Dictionary param -&gt; value</p></li>
+<li><p><strong>instance</strong> (<em>str</em><em>, </em><em>optional</em>) – Problem instance</p></li>
+<li><p><strong>cutoff</strong> (<em>float</em><em>, </em><em>optional</em>) – Wallclock time limit of the target algorithm. If no value is
+provided no limit will be enforced. It is casted to integer internally.</p></li>
 <li><p><strong>seed</strong> (<em>int</em>) – Random seed</p></li>
+<li><p><strong>budget</strong> (<em>float</em><em>, </em><em>optional</em>) – A positive, real-valued number representing an arbitrary limit to the target algorithm
+Handled by the target algorithm internally</p></li>
 <li><p><strong>instance_specific</strong> (<em>str</em>) – Instance specific information (e.g., domain file or solution)</p></li>
 </ul>
 </dd>
@@ -344,7 +344,7 @@ value is provided no limit will be enforced.</p></li>
 
 <dl class="class">
 <dt id="smac.tae.execute_func.ExecuteTAFuncArray">
-<em class="property">class </em><code class="sig-prename descclassname">smac.tae.execute_func.</code><code class="sig-name descname">ExecuteTAFuncArray</code><span class="sig-paren">(</span><em class="sig-param">ta</em>, <em class="sig-param">stats=None</em>, <em class="sig-param">runhistory=None</em>, <em class="sig-param">run_obj: str = 'quality'</em>, <em class="sig-param">memory_limit: int = None</em>, <em class="sig-param">par_factor: int = 1</em>, <em class="sig-param">cost_for_crash: float = 2147483647.0</em>, <em class="sig-param">abort_on_first_run_crash: bool = False</em>, <em class="sig-param">use_pynisher: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#ExecuteTAFuncArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncArray" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.tae.execute_func.</code><code class="sig-name descname">ExecuteTAFuncArray</code><span class="sig-paren">(</span><em class="sig-param">ta</em>, <em class="sig-param">stats=None</em>, <em class="sig-param">runhistory=None</em>, <em class="sig-param">run_obj: str = 'quality'</em>, <em class="sig-param">memory_limit: Optional[int] = None</em>, <em class="sig-param">par_factor: int = 1</em>, <em class="sig-param">cost_for_crash: float = 2147483647.0</em>, <em class="sig-param">abort_on_first_run_crash: bool = False</em>, <em class="sig-param">use_pynisher: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#ExecuteTAFuncArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncArray" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.tae.execute_func.AbstractTAFunc" title="smac.tae.execute_func.AbstractTAFunc"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.tae.execute_func.AbstractTAFunc</span></code></a></p>
 <p>Evaluate function for given configuration and resource limit.</p>
 <p>Passes the configuration as an array-like to the target algorithm. The
@@ -390,7 +390,7 @@ that returned NaN or inf)</p></li>
 
 <dl class="class">
 <dt id="smac.tae.execute_func.ExecuteTAFuncDict">
-<em class="property">class </em><code class="sig-prename descclassname">smac.tae.execute_func.</code><code class="sig-name descname">ExecuteTAFuncDict</code><span class="sig-paren">(</span><em class="sig-param">ta</em>, <em class="sig-param">stats=None</em>, <em class="sig-param">runhistory=None</em>, <em class="sig-param">run_obj: str = 'quality'</em>, <em class="sig-param">memory_limit: int = None</em>, <em class="sig-param">par_factor: int = 1</em>, <em class="sig-param">cost_for_crash: float = 2147483647.0</em>, <em class="sig-param">abort_on_first_run_crash: bool = False</em>, <em class="sig-param">use_pynisher: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#ExecuteTAFuncDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncDict" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.tae.execute_func.</code><code class="sig-name descname">ExecuteTAFuncDict</code><span class="sig-paren">(</span><em class="sig-param">ta</em>, <em class="sig-param">stats=None</em>, <em class="sig-param">runhistory=None</em>, <em class="sig-param">run_obj: str = 'quality'</em>, <em class="sig-param">memory_limit: Optional[int] = None</em>, <em class="sig-param">par_factor: int = 1</em>, <em class="sig-param">cost_for_crash: float = 2147483647.0</em>, <em class="sig-param">abort_on_first_run_crash: bool = False</em>, <em class="sig-param">use_pynisher: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#ExecuteTAFuncDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncDict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.tae.execute_func.AbstractTAFunc" title="smac.tae.execute_func.AbstractTAFunc"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.tae.execute_func.AbstractTAFunc</span></code></a></p>
 <p>Evaluate function for given configuration and resource limit.</p>
 <p>Passes the configuration as a dictionary to the target algorithm. The

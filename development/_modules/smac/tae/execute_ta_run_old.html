@@ -268,6 +268,7 @@
             
   <h1>Source code for smac.tae.execute_ta_run_old</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">from</span> <span class="nn">subprocess</span> <span class="k">import</span> <span class="n">Popen</span><span class="p">,</span> <span class="n">PIPE</span>
 
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">Configuration</span>
@@ -288,12 +289,12 @@
 <span class="sd">    (SMAC &lt; v2.10)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ExecuteTARunOld.run"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run_old.html#smac.tae.execute_ta_run_old.ExecuteTARunOld.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span><span class="n">Configuration</span><span class="p">,</span> 
-            <span class="n">instance</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">cutoff</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">seed</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">12345</span><span class="p">,</span>
-            <span class="n">instance_specific</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s2">&quot;0&quot;</span>
-            <span class="p">):</span>
+<div class="viewcode-block" id="ExecuteTARunOld.run"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run_old.html#smac.tae.execute_ta_run_old.ExecuteTARunOld.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+            <span class="n">instance</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">cutoff</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12345</span><span class="p">,</span>
+            <span class="n">budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">instance_specific</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Runs target algorithm &lt;self.ta&gt; with configuration &lt;config&gt; on</span>
 <span class="sd">        instance &lt;instance&gt; with instance specifics &lt;specifics&gt; for at most</span>
 <span class="sd">        &lt;cutoff&gt; seconds and random seed &lt;seed&gt;</span>
@@ -302,12 +303,15 @@
 <span class="sd">        ----------</span>
 <span class="sd">            config : Configuration</span>
 <span class="sd">                Dictionary param -&gt; value</span>
-<span class="sd">            instance : string</span>
+<span class="sd">            instance : string, optional</span>
 <span class="sd">                Problem instance</span>
 <span class="sd">            cutoff : float</span>
 <span class="sd">                Runtime cutoff</span>
 <span class="sd">            seed : int</span>
 <span class="sd">                Random seed</span>
+<span class="sd">            budget : float, optional</span>
+<span class="sd">                A positive, real-valued number representing an arbitrary limit to the target algorithm.</span>
+<span class="sd">                Handled by the target algorithm internally. Currently ignored</span>
 <span class="sd">            instance_specific: str</span>
 <span class="sd">                Instance specific information (e.g., domain file or solution)</span>
 <span class="sd">        Returns</span>
@@ -328,9 +332,9 @@
             <span class="n">cutoff</span> <span class="o">=</span> <span class="mf">99999999999999.</span>
 
         <span class="n">stdout_</span><span class="p">,</span> <span class="n">stderr_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_ta</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> 
-                              <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span> 
-                              <span class="n">instance_specific</span><span class="o">=</span><span class="n">instance_specific</span><span class="p">,</span> 
-                              <span class="n">cutoff</span><span class="o">=</span><span class="n">cutoff</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+                                         <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span>
+                                         <span class="n">instance_specific</span><span class="o">=</span><span class="n">instance_specific</span><span class="p">,</span>
+                                         <span class="n">cutoff</span><span class="o">=</span><span class="n">cutoff</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
 
         <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;CRASHED&quot;</span>
         <span class="n">quality</span> <span class="o">=</span> <span class="mi">1234567890</span>
@@ -383,14 +387,13 @@
         <span class="k">return</span> <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">runtime</span><span class="p">),</span> <span class="n">additional_info</span></div>
     
     <span class="k">def</span> <span class="nf">_call_ta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
-                 <span class="n">config</span><span class="p">:</span><span class="n">Configuration</span><span class="p">,</span>
-                 <span class="n">instance</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> 
-                 <span class="n">instance_specific</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> 
-                 <span class="n">cutoff</span><span class="p">:</span><span class="nb">float</span><span class="p">,</span>
-                 <span class="n">seed</span><span class="p">:</span><span class="nb">int</span><span class="p">):</span>
+                 <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+                 <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">instance_specific</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">cutoff</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                 <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 
-        <span class="c1"># TODO: maybe replace fixed instance specific and cutoff_length (0) to</span>
-        <span class="c1"># other value</span>
+        <span class="c1"># TODO: maybe replace fixed instance specific and cutoff_length (0) to other value</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">cmd</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ta</span><span class="p">)</span>
         <span class="n">cmd</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">instance</span><span class="p">,</span> <span class="n">instance_specific</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">cutoff</span><span class="p">),</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">seed</span><span class="p">)])</span>
@@ -403,8 +406,8 @@
                   <span class="n">universal_newlines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">stdout_</span><span class="p">,</span> <span class="n">stderr_</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Stdout: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">stdout_</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Stderr: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">stderr_</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Stdout: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">stdout_</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Stderr: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">stderr_</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="n">stdout_</span><span class="p">,</span> <span class="n">stderr_</span></div>
 </pre></div>

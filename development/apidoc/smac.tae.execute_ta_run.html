@@ -349,7 +349,7 @@ that returned NaN or inf)</p></li>
 </dl>
 <dl class="method">
 <dt id="smac.tae.execute_ta_run.ExecuteTARun.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">instance: str</em>, <em class="sig-param">cutoff: int = None</em>, <em class="sig-param">seed: int = 12345</em>, <em class="sig-param">instance_specific: str = '0'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#ExecuteTARun.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">instance: str</em>, <em class="sig-param">cutoff: Optional[float] = None</em>, <em class="sig-param">seed: int = 12345</em>, <em class="sig-param">budget: Optional[float] = 0.0</em>, <em class="sig-param">instance_specific: str = '0'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#ExecuteTARun.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs target algorithm &lt;self.ta&gt; with configuration &lt;config&gt; on
 instance &lt;instance&gt; with instance specifics &lt;specifics&gt; for at most
 &lt;cutoff&gt; seconds and random seed &lt;seed&gt;</p>
@@ -358,9 +358,11 @@ instance &lt;instance&gt; with instance specifics &lt;specifics&gt; for at most
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<em>Configuration</em>) – dictionary param -&gt; value</p></li>
 <li><p><strong>instance</strong> (<em>string</em>) – problem instance</p></li>
-<li><p><strong>cutoff</strong> (<em>int</em><em>, </em><em>optional</em>) – Wallclock time limit of the target algorithm. If no value is
+<li><p><strong>cutoff</strong> (<em>float</em><em>, </em><em>optional</em>) – Wallclock time limit of the target algorithm. If no value is
 provided no limit will be enforced.</p></li>
 <li><p><strong>seed</strong> (<em>int</em>) – random seed</p></li>
+<li><p><strong>budget</strong> (<em>float</em><em>, </em><em>optional</em>) – A positive, real-valued number representing an arbitrary limit to the target algorithm
+Handled by the target algorithm internally</p></li>
 <li><p><strong>instance_specific</strong> (<em>str</em>) – instance specific information (e.g., domain file or solution)</p></li>
 </ul>
 </dd>
@@ -378,7 +380,7 @@ provided no limit will be enforced.</p></li>
 
 <dl class="method">
 <dt id="smac.tae.execute_ta_run.ExecuteTARun.start">
-<code class="sig-name descname">start</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">instance: str</em>, <em class="sig-param">cutoff: float = None</em>, <em class="sig-param">seed: int = 12345</em>, <em class="sig-param">instance_specific: str = '0'</em>, <em class="sig-param">capped: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#ExecuteTARun.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.start" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">start</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">instance: str</em>, <em class="sig-param">cutoff: Optional[float] = None</em>, <em class="sig-param">seed: int = 12345</em>, <em class="sig-param">budget: Optional[float] = 0.0</em>, <em class="sig-param">instance_specific: str = '0'</em>, <em class="sig-param">capped: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#ExecuteTARun.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.start" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper function for ExecuteTARun.run() to check configuration
 budget before the runs and to update stats after run</p>
 <dl class="field-list simple">
@@ -386,8 +388,10 @@ budget before the runs and to update stats after run</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<em>Configuration</em>) – Mainly a dictionary param -&gt; value</p></li>
 <li><p><strong>instance</strong> (<em>string</em>) – Problem instance</p></li>
-<li><p><strong>cutoff</strong> (<em>float</em>) – Runtime cutoff</p></li>
+<li><p><strong>cutoff</strong> (<em>float</em><em>, </em><em>optional</em>) – Runtime cutoff</p></li>
 <li><p><strong>seed</strong> (<em>int</em>) – Random seed</p></li>
+<li><p><strong>budget</strong> (<em>float</em><em>, </em><em>optional</em>) – A positive, real-valued number representing an arbitrary limit to the target algorithm
+Handled by the target algorithm internally</p></li>
 <li><p><strong>instance_specific</strong> (<em>str</em>) – Instance specific information (e.g., domain file or solution)</p></li>
 <li><p><strong>capped</strong> (<em>bool</em>) – If true and status is StatusType.TIMEOUT,
 uses StatusType.CAPPED</p></li>

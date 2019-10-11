@@ -281,8 +281,33 @@
 <em class="property">class </em><code class="sig-prename descclassname">smac.intensification.successive_halving.</code><code class="sig-name descname">SuccessiveHalving</code><span class="sig-paren">(</span><em class="sig-param">tae_runner: smac.tae.execute_ta_run.ExecuteTARun, stats: smac.stats.stats.Stats, traj_logger: smac.utils.io.traj_logging.TrajLogger, rng: numpy.random.mtrand.RandomState, instances: List[str], instance_specifics: Mapping[str, numpy.ndarray] = None, cutoff: Optional[int] = None, deterministic: bool = False, initial_budget: Optional[float] = None, max_budget: Optional[float] = None, eta: float = 3, num_initial_challengers: Optional[int] = None, run_obj_time: bool = True, n_seeds: Optional[int] = None, instance_order: Optional[str] = 'shuffle_once', adaptive_capping_slackfactor: float = 1.2, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/successive_halving.html#SuccessiveHalving"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.successive_halving.SuccessiveHalving" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.intensification.intensification.html#smac.intensification.intensification.Intensifier" title="smac.intensification.intensification.Intensifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.intensification.intensification.Intensifier</span></code></a></p>
 <p>Races multiple challengers against an incumbent using Successive Halving method</p>
-<p>Implementation from “BOHB: Robust and Efficient Hyperparameter Optimization at Scale” (Falkner et al. 2018)
-(refer supplementary)</p>
+<p>Implementation following the description in
+“BOHB: Robust and Efficient Hyperparameter Optimization at Scale” (Falkner et al. 2018)
+Supplementary reference: <a class="reference external" href="http://proceedings.mlr.press/v80/falkner18a/falkner18a-supp.pdf">http://proceedings.mlr.press/v80/falkner18a/falkner18a-supp.pdf</a></p>
+<p>Successive Halving intensifier (and Hyperband) can operate on two kinds of budgets:
+1. <strong>‘Instances’ as budget</strong>:</p>
+<blockquote>
+<div><p>When multiple instances are provided or when run objective is “runtime”, this is the criterion used as budget
+for successive halving iterations i.e., the budget determines how many instances the challengers are evaluated
+on at a time. Top challengers for the next iteration are selected based on the combined performance across
+all instances used.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">initial_budget</span></code> and <code class="docutils literal notranslate"><span class="pre">max_budget</span></code> are not provided, then they are set to 1 and total number
+of available instances respectively by default.</p>
+</div></blockquote>
+<ol class="arabic" start="2">
+<li><dl>
+<dt><strong>‘Real-valued’ budget</strong>:</dt><dd><p>This is used when there is only one instance provided and when run objective is “quality”,
+i.e., budget is a positive, real-valued number that can be passed to the target algorithm as an argument.
+It can be used to control anything by the target algorithm, Eg: number of epochs for training a neural network.</p>
+<p><code class="docutils literal notranslate"><span class="pre">initial_budget</span></code> and <code class="docutils literal notranslate"><span class="pre">max_budget</span></code> are required parameters for this type of budget.</p>
+</dd>
+</dl>
+</li>
+</ol>
+<p>Examples for successive halving (and hyperband) can be found here:
+* Runtime objective and multiple instances <em>(instances as budget)</em>: <cite>examples/spear_qcp/SMAC4AC_spear_qcp.py</cite>
+* Quality objective and multiple instances <em>(instances as budget)</em>: <cite>examples/SMAC4HPO_sgd_hyperband_instances.py</cite>
+* Quality objective and single instance <em>(real-valued budget)</em>: <cite>examples/SMAC4HPO_mlp_hyperband.py</cite></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

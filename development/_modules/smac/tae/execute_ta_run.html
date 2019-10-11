@@ -270,6 +270,7 @@
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">Enum</span>
+<span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -349,9 +350,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ta</span><span class="p">,</span> <span class="n">stats</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">runhistory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">run_obj</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">&quot;runtime&quot;</span><span class="p">,</span> <span class="n">par_factor</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">cost_for_crash</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">),</span>
-                 <span class="n">abort_on_first_run_crash</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                 <span class="n">run_obj</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;runtime&quot;</span><span class="p">,</span> <span class="n">par_factor</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="n">cost_for_crash</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">),</span>
+                 <span class="n">abort_on_first_run_crash</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor</span>
 
 <span class="sd">        Parameters</span>
@@ -387,10 +388,11 @@
 
 <div class="viewcode-block" id="ExecuteTARun.start"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
               <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-              <span class="n">cutoff</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-              <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">12345</span><span class="p">,</span>
-              <span class="n">instance_specific</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
-              <span class="n">capped</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+              <span class="n">cutoff</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12345</span><span class="p">,</span>
+              <span class="n">budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+              <span class="n">instance_specific</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+              <span class="n">capped</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Wrapper function for ExecuteTARun.run() to check configuration</span>
 <span class="sd">        budget before the runs and to update stats after run</span>
 
@@ -400,10 +402,13 @@
 <span class="sd">                Mainly a dictionary param -&gt; value</span>
 <span class="sd">            instance : string</span>
 <span class="sd">                Problem instance</span>
-<span class="sd">            cutoff : float</span>
+<span class="sd">            cutoff : float, optional</span>
 <span class="sd">                Runtime cutoff</span>
 <span class="sd">            seed : int</span>
 <span class="sd">                Random seed</span>
+<span class="sd">            budget : float, optional</span>
+<span class="sd">                A positive, real-valued number representing an arbitrary limit to the target algorithm</span>
+<span class="sd">                Handled by the target algorithm internally</span>
 <span class="sd">            instance_specific: str</span>
 <span class="sd">                Instance specific information (e.g., domain file or solution)</span>
 <span class="sd">            capped: bool</span>
@@ -438,6 +443,7 @@
                                                           <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span>
                                                           <span class="n">cutoff</span><span class="o">=</span><span class="n">cutoff</span><span class="p">,</span>
                                                           <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
+                                                          <span class="n">budget</span><span class="o">=</span><span class="n">budget</span><span class="p">,</span>
                                                           <span class="n">instance_specific</span><span class="o">=</span><span class="n">instance_specific</span><span class="p">)</span>
 
         <span class="c1"># update SMAC stats</span>
@@ -481,14 +487,10 @@
             <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">additional_info</span><span class="p">)))</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">:</span>
-            <span class="c1"># NOTE: cutoff is not adapted if run objective is &#39;quality&#39;, hence, recording it as &#39;budget&#39;</span>
-            <span class="c1"># if there is no budget/budget as instance, cutoff still remains constant throughout the optimization</span>
-            <span class="c1"># so it should not affect existing behaviour</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
                                 <span class="n">cost</span><span class="o">=</span><span class="n">cost</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">runtime</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
                                 <span class="n">instance_id</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
-                                <span class="n">budget</span><span class="o">=</span><span class="n">cutoff</span> <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;quality&quot;</span> <span class="ow">and</span>
-                                                  <span class="n">cutoff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+                                <span class="n">budget</span><span class="o">=</span><span class="n">budget</span><span class="p">,</span>
                                 <span class="n">additional_info</span><span class="o">=</span><span class="n">additional_info</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">n_configs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">config_ids</span><span class="p">)</span>
 
@@ -506,10 +508,12 @@
 
         <span class="k">return</span> <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">additional_info</span></div>
 
-<div class="viewcode-block" id="ExecuteTARun.run"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-            <span class="n">cutoff</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">12345</span><span class="p">,</span>
-            <span class="n">instance_specific</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="ExecuteTARun.run"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+            <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">cutoff</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12345</span><span class="p">,</span>
+            <span class="n">budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">instance_specific</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Runs target algorithm &lt;self.ta&gt; with configuration &lt;config&gt; on</span>
 <span class="sd">        instance &lt;instance&gt; with instance specifics &lt;specifics&gt; for at most</span>
 <span class="sd">        &lt;cutoff&gt; seconds and random seed &lt;seed&gt;</span>
@@ -520,11 +524,14 @@
 <span class="sd">                dictionary param -&gt; value</span>
 <span class="sd">            instance : string</span>
 <span class="sd">                problem instance</span>
-<span class="sd">            cutoff : int, optional</span>
+<span class="sd">            cutoff : float, optional</span>
 <span class="sd">                Wallclock time limit of the target algorithm. If no value is</span>
 <span class="sd">                provided no limit will be enforced.</span>
 <span class="sd">            seed : int</span>
 <span class="sd">                random seed</span>
+<span class="sd">            budget : float, optional</span>
+<span class="sd">                A positive, real-valued number representing an arbitrary limit to the target algorithm</span>
+<span class="sd">                Handled by the target algorithm internally</span>
 <span class="sd">            instance_specific: str</span>
 <span class="sd">                instance specific information (e.g., domain file or solution)</span>
 
