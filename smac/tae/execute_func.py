@@ -106,7 +106,7 @@ class AbstractTAFunc(ExecuteTARun):
                 Problem instance
             cutoff : float, optional
                 Wallclock time limit of the target algorithm. If no value is
-                provided no limit will be enforced.
+                provided no limit will be enforced. It is casted to integer internally.
             seed : int
                 Random seed
             budget : float, optional

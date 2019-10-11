@@ -41,8 +41,8 @@ class ExecuteTARunOld(ExecuteTARun):
             seed : int
                 Random seed
             budget : float, optional
-                A positive, real-valued number representing an arbitrary limit to the target algorithm
-                Handled by the target algorithm internally
+                A positive, real-valued number representing an arbitrary limit to the target algorithm.
+                Handled by the target algorithm internally. Currently ignored
             instance_specific: str
                 Instance specific information (e.g., domain file or solution)
         Returns

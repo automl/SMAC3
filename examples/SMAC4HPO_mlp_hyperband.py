@@ -1,8 +1,8 @@
 """
 An example for the usage of SMAC within Python.
-We optimize a simple MLP on the MNIST digits dataset using "Hyperband" intensification.
+We optimize a simple MLP on the digits dataset using "Hyperband" intensification.
 
-In this example, we use runtime/cutoff (here training epochs) as the budget in hyperband and
+In this example, we use a real-valued budget in hyperband (number of epochs to train the MLP) and
 optimize the average accuracy on a 5-fold cross validation.
 """
 

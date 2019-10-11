@@ -34,7 +34,7 @@ class SuccessiveHalving(Intensifier):
         on at a time. Top challengers for the next iteration are selected based on the combined performance across
         all instances used.
 
-        If `initial_budget` and `max_budget` are not provided, then they are set to 1 and total number
+        If ``initial_budget`` and ``max_budget`` are not provided, then they are set to 1 and total number
         of available instances respectively by default.
 
     2. **'Real-valued' budget**:
@@ -42,7 +42,7 @@ class SuccessiveHalving(Intensifier):
         i.e., budget is a positive, real-valued number that can be passed to the target algorithm as an argument.
         It can be used to control anything by the target algorithm, Eg: number of epochs for training a neural network.
 
-        `initial_budget` and `max_budget` are required parameters for this type of budget.
+        ``initial_budget`` and ``max_budget`` are required parameters for this type of budget.
 
     Examples for successive halving (and hyperband) can be found here:
     * Runtime objective and multiple instances *(instances as budget)*: `examples/spear_qcp/SMAC4AC_spear_qcp.py`
