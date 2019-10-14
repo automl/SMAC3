@@ -121,7 +121,7 @@ Using *SMAC* in Python: SVM
 To explain the use of *SMAC* within Python, let's look at a real-world example,
 optimizing the hyperparameters of a Support Vector Machine (SVM) trained on the widely known `IRIS-dataset
 <https://en.wikipedia.org/wiki/Iris_flower_data_set>`_.
-This example is located in :code:`examples/svm.py`.
+This example is located in :code:`examples/SMAC4HPO_svm.py`.
 
 To use *SMAC* directly with Python, we first import the necessary modules
 
@@ -143,14 +143,14 @@ Let's start by creating a ConfigSpace-object and adding the first hyperparameter
 the kernel.
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 60-65
+   :lines: 58-63
    :lineno-match:
 
 We can add Integers, Floats or Categoricals to the ConfigSpace-object all at
 once, by passing them in a list. 
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 67-70
+   :lines: 65-68
    :lineno-match:
 
 Not every kernel uses all the parameters. The sklearn-implementation of the SVM accepts all hyperparameters we want to optimize, but ignores all those incompatible with the chosen kernel.
@@ -159,7 +159,7 @@ Deactivated hyperparameters are not considered during optimization, limiting the
 This way human knowledge about the problem is introduced.
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 72-78
+   :lines: 70-76
    :lineno-match:
 
 Conditions can be used for various reasons. The `gamma`-hyperparameter for
@@ -167,7 +167,7 @@ example can be set to "auto" or to a fixed float-value. We introduce a hyperpara
 that is only activated if `gamma` is not set to "auto".
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 80-88
+   :lines: 78-86
    :lineno-match:
 
 Of course we also define a function to evaluate the configured SVM on the IRIS-dataset.
@@ -187,7 +187,7 @@ The initialization of a scenario in the code uses the same keywords as a
 scenario-file, which we used in the Branin example.
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 91-96
+   :lines: 89-94
    :lineno-match:
 
 Now we're ready to create a *SMAC*-instance, which handles the Bayesian
@@ -197,7 +197,7 @@ and evaluation of the function, SMAC needs as inputs the scenario object
 as well as the function.
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 103-112
+   :lines: 101-110
    :lineno-match:
 
 We start the optimization loop.
@@ -235,7 +235,7 @@ As a bonus, we can validate our results. This is more useful when optimizing on
 instances, but we include the code so it is easily applicable for any usecase.
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 115-
+   :lines: 113-
    :lineno-match:
 
 .. _spear-example:
