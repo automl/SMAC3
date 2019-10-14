@@ -35,7 +35,7 @@ we refer to
 
     Hutter, F. and Hoos, H. H. and Leyton-Brown, K.
     Sequential Model-Based Optimization for General Algorithm Configuration
-    In: Proceedings of the conference on Learning and Intelligent OptimizatioN (LION 5)
+    In: Proceedings of the conference on Learning and Intelligent Optimization (LION 5)
 
 
 SMAC v3 is written in Python3 and continuously tested with python3.5 and
@@ -47,10 +47,15 @@ is written in C++.
 ## Requirements
 
 Besides the listed requirements (see `requirements.txt`), the random forest
-used in SMAC3 requires SWIG (>= 3.0).
+used in SMAC3 requires SWIG (<4.0, >= 3.0) as a build dependency. After successful installation of `pyrfr`, SWIG can be uninstalled.
 
 ```apt-get install swig```
 
+On Arch Linux (or any distribution with swig4 as default implementation)
+```
+pacman -Syu swig3
+ln -s /usr/bin/swig-3 /usr/bin/swig
+```
 
 ## Installation via pip
 
