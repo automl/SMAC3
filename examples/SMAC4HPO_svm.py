@@ -42,8 +42,6 @@ def svm_from_cfg(cfg):
     # For deactivated parameters, the configuration stores None-values.
     # This is not accepted by the SVM, so we remove them.
     cfg = {k : cfg[k] for k in cfg if cfg[k]}
-    # We translate boolean values:
-    cfg["shrinking"] = True if cfg["shrinking"] == "true" else False
     # And for gamma, we set it to a fixed value or to "auto" (if used)
     if "gamma" in cfg:
         cfg["gamma"] = cfg["gamma_value"] if cfg["gamma"] == "value" else "auto"
@@ -65,8 +63,8 @@ kernel = CategoricalHyperparameter("kernel", ["linear", "rbf", "poly", "sigmoid"
 cs.add_hyperparameter(kernel)
 
 # There are some hyperparameters shared by all kernels
-C = UniformFloatHyperparameter("C", 0.001, 1000.0, default_value=1.0)
-shrinking = CategoricalHyperparameter("shrinking", ["true", "false"], default_value="true")
+C = UniformFloatHyperparameter("C", 0.001, 1000.0, default_value=1.0, log=True)
+shrinking = CategoricalHyperparameter("shrinking", [True, False], default_value=True)
 cs.add_hyperparameters([C, shrinking])
 
 # Others are kernel-specific, so we can add conditions to limit the searchspace
@@ -80,7 +78,7 @@ cs.add_conditions([use_degree, use_coef0])
 # This also works for parameters that are a mix of categorical and values from a range of numbers
 # For example, gamma can be either "auto" or a fixed float
 gamma = CategoricalHyperparameter("gamma", ["auto", "value"], default_value="auto")  # only rbf, poly, sigmoid
-gamma_value = UniformFloatHyperparameter("gamma_value", 0.0001, 8, default_value=1)
+gamma_value = UniformFloatHyperparameter("gamma_value", 0.0001, 8, default_value=1, log=True)
 cs.add_hyperparameters([gamma, gamma_value])
 # We only activate gamma_value if gamma is set to "value"
 cs.add_condition(InCondition(child=gamma_value, parent=gamma, values=["value"]))
