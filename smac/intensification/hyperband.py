@@ -139,8 +139,7 @@ class Hyperband(SuccessiveHalving):
 
         # compute min budget for new SH run
         sh_initial_budget = self.eta**-self.s * self.max_budget
-        # sample challengers for next iteration
-        # NOTE from HpBandster package
+        # sample challengers for next iteration (based on HpBandster package)
         n_challengers = int(np.floor((self.s_max+1) / (self.s + 1)) * self.eta**self.s)
 
         self.logger.info('Hyperband iteration-step: %d-%d  with initial budget: %d' % (
@@ -151,7 +150,9 @@ class Hyperband(SuccessiveHalving):
                                            self.instance_specifics, self.cutoff, self.deterministic,
                                            sh_initial_budget, self.max_budget, self.eta, n_challengers,
                                            self.run_obj_time, self.n_seeds, self.instance_order,
-                                           self.adaptive_capping_slackfactor)
+                                           self.adaptive_capping_slackfactor,
+                                           inst_seed_pairs=self.inst_seed_pairs  # additional argument to avoid
+                                           )                                     # processing instances & seeds again
 
         # run 1 iteration of successive halving
         incumbent, inc_perf = sh_intensifier.intensify(challengers=challengers,
