@@ -99,8 +99,8 @@ class AbstractIntensifier(object):
                   incumbent: Configuration,
                   run_history: RunHistory,
                   aggregate_func: typing.Callable,
-                  time_bound: float=float(MAXINT),
-                  log_traj: bool=True):
+                  time_bound: float = float(MAXINT),
+                  log_traj: bool = True):
         raise NotImplementedError()
 
     def _adapt_cutoff(self, challenger: Configuration,
@@ -155,7 +155,7 @@ class AbstractIntensifier(object):
                          challenger: Configuration,
                          run_history: RunHistory,
                          aggregate_func: typing.Callable,
-                         log_traj: bool=True):
+                         log_traj: bool = True):
         """
         Compare two configuration wrt the runhistory and return the one which
         performs better (or None if the decision is not safe)
