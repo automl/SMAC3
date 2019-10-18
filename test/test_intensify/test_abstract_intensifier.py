@@ -1,5 +1,4 @@
 import unittest
-from nose.plugins.attrib import attr
 
 import logging
 import numpy as np
