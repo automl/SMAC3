@@ -15,7 +15,7 @@ from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
 from smac.epm.gp_base_prior import LognormalPrior, HorseshoePrior
 from smac.epm.util_funcs import get_types
 from smac.initial_design.initial_design import InitialDesign
-from smac.intensification.intensification import Intensifier
+from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.optimizer import pSMAC
 from smac.optimizer.acquisition import AbstractAcquisitionFunction, EI, LogEI,\
     LCB, PI
@@ -67,7 +67,7 @@ class SMBO(object):
                  initial_design: InitialDesign,
                  runhistory: RunHistory,
                  runhistory2epm: AbstractRunHistory2EPM,
-                 intensifier: Intensifier,
+                 intensifier: AbstractIntensifier,
                  aggregate_func: callable,
                  num_run: int,
                  model: RandomForestWithInstances,

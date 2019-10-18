@@ -16,6 +16,7 @@ from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, \
 from smac.initial_design.initial_design import InitialDesign
 from smac.initial_design.default_configuration_design import DefaultConfiguration
 from smac.initial_design.random_configuration_design import RandomConfigurations
+from smac.intensification.abstract_intensifier import AbstractIntensifier
 from smac.intensification.intensification import Intensifier
 from smac.optimizer.epils import EPILS_Solver
 from smac.optimizer.objective import average_cost
@@ -57,7 +58,7 @@ class EPILS(object):
         the tae.ExecuteTARunOld()
     runhistory: RunHistory
         runhistory to store all algorithm runs
-    intensifier: Intensifier
+    intensifier: AbstractIntensifier
         intensification object to issue a racing to decide the current
         incumbent
     acquisition_function : AcquisitionFunction
@@ -90,7 +91,7 @@ class EPILS(object):
                  # typing.Union[ExecuteTARun, callable]
                  tae_runner=None,
                  runhistory: RunHistory = None,
-                 intensifier: Intensifier = None,
+                 intensifier: AbstractIntensifier = None,
                  acquisition_function: AbstractAcquisitionFunction = None,
                  model: AbstractEPM = None,
                  runhistory2epm: AbstractRunHistory2EPM = None,
