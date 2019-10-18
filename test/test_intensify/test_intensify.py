@@ -13,10 +13,8 @@ from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.intensification.intensification import Intensifier
-from smac.runhistory.runhistory import RunHistory, RunKey
-from smac.optimizer.objective import average_cost, sum_cost
+from smac.optimizer.objective import average_cost
 from smac.tae.execute_ta_run import StatusType
-from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
 
 
@@ -52,130 +50,6 @@ class TestIntensify(unittest.TestCase):
         self.stats.start_timing()
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
-
-    def test_compare_configs_no_joint_set(self):
-        intensifier = Intensifier(
-            tae_runner=None, stats=self.stats,
-            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
-            rng=None, instances=[1])
-
-        for i in range(2):
-            self.rh.add(config=self.config1, cost=2, time=2,
-                        status=StatusType.SUCCESS, instance_id=1,
-                        seed=i, additional_info=None)
-
-        for i in range(2, 5):
-            self.rh.add(config=self.config2, cost=1, time=1,
-                        status=StatusType.SUCCESS, instance_id=1,
-                        seed=i, additional_info=None)
-
-        # The sets for the incumbent are completely disjoint.
-        conf = intensifier._compare_configs(incumbent=self.config1,
-                                            challenger=self.config2,
-                                            run_history=self.rh,
-                                            aggregate_func=average_cost)
-        self.assertIsNone(conf)
-
-        # The incumbent has still one instance-seed pair left on which the
-        # challenger was not run yet.
-        self.rh.add(config=self.config2, cost=1, time=1,
-                    status=StatusType.SUCCESS, instance_id=1,
-                    seed=1, additional_info=None)
-        conf = intensifier._compare_configs(incumbent=self.config1,
-                                            challenger=self.config2,
-                                            run_history=self.rh,
-                                            aggregate_func=average_cost)
-        self.assertIsNone(conf)
-
-    def test_compare_configs_chall(self):
-        '''
-            challenger is better
-        '''
-        intensifier = Intensifier(
-            tae_runner=None, stats=self.stats,
-            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
-            rng=None,
-            instances=[1])
-
-        self.rh.add(config=self.config1, cost=1, time=2,
-                    status=StatusType.SUCCESS, instance_id=1,
-                    seed=None,
-                    additional_info=None)
-
-        self.rh.add(config=self.config2, cost=0, time=1,
-                    status=StatusType.SUCCESS, instance_id=1,
-                    seed=None,
-                    additional_info=None)
-
-        conf = intensifier._compare_configs(incumbent=self.config1,
-                                            challenger=self.config2,
-                                            run_history=self.rh,
-                                            aggregate_func=average_cost)
-
-        # challenger has enough runs and is better
-        self.assertEqual(conf, self.config2, "conf: %s" % (conf))
-
-    def test_compare_configs_inc(self):
-        '''
-            incumbent is better
-        '''
-        intensifier = Intensifier(
-            tae_runner=None, stats=self.stats,
-            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
-            rng=None,
-            instances=[1])
-
-        self.rh.add(config=self.config1, cost=1, time=1,
-                    status=StatusType.SUCCESS, instance_id=1,
-                    seed=None,
-                    additional_info=None)
-
-        self.rh.add(config=self.config2, cost=2, time=2,
-                    status=StatusType.SUCCESS, instance_id=1,
-                    seed=None,
-                    additional_info=None)
-
-        conf = intensifier._compare_configs(incumbent=self.config1,
-                                            challenger=self.config2,
-                                            run_history=self.rh,
-                                            aggregate_func=average_cost)
-
-        # challenger worse than inc
-        self.assertEqual(conf, self.config1, "conf: %s" % (conf))
-
-    def test_compare_configs_unknow(self):
-        '''
-            challenger is better but has less runs;
-            -> no decision (None)
-        '''
-        intensifier = Intensifier(
-            tae_runner=None, stats=self.stats,
-            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
-            rng=None,
-            instances=[1])
-
-        self.rh.add(config=self.config1, cost=1, time=1,
-                    status=StatusType.SUCCESS, instance_id=1,
-                    seed=None,
-                    additional_info=None)
-
-        self.rh.add(config=self.config1, cost=1, time=2,
-                    status=StatusType.SUCCESS, instance_id=2,
-                    seed=None,
-                    additional_info=None)
-
-        self.rh.add(config=self.config1, cost=1, time=1,
-                    status=StatusType.SUCCESS, instance_id=2,
-                    seed=None,
-                    additional_info=None)
-
-        conf = intensifier._compare_configs(incumbent=self.config1,
-                                            challenger=self.config2,
-                                            run_history=self.rh,
-                                            aggregate_func=average_cost)
-
-        # challenger worse than inc
-        self.assertIsNone(conf, "conf: %s" % (conf))
 
     @attr('slow')
     def test_race_challenger(self):
@@ -433,46 +307,3 @@ class TestIntensify(unittest.TestCase):
 
         intensifier._add_inc_run(incumbent=self.config1, run_history=self.rh)
         self.assertEqual(len(self.rh.data), 3, self.rh.data)
-
-    def test_adaptive_capping(self):
-        '''
-            test _adapt_cutoff()
-        '''
-        intensifier = Intensifier(
-            tae_runner=None, stats=self.stats,
-            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
-            rng=np.random.RandomState(12345),
-            instances=list(range(5)),
-            deterministic=False)
-
-        for i in range(5):
-            self.rh.add(config=self.config1, cost=i+1, time=i+1,
-                    status=StatusType.SUCCESS, instance_id=i,
-                    seed=i,
-                    additional_info=None)
-        for i in range(3):
-            self.rh.add(config=self.config2, cost=i+1, time=i+1,
-                    status=StatusType.SUCCESS, instance_id=i,
-                    seed=i,
-                    additional_info=None)
-
-        inst_seed_pairs = self.rh.get_runs_for_config(self.config1)
-        # cost used by incumbent for going over all runs in inst_seed_pairs
-        inc_sum_cost = sum_cost(config=self.config1, instance_seed_budget_keys=inst_seed_pairs,
-                                    run_history=self.rh)
-
-        cutoff = intensifier._adapt_cutoff(challenger=self.config2,
-                          incumbent=self.config1,
-                          run_history=self.rh,
-                          inc_sum_cost=inc_sum_cost)
-        # 15*1.2 - 6
-        self.assertEqual(cutoff, 12)
-
-        intensifier.cutoff = 5
-
-        cutoff = intensifier._adapt_cutoff(challenger=self.config2,
-                          incumbent=self.config1,
-                          run_history=self.rh,
-                          inc_sum_cost=inc_sum_cost)
-        # scenario cutoff
-        self.assertEqual(cutoff, 5)

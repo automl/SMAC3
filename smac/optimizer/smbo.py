@@ -74,10 +74,10 @@ class SMBO(object):
                  acq_optimizer: AcquisitionFunctionMaximizer,
                  acquisition_func: AbstractAcquisitionFunction,
                  rng: np.random.RandomState,
-                 restore_incumbent: Configuration=None,
+                 restore_incumbent: Configuration = None,
                  random_configuration_chooser: typing.Union[
                      ChooserNoCoolDown, ChooserLinearCoolDown]=ChooserNoCoolDown(2.0),
-                 predict_incumbent: bool=True):
+                 predict_incumbent: bool = True):
         """
         Interface that contains the main Bayesian optimization loop
 

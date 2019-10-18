@@ -36,14 +36,14 @@ class ROAR(SMAC4AC):
 
     def __init__(self,
                  scenario: Scenario,
-                 tae_runner: ExecuteTARun=None,
-                 runhistory: RunHistory=None,
-                 intensifier: AbstractIntensifier=None,
-                 initial_design: InitialDesign=None,
-                 initial_configurations: typing.List[Configuration]=None,
-                 stats: Stats=None,
-                 rng: np.random.RandomState=None,
-                 run_id: int=1):
+                 tae_runner: ExecuteTARun = None,
+                 runhistory: RunHistory = None,
+                 intensifier: AbstractIntensifier = None,
+                 initial_design: InitialDesign = None,
+                 initial_configurations: typing.List[Configuration] = None,
+                 stats: Stats = None,
+                 rng: np.random.RandomState = None,
+                 run_id: int = 1):
         """
         Constructor
 
