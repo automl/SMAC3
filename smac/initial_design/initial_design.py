@@ -7,7 +7,7 @@ from ConfigSpace.hyperparameters import NumericalHyperparameter, \
 from ConfigSpace.util import deactivate_inactive_hyperparameters
 import numpy as np
 
-from smac.intensification.abstract_intensifier import AbstractIntensifier
+from smac.intensification.abstract_racer import AbstractRacer
 from smac.tae.execute_ta_run import ExecuteTARun
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
@@ -40,7 +40,7 @@ class InitialDesign:
                  traj_logger: TrajLogger,
                  runhistory: RunHistory,
                  rng: np.random.RandomState,
-                 intensifier: AbstractIntensifier,
+                 intensifier: AbstractRacer,
                  aggregate_func: typing.Callable,
                  configs: typing.Optional[typing.List[Configuration]] = None,
                  n_configs_x_params: int = 10,

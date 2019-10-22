@@ -29,7 +29,7 @@ from smac.initial_design.sobol_design import SobolDesign
 
 # intensification
 from smac.intensification.intensification import Intensifier
-from smac.intensification.abstract_intensifier import AbstractIntensifier
+from smac.intensification.abstract_racer import AbstractRacer
 from smac.intensification.successive_halving import SuccessiveHalving
 # optimizer
 from smac.optimizer.smbo import SMBO
@@ -76,7 +76,7 @@ class SMAC4AC(object):
                  tae_runner_kwargs: Optional[dict] = None,
                  runhistory: Optional[Union[Type[RunHistory], RunHistory]] = None,
                  runhistory_kwargs: Optional[dict] = None,
-                 intensifier: Optional[Type[AbstractIntensifier]] = None,
+                 intensifier: Optional[Type[AbstractRacer]] = None,
                  intensifier_kwargs: Optional[dict] = None,
                  acquisition_function: Optional[Type[AbstractAcquisitionFunction]] = None,
                  acquisition_function_kwargs: Optional[dict] = None,

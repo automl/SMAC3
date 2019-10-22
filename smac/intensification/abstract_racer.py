@@ -14,13 +14,13 @@ from smac.tae.execute_ta_run import ExecuteTARun
 from smac.utils.io.traj_logging import TrajLogger
 
 __author__ = "Ashwin Raaghav Narayanan"
-__copyright__ = "Copyright 2018, ML4AAD"
+__copyright__ = "Copyright 2019, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class AbstractIntensifier(object):
+class AbstractRacer(object):
     """
-    Base class for all intensifiers
+    Base class for all racing methods
 
     **Note: Do not use directly**
 
@@ -100,13 +100,13 @@ class AbstractIntensifier(object):
                   run_history: RunHistory,
                   aggregate_func: typing.Callable,
                   time_bound: float = float(MAXINT),
-                  log_traj: bool = True):
+                  log_traj: bool = True) -> typing.Tuple[Configuration, float]:
         raise NotImplementedError()
 
     def _adapt_cutoff(self, challenger: Configuration,
                       incumbent: Configuration,
                       run_history: RunHistory,
-                      inc_sum_cost: float):
+                      inc_sum_cost: float) -> float:
         """Adaptive capping:
         Compute cutoff based on time so far used for incumbent
         and reduce cutoff for next run of challenger accordingly
@@ -129,7 +129,7 @@ class AbstractIntensifier(object):
 
         Returns
         -------
-        cutoff: int
+        cutoff: float
             Adapted cutoff
         """
 
@@ -155,7 +155,7 @@ class AbstractIntensifier(object):
                          challenger: Configuration,
                          run_history: RunHistory,
                          aggregate_func: typing.Callable,
-                         log_traj: bool = True):
+                         log_traj: bool = True) -> typing.Optional[Configuration]:
         """
         Compare two configuration wrt the runhistory and return the one which
         performs better (or None if the decision is not safe)

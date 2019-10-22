@@ -12,14 +12,14 @@ from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
 from smac.tae.execute_ta_run import BudgetExhaustedException, CappedRunException, ExecuteTARun
 from smac.utils.io.traj_logging import TrajLogger
-from smac.intensification.abstract_intensifier import AbstractIntensifier
+from smac.intensification.abstract_racer import AbstractRacer
 
 __author__ = "Katharina Eggensperger, Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class Intensifier(AbstractIntensifier):
+class Intensifier(AbstractRacer):
     """Races challengers against an incumbent (a.k.a. SMAC's intensification
     procedure).
 
@@ -64,11 +64,14 @@ class Intensifier(AbstractIntensifier):
         (even if time_bound is exhausted earlier)
     """
 
-    def __init__(self, tae_runner: ExecuteTARun, stats: Stats,
-                 traj_logger: TrajLogger, rng: np.random.RandomState,
+    def __init__(self, tae_runner: ExecuteTARun,
+                 stats: Stats,
+                 traj_logger: TrajLogger,
+                 rng: np.random.RandomState,
                  instances: typing.List[str],
                  instance_specifics: typing.Mapping[str, np.ndarray] = None,
-                 cutoff: int = None, deterministic: bool = False,
+                 cutoff: int = None,
+                 deterministic: bool = False,
                  run_obj_time: bool = True,
                  always_race_against: Configuration = None,
                  run_limit: int = MAXINT,
@@ -76,29 +79,30 @@ class Intensifier(AbstractIntensifier):
                  minR: int = 1,
                  maxR: int = 2000,
                  adaptive_capping_slackfactor: float = 1.2,
-                 min_chall: int=2):
+                 min_chall: int = 2):
 
-        super().__init__(tae_runner=tae_runner, stats=stats, traj_logger=traj_logger,
-                         rng=rng, instances=instances, instance_specifics=instance_specifics,
-                         cutoff=cutoff, deterministic=deterministic, run_obj_time=run_obj_time,
-                         minR=minR, maxR=maxR, adaptive_capping_slackfactor=adaptive_capping_slackfactor)
+        super().__init__(tae_runner=tae_runner,
+                         stats=stats,
+                         traj_logger=traj_logger,
+                         rng=rng,
+                         instances=instances,
+                         instance_specifics=instance_specifics,
+                         cutoff=cutoff,
+                         deterministic=deterministic,
+                         run_obj_time=run_obj_time,
+                         minR=minR,
+                         maxR=maxR,
+                         adaptive_capping_slackfactor=adaptive_capping_slackfactor)
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
         # general attributes
-        if instances is None:
-            instances = []
-        self.instances = set(instances)
-        if instance_specifics is None:
-            self.instance_specifics = {}
-        else:
-            self.instance_specifics = instance_specifics
         self.run_limit = run_limit
-        self.maxR = maxR
-        self.minR = minR
-
         self.always_race_against = always_race_against
+
+        # storing instances as a set for performing set operations
+        self.instances = set(self.instances)
 
         if self.run_limit < 1:
             raise ValueError("run_limit must be > 1")
@@ -115,8 +119,8 @@ class Intensifier(AbstractIntensifier):
                   incumbent: Configuration,
                   run_history: RunHistory,
                   aggregate_func: typing.Callable,
-                  time_bound: float=float(MAXINT),
-                  log_traj: bool=True):
+                  time_bound: float = float(MAXINT),
+                  log_traj: bool = True) -> typing.Tuple[Configuration, float]:
         """Running intensification to determine the incumbent configuration.
         *Side effect:* adds runs to run_history
 
@@ -218,7 +222,8 @@ class Intensifier(AbstractIntensifier):
 
         return incumbent, inc_perf
 
-    def _add_inc_run(self, incumbent: Configuration, run_history: RunHistory):
+    def _add_inc_run(self, incumbent: Configuration,
+                     run_history: RunHistory) -> None:
         """Add new run for incumbent
 
         *Side effect:* adds runs to <run_history>
@@ -249,7 +254,7 @@ class Intensifier(AbstractIntensifier):
                     max_runs = 0
                 inc_inst = set([x[0] for x in inc_inst if x[1] == max_runs])
 
-                available_insts = (self.instances - inc_inst)
+                available_insts = self.instances - inc_inst
 
                 # if all instances were used n times, we can pick an instances
                 # from the complete set again
@@ -291,7 +296,7 @@ class Intensifier(AbstractIntensifier):
                          incumbent: Configuration,
                          run_history: RunHistory,
                          aggregate_func: typing.Callable,
-                         log_traj:bool=True):
+                         log_traj: bool = True) -> Configuration:
         """Aggressively race challenger against incumbent
 
         Parameters

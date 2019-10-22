@@ -12,7 +12,7 @@ from smac.tae.execute_ta_run import ExecuteTARun
 from smac.utils.io.traj_logging import TrajLogger
 
 __author__ = "Ashwin Raaghav Narayanan"
-__copyright__ = "Copyright 2018, ML4AAD"
+__copyright__ = "Copyright 2019, ML4AAD"
 __license__ = "3-clause BSD"
 
 
@@ -77,11 +77,23 @@ class Hyperband(SuccessiveHalving):
                  adaptive_capping_slackfactor: float = 1.2,
                  **kwargs):
 
-        super().__init__(tae_runner, stats, traj_logger, rng, instances,
-                         instance_specifics, cutoff, deterministic,
-                         initial_budget, max_budget, eta, None,  # initial challengers passed as None
-                         run_obj_time, n_seeds, instance_order,
-                         adaptive_capping_slackfactor, **kwargs)
+        super().__init__(tae_runner=tae_runner,
+                         stats=stats,
+                         traj_logger=traj_logger,
+                         rng=rng,
+                         instances=instances,
+                         instance_specifics=instance_specifics,
+                         cutoff=cutoff,
+                         deterministic=deterministic,
+                         initial_budget=initial_budget,
+                         max_budget=max_budget,
+                         eta=eta,
+                         num_initial_challengers=None,  # initial challengers passed as None
+                         run_obj_time=run_obj_time,
+                         n_seeds=n_seeds,
+                         instance_order=instance_order,
+                         adaptive_capping_slackfactor=adaptive_capping_slackfactor,
+                         **kwargs)
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
@@ -146,11 +158,22 @@ class Hyperband(SuccessiveHalving):
             self.hb_iters+1, self.s_max-self.s+1, sh_initial_budget))
 
         # creating a new Successive Halving intensifier with the current running budget
-        sh_intensifier = SuccessiveHalving(self.tae_runner, self.stats, self.traj_logger, self.rs, self.instances,
-                                           self.instance_specifics, self.cutoff, self.deterministic,
-                                           sh_initial_budget, self.max_budget, self.eta, n_challengers,
-                                           self.run_obj_time, self.n_seeds, self.instance_order,
-                                           self.adaptive_capping_slackfactor,
+        sh_intensifier = SuccessiveHalving(tae_runner=self.tae_runner,
+                                           stats=self.stats,
+                                           traj_logger=self.traj_logger,
+                                           rng=self.rs,
+                                           instances=self.instances,
+                                           instance_specifics=self.instance_specifics,
+                                           cutoff=self.cutoff,
+                                           deterministic=self.deterministic,
+                                           initial_budget=sh_initial_budget,
+                                           max_budget=self.max_budget,
+                                           eta=self.eta,
+                                           num_initial_challengers=n_challengers,
+                                           run_obj_time=self.run_obj_time,
+                                           n_seeds=self.n_seeds,
+                                           instance_order=self.instance_order,
+                                           adaptive_capping_slackfactor=self.adaptive_capping_slackfactor,
                                            inst_seed_pairs=self.inst_seed_pairs  # additional argument to avoid
                                            )                                     # processing instances & seeds again
 

@@ -8,7 +8,7 @@ from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.optimizer import pSMAC
 from smac.optimizer.ei_optimization import LocalSearch
 from smac.epm.rf_with_instances import RandomForestWithInstances
-from smac.intensification.abstract_intensifier import AbstractIntensifier
+from smac.intensification.abstract_racer import AbstractRacer
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.stats.stats import Stats
@@ -68,7 +68,7 @@ class EPILS_Solver(object):
                  initial_design: InitialDesign,
                  runhistory: RunHistory,
                  runhistory2epm: AbstractRunHistory2EPM,
-                 intensifier: AbstractIntensifier,
+                 intensifier: AbstractRacer,
                  aggregate_func: callable,
                  num_run: int,
                  model: RandomForestWithInstances,
@@ -91,7 +91,7 @@ class EPILS_Solver(object):
             runhistory with all runs so far
         runhistory2epm : AbstractRunHistory2EPM
             Object that implements the AbstractRunHistory2EPM to convert runhistory data into EPM data
-        intensifier: AbstractIntensifier
+        intensifier: AbstractRacer
             intensification of new challengers against incumbent configuration (probably with some kind of racing on the instances)
         aggregate_func: callable
             how to aggregate the runs in the runhistory to get the performance of a configuration

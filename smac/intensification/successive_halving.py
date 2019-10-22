@@ -5,7 +5,7 @@ from itertools import islice
 
 import numpy as np
 
-from smac.intensification.abstract_intensifier import AbstractIntensifier
+from smac.intensification.abstract_racer import AbstractRacer
 from smac.optimizer.objective import sum_cost
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
@@ -15,11 +15,11 @@ from smac.tae.execute_ta_run import BudgetExhaustedException, CappedRunException
 from smac.utils.io.traj_logging import TrajLogger
 
 __author__ = "Ashwin Raaghav Narayanan"
-__copyright__ = "Copyright 2018, ML4AAD"
+__copyright__ = "Copyright 2019, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class SuccessiveHalving(AbstractIntensifier):
+class SuccessiveHalving(AbstractRacer):
     """Races multiple challengers against an incumbent using Successive Halving method
 
     Implementation following the description in
@@ -104,9 +104,15 @@ class SuccessiveHalving(AbstractIntensifier):
                  adaptive_capping_slackfactor: float = 1.2,
                  **kwargs):
 
-        super().__init__(tae_runner=tae_runner, stats=stats, traj_logger=traj_logger,
-                         rng=rng, instances=instances, instance_specifics=instance_specifics,
-                         cutoff=cutoff, deterministic=deterministic, run_obj_time=run_obj_time,
+        super().__init__(tae_runner=tae_runner,
+                         stats=stats,
+                         traj_logger=traj_logger,
+                         rng=rng,
+                         instances=instances,
+                         instance_specifics=instance_specifics,
+                         cutoff=cutoff,
+                         deterministic=deterministic,
+                         run_obj_time=run_obj_time,
                          adaptive_capping_slackfactor=adaptive_capping_slackfactor)
 
         self.logger = logging.getLogger(

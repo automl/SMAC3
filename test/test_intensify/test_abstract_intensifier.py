@@ -8,7 +8,7 @@ from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
-from smac.intensification.abstract_intensifier import AbstractIntensifier
+from smac.intensification.abstract_racer import AbstractRacer
 from smac.optimizer.objective import average_cost, sum_cost
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
@@ -49,7 +49,7 @@ class TestAbstractIntensifier(unittest.TestCase):
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
     def test_compare_configs_no_joint_set(self):
-        intensifier = AbstractIntensifier(
+        intensifier = AbstractRacer(
             tae_runner=None, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=None, instances=[1])
@@ -86,7 +86,7 @@ class TestAbstractIntensifier(unittest.TestCase):
         """
             challenger is better
         """
-        intensifier = AbstractIntensifier(
+        intensifier = AbstractRacer(
             tae_runner=None, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=None,
@@ -114,7 +114,7 @@ class TestAbstractIntensifier(unittest.TestCase):
         """
             incumbent is better
         """
-        intensifier = AbstractIntensifier(
+        intensifier = AbstractRacer(
             tae_runner=None, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=None,
@@ -143,7 +143,7 @@ class TestAbstractIntensifier(unittest.TestCase):
             challenger is better but has less runs;
             -> no decision (None)
         """
-        intensifier = AbstractIntensifier(
+        intensifier = AbstractRacer(
             tae_runner=None, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=None,
@@ -176,7 +176,7 @@ class TestAbstractIntensifier(unittest.TestCase):
         """
             test _adapt_cutoff()
         """
-        intensifier = AbstractIntensifier(
+        intensifier = AbstractRacer(
             tae_runner=None, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
