@@ -144,6 +144,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
@@ -276,7 +277,7 @@
 <span class="kn">from</span> <span class="nn">smac.epm.random_epm</span> <span class="k">import</span> <span class="n">RandomEPM</span>
 <span class="kn">from</span> <span class="nn">smac.facade.smac_ac_facade</span> <span class="k">import</span> <span class="n">SMAC4AC</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.initial_design</span> <span class="k">import</span> <span class="n">InitialDesign</span>
-<span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="k">import</span> <span class="n">Intensifier</span>
+<span class="kn">from</span> <span class="nn">smac.intensification.abstract_racer</span> <span class="k">import</span> <span class="n">AbstractRacer</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="k">import</span> <span class="n">RandomSearch</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="k">import</span> <span class="n">RunHistory2EPM4Cost</span>
@@ -305,14 +306,14 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
-                 <span class="n">tae_runner</span><span class="p">:</span> <span class="n">ExecuteTARun</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">intensifier</span><span class="p">:</span> <span class="n">Intensifier</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">initial_design</span><span class="p">:</span> <span class="n">InitialDesign</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">initial_configurations</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+                 <span class="n">tae_runner</span><span class="p">:</span> <span class="n">ExecuteTARun</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">intensifier</span><span class="p">:</span> <span class="n">AbstractRacer</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">initial_design</span><span class="p">:</span> <span class="n">InitialDesign</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">initial_configurations</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
 
@@ -329,7 +330,7 @@
 <span class="sd">            :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.</span>
 <span class="sd">        runhistory: RunHistory</span>
 <span class="sd">            Runhistory to store all algorithm runs</span>
-<span class="sd">        intensifier: Intensifier</span>
+<span class="sd">        intensifier: AbstractRacer</span>
 <span class="sd">            intensification object to issue a racing to decide the current incumbent</span>
 <span class="sd">        initial_design: InitialDesign</span>
 <span class="sd">            initial sampling design</span>

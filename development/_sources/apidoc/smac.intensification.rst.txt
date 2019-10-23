@@ -9,6 +9,7 @@ smac.intensification package
 
 .. toctree::
 
+   smac.intensification.abstract_racer
    smac.intensification.hyperband
    smac.intensification.intensification
    smac.intensification.successive_halving

@@ -144,6 +144,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
@@ -277,7 +278,7 @@
 <span class="kn">from</span> <span class="nn">smac.optimizer</span> <span class="k">import</span> <span class="n">pSMAC</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="k">import</span> <span class="n">LocalSearch</span>
 <span class="kn">from</span> <span class="nn">smac.epm.rf_with_instances</span> <span class="k">import</span> <span class="n">RandomForestWithInstances</span>
-<span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="k">import</span> <span class="n">Intensifier</span>
+<span class="kn">from</span> <span class="nn">smac.intensification.abstract_racer</span> <span class="k">import</span> <span class="n">AbstractRacer</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="k">import</span> <span class="n">AbstractRunHistory2EPM</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="k">import</span> <span class="n">Stats</span>
@@ -337,7 +338,7 @@
                  <span class="n">initial_design</span><span class="p">:</span> <span class="n">InitialDesign</span><span class="p">,</span>
                  <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
                  <span class="n">runhistory2epm</span><span class="p">:</span> <span class="n">AbstractRunHistory2EPM</span><span class="p">,</span>
-                 <span class="n">intensifier</span><span class="p">:</span> <span class="n">Intensifier</span><span class="p">,</span>
+                 <span class="n">intensifier</span><span class="p">:</span> <span class="n">AbstractRacer</span><span class="p">,</span>
                  <span class="n">aggregate_func</span><span class="p">:</span> <span class="n">callable</span><span class="p">,</span>
                  <span class="n">num_run</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                  <span class="n">model</span><span class="p">:</span> <span class="n">RandomForestWithInstances</span><span class="p">,</span>
@@ -360,7 +361,7 @@
 <span class="sd">            runhistory with all runs so far</span>
 <span class="sd">        runhistory2epm : AbstractRunHistory2EPM</span>
 <span class="sd">            Object that implements the AbstractRunHistory2EPM to convert runhistory data into EPM data</span>
-<span class="sd">        intensifier: Intensifier</span>
+<span class="sd">        intensifier: AbstractRacer</span>
 <span class="sd">            intensification of new challengers against incumbent configuration (probably with some kind of racing on the instances)</span>
 <span class="sd">        aggregate_func: callable</span>
 <span class="sd">            how to aggregate the runs in the runhistory to get the performance of a configuration</span>

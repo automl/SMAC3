@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.epm.uncorrelated_mo_rf_with_instances module &mdash; SMAC 0.11.2dev documentation</title>
+  <title>smac.intensification.abstract_racer module &mdash; SMAC 0.11.2dev documentation</title>
   
 
   
@@ -36,8 +36,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.epm.util_funcs module" href="smac.epm.util_funcs.html" />
-    <link rel="prev" title="smac.epm.rfr_imputator module" href="smac.epm.rfr_imputator.html" /> 
+    <link rel="next" title="smac.intensification.hyperband module" href="smac.intensification.hyperband.html" />
+    <link rel="prev" title="smac.intensification package" href="smac.intensification.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -105,7 +105,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.configspace.util.html">smac.configspace.util module</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="smac.epm.html">smac.epm package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="smac.epm.html">smac.epm package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.base_epm.html">smac.epm.base_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.base_gp.html">smac.epm.base_gp module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.base_imputor.html">smac.epm.base_imputor module</a></li>
@@ -118,7 +118,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
 </ul>
 </li>
@@ -145,8 +145,8 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.initial_design.sobol_design.html">smac.initial_design.sobol_design module</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="smac.intensification.html">smac.intensification package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="smac.intensification.html">smac.intensification package</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
@@ -254,15 +254,15 @@
         
           <li><a href="../api.html">API Documentation</a> &raquo;</li>
         
-          <li><a href="smac.epm.html">smac.epm package</a> &raquo;</li>
+          <li><a href="smac.intensification.html">smac.intensification package</a> &raquo;</li>
         
-      <li>smac.epm.uncorrelated_mo_rf_with_instances module</li>
+      <li>smac.intensification.abstract_racer module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/apidoc/smac.epm.uncorrelated_mo_rf_with_instances.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/apidoc/smac.intensification.abstract_racer.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -275,63 +275,38 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-smac.epm.uncorrelated_mo_rf_with_instances">
-<span id="smac-epm-uncorrelated-mo-rf-with-instances-module"></span><h1>smac.epm.uncorrelated_mo_rf_with_instances module<a class="headerlink" href="#module-smac.epm.uncorrelated_mo_rf_with_instances" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-smac.intensification.abstract_racer">
+<span id="smac-intensification-abstract-racer-module"></span><h1>smac.intensification.abstract_racer module<a class="headerlink" href="#module-smac.intensification.abstract_racer" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances">
-<em class="property">class </em><code class="sig-prename descclassname">smac.epm.uncorrelated_mo_rf_with_instances.</code><code class="sig-name descname">UncorrelatedMultiObjectiveRandomForestWithInstances</code><span class="sig-paren">(</span><em class="sig-param">target_names: List[str], configspace: ConfigSpace.configuration_space.ConfigurationSpace, bounds: List[Tuple[float, float]], types: numpy.ndarray, seed: int, rf_kwargs: Optional[Dict[str, Any]] = None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/uncorrelated_mo_rf_with_instances.html#UncorrelatedMultiObjectiveRandomForestWithInstances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_epm.AbstractEPM</span></code></a></p>
-<p>Wrapper for the random forest to predict multiple targets.</p>
-<p>Only the a list with the target names and the types array for the
-underlying forest model are mandatory. All other hyperparameters to
-the random forest can be passed via kwargs. Consult the documentation of
-the random forest for the hyperparameters and their meanings.</p>
-<dl class="attribute">
-<dt id="smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.target_names">
-<code class="sig-name descname">target_names</code><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.target_names" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.num_targets">
-<code class="sig-name descname">num_targets</code><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.num_targets" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.estimators">
-<code class="sig-name descname">estimators</code><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.estimators" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<p>Constructor</p>
+<dt id="smac.intensification.abstract_racer.AbstractRacer">
+<em class="property">class </em><code class="sig-prename descclassname">smac.intensification.abstract_racer.</code><code class="sig-name descname">AbstractRacer</code><span class="sig-paren">(</span><em class="sig-param">tae_runner: smac.tae.execute_ta_run.ExecuteTARun, stats: smac.stats.stats.Stats, traj_logger: smac.utils.io.traj_logging.TrajLogger, rng: numpy.random.mtrand.RandomState, instances: List[str], instance_specifics: Mapping[str, numpy.ndarray] = None, cutoff: Optional[int] = None, deterministic: bool = False, run_obj_time: bool = True, minR: int = 1, maxR: int = 2000, adaptive_capping_slackfactor: float = 1.2, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/abstract_racer.html#AbstractRacer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.abstract_racer.AbstractRacer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for all racing methods</p>
+<p><strong>Note: Do not use directly</strong></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>target_names</strong> (<em>list</em>) – List of str, each entry is the name of one target dimension. Length
-of the list will be <code class="docutils literal notranslate"><span class="pre">n_objectives</span></code>.</p></li>
-<li><p><strong>bounds</strong> (<em>np.ndarray</em>) – See <a class="reference internal" href="smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances" title="smac.epm.rf_with_instances.RandomForestWithInstances"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomForestWithInstances</span></code></a> documentation.</p></li>
-<li><p><strong>types</strong> (<em>np.ndarray</em>) – See <a class="reference internal" href="smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances" title="smac.epm.rf_with_instances.RandomForestWithInstances"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomForestWithInstances</span></code></a> documentation.</p></li>
-<li><p><strong>kwargs</strong> – See <a class="reference internal" href="smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances" title="smac.epm.rf_with_instances.RandomForestWithInstances"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomForestWithInstances</span></code></a> documentation.</p></li>
+<li><p><strong>tae_runner</strong> (<em>tae.executre_ta_run_*.ExecuteTARun* Object</em>) – target algorithm run executor</p></li>
+<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – stats object</p></li>
+<li><p><strong>traj_logger</strong> (<a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger"><em>TrajLogger</em></a>) – TrajLogger object to log all new incumbents</p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – </p></li>
+<li><p><strong>instances</strong> (<em>typing.List</em><em>[</em><em>str</em><em>]</em>) – list of all instance ids</p></li>
+<li><p><strong>instance_specifics</strong> (<em>typing.Mapping</em><em>[</em><em>str</em><em>,</em><em>np.ndarray</em><em>]</em>) – mapping from instance name to instance specific string</p></li>
+<li><p><strong>cutoff</strong> (<em>int</em>) – runtime cutoff of TA runs</p></li>
+<li><p><strong>deterministic</strong> (<em>bool</em>) – whether the TA is deterministic or not</p></li>
+<li><p><strong>run_obj_time</strong> (<em>bool</em>) – whether the run objective is runtime or not (if true, apply adaptive capping)</p></li>
+<li><p><strong>minR</strong> (<em>int</em>) – Minimum number of run per config (summed over all calls to
+intensify).</p></li>
+<li><p><strong>maxR</strong> (<em>int</em>) – Maximum number of runs per config (summed over all calls to
+intensifiy).</p></li>
+<li><p><strong>adaptive_capping_slackfactor</strong> (<em>float</em>) – slack factor of adpative capping (factor * adpative cutoff)</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="method">
-<dt id="smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.predict_marginalized_over_instances">
-<code class="sig-name descname">predict_marginalized_over_instances</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/uncorrelated_mo_rf_with_instances.html#UncorrelatedMultiObjectiveRandomForestWithInstances.predict_marginalized_over_instances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.predict_marginalized_over_instances" title="Permalink to this definition">¶</a></dt>
-<dd><p>Predict mean and variance marginalized over all instances.</p>
-<p>Returns the predictive mean and variance marginalised over all
-instances for a set of configurations.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray of shape =</em><em> [</em><em>n_features</em><em> (</em><em>config</em><em>)</em><em>, </em><em>]</em>) – </p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>means</strong> (<em>np.ndarray of shape = [n_samples, n_objectives]</em>) – Predictive mean</p></li>
-<li><p><strong>vars</strong> (<em>np.ndarray  of shape = [n_samples, n_objectives]</em>) – Predictive variance</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
+<dt id="smac.intensification.abstract_racer.AbstractRacer.intensify">
+<code class="sig-name descname">intensify</code><span class="sig-paren">(</span><em class="sig-param">challengers: List[ConfigSpace.configuration_space.Configuration], incumbent: ConfigSpace.configuration_space.Configuration, run_history: smac.runhistory.runhistory.RunHistory, aggregate_func: Callable, time_bound: float = 2147483647.0, log_traj: bool = True</em><span class="sig-paren">)</span> &#x2192; Tuple[ConfigSpace.configuration_space.Configuration, float]<a class="reference internal" href="../_modules/smac/intensification/abstract_racer.html#AbstractRacer.intensify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.abstract_racer.AbstractRacer.intensify" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -345,10 +320,10 @@ instances for a set of configurations.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="smac.epm.util_funcs.html" class="btn btn-neutral float-right" title="smac.epm.util_funcs module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="smac.intensification.hyperband.html" class="btn btn-neutral float-right" title="smac.intensification.hyperband module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="smac.epm.rfr_imputator.html" class="btn btn-neutral float-left" title="smac.epm.rfr_imputator module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="smac.intensification.html" class="btn btn-neutral float-left" title="smac.intensification package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

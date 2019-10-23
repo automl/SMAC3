@@ -144,6 +144,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../apidoc/smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
@@ -285,6 +286,7 @@
 <span class="kn">from</span> <span class="nn">smac.initial_design.initial_design</span> <span class="k">import</span> <span class="n">InitialDesign</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.default_configuration_design</span> <span class="k">import</span> <span class="n">DefaultConfiguration</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.random_configuration_design</span> <span class="k">import</span> <span class="n">RandomConfigurations</span>
+<span class="kn">from</span> <span class="nn">smac.intensification.abstract_racer</span> <span class="k">import</span> <span class="n">AbstractRacer</span>
 <span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="k">import</span> <span class="n">Intensifier</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.epils</span> <span class="k">import</span> <span class="n">EPILS_Solver</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="k">import</span> <span class="n">average_cost</span>
@@ -326,7 +328,7 @@
 <span class="sd">        the tae.ExecuteTARunOld()</span>
 <span class="sd">    runhistory: RunHistory</span>
 <span class="sd">        runhistory to store all algorithm runs</span>
-<span class="sd">    intensifier: Intensifier</span>
+<span class="sd">    intensifier: AbstractRacer</span>
 <span class="sd">        intensification object to issue a racing to decide the current</span>
 <span class="sd">        incumbent</span>
 <span class="sd">    acquisition_function : AcquisitionFunction</span>
@@ -359,7 +361,7 @@
                  <span class="c1"># typing.Union[ExecuteTARun, callable]</span>
                  <span class="n">tae_runner</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">intensifier</span><span class="p">:</span> <span class="n">Intensifier</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">intensifier</span><span class="p">:</span> <span class="n">AbstractRacer</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">model</span><span class="p">:</span> <span class="n">AbstractEPM</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">runhistory2epm</span><span class="p">:</span> <span class="n">AbstractRunHistory2EPM</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>

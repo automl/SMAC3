@@ -144,6 +144,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
@@ -284,7 +285,7 @@
 <span class="kn">from</span> <span class="nn">smac.epm.gp_base_prior</span> <span class="k">import</span> <span class="n">LognormalPrior</span><span class="p">,</span> <span class="n">HorseshoePrior</span>
 <span class="kn">from</span> <span class="nn">smac.epm.util_funcs</span> <span class="k">import</span> <span class="n">get_types</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.initial_design</span> <span class="k">import</span> <span class="n">InitialDesign</span>
-<span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="k">import</span> <span class="n">Intensifier</span>
+<span class="kn">from</span> <span class="nn">smac.intensification.abstract_racer</span> <span class="k">import</span> <span class="n">AbstractRacer</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer</span> <span class="k">import</span> <span class="n">pSMAC</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="k">import</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span> <span class="n">EI</span><span class="p">,</span> <span class="n">LogEI</span><span class="p">,</span>\
     <span class="n">LCB</span><span class="p">,</span> <span class="n">PI</span>
@@ -336,17 +337,17 @@
                  <span class="n">initial_design</span><span class="p">:</span> <span class="n">InitialDesign</span><span class="p">,</span>
                  <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
                  <span class="n">runhistory2epm</span><span class="p">:</span> <span class="n">AbstractRunHistory2EPM</span><span class="p">,</span>
-                 <span class="n">intensifier</span><span class="p">:</span> <span class="n">Intensifier</span><span class="p">,</span>
+                 <span class="n">intensifier</span><span class="p">:</span> <span class="n">AbstractRacer</span><span class="p">,</span>
                  <span class="n">aggregate_func</span><span class="p">:</span> <span class="n">callable</span><span class="p">,</span>
                  <span class="n">num_run</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                  <span class="n">model</span><span class="p">:</span> <span class="n">RandomForestWithInstances</span><span class="p">,</span>
                  <span class="n">acq_optimizer</span><span class="p">:</span> <span class="n">AcquisitionFunctionMaximizer</span><span class="p">,</span>
                  <span class="n">acquisition_func</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
                  <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span>
-                 <span class="n">restore_incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">restore_incumbent</span><span class="p">:</span> <span class="n">Configuration</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">random_configuration_chooser</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
                      <span class="n">ChooserNoCoolDown</span><span class="p">,</span> <span class="n">ChooserLinearCoolDown</span><span class="p">]</span><span class="o">=</span><span class="n">ChooserNoCoolDown</span><span class="p">(</span><span class="mf">2.0</span><span class="p">),</span>
-                 <span class="n">predict_incumbent</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                 <span class="n">predict_incumbent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Interface that contains the main Bayesian optimization loop</span>
 
