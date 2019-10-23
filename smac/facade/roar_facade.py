@@ -7,7 +7,7 @@ from smac.configspace import Configuration
 from smac.epm.random_epm import RandomEPM
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.initial_design.initial_design import InitialDesign
-from smac.intensification.intensification import Intensifier
+from smac.intensification.abstract_racer import AbstractRacer
 from smac.optimizer.ei_optimization import RandomSearch
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
@@ -36,14 +36,14 @@ class ROAR(SMAC4AC):
 
     def __init__(self,
                  scenario: Scenario,
-                 tae_runner: ExecuteTARun=None,
-                 runhistory: RunHistory=None,
-                 intensifier: Intensifier=None,
-                 initial_design: InitialDesign=None,
-                 initial_configurations: typing.List[Configuration]=None,
-                 stats: Stats=None,
-                 rng: np.random.RandomState=None,
-                 run_id: int=1):
+                 tae_runner: ExecuteTARun = None,
+                 runhistory: RunHistory = None,
+                 intensifier: AbstractRacer = None,
+                 initial_design: InitialDesign = None,
+                 initial_configurations: typing.List[Configuration] = None,
+                 stats: Stats = None,
+                 rng: np.random.RandomState = None,
+                 run_id: int = 1):
         """
         Constructor
 
@@ -60,7 +60,7 @@ class ROAR(SMAC4AC):
             :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.
         runhistory: RunHistory
             Runhistory to store all algorithm runs
-        intensifier: Intensifier
+        intensifier: AbstractRacer
             intensification object to issue a racing to decide the current incumbent
         initial_design: InitialDesign
             initial sampling design
