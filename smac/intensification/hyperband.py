@@ -11,6 +11,11 @@ from smac.runhistory.runhistory import RunHistory
 from smac.tae.execute_ta_run import ExecuteTARun
 from smac.utils.io.traj_logging import TrajLogger
 
+# (for now) to avoid cyclic imports
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from smac.optimizer.smbo import SMBO
+
 __author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
 __license__ = "3-clause BSD"
@@ -113,6 +118,7 @@ class Hyperband(SuccessiveHalving):
         self.s = np.floor(np.log(self.max_budget / self.initial_budget) / np.log(self.eta))
 
     def intensify(self, challengers: typing.List[Configuration],
+                  optimizer: typing.Optional['SMBO'],
                   incumbent: typing.Optional[Configuration],
                   run_history: RunHistory,
                   aggregate_func: typing.Callable,
@@ -128,6 +134,8 @@ class Hyperband(SuccessiveHalving):
         ----------
         challengers : typing.List[Configuration]
             promising configurations
+        optimizer : SMBO
+            optimizer that generates next configurations to use for racing
         incumbent : Configuration
             best configuration so far
         run_history : RunHistory
@@ -179,6 +187,7 @@ class Hyperband(SuccessiveHalving):
 
         # run 1 iteration of successive halving
         incumbent, inc_perf = sh_intensifier.intensify(challengers=challengers,
+                                                       optimizer=optimizer,
                                                        incumbent=incumbent,
                                                        run_history=run_history,
                                                        aggregate_func=aggregate_func,

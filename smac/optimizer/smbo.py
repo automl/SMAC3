@@ -196,20 +196,13 @@ class SMBO(object):
                            configuration_space=self.config_space,
                            logger=self.logger)
 
-            start_time = time.time()
-            X, Y = self.rh2EPM.transform(self.runhistory)
-
-            self.logger.debug("Search for next configuration")
-            # get all found configurations sorted according to acq
-            challengers = self.choose_next(X, Y)
-
-            time_spent = time.time() - start_time
-            time_left = self._get_timebound_for_intensification(time_spent)
+            time_left = self._get_timebound_for_intensification()
 
             self.logger.debug("Intensify")
 
             self.incumbent, inc_perf = self.intensifier.intensify(
-                challengers=challengers,
+                challengers=None,
+                optimizer=self,
                 incumbent=self.incumbent,
                 run_history=self.runhistory,
                 aggregate_func=self.aggregate_func,
@@ -232,8 +225,7 @@ class SMBO(object):
 
         return self.incumbent
 
-    def choose_next(self, X: np.ndarray, Y: np.ndarray,
-                    incumbent_value: float=None):
+    def choose_next(self, incumbent_value: float = None):
         """Choose next candidate solution with Bayesian optimization. The
         suggested configurations depend on the argument ``acq_optimizer`` to
         the ``SMBO`` class.
@@ -256,6 +248,11 @@ class SMBO(object):
         -------
         Iterable
         """
+
+        self.logger.debug("Search for next configuration")
+
+        X, Y = self.rh2EPM.transform(self.runhistory)
+
         if X.shape[0] == 0:
             # Only return a single point to avoid an overly high number of
             # random search iterations
@@ -385,7 +382,7 @@ class SMBO(object):
                                         output_fn=new_rh_path)
         return new_rh
 
-    def _get_timebound_for_intensification(self, time_spent:float):
+    def _get_timebound_for_intensification(self, time_spent: float = 0):
         """Calculate time left for intensify from the time spent on
         choosing challengers using the fraction of time intended for
         intensification (which is specified in
@@ -403,7 +400,7 @@ class SMBO(object):
         if frac_intensify <= 0 or frac_intensify >= 1:
             raise ValueError("The value for intensification_percentage-"
                              "option must lie in (0,1), instead: %.2f" %
-                             (frac_intensify))
+                             frac_intensify)
         total_time = time_spent / (1 - frac_intensify)
         time_left = frac_intensify * total_time
         self.logger.debug("Total time: %.4f, time spent on choosing next "

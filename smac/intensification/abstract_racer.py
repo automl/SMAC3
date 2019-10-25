@@ -1,5 +1,6 @@
 import logging
 import typing
+import time
 from collections import OrderedDict
 
 import numpy as np
@@ -12,6 +13,11 @@ from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
 from smac.tae.execute_ta_run import ExecuteTARun
 from smac.utils.io.traj_logging import TrajLogger
+
+# (for now) to avoid cyclic imports
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from smac.optimizer.smbo import SMBO
 
 __author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
@@ -95,13 +101,73 @@ class AbstractRacer(object):
         else:
             self.instance_specifics = instance_specifics
 
-    def intensify(self, challengers: typing.List[Configuration],
+        # general attributes
+        self._min_time = 10 ** -5
+        self._num_run = 0
+        self._chall_indx = 0
+        self._ta_time = 0
+
+    def intensify(self, challengers: typing.Optional[typing.List[Configuration]],
+                  optimizer: typing.Optional['SMBO'],
                   incumbent: Configuration,
                   run_history: RunHistory,
                   aggregate_func: typing.Callable,
                   time_bound: float = float(MAXINT),
                   log_traj: bool = True) -> typing.Tuple[Configuration, float]:
+
         raise NotImplementedError()
+
+    def next_challenger(self, challengers: typing.Optional[typing.List[Configuration]],
+                        optimizer: typing.Optional['SMBO'],
+                        n_chall: int,
+                        run_history: RunHistory,
+                        repeat_configs: bool = True) -> Configuration:
+        """ Retuns the next challenger to use in intensification
+        If challenger is None, then optimizer will be used to generate the next challenger
+
+        Parameters
+        ----------
+        challengers : typing.List[Configuration]
+            promising configurations
+        optimizer : SMBO
+            optimizer that generates next configurations to use for racing
+        n_chall : int
+            number of challengers used in the current intensify run
+        run_history : RunHistory
+            stores all runs we ran so far
+        repeat_configs : bool
+            if False, an evaluated configuration will not be generated again
+
+        Returns
+        -------
+        Configuration
+            next challenger to use
+        """
+        start_time = time.time()
+
+        used_configs = set(run_history.get_all_configs())
+
+        if challengers:
+            # iterate over challengers provided
+            self.logger.debug("Using challengers provided")
+            chall_gen = (c for c in challengers[n_chall:])
+        else:
+            # generating challengers on-the-fly if optimizer is given
+            self.logger.debug("Generating new challenger from optimizer")
+            chall_gen = optimizer.choose_next()
+
+        # select challenger from the generators
+        challenger = None
+        for challenger in chall_gen:
+            if repeat_configs:  # repetitions allowed
+                break
+            else:               # select only a unique challenger
+                if challenger not in used_configs:
+                    break
+
+        self.logger.info('Time to select next challenger: %.4f' % (time.time() - start_time))
+
+        return challenger
 
     def _adapt_cutoff(self, challenger: Configuration,
                       incumbent: Configuration,

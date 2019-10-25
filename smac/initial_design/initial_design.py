@@ -180,6 +180,7 @@ class InitialDesign:
             # therefore, at least two different configurations have to be in <configs>
             inc, _ = self.intensifier.intensify(
                 challengers=configs,
+                optimizer=None,
                 incumbent=inc,
                 run_history=self.runhistory,
                 aggregate_func=self.aggregate_func,

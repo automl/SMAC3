@@ -293,7 +293,7 @@ class RunHistory(object):
         cost: float
             Computed cost for configuration
         """
-        config_id = self.config_ids[config]
+        config_id = self.config_ids.get(config)
         return self.cost_per_config.get(config_id, np.nan)
 
     def get_runs_for_config(self, config: Configuration, max_budget: bool = True):

@@ -14,6 +14,11 @@ from smac.tae.execute_ta_run import BudgetExhaustedException, CappedRunException
 from smac.utils.io.traj_logging import TrajLogger
 from smac.intensification.abstract_racer import AbstractRacer
 
+# (for now) to avoid cyclic imports
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from smac.optimizer.smbo import SMBO
+
 __author__ = "Katharina Eggensperger, Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
@@ -101,21 +106,14 @@ class Intensifier(AbstractRacer):
         self.run_limit = run_limit
         self.always_race_against = always_race_against
 
-        # storing instances as a set for performing set operations
-        self.instances = set(self.instances)
-
         if self.run_limit < 1:
             raise ValueError("run_limit must be > 1")
 
-        self._num_run = 0
-        self._chall_indx = 0
-
-        self._ta_time = 0
         self.use_ta_time_bound = use_ta_time_bound
-        self._min_time = 10**-5
         self.min_chall = min_chall
 
-    def intensify(self, challengers: typing.List[Configuration],
+    def intensify(self, challengers: typing.Optional[typing.List[Configuration]],
+                  optimizer: typing.Optional['SMBO'],
                   incumbent: Configuration,
                   run_history: RunHistory,
                   aggregate_func: typing.Callable,
@@ -126,10 +124,15 @@ class Intensifier(AbstractRacer):
 
         Implementation of Procedure 2 in Hutter et al. (2011).
 
+        Provide either ``challengers`` or ``optimizer`` and set the other to ``None``.
+        If both arguments are given, then the optimizer will be used.
+
         Parameters
         ----------
         challengers : typing.List[Configuration]
             promising configurations
+        optimizer : SMBO
+            optimizer that generates next configurations to use for racing
         incumbent : Configuration
             best configuration so far
         run_history : RunHistory
@@ -152,13 +155,27 @@ class Intensifier(AbstractRacer):
         self._ta_time = 0
 
         if time_bound < self._min_time:
-            raise ValueError("time_bound must be >= %f" %(self._min_time))
+            raise ValueError("time_bound must be >= %f" % self._min_time)
 
         self._num_run = 0
         self._chall_indx = 0
 
+        # to keep track of challengers used in this intensify
+        n_chall = 0
+
         # Line 1 + 2
-        for challenger in challengers:
+        while True:
+
+            # get challenger
+            challenger = self.next_challenger(challengers=challengers,
+                                              optimizer=optimizer,
+                                              n_chall=n_chall,
+                                              run_history=run_history)
+            n_chall += 1
+            if not challenger:
+                self.logger.debug('All configurations have been evaluated.')
+                break
+
             if challenger == incumbent:
                 self.logger.debug("Challenger was the same as the current incumbent; Skipping challenger")
                 continue
@@ -197,18 +214,17 @@ class Intensifier(AbstractRacer):
             tm = time.time()
             if self._chall_indx >= self.min_chall:
                 if self._num_run > self.run_limit:
-                    self.logger.debug(
-                        "Maximum #runs for intensification reached")
+                    self.logger.debug("Maximum #runs for intensification reached")
                     break
                 if not self.use_ta_time_bound and tm - self.start_time - time_bound >= 0:
                     self.logger.debug("Wallclock time limit for intensification reached ("
-                                        "used: %f sec, available: %f sec)" %
-                                        (tm - self.start_time, time_bound))
+                                      "used: %f sec, available: %f sec)" %
+                                      (tm - self.start_time, time_bound))
                     break
                 elif self._ta_time - time_bound >= 0:
                     self.logger.debug("TA time limit for intensification reached ("
-                                          "used: %f sec, available: %f sec)" %
-                                          (self._ta_time, time_bound))
+                                      "used: %f sec, available: %f sec)" %
+                                      (self._ta_time, time_bound))
                     break
 
         # output estimated performance of incumbent
@@ -254,7 +270,7 @@ class Intensifier(AbstractRacer):
                     max_runs = 0
                 inc_inst = set([x[0] for x in inc_inst if x[1] == max_runs])
 
-                available_insts = self.instances - inc_inst
+                available_insts = set(self.instances) - inc_inst
 
                 # if all instances were used n times, we can pick an instances
                 # from the complete set again

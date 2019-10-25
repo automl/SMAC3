@@ -82,7 +82,7 @@ max_leaf_nodes = UniformIntegerHyperparameter("max_leaf_nodes", 10, 1000, defaul
 cs.add_hyperparameters([num_trees, min_weight_frac_leaf, criterion,
         max_features, min_samples_to_split, min_samples_in_leaf, max_leaf_nodes])
 
-# SMAC scenario oject
+# SMAC scenario object
 scenario = Scenario({"run_obj": "quality",   # we optimize quality (alternative runtime)
                      "runcount-limit": 10,   # max. number of function evaluations; for this example set to a low number
                      "cs": cs,               # configuration space

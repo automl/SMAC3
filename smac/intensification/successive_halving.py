@@ -14,6 +14,11 @@ from smac.runhistory.runhistory import RunHistory
 from smac.tae.execute_ta_run import BudgetExhaustedException, CappedRunException, ExecuteTARun
 from smac.utils.io.traj_logging import TrajLogger
 
+# (for now) to avoid cyclic imports
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from smac.optimizer.smbo import SMBO
+
 __author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
 __license__ = "3-clause BSD"
@@ -220,13 +225,14 @@ class SuccessiveHalving(AbstractRacer):
         max_sh_iter = np.floor(np.log(self.max_budget / self.initial_budget) / np.log(self.eta))
         # initial number of challengers to sample
         if num_initial_challengers is None:
-            self.num_initial_challengers = np.floor(self.eta ** max_sh_iter)
+            self.num_initial_challengers = int(self.eta ** max_sh_iter)
         else:
             self.num_initial_challengers = int(num_initial_challengers)
         # list of budgets that will be used in intensification
         self.all_budgets = self.max_budget * np.power(self.eta, -np.linspace(max_sh_iter, 0, max_sh_iter + 1))
 
     def intensify(self, challengers: typing.List[Configuration],
+                  optimizer: typing.Optional['SMBO'],
                   incumbent: typing.Optional[Configuration],
                   run_history: RunHistory,
                   aggregate_func: typing.Callable,
@@ -242,6 +248,8 @@ class SuccessiveHalving(AbstractRacer):
         ----------
         challengers : typing.List[Configuration]
             promising configurations
+        optimizer : SMBO
+            optimizer that generates next configurations to use for racing
         incumbent : Configuration
             best configuration so far
         run_history : RunHistory
@@ -262,16 +270,13 @@ class SuccessiveHalving(AbstractRacer):
         self._chall_indx = 0
         self._num_run = 0
         first_run = True
+        curr_challengers = challengers
 
         # challengers can be repeated only if optimizing across multiple seeds or changing instance orders every run
         if not (self.n_seeds > 1 or self.instance_order == 'shuffle'):
-            used_configs = set(run_history.get_all_configs())
-            chal_generator = (c for c in challengers if c not in used_configs)
+            self.repeat_configs = False
         else:
-            # converting to generator for consistency
-            chal_generator = (c for c in challengers)
-        # select first 'n' challengers
-        curr_challengers = list(islice(chal_generator, int(self.num_initial_challengers)))
+            self.repeat_configs = True
 
         # randomize instance-seed pairs per successive halving run, if user specifies
         all_inst_seed_pairs = self.inst_seed_pairs
@@ -293,19 +298,15 @@ class SuccessiveHalving(AbstractRacer):
         # run intensification till budget is max
         for i, curr_budget in enumerate(self.all_budgets):
 
-            self.logger.info('Running with budget [%.2f / %d] with %d challengers' %
-                             (curr_budget, self.max_budget, len(curr_challengers)))
             # selecting instance-seed subset for this budget, depending on the kind of budget
             prev_budget = self.all_budgets[i - 1] if i > 0 else 0
             available_insts = all_inst_seed_pairs[int(prev_budget):int(curr_budget)] if self.instance_as_budget \
                 else all_inst_seed_pairs
 
-            # determine 'k' for the next iteration - at least 1
-            next_n_chal = max(1, int(len(curr_challengers) / self.eta))
-
             try:
                 # Race all challengers
                 curr_challengers = self._run_challengers(challengers=curr_challengers,
+                                                         optimizer=optimizer,
                                                          incumbent=incumbent,
                                                          instances=available_insts,
                                                          run_history=run_history,
@@ -327,6 +328,8 @@ class SuccessiveHalving(AbstractRacer):
                 inc_perf = run_history.get_cost(incumbent)
                 return incumbent, inc_perf
 
+            # determine 'k' for the next iteration - at least 1
+            next_n_chal = max(1, int(self.num_initial_challengers / (self.eta ** (i + 1))))
             # selecting the top 'k' challengers for the next iteration
             curr_challengers = self._top_k(curr_challengers, run_history, k=next_n_chal)
 
@@ -362,7 +365,8 @@ class SuccessiveHalving(AbstractRacer):
 
         return new_incumbent, inc_perf
 
-    def _run_challengers(self, challengers: typing.List[Configuration],
+    def _run_challengers(self, challengers: typing.Optional[typing.List[Configuration]],
+                         optimizer: 'SMBO',
                          incumbent: Configuration,
                          instances: typing.List[typing.Tuple[str, int]],
                          run_history: RunHistory,
@@ -374,10 +378,13 @@ class SuccessiveHalving(AbstractRacer):
 
         Parameters
         ----------
-        challengers: typing.List[Configuration]
-            List of challenger configurations to race
+        challengers: typing.List[Configuration] or None
+            List of challenger configurations to race. If None, then it is generated from the EPM
+
         incumbent:
             Current incumbent configuration
+        optimizer : SMBO
+            optimizer that generates next configurations to use for racing
         instances: typing.Tuple[str, int]
             List of instance-seed pairs to use for racing challengers
         run_history: RunHistory
@@ -395,11 +402,29 @@ class SuccessiveHalving(AbstractRacer):
             All challengers that were successfully executed, without being capped
         """
 
-        # to track capped configurations & remove them later
-        capped_configs = []
+        # determining number of challengers for this iteration
+        if first_run or challengers is None:
+            curr_n_chal = self.num_initial_challengers
+        else:
+            curr_n_chal = len(challengers)
 
-        # for every challenger generated, execute target algorithm
-        for challenger in challengers:
+        # to keep track of configurations that were evaluated successfully, without capping
+        eval_challengers = set()
+
+        self.logger.info('Running with budget [%.2f / %d] with %d challengers' %
+                         (budget, self.max_budget, curr_n_chal))
+
+        # iterate over challengers
+        for idx in range(curr_n_chal):
+
+            # get next challenger to race
+            challenger = self.next_challenger(challengers=challengers,
+                                              optimizer=optimizer,
+                                              n_chall=idx,
+                                              run_history=run_history,
+                                              repeat_configs=(not first_run) or self.repeat_configs
+                                              # since configurations have to be repeated from 2nd iteration on
+                                              )
 
             # for every instance in the instance subset
             self.logger.debug(" Running challenger  -  %s" % str(challenger))
@@ -437,18 +462,15 @@ class SuccessiveHalving(AbstractRacer):
                     # We move on to the next configuration if we reach maximum cutoff i.e., capped
                     self.logger.debug("Budget exhausted by adaptive capping; "
                                       "Interrupting current challenger and moving on to the next one")
-                    capped_configs.append(challenger)
                     break
+
+                eval_challengers.add(challenger)
 
             # count every challenger exactly once per SH run
             if first_run:
                 self._chall_indx += 1
 
-        # eliminate capped configuration from the race & reset capped_configs
-        for c in capped_configs:
-            challengers.remove(c)
-
-        return challengers
+        return list(eval_challengers)
 
     def _top_k(self, configs: typing.List[Configuration],
                run_history: RunHistory,
