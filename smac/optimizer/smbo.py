@@ -196,13 +196,23 @@ class SMBO(object):
                            configuration_space=self.config_space,
                            logger=self.logger)
 
-            time_left = self._get_timebound_for_intensification()
+            start_time = time.time()
 
-            self.logger.debug("Intensify")
-
-            self.incumbent, inc_perf = self.intensifier.intensify(
+            # sample next configuration for intensification
+            challenger = self.intensifier.next_challenger(
                 challengers=None,
-                optimizer=self,
+                chooser=self,
+                run_history=self.runhistory,
+                repeat_configs=self.intensifier.repeat_configs
+            )
+
+            time_spent = time.time() - start_time
+            time_left = self._get_timebound_for_intensification(time_spent)
+
+            self.logger.debug("Intensify - evaluate challenger")
+
+            self.incumbent, inc_perf = self.intensifier.eval_challenger(
+                challenger=challenger,
                 incumbent=self.incumbent,
                 run_history=self.runhistory,
                 aggregate_func=self.aggregate_func,

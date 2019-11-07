@@ -178,13 +178,30 @@ class InitialDesign:
             # intensifiy will not do any configuration runs
             # (also not on the incumbent)
             # therefore, at least two different configurations have to be in <configs>
-            inc, _ = self.intensifier.intensify(
-                challengers=configs,
-                optimizer=None,
-                incumbent=inc,
-                run_history=self.runhistory,
-                aggregate_func=self.aggregate_func,
-            )
+
+            # running intensification
+            while not self.intensifier.iteration_done:
+                # sample next configuration for intensification
+                config = self.intensifier.next_challenger(
+                    challengers=configs,
+                    chooser=None,
+                    run_history=self.runhistory,
+                    repeat_configs=self.intensifier.repeat_configs
+                )
+
+                # stop if no more configs are generated
+                if not config:
+                    break
+                # remove config from <configs> to not repeat it again
+                configs = [c for c in configs if c != config]
+
+                # evaluate configuration
+                inc, _ = self.intensifier.eval_challenger(
+                    challenger=config,
+                    incumbent=inc,
+                    run_history=self.runhistory,
+                    aggregate_func=self.aggregate_func,
+                )
 
         return inc
 
@@ -256,7 +273,7 @@ class InitialDesign:
                 v_design[v_design == 1] = 1 - 10**-10
                 design[:, idx] = np.array(v_design * len(param.sequence), dtype=np.int)
             else:
-                raise ValueError("Hyperparamer not supported in LHD")
+                raise ValueError("Hyperparameter not supported in LHD")
 
         self.logger.debug("Initial Design")
         configs = []

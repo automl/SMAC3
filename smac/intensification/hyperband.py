@@ -11,11 +11,6 @@ from smac.runhistory.runhistory import RunHistory
 from smac.tae.execute_ta_run import ExecuteTARun
 from smac.utils.io.traj_logging import TrajLogger
 
-# (for now) to avoid cyclic imports
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from smac.optimizer.smbo import SMBO
-
 __author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
 __license__ = "3-clause BSD"
@@ -105,6 +100,7 @@ class Hyperband(SuccessiveHalving):
 
         # to track completed hyperband iterations
         self.hb_iters = 0
+        self.sh_intensifier = None
 
         # hyperband configuration
         self._init_hb_params()
@@ -117,13 +113,55 @@ class Hyperband(SuccessiveHalving):
         self.s_max = np.floor(np.log(self.max_budget / self.initial_budget) / np.log(self.eta))
         self.s = np.floor(np.log(self.max_budget / self.initial_budget) / np.log(self.eta))
 
-    def intensify(self, challengers: typing.List[Configuration],
-                  optimizer: typing.Optional['SMBO'],
-                  incumbent: typing.Optional[Configuration],
-                  run_history: RunHistory,
-                  aggregate_func: typing.Callable,
-                  time_bound: float = float(MAXINT),
-                  log_traj: bool = True) -> typing.Tuple[Configuration, float]:
+        # initialize tracking variables
+        self._update_hb_stage()
+
+    def _update_hb_stage(self) -> None:
+        """
+        Update tracking information for a new stage/iteration and update statistics
+        """
+        # compute min budget for new SH run
+        sh_initial_budget = self.eta**-self.s * self.max_budget
+        # sample challengers for next iteration (based on HpBandster package)
+        n_challengers = int(np.floor((self.s_max+1) / (self.s + 1)) * self.eta**self.s)
+
+        self.logger.info('Hyperband iteration-step: %d-%d  with initial budget: %d' % (
+            self.hb_iters+1, self.s_max-self.s+1, sh_initial_budget))
+
+        # creating a new Successive Halving intensifier with the current running budget
+        self.sh_intensifier = SuccessiveHalving(
+            tae_runner=self.tae_runner,
+            stats=self.stats,
+            traj_logger=self.traj_logger,
+            rng=self.rs,
+            instances=self.instances,
+            instance_specifics=self.instance_specifics,
+            cutoff=self.cutoff,
+            deterministic=self.deterministic,
+            initial_budget=sh_initial_budget,
+            max_budget=self.max_budget,
+            eta=self.eta,
+            num_initial_challengers=n_challengers,
+            run_obj_time=self.run_obj_time,
+            n_seeds=self.n_seeds,
+            instance_order=self.instance_order,
+            adaptive_capping_slackfactor=self.adaptive_capping_slackfactor,
+            inst_seed_pairs=self.inst_seed_pairs  # additional argument to avoid
+        )                                         # processing instances & seeds again
+
+        # reset if HB iteration is over, else update for next iteration
+        if self.s == 0:
+            self.s = self.s_max
+            self.hb_iters += 1
+        else:
+            self.s -= 1
+
+    def eval_challenger(self, challenger: Configuration,
+                        incumbent: typing.Optional[Configuration],
+                        run_history: RunHistory,
+                        aggregate_func: typing.Callable,
+                        time_bound: float = float(MAXINT),
+                        log_traj: bool = True) -> typing.Tuple[Configuration, float]:
         """
         Running intensification via hyperband to determine the incumbent configuration.
         *Side effect:* adds runs to run_history
@@ -132,10 +170,8 @@ class Hyperband(SuccessiveHalving):
 
         Parameters
         ----------
-        challengers : typing.List[Configuration]
-            promising configurations
-        optimizer : SMBO
-            optimizer that generates next configurations to use for racing
+        challenger : Configuration
+            promising configuration
         incumbent : Configuration
             best configuration so far
         run_history : RunHistory
@@ -157,47 +193,56 @@ class Hyperband(SuccessiveHalving):
         # NOTE Since hyperband requires sampling for new configurations between its iterations,
         #      the intensification is spread across multiple intensify calls
 
-        # compute min budget for new SH run
-        sh_initial_budget = self.eta**-self.s * self.max_budget
-        # sample challengers for next iteration (based on HpBandster package)
-        n_challengers = int(np.floor((self.s_max+1) / (self.s + 1)) * self.eta**self.s)
-
-        self.logger.info('Hyperband iteration-step: %d-%d  with initial budget: %d' % (
-            self.hb_iters+1, self.s_max-self.s+1, sh_initial_budget))
-
-        # creating a new Successive Halving intensifier with the current running budget
-        sh_intensifier = SuccessiveHalving(tae_runner=self.tae_runner,
-                                           stats=self.stats,
-                                           traj_logger=self.traj_logger,
-                                           rng=self.rs,
-                                           instances=self.instances,
-                                           instance_specifics=self.instance_specifics,
-                                           cutoff=self.cutoff,
-                                           deterministic=self.deterministic,
-                                           initial_budget=sh_initial_budget,
-                                           max_budget=self.max_budget,
-                                           eta=self.eta,
-                                           num_initial_challengers=n_challengers,
-                                           run_obj_time=self.run_obj_time,
-                                           n_seeds=self.n_seeds,
-                                           instance_order=self.instance_order,
-                                           adaptive_capping_slackfactor=self.adaptive_capping_slackfactor,
-                                           inst_seed_pairs=self.inst_seed_pairs  # additional argument to avoid
-                                           )                                     # processing instances & seeds again
-
         # run 1 iteration of successive halving
-        incumbent, inc_perf = sh_intensifier.intensify(challengers=challengers,
-                                                       optimizer=optimizer,
-                                                       incumbent=incumbent,
-                                                       run_history=run_history,
-                                                       aggregate_func=aggregate_func,
-                                                       time_bound=time_bound, log_traj=log_traj)
+        incumbent, inc_perf = self.sh_intensifier.eval_challenger(challenger=challenger,
+                                                                  incumbent=incumbent,
+                                                                  run_history=run_history,
+                                                                  aggregate_func=aggregate_func,
+                                                                  time_bound=time_bound,
+                                                                  log_traj=log_traj)
 
-        # reset if hyperband iteration is over, else update for next iteration
-        if self.s == 0:
-            self.s = self.s_max
-            self.hb_iters += 1
-        else:
-            self.s -= 1
+        self.iteration_done = self.sh_intensifier.iteration_done
+
+        # reset if SH iteration is over, else update for next iteration
+        if not self.sh_intensifier or self.sh_intensifier.get_num_iterations() >= 1:
+            self._update_hb_stage()
 
         return incumbent, inc_perf
+
+    def next_challenger(self, challengers: typing.Optional[typing.List[Configuration]],
+                        chooser: typing.Optional['smac.optimizer.smbo.SMBO'],
+                        run_history: RunHistory,
+                        repeat_configs: bool = True):
+        """
+        Selects which challenger to use based on the iteration stage and set the iteration parameters.
+        First iteration will choose configurations from the ``chooser`` or input challengers,
+        while the later iterations sample top configurations from the previously selected challengers in that iteration
+
+        Parameters
+        ----------
+        challengers : typing.List[Configuration]
+            promising configurations
+        chooser : 'smac.optimizer.smbo.SMBO'
+            optimizer that generates next configurations to use for racing
+        run_history : RunHistory
+            stores all runs we ran so far
+        repeat_configs : bool
+            if False, an evaluated configuration will not be generated again
+        """
+        challenger = self.sh_intensifier.next_challenger(
+                         challengers=challengers,
+                         chooser=chooser,
+                         run_history=run_history,
+                         repeat_configs=self.sh_intensifier.repeat_configs
+                     )
+        return challenger
+
+    def get_num_iterations(self) -> int:
+        """
+        Returns the number of completed iterations of the intensifier
+
+        Returns
+        -------
+        int
+        """
+        return self.hb_iters

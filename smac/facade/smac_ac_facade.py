@@ -426,7 +426,7 @@ class SMAC4AC(object):
             }
         if isinstance(intensifier, SuccessiveHalving):
             # If running successive halving, then you need multiple configurations for the initial design
-            n_configs = intensifier.num_initial_challengers / len(self.scenario.cs.get_hyperparameters())
+            n_configs = intensifier.n_configs_in_stage[0] / len(self.scenario.cs.get_hyperparameters())
             init_design_def_kwargs['n_configs_x_params'] = n_configs
             init_design_def_kwargs['run_first_config'] = False
             init_design_def_kwargs['fill_random_configs'] = True
