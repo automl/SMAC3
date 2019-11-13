@@ -3,7 +3,15 @@ import unittest.mock
 
 import numpy as np
 
-from smac.optimizer.acquisition import EI, LogEI, EIPS, PI, LCB, IntegratedAcquisitionFunction
+from smac.optimizer.acquisition import (
+    EI,
+    LogEI,
+    EIPS,
+    PI,
+    LCB,
+    IntegratedAcquisitionFunction,
+    AbstractAcquisitionFunction,
+)
 
 
 class ConfigurationMock(object):
@@ -37,6 +45,22 @@ class MockModelDual(object):
                         self.num_targets).reshape((-1, 2)), \
                np.array([np.mean(X, axis=1).reshape((1, -1))] *
                         self.num_targets).reshape((-1, 2))
+
+
+class TestAcquisitionFunction(unittest.TestCase):
+    def setUp(self):
+        self.model = unittest.mock.Mock()
+        self.acq = AbstractAcquisitionFunction(model=self.model)
+
+    def update_model(self):
+        model = 'abc'
+        self.acq.update({'model': model})
+        self.assertEqual(self.acq.model, model)
+
+    def update_other(self):
+        self.acq.other = 'other'
+        self.acq.update({'other': None})
+        self.assertIsNone(self.acq.other)
 
 
 class TestIntegratedAcquisitionFunction(unittest.TestCase):

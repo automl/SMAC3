@@ -269,9 +269,19 @@ class SMBO(object):
             if self.runhistory.empty():
                 raise ValueError("Runhistory is empty and the cost value of "
                                  "the incumbent is unknown.")
-            incumbent_value = self._get_incumbent_value()
+            incumbent, incumbent_array, incumbent_value = self._get_incumbent_value()
+        else:
+            incumbent = None
+            incumbent_array = None
 
-        self.acquisition_func.update(model=self.model, eta=incumbent_value, num_data=len(self.runhistory.data))
+        self.acquisition_func.update(
+            model=self.model,
+            eta=incumbent_value,
+            incumbent=incumbent,
+            incumbent_array=incumbent_array,
+            num_data=len(self.runhistory.data),
+            X=X,
+        )
 
         challengers = self.acq_optimizer.maximize(
             runhistory=self.runhistory,
@@ -281,37 +291,47 @@ class SMBO(object):
         )
         return challengers
 
-    def _get_incumbent_value(self):
-        ''' get incumbent value either from runhistory
-            or from best predicted performance on configs in runhistory
-            (depends on self.predict_incumbent)"
+    def _get_incumbent_value(self) -> typing.Tuple[float, np.ndarray, Configuration]:
+        '''Get incumbent value, configuration, and array representation.
 
-            Return
-            ------
-            float
+        This is retreived either from the runhistory or from best predicted
+        performance on configs in runhistory (depends on self.predict_incumbent)
+
+        Return
+        ------
+        float
+        np.ndarry
+        Configuration
         '''
+        all_configs = self.runhistory.get_all_configs()
         if self.predict_incumbent:
-            configs = convert_configurations_to_array(self.runhistory.get_all_configs())
+            configs_array = convert_configurations_to_array(all_configs)
             costs = list(map(
-                lambda config:
-                    self.model.predict_marginalized_over_instances(config.reshape((1, -1)))[0][0][0],
-                configs,
+                lambda input_: (
+                    self.model.predict_marginalized_over_instances(input_[0].reshape((1, -1)))[0][0][0],
+                    input_[0], input_[1],
+                ),
+                zip(configs_array, all_configs),
             ))
-            incumbent_value = np.min(costs)
+            costs = sorted(costs, key=lambda t: t[0])
+            incumbent = costs[0][2]
+            incumbent_array = costs[0][1]
+            incumbent_value = costs[0][0]
             # won't need log(y) if EPM was already trained on log(y)
-
         else:
             if self.runhistory.empty():
                 raise ValueError("Runhistory is empty and the cost value of "
                                  "the incumbent is unknown.")
-            incumbent_value = self.runhistory.get_cost(self.incumbent)
-            # It's unclear how to do this for inv scaling and potential future scaling. This line should be changed if
-            # necessary
+            incumbent = self.incumbent
+            incumbent_array = convert_configurations_to_array([all_configs])
+            incumbent_value = self.runhistory.get_cost(incumbent)
             incumbent_value_as_array = np.array(incumbent_value).reshape((1, 1))
+            # It's unclear how to do this for inv scaling and potential future scaling.
+            # This line should be changed if necessary
             incumbent_value = self.rh2EPM.transform_response_values(incumbent_value_as_array)
             incumbent_value = incumbent_value[0][0]
 
-        return incumbent_value
+        return incumbent, incumbent_array, incumbent_value
 
     def validate(self, config_mode='inc', instance_mode='train+test',
                  repetitions=1, use_epm=False, n_jobs=-1, backend='threading'):

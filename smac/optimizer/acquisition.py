@@ -40,21 +40,21 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
         self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
 
     def update(self, **kwargs):
-        """Update the acquisition functions values.
+        """Update the acquisition function attributes required for calculation.
 
-        This method will be called if the model is updated. E.g.
-        entropy search uses it to update its approximation of P(x=x_min),
-        EI uses it to update the current fmin.
+        This method will be called after fitting the model, but before maximizing the acquisition
+        function. As an examples, EI uses it to update the current fmin.
 
-        The default implementation takes all keyword arguments and sets the
-        respective attributes for the acquisition function object.
+        The default implementation only updates the attributes of the acqusition function which
+        are already present.
 
         Parameters
         ----------
         kwargs
         """
         for key in kwargs:
-            setattr(self, key, kwargs[key])
+            if hasattr(self, key):
+                setattr(self, key, kwargs[key])
 
     def __call__(self, configurations: List[Configuration]):
         """Computes the acquisition value for a given X
@@ -484,7 +484,6 @@ class LCB(AbstractAcquisitionFunction):
         super(LCB, self).__init__(model)
         self.long_name = 'Lower Confidence Bound'
         self.par = par
-        self.eta = None  # to be compatible with the existing update calls in SMBO
         self.num_data = None
 
     def _compute(self, X: np.ndarray):
