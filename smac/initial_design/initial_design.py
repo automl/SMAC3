@@ -102,8 +102,6 @@ class InitialDesign:
         self.intensifier = intensifier
         self.runhistory = runhistory
         self.aggregate_func = aggregate_func
-        self.run_first_config = run_first_config
-        self.fill_random_configs = fill_random_configs
 
         self.logger = self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
@@ -133,15 +131,7 @@ class InitialDesign:
     def select_configurations(self) -> typing.List[Configuration]:
 
         if self.configs is None:
-            configs = self._select_configurations()
-            # add random configurations if _select_configurations() returns less than expected budget
-            if self.fill_random_configs and len(configs) < self.init_budget:
-                random_configs = self.scenario.cs.sample_configuration(size=self.init_budget - len(configs))
-                if isinstance(random_configs, list):
-                    configs.extend(random_configs)
-                else:
-                    configs.append(random_configs)
-            self.configs = configs
+            self.configs = self._select_configurations()
 
         for config in self.configs:
             if config.origin is None:
@@ -158,50 +148,6 @@ class InitialDesign:
 
     def _select_configurations(self) -> typing.List[Configuration]:
         raise NotImplementedError
-
-    def _run_first_configuration(self, initial_incumbent, scenario):
-        """Runs the initial design by calling the target algorithm and adding new entries to the trajectory logger.
-
-        Returns
-        -------
-        incumbent: Configuration
-            Initial incumbent configuration
-        """
-        if initial_incumbent.origin is None:
-            initial_incumbent.origin = 'Initial design'
-
-        rand_inst = self.rng.choice(self.scenario.train_insts)
-
-        if self.scenario.deterministic:
-            initial_seed = 0
-        else:
-            initial_seed = self.rng.randint(0, constants.MAXINT)
-
-        try:
-            status, cost, runtime, _ = self.tae_runner.start(
-                initial_incumbent,
-                instance=rand_inst,
-                cutoff=self.scenario.cutoff,
-                seed=initial_seed,
-                instance_specific=self.scenario.instance_specific.get(rand_inst,
-                                                                      "0"))
-        except FirstRunCrashedException as err:
-            if self.scenario.abort_on_first_run_crash:
-                raise err
-            else:
-                # TODO make it possible to add the failed run to the runhistory
-                if self.scenario.run_obj == "quality":
-                    cost = self.scenario.cost_for_crash
-                else:
-                    cost = self.scenario.cutoff * scenario.par_factor
-
-        self.stats.inc_changed += 1  # first incumbent
-
-        self.traj_logger.add_entry(train_perf=cost,
-                                   incumbent_id=self.stats.inc_changed,
-                                   incumbent=initial_incumbent)
-
-        return initial_incumbent
 
     def _transform_continuous_designs(self,
                                       design: np.ndarray,
