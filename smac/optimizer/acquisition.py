@@ -54,7 +54,6 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
         kwargs
         """
         for key in self._required_updates:
-            print(key, key not in kwargs, kwargs.keys())
             if key not in kwargs:
                 raise ValueError(
                     'Acquisition function %s needs to be updated with key %s, but only got '

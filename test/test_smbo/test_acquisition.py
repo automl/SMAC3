@@ -10,7 +10,6 @@ from smac.optimizer.acquisition import (
     PI,
     LCB,
     IntegratedAcquisitionFunction,
-    AbstractAcquisitionFunction,
 )
 
 
@@ -64,8 +63,8 @@ class TestAcquisitionFunction(unittest.TestCase):
 
         with self.assertRaisesRegex(
             ValueError,
-            "Acquisition function EI needs to be updated with key model, but only got keys "
-            "\['other'\].",
+            r"Acquisition function EI needs to be updated with key model, but only got keys "
+            r"\['other'\].",
         ):
             self.acq.update(other=None)
 
@@ -209,7 +208,8 @@ class TestEIPS(unittest.TestCase):
     def test_fail(self):
         with self.assertRaises(ValueError):
             configurations = [ConfigurationMock([1.0, 1.0])]
-            acq = self.ei(configurations)
+            self.ei(configurations)
+
 
 class TestLogEI(unittest.TestCase):
     def setUp(self):
