@@ -37,6 +37,7 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
             Models the objective function.
         """
         self.model = model
+        self._required_updates = ('model', )
         self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
 
     def update(self, **kwargs):
@@ -52,8 +53,16 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
         ----------
         kwargs
         """
+        for key in self._required_updates:
+            print(key, key not in kwargs, kwargs.keys())
+            if key not in kwargs:
+                raise ValueError(
+                    'Acquisition function %s needs to be updated with key %s, but only got '
+                    'keys %s.'
+                    % (self.__class__.__name__, key, list(kwargs.keys()))
+                )
         for key in kwargs:
-            if hasattr(self, key):
+            if key in self._required_updates:
                 setattr(self, key, kwargs[key])
 
     def __call__(self, configurations: List[Configuration]):
@@ -199,6 +208,7 @@ class EI(AbstractAcquisitionFunction):
         self.long_name = 'Expected Improvement'
         self.par = par
         self.eta = None
+        self._required_updates = ('model', 'eta')
 
     def _compute(self, X: np.ndarray, **kwargs):
         """Computes the EI value and its derivatives.
@@ -355,6 +365,7 @@ class LogEI(AbstractAcquisitionFunction):
         self.long_name = 'Expected Improvement'
         self.par = par
         self.eta = None
+        self._required_updates = ('model', 'eta')
 
     def _compute(self, X: np.ndarray, **kwargs):
         """Computes the EI value and its derivatives.
@@ -434,6 +445,7 @@ class PI(AbstractAcquisitionFunction):
         self.long_name = 'Probability of Improvement'
         self.par = par
         self.eta = None
+        self._required_updates = ('model', 'eta')
 
     def _compute(self, X: np.ndarray):
         """Computes the PI value.
@@ -485,6 +497,7 @@ class LCB(AbstractAcquisitionFunction):
         self.long_name = 'Lower Confidence Bound'
         self.par = par
         self.num_data = None
+        self._required_updates = ('model', 'num_data')
 
     def _compute(self, X: np.ndarray):
         """Computes the LCB value.

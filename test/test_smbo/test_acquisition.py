@@ -50,17 +50,28 @@ class MockModelDual(object):
 class TestAcquisitionFunction(unittest.TestCase):
     def setUp(self):
         self.model = unittest.mock.Mock()
-        self.acq = AbstractAcquisitionFunction(model=self.model)
+        self.acq = EI(model=self.model)
 
-    def update_model(self):
+    def test_update_model_and_eta(self):
         model = 'abc'
-        self.acq.update({'model': model})
+        self.assertIsNone(self.acq.eta)
+        self.acq.update(model=model, eta=0.1)
         self.assertEqual(self.acq.model, model)
+        self.assertEqual(self.acq.eta, 0.1)
 
-    def update_other(self):
+    def test_update_other(self):
         self.acq.other = 'other'
-        self.acq.update({'other': None})
-        self.assertIsNone(self.acq.other)
+
+        with self.assertRaisesRegex(
+            ValueError,
+            "Acquisition function EI needs to be updated with key model, but only got keys "
+            "\['other'\].",
+        ):
+            self.acq.update(other=None)
+
+        model = 'abc'
+        self.acq.update(model=model, eta=0.1, other=None)
+        self.assertEqual(self.acq.other, 'other')
 
 
 class TestIntegratedAcquisitionFunction(unittest.TestCase):
