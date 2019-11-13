@@ -152,6 +152,13 @@ class TestSingleInitialDesign(unittest.TestCase):
         ):
             InitialDesign(init_budget=200, **kwargs)
 
+        with self.assertRaisesRegex(
+            ValueError,
+            'Need to provide either argument `init_budget`, `configs` or `n_configs_x_params`, '
+            'but provided none of them.',
+        ):
+            InitialDesign(**kwargs, n_configs_x_params=None)
+
     def test_fill_config_design(self):
         stats = Stats(scenario=self.scenario)
         stats.start_timing()
