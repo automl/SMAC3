@@ -84,7 +84,7 @@ class InitialDesign:
         fill_random_configs: bool
             fill budget with random configurations if initial incumbent sampling returns only 1 configuration
         init_budget : int, optional
-            Maximal initial budget (alternative to ``n_configs_x_params``)
+            Maximal initial budget (disables the argument ``n_configs_x_params``)
         """
 
         self.tae_runner = tae_runner
