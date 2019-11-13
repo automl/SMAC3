@@ -111,9 +111,12 @@ class InitialDesign:
                 )
         elif configs is not None:
             self.init_budget = len(configs)
-        else:
+        elif n_configs_x_params is not None:
             self.init_budget = int(max(1, min(n_configs_x_params * n_params,
                                               (max_config_fracs * scenario.ta_run_limit))))
+        else:
+            raise ValueError('Need to provide either argument `init_budget`, `configs` or '
+                             '`n_configs_x_params`, but provided none of them.')
         if self.init_budget > scenario.ta_run_limit:
             raise ValueError(
                 'Initial budget %d cannot be higher than the run limit %d.'
