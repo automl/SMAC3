@@ -539,9 +539,19 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Runhistory is empty and the cost value of &quot;</span>
                                  <span class="s2">&quot;the incumbent is unknown.&quot;</span><span class="p">)</span>
-            <span class="n">incumbent_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_incumbent_value</span><span class="p">()</span>
+            <span class="n">incumbent</span><span class="p">,</span> <span class="n">incumbent_array</span><span class="p">,</span> <span class="n">incumbent_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_incumbent</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">incumbent</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">incumbent_array</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_func</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="n">incumbent_value</span><span class="p">,</span> <span class="n">num_data</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_func</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">eta</span><span class="o">=</span><span class="n">incumbent_value</span><span class="p">,</span>
+            <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
+            <span class="n">incumbent_array</span><span class="o">=</span><span class="n">incumbent_array</span><span class="p">,</span>
+            <span class="n">num_data</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="p">),</span>
+            <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
+        <span class="p">)</span>
 
         <span class="n">challengers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span><span class="o">.</span><span class="n">maximize</span><span class="p">(</span>
             <span class="n">runhistory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
@@ -551,37 +561,47 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">challengers</span></div>
 
-    <span class="k">def</span> <span class="nf">_get_incumbent_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39; get incumbent value either from runhistory</span>
-<span class="sd">            or from best predicted performance on configs in runhistory</span>
-<span class="sd">            (depends on self.predict_incumbent)&quot;</span>
+    <span class="k">def</span> <span class="nf">_get_incumbent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]:</span>
+        <span class="sd">&#39;&#39;&#39;Get incumbent value, configuration, and array representation.</span>
 
-<span class="sd">            Return</span>
-<span class="sd">            ------</span>
-<span class="sd">            float</span>
+<span class="sd">        This is retreived either from the runhistory or from best predicted</span>
+<span class="sd">        performance on configs in runhistory (depends on self.predict_incumbent)</span>
+
+<span class="sd">        Return</span>
+<span class="sd">        ------</span>
+<span class="sd">        float</span>
+<span class="sd">        np.ndarry</span>
+<span class="sd">        Configuration</span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">all_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_all_configs</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_incumbent</span><span class="p">:</span>
-            <span class="n">configs</span> <span class="o">=</span> <span class="n">convert_configurations_to_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_all_configs</span><span class="p">())</span>
+            <span class="n">configs_array</span> <span class="o">=</span> <span class="n">convert_configurations_to_array</span><span class="p">(</span><span class="n">all_configs</span><span class="p">)</span>
             <span class="n">costs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span>
-                <span class="k">lambda</span> <span class="n">config</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict_marginalized_over_instances</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-                <span class="n">configs</span><span class="p">,</span>
+                <span class="k">lambda</span> <span class="n">input_</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict_marginalized_over_instances</span><span class="p">(</span><span class="n">input_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">input_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">input_</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="p">),</span>
+                <span class="nb">zip</span><span class="p">(</span><span class="n">configs_array</span><span class="p">,</span> <span class="n">all_configs</span><span class="p">),</span>
             <span class="p">))</span>
-            <span class="n">incumbent_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">costs</span><span class="p">)</span>
+            <span class="n">costs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">incumbent</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">incumbent_array</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">incumbent_value</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
             <span class="c1"># won&#39;t need log(y) if EPM was already trained on log(y)</span>
-
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Runhistory is empty and the cost value of &quot;</span>
                                  <span class="s2">&quot;the incumbent is unknown.&quot;</span><span class="p">)</span>
-            <span class="n">incumbent_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">)</span>
-            <span class="c1"># It&#39;s unclear how to do this for inv scaling and potential future scaling. This line should be changed if</span>
-            <span class="c1"># necessary</span>
+            <span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span>
+            <span class="n">incumbent_array</span> <span class="o">=</span> <span class="n">convert_configurations_to_array</span><span class="p">([</span><span class="n">all_configs</span><span class="p">])</span>
+            <span class="n">incumbent_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
             <span class="n">incumbent_value_as_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">incumbent_value</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="c1"># It&#39;s unclear how to do this for inv scaling and potential future scaling.</span>
+            <span class="c1"># This line should be changed if necessary</span>
             <span class="n">incumbent_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rh2EPM</span><span class="o">.</span><span class="n">transform_response_values</span><span class="p">(</span><span class="n">incumbent_value_as_array</span><span class="p">)</span>
             <span class="n">incumbent_value</span> <span class="o">=</span> <span class="n">incumbent_value</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">incumbent_value</span>
+        <span class="k">return</span> <span class="n">incumbent</span><span class="p">,</span> <span class="n">incumbent_array</span><span class="p">,</span> <span class="n">incumbent_value</span>
 
 <div class="viewcode-block" id="SMBO.validate"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_mode</span><span class="o">=</span><span class="s1">&#39;inc&#39;</span><span class="p">,</span> <span class="n">instance_mode</span><span class="o">=</span><span class="s1">&#39;train+test&#39;</span><span class="p">,</span>
                  <span class="n">repetitions</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_epm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;threading&#39;</span><span class="p">):</span>
