@@ -306,10 +306,13 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
-                 <span class="n">tae_runner</span><span class="p">:</span> <span class="n">ExecuteTARun</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">tae_runner</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span>
+                     <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">ExecuteTARun</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">]</span>
+                 <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">intensifier</span><span class="p">:</span> <span class="n">AbstractRacer</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">initial_design</span><span class="p">:</span> <span class="n">InitialDesign</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">initial_design</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">InitialDesign</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">initial_design_kwargs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">initial_configurations</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -332,8 +335,10 @@
 <span class="sd">            Runhistory to store all algorithm runs</span>
 <span class="sd">        intensifier: AbstractRacer</span>
 <span class="sd">            intensification object to issue a racing to decide the current incumbent</span>
-<span class="sd">        initial_design: InitialDesign</span>
+<span class="sd">        initial_design : InitialDesign</span>
 <span class="sd">            initial sampling design</span>
+<span class="sd">        initial_design_kwargs: Optional[dict]</span>
+<span class="sd">            arguments passed to constructor of `~initial_design&#39;</span>
 <span class="sd">        initial_configurations: typing.List[Configuration]</span>
 <span class="sd">            list of initial configurations for initial design --</span>
 <span class="sd">            cannot be used together with initial_design</span>
@@ -357,6 +362,7 @@
             <span class="n">intensifier</span><span class="o">=</span><span class="n">intensifier</span><span class="p">,</span>
             <span class="n">runhistory2epm</span><span class="o">=</span><span class="n">RunHistory2EPM4Cost</span><span class="p">,</span>
             <span class="n">initial_design</span><span class="o">=</span><span class="n">initial_design</span><span class="p">,</span>
+            <span class="n">initial_design_kwargs</span><span class="o">=</span><span class="n">initial_design_kwargs</span><span class="p">,</span>
             <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configurations</span><span class="p">,</span>
             <span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span>
             <span class="n">acquisition_function_optimizer</span><span class="o">=</span><span class="n">RandomSearch</span><span class="p">,</span>
