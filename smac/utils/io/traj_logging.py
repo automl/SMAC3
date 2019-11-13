@@ -308,8 +308,7 @@ class TrajLogger(object):
                 v = float(v)
             elif isinstance(hp, IntegerHyperparameter):
                 v = int(v)
-            elif (isinstance(hp, CategoricalHyperparameter)
-                  or isinstance(hp, Constant)):
+            elif isinstance(hp, (CategoricalHyperparameter, Constant)):
                 # Checking for the correct type requires jumping some hoops
                 # First, we gather possible interpretations of our string
                 interpretations = [v]
@@ -319,14 +318,16 @@ class TrajLogger(object):
                     interpretations.append(True if v == 'True' else False)
                 else:
                     for t in [int, float]:
-                        try: interpretations.append(t(v))
-                        except ValueError: continue
+                        try:
+                            interpretations.append(t(v))
+                        except ValueError:
+                            continue
 
                 # Second, check if it's in the choices / the correct type.
                 if isinstance(hp, CategoricalHyperparameter):
                     legal = set(interpretations) & set(hp.choices)
                 if isinstance(hp, Constant):
-                    legal = {l for l in legal if type(l) == type(hp.default_value)}
+                    legal = {l for l in legal if type(l) is type(hp.default_value)}
 
                 # Third, issue warnings if the interpretation is not unambigious
                 if len(legal) < 1:
