@@ -9,7 +9,7 @@ from smac.utils.constants import VERY_SMALL_NUMBER
 
 class Prior(object):
 
-    def __init__(self, rng: np.random.RandomState = None):
+    def __init__(self, rng: np.random.RandomState):
         """
         Abstract base class to define the interface for priors
         of GP hyperparameter.
@@ -29,9 +29,8 @@ class Prior(object):
 
         """
         if rng is None:
-            self.rng = np.random.RandomState(np.random.randint(0, 10000))
-        else:
-            self.rng = rng
+            raise ValueError('Argument rng must not be `None`.')
+        self.rng = rng
 
     def lnprob(self, theta: float) -> float:
         """
@@ -152,7 +151,7 @@ class Prior(object):
 
 class TophatPrior(Prior):
 
-    def __init__(self, lower_bound: float, upper_bound: float, rng: np.random.RandomState = None):
+    def __init__(self, lower_bound: float, upper_bound: float, rng: np.random.RandomState):
         """
         Tophat prior as it used in the original spearmint code.
 
@@ -171,10 +170,8 @@ class TophatPrior(Prior):
         rng: np.random.RandomState
             Random number generator
         """
-        if rng is None:
-            self.rng = np.random.RandomState(np.random.randint(0, 10000))
-        else:
-            self.rng = rng
+
+        super().__init__(rng)
         self.min = lower_bound
         self._log_min = np.log(lower_bound)
         self.max = upper_bound
@@ -242,7 +239,7 @@ class TophatPrior(Prior):
 
 class HorseshoePrior(Prior):
 
-    def __init__(self, scale: float=0.1, rng: np.random.RandomState=None):
+    def __init__(self, scale: float, rng: np.random.RandomState):
         """
         Horseshoe Prior as it is used in spearmint
 
@@ -259,10 +256,7 @@ class HorseshoePrior(Prior):
         rng: np.random.RandomState
             Random number generator
         """
-        if rng is None:
-            self.rng = np.random.RandomState(np.random.randint(0, 10000))
-        else:
-            self.rng = rng
+        super().__init__(rng)
         self.scale = scale
         self.scale_square = scale ** 2
 
@@ -338,7 +332,7 @@ class HorseshoePrior(Prior):
 
 class LognormalPrior(Prior):
 
-    def __init__(self, sigma: float, mean: float=0, rng: np.random.RandomState = None):
+    def __init__(self, sigma: float, rng: np.random.RandomState, mean: float = 0, ):
         """
         Log normal prior
 
@@ -353,15 +347,12 @@ class LognormalPrior(Prior):
         sigma: float
             Specifies the standard deviation of the normal
             distribution.
-        mean: float
-            Specifies the mean of the normal distribution
         rng: np.random.RandomState
             Random number generator
+        mean: float
+            Specifies the mean of the normal distribution
         """
-        if rng is None:
-            self.rng = np.random.RandomState(np.random.randint(0, 10000))
-        else:
-            self.rng = rng
+        super().__init__(rng)
 
         if mean != 0:
             raise NotImplementedError(mean)
@@ -433,8 +424,8 @@ class LognormalPrior(Prior):
 
 
 class SoftTopHatPrior(Prior):
-    def __init__(self, lower_bound=-10, upper_bound=10, exponent=2, rng: np.random.RandomState = None):
-        super().__init__(rng=rng)
+    def __init__(self, lower_bound, upper_bound, exponent, rng: np.random.RandomState):
+        super().__init__(rng)
 
         with warnings.catch_warnings():
             warnings.simplefilter('error')
@@ -505,7 +496,7 @@ class SoftTopHatPrior(Prior):
 
 class GammaPrior(Prior):
 
-    def __init__(self, a: float, scale: float, loc: float=0, rng: np.random.RandomState = None):
+    def __init__(self, a: float, scale: float, loc: float, rng: np.random.RandomState):
         """
         Gamma prior
 
@@ -522,7 +513,7 @@ class GammaPrior(Prior):
         rng: np.random.RandomState
             Random number generator
         """
-        super().__init__(rng=rng)
+        super().__init__(rng)
 
         self.a = a
         self.loc = loc
