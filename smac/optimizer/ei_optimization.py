@@ -1,4 +1,5 @@
 import abc
+import copy
 import itertools
 import logging
 import time
@@ -735,3 +736,30 @@ class ChallengerList(object):
                 self._index += 1
             self._iteration += 1
             return config
+
+
+class FixedSet(AcquisitionFunctionMaximizer):
+
+    def __init__(self, configurations, **kwargs):
+        """
+        Maximize the acquisition function over a finite list of configurations.
+
+        Parameters
+        ----------
+        configurations : List[~smac.configspace.Configuration]
+            Candidate configurations
+        kwargs : dict
+            Arguments to pass to the super class.
+        """
+        super().__init__(**kwargs)
+        self.configurations = configurations
+
+    def _maximize(
+        self,
+        runhistory: RunHistory,
+        stats: Stats,
+        num_points: int,
+        **kwargs
+    ) -> Iterable[Tuple[float, Configuration]]:
+        configurations = copy.deepcopy(self.configurations)
+        return self._sort_configs_by_acq_value(configurations)
