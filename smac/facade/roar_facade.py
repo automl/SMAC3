@@ -43,10 +43,10 @@ class ROAR(SMAC4AC):
                  intensifier: AbstractRacer = None,
                  initial_design: typing.Optional[typing.Type[InitialDesign]] = None,
                  initial_design_kwargs: typing.Optional[dict] = None,
-                 initial_configurations: typing.List[Configuration]=None,
-                 stats: Stats=None,
-                 rng: np.random.RandomState=None,
-                 run_id: int=1):
+                 initial_configurations: typing.List[Configuration] = None,
+                 stats: Stats = None,
+                 rng: np.random.RandomState = None,
+                 run_id: int = 1):
         """
         Constructor
 
