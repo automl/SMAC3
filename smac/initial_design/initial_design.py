@@ -43,10 +43,11 @@ class InitialDesign:
                  intensifier: AbstractRacer,
                  aggregate_func: typing.Callable,
                  configs: typing.Optional[typing.List[Configuration]] = None,
-                 n_configs_x_params: int = 10,
+                 n_configs_x_params: typing.Optional[int] = 10,
                  max_config_fracs: float = 0.25,
                  run_first_config: bool = True,
-                 fill_random_configs: bool = False
+                 fill_random_configs: bool = False,
+                 init_budget: typing.Optional[int] = None,
                  ):
         """Constructor
 
@@ -73,15 +74,22 @@ class InitialDesign:
             Function to aggregate performance of a configuration across
             instances.
         configs: typing.Optional[typing.List[Configuration]]
-            List of initial configurations.
+            List of initial configurations. Disables the arguments ``n_configs_x_params`` if given.
+            Either this, or ``n_configs_x_params`` or ``init_budget`` must be provided.
         n_configs_x_params: int
-            how many configurations will be used at most in the initial design (X*D)
+            how many configurations will be used at most in the initial design (X*D). Either
+            this, or ``init_budget`` or ``configs`` must be provided. Disables the argument
+            ``n_configs_x_params`` if given.
         max_config_fracs: float
             use at most X*budget in the initial design. Not active if a time limit is given.
         run_first_config: bool
             specify if target algorithm has to be run once on the first configuration before the intensify call
         fill_random_configs: bool
             fill budget with random configurations if initial incumbent sampling returns only 1 configuration
+        init_budget : int, optional
+            Maximal initial budget (disables the arguments ``n_configs_x_params`` and ``configs``
+            if both are given). Either this, or ``n_configs_x_params`` or ``configs`` must be
+            provided.
         """
 
         self.tae_runner = tae_runner
@@ -99,8 +107,26 @@ class InitialDesign:
         self.logger = self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         n_params = len(self.scenario.cs.get_hyperparameters())
-        self.init_budget = int(max(1, min(n_configs_x_params * n_params,
-                                          (max_config_fracs * scenario.ta_run_limit))))
+        if init_budget is not None:
+            self.init_budget = init_budget
+            if n_configs_x_params is not None:
+                self.logger.debug(
+                    'Ignoring argument `n_configs_x_params` (value %d).',
+                    n_configs_x_params,
+                )
+        elif configs is not None:
+            self.init_budget = len(configs)
+        elif n_configs_x_params is not None:
+            self.init_budget = int(max(1, min(n_configs_x_params * n_params,
+                                              (max_config_fracs * scenario.ta_run_limit))))
+        else:
+            raise ValueError('Need to provide either argument `init_budget`, `configs` or '
+                             '`n_configs_x_params`, but provided none of them.')
+        if self.init_budget > scenario.ta_run_limit:
+            raise ValueError(
+                'Initial budget %d cannot be higher than the run limit %d.'
+                % (init_budget, scenario.ta_run_limit)
+            )
         self.logger.info("Running initial design for %d configurations" % self.init_budget)
 
     def select_configurations(self) -> typing.List[Configuration]:
