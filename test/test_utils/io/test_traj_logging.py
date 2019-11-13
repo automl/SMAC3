@@ -16,7 +16,7 @@ except:
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.io.traj_logging import TrajEntry
 
-from smac.configspace import ConfigurationSpace
+from smac.configspace import ConfigurationSpace, Configuration, CategoricalHyperparameter, Constant
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 
@@ -168,13 +168,67 @@ class TrajLoggerTest(unittest.TestCase):
 
         with open('tmp_test_folder/traj_alljson.json') as js:
             data = js.read().split('\n')[:-1]
-
         json_dicts = [json.loads(d) for d in data]
 
         self.assertEquals(json_dicts[0]['cpu_time'], .5)
         self.assertEquals(json_dicts[0]['cost'], 0.9)
         self.assertEquals(len(json_dicts[0]['incumbent']), 3)
         self.assertTrue(json_dicts[0]["incumbent"]["param_a"] == 0.5)
+
+    @patch('smac.stats.stats.Stats')
+    def test_ambigious_categoricals(self, mock_stats):
+        tl = TrajLogger(output_dir='./tmp_test_folder', stats=mock_stats)
+
+        cs = ConfigurationSpace()
+        cs.add_hyperparameters([
+            # Adding another value to the choices with "True", for example, would break the interpretation with aclib2
+            CategoricalHyperparameter('ambigous_categorical', choices=[3, 7.2, True, 0, 'random_string']),
+            Constant('ambigous_constant', value='False')
+        ])
+        mock_stats.ta_time_used = 0.5
+        mock_stats.get_used_wallclock_time = self.mocked_get_used_wallclock_time
+        mock_stats.ta_runs = 1
+        tl.add_entry(0.9, 1, Configuration(cs, {'ambigous_categorical' : True,
+                                                'ambigous_constant' : 'False'}))
+
+        mock_stats.ta_runs = 2
+        mock_stats.ta_time_used = 0
+        tl.add_entry(1.3, 1, Configuration(cs, {'ambigous_categorical' : True,
+                                                'ambigous_constant' : 'False'}))
+
+        mock_stats.ta_time_used = 0
+        tl.add_entry(0.7, 2, Configuration(cs, {'ambigous_categorical' : 7.2,
+                                                'ambigous_constant' : 'False'}))
+
+        self.assertTrue(os.path.exists('tmp_test_folder/traj_aclib2.json'))
+        self.assertTrue(os.path.exists('tmp_test_folder/traj_alljson.json'))
+
+        from_aclib2 = tl.read_traj_aclib_format('tmp_test_folder/traj_aclib2.json', cs)
+        from_alljson = tl.read_traj_alljson_format('tmp_test_folder/traj_alljson.json', cs)
+
+        for reloaded in [from_aclib2, from_alljson]:
+            self.assertIsInstance(reloaded[0]['incumbent']['ambigous_categorical'], bool)
+            self.assertIsInstance(reloaded[-1]['incumbent']['ambigous_categorical'], float)
+            self.assertIsInstance(reloaded[0]['incumbent']['ambigous_constant'], str)
+            self.assertIsInstance(reloaded[-1]['incumbent']['ambigous_constant'], str)
+
+        # An example breaking for aclib2 (unfixable) but working with alljson
+        bad_cs = ConfigurationSpace()
+        bad_cs.add_hyperparameters([
+            CategoricalHyperparameter('ambigous_categorical', choices=[3, 7.2, True, "True", 0, 'random_string']),
+            Constant('ambigous_constant', value='False')
+        ])
+
+        from_aclib2 = tl.read_traj_aclib_format('tmp_test_folder/traj_aclib2.json', bad_cs)
+        from_alljson = tl.read_traj_alljson_format('tmp_test_folder/traj_alljson.json', bad_cs)
+
+        # Wrong! but passes:
+        self.assertIsInstance(from_aclib2[0]['incumbent']['ambigous_categorical'], str)
+
+        self.assertIsInstance(from_alljson[0]['incumbent']['ambigous_categorical'], bool)
+        self.assertIsInstance(from_alljson[-1]['incumbent']['ambigous_categorical'], float)
+        self.assertIsInstance(from_alljson[0]['incumbent']['ambigous_constant'], str)
+        self.assertIsInstance(from_alljson[-1]['incumbent']['ambigous_constant'], str)
 
     def tearDown(self):
         if os.path.exists('tmp_test_folder/traj_old.csv'):

@@ -324,12 +324,12 @@ class TrajLogger(object):
                             continue
 
                 # Second, check if it's in the choices / the correct type.
-                legal = {l for l in legal if hp.is_legal(l)}
+                legal = {l for l in interpretations if hp.is_legal(l)}
 
                 # Third, issue warnings if the interpretation is ambigious
                 if len(legal) != 1:
                     logging.getLogger("smac.trajlogger").warning(
-                        "Ambigous or no interpretation of value {} for hp {} found ({} possible interpretations)"
+                        "Ambigous or no interpretation of value {} for hp {} found ({} possible interpretations). "
                         "Passing string, but this will likely result in an error".format(v, hp.name, len(legal)))
                 else:
                     v = legal.pop()
