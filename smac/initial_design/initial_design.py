@@ -74,9 +74,12 @@ class InitialDesign:
             Function to aggregate performance of a configuration across
             instances.
         configs: typing.Optional[typing.List[Configuration]]
-            List of initial configurations.
+            List of initial configurations. Disables the arguments ``n_configs_x_params`` if given.
+            Either this, or ``n_configs_x_params`` or ``init_budget`` must be provided.
         n_configs_x_params: int
-            how many configurations will be used at most in the initial design (X*D)
+            how many configurations will be used at most in the initial design (X*D). Either
+            this, or ``init_budget`` or ``configs`` must be provided. Disables the argument
+            ``n_configs_x_params`` if given.
         max_config_fracs: float
             use at most X*budget in the initial design. Not active if a time limit is given.
         run_first_config: bool
@@ -84,7 +87,9 @@ class InitialDesign:
         fill_random_configs: bool
             fill budget with random configurations if initial incumbent sampling returns only 1 configuration
         init_budget : int, optional
-            Maximal initial budget (disables the argument ``n_configs_x_params``)
+            Maximal initial budget (disables the arguments ``n_configs_x_params`` and ``configs``
+            if both are given). Either this, or ``n_configs_x_params`` or ``configs`` must be
+            provided.
         """
 
         self.tae_runner = tae_runner
