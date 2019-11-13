@@ -56,7 +56,7 @@ class SMAC4BO(SMAC4AC):
         kwargs['initial_design'] = kwargs.get('initial_design', SobolDesign)
         kwargs['runhistory2epm'] = kwargs.get('runhistory2epm', RunHistory2EPM4Cost)
 
-        init_kwargs = kwargs.get('initial_design_kwargs', dict())
+        init_kwargs = kwargs.get('initial_design_kwargs', dict()) or dict()
         init_kwargs['n_configs_x_params'] = init_kwargs.get('n_configs_x_params', 8)
         init_kwargs['max_config_fracs'] = init_kwargs.get('max_config_fracs', 0.25)
         kwargs['initial_design_kwargs'] = init_kwargs
@@ -64,7 +64,7 @@ class SMAC4BO(SMAC4AC):
         if kwargs.get('model') is None:
             from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel, HammingKernel
 
-            model_kwargs = kwargs.get('model_kwargs', dict())
+            model_kwargs = kwargs.get('model_kwargs', dict()) or dict()
 
             _, rng = get_rng(rng=kwargs.get("rng", None), run_id=kwargs.get("run_id", None), logger=None)
 
@@ -138,17 +138,23 @@ class SMAC4BO(SMAC4AC):
             kwargs['model_kwargs'] = model_kwargs
 
         if kwargs.get('random_configuration_chooser') is None:
-            random_config_chooser_kwargs = kwargs.get('random_configuration_chooser_kwargs', dict())
+            random_config_chooser_kwargs = kwargs.get(
+                'random_configuration_chooser_kwargs',
+                dict(),
+            ) or dict()
             random_config_chooser_kwargs['prob'] = random_config_chooser_kwargs.get('prob', 0.08447232371720552)
             kwargs['random_configuration_chooser_kwargs'] = random_config_chooser_kwargs
 
         if kwargs.get('acquisition_function_optimizer') is None:
-            acquisition_function_optimizer_kwargs = kwargs.get('acquisition_function_optimizer_kwargs', dict())
+            acquisition_function_optimizer_kwargs = kwargs.get(
+                'acquisition_function_optimizer_kwargs',
+                dict(),
+            ) or dict()
             acquisition_function_optimizer_kwargs['n_sls_iterations'] = 10
             kwargs['acquisition_function_optimizer_kwargs'] = acquisition_function_optimizer_kwargs
 
         # only 1 configuration per SMBO iteration
-        intensifier_kwargs = kwargs.get('intensifier_kwargs', dict())
+        intensifier_kwargs = kwargs.get('intensifier_kwargs', dict()) or dict()
         intensifier_kwargs['min_chall'] = 1
         kwargs['intensifier_kwargs'] = intensifier_kwargs
         scenario.intensification_percentage = 1e-10

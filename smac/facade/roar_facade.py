@@ -36,14 +36,17 @@ class ROAR(SMAC4AC):
 
     def __init__(self,
                  scenario: Scenario,
-                 tae_runner: ExecuteTARun = None,
+                 tae_runner: typing.Optional[
+                     typing.Union[typing.Type[ExecuteTARun], typing.Callable]
+                 ] = None,
                  runhistory: RunHistory = None,
                  intensifier: AbstractRacer = None,
-                 initial_design: InitialDesign = None,
-                 initial_configurations: typing.List[Configuration] = None,
-                 stats: Stats = None,
-                 rng: np.random.RandomState = None,
-                 run_id: int = 1):
+                 initial_design: typing.Optional[typing.Type[InitialDesign]] = None,
+                 initial_design_kwargs: typing.Optional[dict] = None,
+                 initial_configurations: typing.List[Configuration]=None,
+                 stats: Stats=None,
+                 rng: np.random.RandomState=None,
+                 run_id: int=1):
         """
         Constructor
 
@@ -62,8 +65,10 @@ class ROAR(SMAC4AC):
             Runhistory to store all algorithm runs
         intensifier: AbstractRacer
             intensification object to issue a racing to decide the current incumbent
-        initial_design: InitialDesign
+        initial_design : InitialDesign
             initial sampling design
+        initial_design_kwargs: Optional[dict]
+            arguments passed to constructor of `~initial_design'
         initial_configurations: typing.List[Configuration]
             list of initial configurations for initial design --
             cannot be used together with initial_design
@@ -87,6 +92,7 @@ class ROAR(SMAC4AC):
             intensifier=intensifier,
             runhistory2epm=RunHistory2EPM4Cost,
             initial_design=initial_design,
+            initial_design_kwargs=initial_design_kwargs,
             initial_configurations=initial_configurations,
             run_id=run_id,
             acquisition_function_optimizer=RandomSearch,
