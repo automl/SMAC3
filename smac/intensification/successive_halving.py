@@ -287,23 +287,24 @@ class SuccessiveHalving(AbstractRacer):
             curr_insts = self.inst_seed_pairs
         n_insts_remaining = len(curr_insts) - self.curr_inst_idx - 1
 
+        self.logger.debug(" Running challenger  -  %s" % str(challenger))
+
+        # run the next instance-seed pair for the given configuration
+        instance, seed = curr_insts[self.curr_inst_idx]
+
+        # selecting cutoff if running adaptive capping
+        cutoff = self._adapt_cutoff(challenger=challenger,
+                                    incumbent=incumbent,
+                                    run_history=run_history,
+                                    inc_sum_cost=inc_sum_cost)
+        if cutoff is not None and cutoff <= 0:
+            # ran out of time to validate challenger
+            self.logger.debug("Stop challenger itensification due to adaptive capping.")
+            self.curr_inst_idx = np.inf
+
+        self.logger.debug('Cutoff for challenger: %s' % str(cutoff))
+
         try:
-            self.logger.debug(" Running challenger  -  %s" % str(challenger))
-
-            # run the next instance-seed pair for the given configuration
-            instance, seed = curr_insts[self.curr_inst_idx]
-
-            # selecting cutoff if running adaptive capping
-            cutoff = self._adapt_cutoff(challenger=challenger,
-                                        incumbent=incumbent,
-                                        run_history=run_history,
-                                        inc_sum_cost=inc_sum_cost)
-            if cutoff is not None and cutoff <= 0:
-                # ran out of time to validate challenger
-                self.logger.debug("Stop challenger itensification due to adaptive capping.")
-                self.curr_inst_idx = np.inf
-
-            self.logger.debug('Cutoff for challenger: %s' % str(cutoff))
 
             # run target algorithm for each instance-seed pair
             self.logger.debug("Execute target algorithm")
@@ -346,21 +347,21 @@ class SuccessiveHalving(AbstractRacer):
 
         # if all configurations for the current stage have been evaluated, reset stage
         if len(self.curr_challengers) == self.n_configs_in_stage[self.stage] and n_insts_remaining <= 0:
-            self._update_sh_stage(run_history=run_history)
+            self._update_stage(run_history=run_history)
 
         # get incumbent cost
         inc_perf = run_history.get_cost(incumbent)
 
         return incumbent, inc_perf
 
-    def next_challenger(self, challengers: typing.Optional[typing.List[Configuration]],
-                        chooser: typing.Optional['smac.optimizer.smbo.SMBO'],
-                        run_history: RunHistory,
-                        repeat_configs: bool = True) -> Configuration:
+    def get_next_challenger(self, challengers: typing.Optional[typing.List[Configuration]],
+                            chooser: typing.Optional['smac.optimizer.smbo.SMBO'],
+                            run_history: RunHistory,
+                            repeat_configs: bool = True) -> Configuration:
         """
         Selects which challenger to use based on the iteration stage and set the iteration parameters.
         First iteration will choose configurations from the ``chooser`` or input challengers,
-        while the later iterations sample top configurations from the previously selected challengers in that iteration
+        while the later iterations pick top configurations from the previously selected challengers in that iteration
 
         Parameters
         ----------
@@ -375,7 +376,7 @@ class SuccessiveHalving(AbstractRacer):
         """
         # if this is the first run, then initialize tracking variables
         if not hasattr(self, 'stage'):
-            self._update_sh_stage(run_history=run_history)
+            self._update_stage(run_history=run_history)
         
         curr_budget = int(self.all_budgets[self.stage])
         prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
@@ -408,9 +409,11 @@ class SuccessiveHalving(AbstractRacer):
 
         return challenger
 
-    def _update_sh_stage(self, run_history: RunHistory = None) -> None:
+    def _update_stage(self, run_history: RunHistory = None) -> None:
         """
-        Update tracking information for a new stage/iteration and update statistics
+        Update tracking information for a new stage/iteration and update statistics.
+        This method is called to initialize stage variables and after all configurations
+        of a successive halving stage are completed.
 
         Parameters
         ----------
@@ -420,6 +423,7 @@ class SuccessiveHalving(AbstractRacer):
 
         if not hasattr(self, 'stage'):
             # initialize all relevant variables for first run
+            # (this initialization is not a part of init because hyperband uses the same init method and has a )
             # to track iteration and stage
             self.sh_iters = 0
             self.stage = 0
@@ -454,7 +458,6 @@ class SuccessiveHalving(AbstractRacer):
                 self.sh_iters += 1
                 self.stage = 0
                 self.configs_to_run = None
-                self.iteration_done = True
 
                 # randomize instance-seed pairs per successive halving run, if user specifies
                 if self.instance_order == 'shuffle':

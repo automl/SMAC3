@@ -145,6 +145,8 @@ class SMBO(object):
             acquisition_func, self.config_space, rng
         )
 
+        self.initial_design_configs = []
+
         self.predict_incumbent = predict_incumbent
 
     def start(self):
@@ -157,26 +159,22 @@ class SMBO(object):
         if self.stats.ta_runs == 0 and self.incumbent is None:
             self.logger.info('Running initial design')
             # Intensifier initialization
-            self.incumbent = self.initial_design.run()
+            self.initial_design_configs = self.initial_design.select_configurations()
 
-        elif self.stats.ta_runs > 0 and self.incumbent is None:
-            raise ValueError("According to stats there have been runs performed, "
-                             "but the optimizer cannot detect an incumbent. Did "
-                             "you set the incumbent (e.g. after restoring state)?")
-        elif self.stats.ta_runs == 0 and self.incumbent is not None:
-            raise ValueError("An incumbent is specified, but there are no runs "
-                             "recorded in the Stats-object. If you're restoring "
-                             "a state, please provide the Stats-object.")
-        else:
-            # Restoring state!
-            self.logger.info("State Restored! Starting optimization with "
-                             "incumbent %s", self.incumbent)
-            self.logger.info("State restored with following budget:")
-            self.stats.print_stats()
-
-        # To be on the safe side -> never return "None" as incumbent
-        if not self.incumbent:
-            self.incumbent = self.config_space.get_default_configuration()
+        # elif self.stats.ta_runs > 0 and self.incumbent is None:
+        #     raise ValueError("According to stats there have been runs performed, "
+        #                      "but the optimizer cannot detect an incumbent. Did "
+        #                      "you set the incumbent (e.g. after restoring state)?")
+        # elif self.stats.ta_runs == 0 and self.incumbent is not None:
+        #     raise ValueError("An incumbent is specified, but there are no runs "
+        #                      "recorded in the Stats-object. If you're restoring "
+        #                      "a state, please provide the Stats-object.")
+        # else:
+        #     # Restoring state!
+        #     self.logger.info("State Restored! Starting optimization with "
+        #                      "incumbent %s", self.incumbent)
+        #     self.logger.info("State restored with following budget:")
+        #     self.stats.print_stats()
 
     def run(self):
         """Runs the Bayesian optimization loop
@@ -199,16 +197,21 @@ class SMBO(object):
             start_time = time.time()
 
             # sample next configuration for intensification
-            challenger = self.intensifier.next_challenger(
-                challengers=None,
+            # Initial design runs are also included in the BO loop now.
+            challenger = self.intensifier.get_next_challenger(
+                challengers=self.initial_design_configs,
                 chooser=self,
                 run_history=self.runhistory,
                 repeat_configs=self.intensifier.repeat_configs
             )
 
+            # remove config from initial design challengers to not repeat it again
+            self.initial_design_configs = [c for c in self.initial_design_configs if c != challenger]
+
             time_spent = time.time() - start_time
             time_left = self._get_timebound_for_intensification(time_spent)
 
+            # evaluate selected challenger
             self.logger.debug("Intensify - evaluate challenger")
 
             self.incumbent, inc_perf = self.intensifier.eval_challenger(
@@ -392,7 +395,7 @@ class SMBO(object):
                                         output_fn=new_rh_path)
         return new_rh
 
-    def _get_timebound_for_intensification(self, time_spent: float = 0):
+    def _get_timebound_for_intensification(self, time_spent: float):
         """Calculate time left for intensify from the time spent on
         choosing challengers using the fraction of time intended for
         intensification (which is specified in

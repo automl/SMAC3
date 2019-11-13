@@ -1,5 +1,6 @@
 import logging
 import typing
+from collections import OrderedDict
 
 from ConfigSpace.configuration_space import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import NumericalHyperparameter, \
@@ -140,70 +141,23 @@ class InitialDesign:
                     configs.extend(random_configs)
                 else:
                     configs.append(random_configs)
-            return configs
-        else:
-            return self.configs
+            self.configs = configs
 
-    def _select_configurations(self) -> typing.List[Configuration]:
-        raise NotImplementedError
-
-    def run(self) -> Configuration:
-        """Run the initial design.
-
-        Returns
-        -------
-        incumbent: Configuration
-            Initial incumbent configuration
-        """
-        configs = self.select_configurations()
-        for config in configs:
+        for config in self.configs:
             if config.origin is None:
                 config.origin = 'Initial design'
 
         # add this incumbent right away to have an entry to time point 0
         self.traj_logger.add_entry(train_perf=2**31,
                                    incumbent_id=1,
-                                   incumbent=configs[0])
+                                   incumbent=self.configs[0])
 
-        # run first design
-        inc = None
-        if self.run_first_config:
-            # ensures that first design is part of trajectory file
-            inc = self._run_first_configuration(configs[0], self.scenario)
-            configs.pop(0)
+        # removing duplicates
+        self.configs = list(OrderedDict.fromkeys(self.configs))
+        return self.configs
 
-        if len(set(configs)) >= 1:
-            # intensify will skip all challenger that are identical with the incumbent;
-            # if <configs> has only identical configurations,
-            # intensifiy will not do any configuration runs
-            # (also not on the incumbent)
-            # therefore, at least two different configurations have to be in <configs>
-
-            # running intensification
-            while not self.intensifier.iteration_done:
-                # sample next configuration for intensification
-                config = self.intensifier.next_challenger(
-                    challengers=configs,
-                    chooser=None,
-                    run_history=self.runhistory,
-                    repeat_configs=self.intensifier.repeat_configs
-                )
-
-                # stop if no more configs are generated
-                if not config:
-                    break
-                # remove config from <configs> to not repeat it again
-                configs = [c for c in configs if c != config]
-
-                # evaluate configuration
-                inc, _ = self.intensifier.eval_challenger(
-                    challenger=config,
-                    incumbent=inc,
-                    run_history=self.runhistory,
-                    aggregate_func=self.aggregate_func,
-                )
-
-        return inc
+    def _select_configurations(self) -> typing.List[Configuration]:
+        raise NotImplementedError
 
     def _run_first_configuration(self, initial_incumbent, scenario):
         """Runs the initial design by calling the target algorithm and adding new entries to the trajectory logger.

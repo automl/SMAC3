@@ -167,10 +167,10 @@ class Intensifier(AbstractRacer):
         while True:
 
             # get challenger
-            challenger = self.next_challenger(challengers=challengers,
-                                              optimizer=optimizer,
-                                              n_chall=n_chall,
-                                              run_history=run_history)
+            challenger = self.get_next_challenger(challengers=challengers,
+                                                  optimizer=optimizer,
+                                                  n_chall=n_chall,
+                                                  run_history=run_history)
             n_chall += 1
             if not challenger:
                 self.logger.debug('All configurations have been evaluated.')

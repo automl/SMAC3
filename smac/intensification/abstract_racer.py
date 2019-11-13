@@ -125,10 +125,10 @@ class AbstractRacer(object):
 
         raise NotImplementedError()
 
-    def next_challenger(self, challengers: typing.Optional[typing.List[Configuration]],
-                        chooser: typing.Optional['smac.optimizer.smbo.SMBO'],
-                        run_history: RunHistory,
-                        repeat_configs: bool = True) -> Configuration:
+    def get_next_challenger(self, challengers: typing.Optional[typing.List[Configuration]],
+                            chooser: typing.Optional['smac.optimizer.smbo.SMBO'],
+                            run_history: RunHistory,
+                            repeat_configs: bool = True) -> Configuration:
         """
         Abstract method for choosing the next challenger, to allow for different selections across intensifiers
         uses ``_next_challenger()`` by default
@@ -165,7 +165,6 @@ class AbstractRacer(object):
         start_time = time.time()
 
         used_configs = set(run_history.get_all_configs())
-        challenger = None
 
         if challengers:
             # iterate over challengers provided
@@ -177,19 +176,20 @@ class AbstractRacer(object):
             chall_gen = chooser.choose_next()
         else:
             self.logger.debug("No configurations/chooser provided. Cannot generate challenger!")
-            return challenger
+            return None
+
+        self.logger.debug('Time to select next challenger: %.4f' % (time.time() - start_time))
 
         # select challenger from the generators
         for challenger in chall_gen:
             if repeat_configs:  # repetitions allowed
-                break
+                return challenger
             else:               # select only a unique challenger
                 if challenger not in used_configs:
-                    break
+                    return challenger
 
-        self.logger.debug('Time to select next challenger: %.4f' % (time.time() - start_time))
-
-        return challenger
+        self.logger.debug("No valid challenger was generated!")
+        return None
 
     def get_num_iterations(self) -> int:
         """

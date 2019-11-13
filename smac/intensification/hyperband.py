@@ -114,11 +114,18 @@ class Hyperband(SuccessiveHalving):
         self.s = np.floor(np.log(self.max_budget / self.initial_budget) / np.log(self.eta))
 
         # initialize tracking variables
-        self._update_hb_stage()
+        self._update_stage()
 
-    def _update_hb_stage(self) -> None:
+    def _update_stage(self, run_history: RunHistory = None) -> None:
         """
-        Update tracking information for a new stage/iteration and update statistics
+        Update tracking information for a new stage/iteration and update statistics.
+        This method is called to initialize stage variables and after all configurations
+        of a successive halving stage are completed.
+
+        Parameters
+        ----------
+         run_history : RunHistory
+            stores all runs we ran so far
         """
         # compute min budget for new SH run
         sh_initial_budget = self.eta**-self.s * self.max_budget
@@ -201,22 +208,20 @@ class Hyperband(SuccessiveHalving):
                                                                   time_bound=time_bound,
                                                                   log_traj=log_traj)
 
-        self.iteration_done = self.sh_intensifier.iteration_done
-
         # reset if SH iteration is over, else update for next iteration
         if not self.sh_intensifier or self.sh_intensifier.get_num_iterations() >= 1:
-            self._update_hb_stage()
+            self._update_stage()
 
         return incumbent, inc_perf
 
-    def next_challenger(self, challengers: typing.Optional[typing.List[Configuration]],
-                        chooser: typing.Optional['smac.optimizer.smbo.SMBO'],
-                        run_history: RunHistory,
-                        repeat_configs: bool = True):
+    def get_next_challenger(self, challengers: typing.Optional[typing.List[Configuration]],
+                            chooser: typing.Optional['smac.optimizer.smbo.SMBO'],
+                            run_history: RunHistory,
+                            repeat_configs: bool = True):
         """
         Selects which challenger to use based on the iteration stage and set the iteration parameters.
         First iteration will choose configurations from the ``chooser`` or input challengers,
-        while the later iterations sample top configurations from the previously selected challengers in that iteration
+        while the later iterations pick top configurations from the previously selected challengers in that iteration
 
         Parameters
         ----------
@@ -229,7 +234,7 @@ class Hyperband(SuccessiveHalving):
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
         """
-        challenger = self.sh_intensifier.next_challenger(
+        challenger = self.sh_intensifier.get_next_challenger(
                          challengers=challengers,
                          chooser=chooser,
                          run_history=run_history,
