@@ -48,7 +48,7 @@ class TestSingleInitialDesign(unittest.TestCase):
             aggregate_func=average_cost,
         )
 
-        inc = dc.run()
+        dc.run()
         self.assertTrue(stats.ta_runs == 1)
         self.assertTrue(len(rh.data) == 0)
 
@@ -70,8 +70,8 @@ class TestSingleInitialDesign(unittest.TestCase):
             run_obj_time=False,
         )
 
-        configs = [Configuration(configuration_space=self.cs, values={"x1":4}),
-                   Configuration(configuration_space=self.cs, values={"x1":2})]
+        configs = [Configuration(configuration_space=self.cs, values={"x1": 4}),
+                   Configuration(configuration_space=self.cs, values={"x1": 2})]
         dc = InitialDesign(
             tae_runner=self.ta,
             scenario=self.scenario,
