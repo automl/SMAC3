@@ -43,10 +43,11 @@ class InitialDesign:
                  intensifier: Intensifier,
                  aggregate_func: typing.Callable,
                  configs: typing.Optional[typing.List[Configuration]] = None,
-                 n_configs_x_params: int = 10,
+                 n_configs_x_params: typing.Optional[int] = 10,
                  max_config_fracs: float = 0.25,
                  run_first_config: bool = True,
-                 fill_random_configs: bool = False
+                 fill_random_configs: bool = False,
+                 init_budget: typing.Optional[int] = None,
                  ):
         """Constructor
 
@@ -82,6 +83,8 @@ class InitialDesign:
             specify if target algorithm has to be run once on the first configuration before the intensify call
         fill_random_configs: bool
             fill budget with random configurations if initial incumbent sampling returns only 1 configuration
+        init_budget : int, optional
+            Maximal initial budget (alternative to ``n_configs_x_params``)
         """
 
         self.tae_runner = tae_runner
@@ -99,8 +102,23 @@ class InitialDesign:
         self.logger = self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         n_params = len(self.scenario.cs.get_hyperparameters())
-        self.init_budget = int(max(1, min(n_configs_x_params * n_params,
-                                          (max_config_fracs * scenario.ta_run_limit))))
+        if init_budget is not None:
+            self.init_budget = init_budget
+            if n_configs_x_params is not None:
+                self.logger.debug(
+                    'Ignoring argument `n_configs_x_params` (value %d).',
+                    n_configs_x_params,
+                )
+        elif configs is not None:
+            self.init_budget = len(configs)
+        else:
+            self.init_budget = int(max(1, min(n_configs_x_params * n_params,
+                                              (max_config_fracs * scenario.ta_run_limit))))
+        if self.init_budget > scenario.ta_run_limit:
+            raise ValueError(
+                'Initial budget %d cannot be higher than the run limit %d.'
+                % (init_budget, scenario.ta_run_limit)
+            )
         self.logger.info("Running initial design for %d configurations" % self.init_budget)
 
     def select_configurations(self) -> typing.List[Configuration]:
