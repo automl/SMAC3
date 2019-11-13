@@ -269,6 +269,7 @@
             
   <h1>Source code for smac.optimizer.ei_optimization</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">time</span>
@@ -1005,6 +1006,33 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_iteration</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">return</span> <span class="n">config</span></div>
+
+
+<div class="viewcode-block" id="FixedSet"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.FixedSet">[docs]</a><span class="k">class</span> <span class="nc">FixedSet</span><span class="p">(</span><span class="n">AcquisitionFunctionMaximizer</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configurations</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Maximize the acquisition function over a finite list of configurations.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        configurations : List[~smac.configspace.Configuration]</span>
+<span class="sd">            Candidate configurations</span>
+<span class="sd">        kwargs : dict</span>
+<span class="sd">            Arguments to pass to the super class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">configurations</span> <span class="o">=</span> <span class="n">configurations</span>
+
+    <span class="k">def</span> <span class="nf">_maximize</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
+        <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">,</span>
+        <span class="n">num_points</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
+        <span class="n">configurations</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">configurations</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sort_configs_by_acq_value</span><span class="p">(</span><span class="n">configurations</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

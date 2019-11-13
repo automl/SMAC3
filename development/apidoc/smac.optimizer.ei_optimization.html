@@ -353,6 +353,21 @@ in each iteration which are never looked at.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="smac.optimizer.ei_optimization.FixedSet">
+<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.ei_optimization.</code><code class="sig-name descname">FixedSet</code><span class="sig-paren">(</span><em class="sig-param">configurations</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#FixedSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.FixedSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</span></code></a></p>
+<p>Maximize the acquisition function over a finite list of configurations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>configurations</strong> (<em>List</em><em>[</em><em>Configuration</em><em>]</em>) – Candidate configurations</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em>) – Arguments to pass to the super class.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
 <dt id="smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch">
 <em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.ei_optimization.</code><code class="sig-name descname">InterleavedLocalAndRandomSearch</code><span class="sig-paren">(</span><em class="sig-param">acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">config_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em class="sig-param">rng: Union[bool</em>, <em class="sig-param">numpy.random.mtrand.RandomState] = None</em>, <em class="sig-param">max_steps: Optional[int] = None</em>, <em class="sig-param">n_steps_plateau_walk: int = 10</em>, <em class="sig-param">n_sls_iterations: int = 10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#InterleavedLocalAndRandomSearch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</span></code></a></p>
