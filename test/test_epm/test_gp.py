@@ -329,17 +329,23 @@ class TestGP(unittest.TestCase):
     def test_sampling_shape(self):
         X = np.arange(-5, 5, 0.1).reshape((-1, 1))
         X_test = np.arange(-5.05, 5.05, 0.1).reshape((-1, 1))
-        y = np.sin(X)
-        rng = np.random.RandomState(1)
-        for gp in (
-            get_gp(n_dimensions=1, rs=rng, noise=1e-10, normalize_y=False),
-            get_gp(n_dimensions=1, rs=rng, noise=1e-10, normalize_y=True),
-        ):
-            gp._train(X, y)
-            func = gp.sample_functions(X_test=X_test, n_funcs=1)
-            self.assertEqual(func.shape, (101, 1))
-            func = gp.sample_functions(X_test=X_test, n_funcs=2)
-            self.assertEqual(func.shape, (101, 2))
+        for shape in (None, (-1, 1)):
+
+            if shape is None:
+                y = np.sin(X).flatten()
+            else:
+                y = np.sin(X).reshape(shape)
+
+            rng = np.random.RandomState(1)
+            for gp in (
+                get_gp(n_dimensions=1, rs=rng, noise=1e-10, normalize_y=False),
+                get_gp(n_dimensions=1, rs=rng, noise=1e-10, normalize_y=True),
+            ):
+                gp._train(X, y)
+                func = gp.sample_functions(X_test=X_test, n_funcs=1)
+                self.assertEqual(func.shape, (101, 1), msg=shape)
+                func = gp.sample_functions(X_test=X_test, n_funcs=2)
+                self.assertEqual(func.shape, (101, 2))
 
     def test_normalization(self):
         X = np.arange(-5, 5, 0.1).reshape((-1, 1))
