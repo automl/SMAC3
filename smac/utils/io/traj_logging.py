@@ -159,7 +159,7 @@ class TrajLogger(object):
                 conf.append("%s='%s'" % (p, repr(incumbent[p])))
 
         traj_entry = {"cpu_time": ta_time_used,
-                      "total_cpu_time": None,  # TODO: fix this
+                      "total_cpu_time": None,
                       "wallclock_time": wallclock_time,
                       "evaluations": self.stats.ta_runs,
                       "cost": train_perf,
@@ -200,7 +200,7 @@ class TrajLogger(object):
             inc_dict = incumbent.get_dictionary()
 
         traj_entry = {"cpu_time": ta_time_used,
-                      "total_cpu_time": None,  # TODO: fix this
+                      "total_cpu_time": None,
                       "wallclock_time": wallclock_time,
                       "evaluations": self.stats.ta_runs,
                       "cost": train_perf,
@@ -234,7 +234,7 @@ class TrajLogger(object):
             Each entry in the list is a dictionary of the form
             {
             "cpu_time": float,
-            "total_cpu_time": None, # TODO
+            "total_cpu_time": None,
             "wallclock_time": float,
             "evaluations": int
             "cost": float,
@@ -268,7 +268,7 @@ class TrajLogger(object):
             Each entry in the list is a dictionary of the form
             {
             "cpu_time": float,
-            "total_cpu_time": None, # TODO
+            "total_cpu_time": None,
             "wallclock_time": float,
             "evaluations": int
             "cost": float,
