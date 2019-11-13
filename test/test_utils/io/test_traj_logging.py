@@ -66,6 +66,7 @@ class TrajLoggerTest(unittest.TestCase):
 
         self.assertTrue(os.path.exists('tmp_test_folder/traj_old.csv'))
         self.assertTrue(os.path.exists('tmp_test_folder/traj_aclib2.json'))
+        self.assertTrue(os.path.exists('tmp_test_folder/traj_alljson.json'))
 
         with open('tmp_test_folder/traj_old.csv') as to:
             data = to.read().split('\n')[:-1]
@@ -87,6 +88,14 @@ class TrajLoggerTest(unittest.TestCase):
         self.assertEquals(json_dict['cost'], 0.9)
         self.assertEquals(len(json_dict['incumbent']), 3)
         self.assertTrue("param_a='0.5'" in json_dict['incumbent'])
+
+        with open('tmp_test_folder/traj_alljson.json') as js:
+            json_dict = json.load(js)
+
+        self.assertEquals(json_dict['cpu_time'], .5)
+        self.assertEquals(json_dict['cost'], 0.9)
+        self.assertEquals(len(json_dict['incumbent']), 3)
+        self.assertTrue(json_dict["incumbent"]["param_a"] == 0.5)
 
         # And finally, test the list that's added to the trajectory class
         self.assertEqual(tl.trajectory[0], TrajEntry(0.9, 1,
@@ -122,6 +131,7 @@ class TrajLoggerTest(unittest.TestCase):
 
         self.assertTrue(os.path.exists('tmp_test_folder/traj_old.csv'))
         self.assertTrue(os.path.exists('tmp_test_folder/traj_aclib2.json'))
+        self.assertTrue(os.path.exists('tmp_test_folder/traj_alljson.json'))
 
         with open('tmp_test_folder/traj_old.csv') as to:
             data = to.read().split('\n')[:-1]
@@ -156,11 +166,23 @@ class TrajLoggerTest(unittest.TestCase):
         self.assertEquals(len(json_dicts[0]['incumbent']), 3)
         self.assertTrue("param_a='0.5'" in json_dicts[0]['incumbent'])
 
+        with open('tmp_test_folder/traj_alljson.json') as js:
+            data = js.read().split('\n')[:-1]
+
+        json_dicts = [json.loads(d) for d in data]
+
+        self.assertEquals(json_dicts[0]['cpu_time'], .5)
+        self.assertEquals(json_dicts[0]['cost'], 0.9)
+        self.assertEquals(len(json_dicts[0]['incumbent']), 3)
+        self.assertTrue(json_dicts[0]["incumbent"]["param_a"] == 0.5)
+
     def tearDown(self):
         if os.path.exists('tmp_test_folder/traj_old.csv'):
             os.remove('tmp_test_folder/traj_old.csv')
         if os.path.exists('tmp_test_folder/traj_aclib2.json'):
             os.remove('tmp_test_folder/traj_aclib2.json')
+        if os.path.exists('tmp_test_folder/traj_alljson.json'):
+            os.remove('tmp_test_folder/traj_alljson.json')
         if os.path.exists('tmp_test_folder'):
             os.rmdir('tmp_test_folder')
 

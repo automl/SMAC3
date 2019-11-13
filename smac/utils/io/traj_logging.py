@@ -70,6 +70,7 @@ class TrajLogger(object):
                         '"Configuration..."\n')
 
             self.aclib_traj_fn = os.path.join(output_dir, "traj_aclib2.json")
+            self.alljson_traj_fn = os.path.join(output_dir, "traj_alljson.json")
 
         self.trajectory = []
 
@@ -97,6 +98,8 @@ class TrajLogger(object):
                                     ta_time_used, wallclock_time)
             self._add_in_aclib_format(train_perf, incumbent_id, incumbent,
                                       ta_time_used, wallclock_time)
+            self._add_in_alljson_format(train_perf, incumbent_id, incumbent,
+                                        ta_time_used, wallclock_time)
 
     def _add_in_old_format(self, train_perf: float, incumbent_id: int,
                            incumbent: Configuration, ta_time_used: float,
@@ -163,6 +166,8 @@ class TrajLogger(object):
                       "cost": train_perf,
                       "incumbent": conf
                       }
+        # Silent support for passing configuration-dict's directly (since actual Configuration's always have
+        #   origin-attribute since v0.4.11 and minimum required by SMAC is 0.4.6):
         try:
             traj_entry["origin"] = incumbent.origin
         except AttributeError:
@@ -171,6 +176,81 @@ class TrajLogger(object):
         with open(self.aclib_traj_fn, "a") as fp:
             json.dump(traj_entry, fp)
             fp.write("\n")
+
+    def _add_in_alljson_format(self, train_perf: float, incumbent_id: int,
+                               incumbent: Configuration, ta_time_used: float,
+                               wallclock_time: float):
+        """Adds entries to AClib2-like (but with configs as json) trajectory file
+
+        Parameters
+        ----------
+        train_perf: float
+            Estimated performance on training (sub)set
+        incumbent_id: int
+            Id of incumbent
+        incumbent: Configuration()
+            Current incumbent configuration
+        ta_time_used: float
+            CPU time used by the target algorithm
+        wallclock_time: float
+            Wallclock time used so far
+        """
+        # Silent support for passing configuration-dict's directly:
+        inc_dict = incumbent
+        if isinstance(incumbent, Configuration):
+            inc_dict = incumbent.get_dictionary()
+
+        traj_entry = {"cpu_time": ta_time_used,
+                      "total_cpu_time": None,  # TODO: fix this
+                      "wallclock_time": wallclock_time,
+                      "evaluations": self.stats.ta_runs,
+                      "cost": train_perf,
+                      "incumbent": inc_dict,
+                      }
+        # Silent support for passing configuration-dict's directly (since actual Configuration's always have
+        #   origin-attribute since v0.4.11 and minimum required by SMAC is 0.4.6):
+        try:
+            traj_entry["origin"] = incumbent.origin
+        except AttributeError:
+            traj_entry["origin"] = "UNKNOWN"
+
+        with open(self.alljson_traj_fn, "a") as fp:
+            json.dump(traj_entry, fp)
+            fp.write("\n")
+
+    @staticmethod
+    def read_traj_alljson_format(fn: str, cs: ConfigurationSpace):
+        """Reads trajectory from file
+
+        Parameters
+        ----------
+        fn: str
+            Filename with saved runhistory in self._add_in_alljson_format format
+        cs: ConfigurationSpace
+            Configuration Space to translate dict object into Confiuration object
+
+        Returns
+        -------
+        trajectory: list
+            Each entry in the list is a dictionary of the form
+            {
+            "cpu_time": float,
+            "total_cpu_time": None, # TODO
+            "wallclock_time": float,
+            "evaluations": int
+            "cost": float,
+            "incumbent": Configuration
+            }
+        """
+
+        trajectory = []
+        with open(fn) as fp:
+            for line in fp:
+                entry = json.loads(line)
+                entry["incumbent"] = Configuration(cs, entry["incumbent"])
+                trajectory.append(entry)
+
+        return trajectory
 
     @staticmethod
     def read_traj_aclib_format(fn: str, cs: ConfigurationSpace):
@@ -209,7 +289,6 @@ class TrajLogger(object):
 
     @staticmethod
     def _convert_dict_to_config(config_list: typing.List[str], cs: ConfigurationSpace):
-        # CAN BE DONE IN CONFIGSPACE
         """Since we save a configurations in a dictionary str->str we have to
         try to figure out the type (int, float, str) of each parameter value
 
