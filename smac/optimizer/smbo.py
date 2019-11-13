@@ -269,7 +269,7 @@ class SMBO(object):
             if self.runhistory.empty():
                 raise ValueError("Runhistory is empty and the cost value of "
                                  "the incumbent is unknown.")
-            incumbent, incumbent_array, incumbent_value = self._get_incumbent_value()
+            incumbent, incumbent_array, incumbent_value = self._get_incumbent()
         else:
             incumbent = None
             incumbent_array = None
@@ -291,7 +291,7 @@ class SMBO(object):
         )
         return challengers
 
-    def _get_incumbent_value(self) -> typing.Tuple[float, np.ndarray, Configuration]:
+    def _get_incumbent(self) -> typing.Tuple[float, np.ndarray, Configuration]:
         '''Get incumbent value, configuration, and array representation.
 
         This is retreived either from the runhistory or from best predicted
