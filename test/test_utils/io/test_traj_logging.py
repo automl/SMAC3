@@ -188,17 +188,17 @@ class TrajLoggerTest(unittest.TestCase):
         mock_stats.ta_time_used = 0.5
         mock_stats.get_used_wallclock_time = self.mocked_get_used_wallclock_time
         mock_stats.ta_runs = 1
-        tl.add_entry(0.9, 1, Configuration(cs, {'ambigous_categorical' : True,
-                                                'ambigous_constant' : 'False'}))
+        tl.add_entry(0.9, 1, Configuration(cs, {'ambigous_categorical': True,
+                                                'ambigous_constant': 'False'}))
 
         mock_stats.ta_runs = 2
         mock_stats.ta_time_used = 0
-        tl.add_entry(1.3, 1, Configuration(cs, {'ambigous_categorical' : True,
-                                                'ambigous_constant' : 'False'}))
+        tl.add_entry(1.3, 1, Configuration(cs, {'ambigous_categorical': True,
+                                                'ambigous_constant': 'False'}))
 
         mock_stats.ta_time_used = 0
-        tl.add_entry(0.7, 2, Configuration(cs, {'ambigous_categorical' : 7.2,
-                                                'ambigous_constant' : 'False'}))
+        tl.add_entry(0.7, 2, Configuration(cs, {'ambigous_categorical': 7.2,
+                                                'ambigous_constant': 'False'}))
 
         self.assertTrue(os.path.exists('tmp_test_folder/traj_aclib2.json'))
         self.assertTrue(os.path.exists('tmp_test_folder/traj_alljson.json'))
@@ -225,6 +225,7 @@ class TrajLoggerTest(unittest.TestCase):
         # Wrong! but passes:
         self.assertIsInstance(from_aclib2[0]['incumbent']['ambigous_categorical'], str)
 
+        # Works for alljson:
         self.assertIsInstance(from_alljson[0]['incumbent']['ambigous_categorical'], bool)
         self.assertIsInstance(from_alljson[-1]['incumbent']['ambigous_categorical'], float)
         self.assertIsInstance(from_alljson[0]['incumbent']['ambigous_constant'], str)
