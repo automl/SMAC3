@@ -6,7 +6,7 @@ import typing
 import collections
 
 from ConfigSpace.configuration_space import ConfigurationSpace, Configuration
-from ConfigSpace.hyperparameters import FloatHyperparameter, IntegerHyperparameter
+from ConfigSpace.hyperparameters import FloatHyperparameter, IntegerHyperparameter, CategoricalHyperparameter, Constant
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -308,6 +308,38 @@ class TrajLogger(object):
                 v = float(v)
             elif isinstance(hp, IntegerHyperparameter):
                 v = int(v)
+            elif (isinstance(hp, CategoricalHyperparameter)
+                  or isinstance(hp, Constant)):
+                # Checking for the correct type requires jumping some hoops
+                # First, we gather possible interpretations of our string
+                interpretations = [v]
+                if v in ["True", "False"]:
+                    # Special Case for booleans (assuming we support them)
+                    # This is important to avoid false positive warnings triggered by 1 == True or "False" == True
+                    interpretations.append(True if v == 'True' else False)
+                else:
+                    for t in [int, float]:
+                        try: interpretations.append(t(v))
+                        except ValueError: continue
+
+                # Second, check if it's in the choices / the correct type.
+                if isinstance(hp, CategoricalHyperparameter):
+                    legal = set(interpretations) & set(hp.choices)
+                if isinstance(hp, Constant):
+                    legal = {l for l in legal if type(l) == type(hp.default_value)}
+
+                # Third, issue warnings if the interpretation is not unambigious
+                if len(legal) < 1:
+                    logging.getLogger("smac.trajlogger").warning(
+                        "No legal interpretation of value {} for hp {} found. "
+                        "Trying to pass string, but this will likely result in an error".format(v, hp.name))
+                if len(legal) > 1:
+                    logging.getLogger("smac.trajlogger").warning(
+                        "Multiple interpretations of value {} for hp {} found"
+                        "Passing string, but this might lead to unintended behaviour".format(v, hp.name))
+                if len(legal) == 1:
+                    v = legal.pop()
+
             config_dict[k] = v
             
         config = Configuration(configuration_space=cs, values=config_dict)
