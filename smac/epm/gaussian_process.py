@@ -46,8 +46,6 @@ class GaussianProcess(BaseModel):
         it implements the Prior interface.
     normalize_y : bool
         Zero mean unit variance normalization of the output values
-    rng: np.random.RandomState
-        Random number generator
     """
 
     def __init__(
@@ -61,7 +59,6 @@ class GaussianProcess(BaseModel):
         n_opt_restarts=10,
         **kwargs
     ):
-
         super().__init__(configspace=configspace, types=types, bounds=bounds, seed=seed, **kwargs)
 
         self.kernel = kernel
@@ -97,6 +94,12 @@ class GaussianProcess(BaseModel):
         X = self._impute_inactive(X)
         if self.normalize_y:
             y = self._normalize_y(y)
+        if len(y.shape) == 1:
+            self.n_objectives_ = 1
+        else:
+            self.n_objectives_ = y.shape[1]
+        if self.n_objectives_ == 1:
+            y = y.flatten()
 
         n_tries = 10
         for i in range(n_tries):
@@ -273,7 +276,6 @@ class GaussianProcess(BaseModel):
 
         X_test = self._impute_inactive(X_test)
         funcs = self.gp.sample_y(X_test, n_samples=n_funcs, random_state=self.rng)
-        funcs = np.squeeze(funcs, axis=1)
 
         if self.normalize_y:
             funcs = self._untransform_y(funcs)
