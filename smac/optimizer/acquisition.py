@@ -56,7 +56,7 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
         for key in kwargs:
             setattr(self, key, kwargs[key])
 
-    def __call__(self, configurations: List[Configuration]):
+    def __call__(self, configurations: List[Configuration], classifier: None):
         """Computes the acquisition value for a given X
 
         Parameters
