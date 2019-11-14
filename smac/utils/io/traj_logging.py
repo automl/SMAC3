@@ -69,7 +69,7 @@ class TrajLogger(object):
                         '"Configuration..."\n')
 
             self.aclib_traj_fn = os.path.join(output_dir, "traj_aclib2.json")
-            self.alljson_traj_fn = os.path.join(output_dir, "traj_alljson.json")
+            self.alljson_traj_fn = os.path.join(output_dir, "traj.json")
 
         self.trajectory = []
 
@@ -159,18 +159,12 @@ class TrajLogger(object):
                 conf.append("%s='%s'" % (p, repr(incumbent[p])))
 
         traj_entry = {"cpu_time": ta_time_used,
-                      "total_cpu_time": None,
                       "wallclock_time": wallclock_time,
                       "evaluations": self.stats.ta_runs,
                       "cost": train_perf,
-                      "incumbent": conf
+                      "incumbent": conf,
+                      "origin": incumbent.origin,
                       }
-        # Silent support for passing configuration-dict's directly (since actual Configuration's always have
-        #   origin-attribute since v0.4.11 and minimum required by SMAC is 0.4.6):
-        try:
-            traj_entry["origin"] = incumbent.origin
-        except AttributeError:
-            traj_entry["origin"] = "UNKNOWN"
 
         with open(self.aclib_traj_fn, "a") as fp:
             json.dump(traj_entry, fp)
@@ -194,24 +188,13 @@ class TrajLogger(object):
         wallclock_time: float
             Wallclock time used so far
         """
-        # Silent support for passing configuration-dict's directly:
-        inc_dict = incumbent
-        if isinstance(incumbent, Configuration):
-            inc_dict = incumbent.get_dictionary()
-
         traj_entry = {"cpu_time": ta_time_used,
-                      "total_cpu_time": None,
                       "wallclock_time": wallclock_time,
                       "evaluations": self.stats.ta_runs,
                       "cost": train_perf,
-                      "incumbent": inc_dict,
+                      "incumbent": incumbent.get_dictionary(),
+                      "origin": incumbent.origin,
                       }
-        # Silent support for passing configuration-dict's directly (since actual Configuration's always have
-        #   origin-attribute since v0.4.11 and minimum required by SMAC is 0.4.6):
-        try:
-            traj_entry["origin"] = incumbent.origin
-        except AttributeError:
-            traj_entry["origin"] = "UNKNOWN"
 
         with open(self.alljson_traj_fn, "a") as fp:
             json.dump(traj_entry, fp)
@@ -234,7 +217,6 @@ class TrajLogger(object):
             Each entry in the list is a dictionary of the form
             {
             "cpu_time": float,
-            "total_cpu_time": None,
             "wallclock_time": float,
             "evaluations": int
             "cost": float,
@@ -268,7 +250,6 @@ class TrajLogger(object):
             Each entry in the list is a dictionary of the form
             {
             "cpu_time": float,
-            "total_cpu_time": None,
             "wallclock_time": float,
             "evaluations": int
             "cost": float,
