@@ -397,7 +397,33 @@ same timestamps for each entry</p>
 <dd class="field-even"><p><strong>trajectory</strong> – Each entry in the list is a dictionary of the form
 {
 “cpu_time”: float,
-“total_cpu_time”: None, # TODO
+“wallclock_time”: float,
+“evaluations”: int
+“cost”: float,
+“incumbent”: Configuration
+}</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.utils.io.traj_logging.TrajLogger.read_traj_alljson_format">
+<em class="property">static </em><code class="sig-name descname">read_traj_alljson_format</code><span class="sig-paren">(</span><em class="sig-param">fn: str</em>, <em class="sig-param">cs: ConfigSpace.configuration_space.ConfigurationSpace</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger.read_traj_alljson_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.read_traj_alljson_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads trajectory from file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fn</strong> (<em>str</em>) – Filename with saved runhistory in self._add_in_alljson_format format</p></li>
+<li><p><strong>cs</strong> (<em>ConfigurationSpace</em>) – Configuration Space to translate dict object into Confiuration object</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>trajectory</strong> – Each entry in the list is a dictionary of the form
+{
+“cpu_time”: float,
 “wallclock_time”: float,
 “evaluations”: int
 “cost”: float,
