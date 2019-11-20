@@ -217,7 +217,7 @@ class Hyperband(SuccessiveHalving):
     def get_next_challenger(self, challengers: typing.Optional[typing.List[Configuration]],
                             chooser: typing.Optional['smac.optimizer.smbo.SMBO'],
                             run_history: RunHistory,
-                            repeat_configs: bool = True):
+                            repeat_configs: bool = True) -> typing.Optional[Configuration]:
         """
         Selects which challenger to use based on the iteration stage and set the iteration parameters.
         First iteration will choose configurations from the ``chooser`` or input challengers,
@@ -233,6 +233,11 @@ class Hyperband(SuccessiveHalving):
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
+
+        Returns
+        -------
+        typing.Optional[Configuration]
+            next configuration to evaluate
         """
         challenger = self.sh_intensifier.get_next_challenger(
                          challengers=challengers,

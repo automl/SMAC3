@@ -160,6 +160,7 @@ class SuccessiveHalving(AbstractRacer):
             self.adaptive_capping = False
 
         # challengers can be repeated only if optimizing across multiple seeds or changing instance orders every run
+        # (this does not include having multiple instances)
         if not (self.n_seeds > 1 or self.instance_order == 'shuffle'):
             self.repeat_configs = False
         else:
@@ -357,7 +358,7 @@ class SuccessiveHalving(AbstractRacer):
     def get_next_challenger(self, challengers: typing.Optional[typing.List[Configuration]],
                             chooser: typing.Optional['smac.optimizer.smbo.SMBO'],
                             run_history: RunHistory,
-                            repeat_configs: bool = True) -> Configuration:
+                            repeat_configs: bool = True) -> typing.Optional[Configuration]:
         """
         Selects which challenger to use based on the iteration stage and set the iteration parameters.
         First iteration will choose configurations from the ``chooser`` or input challengers,
@@ -373,6 +374,11 @@ class SuccessiveHalving(AbstractRacer):
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
+
+        Returns
+        -------
+        typing.Optional[Configuration]
+            next configuration to evaluate
         """
         # if this is the first run, then initialize tracking variables
         if not hasattr(self, 'stage'):

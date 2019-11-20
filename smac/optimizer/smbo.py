@@ -161,6 +161,21 @@ class SMBO(object):
             # Intensifier initialization
             self.initial_design_configs = self.initial_design.select_configurations()
 
+        elif self.stats.ta_runs > 0 and self.incumbent is None:
+            raise ValueError("According to stats there have been runs performed, "
+                             "but the optimizer cannot detect an incumbent. Did "
+                             "you set the incumbent (e.g. after restoring state)?")
+        elif self.stats.ta_runs == 0 and self.incumbent is not None:
+            raise ValueError("An incumbent is specified, but there are no runs "
+                             "recorded in the Stats-object. If you're restoring "
+                             "a state, please provide the Stats-object.")
+        else:
+            # Restoring state!
+            self.logger.info("State Restored! Starting optimization with "
+                             "incumbent %s", self.incumbent)
+            self.logger.info("State restored with following budget:")
+            self.stats.print_stats()
+
     def run(self):
         """Runs the Bayesian optimization loop
 

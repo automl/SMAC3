@@ -46,8 +46,6 @@ class InitialDesign:
                  configs: typing.Optional[typing.List[Configuration]] = None,
                  n_configs_x_params: typing.Optional[int] = 10,
                  max_config_fracs: float = 0.25,
-                 run_first_config: bool = True,
-                 fill_random_configs: bool = False,
                  init_budget: typing.Optional[int] = None,
                  ):
         """Constructor
@@ -83,10 +81,6 @@ class InitialDesign:
             ``n_configs_x_params`` if given.
         max_config_fracs: float
             use at most X*budget in the initial design. Not active if a time limit is given.
-        run_first_config: bool
-            specify if target algorithm has to be run once on the first configuration before the intensify call
-        fill_random_configs: bool
-            fill budget with random configurations if initial incumbent sampling returns only 1 configuration
         init_budget : int, optional
             Maximal initial budget (disables the arguments ``n_configs_x_params`` and ``configs``
             if both are given). Either this, or ``n_configs_x_params`` or ``configs`` must be
@@ -143,6 +137,7 @@ class InitialDesign:
                                    incumbent=self.configs[0])
 
         # removing duplicates
+        # (Reference: https://stackoverflow.com/questions/7961363/removing-duplicates-in-lists)
         self.configs = list(OrderedDict.fromkeys(self.configs))
         return self.configs
 

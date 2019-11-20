@@ -100,7 +100,7 @@ cs.add_hyperparameters([alpha, l1_ratio, learning_rate, eta0])
 
 # SMAC scenario object
 scenario = Scenario({"run_obj": "quality",      # we optimize quality (alternative to runtime)
-                     "wallclock-limit": 60,     # max duration to run the optimization (in seconds)
+                     "wallclock-limit": 100,    # max duration to run the optimization (in seconds)
                      "cs": cs,                  # configuration space
                      "deterministic": "true",
                      "limit_resources": True,   # Uses pynisher to limit memory and runtime

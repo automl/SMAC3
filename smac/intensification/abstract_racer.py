@@ -128,10 +128,26 @@ class AbstractRacer(object):
     def get_next_challenger(self, challengers: typing.Optional[typing.List[Configuration]],
                             chooser: typing.Optional['smac.optimizer.smbo.SMBO'],
                             run_history: RunHistory,
-                            repeat_configs: bool = True) -> Configuration:
+                            repeat_configs: bool = True) -> typing.Optional[Configuration]:
         """
         Abstract method for choosing the next challenger, to allow for different selections across intensifiers
         uses ``_next_challenger()`` by default
+
+        Parameters
+        ----------
+        challengers : typing.List[Configuration]
+            promising configurations
+        chooser : 'smac.optimizer.smbo.SMBO'
+            optimizer that generates next configurations to use for racing
+        run_history : RunHistory
+            stores all runs we ran so far
+        repeat_configs : bool
+            if False, an evaluated configuration will not be generated again
+
+        Returns
+        -------
+        typing.Optional[Configuration]
+            next configuration to evaluate
         """
         challenger = self._next_challenger(challengers=challengers,
                                            chooser=chooser,
