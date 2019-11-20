@@ -8,14 +8,7 @@ from ConfigSpace.hyperparameters import NumericalHyperparameter, \
 from ConfigSpace.util import deactivate_inactive_hyperparameters
 import numpy as np
 
-from smac.intensification.abstract_racer import AbstractRacer
-from smac.tae.execute_ta_run import ExecuteTARun
-from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
-from smac.scenario.scenario import Scenario
-from smac.runhistory.runhistory import RunHistory
-from smac.tae.execute_ta_run import FirstRunCrashedException
-from smac.utils import constants
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2019, AutoML"
@@ -27,22 +20,16 @@ class InitialDesign:
 
     Attributes
     ----------
+    cs : ConfigurationSpace
     configs : typing.List[Configuration]
         List of configurations to be evaluated
-    intensifier
-    runhistory
-    aggregate_func
     """
 
     def __init__(self,
-                 tae_runner: ExecuteTARun,
-                 scenario: Scenario,
-                 stats: Stats,
-                 traj_logger: TrajLogger,
-                 runhistory: RunHistory,
+                 cs: ConfigurationSpace,
                  rng: np.random.RandomState,
-                 intensifier: AbstractRacer,
-                 aggregate_func: typing.Callable,
+                 traj_logger: TrajLogger,
+                 ta_run_limit: float,
                  configs: typing.Optional[typing.List[Configuration]] = None,
                  n_configs_x_params: typing.Optional[int] = 10,
                  max_config_fracs: float = 0.25,
@@ -52,26 +39,15 @@ class InitialDesign:
 
         Parameters
         ---------
-        tae_runner: ExecuteTARun
-            Target algorithm execution object.
-        scenario: Scenario
-            Scenario with all meta information (including configuration space).
-        stats: Stats
-            Statistics of experiments; needed in case initial design already
-            exhausts the budget.
+        cs: ConfigurationSpace
+            configuration space object
+        rng: np.random.RandomState
+            Random state
         traj_logger: TrajLogger
             Trajectory logging to add new incumbents found by the initial
             design.
-        runhistory: RunHistory
-            Runhistory with all target algorithm runs.
-        rng: np.random.RandomState
-            Random state
-        intensifier: Intensifier
-            Intensification object to issue a racing to decide the current
-            incumbent.
-        aggregate_func: typing:Callable
-            Function to aggregate performance of a configuration across
-            instances.
+        ta_run_limit: int
+            Number of iterations allowed for the target algorithm
         configs: typing.Optional[typing.List[Configuration]]
             List of initial configurations. Disables the arguments ``n_configs_x_params`` if given.
             Either this, or ``n_configs_x_params`` or ``init_budget`` must be provided.
@@ -87,19 +63,14 @@ class InitialDesign:
             provided.
         """
 
-        self.tae_runner = tae_runner
-        self.stats = stats
-        self.traj_logger = traj_logger
-        self.scenario = scenario
+        self.cs = cs
         self.rng = rng
+        self.traj_logger = traj_logger
         self.configs = configs
-        self.intensifier = intensifier
-        self.runhistory = runhistory
-        self.aggregate_func = aggregate_func
 
         self.logger = self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
-        n_params = len(self.scenario.cs.get_hyperparameters())
+        n_params = len(self.cs.get_hyperparameters())
         if init_budget is not None:
             self.init_budget = init_budget
             if n_configs_x_params is not None:
@@ -111,14 +82,14 @@ class InitialDesign:
             self.init_budget = len(configs)
         elif n_configs_x_params is not None:
             self.init_budget = int(max(1, min(n_configs_x_params * n_params,
-                                              (max_config_fracs * scenario.ta_run_limit))))
+                                              (max_config_fracs * ta_run_limit))))
         else:
             raise ValueError('Need to provide either argument `init_budget`, `configs` or '
                              '`n_configs_x_params`, but provided none of them.')
-        if self.init_budget > scenario.ta_run_limit:
+        if self.init_budget > ta_run_limit:
             raise ValueError(
                 'Initial budget %d cannot be higher than the run limit %d.'
-                % (init_budget, scenario.ta_run_limit)
+                % (init_budget, ta_run_limit)
             )
         self.logger.info("Running initial design for %d configurations" % self.init_budget)
 

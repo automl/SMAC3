@@ -21,9 +21,6 @@ class SobolDesign(InitialDesign):
         List of configurations to be evaluated
         Don't pass configs to the constructor;
         otherwise factorial design is overwritten
-    intensifier
-    runhistory
-    aggregate_func
     """
 
     def _select_configurations(self) -> typing.List[Configuration]:
@@ -35,8 +32,7 @@ class SobolDesign(InitialDesign):
             initial incumbent configuration
         """
 
-        cs = self.scenario.cs
-        params = cs.get_hyperparameters()
+        params = self.cs.get_hyperparameters()
 
         constants = 0
         for p in params:
@@ -47,4 +43,4 @@ class SobolDesign(InitialDesign):
 
         return self._transform_continuous_designs(design=sobol,
                                                   origin='Sobol',
-                                                  cs=cs)
+                                                  cs=self.cs)

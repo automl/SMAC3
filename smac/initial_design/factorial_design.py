@@ -2,7 +2,8 @@ import itertools
 import typing
 
 from ConfigSpace.configuration_space import Configuration
-from ConfigSpace.hyperparameters import Constant, NumericalHyperparameter, CategoricalHyperparameter, OrdinalHyperparameter
+from ConfigSpace.hyperparameters import Constant, NumericalHyperparameter, \
+    CategoricalHyperparameter, OrdinalHyperparameter
 from ConfigSpace.util import deactivate_inactive_hyperparameters
 import numpy as np
 
@@ -23,9 +24,6 @@ class FactorialInitialDesign(InitialDesign):
         List of configurations to be evaluated
         Don't pass configs to the constructor;
         otherwise factorial design is overwritten
-    intensifier
-    runhistory
-    aggregate_func
     """
 
     def _select_configurations(self) -> Configuration:
@@ -37,8 +35,7 @@ class FactorialInitialDesign(InitialDesign):
             initial incumbent configuration
         """
 
-        cs = self.scenario.cs
-        params = cs.get_hyperparameters()
+        params = self.cs.get_hyperparameters()
 
         values = []
         mid = []
@@ -61,16 +58,16 @@ class FactorialInitialDesign(InitialDesign):
         factorial_design = itertools.product(*values)
 
         self.logger.debug("Initial Design")
-        configs = [cs.get_default_configuration()]
+        configs = [self.cs.get_default_configuration()]
         # add middle point in space
-        conf_dict = dict([(p.name,v) for p,v in zip(params,mid)])
-        middle_conf = deactivate_inactive_hyperparameters(conf_dict, cs)
+        conf_dict = dict([(p.name, v) for p,v in zip(params, mid)])
+        middle_conf = deactivate_inactive_hyperparameters(conf_dict, self.cs)
         configs.append(middle_conf)
 
         # add corner points
         for design in factorial_design:
             conf_dict = dict([(p.name,v) for p,v in zip(params,design)])
-            conf = deactivate_inactive_hyperparameters(conf_dict, cs)
+            conf = deactivate_inactive_hyperparameters(conf_dict, self.cs)
             conf.origin = "Factorial Design"
             configs.append(conf)
             self.logger.debug(conf)

@@ -412,22 +412,14 @@ class SMAC4AC(object):
                 "Either use initial_design or initial_configurations; but not both")
 
         init_design_def_kwargs = {
-            'tae_runner': tae_runner,
-            'scenario': scenario,
-            'stats': self.stats,
+            'cs': scenario.cs,
             'traj_logger': traj_logger,
-            'runhistory': runhistory,
             'rng': rng,
+            'ta_run_limit': scenario.ta_run_limit,
             'configs': initial_configurations,
-            'intensifier': intensifier,
-            'aggregate_func': aggregate_func,
             'n_configs_x_params': 0,
             'max_config_fracs': 0.0
             }
-        if isinstance(intensifier, SuccessiveHalving):
-            # If running successive halving, then you need multiple configurations for the initial design
-            n_configs = intensifier.n_configs_in_stage[0] / len(self.scenario.cs.get_hyperparameters())
-            init_design_def_kwargs['n_configs_x_params'] = n_configs
         if initial_design_kwargs is not None:
             init_design_def_kwargs.update(initial_design_kwargs)
         if initial_configurations is not None:

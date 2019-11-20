@@ -244,35 +244,25 @@ class EPILS(object):
                 "Either use initial_design or initial_configurations; but not both")
 
         if initial_configurations is not None:
-            initial_design = InitialDesign(tae_runner=tae_runner,
-                                           scenario=scenario,
-                                           stats=self.stats,
+            initial_design = InitialDesign(cs=scenario.cs,
                                            traj_logger=traj_logger,
-                                           runhistory=runhistory,
                                            rng=rng,
-                                           configs=initial_configurations,
-                                           intensifier=intensifier,
-                                           aggregate_func=aggregate_func)
+                                           ta_run_limit=scenario.ta_run_limit,
+                                           configs=initial_configurations)
         elif initial_design is None:
             if scenario.initial_incumbent == "DEFAULT":
-                initial_design = DefaultConfiguration(tae_runner=tae_runner,
-                                                      scenario=scenario,
-                                                      stats=self.stats,
+                initial_design = DefaultConfiguration(cs=scenario.cs,
                                                       traj_logger=traj_logger,
-                                                      runhistory=runhistory,
                                                       rng=rng,
-                                                      intensifier=intensifier,
-                                                      aggregate_func=aggregate_func,
+                                                      ta_run_limit=scenario.ta_run_limit,
+                                                      configs=initial_configurations,
                                                       max_config_fracs=0.0)
             elif scenario.initial_incumbent == "RANDOM":
-                initial_design = RandomConfigurations(tae_runner=tae_runner,
-                                                      scenario=scenario,
-                                                      stats=self.stats,
+                initial_design = RandomConfigurations(cs=scenario.cs,
                                                       traj_logger=traj_logger,
-                                                      runhistory=runhistory,
                                                       rng=rng,
-                                                      intensifier=intensifier,
-                                                      aggregate_func=aggregate_func,
+                                                      ta_run_limit=scenario.ta_run_limit,
+                                                      configs=initial_configurations,
                                                       max_config_fracs=0.0)
             else:
                 raise ValueError("Don't know what kind of initial_incumbent "
