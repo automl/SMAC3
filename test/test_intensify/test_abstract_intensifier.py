@@ -199,18 +199,12 @@ class TestAbstractIntensifier(unittest.TestCase):
         inc_sum_cost = sum_cost(config=self.config1, instance_seed_budget_keys=inst_seed_pairs,
                                 run_history=self.rh)
 
-        cutoff = intensifier._adapt_cutoff(challenger=self.config2,
-                                           incumbent=self.config1,
-                                           run_history=self.rh,
-                                           inc_sum_cost=inc_sum_cost)
+        cutoff = intensifier._adapt_cutoff(challenger=self.config2, run_history=self.rh, inc_sum_cost=inc_sum_cost)
         # 15*1.2 - 6
         self.assertEqual(cutoff, 12)
 
         intensifier.cutoff = 5
 
-        cutoff = intensifier._adapt_cutoff(challenger=self.config2,
-                                           incumbent=self.config1,
-                                           run_history=self.rh,
-                                           inc_sum_cost=inc_sum_cost)
+        cutoff = intensifier._adapt_cutoff(challenger=self.config2, run_history=self.rh, inc_sum_cost=inc_sum_cost)
         # scenario cutoff
         self.assertEqual(cutoff, 5)

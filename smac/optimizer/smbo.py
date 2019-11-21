@@ -8,7 +8,6 @@ import smac
 from smac.configspace import ConfigurationSpace, Configuration, Constant,\
      CategoricalHyperparameter, UniformFloatHyperparameter, \
      UniformIntegerHyperparameter, InCondition
-from smac.configspace.util import convert_configurations_to_array
 from smac.epm.base_epm import AbstractEPM
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
@@ -21,8 +20,8 @@ from smac.optimizer.acquisition import AbstractAcquisitionFunction, EI, LogEI,\
     LCB, PI
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
     ChooserLinearCoolDown
-from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer, \
-    RandomSearch
+from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer
+from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.scenario.scenario import Scenario
@@ -50,15 +49,12 @@ class SMBO(object):
     stats
     initial_design
     runhistory
-    rh2EPM
     intensifier
     aggregate_func
     num_run
-    model
-    acq_optimizer
-    acquisition_func
     rng
-    random_configuration_chooser
+    initial_design_configs
+    epm_chooser
     """
 
     def __init__(self,
@@ -107,7 +103,7 @@ class SMBO(object):
             RandomForestWithInstances)
         acq_optimizer: AcquisitionFunctionMaximizer
             Optimizer of acquisition function.
-        acquisition_function : AcquisitionFunction
+        acquisition_func : AcquisitionFunction
             Object that implements the AbstractAcquisitionFunction (i.e., infill
             criterion for acq_optimizer)
         restore_incumbent: Configuration
@@ -131,23 +127,25 @@ class SMBO(object):
         self.stats = stats
         self.initial_design = initial_design
         self.runhistory = runhistory
-        self.rh2EPM = runhistory2epm
         self.intensifier = intensifier
         self.aggregate_func = aggregate_func
         self.num_run = num_run
-        self.model = model
-        self.acq_optimizer = acq_optimizer
-        self.acquisition_func = acquisition_func
         self.rng = rng
-        self.random_configuration_chooser = random_configuration_chooser
-
-        self._random_search = RandomSearch(
-            acquisition_func, self.config_space, rng
-        )
 
         self.initial_design_configs = []
 
-        self.predict_incumbent = predict_incumbent
+        # initialize the chooser to get configurations from the EPM
+        self.epm_chooser = EPMChooser(scenario=scenario,
+                                      stats=stats,
+                                      runhistory=runhistory,
+                                      runhistory2epm=runhistory2epm,
+                                      model=model,
+                                      acq_optimizer=acq_optimizer,
+                                      acquisition_func=acquisition_func,
+                                      rng=rng,
+                                      restore_incumbent=restore_incumbent,
+                                      random_configuration_chooser=random_configuration_chooser,
+                                      predict_incumbent=predict_incumbent)
 
     def start(self):
         """Starts the Bayesian Optimization loop.
@@ -160,6 +158,10 @@ class SMBO(object):
             self.logger.info('Running initial design')
             # Intensifier initialization
             self.initial_design_configs = self.initial_design.select_configurations()
+
+            # to be on the safe side, never return an empty list of initial configs
+            if not self.initial_design_configs:
+                self.initial_design_configs = [self.config_space.get_default_configuration()]
 
         elif self.stats.ta_runs > 0 and self.incumbent is None:
             raise ValueError("According to stats there have been runs performed, "
@@ -200,7 +202,7 @@ class SMBO(object):
             # Initial design runs are also included in the BO loop now.
             challenger = self.intensifier.get_next_challenger(
                 challengers=self.initial_design_configs,
-                chooser=self,
+                chooser=self.epm_chooser,
                 run_history=self.runhistory,
                 repeat_configs=self.intensifier.repeat_configs
             )
@@ -237,106 +239,6 @@ class SMBO(object):
             self.stats.print_stats(debug_out=True)
 
         return self.incumbent
-
-    def choose_next(self, incumbent_value: float = None):
-        """Choose next candidate solution with Bayesian optimization. The
-        suggested configurations depend on the argument ``acq_optimizer`` to
-        the ``SMBO`` class.
-
-        Parameters
-        ----------
-        incumbent_value: float
-            Cost value of incumbent configuration
-            (required for acquisition function);
-            if not given, it will be inferred from runhistory;
-            if not given and runhistory is empty,
-            it will raise a ValueError
-
-        Returns
-        -------
-        Iterable
-        """
-
-        self.logger.debug("Search for next configuration")
-
-        X, Y = self.rh2EPM.transform(self.runhistory)
-
-        if X.shape[0] == 0:
-            # Only return a single point to avoid an overly high number of
-            # random search iterations
-            return self._random_search.maximize(
-                runhistory=self.runhistory, stats=self.stats, num_points=1
-            )
-
-        self.model.train(X, Y)
-
-        if incumbent_value is None:
-            if self.runhistory.empty():
-                raise ValueError("Runhistory is empty and the cost value of "
-                                 "the incumbent is unknown.")
-            incumbent, incumbent_array, incumbent_value = self._get_incumbent()
-        else:
-            incumbent = None
-            incumbent_array = None
-
-        self.acquisition_func.update(
-            model=self.model,
-            eta=incumbent_value,
-            incumbent=incumbent,
-            incumbent_array=incumbent_array,
-            num_data=len(self.runhistory.data),
-            X=X,
-        )
-
-        challengers = self.acq_optimizer.maximize(
-            runhistory=self.runhistory,
-            stats=self.stats,
-            num_points=self.scenario.acq_opt_challengers,
-            random_configuration_chooser=self.random_configuration_chooser
-        )
-        return challengers
-
-    def _get_incumbent(self) -> typing.Tuple[float, np.ndarray, Configuration]:
-        '''Get incumbent value, configuration, and array representation.
-
-        This is retreived either from the runhistory or from best predicted
-        performance on configs in runhistory (depends on self.predict_incumbent)
-
-        Return
-        ------
-        float
-        np.ndarry
-        Configuration
-        '''
-        all_configs = self.runhistory.get_all_configs()
-        if self.predict_incumbent:
-            configs_array = convert_configurations_to_array(all_configs)
-            costs = list(map(
-                lambda input_: (
-                    self.model.predict_marginalized_over_instances(input_[0].reshape((1, -1)))[0][0][0],
-                    input_[0], input_[1],
-                ),
-                zip(configs_array, all_configs),
-            ))
-            costs = sorted(costs, key=lambda t: t[0])
-            incumbent = costs[0][2]
-            incumbent_array = costs[0][1]
-            incumbent_value = costs[0][0]
-            # won't need log(y) if EPM was already trained on log(y)
-        else:
-            if self.runhistory.empty():
-                raise ValueError("Runhistory is empty and the cost value of "
-                                 "the incumbent is unknown.")
-            incumbent = self.incumbent
-            incumbent_array = convert_configurations_to_array([all_configs])
-            incumbent_value = self.runhistory.get_cost(incumbent)
-            incumbent_value_as_array = np.array(incumbent_value).reshape((1, 1))
-            # It's unclear how to do this for inv scaling and potential future scaling.
-            # This line should be changed if necessary
-            incumbent_value = self.rh2EPM.transform_response_values(incumbent_value_as_array)
-            incumbent_value = incumbent_value[0][0]
-
-        return incumbent, incumbent_array, incumbent_value
 
     def validate(self, config_mode='inc', instance_mode='train+test',
                  repetitions=1, use_epm=False, n_jobs=-1, backend='threading'):

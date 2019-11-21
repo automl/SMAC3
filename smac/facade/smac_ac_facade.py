@@ -1,7 +1,7 @@
 import inspect
 import logging
 import os
-from typing import  List, Union, Optional, Type, Callable
+from typing import List, Union, Optional, Type, Callable
 
 import numpy as np
 
@@ -30,7 +30,6 @@ from smac.initial_design.sobol_design import SobolDesign
 # intensification
 from smac.intensification.intensification import Intensifier
 from smac.intensification.abstract_racer import AbstractRacer
-from smac.intensification.successive_halving import SuccessiveHalving
 # optimizer
 from smac.optimizer.smbo import SMBO
 from smac.optimizer.objective import average_cost

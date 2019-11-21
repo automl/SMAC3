@@ -370,7 +370,6 @@ class Intensifier(AbstractRacer):
             for instance, seed, _ in to_run:
 
                 cutoff = self._adapt_cutoff(challenger=challenger,
-                                            incumbent=incumbent,
                                             run_history=run_history,
                                             inc_sum_cost=inc_sum_cost)
                 if cutoff is not None and cutoff <= 0:

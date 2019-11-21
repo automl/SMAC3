@@ -1,4 +1,3 @@
-import time
 import logging
 import typing
 
@@ -6,6 +5,7 @@ import numpy as np
 
 from smac.intensification.abstract_racer import AbstractRacer
 from smac.optimizer.objective import sum_cost
+from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
 from smac.configspace import Configuration
@@ -13,10 +13,6 @@ from smac.runhistory.runhistory import RunHistory
 from smac.tae.execute_ta_run import BudgetExhaustedException, CappedRunException, ExecuteTARun
 from smac.utils.io.traj_logging import TrajLogger
 
-# (for now) to avoid cyclic imports
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    import smac.optimizer.smbo.SMBO
 
 __author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
@@ -295,7 +291,6 @@ class SuccessiveHalving(AbstractRacer):
 
         # selecting cutoff if running adaptive capping
         cutoff = self._adapt_cutoff(challenger=challenger,
-                                    incumbent=incumbent,
                                     run_history=run_history,
                                     inc_sum_cost=inc_sum_cost)
         if cutoff is not None and cutoff <= 0:
@@ -306,9 +301,9 @@ class SuccessiveHalving(AbstractRacer):
         self.logger.debug('Cutoff for challenger: %s' % str(cutoff))
 
         try:
-
             # run target algorithm for each instance-seed pair
             self.logger.debug("Execute target algorithm")
+
             try:
                 status, cost, dur, res = self.tae_runner.start(
                     config=challenger,
@@ -356,7 +351,7 @@ class SuccessiveHalving(AbstractRacer):
         return incumbent, inc_perf
 
     def get_next_challenger(self, challengers: typing.Optional[typing.List[Configuration]],
-                            chooser: typing.Optional['smac.optimizer.smbo.SMBO'],
+                            chooser: typing.Optional[EPMChooser],
                             run_history: RunHistory,
                             repeat_configs: bool = True) -> typing.Optional[Configuration]:
         """
@@ -368,7 +363,7 @@ class SuccessiveHalving(AbstractRacer):
         ----------
         challengers : typing.List[Configuration]
             promising configurations
-        chooser : 'smac.optimizer.smbo.SMBO'
+        chooser : EPMChooser
             optimizer that generates next configurations to use for racing
         run_history : RunHistory
             stores all runs we ran so far

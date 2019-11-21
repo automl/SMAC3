@@ -6,6 +6,7 @@ from collections import OrderedDict
 import numpy as np
 
 from smac.optimizer.objective import sum_cost
+from smac.optimizer.epm_configuration_chooser import EPMChooser
 
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
@@ -14,10 +15,6 @@ from smac.runhistory.runhistory import RunHistory
 from smac.tae.execute_ta_run import ExecuteTARun
 from smac.utils.io.traj_logging import TrajLogger
 
-# (for now) to avoid cyclic imports
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    import smac.optimizer.smbo.SMBO
 
 __author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
@@ -126,7 +123,7 @@ class AbstractRacer(object):
         raise NotImplementedError()
 
     def get_next_challenger(self, challengers: typing.Optional[typing.List[Configuration]],
-                            chooser: typing.Optional['smac.optimizer.smbo.SMBO'],
+                            chooser: typing.Optional[EPMChooser],
                             run_history: RunHistory,
                             repeat_configs: bool = True) -> typing.Optional[Configuration]:
         """
@@ -137,7 +134,7 @@ class AbstractRacer(object):
         ----------
         challengers : typing.List[Configuration]
             promising configurations
-        chooser : 'smac.optimizer.smbo.SMBO'
+        chooser : EPMChooser
             optimizer that generates next configurations to use for racing
         run_history : RunHistory
             stores all runs we ran so far
@@ -156,7 +153,7 @@ class AbstractRacer(object):
         return challenger
 
     def _next_challenger(self, challengers: typing.Optional[typing.List[Configuration]],
-                         chooser: typing.Optional['smac.optimizer.smbo.SMBO'],
+                         chooser: typing.Optional[EPMChooser],
                          run_history: RunHistory,
                          repeat_configs: bool = True) -> typing.Optional[Configuration]:
         """ Retuns the next challenger to use in intensification
@@ -166,7 +163,7 @@ class AbstractRacer(object):
         ----------
         challengers : typing.List[Configuration]
             promising configurations
-        chooser : smac.optimizer.smbo.SMBO
+        chooser : EPMChooser
             a sampler that generates next configurations to use for racing
         run_history : RunHistory
             stores all runs we ran so far
@@ -214,7 +211,6 @@ class AbstractRacer(object):
         raise NotImplementedError()
 
     def _adapt_cutoff(self, challenger: Configuration,
-                      incumbent: Configuration,
                       run_history: RunHistory,
                       inc_sum_cost: float) -> float:
         """Adaptive capping:
@@ -230,8 +226,6 @@ class AbstractRacer(object):
         ----------
         challenger : Configuration
             Configuration which challenges incumbent
-        incumbent : Configuration
-            Best configuration so far
         run_history : RunHistory
             Stores all runs we ran so far
         inc_sum_cost: float

@@ -4,6 +4,7 @@ import typing
 import numpy as np
 
 from smac.intensification.successive_halving import SuccessiveHalving
+from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
 from smac.configspace import Configuration
@@ -215,7 +216,7 @@ class Hyperband(SuccessiveHalving):
         return incumbent, inc_perf
 
     def get_next_challenger(self, challengers: typing.Optional[typing.List[Configuration]],
-                            chooser: typing.Optional['smac.optimizer.smbo.SMBO'],
+                            chooser: typing.Optional[EPMChooser],
                             run_history: RunHistory,
                             repeat_configs: bool = True) -> typing.Optional[Configuration]:
         """
@@ -227,7 +228,7 @@ class Hyperband(SuccessiveHalving):
         ----------
         challengers : typing.List[Configuration]
             promising configurations
-        chooser : 'smac.optimizer.smbo.SMBO'
+        chooser : EPMChooser
             optimizer that generates next configurations to use for racing
         run_history : RunHistory
             stores all runs we ran so far
