@@ -10,6 +10,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
 from smac.intensification.abstract_racer import AbstractRacer
 from smac.optimizer.objective import average_cost, sum_cost
+from smac.facade.smac_ac_facade import SMAC4AC
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
@@ -47,6 +48,33 @@ class TestAbstractIntensifier(unittest.TestCase):
         self.stats.start_timing()
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
+
+    def test_get_next_challenger(self):
+        """
+            test get_next_challenger - pick from list/chooser
+        """
+        intensifier = AbstractRacer(
+            tae_runner=None, stats=self.stats, traj_logger=None,
+            rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
+            cutoff=1, instances=[1], initial_budget=1, max_budget=3, eta=2)
+
+        # None when nothing to choose from
+        config = intensifier.get_next_challenger(challengers=None, chooser=None, run_history=self.rh)
+        self.assertEqual(config, None)
+
+        # next challenger from a list
+        config = intensifier.get_next_challenger(challengers=[self.config1], chooser=None, run_history=self.rh)
+        self.assertEqual(config, self.config1)
+
+        # next challenger from a chooser
+        intensifier = AbstractRacer(
+            tae_runner=None, stats=self.stats, traj_logger=None,
+            rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
+            cutoff=1, instances=[1], initial_budget=1, max_budget=3, eta=2)
+        chooser = SMAC4AC(self.scen, rng=1).solver.epm_chooser
+
+        config = intensifier.get_next_challenger(challengers=None, chooser=chooser, run_history=self.rh)
+        self.assertEqual(list(config.get_dictionary().values()), [24, 68])
 
     def test_compare_configs_no_joint_set(self):
         intensifier = AbstractRacer(

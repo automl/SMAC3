@@ -274,12 +274,12 @@ class SuccessiveHalving(AbstractRacer):
             inc_sum_cost = np.inf
 
         # select which instance to run current config on
-        curr_budget = int(self.all_budgets[self.stage])
-        prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
+        curr_budget = self.all_budgets[self.stage]
+        prev_budget = self.all_budgets[self.stage - 1] if self.stage > 0 else 0.0
 
         # selecting instance-seed subset for this budget, depending on the kind of budget
         if self.instance_as_budget:
-            curr_insts = self.inst_seed_pairs[prev_budget:curr_budget]
+            curr_insts = self.inst_seed_pairs[int(prev_budget):int(curr_budget)]
         else:
             curr_insts = self.inst_seed_pairs
         n_insts_remaining = len(curr_insts) - self.curr_inst_idx - 1
@@ -343,6 +343,12 @@ class SuccessiveHalving(AbstractRacer):
 
         # if all configurations for the current stage have been evaluated, reset stage
         if len(self.curr_challengers) == self.n_configs_in_stage[self.stage] and n_insts_remaining <= 0:
+
+            self.logger.info('Successive Halving iteration-step: %d-%d with '
+                             'budget [%.2f / %d] - evaluated %d challenger(s)' %
+                             (self.sh_iters + 1, self.stage + 1,
+                              self.all_budgets[self.stage], self.max_budget, self.n_configs_in_stage[self.stage]))
+
             self._update_stage(run_history=run_history)
 
         # get incumbent cost
@@ -469,10 +475,6 @@ class SuccessiveHalving(AbstractRacer):
         self.curr_inst_idx = 0
         self.running_challenger = None
 
-        self.logger.info('Successive Halving iteration-step: %d-%d with budget [%.2f / %d] and %d challengers' %
-                         (self.sh_iters+1, self.stage+1,
-                          self.all_budgets[self.stage], self.max_budget, self.n_configs_in_stage[self.stage]))
-
     def _get_incumbent(self, challenger: Configuration,
                        incumbent: typing.Optional[Configuration],
                        run_history: RunHistory,
@@ -519,16 +521,6 @@ class SuccessiveHalving(AbstractRacer):
             new_incumbent = incumbent if new_incumbent is None else new_incumbent
 
         return new_incumbent
-
-    def get_num_iterations(self) -> int:
-        """
-        Returns the number of completed iterations of the intensifier
-
-        Returns
-        -------
-        int
-        """
-        return self.sh_iters
 
     def _top_k(self, configs: typing.List[Configuration],
                run_history: RunHistory,

@@ -103,67 +103,6 @@ class Hyperband(SuccessiveHalving):
         self.hb_iters = 0
         self.sh_intensifier = None
 
-        # hyperband configuration
-        self._init_hb_params()
-
-    def _init_hb_params(self) -> None:
-        """
-        initialize Hyperband related parameters
-        """
-        # setting initial running budget for future iterations (s & s_max from Algorithm 1)
-        self.s_max = np.floor(np.log(self.max_budget / self.initial_budget) / np.log(self.eta))
-        self.s = np.floor(np.log(self.max_budget / self.initial_budget) / np.log(self.eta))
-
-        # initialize tracking variables
-        self._update_stage()
-
-    def _update_stage(self, run_history: RunHistory = None) -> None:
-        """
-        Update tracking information for a new stage/iteration and update statistics.
-        This method is called to initialize stage variables and after all configurations
-        of a successive halving stage are completed.
-
-        Parameters
-        ----------
-         run_history : RunHistory
-            stores all runs we ran so far
-        """
-        # compute min budget for new SH run
-        sh_initial_budget = self.eta**-self.s * self.max_budget
-        # sample challengers for next iteration (based on HpBandster package)
-        n_challengers = int(np.floor((self.s_max+1) / (self.s + 1)) * self.eta**self.s)
-
-        self.logger.info('Hyperband iteration-step: %d-%d  with initial budget: %d' % (
-            self.hb_iters+1, self.s_max-self.s+1, sh_initial_budget))
-
-        # creating a new Successive Halving intensifier with the current running budget
-        self.sh_intensifier = SuccessiveHalving(
-            tae_runner=self.tae_runner,
-            stats=self.stats,
-            traj_logger=self.traj_logger,
-            rng=self.rs,
-            instances=self.instances,
-            instance_specifics=self.instance_specifics,
-            cutoff=self.cutoff,
-            deterministic=self.deterministic,
-            initial_budget=sh_initial_budget,
-            max_budget=self.max_budget,
-            eta=self.eta,
-            num_initial_challengers=n_challengers,
-            run_obj_time=self.run_obj_time,
-            n_seeds=self.n_seeds,
-            instance_order=self.instance_order,
-            adaptive_capping_slackfactor=self.adaptive_capping_slackfactor,
-            inst_seed_pairs=self.inst_seed_pairs  # additional argument to avoid
-        )                                         # processing instances & seeds again
-
-        # reset if HB iteration is over, else update for next iteration
-        if self.s == 0:
-            self.s = self.s_max
-            self.hb_iters += 1
-        else:
-            self.s -= 1
-
     def eval_challenger(self, challenger: Configuration,
                         incumbent: typing.Optional[Configuration],
                         run_history: RunHistory,
@@ -198,9 +137,6 @@ class Hyperband(SuccessiveHalving):
         float
             empirical performance of incumbent configuration
         """
-        # NOTE Since hyperband requires sampling for new configurations between its iterations,
-        #      the intensification is spread across multiple intensify calls
-
         # run 1 iteration of successive halving
         incumbent, inc_perf = self.sh_intensifier.eval_challenger(challenger=challenger,
                                                                   incumbent=incumbent,
@@ -210,7 +146,7 @@ class Hyperband(SuccessiveHalving):
                                                                   log_traj=log_traj)
 
         # reset if SH iteration is over, else update for next iteration
-        if not self.sh_intensifier or self.sh_intensifier.get_num_iterations() >= 1:
+        if self.sh_intensifier.sh_iters >= 1:
             self._update_stage()
 
         return incumbent, inc_perf
@@ -240,6 +176,11 @@ class Hyperband(SuccessiveHalving):
         typing.Optional[Configuration]
             next configuration to evaluate
         """
+
+        if not hasattr(self, 's'):
+            # initialize tracking variables
+            self._update_stage()
+
         challenger = self.sh_intensifier.get_next_challenger(
                          challengers=challengers,
                          chooser=chooser,
@@ -248,12 +189,54 @@ class Hyperband(SuccessiveHalving):
                      )
         return challenger
 
-    def get_num_iterations(self) -> int:
+    def _update_stage(self, run_history: RunHistory = None) -> None:
         """
-        Returns the number of completed iterations of the intensifier
+        Update tracking information for a new stage/iteration and update statistics.
+        This method is called to initialize stage variables and after all configurations
+        of a successive halving stage are completed.
 
-        Returns
-        -------
-        int
+        Parameters
+        ----------
+         run_history : RunHistory
+            stores all runs we ran so far
         """
-        return self.hb_iters
+        if not hasattr(self, 's'):
+            # setting initial running budget for future iterations (s & s_max from Algorithm 1)
+            self.s_max = np.floor(np.log(self.max_budget / self.initial_budget) / np.log(self.eta))
+            self.s = self.s_max
+        elif self.s == 0:
+            # reset if HB iteration is over
+            self.s = self.s_max
+            self.hb_iters += 1
+        else:
+            # update for next iteration
+            self.s -= 1
+
+        # compute min budget for new SH run
+        sh_initial_budget = self.eta ** -self.s * self.max_budget
+        # sample challengers for next iteration (based on HpBandster package)
+        n_challengers = int(np.floor((self.s_max + 1) / (self.s + 1)) * self.eta ** self.s)
+
+        self.logger.info('Hyperband iteration-step: %d-%d  with initial budget: %d' % (
+            self.hb_iters + 1, self.s_max - self.s + 1, sh_initial_budget))
+
+        # creating a new Successive Halving intensifier with the current running budget
+        self.sh_intensifier = SuccessiveHalving(
+            tae_runner=self.tae_runner,
+            stats=self.stats,
+            traj_logger=self.traj_logger,
+            rng=self.rs,
+            instances=self.instances,
+            instance_specifics=self.instance_specifics,
+            cutoff=self.cutoff,
+            deterministic=self.deterministic,
+            initial_budget=sh_initial_budget,
+            max_budget=self.max_budget,
+            eta=self.eta,
+            num_initial_challengers=n_challengers,
+            run_obj_time=self.run_obj_time,
+            n_seeds=self.n_seeds,
+            instance_order=self.instance_order,
+            adaptive_capping_slackfactor=self.adaptive_capping_slackfactor,
+            inst_seed_pairs=self.inst_seed_pairs  # additional argument to avoid
+        )  # processing instances & seeds again

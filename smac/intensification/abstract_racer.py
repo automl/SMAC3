@@ -204,12 +204,6 @@ class AbstractRacer(object):
         self.logger.debug("No valid challenger was generated!")
         return None
 
-    def get_num_iterations(self) -> int:
-        """
-        helper method to get number of completed racing iterations
-        """
-        raise NotImplementedError()
-
     def _adapt_cutoff(self, challenger: Configuration,
                       run_history: RunHistory,
                       inc_sum_cost: float) -> float:
