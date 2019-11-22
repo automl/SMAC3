@@ -143,8 +143,8 @@ class TestEPMChooser(unittest.TestCase):
         epm_chooser.incumbent = self.scenario.cs.sample_configuration()
         previous_configs = [epm_chooser.incumbent] + [self.scenario.cs.sample_configuration() for _ in range(0, 20)]
         epm_chooser.runhistory = RunHistory(aggregate_func=average_cost)
-        for i in range(0, len(previous_configs)):
-            epm_chooser.runhistory.add(previous_configs[i], i, 10, StatusType.SUCCESS)
+        for i, config in enumerate(previous_configs):
+            epm_chooser.runhistory.add(config, i, 10, StatusType.SUCCESS)
         epm_chooser.model = mock.Mock(spec=RandomForestWithInstances)
         epm_chooser.model.predict_marginalized_over_instances.side_effect = side_effect_predict
         epm_chooser.acquisition_func._compute = mock.Mock(spec=RandomForestWithInstances)

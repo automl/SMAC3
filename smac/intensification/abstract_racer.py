@@ -195,11 +195,13 @@ class AbstractRacer(object):
 
         # select challenger from the generators
         for challenger in chall_gen:
-            if repeat_configs:  # repetitions allowed
+            # repetitions allowed
+            if repeat_configs:
                 return challenger
-            else:               # select only a unique challenger
-                if challenger not in used_configs:
-                    return challenger
+
+            # otherwise, select only a unique challenger
+            if challenger not in used_configs:
+                return challenger
 
         self.logger.debug("No valid challenger was generated!")
         return None

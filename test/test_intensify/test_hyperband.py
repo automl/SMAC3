@@ -138,4 +138,3 @@ class TestHyperband(unittest.TestCase):
         self.assertEqual(self.stats.ta_runs, 1)
         self.assertEqual(list(self.rh.data.keys())[-1][0], self.rh.config_ids[self.config2])
         self.assertEqual(self.stats.inc_changed, 1)
-
