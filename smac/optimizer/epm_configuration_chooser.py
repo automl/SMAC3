@@ -39,14 +39,14 @@ class EPMChooser(object):
         ----------
         scenario: smac.scenario.scenario.Scenario
             Scenario object
-        stats: Stats
+        stats: smac.stats.stats.Stats
             statistics object with configuration budgets
-        runhistory: RunHistory
+        runhistory: smac.runhistory.runhistory.RunHistory
             runhistory with all runs so far
-        model: RandomForestWithInstances
+        model: smac.epm.rf_with_instances.RandomForestWithInstances
             empirical performance model (right now, we support only
             RandomForestWithInstances)
-        acq_optimizer: AcquisitionFunctionMaximizer
+        acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
             Optimizer of acquisition function.
         restore_incumbent: Configuration
             incumbent to be used from the start. ONLY used to restore states.

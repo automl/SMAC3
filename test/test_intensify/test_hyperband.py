@@ -61,8 +61,8 @@ class TestHyperband(unittest.TestCase):
             instances=[1], initial_budget=0.1, max_budget=1, eta=2)
         intensifier._update_stage()
 
-        self.assertEqual(intensifier.s, 3.0)
-        self.assertEqual(intensifier.s_max, 3.0)
+        self.assertEqual(intensifier.s, 3)
+        self.assertEqual(intensifier.s_max, 3)
         self.assertEqual(intensifier.hb_iters, 0)
         self.assertIsInstance(intensifier.sh_intensifier, SuccessiveHalving)
         self.assertEqual(intensifier.sh_intensifier.initial_budget, 0.125)
@@ -71,13 +71,14 @@ class TestHyperband(unittest.TestCase):
         # next HB stage
         intensifier._update_stage()
 
-        self.assertEqual(intensifier.s, 2.0)
+        self.assertEqual(intensifier.s, 2)
         self.assertEqual(intensifier.hb_iters, 0)
         self.assertEqual(intensifier.sh_intensifier.initial_budget, 0.25)
         self.assertEqual(intensifier.sh_intensifier.n_configs_in_stage.tolist(), [4.0, 2.0, 1.0])
 
+        intensifier._update_stage()  # s = 1
+        intensifier._update_stage()  # s = 0
         # HB iteration completed
-        intensifier.s = 0.0
         intensifier._update_stage()
 
         self.assertEqual(intensifier.s, intensifier.s_max)
@@ -107,9 +108,10 @@ class TestHyperband(unittest.TestCase):
         self.assertFalse(hasattr(intensifier, 's'))
 
         # Testing get_next_challenger - get next configuration
-        config = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
+        config = intensifier.get_next_challenger(challengers=[self.config2, self.config3],
+                                                 chooser=None, run_history=self.rh)
         self.assertEqual(intensifier.s, intensifier.s_max)
-        self.assertIsInstance(config, Configuration)
+        self.assertEqual(config, self.config2)
 
         # update to the last SH iteration of the given HB stage
         self.assertEqual(intensifier.s, 1)

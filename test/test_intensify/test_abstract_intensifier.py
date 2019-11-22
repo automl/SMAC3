@@ -63,7 +63,8 @@ class TestAbstractIntensifier(unittest.TestCase):
         self.assertEqual(config, None)
 
         # next challenger from a list
-        config = intensifier.get_next_challenger(challengers=[self.config1], chooser=None, run_history=self.rh)
+        config = intensifier.get_next_challenger(challengers=[self.config1, self.config2],
+                                                 chooser=None, run_history=self.rh)
         self.assertEqual(config, self.config1)
 
         # next challenger from a chooser
@@ -75,6 +76,28 @@ class TestAbstractIntensifier(unittest.TestCase):
 
         config = intensifier.get_next_challenger(challengers=None, chooser=chooser, run_history=self.rh)
         self.assertEqual(list(config.get_dictionary().values()), [24, 68])
+
+    def test_get_next_challenger_2(self):
+        """
+            test get_next_challenger - repeat configurations
+        """
+        intensifier = AbstractRacer(
+            tae_runner=None, stats=self.stats, traj_logger=None,
+            rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
+            cutoff=1, instances=[1], initial_budget=1, max_budget=3, eta=2)
+
+        # should not repeat configurations
+        self.rh.add(self.config1, 1, 1, StatusType.SUCCESS)
+        config = intensifier.get_next_challenger(challengers=[self.config1, self.config2],
+                                                 chooser=None, run_history=self.rh, repeat_configs=False)
+
+        self.assertEqual(config, self.config2)
+
+        # should repeat configurations
+        config = intensifier.get_next_challenger(challengers=[self.config1, self.config2],
+                                                 chooser=None, run_history=self.rh, repeat_configs=True)
+
+        self.assertEqual(config, self.config1)
 
     def test_compare_configs_no_joint_set(self):
         intensifier = AbstractRacer(

@@ -29,9 +29,9 @@ class Hyperband(SuccessiveHalving):
     ----------
     tae_runner : tae.executre_ta_run_*.ExecuteTARun* Object
         target algorithm run executor
-    stats: Stats
+    stats: smac.stats.stats.Stats
         stats object
-    traj_logger: TrajLogger
+    traj_logger: smac.utils.io.traj_logging.TrajLogger
         TrajLogger object to log all new incumbents
     rng : np.random.RandomState
     instances : typing.List[str]
@@ -121,7 +121,7 @@ class Hyperband(SuccessiveHalving):
             promising configuration
         incumbent : Configuration
             best configuration so far
-        run_history : RunHistory
+        run_history : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         aggregate_func: typing.Callable
             aggregate error across instances
@@ -164,9 +164,9 @@ class Hyperband(SuccessiveHalving):
         ----------
         challengers : typing.List[Configuration]
             promising configurations
-        chooser : EPMChooser
+        chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
             optimizer that generates next configurations to use for racing
-        run_history : RunHistory
+        run_history : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
@@ -197,12 +197,12 @@ class Hyperband(SuccessiveHalving):
 
         Parameters
         ----------
-         run_history : RunHistory
+         run_history : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         """
         if not hasattr(self, 's'):
             # setting initial running budget for future iterations (s & s_max from Algorithm 1)
-            self.s_max = np.floor(np.log(self.max_budget / self.initial_budget) / np.log(self.eta))
+            self.s_max = int(np.floor(np.log(self.max_budget / self.initial_budget) / np.log(self.eta)))
             self.s = self.s_max
         elif self.s == 0:
             # reset if HB iteration is over

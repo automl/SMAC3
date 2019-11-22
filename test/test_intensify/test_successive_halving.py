@@ -165,8 +165,14 @@ class TestSuccessiveHalving(unittest.TestCase):
         """
             test get_next_challenger for a presently running configuration
         """
+        def target(x):
+            return 1
+
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj='quality')
+        taf.runhistory = self.rh
+
         intensifier = SuccessiveHalving(
-            tae_runner=None, stats=self.stats, traj_logger=None,
+            tae_runner=taf, stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
             cutoff=1, instances=[1, 2], initial_budget=1, max_budget=2, eta=2)
 
@@ -186,13 +192,10 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(config, self.config2)
         self.assertEqual(len(intensifier.curr_challengers), 1)
 
-    def test_get_next_challenger_2(self):
+    def test_get_next_challenger_3(self):
         """
             test get_next_challenger for higher stages of SH iteration
         """
-        def target(x):
-            return 5
-
         intensifier = SuccessiveHalving(
             tae_runner=None, stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
@@ -319,9 +322,9 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(self.stats.inc_changed, 0)
         self.assertEqual(list(self.rh.data.values())[2][2], StatusType.CAPPED)
 
-    def test_intensify_3(self):
+    def test_eval_challenger_3(self):
         """
-            test eval_challenger for updating to next stage
+            test eval_challenger for updating to next stage and shuffling instance order every run
         """
 
         def target(x: Configuration, instance: str):
@@ -338,6 +341,8 @@ class TestSuccessiveHalving(unittest.TestCase):
             deterministic=True, cutoff=1)
 
         intensifier._update_stage()
+
+        self.assertEqual(intensifier.inst_seed_pairs, [(0, 0), (1, 0)])
 
         config = intensifier.get_next_challenger(challengers=[self.config1], chooser=None, run_history=self.rh)
         inc, _ = intensifier.eval_challenger(challenger=config,
@@ -370,3 +375,17 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(len(self.rh.get_runs_for_config(self.config1)), 2)
         self.assertEqual(intensifier.sh_iters, 1)
         self.assertEqual(self.stats.inc_changed, 1)
+
+        # For the 2nd SH iteration, we should still be able to run the old configurations again
+        # since instance order is "shuffle"
+
+        self.assertEqual(intensifier.inst_seed_pairs, [(1, 0), (0, 0)])
+
+        config = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
+        inc, _ = intensifier.eval_challenger(challenger=config,
+                                             incumbent=None,
+                                             run_history=self.rh,
+                                             aggregate_func=average_cost)
+
+        self.assertEqual(config, self.config2)
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config2)), 2)

@@ -37,7 +37,7 @@ class AbstractRacer(object):
         target algorithm run executor
     stats: Stats
         stats object
-    traj_logger: TrajLogger
+    traj_logger: smac.utils.io.traj_logging.TrajLogger
         TrajLogger object to log all new incumbents
     rng : np.random.RandomState
     instances : typing.List[str]
@@ -134,9 +134,9 @@ class AbstractRacer(object):
         ----------
         challengers : typing.List[Configuration]
             promising configurations
-        chooser : EPMChooser
+        chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
             optimizer that generates next configurations to use for racing
-        run_history : RunHistory
+        run_history : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
@@ -162,10 +162,10 @@ class AbstractRacer(object):
         Parameters
         ----------
         challengers : typing.List[Configuration]
-            promising configurations
-        chooser : EPMChooser
+            promising configurations to evaluate next
+        chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
             a sampler that generates next configurations to use for racing
-        run_history : RunHistory
+        run_history : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
@@ -220,7 +220,7 @@ class AbstractRacer(object):
         ----------
         challenger : Configuration
             Configuration which challenges incumbent
-        run_history : RunHistory
+        run_history : smac.runhistory.runhistory.RunHistory
             Stores all runs we ran so far
         inc_sum_cost: float
             Sum of runtimes of all incumbent runs
@@ -272,7 +272,7 @@ class AbstractRacer(object):
             Current incumbent
         challenger: Configuration
             Challenger configuration
-        run_history: RunHistory
+        run_history: smac.runhistory.runhistory.RunHistory
             Stores all runs we ran so far
         aggregate_func: typing.Callable
             Aggregate performance across instances

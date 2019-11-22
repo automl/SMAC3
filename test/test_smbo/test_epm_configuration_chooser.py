@@ -55,6 +55,7 @@ class TestEPMChooser(unittest.TestCase):
         x = smbo.epm_chooser.choose_next(incumbent_value=0.0)
         self.assertEqual(x[0].get_array().shape, (2,))
         self.assertEqual(len(x), 1)
+        self.assertEqual(x[0].origin, 'Random Search')
 
     def test_choose_next_empty_X(self):
         epm_chooser = SMAC4AC(self.scenario, rng=1).solver.epm_chooser

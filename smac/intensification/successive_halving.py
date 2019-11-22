@@ -250,7 +250,7 @@ class SuccessiveHalving(AbstractRacer):
             promising configuration
         incumbent : Configuration
             best configuration so far
-        run_history : RunHistory
+        run_history : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         aggregate_func: typing.Callable
             aggregate error across instances
@@ -369,9 +369,9 @@ class SuccessiveHalving(AbstractRacer):
         ----------
         challengers : typing.List[Configuration]
             promising configurations
-        chooser : EPMChooser
+        chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
             optimizer that generates next configurations to use for racing
-        run_history : RunHistory
+        run_history : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
@@ -424,7 +424,7 @@ class SuccessiveHalving(AbstractRacer):
 
         Parameters
         ----------
-         run_history : RunHistory
+         run_history : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         """
 
@@ -489,7 +489,7 @@ class SuccessiveHalving(AbstractRacer):
             promising configuration
         incumbent : Configuration
             best configuration so far
-        run_history : RunHistory
+        run_history : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         aggregate_func: typing.Callable
             aggregate error across instances
@@ -532,7 +532,7 @@ class SuccessiveHalving(AbstractRacer):
         ----------
         configs: typing.List[Configuration]
             list of configurations to filter from
-        run_history: RunHistory
+        run_history: smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         k: int
             number of configurations to select
