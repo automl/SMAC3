@@ -268,17 +268,17 @@
            <div itemprop="articleBody">
             
   <h1>Source code for smac.epm.gaussian_process_mcmc</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
+<span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">import</span> <span class="nn">emcee</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">lazy_import</span> <span class="k">import</span> <span class="n">lazy_callable</span>
+<span class="kn">from</span> <span class="nn">lazy_import</span> <span class="kn">import</span> <span class="n">lazy_callable</span>
 
-<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">ConfigurationSpace</span>
-<span class="kn">from</span> <span class="nn">smac.epm.base_gp</span> <span class="k">import</span> <span class="n">BaseModel</span>
-<span class="kn">from</span> <span class="nn">smac.epm.gaussian_process</span> <span class="k">import</span> <span class="n">GaussianProcess</span>
+<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span>
+<span class="kn">from</span> <span class="nn">smac.epm.base_gp</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">smac.epm.gaussian_process</span> <span class="kn">import</span> <span class="n">GaussianProcess</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="n">Kernel</span> <span class="o">=</span> <span class="n">lazy_callable</span><span class="p">(</span><span class="s1">&#39;skopt.learning.gaussian_process.kernels.Kernel&#39;</span><span class="p">)</span>
@@ -288,7 +288,7 @@
 
 <div class="viewcode-block" id="GaussianProcessMCMC"><a class="viewcode-back" href="../../../apidoc/smac.epm.gaussian_process_mcmc.html#smac.epm.gaussian_process_mcmc.GaussianProcessMCMC">[docs]</a><span class="k">class</span> <span class="nc">GaussianProcessMCMC</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">configspace</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
         <span class="n">types</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>

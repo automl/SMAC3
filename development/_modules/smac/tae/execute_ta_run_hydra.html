@@ -270,12 +270,12 @@
   <h1>Source code for smac.tae.execute_ta_run_hydra</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">typing</span>
 
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_old</span> <span class="k">import</span> <span class="n">ExecuteTARunOld</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_aclib</span> <span class="k">import</span> <span class="n">ExecuteTARunAClib</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_aclib</span> <span class="k">import</span> <span class="n">ExecuteTARun</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_func</span> <span class="k">import</span> <span class="n">ExecuteTAFuncDict</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_func</span> <span class="k">import</span> <span class="n">ExecuteTAFuncArray</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_old</span> <span class="k">import</span> <span class="n">StatusType</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_old</span> <span class="kn">import</span> <span class="n">ExecuteTARunOld</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_aclib</span> <span class="kn">import</span> <span class="n">ExecuteTARunAClib</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_aclib</span> <span class="kn">import</span> <span class="n">ExecuteTARun</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_func</span> <span class="kn">import</span> <span class="n">ExecuteTAFuncDict</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_func</span> <span class="kn">import</span> <span class="n">ExecuteTAFuncArray</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_old</span> <span class="kn">import</span> <span class="n">StatusType</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2018, ML4AAD&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
@@ -287,7 +287,7 @@
     <span class="sd">&quot;&quot;&quot;Returns min(cost, cost_portfolio)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">cost_oracle</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
                  <span class="n">tae</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">ExecuteTARun</span><span class="p">]</span> <span class="o">=</span> <span class="n">ExecuteTARunOld</span><span class="p">,</span>
                  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>

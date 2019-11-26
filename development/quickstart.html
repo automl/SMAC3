@@ -291,8 +291,8 @@ This example aims to explain the basic usage of <em>SMAC</em>. There are differe
 implemented in <cite>examples/branin/branin_fmin.py</cite> and requires no extra files. We
 import the fmin-function and the Branin-function:</p>
 <div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>3
-4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">branin</span> <span class="k">import</span> <span class="n">branin</span>
-<span class="kn">from</span> <span class="nn">smac.facade.func_facade</span> <span class="k">import</span> <span class="n">fmin_smac</span>
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">branin</span> <span class="kn">import</span> <span class="n">branin</span>
+<span class="kn">from</span> <span class="nn">smac.facade.func_facade</span> <span class="kn">import</span> <span class="n">fmin_smac</span>
 </pre></div>
 </td></tr></table></div>
 <p>And run the f_min-function:</p>
@@ -407,19 +407,19 @@ This example is located in <code class="code docutils literal notranslate"><span
 20
 21
 22</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">sklearn</span> <span class="k">import</span> <span class="n">svm</span><span class="p">,</span> <span class="n">datasets</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">cross_val_score</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">svm</span><span class="p">,</span> <span class="n">datasets</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
 
 <span class="c1"># Import ConfigSpace and different types of parameters</span>
-<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">ConfigurationSpace</span>
-<span class="kn">from</span> <span class="nn">ConfigSpace.hyperparameters</span> <span class="k">import</span> <span class="n">CategoricalHyperparameter</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span>
+<span class="kn">from</span> <span class="nn">ConfigSpace.hyperparameters</span> <span class="kn">import</span> <span class="n">CategoricalHyperparameter</span><span class="p">,</span> \
     <span class="n">UniformFloatHyperparameter</span><span class="p">,</span> <span class="n">UniformIntegerHyperparameter</span>
-<span class="kn">from</span> <span class="nn">ConfigSpace.conditions</span> <span class="k">import</span> <span class="n">InCondition</span>
+<span class="kn">from</span> <span class="nn">ConfigSpace.conditions</span> <span class="kn">import</span> <span class="n">InCondition</span>
 
 <span class="c1"># Import SMAC-utilities</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_func</span> <span class="k">import</span> <span class="n">ExecuteTAFuncDict</span>
-<span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
-<span class="kn">from</span> <span class="nn">smac.facade.smac_hpo_facade</span> <span class="k">import</span> <span class="n">SMAC4HPO</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_func</span> <span class="kn">import</span> <span class="n">ExecuteTAFuncDict</span>
+<span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
+<span class="kn">from</span> <span class="nn">smac.facade.smac_hpo_facade</span> <span class="kn">import</span> <span class="n">SMAC4HPO</span>
 </pre></div>
 </td></tr></table></div>
 <dl class="simple">

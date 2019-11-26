@@ -271,53 +271,53 @@
 <span></span><span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span>  <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span>  <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Callable</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="c1"># tae</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">ExecuteTARun</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_old</span> <span class="k">import</span> <span class="n">ExecuteTARunOld</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_func</span> <span class="k">import</span> <span class="n">ExecuteTAFuncDict</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">StatusType</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="kn">import</span> <span class="n">ExecuteTARun</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_old</span> <span class="kn">import</span> <span class="n">ExecuteTARunOld</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_func</span> <span class="kn">import</span> <span class="n">ExecuteTAFuncDict</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="kn">import</span> <span class="n">StatusType</span>
 <span class="c1"># stats and options</span>
-<span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="k">import</span> <span class="n">Stats</span>
-<span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
+<span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
+<span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 <span class="c1"># runhistory</span>
-<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
-<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="k">import</span> <span class="n">AbstractRunHistory2EPM</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="kn">import</span> <span class="n">AbstractRunHistory2EPM</span><span class="p">,</span> \
     <span class="n">RunHistory2EPM4LogCost</span><span class="p">,</span> <span class="n">RunHistory2EPM4Cost</span><span class="p">,</span> \
     <span class="n">RunHistory2EPM4InvScaledCost</span><span class="p">,</span> <span class="n">RunHistory2EPM4LogScaledCost</span>
 <span class="c1"># Initial designs</span>
-<span class="kn">from</span> <span class="nn">smac.initial_design.initial_design</span> <span class="k">import</span> <span class="n">InitialDesign</span>
-<span class="kn">from</span> <span class="nn">smac.initial_design.default_configuration_design</span> <span class="k">import</span> \
+<span class="kn">from</span> <span class="nn">smac.initial_design.initial_design</span> <span class="kn">import</span> <span class="n">InitialDesign</span>
+<span class="kn">from</span> <span class="nn">smac.initial_design.default_configuration_design</span> <span class="kn">import</span> \
     <span class="n">DefaultConfiguration</span>
-<span class="kn">from</span> <span class="nn">smac.initial_design.random_configuration_design</span> <span class="k">import</span> <span class="n">RandomConfigurations</span>
-<span class="kn">from</span> <span class="nn">smac.initial_design.latin_hypercube_design</span> <span class="k">import</span> <span class="n">LHDesign</span>
-<span class="kn">from</span> <span class="nn">smac.initial_design.factorial_design</span> <span class="k">import</span> <span class="n">FactorialInitialDesign</span>
-<span class="kn">from</span> <span class="nn">smac.initial_design.sobol_design</span> <span class="k">import</span> <span class="n">SobolDesign</span>
+<span class="kn">from</span> <span class="nn">smac.initial_design.random_configuration_design</span> <span class="kn">import</span> <span class="n">RandomConfigurations</span>
+<span class="kn">from</span> <span class="nn">smac.initial_design.latin_hypercube_design</span> <span class="kn">import</span> <span class="n">LHDesign</span>
+<span class="kn">from</span> <span class="nn">smac.initial_design.factorial_design</span> <span class="kn">import</span> <span class="n">FactorialInitialDesign</span>
+<span class="kn">from</span> <span class="nn">smac.initial_design.sobol_design</span> <span class="kn">import</span> <span class="n">SobolDesign</span>
 
 <span class="c1"># intensification</span>
-<span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="k">import</span> <span class="n">Intensifier</span>
-<span class="kn">from</span> <span class="nn">smac.intensification.abstract_racer</span> <span class="k">import</span> <span class="n">AbstractRacer</span>
-<span class="kn">from</span> <span class="nn">smac.intensification.successive_halving</span> <span class="k">import</span> <span class="n">SuccessiveHalving</span>
+<span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="kn">import</span> <span class="n">Intensifier</span>
+<span class="kn">from</span> <span class="nn">smac.intensification.abstract_racer</span> <span class="kn">import</span> <span class="n">AbstractRacer</span>
+<span class="kn">from</span> <span class="nn">smac.intensification.successive_halving</span> <span class="kn">import</span> <span class="n">SuccessiveHalving</span>
 <span class="c1"># optimizer</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.smbo</span> <span class="k">import</span> <span class="n">SMBO</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="k">import</span> <span class="n">average_cost</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="k">import</span> <span class="n">EI</span><span class="p">,</span> <span class="n">LogEI</span><span class="p">,</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span> <span class="n">IntegratedAcquisitionFunction</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="k">import</span> <span class="n">InterleavedLocalAndRandomSearch</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">smac.optimizer.smbo</span> <span class="kn">import</span> <span class="n">SMBO</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="kn">import</span> <span class="n">average_cost</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="kn">import</span> <span class="n">EI</span><span class="p">,</span> <span class="n">LogEI</span><span class="p">,</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span> <span class="n">IntegratedAcquisitionFunction</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="kn">import</span> <span class="n">InterleavedLocalAndRandomSearch</span><span class="p">,</span> \
     <span class="n">AcquisitionFunctionMaximizer</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.random_configuration_chooser</span> <span class="k">import</span> <span class="n">RandomConfigurationChooser</span><span class="p">,</span> <span class="n">ChooserProb</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.random_configuration_chooser</span> <span class="kn">import</span> <span class="n">RandomConfigurationChooser</span><span class="p">,</span> <span class="n">ChooserProb</span>
 <span class="c1"># epm</span>
-<span class="kn">from</span> <span class="nn">smac.epm.rf_with_instances</span> <span class="k">import</span> <span class="n">RandomForestWithInstances</span>
-<span class="kn">from</span> <span class="nn">smac.epm.rfr_imputator</span> <span class="k">import</span> <span class="n">RFRImputator</span>
-<span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="k">import</span> <span class="n">AbstractEPM</span>
-<span class="kn">from</span> <span class="nn">smac.epm.util_funcs</span> <span class="k">import</span> <span class="n">get_types</span><span class="p">,</span> <span class="n">get_rng</span>
+<span class="kn">from</span> <span class="nn">smac.epm.rf_with_instances</span> <span class="kn">import</span> <span class="n">RandomForestWithInstances</span>
+<span class="kn">from</span> <span class="nn">smac.epm.rfr_imputator</span> <span class="kn">import</span> <span class="n">RFRImputator</span>
+<span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="kn">import</span> <span class="n">AbstractEPM</span>
+<span class="kn">from</span> <span class="nn">smac.epm.util_funcs</span> <span class="kn">import</span> <span class="n">get_types</span><span class="p">,</span> <span class="n">get_rng</span>
 <span class="c1"># utils</span>
-<span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="k">import</span> <span class="n">TrajLogger</span>
-<span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="k">import</span> <span class="n">MAXINT</span>
-<span class="kn">from</span> <span class="nn">smac.utils.io.output_directory</span> <span class="k">import</span> <span class="n">create_output_directory</span>
-<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="kn">import</span> <span class="n">TrajLogger</span>
+<span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span>
+<span class="kn">from</span> <span class="nn">smac.utils.io.output_directory</span> <span class="kn">import</span> <span class="n">create_output_directory</span>
+<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2018, ML4AAD&quot;</span>
@@ -340,7 +340,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
                  <span class="n">tae_runner</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">ExecuteTARun</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">tae_runner_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>

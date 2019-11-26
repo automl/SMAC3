@@ -274,9 +274,9 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">smac.utils.io.input_reader</span> <span class="k">import</span> <span class="n">InputReader</span>
-<span class="kn">from</span> <span class="nn">smac.utils.io.output_writer</span> <span class="k">import</span> <span class="n">OutputWriter</span>
-<span class="kn">from</span> <span class="nn">smac.utils.io.cmd_reader</span> <span class="k">import</span> <span class="n">CMDReader</span>
+<span class="kn">from</span> <span class="nn">smac.utils.io.input_reader</span> <span class="kn">import</span> <span class="n">InputReader</span>
+<span class="kn">from</span> <span class="nn">smac.utils.io.output_writer</span> <span class="kn">import</span> <span class="n">OutputWriter</span>
+<span class="kn">from</span> <span class="nn">smac.utils.io.cmd_reader</span> <span class="kn">import</span> <span class="n">CMDReader</span>
 
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer, Matthias Feurer, Aaron Kimmig&quot;</span>
@@ -297,7 +297,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scenario</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmd_options</span><span class="p">:</span> <span class="nb">dict</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scenario</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cmd_options</span><span class="p">:</span> <span class="nb">dict</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Creates a scenario-object. The output_dir will be</span>
 <span class="sd">        &quot;output_dir/run_id/&quot; and if that exists already, the old folder and its</span>
 <span class="sd">        content will be moved (without any checks on whether it&#39;s still used by</span>

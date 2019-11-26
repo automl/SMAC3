@@ -274,22 +274,22 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 
-<span class="kn">from</span> <span class="nn">smac.utils.io.cmd_reader</span> <span class="k">import</span> <span class="n">CMDReader</span>
-<span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
-<span class="kn">from</span> <span class="nn">smac.facade.smac_ac_facade</span> <span class="k">import</span> <span class="n">SMAC4AC</span>
-<span class="kn">from</span> <span class="nn">smac.facade.roar_facade</span> <span class="k">import</span> <span class="n">ROAR</span>
-<span class="kn">from</span> <span class="nn">smac.facade.experimental.epils_facade</span> <span class="k">import</span> <span class="n">EPILS</span>
-<span class="kn">from</span> <span class="nn">smac.facade.experimental.hydra_facade</span> <span class="k">import</span> <span class="n">Hydra</span>
-<span class="kn">from</span> <span class="nn">smac.facade.experimental.psmac_facade</span> <span class="k">import</span> <span class="n">PSMAC</span>
-<span class="kn">from</span> <span class="nn">smac.facade.smac_hpo_facade</span> <span class="k">import</span> <span class="n">SMAC4HPO</span>
-<span class="kn">from</span> <span class="nn">smac.facade.smac_bo_facade</span> <span class="k">import</span> <span class="n">SMAC4BO</span>
-<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
-<span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="k">import</span> <span class="n">Stats</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="k">import</span> <span class="n">average_cost</span>
-<span class="kn">from</span> <span class="nn">smac.utils.merge_foreign_data</span> <span class="k">import</span> <span class="n">merge_foreign_data_from_file</span>
-<span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="k">import</span> <span class="n">TrajLogger</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">TAEAbortException</span><span class="p">,</span> <span class="n">FirstRunCrashedException</span>
-<span class="kn">from</span> <span class="nn">smac.utils.io.output_directory</span> <span class="k">import</span> <span class="n">create_output_directory</span>
+<span class="kn">from</span> <span class="nn">smac.utils.io.cmd_reader</span> <span class="kn">import</span> <span class="n">CMDReader</span>
+<span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
+<span class="kn">from</span> <span class="nn">smac.facade.smac_ac_facade</span> <span class="kn">import</span> <span class="n">SMAC4AC</span>
+<span class="kn">from</span> <span class="nn">smac.facade.roar_facade</span> <span class="kn">import</span> <span class="n">ROAR</span>
+<span class="kn">from</span> <span class="nn">smac.facade.experimental.epils_facade</span> <span class="kn">import</span> <span class="n">EPILS</span>
+<span class="kn">from</span> <span class="nn">smac.facade.experimental.hydra_facade</span> <span class="kn">import</span> <span class="n">Hydra</span>
+<span class="kn">from</span> <span class="nn">smac.facade.experimental.psmac_facade</span> <span class="kn">import</span> <span class="n">PSMAC</span>
+<span class="kn">from</span> <span class="nn">smac.facade.smac_hpo_facade</span> <span class="kn">import</span> <span class="n">SMAC4HPO</span>
+<span class="kn">from</span> <span class="nn">smac.facade.smac_bo_facade</span> <span class="kn">import</span> <span class="n">SMAC4BO</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span>
+<span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="kn">import</span> <span class="n">average_cost</span>
+<span class="kn">from</span> <span class="nn">smac.utils.merge_foreign_data</span> <span class="kn">import</span> <span class="n">merge_foreign_data_from_file</span>
+<span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="kn">import</span> <span class="n">TrajLogger</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="kn">import</span> <span class="n">TAEAbortException</span><span class="p">,</span> <span class="n">FirstRunCrashedException</span>
+<span class="kn">from</span> <span class="nn">smac.utils.io.output_directory</span> <span class="kn">import</span> <span class="n">create_output_directory</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
@@ -303,7 +303,7 @@
 
     <span class="sd">&quot;&quot;&quot;Main class of SMAC&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>

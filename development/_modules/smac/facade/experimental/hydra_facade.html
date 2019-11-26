@@ -274,26 +274,26 @@
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 
 <span class="kn">import</span> <span class="nn">pickle</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">ConfigSpace.configuration_space</span> <span class="k">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span> <span class="nn">ConfigSpace.configuration_space</span> <span class="kn">import</span> <span class="n">Configuration</span>
 
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_hydra</span> <span class="k">import</span> <span class="n">ExecuteTARunHydra</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_hydra</span> <span class="k">import</span> <span class="n">ExecuteTARunOld</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_hydra</span> <span class="k">import</span> <span class="n">ExecuteTARun</span>
-<span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
-<span class="kn">from</span> <span class="nn">smac.facade.smac_ac_facade</span> <span class="k">import</span> <span class="n">SMAC4AC</span>
-<span class="kn">from</span> <span class="nn">smac.facade.experimental.psmac_facade</span> <span class="k">import</span> <span class="n">PSMAC</span>
-<span class="kn">from</span> <span class="nn">smac.utils.io.output_directory</span> <span class="k">import</span> <span class="n">create_output_directory</span>
-<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="k">import</span> <span class="n">average_cost</span>
-<span class="kn">from</span> <span class="nn">smac.epm.util_funcs</span> <span class="k">import</span> <span class="n">get_rng</span>
-<span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="k">import</span> <span class="n">MAXINT</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.pSMAC</span> <span class="k">import</span> <span class="n">read</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_hydra</span> <span class="kn">import</span> <span class="n">ExecuteTARunHydra</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_hydra</span> <span class="kn">import</span> <span class="n">ExecuteTARunOld</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_hydra</span> <span class="kn">import</span> <span class="n">ExecuteTARun</span>
+<span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
+<span class="kn">from</span> <span class="nn">smac.facade.smac_ac_facade</span> <span class="kn">import</span> <span class="n">SMAC4AC</span>
+<span class="kn">from</span> <span class="nn">smac.facade.experimental.psmac_facade</span> <span class="kn">import</span> <span class="n">PSMAC</span>
+<span class="kn">from</span> <span class="nn">smac.utils.io.output_directory</span> <span class="kn">import</span> <span class="n">create_output_directory</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="kn">import</span> <span class="n">average_cost</span>
+<span class="kn">from</span> <span class="nn">smac.epm.util_funcs</span> <span class="kn">import</span> <span class="n">get_rng</span>
+<span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.pSMAC</span> <span class="kn">import</span> <span class="n">read</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2017, ML4AAD&quot;</span>
@@ -318,7 +318,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">scenario</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">Scenario</span><span class="p">],</span>
                  <span class="n">n_iterations</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                  <span class="n">val_set</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;train&#39;</span><span class="p">,</span>

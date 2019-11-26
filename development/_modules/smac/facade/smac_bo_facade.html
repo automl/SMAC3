@@ -270,12 +270,12 @@
   <h1>Source code for smac.facade.smac_bo_facade</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">smac.facade.smac_ac_facade</span> <span class="k">import</span> <span class="n">SMAC4AC</span>
-<span class="kn">from</span> <span class="nn">smac.epm.gaussian_process_mcmc</span> <span class="k">import</span> <span class="n">GaussianProcessMCMC</span><span class="p">,</span> <span class="n">GaussianProcess</span>
-<span class="kn">from</span> <span class="nn">smac.epm.gp_base_prior</span> <span class="k">import</span> <span class="n">HorseshoePrior</span><span class="p">,</span> <span class="n">LognormalPrior</span>
-<span class="kn">from</span> <span class="nn">smac.epm.util_funcs</span> <span class="k">import</span> <span class="n">get_types</span><span class="p">,</span> <span class="n">get_rng</span>
-<span class="kn">from</span> <span class="nn">smac.initial_design.sobol_design</span> <span class="k">import</span> <span class="n">SobolDesign</span>
-<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="k">import</span> <span class="n">RunHistory2EPM4Cost</span>
+<span class="kn">from</span> <span class="nn">smac.facade.smac_ac_facade</span> <span class="kn">import</span> <span class="n">SMAC4AC</span>
+<span class="kn">from</span> <span class="nn">smac.epm.gaussian_process_mcmc</span> <span class="kn">import</span> <span class="n">GaussianProcessMCMC</span><span class="p">,</span> <span class="n">GaussianProcess</span>
+<span class="kn">from</span> <span class="nn">smac.epm.gp_base_prior</span> <span class="kn">import</span> <span class="n">HorseshoePrior</span><span class="p">,</span> <span class="n">LognormalPrior</span>
+<span class="kn">from</span> <span class="nn">smac.epm.util_funcs</span> <span class="kn">import</span> <span class="n">get_types</span><span class="p">,</span> <span class="n">get_rng</span>
+<span class="kn">from</span> <span class="nn">smac.initial_design.sobol_design</span> <span class="kn">import</span> <span class="n">SobolDesign</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="kn">import</span> <span class="n">RunHistory2EPM4Cost</span>
 
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
@@ -316,7 +316,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;gp_mcmc&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;gp_mcmc&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
 <span class="sd">        see ~smac.facade.smac_facade for documentation</span>
@@ -332,7 +332,7 @@
         <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;initial_design_kwargs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_kwargs</span>
 
         <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">smac.epm.gp_kernels</span> <span class="k">import</span> <span class="n">ConstantKernel</span><span class="p">,</span> <span class="n">Matern</span><span class="p">,</span> <span class="n">WhiteKernel</span><span class="p">,</span> <span class="n">HammingKernel</span>
+            <span class="kn">from</span> <span class="nn">smac.epm.gp_kernels</span> <span class="kn">import</span> <span class="n">ConstantKernel</span><span class="p">,</span> <span class="n">Matern</span><span class="p">,</span> <span class="n">WhiteKernel</span><span class="p">,</span> <span class="n">HammingKernel</span>
 
             <span class="n">model_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;model_kwargs&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
 

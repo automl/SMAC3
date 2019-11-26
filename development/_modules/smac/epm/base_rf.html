@@ -270,8 +270,8 @@
   <h1>Source code for smac.epm.base_rf</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="k">import</span> <span class="n">AbstractEPM</span>
-<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="kn">import</span> <span class="n">AbstractEPM</span>
+<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">CategoricalHyperparameter</span><span class="p">,</span>
     <span class="n">UniformFloatHyperparameter</span><span class="p">,</span>
     <span class="n">UniformIntegerHyperparameter</span><span class="p">,</span>
@@ -281,7 +281,7 @@
 
 <div class="viewcode-block" id="BaseModel"><a class="viewcode-back" href="../../../apidoc/smac.epm.base_rf.html#smac.epm.base_rf.BaseModel">[docs]</a><span class="k">class</span> <span class="nc">BaseModel</span><span class="p">(</span><span class="n">AbstractEPM</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configspace</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configspace</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Abstract base class for all random forest models.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

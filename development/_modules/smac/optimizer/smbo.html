@@ -275,31 +275,31 @@
 <span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">import</span> <span class="nn">smac</span>
-<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">ConfigurationSpace</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">Constant</span><span class="p">,</span>\
+<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">Constant</span><span class="p">,</span>\
      <span class="n">CategoricalHyperparameter</span><span class="p">,</span> <span class="n">UniformFloatHyperparameter</span><span class="p">,</span> \
      <span class="n">UniformIntegerHyperparameter</span><span class="p">,</span> <span class="n">InCondition</span>
-<span class="kn">from</span> <span class="nn">smac.configspace.util</span> <span class="k">import</span> <span class="n">convert_configurations_to_array</span>
-<span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="k">import</span> <span class="n">AbstractEPM</span>
-<span class="kn">from</span> <span class="nn">smac.epm.rf_with_instances</span> <span class="k">import</span> <span class="n">RandomForestWithInstances</span>
-<span class="kn">from</span> <span class="nn">smac.epm.gaussian_process_mcmc</span> <span class="k">import</span> <span class="n">GaussianProcessMCMC</span>
-<span class="kn">from</span> <span class="nn">smac.epm.gp_base_prior</span> <span class="k">import</span> <span class="n">LognormalPrior</span><span class="p">,</span> <span class="n">HorseshoePrior</span>
-<span class="kn">from</span> <span class="nn">smac.epm.util_funcs</span> <span class="k">import</span> <span class="n">get_types</span>
-<span class="kn">from</span> <span class="nn">smac.initial_design.initial_design</span> <span class="k">import</span> <span class="n">InitialDesign</span>
-<span class="kn">from</span> <span class="nn">smac.intensification.abstract_racer</span> <span class="k">import</span> <span class="n">AbstractRacer</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer</span> <span class="k">import</span> <span class="n">pSMAC</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="k">import</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span> <span class="n">EI</span><span class="p">,</span> <span class="n">LogEI</span><span class="p">,</span>\
+<span class="kn">from</span> <span class="nn">smac.configspace.util</span> <span class="kn">import</span> <span class="n">convert_configurations_to_array</span>
+<span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="kn">import</span> <span class="n">AbstractEPM</span>
+<span class="kn">from</span> <span class="nn">smac.epm.rf_with_instances</span> <span class="kn">import</span> <span class="n">RandomForestWithInstances</span>
+<span class="kn">from</span> <span class="nn">smac.epm.gaussian_process_mcmc</span> <span class="kn">import</span> <span class="n">GaussianProcessMCMC</span>
+<span class="kn">from</span> <span class="nn">smac.epm.gp_base_prior</span> <span class="kn">import</span> <span class="n">LognormalPrior</span><span class="p">,</span> <span class="n">HorseshoePrior</span>
+<span class="kn">from</span> <span class="nn">smac.epm.util_funcs</span> <span class="kn">import</span> <span class="n">get_types</span>
+<span class="kn">from</span> <span class="nn">smac.initial_design.initial_design</span> <span class="kn">import</span> <span class="n">InitialDesign</span>
+<span class="kn">from</span> <span class="nn">smac.intensification.abstract_racer</span> <span class="kn">import</span> <span class="n">AbstractRacer</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer</span> <span class="kn">import</span> <span class="n">pSMAC</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="kn">import</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span> <span class="n">EI</span><span class="p">,</span> <span class="n">LogEI</span><span class="p">,</span>\
     <span class="n">LCB</span><span class="p">,</span> <span class="n">PI</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.random_configuration_chooser</span> <span class="k">import</span> <span class="n">ChooserNoCoolDown</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">smac.optimizer.random_configuration_chooser</span> <span class="kn">import</span> <span class="n">ChooserNoCoolDown</span><span class="p">,</span> \
     <span class="n">ChooserLinearCoolDown</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="k">import</span> <span class="n">AcquisitionFunctionMaximizer</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="kn">import</span> <span class="n">AcquisitionFunctionMaximizer</span><span class="p">,</span> \
     <span class="n">RandomSearch</span>
-<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
-<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="k">import</span> <span class="n">AbstractRunHistory2EPM</span>
-<span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
-<span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="k">import</span> <span class="n">Stats</span>
-<span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="k">import</span> <span class="n">TrajLogger</span>
-<span class="kn">from</span> <span class="nn">smac.utils.validate</span> <span class="k">import</span> <span class="n">Validator</span>
-<span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="k">import</span> <span class="n">MAXINT</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="kn">import</span> <span class="n">AbstractRunHistory2EPM</span>
+<span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
+<span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
+<span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="kn">import</span> <span class="n">TrajLogger</span>
+<span class="kn">from</span> <span class="nn">smac.utils.validate</span> <span class="kn">import</span> <span class="n">Validator</span>
+<span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span>
 
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Aaron Klein, Marius Lindauer, Matthias Feurer&quot;</span>
@@ -331,7 +331,7 @@
 <span class="sd">    random_configuration_chooser</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
                  <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">,</span>
                  <span class="n">initial_design</span><span class="p">:</span> <span class="n">InitialDesign</span><span class="p">,</span>
@@ -718,7 +718,7 @@
             <span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">conf</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;GP&quot;</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">smac.epm.gp_kernels</span> <span class="k">import</span> <span class="n">ConstantKernel</span><span class="p">,</span> <span class="n">HammingKernel</span><span class="p">,</span> <span class="n">WhiteKernel</span><span class="p">,</span> <span class="n">Matern</span>
+            <span class="kn">from</span> <span class="nn">smac.epm.gp_kernels</span> <span class="kn">import</span> <span class="n">ConstantKernel</span><span class="p">,</span> <span class="n">HammingKernel</span><span class="p">,</span> <span class="n">WhiteKernel</span><span class="p">,</span> <span class="n">Matern</span>
 
             <span class="n">cov_amp</span> <span class="o">=</span> <span class="n">ConstantKernel</span><span class="p">(</span>
                 <span class="mf">2.0</span><span class="p">,</span>

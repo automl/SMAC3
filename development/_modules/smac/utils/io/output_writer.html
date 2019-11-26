@@ -272,13 +272,13 @@
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 
-<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">pcs_new</span><span class="p">,</span> <span class="n">json</span><span class="p">,</span> <span class="n">ConfigurationSpace</span>
-<span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="k">import</span> <span class="n">PickableLoggerAdapter</span>
+<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">pcs_new</span><span class="p">,</span> <span class="n">json</span><span class="p">,</span> <span class="n">ConfigurationSpace</span>
+<span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">PickableLoggerAdapter</span>
 
 <div class="viewcode-block" id="OutputWriter"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.output_writer.html#smac.utils.io.output_writer.OutputWriter">[docs]</a><span class="k">class</span> <span class="nc">OutputWriter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Writing scenario to file.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">PickableLoggerAdapter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
 <div class="viewcode-block" id="OutputWriter.write_scenario_file"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.output_writer.html#smac.utils.io.output_writer.OutputWriter.write_scenario_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_scenario_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scenario</span><span class="p">):</span>

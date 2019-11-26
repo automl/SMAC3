@@ -269,18 +269,18 @@
             
   <h1>Source code for smac.runhistory.runhistory2epm</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">abc</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">StatusType</span>
-<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">RunKey</span><span class="p">,</span> <span class="n">RunValue</span>
-<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="n">convert_configurations_to_array</span>
-<span class="kn">from</span> <span class="nn">smac.epm.base_imputor</span> <span class="k">import</span> <span class="n">BaseImputor</span>
-<span class="kn">from</span> <span class="nn">smac.utils</span> <span class="k">import</span> <span class="n">constants</span>
-<span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="k">import</span> <span class="n">Scenario</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="kn">import</span> <span class="n">StatusType</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">RunKey</span><span class="p">,</span> <span class="n">RunValue</span>
+<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">convert_configurations_to_array</span>
+<span class="kn">from</span> <span class="nn">smac.epm.base_imputor</span> <span class="kn">import</span> <span class="n">BaseImputor</span>
+<span class="kn">from</span> <span class="nn">smac.utils</span> <span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Katharina Eggensperger&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
@@ -312,7 +312,7 @@
 <span class="sd">    num_params</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
         <span class="n">num_params</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -709,7 +709,7 @@
 
 <div class="viewcode-block" id="RunHistory2EPM4InvScaledCost"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4InvScaledCost">[docs]</a><span class="k">class</span> <span class="nc">RunHistory2EPM4InvScaledCost</span><span class="p">(</span><span class="n">RunHistory2EPM4Cost</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;TODO&quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_features</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance_features</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -743,7 +743,7 @@
 
 <div class="viewcode-block" id="RunHistory2EPM4SqrtScaledCost"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4SqrtScaledCost">[docs]</a><span class="k">class</span> <span class="nc">RunHistory2EPM4SqrtScaledCost</span><span class="p">(</span><span class="n">RunHistory2EPM4Cost</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;TODO&quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_features</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance_features</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>

@@ -275,19 +275,19 @@
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">get_one_exchange_neighbourhood</span><span class="p">,</span>
     <span class="n">Configuration</span><span class="p">,</span>
     <span class="n">ConfigurationSpace</span><span class="p">,</span>
     <span class="n">convert_configurations_to_array</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="k">import</span> <span class="n">RunHistory</span>
-<span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="k">import</span> <span class="n">Stats</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="k">import</span> <span class="n">AbstractAcquisitionFunction</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.random_configuration_chooser</span> <span class="k">import</span> <span class="n">ChooserNoCoolDown</span>
-<span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="k">import</span> <span class="n">MAXINT</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span>
+<span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="kn">import</span> <span class="n">AbstractAcquisitionFunction</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.random_configuration_chooser</span> <span class="kn">import</span> <span class="n">ChooserNoCoolDown</span>
+<span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Aaron Klein, Marius Lindauer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
@@ -312,7 +312,7 @@
 <span class="sd">    rng : np.random.RandomState or int, optional</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
             <span class="n">config_space</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
@@ -446,7 +446,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
             <span class="n">config_space</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
@@ -747,7 +747,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
 
-        <span class="kn">from</span> <span class="nn">scipy.optimize._differentialevolution</span> <span class="k">import</span> <span class="n">DifferentialEvolutionSolver</span>
+        <span class="kn">from</span> <span class="nn">scipy.optimize._differentialevolution</span> <span class="kn">import</span> <span class="n">DifferentialEvolutionSolver</span>
         <span class="n">configs</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
@@ -855,7 +855,7 @@
 <span class="sd">        [Local Search] number of local search iterations</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
             <span class="n">config_space</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
@@ -984,17 +984,17 @@
 <span class="sd">        ConfigurationSpace from which to sample new random configurations.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">challengers</span><span class="p">,</span> <span class="n">configuration_space</span><span class="p">,</span> <span class="n">random_configuration_chooser</span><span class="o">=</span><span class="n">ChooserNoCoolDown</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">challengers</span><span class="p">,</span> <span class="n">configuration_space</span><span class="p">,</span> <span class="n">random_configuration_chooser</span><span class="o">=</span><span class="n">ChooserNoCoolDown</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">challengers</span> <span class="o">=</span> <span class="n">challengers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">configuration_space</span> <span class="o">=</span> <span class="n">configuration_space</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_iteration</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># 1-based to prevent from starting with a random configuration</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_configuration_chooser</span> <span class="o">=</span> <span class="n">random_configuration_chooser</span>
 
-    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="nf">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">challengers</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">StopIteration</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1010,7 +1010,7 @@
 
 <div class="viewcode-block" id="FixedSet"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.FixedSet">[docs]</a><span class="k">class</span> <span class="nc">FixedSet</span><span class="p">(</span><span class="n">AcquisitionFunctionMaximizer</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configurations</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configurations</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Maximize the acquisition function over a finite list of configurations.</span>
 
