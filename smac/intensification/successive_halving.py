@@ -86,7 +86,8 @@ class SuccessiveHalving(AbstractRacer):
         slack factor of adpative capping (factor * adaptive cutoff)
     """
 
-    def __init__(self, tae_runner: ExecuteTARun,
+    def __init__(self,
+                 tae_runner: ExecuteTARun,
                  stats: Stats,
                  traj_logger: TrajLogger,
                  rng: np.random.RandomState,
@@ -162,7 +163,8 @@ class SuccessiveHalving(AbstractRacer):
         else:
             self.repeat_configs = True
 
-    def _init_sh_params(self, initial_budget: typing.Optional[float],
+    def _init_sh_params(self,
+                        initial_budget: typing.Optional[float],
                         max_budget: typing.Optional[float],
                         eta: float,
                         num_initial_challengers: typing.Optional[int]) -> None:
@@ -234,7 +236,8 @@ class SuccessiveHalving(AbstractRacer):
         self.n_configs_in_stage = num_initial_challengers * np.power(self.eta, 
                                                                      -np.linspace(0, max_sh_iter, max_sh_iter + 1))
 
-    def eval_challenger(self, challenger: Configuration,
+    def eval_challenger(self,
+                        challenger: Configuration,
                         incumbent: typing.Optional[Configuration],
                         run_history: RunHistory,
                         aggregate_func: typing.Callable,
@@ -356,7 +359,8 @@ class SuccessiveHalving(AbstractRacer):
 
         return incumbent, inc_perf
 
-    def get_next_challenger(self, challengers: typing.Optional[typing.List[Configuration]],
+    def get_next_challenger(self,
+                            challengers: typing.Optional[typing.List[Configuration]],
                             chooser: typing.Optional[EPMChooser],
                             run_history: RunHistory,
                             repeat_configs: bool = True) -> typing.Optional[Configuration]:
@@ -475,7 +479,8 @@ class SuccessiveHalving(AbstractRacer):
         self.curr_inst_idx = 0
         self.running_challenger = None
 
-    def _get_incumbent(self, challenger: Configuration,
+    def _get_incumbent(self,
+                       challenger: Configuration,
                        incumbent: typing.Optional[Configuration],
                        run_history: RunHistory,
                        aggregate_func: typing.Callable,
@@ -522,7 +527,8 @@ class SuccessiveHalving(AbstractRacer):
 
         return new_incumbent
 
-    def _top_k(self, configs: typing.List[Configuration],
+    def _top_k(self,
+               configs: typing.List[Configuration],
                run_history: RunHistory,
                k: int) -> typing.List[Configuration]:
         """

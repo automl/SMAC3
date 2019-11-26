@@ -25,7 +25,7 @@ class AbstractRacer(object):
     """
     Base class for all racing methods
 
-    The "intensification" is designed to be spread across multiple ``eval_config()`` runs.
+    The "intensification" is designed to be spread across multiple ``eval_challenger()`` runs.
     This is to facilitate on-demand configuration sampling if multiple configurations are required,
     like Successive Halving or Hyperband.
 
@@ -60,7 +60,8 @@ class AbstractRacer(object):
         slack factor of adpative capping (factor * adpative cutoff)
     """
 
-    def __init__(self, tae_runner: ExecuteTARun,
+    def __init__(self,
+                 tae_runner: ExecuteTARun,
                  stats: Stats,
                  traj_logger: TrajLogger,
                  rng: np.random.RandomState,
@@ -113,16 +114,42 @@ class AbstractRacer(object):
         # to sample fresh configs from EPM / mark the end of an iteration
         self.iteration_done = False
 
-    def eval_challenger(self, challenger: Configuration,
+    def eval_challenger(self,
+                        challenger: Configuration,
                         incumbent: Configuration,
                         run_history: RunHistory,
                         aggregate_func: typing.Callable,
                         time_bound: float = float(MAXINT),
                         log_traj: bool = True) -> typing.Tuple[Configuration, float]:
+        """
+        Runs intensification by evaluating one configuration-instance at a time
+        *Side effect:* adds runs to run_history
+
+        Parameters
+        ----------
+        challenger : Configuration
+            promising configuration
+        incumbent : Configuration
+            best configuration so far
+        run_history : smac.runhistory.runhistory.RunHistory
+            stores all runs we ran so far
+        aggregate_func: typing.Callable
+            aggregate error across instances
+        time_bound : float, optional (default=2 ** 31 - 1)
+            time in [sec] available to perform intensify
+        log_traj : bool
+            whether to log changes of incumbents in trajectory
+
+        Returns
+        -------
+        typing.Tuple[Configuration, float]
+            incumbent and incumbent cost
+        """
 
         raise NotImplementedError()
 
-    def get_next_challenger(self, challengers: typing.Optional[typing.List[Configuration]],
+    def get_next_challenger(self,
+                            challengers: typing.Optional[typing.List[Configuration]],
                             chooser: typing.Optional[EPMChooser],
                             run_history: RunHistory,
                             repeat_configs: bool = True) -> typing.Optional[Configuration]:
@@ -152,7 +179,8 @@ class AbstractRacer(object):
                                            repeat_configs=repeat_configs)
         return challenger
 
-    def _next_challenger(self, challengers: typing.Optional[typing.List[Configuration]],
+    def _next_challenger(self,
+                         challengers: typing.Optional[typing.List[Configuration]],
                          chooser: typing.Optional[EPMChooser],
                          run_history: RunHistory,
                          repeat_configs: bool = True) -> typing.Optional[Configuration]:
@@ -206,7 +234,8 @@ class AbstractRacer(object):
         self.logger.debug("No valid challenger was generated!")
         return None
 
-    def _adapt_cutoff(self, challenger: Configuration,
+    def _adapt_cutoff(self,
+                      challenger: Configuration,
                       run_history: RunHistory,
                       inc_sum_cost: float) -> float:
         """Adaptive capping:
@@ -251,7 +280,8 @@ class AbstractRacer(object):
                      )
         return cutoff
 
-    def _compare_configs(self, incumbent: Configuration,
+    def _compare_configs(self,
+                         incumbent: Configuration,
                          challenger: Configuration,
                          run_history: RunHistory,
                          aggregate_func: typing.Callable,

@@ -61,7 +61,8 @@ class Hyperband(SuccessiveHalving):
         slack factor of adpative capping (factor * adpative cutoff)
     """
 
-    def __init__(self, tae_runner: ExecuteTARun,
+    def __init__(self,
+                 tae_runner: ExecuteTARun,
                  stats: Stats,
                  traj_logger: TrajLogger,
                  rng: np.random.RandomState,
@@ -103,7 +104,8 @@ class Hyperband(SuccessiveHalving):
         self.hb_iters = 0
         self.sh_intensifier = None
 
-    def eval_challenger(self, challenger: Configuration,
+    def eval_challenger(self,
+                        challenger: Configuration,
                         incumbent: typing.Optional[Configuration],
                         run_history: RunHistory,
                         aggregate_func: typing.Callable,
@@ -151,7 +153,8 @@ class Hyperband(SuccessiveHalving):
 
         return incumbent, inc_perf
 
-    def get_next_challenger(self, challengers: typing.Optional[typing.List[Configuration]],
+    def get_next_challenger(self,
+                            challengers: typing.Optional[typing.List[Configuration]],
                             chooser: typing.Optional[EPMChooser],
                             run_history: RunHistory,
                             repeat_configs: bool = True) -> typing.Optional[Configuration]:

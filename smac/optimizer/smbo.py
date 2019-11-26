@@ -240,8 +240,13 @@ class SMBO(object):
 
         return self.incumbent
 
-    def validate(self, config_mode='inc', instance_mode='train+test',
-                 repetitions=1, use_epm=False, n_jobs=-1, backend='threading'):
+    def validate(self,
+                 config_mode='inc',
+                 instance_mode='train+test',
+                 repetitions=1,
+                 use_epm=False,
+                 n_jobs=-1,
+                 backend='threading'):
         """Create validator-object and run validation, using
         scenario-information, runhistory from smbo and tae_runner from intensify
 
@@ -320,7 +325,7 @@ class SMBO(object):
         return time_left
 
     def _component_builder(self, conf:typing.Union[Configuration, dict]) \
-        -> typing.Tuple[AbstractAcquisitionFunction, AbstractEPM]:
+            -> typing.Tuple[AbstractAcquisitionFunction, AbstractEPM]:
         """
             builds new Acquisition function object
             and EPM object and returns these
