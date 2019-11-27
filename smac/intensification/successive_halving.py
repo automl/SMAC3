@@ -251,8 +251,8 @@ class SuccessiveHalving(AbstractRacer):
         ----------
         challenger : Configuration
             promising configuration
-        incumbent : Configuration
-            best configuration so far
+        incumbent : typing.Optional[Configuration]
+            best configuration so far, None in 1st run
         run_history : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         aggregate_func: typing.Callable

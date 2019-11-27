@@ -118,20 +118,22 @@ class Intensifier(AbstractRacer):
         self.run_incumbent = True
         self.run_challenger = False
         self.first_run = True
+        self.n_iters = 0
 
         # challenger related variables
         self._chall_indx = 0
         self.running_challenger = None
         self.continue_challenger = False
-        self.N = None
+        self.configs_to_run = None
 
         # racing related variables
         self.to_run = None
         self.inc_sum_cost = np.inf
+        self.N = None
 
     def eval_challenger(self,
                         challenger: Configuration,
-                        incumbent: Configuration,
+                        incumbent: typing.Optional[Configuration],
                         run_history: RunHistory,
                         aggregate_func: typing.Callable,
                         time_bound: float = float(MAXINT),
@@ -148,8 +150,8 @@ class Intensifier(AbstractRacer):
         ----------
         challenger : Configuration
             promising configurations
-        incumbent : Configuration
-            best configuration so far
+        incumbent : typing.Optional[Configuration]
+            best configuration so far, None in 1st run
         run_history : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         aggregate_func: typing.Callable
@@ -225,21 +227,27 @@ class Intensifier(AbstractRacer):
             self.logger.debug("Budget exhausted; Return incumbent")
             return incumbent, inc_perf
 
+        # check if 1 intensification run is complete
         tm = time.time()
-        if self._chall_indx >= self.min_chall:
+        if self.run_incumbent and self._chall_indx >= self.min_chall:
             if self._num_run > self.run_limit:
-                self.logger.debug("Maximum #runs for intensification reached")
-                # break
+                self.logger.info("Maximum #runs for intensification reached")
+                self.n_iters += 1
+                self.configs_to_run = None
+
             if not self.use_ta_time_bound and tm - self.start_time - time_bound >= 0:
                 self.logger.debug("Wallclock time limit for intensification reached ("
                                   "used: %f sec, available: %f sec)" %
                                   (tm - self.start_time, time_bound))
-                # break
+                self.n_iters += 1
+                self.configs_to_run = None
+
             elif self._ta_time - time_bound >= 0:
                 self.logger.debug("TA time limit for intensification reached ("
                                   "used: %f sec, available: %f sec)" %
                                   (self._ta_time, time_bound))
-                # break
+                self.n_iters += 1
+                self.configs_to_run = None
 
         self.stats.update_average_configs_per_intensify(
             n_configs=self._chall_indx)
@@ -487,7 +495,7 @@ class Intensifier(AbstractRacer):
     def get_next_challenger(self,
                             challengers: typing.Optional[typing.List[Configuration]],
                             chooser: typing.Optional[EPMChooser],
-                            run_history: RunHistory,
+                            run_history: typing.Optional[RunHistory] = None,
                             repeat_configs: bool = True) -> typing.Optional[Configuration]:
         """
         Selects which challenger to use based on the iteration stage and set the iteration parameters.
@@ -500,7 +508,7 @@ class Intensifier(AbstractRacer):
             promising configurations
         chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
             optimizer that generates next configurations to use for racing
-        run_history : smac.runhistory.runhistory.RunHistory
+        run_history : typing.Optional[smac.runhistory.runhistory.RunHistory]
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
@@ -519,10 +527,22 @@ class Intensifier(AbstractRacer):
         # or for the first run
         if not self.running_challenger or \
                 (self.run_challenger and not self.to_run):
-            challenger = self._next_challenger(challengers=challengers,
-                                               chooser=chooser,
-                                               run_history=run_history,
-                                               repeat_configs=repeat_configs)
+
+            # this is a new intensification run, get the next list of configurations to run
+            if not self.configs_to_run:
+                self.configs_to_run = self._generate_challengers(challengers=challengers,
+                                                                 chooser=chooser)
+
+            # pick next configuration from the generator
+            try:
+                challenger = next(self.configs_to_run)
+
+            except StopIteration:
+                # out of challengers for the current iteration, start next incumbent iteration
+                self.n_iters += 1
+                self.configs_to_run = self._generate_challengers(challengers=challengers,
+                                                                 chooser=chooser)
+                challenger = next(self.configs_to_run)
 
             if challenger:
                 # reset instance index for the new challenger
@@ -536,3 +556,40 @@ class Intensifier(AbstractRacer):
         else:
             # return currently running challenger
             return self.running_challenger
+
+    def _generate_challengers(self,
+                              challengers: typing.Optional[typing.List[Configuration]],
+                              chooser: typing.Optional[EPMChooser]) \
+            -> typing.Optional[typing.Iterator[Configuration]]:
+        """
+        Retuns a sequence of challengers to use in intensification
+        If challengers are not provided, then optimizer will be used to generate the challenger list
+
+        Parameters
+        ----------
+        challengers : typing.List[Configuration]
+            promising configurations to evaluate next
+        chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
+            a sampler that generates next configurations to use for racing
+
+        Returns
+        -------
+        typing.Optional[typing.Generator[Configuration]]
+            A generator containing the next challengers to use
+        """
+        if challengers:
+            # iterate over challengers provided
+            self.logger.debug("Using challengers provided")
+            chall_gen = challengers
+        elif chooser:
+            # generating challengers on-the-fly if optimizer is given
+            self.logger.debug("Generating new challenger from optimizer")
+            chall_gen = chooser.choose_next()
+        else:
+            raise ValueError('No configurations/chooser provided. Cannot generate challenger!')
+
+        # ensuring a generator is returned
+        if isinstance(chall_gen, list):
+            chall_gen = (i for i in chall_gen)
+
+        return chall_gen

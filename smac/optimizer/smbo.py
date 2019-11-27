@@ -213,20 +213,21 @@ class SMBO(object):
             time_spent = time.time() - start_time
             time_left = self._get_timebound_for_intensification(time_spent)
 
-            # evaluate selected challenger
-            self.logger.debug("Intensify - evaluate challenger")
+            if challenger:
+                # evaluate selected challenger
+                self.logger.debug("Intensify - evaluate challenger")
 
-            self.incumbent, inc_perf = self.intensifier.eval_challenger(
-                challenger=challenger,
-                incumbent=self.incumbent,
-                run_history=self.runhistory,
-                aggregate_func=self.aggregate_func,
-                time_bound=max(self.intensifier._min_time, time_left))
+                self.incumbent, inc_perf = self.intensifier.eval_challenger(
+                    challenger=challenger,
+                    incumbent=self.incumbent,
+                    run_history=self.runhistory,
+                    aggregate_func=self.aggregate_func,
+                    time_bound=max(self.intensifier._min_time, time_left))
 
-            if self.scenario.shared_model:
-                pSMAC.write(run_history=self.runhistory,
-                            output_directory=self.scenario.output_dir_for_this_run,
-                            logger=self.logger)
+                if self.scenario.shared_model:
+                    pSMAC.write(run_history=self.runhistory,
+                                output_directory=self.scenario.output_dir_for_this_run,
+                                logger=self.logger)
 
             self.logger.debug("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
                 self.stats.get_remaing_time_budget(),
@@ -324,7 +325,7 @@ class SMBO(object):
                           (total_time, time_spent, (1 - frac_intensify), time_left, frac_intensify))
         return time_left
 
-    def _component_builder(self, conf:typing.Union[Configuration, dict]) \
+    def _component_builder(self, conf: typing.Union[Configuration, dict]) \
             -> typing.Tuple[AbstractAcquisitionFunction, AbstractEPM]:
         """
             builds new Acquisition function object

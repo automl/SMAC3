@@ -59,8 +59,8 @@ class TestAbstractIntensifier(unittest.TestCase):
             cutoff=1, instances=[1], initial_budget=1, max_budget=3, eta=2)
 
         # None when nothing to choose from
-        config = intensifier.get_next_challenger(challengers=None, chooser=None, run_history=self.rh)
-        self.assertEqual(config, None)
+        with self.assertRaisesRegex(ValueError, "No configurations/chooser provided"):
+            intensifier.get_next_challenger(challengers=None, chooser=None, run_history=self.rh)
 
         # next challenger from a list
         config = intensifier.get_next_challenger(challengers=[self.config1, self.config2],

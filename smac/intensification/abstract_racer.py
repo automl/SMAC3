@@ -116,7 +116,7 @@ class AbstractRacer(object):
 
     def eval_challenger(self,
                         challenger: Configuration,
-                        incumbent: Configuration,
+                        incumbent: typing.Optional[Configuration],
                         run_history: RunHistory,
                         aggregate_func: typing.Callable,
                         time_bound: float = float(MAXINT),
@@ -129,8 +129,8 @@ class AbstractRacer(object):
         ----------
         challenger : Configuration
             promising configuration
-        incumbent : Configuration
-            best configuration so far
+        incumbent : typing.Optional[Configuration]
+            best configuration so far, None in 1st run
         run_history : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         aggregate_func: typing.Callable
@@ -216,8 +216,7 @@ class AbstractRacer(object):
             self.logger.debug("Generating new challenger from optimizer")
             chall_gen = chooser.choose_next()
         else:
-            self.logger.debug("No configurations/chooser provided. Cannot generate challenger!")
-            return None
+            raise ValueError('No configurations/chooser provided. Cannot generate challenger!')
 
         self.logger.debug('Time to select next challenger: %.4f' % (time.time() - start_time))
 
