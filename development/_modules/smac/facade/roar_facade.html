@@ -278,7 +278,7 @@
 <span class="kn">from</span> <span class="nn">smac.facade.smac_ac_facade</span> <span class="kn">import</span> <span class="n">SMAC4AC</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.initial_design</span> <span class="kn">import</span> <span class="n">InitialDesign</span>
 <span class="kn">from</span> <span class="nn">smac.intensification.abstract_racer</span> <span class="kn">import</span> <span class="n">AbstractRacer</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="kn">import</span> <span class="n">RandomSearch</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="kn">import</span> <span class="n">RandomSearch</span><span class="p">,</span> <span class="n">AcquisitionFunctionMaximizer</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="kn">import</span> <span class="n">RunHistory2EPM4Cost</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
@@ -311,6 +311,8 @@
                  <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">intensifier</span><span class="p">:</span> <span class="n">AbstractRacer</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">acquisition_function_optimizer</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">AcquisitionFunctionMaximizer</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">acquisition_function_optimizer_kwargs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">initial_design</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">InitialDesign</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">initial_design_kwargs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">initial_configurations</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -335,6 +337,12 @@
 <span class="sd">            Runhistory to store all algorithm runs</span>
 <span class="sd">        intensifier: AbstractRacer</span>
 <span class="sd">            intensification object to issue a racing to decide the current incumbent</span>
+<span class="sd">        acquisition_function_optimizer : ~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</span>
+<span class="sd">            Object that implements the :class:`~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer`.</span>
+<span class="sd">            Will use :class:`smac.optimizer.ei_optimization.RandomSearch` if not set. Can be used</span>
+<span class="sd">            to perform random search over a fixed set of configurations.</span>
+<span class="sd">        acquisition_function_optimizer_kwargs: Optional[dict]</span>
+<span class="sd">            Arguments passed to constructor of &#39;~acquisition_function_optimizer&#39;</span>
 <span class="sd">        initial_design : InitialDesign</span>
 <span class="sd">            initial sampling design</span>
 <span class="sd">        initial_design_kwargs: Optional[dict]</span>
@@ -354,6 +362,9 @@
 
         <span class="n">scenario</span><span class="o">.</span><span class="n">acq_opt_challengers</span> <span class="o">=</span> <span class="mi">1</span>
 
+        <span class="k">if</span> <span class="n">acquisition_function_optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">acquisition_function_optimizer</span> <span class="o">=</span> <span class="n">RandomSearch</span>
+
         <span class="c1"># use SMAC facade</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
@@ -365,7 +376,8 @@
             <span class="n">initial_design_kwargs</span><span class="o">=</span><span class="n">initial_design_kwargs</span><span class="p">,</span>
             <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configurations</span><span class="p">,</span>
             <span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span>
-            <span class="n">acquisition_function_optimizer</span><span class="o">=</span><span class="n">RandomSearch</span><span class="p">,</span>
+            <span class="n">acquisition_function_optimizer</span><span class="o">=</span><span class="n">acquisition_function_optimizer</span><span class="p">,</span>
+            <span class="n">acquisition_function_optimizer_kwargs</span><span class="o">=</span><span class="n">acquisition_function_optimizer_kwargs</span><span class="p">,</span>
             <span class="n">model</span><span class="o">=</span><span class="n">RandomEPM</span><span class="p">,</span>
             <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
             <span class="n">stats</span><span class="o">=</span><span class="n">stats</span>
