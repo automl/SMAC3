@@ -3,7 +3,6 @@ import typing
 
 import numpy as np
 
-import smac
 from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
 from smac.epm.rf_with_instances import RandomForestWithInstances
@@ -30,7 +29,7 @@ class EPMChooser(object):
                  rng: np.random.RandomState,
                  restore_incumbent: Configuration = None,
                  random_configuration_chooser: typing.Union[
-                     ChooserNoCoolDown, ChooserLinearCoolDown]=ChooserNoCoolDown(2.0),
+                     ChooserNoCoolDown, ChooserLinearCoolDown] = ChooserNoCoolDown(2.0),
                  predict_incumbent: bool = True):
         """
         Interface to train the EPM and generate next configurations

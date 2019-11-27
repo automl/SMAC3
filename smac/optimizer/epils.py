@@ -149,7 +149,24 @@ class EPILS_Solver(object):
         """
         self.stats.start_timing()
         try:
-            self.incumbent = self.initial_design.run()
+            initial_design_configs = self.initial_design.select_configurations()
+            # get initial incumbent
+            while not self.intensifier.iteration_done:
+                # sample next challenger
+                challenger = self.intensifier.get_next_challenger(challengers=initial_design_configs,
+                                                                  chooser=None,
+                                                                  run_history=self.runhistory)
+                initial_design_configs = [c for c in initial_design_configs if c != challenger]
+
+                # evaluate challenger
+                self.incumbent, inc_perf = self.intensifier.eval_challenger(
+                        challenger=challenger,
+                        incumbent=self.incumbent,
+                        run_history=self.runhistory,
+                        aggregate_func=self.aggregate_func,
+                        time_bound=0.01,
+                        log_traj=True)
+
         except FirstRunCrashedException as err:
             if self.scenario.abort_on_first_run_crash:
                 raise
@@ -194,11 +211,12 @@ class EPILS_Solver(object):
             self.intensifier.minR = self.slow_race_minR
             self.intensifier.Adaptive_Capping_Slackfactor = self.slow_race_adaptive_capping_factor
             # log traj
-
             # run intensification
             while not self.intensifier.iteration_done:
                 # sample next challenger
-                challenger = self.intensifier.get_next_challenger(challengers=[local_inc], chooser=None)
+                challenger = self.intensifier.get_next_challenger(challengers=[local_inc],
+                                                                  chooser=None,
+                                                                  run_history=self.runhistory)
                 # evaluate challenger
                 self.incumbent, inc_perf = self.intensifier.eval_challenger(
                         challenger=challenger,

@@ -60,7 +60,7 @@ class FactorialInitialDesign(InitialDesign):
         self.logger.debug("Initial Design")
         configs = [self.cs.get_default_configuration()]
         # add middle point in space
-        conf_dict = dict([(p.name, v) for p,v in zip(params, mid)])
+        conf_dict = dict([(p.name, v) for p, v in zip(params, mid)])
         middle_conf = deactivate_inactive_hyperparameters(conf_dict, self.cs)
         configs.append(middle_conf)
 

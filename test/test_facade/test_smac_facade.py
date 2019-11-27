@@ -221,7 +221,8 @@ class TestSMACFacade(unittest.TestCase):
             ).solver
             self.assertIsInstance(smbo.epm_chooser.model, UncorrelatedMultiObjectiveRandomForestWithInstances)
             self.assertIsInstance(smbo.epm_chooser.acquisition_func, EIPS)
-            self.assertIsInstance(smbo.epm_chooser.acquisition_func.model, UncorrelatedMultiObjectiveRandomForestWithInstances)
+            self.assertIsInstance(smbo.epm_chooser.acquisition_func.model,
+                                  UncorrelatedMultiObjectiveRandomForestWithInstances)
             self.assertIsInstance(smbo.epm_chooser.rh2EPM, RunHistory2EPM4EIPS)
 
     ####################################################################################################################
