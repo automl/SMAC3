@@ -148,7 +148,7 @@ class Hyperband(SuccessiveHalving):
                                                                   log_traj=log_traj)
 
         # reset if SH iteration is over, else update for next iteration
-        if self.sh_intensifier.sh_iters >= 1:
+        if self.sh_intensifier.iteration_done:
             self._update_stage()
 
         return incumbent, inc_perf
@@ -184,6 +184,9 @@ class Hyperband(SuccessiveHalving):
             # initialize tracking variables
             self._update_stage()
 
+        # sampling from next challenger marks the beginning of a new iteration
+        self.iteration_done = False
+
         challenger = self.sh_intensifier.get_next_challenger(
                          challengers=challengers,
                          chooser=chooser,
@@ -211,6 +214,7 @@ class Hyperband(SuccessiveHalving):
             # reset if HB iteration is over
             self.s = self.s_max
             self.hb_iters += 1
+            self.iteration_done = True
         else:
             # update for next iteration
             self.s -= 1

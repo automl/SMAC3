@@ -111,7 +111,7 @@ class AbstractRacer(object):
 
         # attributes for sampling next configuration
         self.repeat_configs = True
-        # to sample fresh configs from EPM / mark the end of an iteration
+        # to mark the end of an iteration
         self.iteration_done = False
 
     def eval_challenger(self,

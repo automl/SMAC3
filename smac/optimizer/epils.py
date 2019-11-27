@@ -193,14 +193,20 @@ class EPILS_Solver(object):
             # don't be too aggressive here
             self.intensifier.minR = self.slow_race_minR
             self.intensifier.Adaptive_Capping_Slackfactor = self.slow_race_adaptive_capping_factor
-            # log traj 
-            self.incumbent, inc_perf = self.intensifier.intensify(
-                    challengers=[local_inc],
-                    incumbent=self.incumbent,
-                    run_history=self.runhistory,
-                    aggregate_func=self.aggregate_func,
-                    time_bound=0.01,
-                    log_traj=True)
+            # log traj
+
+            # run intensification
+            while not self.intensifier.iteration_done:
+                # sample next challenger
+                challenger = self.intensifier.get_next_challenger(challengers=[local_inc], chooser=None)
+                # evaluate challenger
+                self.incumbent, inc_perf = self.intensifier.eval_challenger(
+                        challenger=challenger,
+                        incumbent=self.incumbent,
+                        run_history=self.runhistory,
+                        aggregate_func=self.aggregate_func,
+                        time_bound=0.01,
+                        log_traj=True)
             if self.incumbent == local_inc:
                 self.logger.info("Changed global incumbent!")
 
@@ -271,15 +277,22 @@ class EPILS_Solver(object):
                 neighbors_looked_at += 1
 
                 neighbor.origin = "SLS"
-                self.logger.debug("Intensify")                
-                incumbent, inc_perf = self.intensifier.intensify(
-                    challengers=[neighbor],
-                    incumbent=incumbent,
-                    run_history=self.runhistory,
-                    aggregate_func=self.aggregate_func,
-                    time_bound=0.01,
-                    log_traj=False)
-                
+                self.logger.debug("Intensify")
+                # run intensification
+                while not self.intensifier.iteration_done:
+                    # sample next challenger
+                    challenger = self.intensifier.get_next_challenger(challengers=[neighbor],
+                                                                      chooser=None,
+                                                                      run_history=self.runhistory)
+                    # evaluate challenger
+                    incumbent, inc_perf = self.intensifier.eval_challenger(
+                        challenger=challenger,
+                        incumbent=self.incumbent,
+                        run_history=self.runhistory,
+                        aggregate_func=self.aggregate_func,
+                        time_bound=0.01,
+                        log_traj=False)
+
                 # first improvement SLS
                 if incumbent != prev_incumbent:
                     changed_inc = True

@@ -388,7 +388,10 @@ class SuccessiveHalving(AbstractRacer):
         # if this is the first run, then initialize tracking variables
         if not hasattr(self, 'stage'):
             self._update_stage(run_history=run_history)
-        
+
+        # sampling from next challenger marks the beginning of a new iteration
+        self.iteration_done = False
+
         curr_budget = int(self.all_budgets[self.stage])
         prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
 
@@ -466,6 +469,7 @@ class SuccessiveHalving(AbstractRacer):
                 self._chall_indx = 0
                 self._num_run = 0
 
+                self.iteration_done = True
                 self.sh_iters += 1
                 self.stage = 0
                 self.configs_to_run = None

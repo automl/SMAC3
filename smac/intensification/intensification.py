@@ -232,25 +232,19 @@ class Intensifier(AbstractRacer):
         if self.run_incumbent and self._chall_indx >= self.min_chall:
             if self._num_run > self.run_limit:
                 self.logger.info("Maximum #runs for intensification reached")
-                self.n_iters += 1
-                self.configs_to_run = None
+                self._update_trackers()
 
             if not self.use_ta_time_bound and tm - self.start_time - time_bound >= 0:
                 self.logger.debug("Wallclock time limit for intensification reached ("
                                   "used: %f sec, available: %f sec)" %
                                   (tm - self.start_time, time_bound))
-                self.n_iters += 1
-                self.configs_to_run = None
+                self._update_trackers()
 
             elif self._ta_time - time_bound >= 0:
                 self.logger.debug("TA time limit for intensification reached ("
                                   "used: %f sec, available: %f sec)" %
                                   (self._ta_time, time_bound))
-                self.n_iters += 1
-                self.configs_to_run = None
-
-        self.stats.update_average_configs_per_intensify(
-            n_configs=self._chall_indx)
+                self._update_trackers()
 
         inc_perf = run_history.get_cost(incumbent)
 
@@ -519,6 +513,9 @@ class Intensifier(AbstractRacer):
             next configuration to evaluate
         """
 
+        # sampling from next challenger marks the beginning of a new iteration
+        self.iteration_done = False
+
         # if the current challenger could not be rejected, it is run again on more instances
         if self.running_challenger and self.continue_challenger:
             return self.running_challenger
@@ -539,7 +536,7 @@ class Intensifier(AbstractRacer):
 
             except StopIteration:
                 # out of challengers for the current iteration, start next incumbent iteration
-                self.n_iters += 1
+                self._update_trackers()
                 self.configs_to_run = self._generate_challengers(challengers=challengers,
                                                                  chooser=chooser)
                 challenger = next(self.configs_to_run)
@@ -553,9 +550,8 @@ class Intensifier(AbstractRacer):
 
             return challenger
 
-        else:
-            # return currently running challenger
-            return self.running_challenger
+        # return currently running challenger
+        return self.running_challenger
 
     def _generate_challengers(self,
                               challengers: typing.Optional[typing.List[Configuration]],
@@ -593,3 +589,14 @@ class Intensifier(AbstractRacer):
             chall_gen = (i for i in chall_gen)
 
         return chall_gen
+
+    def _update_trackers(self) -> None:
+        """
+        Updates tracking variables at the end of an intensification run
+        """
+        self.n_iters += 1
+        self.iteration_done = True
+        self.configs_to_run = None
+
+        self.stats.update_average_configs_per_intensify(
+            n_configs=self._chall_indx)

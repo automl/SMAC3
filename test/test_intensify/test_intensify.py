@@ -407,7 +407,7 @@ class TestIntensify(unittest.TestCase):
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
             instances=[1], run_obj_time=False,
-            deterministic=False, always_race_against=self.config3)
+            deterministic=False, always_race_against=self.config3, run_limit=1)
 
         # run incumbent first if it was not run before
         config = intensifier.get_next_challenger(challengers=[self.config2], chooser=None)
@@ -428,6 +428,9 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(self.stats.inc_changed, 1)
         self.assertFalse(intensifier.run_challenger)
         self.assertFalse(intensifier.continue_challenger)
+        # ran out of configurations, so get_next_challenger selects the next list of challengers to evaluate
+        # and starts the next intensification iteration
+        self.assertEqual(intensifier.n_iters, 1)
 
         # run `always_race_against` now since the incumbent has changed
         config = intensifier.get_next_challenger(challengers=[self.config3], chooser=None)
@@ -437,3 +440,5 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(inc, self.config1)
         self.assertTrue(intensifier.run_incumbent)
         self.assertEqual(len(self.rh.get_runs_for_config(self.config3)), 1)
+        self.assertEqual(intensifier.n_iters, 2)
+        self.assertEqual(intensifier.configs_to_run, None)
