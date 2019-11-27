@@ -268,12 +268,8 @@ class EPILS(object):
                 raise ValueError("Don't know what kind of initial_incumbent "
                                  "'%s' is" % scenario.initial_incumbent)
         # inject deps if necessary
-        if initial_design.tae_runner is None:
-            initial_design.tae_runner = tae_runner
-        if initial_design.scenario is None:
-            initial_design.scenario = scenario
-        if initial_design.stats is None:
-            initial_design.stats = self.stats
+        if initial_design.cs is None:
+            initial_design.cs = scenario.cs
         if initial_design.traj_logger is None:
             initial_design.traj_logger = traj_logger
 

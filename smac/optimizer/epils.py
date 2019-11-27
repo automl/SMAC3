@@ -158,6 +158,9 @@ class EPILS_Solver(object):
                                                                   run_history=self.runhistory)
                 initial_design_configs = [c for c in initial_design_configs if c != challenger]
 
+                if not challenger:
+                    break
+
                 # evaluate challenger
                 self.incumbent, inc_perf = self.intensifier.eval_challenger(
                         challenger=challenger,
@@ -217,6 +220,10 @@ class EPILS_Solver(object):
                 challenger = self.intensifier.get_next_challenger(challengers=[local_inc],
                                                                   chooser=None,
                                                                   run_history=self.runhistory)
+
+                if not challenger:
+                    break
+
                 # evaluate challenger
                 self.incumbent, inc_perf = self.intensifier.eval_challenger(
                         challenger=challenger,
@@ -302,6 +309,10 @@ class EPILS_Solver(object):
                     challenger = self.intensifier.get_next_challenger(challengers=[neighbor],
                                                                       chooser=None,
                                                                       run_history=self.runhistory)
+
+                    if not challenger:
+                        break
+
                     # evaluate challenger
                     incumbent, inc_perf = self.intensifier.eval_challenger(
                         challenger=challenger,

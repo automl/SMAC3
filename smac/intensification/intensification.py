@@ -187,6 +187,7 @@ class Intensifier(AbstractRacer):
         if self.first_run and not incumbent:
             self.logger.info("First run, no incumbent provided; challenger is assumed to be the incumbent")
             incumbent = challenger
+            self.running_challenger = None
             self.first_run = False
 
         self.logger.debug("Intensify on %s", challenger)
@@ -533,13 +534,10 @@ class Intensifier(AbstractRacer):
             # pick next configuration from the generator
             try:
                 challenger = next(self.configs_to_run)
-
             except StopIteration:
                 # out of challengers for the current iteration, start next incumbent iteration
                 self._update_trackers()
-                self.configs_to_run = self._generate_challengers(challengers=challengers,
-                                                                 chooser=chooser)
-                challenger = next(self.configs_to_run)
+                return None
 
             if challenger:
                 # reset instance index for the new challenger
