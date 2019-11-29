@@ -64,11 +64,11 @@ class TestAbstractIntensifier(unittest.TestCase):
 
         # next challenger from a list
         config, _ = intensifier.get_next_challenger(challengers=[self.config1, self.config2],
-                                                 chooser=None, run_history=self.rh)
+                                                    chooser=None, run_history=self.rh)
         self.assertEqual(config, self.config1)
 
         config, _ = intensifier.get_next_challenger(challengers=[self.config2, self.config3],
-                                                 chooser=None, run_history=self.rh)
+                                                    chooser=None, run_history=self.rh)
         self.assertEqual(config, self.config2)
 
         # next challenger from a chooser
@@ -96,13 +96,13 @@ class TestAbstractIntensifier(unittest.TestCase):
         # should not repeat configurations
         self.rh.add(self.config1, 1, 1, StatusType.SUCCESS)
         config, _ = intensifier.get_next_challenger(challengers=[self.config1, self.config2],
-                                                 chooser=None, run_history=self.rh, repeat_configs=False)
+                                                    chooser=None, run_history=self.rh, repeat_configs=False)
 
         self.assertEqual(config, self.config2)
 
         # should repeat configurations
         config, _ = intensifier.get_next_challenger(challengers=[self.config1, self.config2],
-                                                 chooser=None, run_history=self.rh, repeat_configs=True)
+                                                    chooser=None, run_history=self.rh, repeat_configs=True)
 
         self.assertEqual(config, self.config1)
 
