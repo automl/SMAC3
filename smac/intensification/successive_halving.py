@@ -158,10 +158,10 @@ class SuccessiveHalving(AbstractRacer):
 
         # challengers can be repeated only if optimizing across multiple seeds or changing instance orders every run
         # (this does not include having multiple instances)
-        if not (self.n_seeds > 1 or self.instance_order == 'shuffle'):
-            self.repeat_configs = False
-        else:
+        if self.n_seeds > 1 or self.instance_order == 'shuffle':
             self.repeat_configs = True
+        else:
+            self.repeat_configs = False
 
     def _init_sh_params(self,
                         initial_budget: typing.Optional[float],
@@ -235,6 +235,7 @@ class SuccessiveHalving(AbstractRacer):
         # number of challengers to consider in each stage
         self.n_configs_in_stage = num_initial_challengers * np.power(self.eta,
                                                                      -np.linspace(0, max_sh_iter, max_sh_iter + 1))
+        self.n_configs_in_stage = self.n_configs_in_stage.tolist()
 
     def eval_challenger(self,
                         challenger: Configuration,
@@ -363,7 +364,8 @@ class SuccessiveHalving(AbstractRacer):
                             challengers: typing.Optional[typing.List[Configuration]],
                             chooser: typing.Optional[EPMChooser],
                             run_history: RunHistory,
-                            repeat_configs: bool = True) -> typing.Optional[Configuration]:
+                            repeat_configs: bool = True) -> \
+            typing.Tuple[typing.Optional[Configuration], bool]:
         """
         Selects which challenger to use based on the iteration stage and set the iteration parameters.
         First iteration will choose configurations from the ``chooser`` or input challengers,
@@ -384,6 +386,8 @@ class SuccessiveHalving(AbstractRacer):
         -------
         typing.Optional[Configuration]
             next configuration to evaluate
+        bool
+            flag telling if the configuration is newly sampled or one currently being tracked
         """
         # if this is the first run, then initialize tracking variables
         if not hasattr(self, 'stage'):
@@ -401,7 +405,7 @@ class SuccessiveHalving(AbstractRacer):
 
         # if there are instances pending, finish running configuration
         if self.running_challenger and n_insts_remaining > 0:
-            return self.running_challenger
+            return self.running_challenger, False
 
         # select next configuration
         if self.stage == 0:
@@ -410,10 +414,11 @@ class SuccessiveHalving(AbstractRacer):
                                                chooser=chooser,
                                                run_history=run_history,
                                                repeat_configs=repeat_configs)
-
+            new_challenger = True
         else:
             # sample top configs from previously sampled configurations
             challenger = self.configs_to_run.pop()
+            new_challenger = False
 
         if challenger:
             # reset instance index for the new challenger
@@ -421,7 +426,7 @@ class SuccessiveHalving(AbstractRacer):
             self._chall_indx += 1
             self.running_challenger = challenger
 
-        return challenger
+        return challenger, new_challenger
 
     def _update_stage(self, run_history: RunHistory = None) -> None:
         """

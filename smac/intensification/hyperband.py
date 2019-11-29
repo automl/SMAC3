@@ -157,7 +157,8 @@ class Hyperband(SuccessiveHalving):
                             challengers: typing.Optional[typing.List[Configuration]],
                             chooser: typing.Optional[EPMChooser],
                             run_history: RunHistory,
-                            repeat_configs: bool = True) -> typing.Optional[Configuration]:
+                            repeat_configs: bool = True) -> \
+            typing.Tuple[typing.Optional[Configuration], bool]:
         """
         Selects which challenger to use based on the iteration stage and set the iteration parameters.
         First iteration will choose configurations from the ``chooser`` or input challengers,
@@ -178,6 +179,8 @@ class Hyperband(SuccessiveHalving):
         -------
         typing.Optional[Configuration]
             next configuration to evaluate
+        bool
+            flag telling if the configuration is newly sampled or one currently being tracked
         """
 
         if not hasattr(self, 's'):
@@ -187,13 +190,13 @@ class Hyperband(SuccessiveHalving):
         # sampling from next challenger marks the beginning of a new iteration
         self.iteration_done = False
 
-        challenger = self.sh_intensifier.get_next_challenger(
-                         challengers=challengers,
-                         chooser=chooser,
-                         run_history=run_history,
-                         repeat_configs=self.sh_intensifier.repeat_configs
-                     )
-        return challenger
+        challenger, new_challenger = self.sh_intensifier.get_next_challenger(
+            challengers=challengers,
+            chooser=chooser,
+            run_history=run_history,
+            repeat_configs=self.sh_intensifier.repeat_configs
+        )
+        return challenger, new_challenger
 
     def _update_stage(self, run_history: RunHistory = None) -> None:
         """

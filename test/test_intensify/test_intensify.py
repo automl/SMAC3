@@ -12,7 +12,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.tae.execute_func import ExecuteTAFuncDict
-from smac.intensification.intensification import Intensifier
+from smac.intensification.intensification import Intensifier, IntensifierStage
 from smac.optimizer.objective import average_cost
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.tae.execute_ta_run import StatusType
@@ -145,7 +145,7 @@ class TestIntensify(unittest.TestCase):
 
         # config2 should have a timeout (due to adaptive capping)
         # and config1 should still be the incumbent
-        config = intensifier.get_next_challenger(challengers=[self.config2, self.config3], chooser=None)
+        config, _ = intensifier.get_next_challenger(challengers=[self.config2, self.config3], chooser=None)
         inc = intensifier._race_challenger(challenger=config,
                                            incumbent=self.config1,
                                            run_history=self.rh,
@@ -161,14 +161,14 @@ class TestIntensify(unittest.TestCase):
         # give config2 a second chance - now it should run on both instances
 
         # run on instance 1
-        config = intensifier.get_next_challenger(challengers=[self.config2, self.config3], chooser=None)
+        config, _ = intensifier.get_next_challenger(challengers=[self.config2, self.config3], chooser=None)
         inc = intensifier._race_challenger(challenger=config,
                                            incumbent=self.config1,
                                            run_history=self.rh,
                                            aggregate_func=average_cost)
 
         # run on instance 2
-        config = intensifier.get_next_challenger(challengers=[self.config3], chooser=None)
+        config, _ = intensifier.get_next_challenger(challengers=[self.config3], chooser=None)
         self.assertEqual(config, self.config2)
         self.assertTrue(intensifier.continue_challenger)
 
@@ -209,18 +209,19 @@ class TestIntensify(unittest.TestCase):
                         seed=12345,
                         additional_info=None)
 
-        intensifier.run_challenger = True
+        intensifier.stage = IntensifierStage.RUN_CHALLENGER
 
         # tie on first instances and then challenger should always win
         # and be returned as inc
         while True:
-            config = intensifier.get_next_challenger(challengers=[self.config2, self.config3], chooser=None)
+            config, _ = intensifier.get_next_challenger(challengers=[self.config2, self.config3], chooser=None)
             inc = intensifier._race_challenger(challenger=config,
                                                incumbent=self.config1,
                                                run_history=self.rh,
                                                aggregate_func=average_cost)
 
-            if not intensifier.run_challenger:  # stop when challenger evaluation is over
+            # stop when challenger evaluation is over
+            if not intensifier.stage == IntensifierStage.RUN_CHALLENGER:
                 break
 
         self.assertEqual(inc, self.config2)
@@ -254,18 +255,19 @@ class TestIntensify(unittest.TestCase):
                         seed=i,
                         additional_info=None)
 
-        intensifier.run_challenger = True
+        intensifier.stage = IntensifierStage.RUN_CHALLENGER
 
         # tie on first instances and then challenger should always win
         # and be returned as inc
         while True:
-            config = intensifier.get_next_challenger(challengers=[self.config2, self.config3], chooser=None)
+            config, _ = intensifier.get_next_challenger(challengers=[self.config2, self.config3], chooser=None)
             inc = intensifier._race_challenger(challenger=config,
                                                incumbent=self.config1,
                                                run_history=self.rh,
                                                aggregate_func=average_cost)
 
-            if not intensifier.run_challenger:  # stop when challenger evaluation is over
+            # stop when challenger evaluation is over
+            if not intensifier.stage == IntensifierStage.RUN_CHALLENGER:
                 break
 
         self.assertEqual(inc, self.config2)
@@ -345,20 +347,22 @@ class TestIntensify(unittest.TestCase):
             instances=[1],
             deterministic=True)
 
-        intensifier.run_challenger = True
+        intensifier.stage = IntensifierStage.RUN_CHALLENGER
 
         # get a new challenger to evaluate
-        config = intensifier.get_next_challenger(challengers=[self.config1, self.config2], chooser=None)
+        config, new = intensifier.get_next_challenger(challengers=[self.config1, self.config2], chooser=None)
 
-        self.assertEqual(config, self.config1, intensifier.running_challenger)
+        self.assertEqual(config, self.config1, intensifier.current_challenger)
         self.assertEqual(intensifier._chall_indx, 1)
         self.assertEqual(intensifier.N, 1)
+        self.assertTrue(new)
 
         # when already evaluating a challenger, return the same challenger
         intensifier.to_run = [(1, 1, 0)]
-        config = intensifier.get_next_challenger(challengers=[self.config2], chooser=None)
-        self.assertEqual(config, self.config1, intensifier.running_challenger)
+        config, new = intensifier.get_next_challenger(challengers=[self.config2], chooser=None)
+        self.assertEqual(config, self.config1, intensifier.current_challenger)
         self.assertEqual(intensifier._chall_indx, 1)
+        self.assertFalse(new)
 
     def test_generate_challenger(self):
         """
@@ -410,35 +414,34 @@ class TestIntensify(unittest.TestCase):
             deterministic=False, always_race_against=self.config3, run_limit=1)
 
         # run incumbent first if it was not run before
-        config = intensifier.get_next_challenger(challengers=[self.config2, self.config1, self.config3],
-                                                 chooser=None)
+        config, _ = intensifier.get_next_challenger(challengers=[self.config2, self.config1, self.config3],
+                                                    chooser=None)
         inc, _ = intensifier.eval_challenger(challenger=config, incumbent=None,
                                              run_history=self.rh, aggregate_func=average_cost)
 
         self.assertEqual(inc, self.config2)
-        self.assertFalse(intensifier.run_incumbent)
-        self.assertTrue(intensifier.run_challenger)
+        self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
 
         # run challenger now that the incumbent has been executed
-        config = intensifier.get_next_challenger(challengers=[self.config2, self.config1, self.config3],
-                                                 chooser=None)
+        config, _ = intensifier.get_next_challenger(challengers=[self.config2, self.config1, self.config3],
+                                                    chooser=None)
         inc, _ = intensifier.eval_challenger(challenger=config, incumbent=inc,
                                              run_history=self.rh, aggregate_func=average_cost)
 
         # challenger should have a better performance, so incumbent should have changed
         self.assertEqual(inc, self.config1)
         self.assertEqual(self.stats.inc_changed, 1)
-        self.assertFalse(intensifier.run_challenger)
+        self.assertEqual(intensifier.stage, IntensifierStage.RUN_DEFAULT)
         self.assertFalse(intensifier.continue_challenger)
 
         # run `always_race_against` now since the incumbent has changed
-        config = intensifier.get_next_challenger(challengers=[self.config2, self.config1, self.config3],
-                                                 chooser=None)
+        config, _ = intensifier.get_next_challenger(challengers=[self.config2, self.config1, self.config3],
+                                                    chooser=None)
         inc, _ = intensifier.eval_challenger(challenger=config, incumbent=inc,
                                              run_history=self.rh, aggregate_func=average_cost)
 
         self.assertEqual(inc, self.config1)
-        self.assertTrue(intensifier.run_incumbent)
+        self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
         self.assertEqual(len(self.rh.get_runs_for_config(self.config3)), 1)
         self.assertEqual(intensifier.n_iters, 1)
         self.assertEqual(intensifier.configs_to_run, None)

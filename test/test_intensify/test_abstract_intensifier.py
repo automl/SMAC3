@@ -58,14 +58,18 @@ class TestAbstractIntensifier(unittest.TestCase):
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
             cutoff=1, instances=[1], initial_budget=1, max_budget=3, eta=2)
 
-        # None when nothing to choose from
+        # Error when nothing to choose from
         with self.assertRaisesRegex(ValueError, "No configurations/chooser provided"):
             intensifier.get_next_challenger(challengers=None, chooser=None, run_history=self.rh)
 
         # next challenger from a list
-        config = intensifier.get_next_challenger(challengers=[self.config1, self.config2],
+        config, _ = intensifier.get_next_challenger(challengers=[self.config1, self.config2],
                                                  chooser=None, run_history=self.rh)
         self.assertEqual(config, self.config1)
+
+        config, _ = intensifier.get_next_challenger(challengers=[self.config2, self.config3],
+                                                 chooser=None, run_history=self.rh)
+        self.assertEqual(config, self.config2)
 
         # next challenger from a chooser
         intensifier = AbstractRacer(
@@ -74,10 +78,13 @@ class TestAbstractIntensifier(unittest.TestCase):
             cutoff=1, instances=[1], initial_budget=1, max_budget=3, eta=2)
         chooser = SMAC4AC(self.scen, rng=1).solver.epm_chooser
 
-        config = intensifier.get_next_challenger(challengers=None, chooser=chooser, run_history=self.rh)
+        config, _ = intensifier.get_next_challenger(challengers=None, chooser=chooser, run_history=self.rh)
         self.assertEqual(list(config.get_dictionary().values()), [24, 68])
 
-    def test_get_next_challenger_2(self):
+        config, _ = intensifier.get_next_challenger(challengers=None, chooser=chooser, run_history=self.rh)
+        self.assertEqual(list(config.get_dictionary().values()), [95, 38])
+
+    def test_get_next_challenger_repeat(self):
         """
             test get_next_challenger - repeat configurations
         """
@@ -88,13 +95,13 @@ class TestAbstractIntensifier(unittest.TestCase):
 
         # should not repeat configurations
         self.rh.add(self.config1, 1, 1, StatusType.SUCCESS)
-        config = intensifier.get_next_challenger(challengers=[self.config1, self.config2],
+        config, _ = intensifier.get_next_challenger(challengers=[self.config1, self.config2],
                                                  chooser=None, run_history=self.rh, repeat_configs=False)
 
         self.assertEqual(config, self.config2)
 
         # should repeat configurations
-        config = intensifier.get_next_challenger(challengers=[self.config1, self.config2],
+        config, _ = intensifier.get_next_challenger(challengers=[self.config1, self.config2],
                                                  chooser=None, run_history=self.rh, repeat_configs=True)
 
         self.assertEqual(config, self.config1)

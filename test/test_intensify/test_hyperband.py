@@ -108,8 +108,8 @@ class TestHyperband(unittest.TestCase):
         self.assertFalse(hasattr(intensifier, 's'))
 
         # Testing get_next_challenger - get next configuration
-        config = intensifier.get_next_challenger(challengers=[self.config2, self.config3],
-                                                 chooser=None, run_history=self.rh)
+        config, _ = intensifier.get_next_challenger(challengers=[self.config2, self.config3],
+                                                    chooser=None, run_history=self.rh)
         self.assertEqual(intensifier.s, intensifier.s_max)
         self.assertEqual(config, self.config2)
 

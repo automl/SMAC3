@@ -65,7 +65,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(len(intensifier.instances), 3)
         self.assertEqual(intensifier.initial_budget, 1)
         self.assertEqual(intensifier.max_budget, 6)
-        self.assertListEqual(intensifier.n_configs_in_stage.tolist(), [4.0, 2.0, 1.0])
+        self.assertListEqual(intensifier.n_configs_in_stage, [4.0, 2.0, 1.0])
         self.assertTrue(intensifier.instance_as_budget)
         self.assertTrue(intensifier.repeat_configs)
 
@@ -82,7 +82,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(len(intensifier.inst_seed_pairs), 1)  # since instance-seed pairs
         self.assertEqual(intensifier.initial_budget, 1)
         self.assertEqual(intensifier.max_budget, 10)
-        self.assertListEqual(intensifier.n_configs_in_stage.tolist(), [8.0, 4.0, 2.0, 1.0])
+        self.assertListEqual(intensifier.n_configs_in_stage, [8.0, 4.0, 2.0, 1.0])
         self.assertFalse(intensifier.instance_as_budget)
         self.assertFalse(intensifier.repeat_configs)
 
@@ -161,7 +161,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             intensifier._top_k(configs=[self.config2, self.config1, self.config3],
                                k=1, run_history=self.rh)
 
-    def test_get_next_challenger_2(self):
+    def test_get_next_challenger_1(self):
         """
             test get_next_challenger for a presently running configuration
         """
@@ -177,22 +177,25 @@ class TestSuccessiveHalving(unittest.TestCase):
             cutoff=1, instances=[1, 2], initial_budget=1, max_budget=2, eta=2)
 
         # next challenger from a list
-        config = intensifier.get_next_challenger(challengers=[self.config1], chooser=None, run_history=self.rh)
+        config, new = intensifier.get_next_challenger(challengers=[self.config1], chooser=None, run_history=self.rh)
         self.assertEqual(config, self.config1)
+        self.assertTrue(new)
 
         # until evaluated, does not pick new challenger
-        config = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
+        config, new = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
         self.assertEqual(config, self.config1)
         self.assertEqual(intensifier.running_challenger, config)
+        self.assertFalse(new)
 
         # evaluating configuration
         _ = intensifier.eval_challenger(challenger=config, incumbent=None, run_history=self.rh,
                                         aggregate_func=average_cost)
-        config = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
+        config, new = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
         self.assertEqual(config, self.config2)
         self.assertEqual(len(intensifier.curr_challengers), 1)
+        self.assertTrue(new)
 
-    def test_get_next_challenger_3(self):
+    def test_get_next_challenger_2(self):
         """
             test get_next_challenger for higher stages of SH iteration
         """
@@ -206,9 +209,10 @@ class TestSuccessiveHalving(unittest.TestCase):
         intensifier.configs_to_run = [self.config1]
 
         # next challenger should come from configs to run
-        config = intensifier.get_next_challenger(challengers=None, chooser=None, run_history=self.rh)
+        config, new = intensifier.get_next_challenger(challengers=None, chooser=None, run_history=self.rh)
         self.assertEqual(config, self.config1)
         self.assertEqual(len(intensifier.configs_to_run), 0)
+        self.assertFalse(new)
 
     def test_update_stage(self):
         """
@@ -344,7 +348,7 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         self.assertEqual(intensifier.inst_seed_pairs, [(0, 0), (1, 0)])
 
-        config = intensifier.get_next_challenger(challengers=[self.config1], chooser=None, run_history=self.rh)
+        config, _ = intensifier.get_next_challenger(challengers=[self.config1], chooser=None, run_history=self.rh)
         inc, _ = intensifier.eval_challenger(challenger=config,
                                              incumbent=None,
                                              run_history=self.rh,
@@ -353,7 +357,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(inc, None)   # since this is first run, doesn't return any incumbent
         self.assertEqual(len(self.rh.get_runs_for_config(self.config1)), 1)
 
-        config = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
+        config, _ = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
         inc, _ = intensifier.eval_challenger(challenger=config,
                                              incumbent=None,
                                              run_history=self.rh,
@@ -364,7 +368,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(intensifier.configs_to_run, [self.config1])
         self.assertEqual(intensifier.stage, 1)
 
-        config = intensifier.get_next_challenger(challengers=[self.config3], chooser=None, run_history=self.rh)
+        config, _ = intensifier.get_next_challenger(challengers=[self.config3], chooser=None, run_history=self.rh)
         inc, _ = intensifier.eval_challenger(challenger=config,
                                              incumbent=None,
                                              run_history=self.rh,
@@ -381,7 +385,7 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         self.assertEqual(intensifier.inst_seed_pairs, [(1, 0), (0, 0)])
 
-        config = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
+        config, _ = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
         inc, _ = intensifier.eval_challenger(challenger=config,
                                              incumbent=None,
                                              run_history=self.rh,

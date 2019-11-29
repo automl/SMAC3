@@ -152,7 +152,8 @@ class AbstractRacer(object):
                             challengers: typing.Optional[typing.List[Configuration]],
                             chooser: typing.Optional[EPMChooser],
                             run_history: RunHistory,
-                            repeat_configs: bool = True) -> typing.Optional[Configuration]:
+                            repeat_configs: bool = True) -> \
+            typing.Tuple[typing.Optional[Configuration], bool]:
         """
         Abstract method for choosing the next challenger, to allow for different selections across intensifiers
         uses ``_next_challenger()`` by default
@@ -172,12 +173,14 @@ class AbstractRacer(object):
         -------
         typing.Optional[Configuration]
             next configuration to evaluate
+        bool
+            flag telling if the configuration is newly sampled or one currently being tracked
         """
         challenger = self._next_challenger(challengers=challengers,
                                            chooser=chooser,
                                            run_history=run_history,
                                            repeat_configs=repeat_configs)
-        return challenger
+        return challenger, True
 
     def _next_challenger(self,
                          challengers: typing.Optional[typing.List[Configuration]],

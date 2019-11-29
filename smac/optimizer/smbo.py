@@ -200,7 +200,7 @@ class SMBO(object):
 
             # sample next configuration for intensification
             # Initial design runs are also included in the BO loop now.
-            challenger = self.intensifier.get_next_challenger(
+            challenger, new_challenger = self.intensifier.get_next_challenger(
                 challengers=self.initial_design_configs,
                 chooser=self.epm_chooser,
                 run_history=self.runhistory,
@@ -210,8 +210,10 @@ class SMBO(object):
             # remove config from initial design challengers to not repeat it again
             self.initial_design_configs = [c for c in self.initial_design_configs if c != challenger]
 
-            time_spent = time.time() - start_time
-            time_left = self._get_timebound_for_intensification(time_spent)
+            # update timebound only if a 'new' configuration is sampled as the challenger
+            if new_challenger:
+                time_spent = time.time() - start_time
+                time_left = self._get_timebound_for_intensification(time_spent)
 
             if challenger:
                 # evaluate selected challenger
