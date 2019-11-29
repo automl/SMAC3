@@ -66,7 +66,7 @@ class TestHyperband(unittest.TestCase):
         self.assertEqual(intensifier.hb_iters, 0)
         self.assertIsInstance(intensifier.sh_intensifier, SuccessiveHalving)
         self.assertEqual(intensifier.sh_intensifier.initial_budget, 0.125)
-        self.assertEqual(intensifier.sh_intensifier.n_configs_in_stage.tolist(), [8.0, 4.0, 2.0, 1.0])
+        self.assertEqual(intensifier.sh_intensifier.n_configs_in_stage, [8.0, 4.0, 2.0, 1.0])
 
         # next HB stage
         intensifier._update_stage()
@@ -74,7 +74,7 @@ class TestHyperband(unittest.TestCase):
         self.assertEqual(intensifier.s, 2)
         self.assertEqual(intensifier.hb_iters, 0)
         self.assertEqual(intensifier.sh_intensifier.initial_budget, 0.25)
-        self.assertEqual(intensifier.sh_intensifier.n_configs_in_stage.tolist(), [4.0, 2.0, 1.0])
+        self.assertEqual(intensifier.sh_intensifier.n_configs_in_stage, [4.0, 2.0, 1.0])
 
         intensifier._update_stage()  # s = 1
         intensifier._update_stage()  # s = 0
@@ -84,7 +84,7 @@ class TestHyperband(unittest.TestCase):
         self.assertEqual(intensifier.s, intensifier.s_max)
         self.assertEqual(intensifier.hb_iters, 1)
         self.assertEqual(intensifier.sh_intensifier.initial_budget, 0.125)
-        self.assertEqual(intensifier.sh_intensifier.n_configs_in_stage.tolist(), [8.0, 4.0, 2.0, 1.0])
+        self.assertEqual(intensifier.sh_intensifier.n_configs_in_stage, [8.0, 4.0, 2.0, 1.0])
 
     @attr('slow')
     def test_eval_challenger(self):
