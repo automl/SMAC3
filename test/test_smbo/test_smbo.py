@@ -8,7 +8,7 @@ from nose.plugins.attrib import attr
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.facade.smac_ac_facade import SMAC4AC
-from smac.intensification.abstract_racer import AbstractRacer
+from smac.intensification.intensification import Intensifier
 from smac.optimizer.acquisition import EI, LogEI
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, RunHistory2EPM4LogCost
 from smac.scenario.scenario import Scenario
@@ -83,7 +83,7 @@ class TestSMBO(unittest.TestCase):
             rng='BLA',
         )
 
-    @mock.patch.object(AbstractRacer, 'eval_challenger')
+    @mock.patch.object(Intensifier, 'eval_challenger')
     def test_abort_on_initial_design(self, patch):
         def target(x):
             return 5
