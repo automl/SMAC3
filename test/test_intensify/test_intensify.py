@@ -389,7 +389,7 @@ class TestIntensify(unittest.TestCase):
 
         gen = intensifier._generate_challengers(challengers=None, chooser=chooser)
 
-        self.assertEqual(list(next(gen).get_dictionary().values()), [24, 68])
+        self.assertEqual(next(gen).get_dictionary(), {'a': 24, 'b': 68})
         self.assertRaises(StopIteration, next, gen)
 
         # when both are none, raise error
