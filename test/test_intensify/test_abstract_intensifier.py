@@ -10,6 +10,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
 from smac.intensification.abstract_racer import AbstractRacer
 from smac.optimizer.objective import average_cost, sum_cost
+from smac.facade.smac_ac_facade import SMAC4AC
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
@@ -47,6 +48,63 @@ class TestAbstractIntensifier(unittest.TestCase):
         self.stats.start_timing()
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
+
+    def test_get_next_challenger(self):
+        """
+            test get_next_challenger - pick from list/chooser
+        """
+        intensifier = AbstractRacer(
+            tae_runner=None, stats=self.stats, traj_logger=None,
+            rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
+            cutoff=1, instances=[1], initial_budget=1, max_budget=3, eta=2)
+
+        # Error when nothing to choose from
+        with self.assertRaisesRegex(ValueError, "No configurations/chooser provided"):
+            intensifier.get_next_challenger(challengers=None, chooser=None, run_history=self.rh)
+
+        # next challenger from a list
+        config, _ = intensifier.get_next_challenger(challengers=[self.config1, self.config2],
+                                                    chooser=None, run_history=self.rh)
+        self.assertEqual(config, self.config1)
+
+        config, _ = intensifier.get_next_challenger(challengers=[self.config2, self.config3],
+                                                    chooser=None, run_history=self.rh)
+        self.assertEqual(config, self.config2)
+
+        # next challenger from a chooser
+        intensifier = AbstractRacer(
+            tae_runner=None, stats=self.stats, traj_logger=None,
+            rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
+            cutoff=1, instances=[1], initial_budget=1, max_budget=3, eta=2)
+        chooser = SMAC4AC(self.scen, rng=1).solver.epm_chooser
+
+        config, _ = intensifier.get_next_challenger(challengers=None, chooser=chooser, run_history=self.rh)
+        self.assertEqual(list(config.get_dictionary().values()), [24, 68])
+
+        config, _ = intensifier.get_next_challenger(challengers=None, chooser=chooser, run_history=self.rh)
+        self.assertEqual(list(config.get_dictionary().values()), [95, 38])
+
+    def test_get_next_challenger_repeat(self):
+        """
+            test get_next_challenger - repeat configurations
+        """
+        intensifier = AbstractRacer(
+            tae_runner=None, stats=self.stats, traj_logger=None,
+            rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
+            cutoff=1, instances=[1], initial_budget=1, max_budget=3, eta=2)
+
+        # should not repeat configurations
+        self.rh.add(self.config1, 1, 1, StatusType.SUCCESS)
+        config, _ = intensifier.get_next_challenger(challengers=[self.config1, self.config2],
+                                                    chooser=None, run_history=self.rh, repeat_configs=False)
+
+        self.assertEqual(config, self.config2)
+
+        # should repeat configurations
+        config, _ = intensifier.get_next_challenger(challengers=[self.config1, self.config2],
+                                                    chooser=None, run_history=self.rh, repeat_configs=True)
+
+        self.assertEqual(config, self.config1)
 
     def test_compare_configs_no_joint_set(self):
         intensifier = AbstractRacer(
@@ -199,18 +257,12 @@ class TestAbstractIntensifier(unittest.TestCase):
         inc_sum_cost = sum_cost(config=self.config1, instance_seed_budget_keys=inst_seed_pairs,
                                 run_history=self.rh)
 
-        cutoff = intensifier._adapt_cutoff(challenger=self.config2,
-                                           incumbent=self.config1,
-                                           run_history=self.rh,
-                                           inc_sum_cost=inc_sum_cost)
+        cutoff = intensifier._adapt_cutoff(challenger=self.config2, run_history=self.rh, inc_sum_cost=inc_sum_cost)
         # 15*1.2 - 6
         self.assertEqual(cutoff, 12)
 
         intensifier.cutoff = 5
 
-        cutoff = intensifier._adapt_cutoff(challenger=self.config2,
-                                           incumbent=self.config1,
-                                           run_history=self.rh,
-                                           inc_sum_cost=inc_sum_cost)
+        cutoff = intensifier._adapt_cutoff(challenger=self.config2, run_history=self.rh, inc_sum_cost=inc_sum_cost)
         # scenario cutoff
         self.assertEqual(cutoff, 5)

@@ -17,7 +17,7 @@ from smac.epm.uncorrelated_mo_rf_with_instances import \
     UncorrelatedMultiObjectiveRandomForestWithInstances
 from smac.epm.util_funcs import get_types
 from smac.facade.experimental.epils_facade import EPILS
-from smac.initial_design.initial_design import InitialDesign
+from smac.intensification.intensification import Intensifier
 
 if sys.version_info[0] == 2:
     import mock
@@ -39,7 +39,7 @@ class TestSMBO(unittest.TestCase):
         self.scenario = Scenario({'cs': test_helpers.get_branin_config_space(),
                                   'run_obj': 'quality',
                                   'output_dir': '',
-                                  'runcount_limit':1,
+                                  'runcount_limit': 1,
                                   'deterministic': True})
 
     def tearDown(self):
@@ -61,7 +61,6 @@ class TestSMBO(unittest.TestCase):
         # not enough runs available to change the inc
         self.assertEqual(inc["x"], 2.5)
         self.assertEqual(inc["y"], 7.5)
-
 
     def test_init_only_scenario_runtime(self):
         self.scenario.run_obj = 'runtime'
@@ -108,7 +107,7 @@ class TestSMBO(unittest.TestCase):
                                 'np.random.RandomState',
                                 EPILS, self.scenario, rng='BLA')
 
-    @mock.patch.object(InitialDesign, 'run')
+    @mock.patch.object(Intensifier, 'eval_challenger')
     def test_abort_on_initial_design(self, patch):
         def target(x):
             return 5
@@ -118,6 +117,7 @@ class TestSMBO(unittest.TestCase):
                          'abort_on_first_run_crash': 1})
         epils = EPILS(scen, tae_runner=target, rng=1).solver
         self.assertRaises(FirstRunCrashedException, epils.run)
+
 
 if __name__ == "__main__":
     unittest.main()

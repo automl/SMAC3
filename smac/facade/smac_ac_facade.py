@@ -1,7 +1,7 @@
 import inspect
 import logging
 import os
-from typing import  List, Union, Optional, Type, Callable
+from typing import List, Union, Optional, Type, Callable
 
 import numpy as np
 
@@ -30,7 +30,6 @@ from smac.initial_design.sobol_design import SobolDesign
 # intensification
 from smac.intensification.intensification import Intensifier
 from smac.intensification.abstract_racer import AbstractRacer
-from smac.intensification.successive_halving import SuccessiveHalving
 # optimizer
 from smac.optimizer.smbo import SMBO
 from smac.optimizer.objective import average_cost
@@ -412,24 +411,14 @@ class SMAC4AC(object):
                 "Either use initial_design or initial_configurations; but not both")
 
         init_design_def_kwargs = {
-            'tae_runner': tae_runner,
-            'scenario': scenario,
-            'stats': self.stats,
+            'cs': scenario.cs,
             'traj_logger': traj_logger,
-            'runhistory': runhistory,
             'rng': rng,
+            'ta_run_limit': scenario.ta_run_limit,
             'configs': initial_configurations,
-            'intensifier': intensifier,
-            'aggregate_func': aggregate_func,
             'n_configs_x_params': 0,
             'max_config_fracs': 0.0
             }
-        if isinstance(intensifier, SuccessiveHalving):
-            # If running successive halving, then you need multiple configurations for the initial design
-            n_configs = intensifier.num_initial_challengers / len(self.scenario.cs.get_hyperparameters())
-            init_design_def_kwargs['n_configs_x_params'] = n_configs
-            init_design_def_kwargs['run_first_config'] = False
-            init_design_def_kwargs['fill_random_configs'] = True
         if initial_design_kwargs is not None:
             init_design_def_kwargs.update(initial_design_kwargs)
         if initial_configurations is not None:

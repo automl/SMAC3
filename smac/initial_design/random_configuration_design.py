@@ -22,7 +22,7 @@ class RandomConfigurations(InitialDesign):
             Initial incumbent configuration
         """
 
-        configs = self.scenario.cs.sample_configuration(size=self.init_budget)
+        configs = self.cs.sample_configuration(size=self.init_budget)
         if self.init_budget == 1:
             configs = [configs]
         for config in configs:

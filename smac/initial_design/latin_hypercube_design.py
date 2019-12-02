@@ -23,9 +23,6 @@ class LHDesign(InitialDesign):
         List of configurations to be evaluated
         Don't pass configs to the constructor;
         otherwise factorial design is overwritten
-    intensifier
-    runhistory
-    aggregate_func
     """
 
     def _select_configurations(self) -> typing.List[Configuration]:
@@ -37,11 +34,10 @@ class LHDesign(InitialDesign):
             initial incumbent configuration
         """
 
-        cs = self.scenario.cs
-        params = cs.get_hyperparameters()
+        params = self.cs.get_hyperparameters()
 
         # seeding of lhd design
-        np.random.seed(self.rng.randint(1,2*20))
+        np.random.seed(self.rng.randint(1, 2 * 20))
 
         constants = 0
         for p in params:
@@ -52,4 +48,4 @@ class LHDesign(InitialDesign):
 
         return self._transform_continuous_designs(design=lhd,
                                                   origin='LHD',
-                                                  cs=cs)
+                                                  cs=self.cs)

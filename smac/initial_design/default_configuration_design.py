@@ -24,6 +24,6 @@ class DefaultConfiguration(InitialDesign):
             Initial incumbent configuration.
         """
 
-        config = self.scenario.cs.get_default_configuration()
+        config = self.cs.get_default_configuration()
         config.origin = 'Default'
         return [config]

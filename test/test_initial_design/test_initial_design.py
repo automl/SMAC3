@@ -6,7 +6,6 @@ from ConfigSpace import Configuration, UniformFloatHyperparameter
 from smac.configspace import ConfigurationSpace
 from smac.initial_design.default_configuration_design import DefaultConfiguration
 from smac.initial_design.initial_design import InitialDesign
-from smac.intensification.intensification import Intensifier
 from smac.optimizer.objective import average_cost
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
@@ -35,22 +34,18 @@ class TestSingleInitialDesign(unittest.TestCase):
         stats.start_timing()
         self.ta.stats = stats
         tj = TrajLogger(output_dir=None, stats=stats)
-        rh = RunHistory(aggregate_func=average_cost)
 
         dc = DefaultConfiguration(
-            tae_runner=self.ta,
-            scenario=self.scenario,
-            stats=stats,
+            cs=self.cs,
             traj_logger=tj,
             rng=np.random.RandomState(seed=12345),
-            runhistory=rh,
-            intensifier=None,
-            aggregate_func=average_cost,
+            ta_run_limit=self.scenario.ta_run_limit
         )
 
-        dc.run()
-        self.assertTrue(stats.ta_runs == 1)
-        self.assertTrue(len(rh.data) == 0)
+        # should return only the default config
+        configs = dc.select_configurations()
+        self.assertEqual(len(configs), 1)
+        self.assertEqual(configs[0]['x1'], 1)
 
     def test_multi_config_design(self):
         stats = Stats(scenario=self.scenario)
@@ -61,34 +56,21 @@ class TestSingleInitialDesign(unittest.TestCase):
         self.ta.runhistory = rh
         rng = np.random.RandomState(seed=12345)
 
-        intensifier = Intensifier(
-            tae_runner=self.ta,
-            stats=stats,
-            traj_logger=tj,
-            rng=rng,
-            instances=[None],
-            run_obj_time=False,
-        )
-
         configs = [Configuration(configuration_space=self.cs, values={"x1": 4}),
                    Configuration(configuration_space=self.cs, values={"x1": 2})]
         dc = InitialDesign(
-            tae_runner=self.ta,
-            scenario=self.scenario,
-            stats=stats,
+            cs=self.cs,
             traj_logger=tj,
-            runhistory=rh,
-            rng=rng,
-            configs=configs,
-            intensifier=intensifier,
-            aggregate_func=average_cost,
+            rng=np.random.RandomState(seed=12345),
+            ta_run_limit=self.scenario.ta_run_limit,
+            configs=configs
         )
 
-        inc = dc.run()
-        self.assertEqual(stats.ta_runs, 4)  # two runs per config
-        self.assertEqual(len(rh.data), 4)  # two runs per config
-        self.assertEqual(rh.get_cost(inc), 4)
-        self.assertEqual(len(rh.get_all_configs()), 2)
+        # selects multiple initial configurations to run
+        # since the configs were passed to initial design, it should return the same
+        init_configs = dc.select_configurations()
+        self.assertEqual(len(init_configs), 2)
+        self.assertEqual(init_configs, configs)
 
     def test_init_budget(self):
         stats = Stats(scenario=self.scenario)
@@ -99,23 +81,11 @@ class TestSingleInitialDesign(unittest.TestCase):
         self.ta.runhistory = rh
         rng = np.random.RandomState(seed=12345)
 
-        intensifier = Intensifier(
-            tae_runner=self.ta,
-            stats=stats,
-            traj_logger=tj,
-            rng=rng,
-            instances=[None],
-            run_obj_time=False,
-        )
         kwargs = dict(
-            tae_runner=self.ta,
-            scenario=self.scenario,
-            stats=stats,
+            cs=self.cs,
             traj_logger=tj,
-            runhistory=rh,
-            rng=rng,
-            intensifier=intensifier,
-            aggregate_func=average_cost,
+            rng=np.random.RandomState(seed=12345),
+            ta_run_limit=self.scenario.ta_run_limit
         )
 
         configs = [Configuration(configuration_space=self.cs, values={"x1": 4}),
@@ -158,44 +128,3 @@ class TestSingleInitialDesign(unittest.TestCase):
             'but provided none of them.',
         ):
             InitialDesign(**kwargs, n_configs_x_params=None)
-
-    def test_fill_config_design(self):
-        stats = Stats(scenario=self.scenario)
-        stats.start_timing()
-        self.ta.stats = stats
-        tj = TrajLogger(output_dir=None, stats=stats)
-        rh = RunHistory(aggregate_func=average_cost)
-        self.ta.runhistory = rh
-        rng = np.random.RandomState(seed=12345)
-
-        intensifier = Intensifier(
-            tae_runner=self.ta,
-            stats=stats,
-            traj_logger=tj,
-            rng=rng,
-            instances=[None],
-            run_obj_time=False,
-            deterministic=True,
-        )
-
-        configs = None
-
-        dc = DefaultConfiguration(
-            tae_runner=self.ta,
-            scenario=self.scenario,
-            stats=stats,
-            traj_logger=tj,
-            runhistory=rh,
-            rng=rng,
-            configs=configs,
-            intensifier=intensifier,
-            aggregate_func=average_cost,
-            n_configs_x_params=2,
-            fill_random_configs=True,
-        )
-
-        inc = dc.run()
-        self.assertEqual(stats.ta_runs, 2)  # two runs per config
-        self.assertEqual(len(rh.data), 2)  # two runs per config
-        self.assertEqual(rh.get_cost(inc), 1)
-        self.assertEqual(len(rh.get_all_configs()), 2)

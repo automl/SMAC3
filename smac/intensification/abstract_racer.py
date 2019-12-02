@@ -1,10 +1,12 @@
 import logging
 import typing
+import time
 from collections import OrderedDict
 
 import numpy as np
 
 from smac.optimizer.objective import sum_cost
+from smac.optimizer.epm_configuration_chooser import EPMChooser
 
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
@@ -12,6 +14,7 @@ from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
 from smac.tae.execute_ta_run import ExecuteTARun
 from smac.utils.io.traj_logging import TrajLogger
+
 
 __author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
@@ -22,6 +25,10 @@ class AbstractRacer(object):
     """
     Base class for all racing methods
 
+    The "intensification" is designed to be spread across multiple ``eval_challenger()`` runs.
+    This is to facilitate on-demand configuration sampling if multiple configurations are required,
+    like Successive Halving or Hyperband.
+
     **Note: Do not use directly**
 
     Parameters
@@ -30,7 +37,7 @@ class AbstractRacer(object):
         target algorithm run executor
     stats: Stats
         stats object
-    traj_logger: TrajLogger
+    traj_logger: smac.utils.io.traj_logging.TrajLogger
         TrajLogger object to log all new incumbents
     rng : np.random.RandomState
     instances : typing.List[str]
@@ -53,7 +60,8 @@ class AbstractRacer(object):
         slack factor of adpative capping (factor * adpative cutoff)
     """
 
-    def __init__(self, tae_runner: ExecuteTARun,
+    def __init__(self,
+                 tae_runner: ExecuteTARun,
                  stats: Stats,
                  traj_logger: TrajLogger,
                  rng: np.random.RandomState,
@@ -95,16 +103,141 @@ class AbstractRacer(object):
         else:
             self.instance_specifics = instance_specifics
 
-    def intensify(self, challengers: typing.List[Configuration],
-                  incumbent: Configuration,
-                  run_history: RunHistory,
-                  aggregate_func: typing.Callable,
-                  time_bound: float = float(MAXINT),
-                  log_traj: bool = True) -> typing.Tuple[Configuration, float]:
+        # general attributes
+        self._min_time = 10 ** -5
+        self._num_run = 0
+        self._chall_indx = 0
+        self._ta_time = 0
+
+        # attributes for sampling next configuration
+        self.repeat_configs = True
+        # to mark the end of an iteration
+        self.iteration_done = False
+
+    def eval_challenger(self,
+                        challenger: Configuration,
+                        incumbent: typing.Optional[Configuration],
+                        run_history: RunHistory,
+                        aggregate_func: typing.Callable,
+                        time_bound: float = float(MAXINT),
+                        log_traj: bool = True) -> typing.Tuple[Configuration, float]:
+        """
+        Runs intensification by evaluating one configuration-instance at a time
+        *Side effect:* adds runs to run_history
+
+        Parameters
+        ----------
+        challenger : Configuration
+            promising configuration
+        incumbent : typing.Optional[Configuration]
+            best configuration so far, None in 1st run
+        run_history : smac.runhistory.runhistory.RunHistory
+            stores all runs we ran so far
+        aggregate_func: typing.Callable
+            aggregate error across instances
+        time_bound : float, optional (default=2 ** 31 - 1)
+            time in [sec] available to perform intensify
+        log_traj : bool
+            whether to log changes of incumbents in trajectory
+
+        Returns
+        -------
+        typing.Tuple[Configuration, float]
+            incumbent and incumbent cost
+        """
+
         raise NotImplementedError()
 
-    def _adapt_cutoff(self, challenger: Configuration,
-                      incumbent: Configuration,
+    def get_next_challenger(self,
+                            challengers: typing.Optional[typing.List[Configuration]],
+                            chooser: typing.Optional[EPMChooser],
+                            run_history: RunHistory,
+                            repeat_configs: bool = True) -> \
+            typing.Tuple[typing.Optional[Configuration], bool]:
+        """
+        Abstract method for choosing the next challenger, to allow for different selections across intensifiers
+        uses ``_next_challenger()`` by default
+
+        Parameters
+        ----------
+        challengers : typing.List[Configuration]
+            promising configurations
+        chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
+            optimizer that generates next configurations to use for racing
+        run_history : smac.runhistory.runhistory.RunHistory
+            stores all runs we ran so far
+        repeat_configs : bool
+            if False, an evaluated configuration will not be generated again
+
+        Returns
+        -------
+        typing.Optional[Configuration]
+            next configuration to evaluate
+        bool
+            flag telling if the configuration is newly sampled or one currently being tracked
+        """
+        challenger = self._next_challenger(challengers=challengers,
+                                           chooser=chooser,
+                                           run_history=run_history,
+                                           repeat_configs=repeat_configs)
+        return challenger, True
+
+    def _next_challenger(self,
+                         challengers: typing.Optional[typing.List[Configuration]],
+                         chooser: typing.Optional[EPMChooser],
+                         run_history: RunHistory,
+                         repeat_configs: bool = True) -> typing.Optional[Configuration]:
+        """ Retuns the next challenger to use in intensification
+        If challenger is None, then optimizer will be used to generate the next challenger
+
+        Parameters
+        ----------
+        challengers : typing.List[Configuration]
+            promising configurations to evaluate next
+        chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
+            a sampler that generates next configurations to use for racing
+        run_history : smac.runhistory.runhistory.RunHistory
+            stores all runs we ran so far
+        repeat_configs : bool
+            if False, an evaluated configuration will not be generated again
+
+        Returns
+        -------
+        Configuration
+            next challenger to use
+        """
+        start_time = time.time()
+
+        used_configs = set(run_history.get_all_configs())
+
+        if challengers:
+            # iterate over challengers provided
+            self.logger.debug("Using challengers provided")
+            chall_gen = (c for c in challengers)
+        elif chooser:
+            # generating challengers on-the-fly if optimizer is given
+            self.logger.debug("Generating new challenger from optimizer")
+            chall_gen = chooser.choose_next()
+        else:
+            raise ValueError('No configurations/chooser provided. Cannot generate challenger!')
+
+        self.logger.debug('Time to select next challenger: %.4f' % (time.time() - start_time))
+
+        # select challenger from the generators
+        for challenger in chall_gen:
+            # repetitions allowed
+            if repeat_configs:
+                return challenger
+
+            # otherwise, select only a unique challenger
+            if challenger not in used_configs:
+                return challenger
+
+        self.logger.debug("No valid challenger was generated!")
+        return None
+
+    def _adapt_cutoff(self,
+                      challenger: Configuration,
                       run_history: RunHistory,
                       inc_sum_cost: float) -> float:
         """Adaptive capping:
@@ -120,9 +253,7 @@ class AbstractRacer(object):
         ----------
         challenger : Configuration
             Configuration which challenges incumbent
-        incumbent : Configuration
-            Best configuration so far
-        run_history : RunHistory
+        run_history : smac.runhistory.runhistory.RunHistory
             Stores all runs we ran so far
         inc_sum_cost: float
             Sum of runtimes of all incumbent runs
@@ -151,7 +282,8 @@ class AbstractRacer(object):
                      )
         return cutoff
 
-    def _compare_configs(self, incumbent: Configuration,
+    def _compare_configs(self,
+                         incumbent: Configuration,
                          challenger: Configuration,
                          run_history: RunHistory,
                          aggregate_func: typing.Callable,
@@ -174,7 +306,7 @@ class AbstractRacer(object):
             Current incumbent
         challenger: Configuration
             Challenger configuration
-        run_history: RunHistory
+        run_history: smac.runhistory.runhistory.RunHistory
             Stores all runs we ran so far
         aggregate_func: typing.Callable
             Aggregate performance across instances
@@ -224,7 +356,7 @@ class AbstractRacer(object):
             self.logger.info("Changes in incumbent:")
             for param in params:
                 if param[1] != param[2]:
-                    self.logger.info("  %s : %r -> %r" % (param))
+                    self.logger.info("  %s : %r -> %r" % param)
                 else:
                     self.logger.debug("  %s remains unchanged: %r" %
                                       (param[0], param[1]))

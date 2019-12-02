@@ -148,11 +148,9 @@ class EPILS_Solver(object):
             The best found configuration
         """
         self.stats.start_timing()
-        try:
-            self.incumbent = self.initial_design.run()
-        except FirstRunCrashedException as err:
-            if self.scenario.abort_on_first_run_crash:
-                raise
+        initial_design_configs = self.initial_design.select_configurations()
+        # get initial incumbent
+        self.incumbent, inc_perf = self._intensify(challengers=initial_design_configs, log_traj=True)
 
         # Main loop
         iteration = 1
@@ -193,14 +191,10 @@ class EPILS_Solver(object):
             # don't be too aggressive here
             self.intensifier.minR = self.slow_race_minR
             self.intensifier.Adaptive_Capping_Slackfactor = self.slow_race_adaptive_capping_factor
-            # log traj 
-            self.incumbent, inc_perf = self.intensifier.intensify(
-                    challengers=[local_inc],
-                    incumbent=self.incumbent,
-                    run_history=self.runhistory,
-                    aggregate_func=self.aggregate_func,
-                    time_bound=0.01,
-                    log_traj=True)
+            # log traj
+            # run intensification
+            self.incumbent, inc_perf = self._intensify(challengers=[local_inc], log_traj=True)
+
             if self.incumbent == local_inc:
                 self.logger.info("Changed global incumbent!")
 
@@ -241,7 +235,7 @@ class EPILS_Solver(object):
             The best found configuration
         """
         
-        self.intensifier.minR = self.fast_race_minR # be aggressive here!
+        self.intensifier.minR = self.fast_race_minR  # be aggressive here!
         self.intensifier.Adaptive_Capping_Slackfactor = self.fast_race_adaptive_capping_factor
         
         incumbent = start_point
@@ -271,15 +265,10 @@ class EPILS_Solver(object):
                 neighbors_looked_at += 1
 
                 neighbor.origin = "SLS"
-                self.logger.debug("Intensify")                
-                incumbent, inc_perf = self.intensifier.intensify(
-                    challengers=[neighbor],
-                    incumbent=incumbent,
-                    run_history=self.runhistory,
-                    aggregate_func=self.aggregate_func,
-                    time_bound=0.01,
-                    log_traj=False)
-                
+                self.logger.debug("Intensify")
+                # run intensification
+                incumbent, inc_perf = self._intensify(challengers=[neighbor], log_traj=False)
+
                 # first improvement SLS
                 if incumbent != prev_incumbent:
                     changed_inc = True
@@ -292,3 +281,55 @@ class EPILS_Solver(object):
 
         return incumbent
 
+    def _intensify(self,
+                   challengers: typing.List[Configuration],
+                   log_traj: bool = True):
+        """
+        Method to perform intensification on the given list of challengers and return an incumbent.
+        This proxy method has been created for ease of use as
+        intensifiers now execute only 1 "ExecuteRun" per iteration.
+
+        Parameters
+        ----------
+        challengers: typing.List[Configuration]
+            list of promising configurations to race against the incumbent
+        log_traj: bool
+            whether to log in the `traj_logger` or not
+
+        Returns
+        -------
+        typing.Optional[Configuration]
+            the new incumbent configuration
+        float
+            incumbent performance
+        """
+
+        incumbent = None
+        inc_perf = np.inf
+
+        while True:
+            # sample next challenger
+            challenger, _ = self.intensifier.get_next_challenger(challengers=challengers,
+                                                                 chooser=None,
+                                                                 run_history=self.runhistory)
+
+            # terminate if out of challengers
+            if not challenger:
+                break
+
+            challengers = [c for c in challengers if c != challenger]
+
+            # evaluate challenger
+            incumbent, inc_perf = self.intensifier.eval_challenger(
+                challenger=challenger,
+                incumbent=self.incumbent,
+                run_history=self.runhistory,
+                aggregate_func=self.aggregate_func,
+                time_bound=0.01,
+                log_traj=log_traj)
+
+            # terminate if intensification is completed
+            if self.intensifier.iteration_done:
+                break
+
+        return incumbent, inc_perf
