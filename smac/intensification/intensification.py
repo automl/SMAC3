@@ -175,8 +175,6 @@ class Intensifier(AbstractRacer):
         inc_perf: float
             empirical performance of incumbent configuration
         """
-        self.start_time = time.time()
-        self._ta_time = 0
 
         if time_bound < self._min_time:
             raise ValueError("time_bound must be >= %f" % self._min_time)
@@ -550,6 +548,10 @@ class Intensifier(AbstractRacer):
                 self.N = max(1, self.minR)
                 self.to_run = None
 
+                # reset time bound related params since this is a new configuration
+                self.start_time = time.time()
+                self._ta_time = 0
+
             return challenger, True
 
         # return currently running challenger
@@ -596,9 +598,14 @@ class Intensifier(AbstractRacer):
         """
         Updates tracking variables at the end of an intensification run
         """
+        # track iterations
         self.n_iters += 1
         self.iteration_done = True
         self.configs_to_run = None
+
+        # reset for a new iteration
+        self._num_run = 0
+        self._chall_indx = 0
 
         self.stats.update_average_configs_per_intensify(
             n_configs=self._chall_indx)
