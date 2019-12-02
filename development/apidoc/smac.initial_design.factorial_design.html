@@ -156,6 +156,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
@@ -279,7 +280,7 @@
 <span id="smac-initial-design-factorial-design-module"></span><h1>smac.initial_design.factorial_design module<a class="headerlink" href="#module-smac.initial_design.factorial_design" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.initial_design.factorial_design.FactorialInitialDesign">
-<em class="property">class </em><code class="sig-prename descclassname">smac.initial_design.factorial_design.</code><code class="sig-name descname">FactorialInitialDesign</code><span class="sig-paren">(</span><em class="sig-param">tae_runner: smac.tae.execute_ta_run.ExecuteTARun</em>, <em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">traj_logger: smac.utils.io.traj_logging.TrajLogger</em>, <em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">rng: numpy.random.mtrand.RandomState</em>, <em class="sig-param">intensifier: smac.intensification.abstract_racer.AbstractRacer</em>, <em class="sig-param">aggregate_func: Callable</em>, <em class="sig-param">configs: Optional[List[ConfigSpace.configuration_space.Configuration]] = None</em>, <em class="sig-param">n_configs_x_params: Optional[int] = 10</em>, <em class="sig-param">max_config_fracs: float = 0.25</em>, <em class="sig-param">run_first_config: bool = True</em>, <em class="sig-param">fill_random_configs: bool = False</em>, <em class="sig-param">init_budget: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/initial_design/factorial_design.html#FactorialInitialDesign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.factorial_design.FactorialInitialDesign" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.initial_design.factorial_design.</code><code class="sig-name descname">FactorialInitialDesign</code><span class="sig-paren">(</span><em class="sig-param">cs: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em class="sig-param">rng: numpy.random.mtrand.RandomState</em>, <em class="sig-param">traj_logger: smac.utils.io.traj_logging.TrajLogger</em>, <em class="sig-param">ta_run_limit: float</em>, <em class="sig-param">configs: Optional[List[ConfigSpace.configuration_space.Configuration]] = None</em>, <em class="sig-param">n_configs_x_params: Optional[int] = 10</em>, <em class="sig-param">max_config_fracs: float = 0.25</em>, <em class="sig-param">init_budget: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/initial_design/factorial_design.html#FactorialInitialDesign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.factorial_design.FactorialInitialDesign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign" title="smac.initial_design.initial_design.InitialDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.initial_design.initial_design.InitialDesign</span></code></a></p>
 <p>Factorial initial design</p>
 <dl class="attribute">
@@ -295,45 +296,21 @@ otherwise factorial design is overwritten</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="smac.initial_design.factorial_design.FactorialInitialDesign.intensifier">
-<code class="sig-name descname">intensifier</code><a class="headerlink" href="#smac.initial_design.factorial_design.FactorialInitialDesign.intensifier" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="smac.initial_design.factorial_design.FactorialInitialDesign.runhistory">
-<code class="sig-name descname">runhistory</code><a class="headerlink" href="#smac.initial_design.factorial_design.FactorialInitialDesign.runhistory" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="smac.initial_design.factorial_design.FactorialInitialDesign.aggregate_func">
-<code class="sig-name descname">aggregate_func</code><a class="headerlink" href="#smac.initial_design.factorial_design.FactorialInitialDesign.aggregate_func" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <p>Constructor</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tae_runner</strong> (<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><em>ExecuteTARun</em></a>) – Target algorithm execution object.</p></li>
-<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – Scenario with all meta information (including configuration space).</p></li>
-<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – Statistics of experiments; needed in case initial design already
-exhausts the budget.</p></li>
+<li><p><strong>cs</strong> (<em>ConfigurationSpace</em>) – configuration space object</p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</p></li>
 <li><p><strong>traj_logger</strong> (<a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger"><em>TrajLogger</em></a>) – Trajectory logging to add new incumbents found by the initial
 design.</p></li>
-<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – Runhistory with all target algorithm runs.</p></li>
-<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</p></li>
-<li><p><strong>intensifier</strong> (<a class="reference internal" href="smac.intensification.intensification.html#smac.intensification.intensification.Intensifier" title="smac.intensification.intensification.Intensifier"><em>Intensifier</em></a>) – Intensification object to issue a racing to decide the current
-incumbent.</p></li>
-<li><p><strong>aggregate_func</strong> (<em>typing:Callable</em>) – Function to aggregate performance of a configuration across
-instances.</p></li>
+<li><p><strong>ta_run_limit</strong> (<em>int</em>) – Number of iterations allowed for the target algorithm</p></li>
 <li><p><strong>configs</strong> (<em>typing.Optional</em><em>[</em><em>typing.List</em><em>[</em><em>Configuration</em><em>]</em><em>]</em>) – List of initial configurations. Disables the arguments <code class="docutils literal notranslate"><span class="pre">n_configs_x_params</span></code> if given.
 Either this, or <code class="docutils literal notranslate"><span class="pre">n_configs_x_params</span></code> or <code class="docutils literal notranslate"><span class="pre">init_budget</span></code> must be provided.</p></li>
 <li><p><strong>n_configs_x_params</strong> (<em>int</em>) – how many configurations will be used at most in the initial design (X*D). Either
 this, or <code class="docutils literal notranslate"><span class="pre">init_budget</span></code> or <code class="docutils literal notranslate"><span class="pre">configs</span></code> must be provided. Disables the argument
 <code class="docutils literal notranslate"><span class="pre">n_configs_x_params</span></code> if given.</p></li>
 <li><p><strong>max_config_fracs</strong> (<em>float</em>) – use at most X*budget in the initial design. Not active if a time limit is given.</p></li>
-<li><p><strong>run_first_config</strong> (<em>bool</em>) – specify if target algorithm has to be run once on the first configuration before the intensify call</p></li>
-<li><p><strong>fill_random_configs</strong> (<em>bool</em>) – fill budget with random configurations if initial incumbent sampling returns only 1 configuration</p></li>
 <li><p><strong>init_budget</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximal initial budget (disables the arguments <code class="docutils literal notranslate"><span class="pre">n_configs_x_params</span></code> and <code class="docutils literal notranslate"><span class="pre">configs</span></code>
 if both are given). Either this, or <code class="docutils literal notranslate"><span class="pre">n_configs_x_params</span></code> or <code class="docutils literal notranslate"><span class="pre">configs</span></code> must be
 provided.</p></li>

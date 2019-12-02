@@ -154,6 +154,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
@@ -271,7 +272,7 @@
 <span></span><span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span>  <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Callable</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -300,7 +301,6 @@
 <span class="c1"># intensification</span>
 <span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="kn">import</span> <span class="n">Intensifier</span>
 <span class="kn">from</span> <span class="nn">smac.intensification.abstract_racer</span> <span class="kn">import</span> <span class="n">AbstractRacer</span>
-<span class="kn">from</span> <span class="nn">smac.intensification.successive_halving</span> <span class="kn">import</span> <span class="n">SuccessiveHalving</span>
 <span class="c1"># optimizer</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.smbo</span> <span class="kn">import</span> <span class="n">SMBO</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="kn">import</span> <span class="n">average_cost</span>
@@ -682,24 +682,14 @@
                 <span class="s2">&quot;Either use initial_design or initial_configurations; but not both&quot;</span><span class="p">)</span>
 
         <span class="n">init_design_def_kwargs</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;tae_runner&#39;</span><span class="p">:</span> <span class="n">tae_runner</span><span class="p">,</span>
-            <span class="s1">&#39;scenario&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="p">,</span>
-            <span class="s1">&#39;stats&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+            <span class="s1">&#39;cs&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span>
             <span class="s1">&#39;traj_logger&#39;</span><span class="p">:</span> <span class="n">traj_logger</span><span class="p">,</span>
-            <span class="s1">&#39;runhistory&#39;</span><span class="p">:</span> <span class="n">runhistory</span><span class="p">,</span>
             <span class="s1">&#39;rng&#39;</span><span class="p">:</span> <span class="n">rng</span><span class="p">,</span>
+            <span class="s1">&#39;ta_run_limit&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">ta_run_limit</span><span class="p">,</span>
             <span class="s1">&#39;configs&#39;</span><span class="p">:</span> <span class="n">initial_configurations</span><span class="p">,</span>
-            <span class="s1">&#39;intensifier&#39;</span><span class="p">:</span> <span class="n">intensifier</span><span class="p">,</span>
-            <span class="s1">&#39;aggregate_func&#39;</span><span class="p">:</span> <span class="n">aggregate_func</span><span class="p">,</span>
             <span class="s1">&#39;n_configs_x_params&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
             <span class="s1">&#39;max_config_fracs&#39;</span><span class="p">:</span> <span class="mf">0.0</span>
             <span class="p">}</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">intensifier</span><span class="p">,</span> <span class="n">SuccessiveHalving</span><span class="p">):</span>
-            <span class="c1"># If running successive halving, then you need multiple configurations for the initial design</span>
-            <span class="n">n_configs</span> <span class="o">=</span> <span class="n">intensifier</span><span class="o">.</span><span class="n">num_initial_challengers</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">())</span>
-            <span class="n">init_design_def_kwargs</span><span class="p">[</span><span class="s1">&#39;n_configs_x_params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_configs</span>
-            <span class="n">init_design_def_kwargs</span><span class="p">[</span><span class="s1">&#39;run_first_config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="n">init_design_def_kwargs</span><span class="p">[</span><span class="s1">&#39;fill_random_configs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">if</span> <span class="n">initial_design_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">init_design_def_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">initial_design_kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">initial_configurations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>

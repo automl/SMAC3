@@ -1,0 +1,7 @@
+smac.optimizer.epm\_configuration\_chooser module
+=================================================
+
+.. automodule:: smac.optimizer.epm_configuration_chooser
+   :members:
+   :undoc-members:
+   :show-inheritance:

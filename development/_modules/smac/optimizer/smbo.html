@@ -154,6 +154,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
@@ -278,7 +279,6 @@
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">Constant</span><span class="p">,</span>\
      <span class="n">CategoricalHyperparameter</span><span class="p">,</span> <span class="n">UniformFloatHyperparameter</span><span class="p">,</span> \
      <span class="n">UniformIntegerHyperparameter</span><span class="p">,</span> <span class="n">InCondition</span>
-<span class="kn">from</span> <span class="nn">smac.configspace.util</span> <span class="kn">import</span> <span class="n">convert_configurations_to_array</span>
 <span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="kn">import</span> <span class="n">AbstractEPM</span>
 <span class="kn">from</span> <span class="nn">smac.epm.rf_with_instances</span> <span class="kn">import</span> <span class="n">RandomForestWithInstances</span>
 <span class="kn">from</span> <span class="nn">smac.epm.gaussian_process_mcmc</span> <span class="kn">import</span> <span class="n">GaussianProcessMCMC</span>
@@ -291,8 +291,8 @@
     <span class="n">LCB</span><span class="p">,</span> <span class="n">PI</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.random_configuration_chooser</span> <span class="kn">import</span> <span class="n">ChooserNoCoolDown</span><span class="p">,</span> \
     <span class="n">ChooserLinearCoolDown</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="kn">import</span> <span class="n">AcquisitionFunctionMaximizer</span><span class="p">,</span> \
-    <span class="n">RandomSearch</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="kn">import</span> <span class="n">AcquisitionFunctionMaximizer</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.epm_configuration_chooser</span> <span class="kn">import</span> <span class="n">EPMChooser</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="kn">import</span> <span class="n">AbstractRunHistory2EPM</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
@@ -320,15 +320,12 @@
 <span class="sd">    stats</span>
 <span class="sd">    initial_design</span>
 <span class="sd">    runhistory</span>
-<span class="sd">    rh2EPM</span>
 <span class="sd">    intensifier</span>
 <span class="sd">    aggregate_func</span>
 <span class="sd">    num_run</span>
-<span class="sd">    model</span>
-<span class="sd">    acq_optimizer</span>
-<span class="sd">    acquisition_func</span>
 <span class="sd">    rng</span>
-<span class="sd">    random_configuration_chooser</span>
+<span class="sd">    initial_design_configs</span>
+<span class="sd">    epm_chooser</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
@@ -377,7 +374,7 @@
 <span class="sd">            RandomForestWithInstances)</span>
 <span class="sd">        acq_optimizer: AcquisitionFunctionMaximizer</span>
 <span class="sd">            Optimizer of acquisition function.</span>
-<span class="sd">        acquisition_function : AcquisitionFunction</span>
+<span class="sd">        acquisition_func : AcquisitionFunction</span>
 <span class="sd">            Object that implements the AbstractAcquisitionFunction (i.e., infill</span>
 <span class="sd">            criterion for acq_optimizer)</span>
 <span class="sd">        restore_incumbent: Configuration</span>
@@ -401,21 +398,25 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="n">stats</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initial_design</span> <span class="o">=</span> <span class="n">initial_design</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span> <span class="o">=</span> <span class="n">runhistory</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rh2EPM</span> <span class="o">=</span> <span class="n">runhistory2epm</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span> <span class="o">=</span> <span class="n">intensifier</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">aggregate_func</span> <span class="o">=</span> <span class="n">aggregate_func</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_run</span> <span class="o">=</span> <span class="n">num_run</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span> <span class="o">=</span> <span class="n">acq_optimizer</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_func</span> <span class="o">=</span> <span class="n">acquisition_func</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">rng</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">random_configuration_chooser</span> <span class="o">=</span> <span class="n">random_configuration_chooser</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_random_search</span> <span class="o">=</span> <span class="n">RandomSearch</span><span class="p">(</span>
-            <span class="n">acquisition_func</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_space</span><span class="p">,</span> <span class="n">rng</span>
-        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">predict_incumbent</span> <span class="o">=</span> <span class="n">predict_incumbent</span>
+        <span class="c1"># initialize the chooser to get configurations from the EPM</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epm_chooser</span> <span class="o">=</span> <span class="n">EPMChooser</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
+                                      <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
+                                      <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
+                                      <span class="n">runhistory2epm</span><span class="o">=</span><span class="n">runhistory2epm</span><span class="p">,</span>
+                                      <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+                                      <span class="n">acq_optimizer</span><span class="o">=</span><span class="n">acq_optimizer</span><span class="p">,</span>
+                                      <span class="n">acquisition_func</span><span class="o">=</span><span class="n">acquisition_func</span><span class="p">,</span>
+                                      <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
+                                      <span class="n">restore_incumbent</span><span class="o">=</span><span class="n">restore_incumbent</span><span class="p">,</span>
+                                      <span class="n">random_configuration_chooser</span><span class="o">=</span><span class="n">random_configuration_chooser</span><span class="p">,</span>
+                                      <span class="n">predict_incumbent</span><span class="o">=</span><span class="n">predict_incumbent</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SMBO.start"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Starts the Bayesian Optimization loop.</span>
@@ -427,7 +428,11 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_runs</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Running initial design&#39;</span><span class="p">)</span>
             <span class="c1"># Intensifier initialization</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_design</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_design</span><span class="o">.</span><span class="n">select_configurations</span><span class="p">()</span>
+
+            <span class="c1"># to be on the safe side, never return an empty list of initial configs</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config_space</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">()]</span>
 
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_runs</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;According to stats there have been runs performed, &quot;</span>
@@ -442,11 +447,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;State Restored! Starting optimization with &quot;</span>
                              <span class="s2">&quot;incumbent </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;State restored with following budget:&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">print_stats</span><span class="p">()</span>
-
-        <span class="c1"># To be on the safe side -&gt; never return &quot;None&quot; as incumbent</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_space</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">()</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">print_stats</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="SMBO.run"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Runs the Bayesian optimization loop</span>
@@ -467,28 +468,39 @@
                            <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
 
             <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-            <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rh2EPM</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Search for next configuration&quot;</span><span class="p">)</span>
-            <span class="c1"># get all found configurations sorted according to acq</span>
-            <span class="n">challengers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">choose_next</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
-
-            <span class="n">time_spent</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-            <span class="n">time_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_timebound_for_intensification</span><span class="p">(</span><span class="n">time_spent</span><span class="p">)</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Intensify&quot;</span><span class="p">)</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">inc_perf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">intensify</span><span class="p">(</span>
-                <span class="n">challengers</span><span class="o">=</span><span class="n">challengers</span><span class="p">,</span>
-                <span class="n">incumbent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">,</span>
+            <span class="c1"># sample next configuration for intensification</span>
+            <span class="c1"># Initial design runs are also included in the BO loop now.</span>
+            <span class="n">challenger</span><span class="p">,</span> <span class="n">new_challenger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">get_next_challenger</span><span class="p">(</span>
+                <span class="n">challengers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span><span class="p">,</span>
+                <span class="n">chooser</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">epm_chooser</span><span class="p">,</span>
                 <span class="n">run_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
-                <span class="n">aggregate_func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aggregate_func</span><span class="p">,</span>
-                <span class="n">time_bound</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">_min_time</span><span class="p">,</span> <span class="n">time_left</span><span class="p">))</span>
+                <span class="n">repeat_configs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">repeat_configs</span>
+            <span class="p">)</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">shared_model</span><span class="p">:</span>
-                <span class="n">pSMAC</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">run_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
-                            <span class="n">output_directory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">,</span>
-                            <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+            <span class="c1"># remove config from initial design challengers to not repeat it again</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span> <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="n">challenger</span><span class="p">]</span>
+
+            <span class="c1"># update timebound only if a &#39;new&#39; configuration is sampled as the challenger</span>
+            <span class="k">if</span> <span class="n">new_challenger</span><span class="p">:</span>
+                <span class="n">time_spent</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+                <span class="n">time_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_timebound_for_intensification</span><span class="p">(</span><span class="n">time_spent</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">challenger</span><span class="p">:</span>
+                <span class="c1"># evaluate selected challenger</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Intensify - evaluate challenger&quot;</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">inc_perf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">eval_challenger</span><span class="p">(</span>
+                    <span class="n">challenger</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
+                    <span class="n">incumbent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">,</span>
+                    <span class="n">run_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
+                    <span class="n">aggregate_func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aggregate_func</span><span class="p">,</span>
+                    <span class="n">time_bound</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">_min_time</span><span class="p">,</span> <span class="n">time_left</span><span class="p">))</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">shared_model</span><span class="p">:</span>
+                    <span class="n">pSMAC</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">run_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
+                                <span class="n">output_directory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">,</span>
+                                <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Remaining budget: </span><span class="si">%f</span><span class="s2"> (wallclock), </span><span class="si">%f</span><span class="s2"> (ta costs), </span><span class="si">%f</span><span class="s2"> (target runs)&quot;</span> <span class="o">%</span> <span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get_remaing_time_budget</span><span class="p">(),</span>
@@ -502,109 +514,13 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span></div>
 
-<div class="viewcode-block" id="SMBO.choose_next"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.choose_next">[docs]</a>    <span class="k">def</span> <span class="nf">choose_next</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-                    <span class="n">incumbent_value</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Choose next candidate solution with Bayesian optimization. The</span>
-<span class="sd">        suggested configurations depend on the argument ``acq_optimizer`` to</span>
-<span class="sd">        the ``SMBO`` class.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        X : (N, D) numpy array</span>
-<span class="sd">            Each row contains a configuration and one set of</span>
-<span class="sd">            instance features.</span>
-<span class="sd">        Y : (N, O) numpy array</span>
-<span class="sd">            The function values for each configuration instance pair.</span>
-<span class="sd">        incumbent_value: float</span>
-<span class="sd">            Cost value of incumbent configuration</span>
-<span class="sd">            (required for acquisition function);</span>
-<span class="sd">            if not given, it will be inferred from runhistory;</span>
-<span class="sd">            if not given and runhistory is empty,</span>
-<span class="sd">            it will raise a ValueError</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        Iterable</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="c1"># Only return a single point to avoid an overly high number of</span>
-            <span class="c1"># random search iterations</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_search</span><span class="o">.</span><span class="n">maximize</span><span class="p">(</span>
-                <span class="n">runhistory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span> <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span> <span class="n">num_points</span><span class="o">=</span><span class="mi">1</span>
-            <span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">incumbent_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Runhistory is empty and the cost value of &quot;</span>
-                                 <span class="s2">&quot;the incumbent is unknown.&quot;</span><span class="p">)</span>
-            <span class="n">incumbent</span><span class="p">,</span> <span class="n">incumbent_array</span><span class="p">,</span> <span class="n">incumbent_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_incumbent</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">incumbent</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">incumbent_array</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_func</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-            <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
-            <span class="n">eta</span><span class="o">=</span><span class="n">incumbent_value</span><span class="p">,</span>
-            <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
-            <span class="n">incumbent_array</span><span class="o">=</span><span class="n">incumbent_array</span><span class="p">,</span>
-            <span class="n">num_data</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="p">),</span>
-            <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
-        <span class="p">)</span>
-
-        <span class="n">challengers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span><span class="o">.</span><span class="n">maximize</span><span class="p">(</span>
-            <span class="n">runhistory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
-            <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
-            <span class="n">num_points</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">acq_opt_challengers</span><span class="p">,</span>
-            <span class="n">random_configuration_chooser</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">random_configuration_chooser</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">challengers</span></div>
-
-    <span class="k">def</span> <span class="nf">_get_incumbent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]:</span>
-        <span class="sd">&#39;&#39;&#39;Get incumbent value, configuration, and array representation.</span>
-
-<span class="sd">        This is retreived either from the runhistory or from best predicted</span>
-<span class="sd">        performance on configs in runhistory (depends on self.predict_incumbent)</span>
-
-<span class="sd">        Return</span>
-<span class="sd">        ------</span>
-<span class="sd">        float</span>
-<span class="sd">        np.ndarry</span>
-<span class="sd">        Configuration</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">all_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_all_configs</span><span class="p">()</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_incumbent</span><span class="p">:</span>
-            <span class="n">configs_array</span> <span class="o">=</span> <span class="n">convert_configurations_to_array</span><span class="p">(</span><span class="n">all_configs</span><span class="p">)</span>
-            <span class="n">costs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span>
-                <span class="k">lambda</span> <span class="n">input_</span><span class="p">:</span> <span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict_marginalized_over_instances</span><span class="p">(</span><span class="n">input_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-                    <span class="n">input_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">input_</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                <span class="p">),</span>
-                <span class="nb">zip</span><span class="p">(</span><span class="n">configs_array</span><span class="p">,</span> <span class="n">all_configs</span><span class="p">),</span>
-            <span class="p">))</span>
-            <span class="n">costs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="n">incumbent</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
-            <span class="n">incumbent_array</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">incumbent_value</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="c1"># won&#39;t need log(y) if EPM was already trained on log(y)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Runhistory is empty and the cost value of &quot;</span>
-                                 <span class="s2">&quot;the incumbent is unknown.&quot;</span><span class="p">)</span>
-            <span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span>
-            <span class="n">incumbent_array</span> <span class="o">=</span> <span class="n">convert_configurations_to_array</span><span class="p">([</span><span class="n">all_configs</span><span class="p">])</span>
-            <span class="n">incumbent_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
-            <span class="n">incumbent_value_as_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">incumbent_value</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-            <span class="c1"># It&#39;s unclear how to do this for inv scaling and potential future scaling.</span>
-            <span class="c1"># This line should be changed if necessary</span>
-            <span class="n">incumbent_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rh2EPM</span><span class="o">.</span><span class="n">transform_response_values</span><span class="p">(</span><span class="n">incumbent_value_as_array</span><span class="p">)</span>
-            <span class="n">incumbent_value</span> <span class="o">=</span> <span class="n">incumbent_value</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-
-        <span class="k">return</span> <span class="n">incumbent</span><span class="p">,</span> <span class="n">incumbent_array</span><span class="p">,</span> <span class="n">incumbent_value</span>
-
-<div class="viewcode-block" id="SMBO.validate"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_mode</span><span class="o">=</span><span class="s1">&#39;inc&#39;</span><span class="p">,</span> <span class="n">instance_mode</span><span class="o">=</span><span class="s1">&#39;train+test&#39;</span><span class="p">,</span>
-                 <span class="n">repetitions</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_epm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;threading&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="SMBO.validate"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">config_mode</span><span class="o">=</span><span class="s1">&#39;inc&#39;</span><span class="p">,</span>
+                 <span class="n">instance_mode</span><span class="o">=</span><span class="s1">&#39;train+test&#39;</span><span class="p">,</span>
+                 <span class="n">repetitions</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">use_epm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;threading&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create validator-object and run validation, using</span>
 <span class="sd">        scenario-information, runhistory from smbo and tae_runner from intensify</span>
 
@@ -655,7 +571,7 @@
                                         <span class="n">output_fn</span><span class="o">=</span><span class="n">new_rh_path</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">new_rh</span></div>
 
-    <span class="k">def</span> <span class="nf">_get_timebound_for_intensification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_spent</span><span class="p">:</span><span class="nb">float</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_get_timebound_for_intensification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_spent</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculate time left for intensify from the time spent on</span>
 <span class="sd">        choosing challengers using the fraction of time intended for</span>
 <span class="sd">        intensification (which is specified in</span>
@@ -673,7 +589,7 @@
         <span class="k">if</span> <span class="n">frac_intensify</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">frac_intensify</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The value for intensification_percentage-&quot;</span>
                              <span class="s2">&quot;option must lie in (0,1), instead: </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span>
-                             <span class="p">(</span><span class="n">frac_intensify</span><span class="p">))</span>
+                             <span class="n">frac_intensify</span><span class="p">)</span>
         <span class="n">total_time</span> <span class="o">=</span> <span class="n">time_spent</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">frac_intensify</span><span class="p">)</span>
         <span class="n">time_left</span> <span class="o">=</span> <span class="n">frac_intensify</span> <span class="o">*</span> <span class="n">total_time</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Total time: </span><span class="si">%.4f</span><span class="s2">, time spent on choosing next &quot;</span>
@@ -682,8 +598,8 @@
                           <span class="p">(</span><span class="n">total_time</span><span class="p">,</span> <span class="n">time_spent</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">frac_intensify</span><span class="p">),</span> <span class="n">time_left</span><span class="p">,</span> <span class="n">frac_intensify</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">time_left</span>
 
-    <span class="k">def</span> <span class="nf">_component_builder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conf</span><span class="p">:</span><span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">dict</span><span class="p">])</span> \
-        <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">AbstractAcquisitionFunction</span><span class="p">,</span> <span class="n">AbstractEPM</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_component_builder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conf</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">dict</span><span class="p">])</span> \
+            <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">AbstractAcquisitionFunction</span><span class="p">,</span> <span class="n">AbstractEPM</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            builds new Acquisition function object</span>
 <span class="sd">            and EPM object and returns these</span>

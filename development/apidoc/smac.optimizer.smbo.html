@@ -156,6 +156,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
@@ -318,11 +319,6 @@
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="smac.optimizer.smbo.SMBO.rh2EPM">
-<code class="sig-name descname">rh2EPM</code><a class="headerlink" href="#smac.optimizer.smbo.SMBO.rh2EPM" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
 <dt id="smac.optimizer.smbo.SMBO.intensifier">
 <code class="sig-name descname">intensifier</code><a class="headerlink" href="#smac.optimizer.smbo.SMBO.intensifier" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -338,28 +334,18 @@
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="smac.optimizer.smbo.SMBO.model">
-<code class="sig-name descname">model</code><a class="headerlink" href="#smac.optimizer.smbo.SMBO.model" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="smac.optimizer.smbo.SMBO.acq_optimizer">
-<code class="sig-name descname">acq_optimizer</code><a class="headerlink" href="#smac.optimizer.smbo.SMBO.acq_optimizer" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="smac.optimizer.smbo.SMBO.acquisition_func">
-<code class="sig-name descname">acquisition_func</code><a class="headerlink" href="#smac.optimizer.smbo.SMBO.acquisition_func" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
 <dt id="smac.optimizer.smbo.SMBO.rng">
 <code class="sig-name descname">rng</code><a class="headerlink" href="#smac.optimizer.smbo.SMBO.rng" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="smac.optimizer.smbo.SMBO.random_configuration_chooser">
-<code class="sig-name descname">random_configuration_chooser</code><a class="headerlink" href="#smac.optimizer.smbo.SMBO.random_configuration_chooser" title="Permalink to this definition">¶</a></dt>
+<dt id="smac.optimizer.smbo.SMBO.initial_design_configs">
+<code class="sig-name descname">initial_design_configs</code><a class="headerlink" href="#smac.optimizer.smbo.SMBO.initial_design_configs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.optimizer.smbo.SMBO.epm_chooser">
+<code class="sig-name descname">epm_chooser</code><a class="headerlink" href="#smac.optimizer.smbo.SMBO.epm_chooser" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>Interface that contains the main Bayesian optimization loop</p>
@@ -383,7 +369,7 @@ data into EPM data</p></li>
 <li><p><strong>model</strong> (<a class="reference internal" href="smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances" title="smac.epm.rf_with_instances.RandomForestWithInstances"><em>RandomForestWithInstances</em></a>) – empirical performance model (right now, we support only
 RandomForestWithInstances)</p></li>
 <li><p><strong>acq_optimizer</strong> (<a class="reference internal" href="smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><em>AcquisitionFunctionMaximizer</em></a>) – Optimizer of acquisition function.</p></li>
-<li><p><strong>acquisition_function</strong> (<em>AcquisitionFunction</em>) – Object that implements the AbstractAcquisitionFunction (i.e., infill
+<li><p><strong>acquisition_func</strong> (<em>AcquisitionFunction</em>) – Object that implements the AbstractAcquisitionFunction (i.e., infill
 criterion for acq_optimizer)</p></li>
 <li><p><strong>restore_incumbent</strong> (<em>Configuration</em>) – incumbent to be used from the start. ONLY used to restore states.</p></li>
 <li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</p></li>
@@ -394,34 +380,6 @@ criterion for acq_optimizer)</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
-<dt id="smac.optimizer.smbo.SMBO.choose_next">
-<code class="sig-name descname">choose_next</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">Y: numpy.ndarray</em>, <em class="sig-param">incumbent_value: float = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO.choose_next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO.choose_next" title="Permalink to this definition">¶</a></dt>
-<dd><p>Choose next candidate solution with Bayesian optimization. The
-suggested configurations depend on the argument <code class="docutils literal notranslate"><span class="pre">acq_optimizer</span></code> to
-the <code class="docutils literal notranslate"><span class="pre">SMBO</span></code> class.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<em>(</em><em>N</em><em>, </em><em>D</em><em>) </em><em>numpy array</em>) – Each row contains a configuration and one set of
-instance features.</p></li>
-<li><p><strong>Y</strong> (<em>(</em><em>N</em><em>, </em><em>O</em><em>) </em><em>numpy array</em>) – The function values for each configuration instance pair.</p></li>
-<li><p><strong>incumbent_value</strong> (<em>float</em>) – Cost value of incumbent configuration
-(required for acquisition function);
-if not given, it will be inferred from runhistory;
-if not given and runhistory is empty,
-it will raise a ValueError</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Iterable</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="method">
 <dt id="smac.optimizer.smbo.SMBO.run">
 <code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO.run" title="Permalink to this definition">¶</a></dt>

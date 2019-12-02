@@ -156,6 +156,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
@@ -282,13 +283,16 @@
 <em class="property">class </em><code class="sig-prename descclassname">smac.intensification.abstract_racer.</code><code class="sig-name descname">AbstractRacer</code><span class="sig-paren">(</span><em class="sig-param">tae_runner: smac.tae.execute_ta_run.ExecuteTARun, stats: smac.stats.stats.Stats, traj_logger: smac.utils.io.traj_logging.TrajLogger, rng: numpy.random.mtrand.RandomState, instances: List[str], instance_specifics: Mapping[str, numpy.ndarray] = None, cutoff: Optional[int] = None, deterministic: bool = False, run_obj_time: bool = True, minR: int = 1, maxR: int = 2000, adaptive_capping_slackfactor: float = 1.2, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/abstract_racer.html#AbstractRacer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.abstract_racer.AbstractRacer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class for all racing methods</p>
+<p>The “intensification” is designed to be spread across multiple <code class="docutils literal notranslate"><span class="pre">eval_challenger()</span></code> runs.
+This is to facilitate on-demand configuration sampling if multiple configurations are required,
+like Successive Halving or Hyperband.</p>
 <p><strong>Note: Do not use directly</strong></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tae_runner</strong> (<em>tae.executre_ta_run_*.ExecuteTARun* Object</em>) – target algorithm run executor</p></li>
 <li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – stats object</p></li>
-<li><p><strong>traj_logger</strong> (<a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger"><em>TrajLogger</em></a>) – TrajLogger object to log all new incumbents</p></li>
+<li><p><strong>traj_logger</strong> (<a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger"><em>smac.utils.io.traj_logging.TrajLogger</em></a>) – TrajLogger object to log all new incumbents</p></li>
 <li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – </p></li>
 <li><p><strong>instances</strong> (<em>typing.List</em><em>[</em><em>str</em><em>]</em>) – list of all instance ids</p></li>
 <li><p><strong>instance_specifics</strong> (<em>typing.Mapping</em><em>[</em><em>str</em><em>,</em><em>np.ndarray</em><em>]</em>) – mapping from instance name to instance specific string</p></li>
@@ -304,9 +308,53 @@ intensifiy).</p></li>
 </dd>
 </dl>
 <dl class="method">
-<dt id="smac.intensification.abstract_racer.AbstractRacer.intensify">
-<code class="sig-name descname">intensify</code><span class="sig-paren">(</span><em class="sig-param">challengers: List[ConfigSpace.configuration_space.Configuration], incumbent: ConfigSpace.configuration_space.Configuration, run_history: smac.runhistory.runhistory.RunHistory, aggregate_func: Callable, time_bound: float = 2147483647.0, log_traj: bool = True</em><span class="sig-paren">)</span> &#x2192; Tuple[ConfigSpace.configuration_space.Configuration, float]<a class="reference internal" href="../_modules/smac/intensification/abstract_racer.html#AbstractRacer.intensify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.abstract_racer.AbstractRacer.intensify" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="smac.intensification.abstract_racer.AbstractRacer.eval_challenger">
+<code class="sig-name descname">eval_challenger</code><span class="sig-paren">(</span><em class="sig-param">challenger: ConfigSpace.configuration_space.Configuration, incumbent: Optional[ConfigSpace.configuration_space.Configuration], run_history: smac.runhistory.runhistory.RunHistory, aggregate_func: Callable, time_bound: float = 2147483647.0, log_traj: bool = True</em><span class="sig-paren">)</span> &#x2192; Tuple[ConfigSpace.configuration_space.Configuration, float]<a class="reference internal" href="../_modules/smac/intensification/abstract_racer.html#AbstractRacer.eval_challenger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.abstract_racer.AbstractRacer.eval_challenger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs intensification by evaluating one configuration-instance at a time
+<em>Side effect:</em> adds runs to run_history</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>challenger</strong> (<em>Configuration</em>) – promising configuration</p></li>
+<li><p><strong>incumbent</strong> (<em>typing.Optional</em><em>[</em><em>Configuration</em><em>]</em>) – best configuration so far, None in 1st run</p></li>
+<li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – stores all runs we ran so far</p></li>
+<li><p><strong>aggregate_func</strong> (<em>typing.Callable</em>) – aggregate error across instances</p></li>
+<li><p><strong>time_bound</strong> (<em>float</em><em>, </em><em>optional</em><em> (</em><em>default=2 ** 31 - 1</em><em>)</em>) – time in [sec] available to perform intensify</p></li>
+<li><p><strong>log_traj</strong> (<em>bool</em>) – whether to log changes of incumbents in trajectory</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>incumbent and incumbent cost</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>typing.Tuple[Configuration, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.intensification.abstract_racer.AbstractRacer.get_next_challenger">
+<code class="sig-name descname">get_next_challenger</code><span class="sig-paren">(</span><em class="sig-param">challengers: Optional[List[ConfigSpace.configuration_space.Configuration]], chooser: Optional[smac.optimizer.epm_configuration_chooser.EPMChooser], run_history: smac.runhistory.runhistory.RunHistory, repeat_configs: bool = True</em><span class="sig-paren">)</span> &#x2192; Tuple[Optional[ConfigSpace.configuration_space.Configuration], bool]<a class="reference internal" href="../_modules/smac/intensification/abstract_racer.html#AbstractRacer.get_next_challenger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.abstract_racer.AbstractRacer.get_next_challenger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract method for choosing the next challenger, to allow for different selections across intensifiers
+uses <code class="docutils literal notranslate"><span class="pre">_next_challenger()</span></code> by default</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>challengers</strong> (<em>typing.List</em><em>[</em><em>Configuration</em><em>]</em>) – promising configurations</p></li>
+<li><p><strong>chooser</strong> (<a class="reference internal" href="smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser" title="smac.optimizer.epm_configuration_chooser.EPMChooser"><em>smac.optimizer.epm_configuration_chooser.EPMChooser</em></a>) – optimizer that generates next configurations to use for racing</p></li>
+<li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – stores all runs we ran so far</p></li>
+<li><p><strong>repeat_configs</strong> (<em>bool</em>) – if False, an evaluated configuration will not be generated again</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>typing.Optional[Configuration]</em> – next configuration to evaluate</p></li>
+<li><p><em>bool</em> – flag telling if the configuration is newly sampled or one currently being tracked</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

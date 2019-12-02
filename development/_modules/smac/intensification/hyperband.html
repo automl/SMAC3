@@ -154,6 +154,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
@@ -274,6 +275,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">smac.intensification.successive_halving</span> <span class="kn">import</span> <span class="n">SuccessiveHalving</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.epm_configuration_chooser</span> <span class="kn">import</span> <span class="n">EPMChooser</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
 <span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span>
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">Configuration</span>
@@ -298,9 +300,9 @@
 <span class="sd">    ----------</span>
 <span class="sd">    tae_runner : tae.executre_ta_run_*.ExecuteTARun* Object</span>
 <span class="sd">        target algorithm run executor</span>
-<span class="sd">    stats: Stats</span>
+<span class="sd">    stats: smac.stats.stats.Stats</span>
 <span class="sd">        stats object</span>
-<span class="sd">    traj_logger: TrajLogger</span>
+<span class="sd">    traj_logger: smac.utils.io.traj_logging.TrajLogger</span>
 <span class="sd">        TrajLogger object to log all new incumbents</span>
 <span class="sd">    rng : np.random.RandomState</span>
 <span class="sd">    instances : typing.List[str]</span>
@@ -330,7 +332,8 @@
 <span class="sd">        slack factor of adpative capping (factor * adpative cutoff)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tae_runner</span><span class="p">:</span> <span class="n">ExecuteTARun</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">tae_runner</span><span class="p">:</span> <span class="n">ExecuteTARun</span><span class="p">,</span>
                  <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">,</span>
                  <span class="n">traj_logger</span><span class="p">:</span> <span class="n">TrajLogger</span><span class="p">,</span>
                  <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span>
@@ -370,24 +373,15 @@
 
         <span class="c1"># to track completed hyperband iterations</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hb_iters</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sh_intensifier</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="c1"># hyperband configuration</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_init_hb_params</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">_init_hb_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        initialize Hyperband related parameters</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># setting initial running budget for future iterations (s &amp; s_max from Algorithm 1)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">s_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_budget</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_budget</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="p">))</span>
-
-<div class="viewcode-block" id="Hyperband.intensify"><a class="viewcode-back" href="../../../apidoc/smac.intensification.hyperband.html#smac.intensification.hyperband.Hyperband.intensify">[docs]</a>    <span class="k">def</span> <span class="nf">intensify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">challengers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
-                  <span class="n">incumbent</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
-                  <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
-                  <span class="n">aggregate_func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
-                  <span class="n">time_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">),</span>
-                  <span class="n">log_traj</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<div class="viewcode-block" id="Hyperband.eval_challenger"><a class="viewcode-back" href="../../../apidoc/smac.intensification.hyperband.html#smac.intensification.hyperband.Hyperband.eval_challenger">[docs]</a>    <span class="k">def</span> <span class="nf">eval_challenger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                        <span class="n">challenger</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+                        <span class="n">incumbent</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
+                        <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
+                        <span class="n">aggregate_func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
+                        <span class="n">time_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">),</span>
+                        <span class="n">log_traj</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Running intensification via hyperband to determine the incumbent configuration.</span>
 <span class="sd">        *Side effect:* adds runs to run_history</span>
@@ -396,11 +390,11 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        challengers : typing.List[Configuration]</span>
-<span class="sd">            promising configurations</span>
-<span class="sd">        incumbent : Configuration</span>
-<span class="sd">            best configuration so far</span>
-<span class="sd">        run_history : RunHistory</span>
+<span class="sd">        challenger : Configuration</span>
+<span class="sd">            promising configuration</span>
+<span class="sd">        incumbent : typing.Optional[Configuration]</span>
+<span class="sd">            best configuration so far, None in 1st run</span>
+<span class="sd">        run_history : smac.runhistory.runhistory.RunHistory</span>
 <span class="sd">            stores all runs we ran so far</span>
 <span class="sd">        aggregate_func: typing.Callable</span>
 <span class="sd">            aggregate error across instances</span>
@@ -416,52 +410,117 @@
 <span class="sd">        float</span>
 <span class="sd">            empirical performance of incumbent configuration</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># NOTE Since hyperband requires sampling for new configurations between its iterations,</span>
-        <span class="c1">#      the intensification is spread across multiple intensify calls</span>
-
-        <span class="c1"># compute min budget for new SH run</span>
-        <span class="n">sh_initial_budget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="o">**-</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span>
-        <span class="c1"># sample challengers for next iteration (based on HpBandster package)</span>
-        <span class="n">n_challengers</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">s_max</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Hyperband iteration-step: </span><span class="si">%d</span><span class="s1">-</span><span class="si">%d</span><span class="s1">  with initial budget: </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">hb_iters</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">s_max</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">sh_initial_budget</span><span class="p">))</span>
-
-        <span class="c1"># creating a new Successive Halving intensifier with the current running budget</span>
-        <span class="n">sh_intensifier</span> <span class="o">=</span> <span class="n">SuccessiveHalving</span><span class="p">(</span><span class="n">tae_runner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tae_runner</span><span class="p">,</span>
-                                           <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
-                                           <span class="n">traj_logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">traj_logger</span><span class="p">,</span>
-                                           <span class="n">rng</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rs</span><span class="p">,</span>
-                                           <span class="n">instances</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instances</span><span class="p">,</span>
-                                           <span class="n">instance_specifics</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance_specifics</span><span class="p">,</span>
-                                           <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span><span class="p">,</span>
-                                           <span class="n">deterministic</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">deterministic</span><span class="p">,</span>
-                                           <span class="n">initial_budget</span><span class="o">=</span><span class="n">sh_initial_budget</span><span class="p">,</span>
-                                           <span class="n">max_budget</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span><span class="p">,</span>
-                                           <span class="n">eta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="p">,</span>
-                                           <span class="n">num_initial_challengers</span><span class="o">=</span><span class="n">n_challengers</span><span class="p">,</span>
-                                           <span class="n">run_obj_time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">run_obj_time</span><span class="p">,</span>
-                                           <span class="n">n_seeds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_seeds</span><span class="p">,</span>
-                                           <span class="n">instance_order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance_order</span><span class="p">,</span>
-                                           <span class="n">adaptive_capping_slackfactor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">adaptive_capping_slackfactor</span><span class="p">,</span>
-                                           <span class="n">inst_seed_pairs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">inst_seed_pairs</span>  <span class="c1"># additional argument to avoid</span>
-                                           <span class="p">)</span>                                     <span class="c1"># processing instances &amp; seeds again</span>
-
         <span class="c1"># run 1 iteration of successive halving</span>
-        <span class="n">incumbent</span><span class="p">,</span> <span class="n">inc_perf</span> <span class="o">=</span> <span class="n">sh_intensifier</span><span class="o">.</span><span class="n">intensify</span><span class="p">(</span><span class="n">challengers</span><span class="o">=</span><span class="n">challengers</span><span class="p">,</span>
-                                                       <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
-                                                       <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
-                                                       <span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">,</span>
-                                                       <span class="n">time_bound</span><span class="o">=</span><span class="n">time_bound</span><span class="p">,</span> <span class="n">log_traj</span><span class="o">=</span><span class="n">log_traj</span><span class="p">)</span>
+        <span class="n">incumbent</span><span class="p">,</span> <span class="n">inc_perf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sh_intensifier</span><span class="o">.</span><span class="n">eval_challenger</span><span class="p">(</span><span class="n">challenger</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
+                                                                  <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
+                                                                  <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
+                                                                  <span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">,</span>
+                                                                  <span class="n">time_bound</span><span class="o">=</span><span class="n">time_bound</span><span class="p">,</span>
+                                                                  <span class="n">log_traj</span><span class="o">=</span><span class="n">log_traj</span><span class="p">)</span>
 
-        <span class="c1"># reset if hyperband iteration is over, else update for next iteration</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># reset if SH iteration is over, else update for next iteration</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sh_intensifier</span><span class="o">.</span><span class="n">iteration_done</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_stage</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">incumbent</span><span class="p">,</span> <span class="n">inc_perf</span></div>
+
+<div class="viewcode-block" id="Hyperband.get_next_challenger"><a class="viewcode-back" href="../../../apidoc/smac.intensification.hyperband.html#smac.intensification.hyperband.Hyperband.get_next_challenger">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_challenger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                            <span class="n">challengers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]],</span>
+                            <span class="n">chooser</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">EPMChooser</span><span class="p">],</span>
+                            <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
+                            <span class="n">repeat_configs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> \
+            <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Selects which challenger to use based on the iteration stage and set the iteration parameters.</span>
+<span class="sd">        First iteration will choose configurations from the ``chooser`` or input challengers,</span>
+<span class="sd">        while the later iterations pick top configurations from the previously selected challengers in that iteration</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        challengers : typing.List[Configuration]</span>
+<span class="sd">            promising configurations</span>
+<span class="sd">        chooser : smac.optimizer.epm_configuration_chooser.EPMChooser</span>
+<span class="sd">            optimizer that generates next configurations to use for racing</span>
+<span class="sd">        run_history : smac.runhistory.runhistory.RunHistory</span>
+<span class="sd">            stores all runs we ran so far</span>
+<span class="sd">        repeat_configs : bool</span>
+<span class="sd">            if False, an evaluated configuration will not be generated again</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        typing.Optional[Configuration]</span>
+<span class="sd">            next configuration to evaluate</span>
+<span class="sd">        bool</span>
+<span class="sd">            flag telling if the configuration is newly sampled or one currently being tracked</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">):</span>
+            <span class="c1"># initialize tracking variables</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_stage</span><span class="p">()</span>
+
+        <span class="c1"># sampling from next challenger marks the beginning of a new iteration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iteration_done</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">challenger</span><span class="p">,</span> <span class="n">new_challenger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sh_intensifier</span><span class="o">.</span><span class="n">get_next_challenger</span><span class="p">(</span>
+            <span class="n">challengers</span><span class="o">=</span><span class="n">challengers</span><span class="p">,</span>
+            <span class="n">chooser</span><span class="o">=</span><span class="n">chooser</span><span class="p">,</span>
+            <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
+            <span class="n">repeat_configs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sh_intensifier</span><span class="o">.</span><span class="n">repeat_configs</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">challenger</span><span class="p">,</span> <span class="n">new_challenger</span></div>
+
+    <span class="k">def</span> <span class="nf">_update_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update tracking information for a new stage/iteration and update statistics.</span>
+<span class="sd">        This method is called to initialize stage variables and after all configurations</span>
+<span class="sd">        of a successive halving stage are completed.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">         run_history : smac.runhistory.runhistory.RunHistory</span>
+<span class="sd">            stores all runs we ran so far</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">):</span>
+            <span class="c1"># setting initial running budget for future iterations (s &amp; s_max from Algorithm 1)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">s_max</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_budget</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s_max</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># reset if HB iteration is over</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s_max</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">hb_iters</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">iteration_done</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># update for next iteration</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">-=</span> <span class="mi">1</span>
 
-        <span class="k">return</span> <span class="n">incumbent</span><span class="p">,</span> <span class="n">inc_perf</span></div></div>
+        <span class="c1"># compute min budget for new SH run</span>
+        <span class="n">sh_initial_budget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">**</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span>
+        <span class="c1"># sample challengers for next iteration (based on HpBandster package)</span>
+        <span class="n">n_challengers</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">s_max</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Hyperband iteration-step: </span><span class="si">%d</span><span class="s1">-</span><span class="si">%d</span><span class="s1">  with initial budget: </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hb_iters</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">s_max</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sh_initial_budget</span><span class="p">))</span>
+
+        <span class="c1"># creating a new Successive Halving intensifier with the current running budget</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sh_intensifier</span> <span class="o">=</span> <span class="n">SuccessiveHalving</span><span class="p">(</span>
+            <span class="n">tae_runner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tae_runner</span><span class="p">,</span>
+            <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+            <span class="n">traj_logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">traj_logger</span><span class="p">,</span>
+            <span class="n">rng</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rs</span><span class="p">,</span>
+            <span class="n">instances</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instances</span><span class="p">,</span>
+            <span class="n">instance_specifics</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance_specifics</span><span class="p">,</span>
+            <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span><span class="p">,</span>
+            <span class="n">deterministic</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">deterministic</span><span class="p">,</span>
+            <span class="n">initial_budget</span><span class="o">=</span><span class="n">sh_initial_budget</span><span class="p">,</span>
+            <span class="n">max_budget</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span><span class="p">,</span>
+            <span class="n">eta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="p">,</span>
+            <span class="n">num_initial_challengers</span><span class="o">=</span><span class="n">n_challengers</span><span class="p">,</span>
+            <span class="n">run_obj_time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">run_obj_time</span><span class="p">,</span>
+            <span class="n">n_seeds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_seeds</span><span class="p">,</span>
+            <span class="n">instance_order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance_order</span><span class="p">,</span>
+            <span class="n">adaptive_capping_slackfactor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">adaptive_capping_slackfactor</span><span class="p">,</span>
+            <span class="n">inst_seed_pairs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">inst_seed_pairs</span>  <span class="c1"># additional argument to avoid</span>
+        <span class="p">)</span>  <span class="c1"># processing instances &amp; seeds again</span></div>
 </pre></div>
 
            </div>

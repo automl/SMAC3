@@ -154,6 +154,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
@@ -270,11 +271,13 @@
   <h1>Source code for smac.intensification.abstract_racer</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="kn">import</span> <span class="n">sum_cost</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.epm_configuration_chooser</span> <span class="kn">import</span> <span class="n">EPMChooser</span>
 
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
 <span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span>
@@ -282,6 +285,7 @@
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="kn">import</span> <span class="n">ExecuteTARun</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="kn">import</span> <span class="n">TrajLogger</span>
+
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Ashwin Raaghav Narayanan&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2019, ML4AAD&quot;</span>
@@ -292,6 +296,10 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for all racing methods</span>
 
+<span class="sd">    The &quot;intensification&quot; is designed to be spread across multiple ``eval_challenger()`` runs.</span>
+<span class="sd">    This is to facilitate on-demand configuration sampling if multiple configurations are required,</span>
+<span class="sd">    like Successive Halving or Hyperband.</span>
+
 <span class="sd">    **Note: Do not use directly**</span>
 
 <span class="sd">    Parameters</span>
@@ -300,7 +308,7 @@
 <span class="sd">        target algorithm run executor</span>
 <span class="sd">    stats: Stats</span>
 <span class="sd">        stats object</span>
-<span class="sd">    traj_logger: TrajLogger</span>
+<span class="sd">    traj_logger: smac.utils.io.traj_logging.TrajLogger</span>
 <span class="sd">        TrajLogger object to log all new incumbents</span>
 <span class="sd">    rng : np.random.RandomState</span>
 <span class="sd">    instances : typing.List[str]</span>
@@ -323,7 +331,8 @@
 <span class="sd">        slack factor of adpative capping (factor * adpative cutoff)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tae_runner</span><span class="p">:</span> <span class="n">ExecuteTARun</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">tae_runner</span><span class="p">:</span> <span class="n">ExecuteTARun</span><span class="p">,</span>
                  <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">,</span>
                  <span class="n">traj_logger</span><span class="p">:</span> <span class="n">TrajLogger</span><span class="p">,</span>
                  <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span>
@@ -365,16 +374,141 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">instance_specifics</span> <span class="o">=</span> <span class="n">instance_specifics</span>
 
-<div class="viewcode-block" id="AbstractRacer.intensify"><a class="viewcode-back" href="../../../apidoc/smac.intensification.abstract_racer.html#smac.intensification.abstract_racer.AbstractRacer.intensify">[docs]</a>    <span class="k">def</span> <span class="nf">intensify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">challengers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
-                  <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
-                  <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
-                  <span class="n">aggregate_func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
-                  <span class="n">time_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">),</span>
-                  <span class="n">log_traj</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="c1"># general attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_min_time</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="o">-</span><span class="mi">5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_num_run</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ta_time</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># attributes for sampling next configuration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">repeat_configs</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># to mark the end of an iteration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iteration_done</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="AbstractRacer.eval_challenger"><a class="viewcode-back" href="../../../apidoc/smac.intensification.abstract_racer.html#smac.intensification.abstract_racer.AbstractRacer.eval_challenger">[docs]</a>    <span class="k">def</span> <span class="nf">eval_challenger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                        <span class="n">challenger</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+                        <span class="n">incumbent</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
+                        <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
+                        <span class="n">aggregate_func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
+                        <span class="n">time_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">),</span>
+                        <span class="n">log_traj</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs intensification by evaluating one configuration-instance at a time</span>
+<span class="sd">        *Side effect:* adds runs to run_history</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        challenger : Configuration</span>
+<span class="sd">            promising configuration</span>
+<span class="sd">        incumbent : typing.Optional[Configuration]</span>
+<span class="sd">            best configuration so far, None in 1st run</span>
+<span class="sd">        run_history : smac.runhistory.runhistory.RunHistory</span>
+<span class="sd">            stores all runs we ran so far</span>
+<span class="sd">        aggregate_func: typing.Callable</span>
+<span class="sd">            aggregate error across instances</span>
+<span class="sd">        time_bound : float, optional (default=2 ** 31 - 1)</span>
+<span class="sd">            time in [sec] available to perform intensify</span>
+<span class="sd">        log_traj : bool</span>
+<span class="sd">            whether to log changes of incumbents in trajectory</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        typing.Tuple[Configuration, float]</span>
+<span class="sd">            incumbent and incumbent cost</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">_adapt_cutoff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">challenger</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
-                      <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+<div class="viewcode-block" id="AbstractRacer.get_next_challenger"><a class="viewcode-back" href="../../../apidoc/smac.intensification.abstract_racer.html#smac.intensification.abstract_racer.AbstractRacer.get_next_challenger">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_challenger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                            <span class="n">challengers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]],</span>
+                            <span class="n">chooser</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">EPMChooser</span><span class="p">],</span>
+                            <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
+                            <span class="n">repeat_configs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> \
+            <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Abstract method for choosing the next challenger, to allow for different selections across intensifiers</span>
+<span class="sd">        uses ``_next_challenger()`` by default</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        challengers : typing.List[Configuration]</span>
+<span class="sd">            promising configurations</span>
+<span class="sd">        chooser : smac.optimizer.epm_configuration_chooser.EPMChooser</span>
+<span class="sd">            optimizer that generates next configurations to use for racing</span>
+<span class="sd">        run_history : smac.runhistory.runhistory.RunHistory</span>
+<span class="sd">            stores all runs we ran so far</span>
+<span class="sd">        repeat_configs : bool</span>
+<span class="sd">            if False, an evaluated configuration will not be generated again</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        typing.Optional[Configuration]</span>
+<span class="sd">            next configuration to evaluate</span>
+<span class="sd">        bool</span>
+<span class="sd">            flag telling if the configuration is newly sampled or one currently being tracked</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">challenger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_challenger</span><span class="p">(</span><span class="n">challengers</span><span class="o">=</span><span class="n">challengers</span><span class="p">,</span>
+                                           <span class="n">chooser</span><span class="o">=</span><span class="n">chooser</span><span class="p">,</span>
+                                           <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
+                                           <span class="n">repeat_configs</span><span class="o">=</span><span class="n">repeat_configs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">challenger</span><span class="p">,</span> <span class="kc">True</span></div>
+
+    <span class="k">def</span> <span class="nf">_next_challenger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                         <span class="n">challengers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]],</span>
+                         <span class="n">chooser</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">EPMChooser</span><span class="p">],</span>
+                         <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
+                         <span class="n">repeat_configs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot; Retuns the next challenger to use in intensification</span>
+<span class="sd">        If challenger is None, then optimizer will be used to generate the next challenger</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        challengers : typing.List[Configuration]</span>
+<span class="sd">            promising configurations to evaluate next</span>
+<span class="sd">        chooser : smac.optimizer.epm_configuration_chooser.EPMChooser</span>
+<span class="sd">            a sampler that generates next configurations to use for racing</span>
+<span class="sd">        run_history : smac.runhistory.runhistory.RunHistory</span>
+<span class="sd">            stores all runs we ran so far</span>
+<span class="sd">        repeat_configs : bool</span>
+<span class="sd">            if False, an evaluated configuration will not be generated again</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Configuration</span>
+<span class="sd">            next challenger to use</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+        <span class="n">used_configs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">run_history</span><span class="o">.</span><span class="n">get_all_configs</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="n">challengers</span><span class="p">:</span>
+            <span class="c1"># iterate over challengers provided</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Using challengers provided&quot;</span><span class="p">)</span>
+            <span class="n">chall_gen</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">challengers</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">chooser</span><span class="p">:</span>
+            <span class="c1"># generating challengers on-the-fly if optimizer is given</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Generating new challenger from optimizer&quot;</span><span class="p">)</span>
+            <span class="n">chall_gen</span> <span class="o">=</span> <span class="n">chooser</span><span class="o">.</span><span class="n">choose_next</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No configurations/chooser provided. Cannot generate challenger!&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Time to select next challenger: </span><span class="si">%.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
+
+        <span class="c1"># select challenger from the generators</span>
+        <span class="k">for</span> <span class="n">challenger</span> <span class="ow">in</span> <span class="n">chall_gen</span><span class="p">:</span>
+            <span class="c1"># repetitions allowed</span>
+            <span class="k">if</span> <span class="n">repeat_configs</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">challenger</span>
+
+            <span class="c1"># otherwise, select only a unique challenger</span>
+            <span class="k">if</span> <span class="n">challenger</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">used_configs</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">challenger</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;No valid challenger was generated!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_adapt_cutoff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                      <span class="n">challenger</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
                       <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
                       <span class="n">inc_sum_cost</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Adaptive capping:</span>
@@ -390,9 +524,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        challenger : Configuration</span>
 <span class="sd">            Configuration which challenges incumbent</span>
-<span class="sd">        incumbent : Configuration</span>
-<span class="sd">            Best configuration so far</span>
-<span class="sd">        run_history : RunHistory</span>
+<span class="sd">        run_history : smac.runhistory.runhistory.RunHistory</span>
 <span class="sd">            Stores all runs we ran so far</span>
 <span class="sd">        inc_sum_cost: float</span>
 <span class="sd">            Sum of runtimes of all incumbent runs</span>
@@ -421,7 +553,8 @@
                      <span class="p">)</span>
         <span class="k">return</span> <span class="n">cutoff</span>
 
-    <span class="k">def</span> <span class="nf">_compare_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">_compare_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                         <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
                          <span class="n">challenger</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
                          <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
                          <span class="n">aggregate_func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
@@ -444,7 +577,7 @@
 <span class="sd">            Current incumbent</span>
 <span class="sd">        challenger: Configuration</span>
 <span class="sd">            Challenger configuration</span>
-<span class="sd">        run_history: RunHistory</span>
+<span class="sd">        run_history: smac.runhistory.runhistory.RunHistory</span>
 <span class="sd">            Stores all runs we ran so far</span>
 <span class="sd">        aggregate_func: typing.Callable</span>
 <span class="sd">            Aggregate performance across instances</span>
@@ -494,7 +627,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Changes in incumbent:&quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">param</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">param</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;  </span><span class="si">%s</span><span class="s2"> : </span><span class="si">%r</span><span class="s2"> -&gt; </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">param</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;  </span><span class="si">%s</span><span class="s2"> : </span><span class="si">%r</span><span class="s2"> -&gt; </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">param</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;  </span><span class="si">%s</span><span class="s2"> remains unchanged: </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span>
                                       <span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">param</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
