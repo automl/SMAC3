@@ -3,7 +3,7 @@ import unittest
 from unittest import mock
 
 import numpy as np
-from nose.plugins.attrib import attr
+import pytest.mark
 
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
 from smac.epm.rf_with_instances import RandomForestWithInstances
@@ -98,7 +98,7 @@ class TestSMBO(unittest.TestCase):
             smbo.start()
             smbo.run()
 
-    @attr('slow')
+    @pytest.mark.slow
     def test_intensification_percentage(self):
         def target(x):
             return 5

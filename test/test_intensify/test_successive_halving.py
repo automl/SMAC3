@@ -1,5 +1,4 @@
 import unittest
-from nose.plugins.attrib import attr
 
 import logging
 import numpy as np
@@ -249,7 +248,6 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(intensifier.sh_iters, 1)
         self.assertEqual(intensifier.configs_to_run, None)
 
-    @attr('slow')
     def test_eval_challenger_1(self):
         """
            test eval_challenger with quality objective & real-valued budget
@@ -289,7 +287,6 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(list(self.rh.data.keys())[-1][0], self.rh.config_ids[self.config2])
         self.assertEqual(self.stats.inc_changed, 1)
 
-    @attr('slow')
     def test_eval_challenger_2(self):
         """
            test eval_challenger with runtime objective and adaptive capping

@@ -1,5 +1,4 @@
 import unittest
-from nose.plugins.attrib import attr
 
 import logging
 import numpy as np
@@ -86,7 +85,6 @@ class TestHyperband(unittest.TestCase):
         self.assertEqual(intensifier.sh_intensifier.initial_budget, 0.125)
         self.assertEqual(intensifier.sh_intensifier.n_configs_in_stage, [8.0, 4.0, 2.0, 1.0])
 
-    @attr('slow')
     def test_eval_challenger(self):
         """
             since hyperband uses eval_challenger and get_next_challenger of the internal successive halving,
