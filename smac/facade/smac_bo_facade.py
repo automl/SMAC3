@@ -53,20 +53,15 @@ class SMAC4BO(SMAC4AC):
         see ~smac.facade.smac_facade for documentation
         """
 
-        # The logger is only initialized on the call to super AFTER constructing all objects. In order to still log
-        # messages, we keep them in an array and fire them off later
-        log_messages = []
-
         scenario = kwargs['scenario']
 
         if len(scenario.cs.get_hyperparameters()) <= 40:
             kwargs['initial_design'] = kwargs.get('initial_design', SobolDesign)
         else:
-            kwargs['initial_design'] = kwargs.get('initial_design', LHDesign)
-            log_messages.append((
-                30,
-                'The Sobol initial design can only handle up to 40 dimensions. Changing to a Latin Hypercube design',
-            ))
+            raise ValueError(
+                'The default initial design "Sobol sequence" can only handle up to 40 dimensions. '
+                'Please use a different initial design, such as "the Latin Hypercube design".',
+            )
         kwargs['runhistory2epm'] = kwargs.get('runhistory2epm', RunHistory2EPM4Cost)
 
         init_kwargs = kwargs.get('initial_design_kwargs', dict()) or dict()
@@ -173,8 +168,6 @@ class SMAC4BO(SMAC4AC):
         scenario.intensification_percentage = 1e-10
 
         super().__init__(**kwargs)
-        for level, message in log_messages:
-            self.logger.log(level, message)
 
         if self.solver.scenario.n_features > 0:
             raise NotImplementedError("BOGP cannot handle instances")

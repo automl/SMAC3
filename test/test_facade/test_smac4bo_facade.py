@@ -21,5 +21,10 @@ class TestSMACFacade(unittest.TestCase):
         facade = SMAC4BO(scenario=scenario)
         self.assertIsInstance(facade.solver.initial_design, SobolDesign)
         cs.add_hyperparameter(UniformFloatHyperparameter('x41', 0, 1))
-        facade = SMAC4BO(scenario=scenario)
-        self.assertIsInstance(facade.solver.initial_design, LHDesign)
+
+        with self.assertRaisesRegex(
+            ValueError,
+            'Sobol sequence" can only handle up to 40 dimensions. Please use a different initial design, such as '
+            '"the Latin Hypercube design"',
+        ):
+            SMAC4BO(scenario=scenario)
