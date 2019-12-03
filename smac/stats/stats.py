@@ -151,8 +151,8 @@ class Stats(object):
         exhaustedness: boolean
             true if one of the budgets is exhausted
         """
-        return (self.get_remaing_time_budget() < 0 or self.get_remaining_ta_budget()
-                ) < 0 or self.get_remaining_ta_runs() <= 0
+        return (self.get_remaing_time_budget() < 0 or self.get_remaining_ta_budget() < 0
+                ) or self.get_remaining_ta_runs() <= 0
 
     def update_average_configs_per_intensify(self, n_configs: int):
         """Updates statistics how many configurations on average per used in
