@@ -484,7 +484,7 @@ class SoftTopHatPrior(Prior):
             if theta < self._log_lower_bound:
                 return - self.exponent * (theta - self._log_lower_bound)
             elif theta > self._log_upper_bound:
-                return self.exponent * ( self._log_upper_bound - theta)
+                return self.exponent * (self._log_upper_bound - theta)
             else:
                 return 0
         else:

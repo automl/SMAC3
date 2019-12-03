@@ -5,9 +5,9 @@ import time
 import typing
 
 import smac
-from smac.configspace import ConfigurationSpace, Configuration, Constant,\
-     CategoricalHyperparameter, UniformFloatHyperparameter, \
-     UniformIntegerHyperparameter, InCondition
+from smac.configspace import ConfigurationSpace, Configuration, Constant, \
+    CategoricalHyperparameter, UniformFloatHyperparameter, \
+    UniformIntegerHyperparameter, InCondition
 from smac.epm.base_epm import AbstractEPM
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
@@ -16,7 +16,7 @@ from smac.epm.util_funcs import get_types
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer
 from smac.optimizer import pSMAC
-from smac.optimizer.acquisition import AbstractAcquisitionFunction, EI, LogEI,\
+from smac.optimizer.acquisition import AbstractAcquisitionFunction, EI, LogEI, \
     LCB, PI
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
     ChooserLinearCoolDown
@@ -30,14 +30,12 @@ from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
 from smac.utils.constants import MAXINT
 
-
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"
 
 
 class SMBO(object):
-
     """Interface that contains the main Bayesian optimization loop
 
     Attributes
@@ -72,7 +70,7 @@ class SMBO(object):
                  rng: np.random.RandomState,
                  restore_incumbent: Configuration = None,
                  random_configuration_chooser: typing.Union[
-                     ChooserNoCoolDown, ChooserLinearCoolDown]=ChooserNoCoolDown(2.0),
+                     ChooserNoCoolDown, ChooserLinearCoolDown] = ChooserNoCoolDown(2.0),
                  predict_incumbent: bool = True):
         """
         Interface that contains the main Bayesian optimization loop
@@ -427,7 +425,7 @@ class SMBO(object):
                      par=conf.get("par_ei", 0))
         elif conf["acq_func"] == "LCB":
             acq = LCB(model=model,
-                par=conf.get("par_lcb", 0))
+                      par=conf.get("par_lcb", 0))
         elif conf["acq_func"] == "PI":
             acq = PI(model=model,
                      par=conf.get("par_pi", 0))
@@ -449,7 +447,7 @@ class SMBO(object):
         """
 
         cs = ConfigurationSpace()
-        cs.seed(self.rng.randint(0,2**20))
+        cs.seed(self.rng.randint(0, 2 ** 20))
 
         if 'gp' in smac.extras_installed:
             model = CategoricalHyperparameter("model", choices=("RF", "GP"))
@@ -472,7 +470,7 @@ class SMBO(object):
 
         cs.add_conditions([inc_num_trees, inc_bootstrap, inc_ratio_features, inc_min_split, inc_min_leavs])
 
-        acq  = CategoricalHyperparameter("acq_func", choices=("EI", "LCB", "PI", "LogEI"))
+        acq = CategoricalHyperparameter("acq_func", choices=("EI", "LCB", "PI", "LogEI"))
         par_ei = UniformFloatHyperparameter("par_ei", lower=-10, upper=10)
         par_pi = UniformFloatHyperparameter("par_pi", lower=-10, upper=10)
         par_logei = UniformFloatHyperparameter("par_logei", lower=0.001, upper=100, log=True)

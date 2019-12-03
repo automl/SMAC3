@@ -2,8 +2,6 @@ import unittest
 
 import numpy as np
 import scipy.optimize
-import scipy.stats as scst
-import scipy.integrate as scin
 
 from smac.epm.gp_base_prior import TophatPrior, HorseshoePrior, LognormalPrior, GammaPrior, SoftTopHatPrior
 from smac.utils.constants import VERY_SMALL_NUMBER

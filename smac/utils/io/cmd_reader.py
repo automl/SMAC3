@@ -36,7 +36,7 @@ def truthy(x):
 class CheckScenarioFileAction(Action):
     """Check scenario file given by user"""
 
-    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
+    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str = None):
         fn = values
         if fn:
             if not os.path.isfile(fn):
@@ -61,7 +61,7 @@ class ParseRandomConfigurationChooserAction(Action):
 class ProcessRunObjectiveAction(Action):
     """Process run objective given by user"""
 
-    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
+    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str = None):
         if values == "runtime":
             parsed_scen_args["cutoff_time_required"] = {
                 "error": "--cutoff-time is required when --run-objective is set to \"runtime\""
@@ -72,7 +72,7 @@ class ProcessRunObjectiveAction(Action):
 class ParseOverallObjectiveAction(Action):
     """Parse overall objective given by user"""
 
-    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
+    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str = None):
         par_str = values
         if par_str[:3] in ["PAR", "par"]:
             par_str = par_str[3:]
@@ -90,7 +90,7 @@ class ParseOverallObjectiveAction(Action):
 class ReadTrainInstFileAction(Action):
     """Read training instance file given by user"""
 
-    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
+    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str = None):
         fn = values
         if fn:
             if os.path.isfile(fn):
@@ -103,7 +103,7 @@ class ReadTrainInstFileAction(Action):
 class ReadTestInstFileAction(Action):
     """Read test instance file given by user"""
 
-    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
+    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str = None):
         fn = values
         if fn:
             if os.path.isfile(fn):
@@ -116,7 +116,7 @@ class ReadTestInstFileAction(Action):
 class ReadFeatureFileAction(Action):
     """Read feature file given by user"""
 
-    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
+    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str = None):
         fn = values
         if fn:
             if os.path.isfile(fn):
@@ -130,7 +130,7 @@ class ReadFeatureFileAction(Action):
 class ReadPCSFileAction(Action):
     """Read PCS (parameter configuration space) file given by user"""
 
-    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
+    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str = None):
         fn = values
         if fn:
             if os.path.isfile(fn):
@@ -144,7 +144,7 @@ class ReadPCSFileAction(Action):
 class ProcessOutputDirAction(Action):
     """Process output directory given by user"""
 
-    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
+    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str = None):
         directory = values
         if not directory:
             logger.debug("Deactivate output directory.")
@@ -229,6 +229,7 @@ class SMACArgumentParser(ArgumentParser):
                 formatter.add_text(action_group.description)
                 formatter.add_arguments(action_group._group_actions)
                 formatter.end_section()
+
         add_action_groups(self)
 
         # positionals, optionals and user-defined groups from additional parsers
@@ -248,7 +249,7 @@ class StandardHelpAction(Action):
     def __init__(self, *args, **kwargs):
         super(StandardHelpAction, self).__init__(default=SUPPRESS, nargs=0, *args, **kwargs)
 
-    def __call__(self, parser: SMACArgumentParser, namespace: Namespace, values: list, option_string: str=None):
+    def __call__(self, parser: SMACArgumentParser, namespace: Namespace, values: list, option_string: str = None):
         parser.set_help_type('standard')
         parser.print_help()
         parser.exit()
@@ -260,7 +261,7 @@ class DevHelpAction(Action):
     def __init__(self, *args, **kwargs):
         super(DevHelpAction, self).__init__(default=SUPPRESS, nargs=0, *args, **kwargs)
 
-    def __call__(self, parser: SMACArgumentParser, namespace: Namespace, values: list, option_string: str=None):
+    def __call__(self, parser: SMACArgumentParser, namespace: Namespace, values: list, option_string: str = None):
         parser.set_help_type('dev')
         parser.print_help()
         parser.exit()
@@ -468,7 +469,7 @@ class CMDReader(object):
         smac_opts.add_argument("--use-ta-time", "--use_ta_time", dest="use_ta_time",
                                default=False, type=truthy,
                                help="[dev] Instead of measuring SMAC's wallclock time, "
-                               "only consider time reported by the target algorithm (ta).")
+                                    "only consider time reported by the target algorithm (ta).")
 
         # Hyperparameters
         smac_opts.add_argument("--always-race-default", "--always_race_default", dest='always_race_default',
@@ -484,74 +485,78 @@ class CMDReader(object):
         smac_opts.add_argument("--transform_y", "--transform-y",
                                dest='transform_y',
                                choices=["NONE", "LOG", "LOGS", "INVS"],
-                               default="NONE",                      
+                               default="NONE",
                                help="[dev] Transform all observed cost values"
-                               " via log-transformations or inverse scaling."
-                               " The subfix \"s\" indicates that SMAC scales the"
-                               " y-values accordingly to apply the transformation.")
+                                    " via log-transformations or inverse scaling."
+                                    " The subfix \"s\" indicates that SMAC scales the"
+                                    " y-values accordingly to apply the transformation.")
 
-        ## RF Hyperparameters
-        smac_opts.add_argument("--rf_num_trees","--rf-num-trees",
+        # RF Hyperparameters
+        smac_opts.add_argument("--rf_num_trees",
+                               "--rf-num-trees",
                                dest='rf_num_trees',
                                default=N_TREES, type=int,
                                help="[dev] Number of trees in the random forest (> 1).")
-        smac_opts.add_argument("--rf_do_bootstrapping","--rf-do-bootstrapping",
-                       dest='rf_do_bootstrapping',
-                       default=True, type=bool,
-                       help="[dev] Use bootstraping in random forest.")
-        smac_opts.add_argument("--rf_ratio_features","--rf-ratio-features",
-                       dest='rf_ratio_features',
-                       default=5. / 6., type=float,
-                       help="[dev] Ratio of sampled features in each split ([0.,1.]).")
-        smac_opts.add_argument("--rf_min_samples_split","--rf-min-samples-split",
-                       dest='rf_min_samples_split',
-                       default=3, type=int,
-                       help="[dev] Minimum number of samples to split for building a tree in the random forest.")
-        smac_opts.add_argument("--rf_min_samples_leaf","--rf-min-samples-leaf",
-                       dest='rf_min_samples_leaf',
-                       default=3, type=int,
-                       help="[dev] Minimum required number of samples in each leaf of a tree in the random forest.")
-        smac_opts.add_argument("--rf_max_depth","--rf-max-depth",
-                       dest='rf_max_depth',
-                       default=20, type=int,
-                       help="[dev] Maximum depth of each tree in the random forest.")
-        ## AcquisitionOptimizer SLS
-        smac_opts.add_argument("--sls_n_steps_plateau_walk","--sls-n-steps-plateau-walk",
-               dest='sls_n_steps_plateau_walk',
-               default=10, type=int,
-               help="[dev] Maximum number of steps on plateaus during "
-                    "the optimization of the acquisition function.")
-        smac_opts.add_argument("--sls_max_steps","--sls-max-steps",
-               dest='sls_max_steps',
-               default=None, type=int,
-               help="[dev] Maximum number of local search steps in one iteration"
-                    " during the optimization of the acquisition function.")
-        smac_opts.add_argument("--acq_opt_challengers","--acq-opt-challengers",
-               dest='acq_opt_challengers',
-               default=5000, type=int,
-               help="[dev] Number of challengers returned by acquisition function" 
-                    " optimization. Also influences the number of randomly sampled"
-                    " configurations to optimized the acquisition function")
-    
-        ## Intensification
-        smac_opts.add_argument("--intens_adaptive_capping_slackfactor","--intens-adaptive-capping-slackfactork",
-               dest='intens_adaptive_capping_slackfactor',
-               default=1.2, type=float,
-               help="[dev] Slack factor of adpative capping (factor * adpative cutoff)."
-                    " Only active if obj is runtime."
-                    " If set to very large number it practically deactivates adaptive capping.")
-        smac_opts.add_argument("--intens_min_chall","--intens-min-chall",
-               dest='intens_min_chall',
-               default=2, type=int,
-               help="[dev] Minimal number of challengers to be considered in each intensification run (> 1)."
-                    " Set to 1 and in combination with very small intensification-percentage."
-                    " it will deactivate randomly sampled configurations"
-                    " (and hence, extrapolation of random forest will be an issue.)")
-        smac_opts.add_argument("--rand_prob","--rand-prob",
-               dest='rand_prob',
-               default=0.5, type=float,
-               help="[dev] probablity to run a random configuration"
-               " instead of configuration optimized on the acquisition function")
+        smac_opts.add_argument("--rf_do_bootstrapping", "--rf-do-bootstrapping",
+                               dest='rf_do_bootstrapping',
+                               default=True, type=bool,
+                               help="[dev] Use bootstraping in random forest.")
+        smac_opts.add_argument("--rf_ratio_features", "--rf-ratio-features",
+                               dest='rf_ratio_features',
+                               default=5. / 6., type=float,
+                               help="[dev] Ratio of sampled features in each split ([0.,1.]).")
+        smac_opts.add_argument("--rf_min_samples_split", "--rf-min-samples-split",
+                               dest='rf_min_samples_split',
+                               default=3, type=int,
+                               help="[dev] Minimum number of samples"
+                                    " to split for building a tree in the random forest.")
+        smac_opts.add_argument("--rf_min_samples_leaf", "--rf-min-samples-leaf",
+                               dest='rf_min_samples_leaf',
+                               default=3, type=int,
+                               help="[dev] Minimum required number of"
+                                    " samples in each leaf of a tree in the random forest.")
+        smac_opts.add_argument("--rf_max_depth", "--rf-max-depth",
+                               dest='rf_max_depth',
+                               default=20, type=int,
+                               help="[dev] Maximum depth of each tree in the random forest.")
+        # AcquisitionOptimizer SLS
+        smac_opts.add_argument("--sls_n_steps_plateau_walk", "--sls-n-steps-plateau-walk",
+                               dest='sls_n_steps_plateau_walk',
+                               default=10, type=int,
+                               help="[dev] Maximum number of steps on plateaus during "
+                                    "the optimization of the acquisition function.")
+        smac_opts.add_argument("--sls_max_steps", "--sls-max-steps",
+                               dest='sls_max_steps',
+                               default=None, type=int,
+                               help="[dev] Maximum number of local search steps in one iteration"
+                                    " during the optimization of the acquisition function.")
+        smac_opts.add_argument("--acq_opt_challengers", "--acq-opt-challengers",
+                               dest='acq_opt_challengers',
+                               default=5000, type=int,
+                               help="[dev] Number of challengers returned by acquisition function"
+                                    " optimization. Also influences the number of randomly sampled"
+                                    " configurations to optimized the acquisition function")
+
+        # Intensification
+        smac_opts.add_argument("--intens_adaptive_capping_slackfactor", "--intens-adaptive-capping-slackfactork",
+                               dest='intens_adaptive_capping_slackfactor',
+                               default=1.2, type=float,
+                               help="[dev] Slack factor of adpative capping (factor * adpative cutoff)."
+                                    " Only active if obj is runtime."
+                                    " If set to very large number it practically deactivates adaptive capping.")
+        smac_opts.add_argument("--intens_min_chall", "--intens-min-chall",
+                               dest='intens_min_chall',
+                               default=2, type=int,
+                               help="[dev] Minimal number of challengers to be"
+                                    " considered in each intensification run (> 1)."
+                                    " Set to 1 and in combination with very small intensification-percentage."
+                                    " it will deactivate randomly sampled configurations"
+                                    " (and hence, extrapolation of random forest will be an issue.)")
+        smac_opts.add_argument("--rand_prob", "--rand-prob",
+                               dest='rand_prob',
+                               default=0.5, type=float,
+                               help="[dev] probablity to run a random configuration"
+                                    " instead of configuration optimized on the acquisition function")
         self.parser.add_parser(self.smac_parser)
         self.smac_cmd_actions, self.smac_cmd_translations = CMDReader._extract_action_info(self.smac_parser._actions)
 
@@ -569,8 +574,8 @@ class CMDReader(object):
         scen_opts.add_argument("--deterministic", dest="deterministic",
                                default=False, type=truthy,
                                help="[dev] If true, SMAC assumes that the target function or algorithm is deterministic"
-                               " (the same static seed of 0 is always passed to the function/algorithm)."
-                               " If false, different random seeds are passed to the target function/algorithm.")
+                                    " (the same static seed of 0 is always passed to the function/algorithm)."
+                                    " If false, different random seeds are passed to the target function/algorithm.")
         scen_opts.add_argument("--run-obj", "--run_obj", dest="run_obj",
                                type=str, action=ProcessRunObjectiveAction,
                                required=True, choices=['runtime', 'quality'],
@@ -599,7 +604,8 @@ class CMDReader(object):
                                type=float,
                                help="[dev] Maximum available memory the target algorithm "
                                     "can occupy before being cancelled in MB.")
-        scen_opts.add_argument("--tuner-timeout", "--tuner_timeout", "--algo-runs-timelimit", "--algo_runs_timelimit", dest="algo_runs_timelimit",
+        scen_opts.add_argument("--tuner-timeout", "--tuner_timeout", "--algo-runs-timelimit", "--algo_runs_timelimit",
+                               dest="algo_runs_timelimit",
                                default=float('inf'), type=float,
                                help="[dev] Maximum amount of CPU-time used for optimization.")
         scen_opts.add_argument("--wallclock-limit", "--wallclock_limit", dest="wallclock_limit",
@@ -608,19 +614,23 @@ class CMDReader(object):
         scen_opts.add_argument("--always-race-default", "--always_race_default", dest="always_race_default",
                                default=False, type=truthy,
                                help="[dev] Race new incumbents always against default configuration.")
-        scen_opts.add_argument("--runcount-limit", "--runcount_limit", "--ta-run-limit", "--ta_run_limit", dest="ta_run_limit",
+        scen_opts.add_argument("--runcount-limit", "--runcount_limit", "--ta-run-limit", "--ta_run_limit",
+                               dest="ta_run_limit",
                                default=float('inf'), type=float,
                                help="[dev] Maximum number of algorithm-calls during optimization.")
-        scen_opts.add_argument("--instance-file", "--instance_file", "--train-inst-fn", "--train_inst_fn", dest='train_inst_fn',
+        scen_opts.add_argument("--instance-file", "--instance_file", "--train-inst-fn", "--train_inst_fn",
+                               dest='train_inst_fn',
                                type=str, action=ReadTrainInstFileAction,
                                help="[dev] Specifies the file with the training-instances.")
         scen_opts.add_argument("--instances", "--train-insts", "--train_insts", dest="train_insts",
                                default=[[None]],  # overridden by --instance-file
                                help=SUPPRESS)
-        scen_opts.add_argument("--test-instance-file", "--test_instance_file", "--test-inst-fn", "--test_inst_fn", dest='test_inst_fn',
+        scen_opts.add_argument("--test-instance-file", "--test_instance_file", "--test-inst-fn", "--test_inst_fn",
+                               dest='test_inst_fn',
                                type=str, action=ReadTestInstFileAction,
                                help="[dev] Specifies the file with the test-instances.")
-        scen_opts.add_argument("--test-instances", "--test_instances", "--test-insts", "--test_insts", dest="test_insts",
+        scen_opts.add_argument("--test-instances", "--test_instances", "--test-insts", "--test_insts",
+                               dest="test_insts",
                                default=[[None]],  # overridden by --test-instance-file
                                help=SUPPRESS)
         scen_opts.add_argument("--feature-file", "--feature_file", "--feature-fn", "--feature_fn", dest='feature_fn',
@@ -694,9 +704,9 @@ class CMDReader(object):
         return args_, misc_dict, misc_cmd
 
     def parse_scenario_command(self,
-                               scenario_file: str=None,
-                               scenario_dict: dict={},
-                               scenario_cmd_opts: typing.List[str]=[]):
+                               scenario_file: str = None,
+                               scenario_dict: dict = {},
+                               scenario_cmd_opts: typing.List[str] = []):
         """
         Parse scenario options
         :param scenario_file: str or None
@@ -767,7 +777,7 @@ class CMDReader(object):
 
         return scen_args_
 
-    def read_smac_scenario_dict_cmd(self, dict_cmd: dict, scenario_file: str=None):
+    def read_smac_scenario_dict_cmd(self, dict_cmd: dict, scenario_file: str = None):
         """Reads smac and scenario options provided in a dictionary
 
         Returns
@@ -780,7 +790,7 @@ class CMDReader(object):
                                                  scenario_cmd_opts=misc_cmd)
         return smac_args_, scen_args_
 
-    def read_cmd(self, commandline_arguments: typing.List[str]=sys.argv[1:]):
+    def read_cmd(self, commandline_arguments: typing.List[str] = sys.argv[1:]):
         """Reads command line options (main, smac and scenario options)
 
         Returns
@@ -813,7 +823,7 @@ class CMDReader(object):
                 fh.write("\n")
             fh.write("\n\n")
 
-    def write_main_options_to_doc(self, path: str='main_options.rst'):
+    def write_main_options_to_doc(self, path: str = 'main_options.rst'):
         """Writes the SMAC option-list to file for autogeneration in documentation.
         The list is created in doc/conf.py and read in doc/options.rst.
 
@@ -826,7 +836,7 @@ class CMDReader(object):
         _arguments = self.main_cmd_actions
         CMDReader._write_options_to_doc(_arguments, path, exclude)
 
-    def write_smac_options_to_doc(self, path: str='smac_options.rst'):
+    def write_smac_options_to_doc(self, path: str = 'smac_options.rst'):
         """Writes the SMAC option-list to file for autogeneration in documentation.
         The list is created in doc/conf.py and read in doc/options.rst.
 
@@ -839,7 +849,7 @@ class CMDReader(object):
         _arguments = self.smac_cmd_actions
         CMDReader._write_options_to_doc(_arguments, path, exclude)
 
-    def write_scenario_options_to_doc(self, path: str='scenario_options.rst'):
+    def write_scenario_options_to_doc(self, path: str = 'scenario_options.rst'):
         """Writes the Scenario option-list to file for autogeneration in documentation.
         The list is created in doc/conf.py and read in doc/options.rst.
 

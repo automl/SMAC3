@@ -68,12 +68,12 @@ class TestLocalSearch(unittest.TestCase):
                 rval.append([-euclidean(point.get_array(), opt)])
             return np.array(rval)
 
-        l = LocalSearch(acquisition_function, self.cs, max_steps=100)
+        ls = LocalSearch(acquisition_function, self.cs, max_steps=100)
 
         start_point = self.cs.sample_configuration()
         acq_val_start_point = acquisition_function([start_point])
 
-        acq_val_incumbent, _ = l._do_search(start_point)[0]
+        acq_val_incumbent, _ = ls._do_search(start_point)[0]
 
         # Local search needs to find something that is as least as good as the
         # start point
@@ -100,10 +100,10 @@ class TestLocalSearch(unittest.TestCase):
         start_point = config_space.get_default_configuration()
         _get_initial_points_patch.return_value = [start_point]
 
-        l = LocalSearch(acquisition_function, config_space, max_steps=100000)
+        ls = LocalSearch(acquisition_function, config_space, max_steps=100000)
         # To have some data in a mock runhistory
-        l.runhistory = [None] * 1000
-        acq_val_incumbent, incumbent = l._maximize(runhistory, None, 1)[0]
+        ls.runhistory = [None] * 1000
+        acq_val_incumbent, incumbent = ls._maximize(runhistory, None, 1)[0]
 
         np.testing.assert_allclose(
             incumbent.get_array(),

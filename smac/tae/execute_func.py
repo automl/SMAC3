@@ -63,12 +63,11 @@ class AbstractTAFunc(ExecuteTARun):
             cost that is used in case of crashed runs (including runs
             that returned NaN or inf)
         use_pynisher: bool
-            use pynisher to limit resources; 
+            use pynisher to limit resources;
             if disabled
-              * TA func can use as many resources 
+              * TA func can use as many resources
               as it wants (time and memory) --- use with caution
               * all runs will be returned as SUCCESS if returned value is not None
-            
         """
 
         signature = inspect.signature(ta).parameters
@@ -170,7 +169,7 @@ class AbstractTAFunc(ExecuteTARun):
             else:
                 status = StatusType.CRASHED
                 cost = self.crash_cost
-        
+
             runtime = float(obj.wall_clock_time)
         else:
             start_time = time.time()
@@ -195,7 +194,7 @@ class AbstractTAFunc(ExecuteTARun):
             else:
                 status = StatusType.CRASHED
                 cost = self.crash_cost
-            
+
             runtime = time.time() - start_time
 
         # check serializability of results

@@ -1,4 +1,3 @@
-import copy
 import unittest
 import logging
 from nose.plugins.attrib import attr
@@ -7,9 +6,6 @@ import numpy
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, \
     CategoricalHyperparameter, UniformFloatHyperparameter
-from ConfigSpace.conditions import InCondition
-
-from pyrfr.regression import binary_rss_forest
 
 from smac.tae.execute_ta_run import StatusType
 from smac.runhistory import runhistory, runhistory2epm

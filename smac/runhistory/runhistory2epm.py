@@ -1,5 +1,4 @@
 import abc
-from collections import OrderedDict
 import logging
 import typing
 
@@ -397,7 +396,6 @@ class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
         -------
         np.ndarray
         """
-
 
         # ensure that minimal value is larger than 0
         if np.any(values <= 0):

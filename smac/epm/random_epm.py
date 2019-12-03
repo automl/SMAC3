@@ -1,4 +1,3 @@
-import logging
 import numpy as np
 
 from smac.epm.base_epm import AbstractEPM

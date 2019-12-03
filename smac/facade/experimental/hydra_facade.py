@@ -111,7 +111,7 @@ class Hydra(object):
         self.optimizer = None
         self.portfolio_cost = None
 
-    def _get_validation_set(self, val_set: str, delete: bool=True) -> typing.List[str]:
+    def _get_validation_set(self, val_set: str, delete: bool = True) -> typing.List[str]:
         """
         Create small validation set for hydra to determine incumbent performance
 

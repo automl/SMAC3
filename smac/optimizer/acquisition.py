@@ -190,7 +190,7 @@ class EI(AbstractAcquisitionFunction):
 
     def __init__(self,
                  model: AbstractEPM,
-                 par: float=0.0):
+                 par: float = 0.0):
         """Constructor
 
         Parameters
@@ -262,10 +262,10 @@ class EI(AbstractAcquisitionFunction):
 class EIPS(EI):
     def __init__(self,
                  model: AbstractEPM,
-                 par: float=0.0):
+                 par: float = 0.0):
         r"""Computes for a given x the expected improvement as
         acquisition value.
-        :math:`EI(X) := \frac{\mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]} {np.log(r(x))}`,
+        :math:`EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}`,
         with :math:`f(X^+)` as the incumbent and :math:`r(x)` as runtime.
 
         Parameters
@@ -347,7 +347,7 @@ class LogEI(AbstractAcquisitionFunction):
 
     def __init__(self,
                  model: AbstractEPM,
-                 par: float=0.0):
+                 par: float = 0.0):
         r"""Computes for a given x the logarithm expected improvement as
         acquisition value.
 
@@ -422,7 +422,7 @@ class LogEI(AbstractAcquisitionFunction):
 class PI(AbstractAcquisitionFunction):
     def __init__(self,
                  model: AbstractEPM,
-                 par: float=0.0):
+                 par: float = 0.0):
 
         """Computes the probability of improvement for a given x over the best so far value as
         acquisition value.
@@ -474,7 +474,7 @@ class PI(AbstractAcquisitionFunction):
 class LCB(AbstractAcquisitionFunction):
     def __init__(self,
                  model: AbstractEPM,
-                 par: float=1.0):
+                 par: float = 1.0):
 
         """Computes the lower confidence bound for a given x over the best so far value as
         acquisition value.

@@ -2,7 +2,6 @@ import os
 import pickle
 import tempfile
 import unittest
-import numpy
 
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
@@ -21,6 +20,7 @@ def get_config_space():
                                                        lower=0,
                                                        upper=100))
     return cs
+
 
 class RunhistoryTest(unittest.TestCase):
 
@@ -148,10 +148,10 @@ class RunhistoryTest(unittest.TestCase):
         updated_cost_config2 = rh.get_cost(config2)
         self.assertTrue(cost_config2 == updated_cost_config2)
 
-        rh.compute_all_costs(instances = [2])
+        rh.compute_all_costs(instances=[2])
         updated_cost_config2 = rh.get_cost(config2)
         self.assertTrue(cost_config2 != updated_cost_config2)
-        self.assertTrue(updated_cost_config2==20)
+        self.assertTrue(updated_cost_config2 == 20)
 
     def test_incremental_update(self):
 
@@ -207,7 +207,7 @@ class RunhistoryTest(unittest.TestCase):
 
             path = 'test/test_files/test_json_origin.json'
             rh.save_json(path)
-            new_rh = rh.load_json(path, cs)
+            _ = rh.load_json(path, cs)
 
             self.assertEqual(rh.get_all_configs()[0].origin, origin)
 

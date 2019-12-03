@@ -38,7 +38,7 @@ class SMACCLI(object):
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
-    def main_cli(self, commandline_arguments: typing.List[str]=None):
+    def main_cli(self, commandline_arguments: typing.List[str] = None):
         """Main function of SMAC for CLI interface"""
         self.logger.info("SMAC call: %s" % (" ".join(sys.argv)))
 
@@ -186,9 +186,9 @@ class SMACCLI(object):
         stats_path = os.path.join(args_.restore_state, "stats.json")
         traj_path_aclib = os.path.join(args_.restore_state, "traj_aclib2.json")
         traj_path_old = os.path.join(args_.restore_state, "traj_old.csv")
-        scen_path = os.path.join(args_.restore_state, "scenario.txt")
+        _ = os.path.join(args_.restore_state, "scenario.txt")
         if not os.path.isdir(args_.restore_state):
-           raise FileNotFoundError("Could not find folder from which to restore.")
+            raise FileNotFoundError("Could not find folder from which to restore.")
         # Load runhistory and stats
         rh = RunHistory(aggregate_func=None)
         rh.load_json(rh_path, scen.cs)

@@ -20,6 +20,7 @@ from smac.configspace import ConfigurationSpace, Configuration, CategoricalHyper
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 
+
 class TrajLoggerTest(unittest.TestCase):
 
     def mocked_get_used_wallclock_time(self):
@@ -152,6 +153,7 @@ class TrajLoggerTest(unittest.TestCase):
         self.assertIsInstance(from_aclib2[0]['incumbent']['ambigous_categorical'], str)
         # Works good for alljson:
         self.assertIsInstance(from_alljson[0]['incumbent']['ambigous_categorical'], bool)
+
 
 if __name__ == "__main__":
     unittest.main()

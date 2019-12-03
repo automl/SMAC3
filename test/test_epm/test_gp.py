@@ -197,6 +197,7 @@ class TestGP(unittest.TestCase):
 
         class Dummy:
             counter = 0
+
             def __call__(self, X, y):
                 if self.counter >= 10:
                     return None
@@ -220,6 +221,7 @@ class TestGP(unittest.TestCase):
 
         class Dummy:
             counter = 0
+
             def __call__(self, X, eval_gradient=True):
                 # If this is not aligned with the GP an error will be raised that None is not iterable
                 if self.counter == 13:
@@ -234,7 +236,7 @@ class TestGP(unittest.TestCase):
         X, Y, n_dims = get_cont_data(rs)
 
         model = get_gp(n_dims, rs)
-        fixture = model.kernel.theta
+        # fixture = model.kernel.theta
         model._train(X[:10], Y[:10], do_optimize=True)
         np.testing.assert_array_almost_equal(
             model.gp.kernel.theta,

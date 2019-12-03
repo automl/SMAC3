@@ -155,13 +155,14 @@ class TaeTest(unittest.TestCase):
         # Check quality
         test_run.return_value = StatusType.CRASHED, np.nan, np.nan, {}
         eta = ExecuteTARun(ta=lambda *args: None, stats=stats,
-                run_obj='quality', cost_for_crash=100)
+                           run_obj='quality', cost_for_crash=100)
         self.assertEqual(100, eta.start(config={}, instance=1)[1])
 
         # Check runtime
         eta = ExecuteTARun(ta=lambda *args: None, stats=stats,
-                run_obj='runtime', cost_for_crash=10.7)
+                           run_obj='runtime', cost_for_crash=10.7)
         self.assertEqual(20.0, eta.start(config={}, instance=1, cutoff=20)[1])
+
 
 if __name__ == "__main__":
     unittest.main()

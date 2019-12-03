@@ -5,7 +5,7 @@ import numpy as np
 
 from ConfigSpace import CategoricalHyperparameter, \
     UniformFloatHyperparameter, UniformIntegerHyperparameter, \
-    OrdinalHyperparameter, ConfigurationSpace, EqualsCondition
+    OrdinalHyperparameter, EqualsCondition
 
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.util_funcs import get_types
@@ -159,7 +159,8 @@ class TestRFWithInstances(unittest.TestCase):
         X_ = rs.rand(200, 15)
         model.train(X_, Y)
         means, vars = model.predict_marginalized_over_instances(rs.rand(11, 10))
-        self.assertEqual(rf_mock.call_count, 0)  # expected to be 0 as the predict is replaced by manual unloggin the trees
+        # expected to be 0 as the predict is replaced by manual unloggin the trees
+        self.assertEqual(rf_mock.call_count, 0)
         self.assertEqual(means.shape, (11, 1))
         self.assertEqual(vars.shape, (11, 1))
         for i in range(11):
@@ -201,10 +202,10 @@ class TestRFWithInstances(unittest.TestCase):
 
     def test_with_ordinal(self):
         cs = smac.configspace.ConfigurationSpace()
-        a = cs.add_hyperparameter(CategoricalHyperparameter('a', [0, 1], default_value=0))
-        b = cs.add_hyperparameter(OrdinalHyperparameter('b', [0, 1], default_value=1))
-        b = cs.add_hyperparameter(UniformFloatHyperparameter('c', lower=0., upper=1., default_value=1))
-        b = cs.add_hyperparameter(UniformIntegerHyperparameter('d', lower=0, upper=10, default_value=1))
+        _ = cs.add_hyperparameter(CategoricalHyperparameter('a', [0, 1], default_value=0))
+        _ = cs.add_hyperparameter(OrdinalHyperparameter('b', [0, 1], default_value=1))
+        _ = cs.add_hyperparameter(UniformFloatHyperparameter('c', lower=0., upper=1., default_value=1))
+        _ = cs.add_hyperparameter(UniformIntegerHyperparameter('d', lower=0, upper=10, default_value=1))
         cs.seed(1)
 
         feat_array = np.array([0, 0, 0]).reshape(1, -1)
