@@ -1,6 +1,7 @@
 import os
 import typing
 import logging
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("PlotTraj")
 
@@ -19,7 +20,7 @@ __license__ = "3-clause BSD"
 
 
 def setup_SMAC_from_file(smac_out_dn: str,
-                         add_dn:typing.List[str]):
+                         add_dn: typing.List[str]):
     '''
         read all files from disk
         and initialize SMAC data structures with it
@@ -31,7 +32,7 @@ def setup_SMAC_from_file(smac_out_dn: str,
         add_dn: typing.List[str]
             additional output directories of SMAC runs
             to extend runhistory
-            (Assumption: All output directories correspond 
+            (Assumption: All output directories correspond
             to the same scenario)
 
         Returns
@@ -48,7 +49,7 @@ def setup_SMAC_from_file(smac_out_dn: str,
 
     rh = smac.solver.runhistory
     rh.load_json(os.path.join(smac_out_dn, "runhistory.json"), cs=scenario.cs)
-    
+
     for dn in add_dn:
         rh.update_from_json(fn=os.path.join(dn, "runhistory.json"), cs=scenario.cs)
 
@@ -62,7 +63,7 @@ def setup_SMAC_from_file(smac_out_dn: str,
     return smac, traj
 
 
-def predict_perf_of_traj(traj, smac: SMAC):
+def predict_perf_of_traj(traj, smac: SMAC4AC):
     '''
         predict the performance of all entries in the trajectory
         marginalized across all instances
@@ -94,7 +95,7 @@ def predict_perf_of_traj(traj, smac: SMAC):
             X=config_array)
 
         if smac.solver.scenario.run_obj == "runtime":
-            p = 10**m[0, 0]
+            p = 10 ** m[0, 0]
         else:
             p = m[0, 0]
 
@@ -132,7 +133,6 @@ def plot(x: typing.List[float], y: typing.List[float], out_dir: str):
 
 
 if __name__ == "__main__":
-
     parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument("--smac_output_dir", required=True,
                         help="Output directory of SMAC")
