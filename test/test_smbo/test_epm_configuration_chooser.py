@@ -46,6 +46,41 @@ class TestEPMChooser(unittest.TestCase):
         x = next(smbo.epm_chooser.choose_next()).get_array()
         self.assertEqual(x.shape, (2,))
 
+    def test_choose_next_budget(self):
+        seed = 42
+        config = self.scenario.cs.sample_configuration()
+        rh = RunHistory(aggregate_func=average_cost)
+        rh.add(config=config, cost=10, time=10, instance_id=None,
+               seed=1, budget=1, additional_info=None, status=StatusType.SUCCESS)
+
+        smbo = SMAC4AC(self.scenario, rng=seed, runhistory=rh).solver
+        smbo.epm_chooser.min_samples_model = 2
+
+        # There is no model, so it returns a single random configuration
+        x = smbo.epm_chooser.choose_next()
+        self.assertEqual(len(x), 1)
+
+    def test_choose_next_higher_budget(self):
+        seed = 42
+        config = self.scenario.cs.sample_configuration
+        rh = RunHistory(aggregate_func=average_cost)
+        rh.add(config=config(), cost=1, time=10, instance_id=None,
+               seed=1, budget=1, additional_info=None, status=StatusType.SUCCESS)
+        rh.add(config=config(), cost=2, time=10, instance_id=None,
+               seed=1, budget=2, additional_info=None, status=StatusType.SUCCESS)
+        rh.add(config=config(), cost=3, time=10, instance_id=None,
+               seed=1, budget=2, additional_info=None, status=StatusType.SUCCESS)
+        rh.add(config=config(), cost=4, time=10, instance_id=None,
+               seed=1, budget=3, additional_info=None, status=StatusType.SUCCESS)
+
+        smbo = SMAC4AC(self.scenario, rng=seed, runhistory=rh).solver
+        smbo.epm_chooser.min_samples_model = 2
+
+        # Return two configurations evaluated with budget==2
+        x, y = smbo.epm_chooser._collect_data_to_train_model()
+        self.assertListEqual(list(y.flatten()), [2, 3])
+        self.assertEqual(x.shape[0], 2)
+
     def test_choose_next_w_empty_rh(self):
         seed = 42
         smbo = SMAC4AC(self.scenario, rng=seed).solver
