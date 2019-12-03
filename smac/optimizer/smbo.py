@@ -71,7 +71,8 @@ class SMBO(object):
                  restore_incumbent: Configuration = None,
                  random_configuration_chooser: typing.Union[
                      ChooserNoCoolDown, ChooserLinearCoolDown] = ChooserNoCoolDown(2.0),
-                 predict_incumbent: bool = True):
+                 predict_incumbent: bool = True,
+                 min_samples_model: int = 1):
         """
         Interface that contains the main Bayesian optimization loop
 
@@ -114,6 +115,8 @@ class SMBO(object):
             * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)
         predict_incumbent: bool
             Use predicted performance of incumbent instead of observed performance
+        min_samples_model: int
+-            Minimum number of samples to build a model
         """
 
         self.logger = logging.getLogger(
@@ -143,7 +146,8 @@ class SMBO(object):
                                       rng=rng,
                                       restore_incumbent=restore_incumbent,
                                       random_configuration_chooser=random_configuration_chooser,
-                                      predict_incumbent=predict_incumbent)
+                                      predict_incumbent=predict_incumbent,
+                                      min_samples_model=min_samples_model)
 
     def start(self):
         """Starts the Bayesian Optimization loop.
