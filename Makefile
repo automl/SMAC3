@@ -1,17 +1,17 @@
 
 .PHONY: test
 test:
-	pytest -sv --cov=smac test --duration=20
+	pytest -sv --cov=smac test --durations=20
 
 .PHONY: test-fast
 test-fast:
 	# requires nose-timer
-	pytest -sv -m !slow --duration=20 test
+	pytest -sv -m !slow --durations=20 test
 
 .PHONY: test-runtimes
 test-runtimes:
 	# requires nose-timer
-	pytest -sv --duration=20 test
+	pytest -sv --durations=20 test
 
 .PHONY: doc
 doc:
