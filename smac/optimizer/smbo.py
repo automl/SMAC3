@@ -15,13 +15,15 @@ from smac.epm.gp_base_prior import LognormalPrior, HorseshoePrior
 from smac.epm.util_funcs import get_types
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer
+from smac.intensification.hyperband import Hyperband
+from smac.intensification.successive_halving import SuccessiveHalving
 from smac.optimizer import pSMAC
 from smac.optimizer.acquisition import AbstractAcquisitionFunction, EI, LogEI,\
     LCB, PI
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
     ChooserLinearCoolDown
 from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer
-from smac.optimizer.epm_configuration_chooser import EPMChooser
+from smac.optimizer.epm_configuration_chooser import EPMChooser, EPMChooserBudgets
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.scenario.scenario import Scenario
@@ -135,17 +137,21 @@ class SMBO(object):
         self.initial_design_configs = []
 
         # initialize the chooser to get configurations from the EPM
-        self.epm_chooser = EPMChooser(scenario=scenario,
-                                      stats=stats,
-                                      runhistory=runhistory,
-                                      runhistory2epm=runhistory2epm,
-                                      model=model,
-                                      acq_optimizer=acq_optimizer,
-                                      acquisition_func=acquisition_func,
-                                      rng=rng,
-                                      restore_incumbent=restore_incumbent,
-                                      random_configuration_chooser=random_configuration_chooser,
-                                      predict_incumbent=predict_incumbent)
+        if self.intensifier in (Hyperband, SuccessiveHalving):
+            self.epm_chooser = EPMChooserBudgets
+        else:
+            self.epm_chooser = EPMChooser
+        self.epm_chooser = self.epm_chooser(scenario=scenario,
+                                            stats=stats,
+                                            runhistory=runhistory,
+                                            runhistory2epm=runhistory2epm,
+                                            model=model,
+                                            acq_optimizer=acq_optimizer,
+                                            acquisition_func=acquisition_func,
+                                            rng=rng,
+                                            restore_incumbent=restore_incumbent,
+                                            random_configuration_chooser=random_configuration_chooser,
+                                            predict_incumbent=predict_incumbent)
 
     def start(self):
         """Starts the Bayesian Optimization loop.

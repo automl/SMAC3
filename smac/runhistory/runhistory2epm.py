@@ -162,7 +162,7 @@ class AbstractRunHistory2EPM(object):
         """
         raise NotImplementedError()
 
-    def transform(self, runhistory: RunHistory):
+    def transform(self, runhistory: RunHistory, budget_subset: list = None):
         """Returns vector representation of runhistory; if imputation is
         disabled, censored (TIMEOUT with time < cutoff) will be skipped
 
@@ -170,6 +170,7 @@ class AbstractRunHistory2EPM(object):
         ----------
         runhistory : smac.runhistory.runhistory.RunHistory
             Runhistory containing all evaluated configurations/instances
+        budget_subset : list of budgets to consider
 
         Returns
         -------
@@ -183,6 +184,11 @@ class AbstractRunHistory2EPM(object):
         # consider only successfully finished runs
         s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
                       if runhistory.data[run].status in self.success_states}
+
+        # consider only runs on a given budget
+        if budget_subset is not None:
+            s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
+                          if run.budget in budget_subset}
 
         # Store a list of instance IDs
         s_instance_id_list = [k.instance_id for k in s_run_dict.keys()]
