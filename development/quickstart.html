@@ -293,20 +293,20 @@ implemented in <cite>examples/branin/branin_fmin.py</cite> and requires no extra
 import the fmin-function and the Branin-function:</p>
 <div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>3
 4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">branin</span> <span class="kn">import</span> <span class="n">branin</span>
-<span class="kn">from</span> <span class="nn">smac.facade.func_facade</span> <span class="kn">import</span> <span class="n">fmin_smac</span>
+
 </pre></div>
 </td></tr></table></div>
 <p>And run the f_min-function:</p>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>16
-17
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>17
 18
 19
 20
-21</pre></div></td><td class="code"><div class="highlight"><pre><span></span>    <span class="n">x</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">fmin_smac</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">branin</span><span class="p">,</span>  <span class="c1"># function</span>
-                           <span class="n">x0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>    <span class="c1"># default configuration</span>
+21
+22</pre></div></td><td class="code"><div class="highlight"><pre><span></span>    <span class="n">x</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">fmin_smac</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">branin</span><span class="p">,</span>  <span class="c1"># function</span>
+                           <span class="n">x0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># default configuration</span>
                            <span class="n">bounds</span><span class="o">=</span><span class="p">[(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">)],</span>  <span class="c1"># limits</span>
-                           <span class="n">maxfun</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>   <span class="c1"># maximum number of evaluations</span>
-                           <span class="n">rng</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>        <span class="c1"># random seed</span>
+                           <span class="n">maxfun</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>  <span class="c1"># maximum number of evaluations</span>
+                           <span class="n">rng</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># random seed</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimum at </span><span class="si">{}</span><span class="s2"> with cost of </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cost</span><span class="p">))</span>
 </pre></div>
 </td></tr></table></div>
@@ -407,20 +407,20 @@ This example is located in <code class="code docutils literal notranslate"><span
 19
 20
 21
-22</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+22</pre></div></td><td class="code"><div class="highlight"><pre><span></span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">ConfigSpace.conditions</span> <span class="kn">import</span> <span class="n">InCondition</span>
+<span class="kn">from</span> <span class="nn">ConfigSpace.hyperparameters</span> <span class="kn">import</span> <span class="n">CategoricalHyperparameter</span><span class="p">,</span> \
+    <span class="n">UniformFloatHyperparameter</span><span class="p">,</span> <span class="n">UniformIntegerHyperparameter</span>
 <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">svm</span><span class="p">,</span> <span class="n">datasets</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
 
 <span class="c1"># Import ConfigSpace and different types of parameters</span>
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span>
-<span class="kn">from</span> <span class="nn">ConfigSpace.hyperparameters</span> <span class="kn">import</span> <span class="n">CategoricalHyperparameter</span><span class="p">,</span> \
-    <span class="n">UniformFloatHyperparameter</span><span class="p">,</span> <span class="n">UniformIntegerHyperparameter</span>
-<span class="kn">from</span> <span class="nn">ConfigSpace.conditions</span> <span class="kn">import</span> <span class="n">InCondition</span>
-
-<span class="c1"># Import SMAC-utilities</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_func</span> <span class="kn">import</span> <span class="n">ExecuteTAFuncDict</span>
-<span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.facade.smac_hpo_facade</span> <span class="kn">import</span> <span class="n">SMAC4HPO</span>
+<span class="c1"># Import SMAC-utilities</span>
+<span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
+
 </pre></div>
 </td></tr></table></div>
 <dl class="simple">
@@ -470,7 +470,7 @@ This way human knowledge about the problem is introduced.</p>
 76
 77
 78</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># Others are kernel-specific, so we can add conditions to limit the searchspace</span>
-<span class="n">degree</span> <span class="o">=</span> <span class="n">UniformIntegerHyperparameter</span><span class="p">(</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>     <span class="c1"># Only used by kernel poly</span>
+<span class="n">degree</span> <span class="o">=</span> <span class="n">UniformIntegerHyperparameter</span><span class="p">(</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># Only used by kernel poly</span>
 <span class="n">coef0</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;coef0&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># poly, sigmoid</span>
 <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">degree</span><span class="p">,</span> <span class="n">coef0</span><span class="p">])</span>
 <span class="n">use_degree</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">degree</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;poly&quot;</span><span class="p">])</span>
@@ -503,7 +503,8 @@ that is only activated if <cite>gamma</cite> is not set to “auto”.</p>
 <p>Of course we also define a function to evaluate the configured SVM on the IRIS-dataset.
 Some options, such as the <em>kernel</em> or <em>C</em>, can be passed directly.
 Others, such as <em>gamma</em>, need to be translated before the call to the SVM.</p>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>28
+<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>27
+28
 29
 30
 31
@@ -529,8 +530,7 @@ Others, such as <em>gamma</em>, need to be translated before the call to the SVM
 51
 52
 53
-54
-55</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">svm_from_cfg</span><span class="p">(</span><span class="n">cfg</span><span class="p">):</span>
+54</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">svm_from_cfg</span><span class="p">(</span><span class="n">cfg</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Creates a SVM based on a configuration and evaluates it on the</span>
 <span class="sd">    iris-dataset using cross-validation.</span>
 
@@ -546,7 +546,7 @@ Others, such as <em>gamma</em>, need to be translated before the call to the SVM
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># For deactivated parameters, the configuration stores None-values.</span>
     <span class="c1"># This is not accepted by the SVM, so we remove them.</span>
-    <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span> <span class="p">:</span> <span class="n">cfg</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">cfg</span> <span class="k">if</span> <span class="n">cfg</span><span class="p">[</span><span class="n">k</span><span class="p">]}</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">cfg</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">cfg</span> <span class="k">if</span> <span class="n">cfg</span><span class="p">[</span><span class="n">k</span><span class="p">]}</span>
     <span class="c1"># We translate boolean values:</span>
     <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;shrinking&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;shrinking&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span> <span class="k">else</span> <span class="kc">False</span>
     <span class="c1"># And for gamma, we set it to a fixed value or to &quot;auto&quot; (if used)</span>
@@ -557,7 +557,7 @@ Others, such as <em>gamma</em>, need to be translated before the call to the SVM
     <span class="n">clf</span> <span class="o">=</span> <span class="n">svm</span><span class="o">.</span><span class="n">SVC</span><span class="p">(</span><span class="o">**</span><span class="n">cfg</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 
     <span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-    <span class="k">return</span> <span class="mi">1</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>  <span class="c1"># Minimize!</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>  <span class="c1"># Minimize!</span>
 </pre></div>
 </td></tr></table></div>
 <p>We need a Scenario-object to configure the optimization process.
@@ -569,12 +569,12 @@ scenario-file, which we used in the Branin example.</p>
 93
 94
 95
-96</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># Scenario object</span>
-<span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">({</span><span class="s2">&quot;run_obj&quot;</span><span class="p">:</span> <span class="s2">&quot;quality&quot;</span><span class="p">,</span>   <span class="c1"># we optimize quality (alternatively runtime)</span>
-                     <span class="s2">&quot;runcount-limit&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>   <span class="c1"># max. number of function evaluations; for this example set to a low number</span>
-                     <span class="s2">&quot;cs&quot;</span><span class="p">:</span> <span class="n">cs</span><span class="p">,</span>               <span class="c1"># configuration space</span>
+96</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">({</span><span class="s2">&quot;run_obj&quot;</span><span class="p">:</span> <span class="s2">&quot;quality&quot;</span><span class="p">,</span>  <span class="c1"># we optimize quality (alternatively runtime)</span>
+                     <span class="s2">&quot;runcount-limit&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>  <span class="c1"># max. number of function evaluations; for this example set to a low number</span>
+                     <span class="s2">&quot;cs&quot;</span><span class="p">:</span> <span class="n">cs</span><span class="p">,</span>  <span class="c1"># configuration space</span>
                      <span class="s2">&quot;deterministic&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span>
                      <span class="p">})</span>
+
 </pre></div>
 </td></tr></table></div>
 <p>Now we’re ready to create a <em>SMAC</em>-instance, which handles the Bayesian
@@ -591,16 +591,16 @@ as well as the function.</p>
 109
 110
 111
-112</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># Optimize, using a SMAC-object</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimizing! Depending on your machine, this might take a few minutes.&quot;</span><span class="p">)</span>
+112</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimizing! Depending on your machine, this might take a few minutes.&quot;</span><span class="p">)</span>
 <span class="n">smac</span> <span class="o">=</span> <span class="n">SMAC4HPO</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span>
-        <span class="n">tae_runner</span><span class="o">=</span><span class="n">svm_from_cfg</span><span class="p">)</span>
+                <span class="n">tae_runner</span><span class="o">=</span><span class="n">svm_from_cfg</span><span class="p">)</span>
 
 <span class="n">incumbent</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
 
 <span class="n">inc_value</span> <span class="o">=</span> <span class="n">svm_from_cfg</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimized Value: </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">inc_value</span><span class="p">))</span>
+
 </pre></div>
 </td></tr></table></div>
 <p>We start the optimization loop.</p>
@@ -632,13 +632,9 @@ so that as final output we can see the error value of the incumbent.</p>
 instances, but we include the code so it is easily applicable for any usecase.</p>
 <div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>115
 116
-117
-118
-119</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># We can also validate our results (though this makes a lot more sense with instances)</span>
-<span class="n">smac</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">config_mode</span><span class="o">=</span><span class="s1">&#39;inc&#39;</span><span class="p">,</span>      <span class="c1"># We can choose which configurations to evaluate</span>
-              <span class="c1">#instance_mode=&#39;train+test&#39;,  # Defines what instances to validate</span>
-              <span class="n">repetitions</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>        <span class="c1"># Ignored, unless you set &quot;deterministic&quot; to &quot;false&quot; in line 95</span>
-              <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>               <span class="c1"># How many cores to use in parallel for optimization</span>
+117</pre></div></td><td class="code"><div class="highlight"><pre><span></span>              <span class="c1"># instance_mode=&#39;train+test&#39;,  # Defines what instances to validate</span>
+              <span class="n">repetitions</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>  <span class="c1"># Ignored, unless you set &quot;deterministic&quot; to &quot;false&quot; in line 95</span>
+              <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># How many cores to use in parallel for optimization</span>
 </pre></div>
 </td></tr></table></div>
 </div>
