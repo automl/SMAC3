@@ -1,17 +1,16 @@
 import logging
 
 import numpy as np
-from sklearn.metrics import make_scorer
-from sklearn.model_selection import cross_val_score
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.datasets import load_boston
-
-from smac.configspace import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformFloatHyperparameter, UniformIntegerHyperparameter
+from sklearn.datasets import load_boston
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import make_scorer
+from sklearn.model_selection import cross_val_score
 
-from smac.scenario.scenario import Scenario
+from smac.configspace import ConfigurationSpace
 from smac.facade.smac_hpo_facade import SMAC4HPO
+from smac.scenario.scenario import Scenario
 
 boston = load_boston()
 
@@ -47,7 +46,8 @@ def rf_from_cfg(cfg, seed):
         random_state=seed)
 
     def rmse(y, y_pred):
-        return np.sqrt(np.mean((y_pred - y)**2))
+        return np.sqrt(np.mean((y_pred - y) ** 2))
+
     # Creating root mean square error for sklearns crossvalidation
     rmse_scorer = make_scorer(rmse, greater_is_better=False)
     score = cross_val_score(rfr, boston.data, boston.target, cv=11, scoring=rmse_scorer)
@@ -56,7 +56,7 @@ def rf_from_cfg(cfg, seed):
 
 logger = logging.getLogger("RF-example")
 logging.basicConfig(level=logging.INFO)
-#logging.basicConfig(level=logging.DEBUG)  # Enable to show debug-output
+# logging.basicConfig(level=logging.DEBUG)  # Enable to show debug-output
 logger.info("Running random forest example for SMAC. If you experience "
             "difficulties, try to decrease the memory-limit.")
 
@@ -80,14 +80,14 @@ min_samples_in_leaf = UniformIntegerHyperparameter("min_samples_in_leaf", 1, 20,
 max_leaf_nodes = UniformIntegerHyperparameter("max_leaf_nodes", 10, 1000, default_value=100)
 
 cs.add_hyperparameters([num_trees, min_weight_frac_leaf, criterion,
-        max_features, min_samples_to_split, min_samples_in_leaf, max_leaf_nodes])
+                        max_features, min_samples_to_split, min_samples_in_leaf, max_leaf_nodes])
 
 # SMAC scenario object
-scenario = Scenario({"run_obj": "quality",   # we optimize quality (alternative runtime)
-                     "runcount-limit": 10,   # max. number of function evaluations; for this example set to a low number
-                     "cs": cs,               # configuration space
+scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative runtime)
+                     "runcount-limit": 10,  # max. number of function evaluations; for this example set to a low number
+                     "cs": cs,  # configuration space
                      "deterministic": "true",
-                     "memory_limit": 3072,   # adapt this to reasonable value for your hardware
+                     "memory_limit": 3072,  # adapt this to reasonable value for your hardware
                      })
 
 # To optimize, we pass the function to the SMAC-object

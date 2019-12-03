@@ -19,6 +19,7 @@ def rosenbrock_2d(x):
     val = 100. * (x2 - x1 ** 2.) ** 2. + (1 - x1) ** 2.
     return val
 
+
 # debug output
 logging.basicConfig(level=20)
 logger = logging.getLogger("Optimizer")  # Enable to show Debug outputs
@@ -31,4 +32,4 @@ x, cost, _ = fmin_smac(func=rosenbrock_2d,
                        maxfun=10,
                        rng=3)  # Passing a seed makes fmin_smac determistic
 
-print("Best x: %s; with cost: %f"% (str(x), cost))
+print("Best x: %s; with cost: %f" % (str(x), cost))

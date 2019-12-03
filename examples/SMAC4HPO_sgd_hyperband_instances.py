@@ -9,28 +9,27 @@ for the algorithm to run. SMAC then returns the algorithm that had the best perf
 In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.
 """
 
+import itertools
 import logging
 import warnings
-import itertools
+
 import numpy as np
+from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatHyperparameter
 from sklearn import datasets
+from sklearn.exceptions import ConvergenceWarning
 from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import cross_val_score, StratifiedKFold
-from sklearn.exceptions import ConvergenceWarning
 
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
-from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatHyperparameter
-
-# Import SMAC-utilities
-from smac.scenario.scenario import Scenario
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.intensification.hyperband import Hyperband
-
+# Import SMAC-utilities
+from smac.scenario.scenario import Scenario
 
 # We load the MNIST-dataset (a widely used benchmark) and split it into a collection of binary datasets
 digits = datasets.load_digits()
-instances = [[str(a)+str(b)] for a, b in itertools.combinations(digits.target_names, 2)]
+instances = [[str(a) + str(b)] for a, b in itertools.combinations(digits.target_names, 2)]
 
 
 def generate_instances(a: int, b: int):
@@ -80,7 +79,7 @@ def sgd_from_cfg(cfg, seed, instance):
 
         cv = StratifiedKFold(n_splits=4, random_state=seed)  # to make CV splits consistent
         scores = cross_val_score(clf, data, target, cv=cv)
-    return 1-np.mean(scores)  # Minimize!
+    return 1 - np.mean(scores)  # Minimize!
 
 
 logger = logging.getLogger("Hyperband-instances-example")
@@ -99,32 +98,31 @@ eta0 = UniformFloatHyperparameter("eta0", 0.00001, 1, default_value=0.1, log=Tru
 cs.add_hyperparameters([alpha, l1_ratio, learning_rate, eta0])
 
 # SMAC scenario object
-scenario = Scenario({"run_obj": "quality",      # we optimize quality (alternative to runtime)
-                     "wallclock-limit": 100,    # max duration to run the optimization (in seconds)
-                     "cs": cs,                  # configuration space
+scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative to runtime)
+                     "wallclock-limit": 100,  # max duration to run the optimization (in seconds)
+                     "cs": cs,  # configuration space
                      "deterministic": True,
-                     "limit_resources": True,   # Uses pynisher to limit memory and runtime
-                     "memory_limit": 3072,      # adapt this to reasonable value for your hardware
-                     "cutoff": 3,               # runtime limit for the target algorithm
-                     "instances": instances     # Optimize across all given instances
+                     "limit_resources": True,  # Uses pynisher to limit memory and runtime
+                     "memory_limit": 3072,  # adapt this to reasonable value for your hardware
+                     "cutoff": 3,  # runtime limit for the target algorithm
+                     "instances": instances  # Optimize across all given instances
                      })
 
 # intensifier parameters
 # if no argument provided for budgets, hyperband decides them based on the number of instances available
 intensifier_kwargs = {'initial_budget': 1, 'max_budget': 45, 'eta': 3,
                       'instance_order': None,  # You can also shuffle the order of using instances by this parameter.
-                                               # 'shuffle' will shuffle instances before each SH run and
-                                               # 'shuffle_once' will shuffle instances once before the 1st
-                                               # SH iteration begins
+                      # 'shuffle' will shuffle instances before each SH run and
+                      # 'shuffle_once' will shuffle instances once before the 1st
+                      # SH iteration begins
                       }
 
 # To optimize, we pass the function to the SMAC-object
 smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
                 tae_runner=sgd_from_cfg,
-                intensifier=Hyperband,                  # you can also change the intensifier to use like this!
-                                                        # This example currently uses Hyperband intensification,
+                intensifier=Hyperband,  # you can also change the intensifier to use like this!
+                # This example currently uses Hyperband intensification,
                 intensifier_kwargs=intensifier_kwargs)  # all parameters related to intensifier can be passed like this
-
 
 # Example call of the function
 # It returns: Status, Cost, Runtime, Additional Infos
