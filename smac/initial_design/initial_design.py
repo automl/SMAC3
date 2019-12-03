@@ -29,7 +29,7 @@ class InitialDesign:
                  cs: ConfigurationSpace,
                  rng: np.random.RandomState,
                  traj_logger: TrajLogger,
-                 ta_run_limit: float,
+                 ta_run_limit: int,
                  configs: typing.Optional[typing.List[Configuration]] = None,
                  n_configs_x_params: typing.Optional[int] = 10,
                  max_config_fracs: float = 0.25,

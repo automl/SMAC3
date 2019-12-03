@@ -3,6 +3,7 @@ from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
 from smac.optimizer.acquisition import LogEI
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.initial_design.sobol_design import SobolDesign
+from smac.initial_design.latin_hypercube_design import LHDesign
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
@@ -34,9 +35,20 @@ class SMAC4HPO(SMAC4AC):
         see ~smac.facade.smac_facade for docu
         """
 
+        # The logger is only initialized on the call to super AFTER constructing all objects. In order to still log
+        # messages, we keep them in an array and fire them off later
+        log_messages = []
+
         scenario = kwargs['scenario']
 
-        kwargs['initial_design'] = kwargs.get('initial_design', SobolDesign)
+        if len(scenario.cs.get_hyperparameters()) <= 40:
+           kwargs['initial_design'] = kwargs.get('initial_design', SobolDesign)
+        else:
+           kwargs['initial_design'] = kwargs.get('initial_design', LHDesign)
+           log_messages.append((
+               30,
+               'The Sobol initial design can only handle up to 40 dimensions. Changing to a Latin Hypercube design',
+           ))
         kwargs['runhistory2epm'] = kwargs.get('runhistory2epm', RunHistory2EPM4LogScaledCost)
 
         init_kwargs = kwargs.get('initial_design_kwargs', dict())
@@ -81,6 +93,8 @@ class SMAC4HPO(SMAC4AC):
 
         super().__init__(**kwargs)
         self.logger.info(self.__class__)
+        for level, message in log_messages:
+            self.logger.log(level, message)
 
         # better improve acquisition function optimization
         # 2. more randomly sampled configurations
