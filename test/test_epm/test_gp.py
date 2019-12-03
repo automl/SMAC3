@@ -236,7 +236,7 @@ class TestGP(unittest.TestCase):
         X, Y, n_dims = get_cont_data(rs)
 
         model = get_gp(n_dims, rs)
-        # fixture = model.kernel.theta
+        fixture = model.kernel.theta
         model._train(X[:10], Y[:10], do_optimize=True)
         np.testing.assert_array_almost_equal(
             model.gp.kernel.theta,
