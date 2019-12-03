@@ -83,7 +83,7 @@ class TestSMBO(unittest.TestCase):
             rng='BLA',
         )
 
-    @mock.patch.object(InitialDesign, 'run')
+    @mock.patch.object(Intensifier, 'eval_challenger')
     def test_abort_on_initial_design(self, patch):
         def target(x):
             return 5
