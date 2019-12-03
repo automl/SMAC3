@@ -276,9 +276,9 @@
 <span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">import</span> <span class="nn">smac</span>
-<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">Constant</span><span class="p">,</span>\
-     <span class="n">CategoricalHyperparameter</span><span class="p">,</span> <span class="n">UniformFloatHyperparameter</span><span class="p">,</span> \
-     <span class="n">UniformIntegerHyperparameter</span><span class="p">,</span> <span class="n">InCondition</span>
+<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">Constant</span><span class="p">,</span> \
+    <span class="n">CategoricalHyperparameter</span><span class="p">,</span> <span class="n">UniformFloatHyperparameter</span><span class="p">,</span> \
+    <span class="n">UniformIntegerHyperparameter</span><span class="p">,</span> <span class="n">InCondition</span>
 <span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="kn">import</span> <span class="n">AbstractEPM</span>
 <span class="kn">from</span> <span class="nn">smac.epm.rf_with_instances</span> <span class="kn">import</span> <span class="n">RandomForestWithInstances</span>
 <span class="kn">from</span> <span class="nn">smac.epm.gaussian_process_mcmc</span> <span class="kn">import</span> <span class="n">GaussianProcessMCMC</span>
@@ -287,7 +287,7 @@
 <span class="kn">from</span> <span class="nn">smac.initial_design.initial_design</span> <span class="kn">import</span> <span class="n">InitialDesign</span>
 <span class="kn">from</span> <span class="nn">smac.intensification.abstract_racer</span> <span class="kn">import</span> <span class="n">AbstractRacer</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer</span> <span class="kn">import</span> <span class="n">pSMAC</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="kn">import</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span> <span class="n">EI</span><span class="p">,</span> <span class="n">LogEI</span><span class="p">,</span>\
+<span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="kn">import</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span> <span class="n">EI</span><span class="p">,</span> <span class="n">LogEI</span><span class="p">,</span> \
     <span class="n">LCB</span><span class="p">,</span> <span class="n">PI</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.random_configuration_chooser</span> <span class="kn">import</span> <span class="n">ChooserNoCoolDown</span><span class="p">,</span> \
     <span class="n">ChooserLinearCoolDown</span>
@@ -301,14 +301,12 @@
 <span class="kn">from</span> <span class="nn">smac.utils.validate</span> <span class="kn">import</span> <span class="n">Validator</span>
 <span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span>
 
-
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Aaron Klein, Marius Lindauer, Matthias Feurer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
 <div class="viewcode-block" id="SMBO"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO">[docs]</a><span class="k">class</span> <span class="nc">SMBO</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-
     <span class="sd">&quot;&quot;&quot;Interface that contains the main Bayesian optimization loop</span>
 
 <span class="sd">    Attributes</span>
@@ -343,7 +341,7 @@
                  <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span>
                  <span class="n">restore_incumbent</span><span class="p">:</span> <span class="n">Configuration</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">random_configuration_chooser</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
-                     <span class="n">ChooserNoCoolDown</span><span class="p">,</span> <span class="n">ChooserLinearCoolDown</span><span class="p">]</span><span class="o">=</span><span class="n">ChooserNoCoolDown</span><span class="p">(</span><span class="mf">2.0</span><span class="p">),</span>
+                     <span class="n">ChooserNoCoolDown</span><span class="p">,</span> <span class="n">ChooserLinearCoolDown</span><span class="p">]</span> <span class="o">=</span> <span class="n">ChooserNoCoolDown</span><span class="p">(</span><span class="mf">2.0</span><span class="p">),</span>
                  <span class="n">predict_incumbent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Interface that contains the main Bayesian optimization loop</span>
@@ -698,7 +696,7 @@
                      <span class="n">par</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;par_ei&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">conf</span><span class="p">[</span><span class="s2">&quot;acq_func&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;LCB&quot;</span><span class="p">:</span>
             <span class="n">acq</span> <span class="o">=</span> <span class="n">LCB</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-                <span class="n">par</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;par_lcb&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+                      <span class="n">par</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;par_lcb&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">conf</span><span class="p">[</span><span class="s2">&quot;acq_func&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;PI&quot;</span><span class="p">:</span>
             <span class="n">acq</span> <span class="o">=</span> <span class="n">PI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
                      <span class="n">par</span><span class="o">=</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;par_pi&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
@@ -720,7 +718,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">cs</span> <span class="o">=</span> <span class="n">ConfigurationSpace</span><span class="p">()</span>
-        <span class="n">cs</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="o">**</span><span class="mi">20</span><span class="p">))</span>
+        <span class="n">cs</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">**</span> <span class="mi">20</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="s1">&#39;gp&#39;</span> <span class="ow">in</span> <span class="n">smac</span><span class="o">.</span><span class="n">extras_installed</span><span class="p">:</span>
             <span class="n">model</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;RF&quot;</span><span class="p">,</span> <span class="s2">&quot;GP&quot;</span><span class="p">))</span>
@@ -743,7 +741,7 @@
 
         <span class="n">cs</span><span class="o">.</span><span class="n">add_conditions</span><span class="p">([</span><span class="n">inc_num_trees</span><span class="p">,</span> <span class="n">inc_bootstrap</span><span class="p">,</span> <span class="n">inc_ratio_features</span><span class="p">,</span> <span class="n">inc_min_split</span><span class="p">,</span> <span class="n">inc_min_leavs</span><span class="p">])</span>
 
-        <span class="n">acq</span>  <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;acq_func&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="s2">&quot;LCB&quot;</span><span class="p">,</span> <span class="s2">&quot;PI&quot;</span><span class="p">,</span> <span class="s2">&quot;LogEI&quot;</span><span class="p">))</span>
+        <span class="n">acq</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;acq_func&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;EI&quot;</span><span class="p">,</span> <span class="s2">&quot;LCB&quot;</span><span class="p">,</span> <span class="s2">&quot;PI&quot;</span><span class="p">,</span> <span class="s2">&quot;LogEI&quot;</span><span class="p">))</span>
         <span class="n">par_ei</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;par_ei&quot;</span><span class="p">,</span> <span class="n">lower</span><span class="o">=-</span><span class="mi">10</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
         <span class="n">par_pi</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;par_pi&quot;</span><span class="p">,</span> <span class="n">lower</span><span class="o">=-</span><span class="mi">10</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
         <span class="n">par_logei</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;par_logei&quot;</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -771,7 +769,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>

@@ -369,11 +369,11 @@ if objective is runtime.</p></li>
 <li><p><strong>runhistory2epm_kwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – Arguments passed to the constructor of ‘~runhistory2epm’</p></li>
 <li><p><strong>initial_design</strong> (<a class="reference internal" href="smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign" title="smac.initial_design.initial_design.InitialDesign"><em>InitialDesign</em></a>) – initial sampling design</p></li>
 <li><p><strong>initial_design_kwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – arguments passed to constructor of <a href="#id1"><span class="problematic" id="id2">`</span></a>~initial_design’</p></li>
-<li><p><strong>initial_configurations</strong> (<em>List</em><em>[</em><em>Configuration</em><em>]</em>) – list of initial configurations for initial design –
+<li><p><strong>initial_configurations</strong> (<em>List</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em>) – list of initial configurations for initial design –
 cannot be used together with initial_design</p></li>
 <li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – optional stats object</p></li>
 <li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</p></li>
-<li><p><strong>restore_incumbent</strong> (<em>Configuration</em>) – incumbent used if restoring to previous state</p></li>
+<li><p><strong>restore_incumbent</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – incumbent used if restoring to previous state</p></li>
 <li><p><strong>smbo_class</strong> (<a class="reference internal" href="smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO" title="smac.optimizer.smbo.SMBO"><em>SMBO</em></a>) – Class implementing the SMBO interface which will be used to
 instantiate the optimizer class.</p></li>
 <li><p><strong>run_id</strong> (<em>int</em><em> (</em><em>optional</em><em>)</em>) – Run ID will be used as subfolder for output_dir. If no <code class="docutils literal notranslate"><span class="pre">run_id</span></code> is given, a random <code class="docutils literal notranslate"><span class="pre">run_id</span></code> will be
@@ -457,7 +457,7 @@ time).</p>
 <dd class="field-odd"><p><strong>incumbent</strong> – Best found configuration</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Configuration</p>
+<dd class="field-even"><p><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -516,7 +516,7 @@ deterministic will be fixed to 1)</p></li>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>

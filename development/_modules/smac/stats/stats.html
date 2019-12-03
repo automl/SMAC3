@@ -285,7 +285,6 @@
 
 
 <div class="viewcode-block" id="Stats"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats">[docs]</a><span class="k">class</span> <span class="nc">Stats</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    All statistics collected during configuration run.</span>
 <span class="sd">    Written to output-directory to be restored</span>
@@ -318,7 +317,7 @@
         <span class="c1"># debug stats</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_n_configs_per_intensify</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_n_calls_of_intensify</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="c1">## exponential moving average</span>
+        <span class="c1"># exponential moving average</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ema_n_configs_per_intensifiy</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_EMA_ALPHA</span> <span class="o">=</span> <span class="mf">0.2</span>
 
@@ -338,7 +337,7 @@
         <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;_Stats__scenario&#39;</span><span class="p">,</span> <span class="s1">&#39;_logger&#39;</span><span class="p">,</span> <span class="s1">&#39;_start_time&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;_Stats__scenario&#39;</span><span class="p">,</span> <span class="s1">&#39;_logger&#39;</span><span class="p">,</span> <span class="s1">&#39;_start_time&#39;</span><span class="p">]:</span>
                 <span class="n">data</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
 
         <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
@@ -423,9 +422,8 @@
 <span class="sd">        exhaustedness: boolean</span>
 <span class="sd">            true if one of the budgets is exhausted</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span>  <span class="bp">self</span><span class="o">.</span><span class="n">get_remaing_time_budget</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">get_remaining_ta_budget</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">get_remaining_ta_runs</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">0</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_remaing_time_budget</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_remaining_ta_budget</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span>
+                <span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_remaining_ta_runs</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">0</span></div>
 
 <div class="viewcode-block" id="Stats.update_average_configs_per_intensify"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.update_average_configs_per_intensify">[docs]</a>    <span class="k">def</span> <span class="nf">update_average_configs_per_intensify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_configs</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Updates statistics how many configurations on average per used in</span>
@@ -443,9 +441,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_ema_n_configs_per_intensifiy</span> <span class="o">=</span> <span class="n">n_configs</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ema_n_configs_per_intensifiy</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_EMA_ALPHA</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ema_n_configs_per_intensifiy</span> \
-                                                        <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_EMA_ALPHA</span> <span class="o">*</span> <span class="n">n_configs</span></div>
+                <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_EMA_ALPHA</span> <span class="o">*</span> <span class="n">n_configs</span></div>
 
-<div class="viewcode-block" id="Stats.print_stats"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.print_stats">[docs]</a>    <span class="k">def</span> <span class="nf">print_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">debug_out</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="Stats.print_stats"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.print_stats">[docs]</a>    <span class="k">def</span> <span class="nf">print_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">debug_out</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Prints all statistics</span>
 
 <span class="sd">        Parameters</span>
@@ -459,15 +457,19 @@
 
         <span class="n">log_func</span><span class="p">(</span><span class="s2">&quot;##########################################################&quot;</span><span class="p">)</span>
         <span class="n">log_func</span><span class="p">(</span><span class="s2">&quot;Statistics:&quot;</span><span class="p">)</span>
-        <span class="n">log_func</span><span class="p">(</span><span class="s2">&quot;#Incumbent changed: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># first change is default conf</span>
-        <span class="n">log_func</span><span class="p">(</span><span class="s2">&quot;#Target algorithm runs: </span><span class="si">%d</span><span class="s2"> / </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ta_runs</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="o">.</span><span class="n">ta_run_limit</span><span class="p">)))</span>
-        <span class="n">log_func</span><span class="p">(</span><span class="s2">&quot;#Configurations: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_configs</span><span class="p">))</span>
-        <span class="n">log_func</span><span class="p">(</span><span class="s2">&quot;Used wallclock time: </span><span class="si">%.2f</span><span class="s2"> / </span><span class="si">%.2f</span><span class="s2"> sec &quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="o">.</span><span class="n">wallclock_limit</span><span class="p">))</span>
-        <span class="n">log_func</span><span class="p">(</span><span class="s2">&quot;Used target algorithm runtime: </span><span class="si">%.2f</span><span class="s2"> / </span><span class="si">%.2f</span><span class="s2"> sec&quot;</span> <span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ta_time_used</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="o">.</span><span class="n">algo_runs_timelimit</span><span class="p">))</span>
+        <span class="n">log_func</span><span class="p">(</span><span class="s2">&quot;#Incumbent changed: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>  <span class="c1"># first change is default conf</span>
+        <span class="n">log_func</span><span class="p">(</span><span class="s2">&quot;#Target algorithm runs: </span><span class="si">%d</span><span class="s2"> / </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ta_runs</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="o">.</span><span class="n">ta_run_limit</span><span class="p">)))</span>
+        <span class="n">log_func</span><span class="p">(</span><span class="s2">&quot;#Configurations: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_configs</span><span class="p">))</span>
+        <span class="n">log_func</span><span class="p">(</span>
+            <span class="s2">&quot;Used wallclock time: </span><span class="si">%.2f</span><span class="s2"> / </span><span class="si">%.2f</span><span class="s2"> sec &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="o">.</span><span class="n">wallclock_limit</span><span class="p">))</span>
+        <span class="n">log_func</span><span class="p">(</span>
+            <span class="s2">&quot;Used target algorithm runtime: </span><span class="si">%.2f</span><span class="s2"> / </span><span class="si">%.2f</span><span class="s2"> sec&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ta_time_used</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="o">.</span><span class="n">algo_runs_timelimit</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Debug Statistics:&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_calls_of_intensify</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Average Configurations per Intensify: </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_configs_per_intensify</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_calls_of_intensify</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Exponential Moving Average of Configurations per Intensify: </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ema_n_configs_per_intensifiy</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Average Configurations per Intensify: </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_n_configs_per_intensify</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_calls_of_intensify</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Exponential Moving Average of Configurations per Intensify: </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_ema_n_configs_per_intensifiy</span><span class="p">))</span>
 
         <span class="n">log_func</span><span class="p">(</span><span class="s2">&quot;##########################################################&quot;</span><span class="p">)</span></div></div>
 </pre></div>
@@ -482,7 +484,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>

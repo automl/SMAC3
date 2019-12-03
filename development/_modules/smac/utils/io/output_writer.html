@@ -276,6 +276,7 @@
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">pcs_new</span><span class="p">,</span> <span class="n">json</span><span class="p">,</span> <span class="n">ConfigurationSpace</span>
 <span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">PickableLoggerAdapter</span>
 
+
 <div class="viewcode-block" id="OutputWriter"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.output_writer.html#smac.utils.io.output_writer.OutputWriter">[docs]</a><span class="k">class</span> <span class="nc">OutputWriter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Writing scenario to file.&quot;&quot;&quot;</span>
 
@@ -315,7 +316,8 @@
 
         <span class="c1"># options_dest2name maps scenario._arguments from dest -&gt; name</span>
         <span class="n">options_dest2name</span> <span class="o">=</span> <span class="p">{(</span><span class="n">scenario</span><span class="o">.</span><span class="n">_arguments</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;dest&#39;</span><span class="p">]</span> <span class="k">if</span>
-            <span class="n">scenario</span><span class="o">.</span><span class="n">_arguments</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;dest&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="n">v</span><span class="p">)</span> <span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">scenario</span><span class="o">.</span><span class="n">_arguments</span><span class="p">}</span>
+                              <span class="n">scenario</span><span class="o">.</span><span class="n">_arguments</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;dest&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="n">v</span><span class="p">):</span> <span class="n">v</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span>
+                             <span class="n">scenario</span><span class="o">.</span><span class="n">_arguments</span><span class="p">}</span>
 
         <span class="c1"># Write all options into &quot;output_dir/scenario.txt&quot;</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">,</span> <span class="s2">&quot;scenario.txt&quot;</span><span class="p">)</span>
@@ -371,7 +373,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">save_configspace</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span> <span class="n">pcs_path</span><span class="p">,</span> <span class="s1">&#39;pcs_new&#39;</span><span class="p">)</span>
                 <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not write pcs file to disk.&quot;</span>
-                    <span class="s2">&quot; ConfigSpace not compatible with (new) pcs format.&quot;</span><span class="p">)</span>
+                                      <span class="s2">&quot; ConfigSpace not compatible with (new) pcs format.&quot;</span><span class="p">)</span>
                 <span class="n">new_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">,</span> <span class="s1">&#39;configspace.json&#39;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">save_configspace</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span> <span class="n">new_path</span><span class="p">,</span> <span class="s1">&#39;json&#39;</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;train_inst_fn&#39;</span> <span class="ow">and</span> <span class="n">scenario</span><span class="o">.</span><span class="n">train_insts</span> <span class="o">!=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]:</span>
@@ -423,7 +425,7 @@
 <span class="sd">                 File name of instance feature file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">header</span> <span class="o">=</span> <span class="s2">&quot;Instance, &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="p">[</span><span class="s2">&quot;feature&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_features</span><span class="p">)])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="p">[</span><span class="s2">&quot;feature&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_features</span><span class="p">)])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">body</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">inst</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">feat_dict</span><span class="p">[</span><span class="n">inst</span><span class="p">]])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
                 <span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">feat_dict</span><span class="p">]</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
@@ -467,7 +469,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>

@@ -322,9 +322,16 @@
 <span class="sd">        Constructor</span>
 <span class="sd">        see ~smac.facade.smac_facade for documentation</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">scenario</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;scenario&#39;</span><span class="p">]</span>
 
-        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;initial_design&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;initial_design&#39;</span><span class="p">,</span> <span class="n">SobolDesign</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">())</span> <span class="o">&lt;=</span> <span class="mi">40</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;initial_design&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;initial_design&#39;</span><span class="p">,</span> <span class="n">SobolDesign</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;The default initial design &quot;Sobol sequence&quot; can only handle up to 40 dimensions. &#39;</span>
+                <span class="s1">&#39;Please use a different initial design, such as &quot;the Latin Hypercube design&quot;.&#39;</span><span class="p">,</span>
+            <span class="p">)</span>
         <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;runhistory2epm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runhistory2epm&#39;</span><span class="p">,</span> <span class="n">RunHistory2EPM4Cost</span><span class="p">)</span>
 
         <span class="n">init_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;initial_design_kwargs&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
@@ -373,7 +380,7 @@
 
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cont_dims</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat_dims</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="c1"># both</span>
-                <span class="n">kernel</span> <span class="o">=</span> <span class="n">cov_amp</span> <span class="o">*</span> <span class="p">(</span><span class="n">exp_kernel</span><span class="o">*</span><span class="n">ham_kernel</span><span class="p">)</span> <span class="o">+</span> <span class="n">noise_kernel</span>
+                <span class="n">kernel</span> <span class="o">=</span> <span class="n">cov_amp</span> <span class="o">*</span> <span class="p">(</span><span class="n">exp_kernel</span> <span class="o">*</span> <span class="n">ham_kernel</span><span class="p">)</span> <span class="o">+</span> <span class="n">noise_kernel</span>
             <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">cont_dims</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat_dims</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="c1"># only cont</span>
                 <span class="n">kernel</span> <span class="o">=</span> <span class="n">cov_amp</span> <span class="o">*</span> <span class="n">exp_kernel</span> <span class="o">+</span> <span class="n">noise_kernel</span>
@@ -452,7 +459,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>

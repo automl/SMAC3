@@ -277,7 +277,6 @@
 <span class="kn">import</span> <span class="nn">smac.epm.base_imputor</span>
 <span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="kn">import</span> <span class="n">AbstractEPM</span>
 
-
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Katharina Eggensperger&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
@@ -287,7 +286,6 @@
 
 
 <div class="viewcode-block" id="RFRImputator"><a class="viewcode-back" href="../../../apidoc/smac.epm.rfr_imputator.html#smac.epm.rfr_imputator.RFRImputator">[docs]</a><span class="k">class</span> <span class="nc">RFRImputator</span><span class="p">(</span><span class="n">smac</span><span class="o">.</span><span class="n">epm</span><span class="o">.</span><span class="n">base_imputor</span><span class="o">.</span><span class="n">BaseImputor</span><span class="p">):</span>
-
     <span class="sd">&quot;&quot;&quot;Imputor using pyrfr&#39;s Random Forest regressor.</span>
 
 <span class="sd">    **Note:** Sets var_threshold as the lower bound on the variance for the</span>
@@ -310,8 +308,8 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                  <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AbstractEPM</span><span class="p">,</span>
-                 <span class="n">change_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
-                 <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+                 <span class="n">change_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
+                 <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor</span>
 
 <span class="sd">        Parameters</span>
@@ -401,8 +399,7 @@
                 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
                     <span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;divide by zero encountered in (true_divide|log).*&#39;</span><span class="p">)</span>
                 <span class="n">imputed_y</span> <span class="o">=</span> <span class="n">truncnorm</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="p">(</span><span class="n">censored_y</span> <span class="o">-</span> <span class="n">y_mean</span><span class="p">)</span> <span class="o">/</span> <span class="n">y_stdev</span><span class="p">,</span>
-                                            <span class="n">b</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">-</span> <span class="n">y_mean</span><span class="p">)</span> <span class="o">/</span>
-                                            <span class="n">y_stdev</span><span class="p">,</span>
+                                            <span class="n">b</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">-</span> <span class="n">y_mean</span><span class="p">)</span> <span class="o">/</span> <span class="n">y_stdev</span><span class="p">,</span>
                                             <span class="n">loc</span><span class="o">=</span><span class="n">y_mean</span><span class="p">,</span>
                                             <span class="n">scale</span><span class="o">=</span><span class="n">y_stdev</span><span class="p">,</span>
                                             <span class="n">moments</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">)</span>
@@ -425,9 +422,7 @@
                 <span class="c1"># iteration, assume imputed values are always concatenated</span>
                 <span class="c1"># after uncensored values</span>
 
-                <span class="n">change</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">imputed_y</span> <span class="o">-</span>
-                                     <span class="n">y</span><span class="p">[</span><span class="n">uncensored_y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:])</span> <span class="o">/</span>
-                                 <span class="n">y</span><span class="p">[</span><span class="n">uncensored_y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:])</span>
+                <span class="n">change</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">imputed_y</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">uncensored_y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:])</span> <span class="o">/</span> <span class="n">y</span><span class="p">[</span><span class="n">uncensored_y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:])</span>
 
             <span class="c1"># lower all values that are higher than threshold</span>
             <span class="c1"># should probably never happen</span>
@@ -470,7 +465,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>

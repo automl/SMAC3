@@ -315,8 +315,8 @@ intensifiy).</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>challenger</strong> (<em>Configuration</em>) – promising configuration</p></li>
-<li><p><strong>incumbent</strong> (<em>typing.Optional</em><em>[</em><em>Configuration</em><em>]</em>) – best configuration so far, None in 1st run</p></li>
+<li><p><strong>challenger</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – promising configuration</p></li>
+<li><p><strong>incumbent</strong> (<em>typing.Optional</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em>) – best configuration so far, None in 1st run</p></li>
 <li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – stores all runs we ran so far</p></li>
 <li><p><strong>aggregate_func</strong> (<em>typing.Callable</em>) – aggregate error across instances</p></li>
 <li><p><strong>time_bound</strong> (<em>float</em><em>, </em><em>optional</em><em> (</em><em>default=2 ** 31 - 1</em><em>)</em>) – time in [sec] available to perform intensify</p></li>
@@ -327,7 +327,7 @@ intensifiy).</p></li>
 <dd class="field-even"><p>incumbent and incumbent cost</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>typing.Tuple[Configuration, float]</p>
+<dd class="field-odd"><p>typing.Tuple[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>, float]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -340,7 +340,7 @@ uses <code class="docutils literal notranslate"><span class="pre">_next_challeng
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>challengers</strong> (<em>typing.List</em><em>[</em><em>Configuration</em><em>]</em>) – promising configurations</p></li>
+<li><p><strong>challengers</strong> (<em>typing.List</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em>) – promising configurations</p></li>
 <li><p><strong>chooser</strong> (<a class="reference internal" href="smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser" title="smac.optimizer.epm_configuration_chooser.EPMChooser"><em>smac.optimizer.epm_configuration_chooser.EPMChooser</em></a>) – optimizer that generates next configurations to use for racing</p></li>
 <li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – stores all runs we ran so far</p></li>
 <li><p><strong>repeat_configs</strong> (<em>bool</em>) – if False, an evaluated configuration will not be generated again</p></li>
@@ -380,7 +380,7 @@ uses <code class="docutils literal notranslate"><span class="pre">_next_challeng
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>

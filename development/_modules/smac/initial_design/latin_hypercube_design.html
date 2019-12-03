@@ -315,7 +315,7 @@
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">Constant</span><span class="p">):</span>
                 <span class="n">constants</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="n">lhd</span> <span class="o">=</span> <span class="n">pyDOE</span><span class="o">.</span><span class="n">lhs</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span><span class="o">-</span><span class="n">constants</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">init_budget</span><span class="p">)</span>
+        <span class="n">lhd</span> <span class="o">=</span> <span class="n">pyDOE</span><span class="o">.</span><span class="n">lhs</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span> <span class="o">-</span> <span class="n">constants</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">init_budget</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform_continuous_designs</span><span class="p">(</span><span class="n">design</span><span class="o">=</span><span class="n">lhd</span><span class="p">,</span>
                                                   <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;LHD&#39;</span><span class="p">,</span>
@@ -332,7 +332,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>

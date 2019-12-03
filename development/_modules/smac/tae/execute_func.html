@@ -334,12 +334,11 @@
 <span class="sd">            cost that is used in case of crashed runs (including runs</span>
 <span class="sd">            that returned NaN or inf)</span>
 <span class="sd">        use_pynisher: bool</span>
-<span class="sd">            use pynisher to limit resources; </span>
+<span class="sd">            use pynisher to limit resources;</span>
 <span class="sd">            if disabled</span>
-<span class="sd">              * TA func can use as many resources </span>
+<span class="sd">              * TA func can use as many resources</span>
 <span class="sd">              as it wants (time and memory) --- use with caution</span>
 <span class="sd">              * all runs will be returned as SUCCESS if returned value is not None</span>
-<span class="sd">            </span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">signature</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">ta</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
@@ -441,7 +440,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span>
                 <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crash_cost</span>
-        
+
             <span class="n">runtime</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">wall_clock_time</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
@@ -466,7 +465,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span>
                 <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crash_cost</span>
-            
+
             <span class="n">runtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
 
         <span class="c1"># check serializability of results</span>
@@ -582,7 +581,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>

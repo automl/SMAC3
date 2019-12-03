@@ -270,7 +270,6 @@
             
   <h1>Source code for smac.runhistory.runhistory2epm</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">abc</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 
@@ -462,8 +461,8 @@
 
         <span class="c1"># Also get TIMEOUT runs</span>
         <span class="n">t_run_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">run</span><span class="p">:</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-                      <span class="k">if</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">TIMEOUT</span> <span class="ow">and</span>
-                      <span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">time</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff_time</span><span class="p">}</span>
+                      <span class="k">if</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="p">[</span>
+                          <span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">TIMEOUT</span> <span class="ow">and</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">time</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff_time</span><span class="p">}</span>
         <span class="n">t_instance_id_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">instance_id</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">s_run_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
 
         <span class="c1"># use penalization (e.g. PAR10) for EPM training</span>
@@ -479,8 +478,8 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">impute_censored_data</span><span class="p">:</span>
             <span class="c1"># Get all censored runs</span>
             <span class="n">c_run_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">run</span><span class="p">:</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">]</span> <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-                          <span class="k">if</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">impute_state</span> <span class="ow">and</span>
-                          <span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff_time</span><span class="p">}</span>
+                          <span class="k">if</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="p">[</span>
+                              <span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">impute_state</span> <span class="ow">and</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">run</span><span class="p">]</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff_time</span><span class="p">}</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">c_run_dict</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;No censored data found, skip imputation&quot;</span><span class="p">)</span>
                 <span class="c1"># If we do not impute, we also return TIMEOUT data</span>
@@ -668,7 +667,6 @@
 <span class="sd">        -------</span>
 <span class="sd">        np.ndarray</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
 
         <span class="c1"># ensure that minimal value is larger than 0</span>
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">values</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
@@ -870,7 +868,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>

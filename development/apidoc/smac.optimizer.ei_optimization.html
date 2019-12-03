@@ -289,7 +289,7 @@
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </p></li>
-<li><p><strong>config_space</strong> (<em>ConfigurationSpace</em>) – </p></li>
+<li><p><strong>config_space</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="smac.configspace.ConfigurationSpace"><em>ConfigurationSpace</em></a>) – </p></li>
 <li><p><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </p></li>
 </ul>
 </dd>
@@ -308,7 +308,7 @@
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>An iterable consisting of <code class="xref py py-class docutils literal notranslate"><span class="pre">smac.configspace.Configuration</span></code>.</p>
+<dd class="field-even"><p>An iterable consisting of <a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.configspace.Configuration</span></code></a>.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>iterable</p>
@@ -331,7 +331,7 @@ in each iteration which are never looked at.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>challengers</strong> (<em>list</em>) – List of challengers (without interleaved random configurations)</p></li>
-<li><p><strong>configuration_space</strong> (<em>ConfigurationSpace</em>) – ConfigurationSpace from which to sample new random configurations.</p></li>
+<li><p><strong>configuration_space</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="smac.configspace.ConfigurationSpace"><em>ConfigurationSpace</em></a>) – ConfigurationSpace from which to sample new random configurations.</p></li>
 </ul>
 </dd>
 </dl>
@@ -346,7 +346,7 @@ in each iteration which are never looked at.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </p></li>
-<li><p><strong>config_space</strong> (<em>ConfigurationSpace</em>) – </p></li>
+<li><p><strong>config_space</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="smac.configspace.ConfigurationSpace"><em>ConfigurationSpace</em></a>) – </p></li>
 <li><p><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </p></li>
 </ul>
 </dd>
@@ -361,7 +361,7 @@ in each iteration which are never looked at.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>configurations</strong> (<em>List</em><em>[</em><em>Configuration</em><em>]</em>) – Candidate configurations</p></li>
+<li><p><strong>configurations</strong> (<em>List</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em>) – Candidate configurations</p></li>
 <li><p><strong>kwargs</strong> (<em>dict</em>) – Arguments to pass to the super class.</p></li>
 </ul>
 </dd>
@@ -381,7 +381,7 @@ sampled configurations in between.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </p></li>
-<li><p><strong>config_space</strong> (<em>ConfigurationSpace</em>) – </p></li>
+<li><p><strong>config_space</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="smac.configspace.ConfigurationSpace"><em>ConfigurationSpace</em></a>) – </p></li>
 <li><p><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </p></li>
 <li><p><strong>max_steps</strong> (<em>int</em>) – [LocalSearch] Maximum number of steps that the local search will perform</p></li>
 <li><p><strong>n_steps_plateau_walk</strong> (<em>int</em>) – [LocalSearch] number of steps during a plateau walk before local search terminates</p></li>
@@ -411,7 +411,7 @@ is called at the end of this function</p></li>
 <dd class="field-even"><p>to be concrete: ~smac.ei_optimization.ChallengerList</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Iterable[Configuration]</p>
+<dd class="field-odd"><p>Iterable[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -427,7 +427,7 @@ is called at the end of this function</p></li>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </p></li>
-<li><p><strong>config_space</strong> (<em>ConfigurationSpace</em>) – </p></li>
+<li><p><strong>config_space</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="smac.configspace.ConfigurationSpace"><em>ConfigurationSpace</em></a>) – </p></li>
 <li><p><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </p></li>
 <li><p><strong>max_steps</strong> (<em>int</em>) – Maximum number of iterations that the local search will perform</p></li>
 <li><p><strong>n_steps_plateau_walk</strong> (<em>int</em>) – number of steps during a plateau walk before local search terminates</p></li>
@@ -449,7 +449,7 @@ reduce the overhead of SMAC</p></li>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </p></li>
-<li><p><strong>config_space</strong> (<em>ConfigurationSpace</em>) – </p></li>
+<li><p><strong>config_space</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="smac.configspace.ConfigurationSpace"><em>ConfigurationSpace</em></a>) – </p></li>
 <li><p><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </p></li>
 </ul>
 </dd>
@@ -509,7 +509,7 @@ the given configuration.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>

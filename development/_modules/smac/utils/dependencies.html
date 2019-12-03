@@ -334,11 +334,9 @@
     <span class="k">elif</span> <span class="n">operation</span> <span class="o">==</span> <span class="s1">&#39;&lt;&#39;</span><span class="p">:</span>
         <span class="n">check</span> <span class="o">=</span> <span class="n">installed_version</span> <span class="o">&lt;</span> <span class="n">required_version</span>
     <span class="k">elif</span> <span class="n">operation</span> <span class="o">==</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">:</span>
-        <span class="n">check</span> <span class="o">=</span> <span class="n">installed_version</span> <span class="o">&gt;</span> <span class="n">required_version</span> <span class="ow">or</span> \
-                <span class="n">installed_version</span> <span class="o">==</span> <span class="n">required_version</span>
+        <span class="n">check</span> <span class="o">=</span> <span class="n">installed_version</span> <span class="o">&gt;</span> <span class="n">required_version</span> <span class="ow">or</span> <span class="n">installed_version</span> <span class="o">==</span> <span class="n">required_version</span>
     <span class="k">elif</span> <span class="n">operation</span> <span class="o">==</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">:</span>
-        <span class="n">check</span> <span class="o">=</span> <span class="n">installed_version</span> <span class="o">&lt;</span> <span class="n">required_version</span> <span class="ow">or</span> \
-                <span class="n">installed_version</span> <span class="o">==</span> <span class="n">required_version</span>
+        <span class="n">check</span> <span class="o">=</span> <span class="n">installed_version</span> <span class="o">&lt;</span> <span class="n">required_version</span> <span class="ow">or</span> <span class="n">installed_version</span> <span class="o">==</span> <span class="n">required_version</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
             <span class="s1">&#39;operation </span><span class="se">\&#39;</span><span class="si">%s</span><span class="se">\&#39;</span><span class="s1"> is not supported&#39;</span> <span class="o">%</span> <span class="n">operation</span><span class="p">)</span>
@@ -382,7 +380,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>

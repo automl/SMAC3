@@ -361,13 +361,15 @@
                         <span class="n">priors_for_hp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_param</span><span class="o">.</span><span class="n">prior</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">add_bound_priors</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">add_soft_bounds</span><span class="p">:</span>
-                            <span class="n">priors_for_hp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">smac</span><span class="o">.</span><span class="n">epm</span><span class="o">.</span><span class="n">gp_base_prior</span><span class="o">.</span><span class="n">SoftTopHatPrior</span><span class="p">(</span>
-                               <span class="n">lower_bound</span><span class="o">=</span><span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">upper_bound</span><span class="o">=</span><span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">rng</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span>
-                            <span class="p">))</span>
+                            <span class="n">priors_for_hp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                                <span class="n">smac</span><span class="o">.</span><span class="n">epm</span><span class="o">.</span><span class="n">gp_base_prior</span><span class="o">.</span><span class="n">SoftTopHatPrior</span><span class="p">(</span>
+                                    <span class="n">lower_bound</span><span class="o">=</span><span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">upper_bound</span><span class="o">=</span><span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">rng</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span>
+                                <span class="p">))</span>
                         <span class="k">else</span><span class="p">:</span>
-                            <span class="n">priors_for_hp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">smac</span><span class="o">.</span><span class="n">epm</span><span class="o">.</span><span class="n">gp_base_prior</span><span class="o">.</span><span class="n">TophatPrior</span><span class="p">(</span>
-                                <span class="n">lower_bound</span><span class="o">=</span><span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">upper_bound</span><span class="o">=</span><span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">rng</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span>
-                            <span class="p">))</span>
+                            <span class="n">priors_for_hp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                                <span class="n">smac</span><span class="o">.</span><span class="n">epm</span><span class="o">.</span><span class="n">gp_base_prior</span><span class="o">.</span><span class="n">TophatPrior</span><span class="p">(</span>
+                                    <span class="n">lower_bound</span><span class="o">=</span><span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">upper_bound</span><span class="o">=</span><span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">rng</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span>
+                                <span class="p">))</span>
                     <span class="n">all_priors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">priors_for_hp</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">all_priors</span>
 
@@ -402,7 +404,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>

@@ -471,9 +471,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span>
 
         <span class="k">if</span> <span class="p">(</span>
-            <span class="n">scenario</span><span class="o">.</span><span class="n">deterministic</span> <span class="ow">is</span> <span class="kc">True</span>
-            <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="s1">&#39;tuner_timeout&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
-            <span class="ow">and</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s1">&#39;quality&#39;</span>
+                <span class="n">scenario</span><span class="o">.</span><span class="n">deterministic</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="s1">&#39;tuner_timeout&#39;</span><span class="p">,</span>
+                                                           <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s1">&#39;quality&#39;</span>
         <span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Optimizing a deterministic scenario for quality without a tuner timeout - will make &#39;</span>
                              <span class="s1">&#39;SMAC deterministic and only evaluate one configuration per iteration!&#39;</span><span class="p">)</span>
@@ -505,7 +504,7 @@
                 <span class="n">runhistory</span><span class="o">.</span><span class="n">aggregate_func</span> <span class="o">=</span> <span class="n">aggregate_func</span>
 
         <span class="n">rand_conf_chooser_kwargs</span> <span class="o">=</span> <span class="p">{</span>
-           <span class="s1">&#39;rng&#39;</span><span class="p">:</span> <span class="n">rng</span>
+            <span class="s1">&#39;rng&#39;</span><span class="p">:</span> <span class="n">rng</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="n">random_configuration_chooser_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">rand_conf_chooser_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">random_configuration_chooser_kwargs</span><span class="p">)</span>
@@ -556,7 +555,7 @@
             <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">model_def_kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                <span class="s2">&quot;Model not recognized: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">model</span><span class="p">)))</span>
+                <span class="s2">&quot;Model not recognized: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">model</span><span class="p">)))</span>
 
         <span class="c1"># initial acquisition function</span>
         <span class="n">acq_def_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="n">model</span><span class="p">}</span>
@@ -586,7 +585,7 @@
             <span class="s1">&#39;acquisition_function&#39;</span><span class="p">:</span> <span class="n">acquisition_function</span><span class="p">,</span>
             <span class="s1">&#39;config_space&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span>
             <span class="s1">&#39;rng&#39;</span><span class="p">:</span> <span class="n">rng</span><span class="p">,</span>
-            <span class="p">}</span>
+        <span class="p">}</span>
         <span class="k">if</span> <span class="n">acquisition_function_optimizer_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">acq_func_opt_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">acquisition_function_optimizer_kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">acquisition_function_optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -616,7 +615,7 @@
             <span class="s1">&#39;par_factor&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">par_factor</span><span class="p">,</span>
             <span class="s1">&#39;cost_for_crash&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cost_for_crash</span><span class="p">,</span>
             <span class="s1">&#39;abort_on_first_run_crash&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span>
-            <span class="p">}</span>
+        <span class="p">}</span>
         <span class="k">if</span> <span class="n">tae_runner_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">tae_def_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tae_runner_kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="s1">&#39;ta&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tae_def_kwargs</span><span class="p">:</span>
@@ -655,14 +654,14 @@
             <span class="s1">&#39;deterministic&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">deterministic</span><span class="p">,</span>
             <span class="s1">&#39;run_obj_time&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;runtime&quot;</span><span class="p">,</span>
             <span class="s1">&#39;always_race_against&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">()</span>
-                                   <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">always_race_default</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">always_race_default</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
             <span class="s1">&#39;use_ta_time_bound&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">use_ta_time</span><span class="p">,</span>
             <span class="s1">&#39;instance_specifics&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">instance_specific</span><span class="p">,</span>
             <span class="s1">&#39;minR&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">minR</span><span class="p">,</span>
             <span class="s1">&#39;maxR&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">maxR</span><span class="p">,</span>
             <span class="s1">&#39;adaptive_capping_slackfactor&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">intens_adaptive_capping_slackfactor</span><span class="p">,</span>
             <span class="s1">&#39;min_chall&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">intens_min_chall</span>
-            <span class="p">}</span>
+        <span class="p">}</span>
         <span class="k">if</span> <span class="n">intensifier_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">intensifier_def_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">intensifier_kwargs</span><span class="p">)</span>
 
@@ -689,7 +688,7 @@
             <span class="s1">&#39;configs&#39;</span><span class="p">:</span> <span class="n">initial_configurations</span><span class="p">,</span>
             <span class="s1">&#39;n_configs_x_params&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
             <span class="s1">&#39;max_config_fracs&#39;</span><span class="p">:</span> <span class="mf">0.0</span>
-            <span class="p">}</span>
+        <span class="p">}</span>
         <span class="k">if</span> <span class="n">initial_design_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">init_design_def_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">initial_design_kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">initial_configurations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -743,7 +742,7 @@
             <span class="s1">&#39;impute_state&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span><span class="p">,</span> <span class="p">],</span>
             <span class="s1">&#39;imputor&#39;</span><span class="p">:</span> <span class="n">imputor</span><span class="p">,</span>
             <span class="s1">&#39;scale_perc&#39;</span><span class="p">:</span> <span class="mi">5</span>
-            <span class="p">}</span>
+        <span class="p">}</span>
         <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s1">&#39;quality&#39;</span><span class="p">:</span>
             <span class="n">r2e_def_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
                 <span class="s1">&#39;success_states&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">],</span>
@@ -831,8 +830,8 @@
                  <span class="n">instance_mode</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;train+test&#39;</span><span class="p">,</span>
                  <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
                  <span class="n">use_epm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                 <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">backend</span><span class="p">:</span>
-                 <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;threading&#39;</span><span class="p">):</span>
+                 <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;threading&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create validator-object and run validation, using</span>
 <span class="sd">        scenario-information, runhistory from smbo and tae_runner from intensify</span>
@@ -938,7 +937,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>

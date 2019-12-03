@@ -288,7 +288,6 @@
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="kn">import</span> <span class="n">AbstractAcquisitionFunction</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.random_configuration_chooser</span> <span class="kn">import</span> <span class="n">ChooserNoCoolDown</span>
-<span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Aaron Klein, Marius Lindauer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
@@ -330,7 +329,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">rng</span>
-
 
 <div class="viewcode-block" id="AcquisitionFunctionMaximizer.maximize"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer.maximize">[docs]</a>    <span class="k">def</span> <span class="nf">maximize</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
@@ -722,7 +720,7 @@
             <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
             <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">,</span>
             <span class="n">num_points</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-            <span class="n">_sorted</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">_sorted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;DifferentialEvolutionSolver</span>
@@ -747,23 +745,28 @@
 <span class="sd">            tuple(acqusition_value, :class:`smac.configspace.Configuration`).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-
         <span class="kn">from</span> <span class="nn">scipy.optimize._differentialevolution</span> <span class="kn">import</span> <span class="n">DifferentialEvolutionSolver</span>
         <span class="n">configs</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
             <span class="k">return</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">acquisition_function</span><span class="p">([</span><span class="n">Configuration</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_space</span><span class="p">,</span> <span class="n">vector</span><span class="o">=</span><span class="n">x</span><span class="p">)])</span>
 
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">DifferentialEvolutionSolver</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">args</span><span class="o">=</span><span class="p">(),</span>
-                                    <span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;best1bin&#39;</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-                                    <span class="n">popsize</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
-                                    <span class="n">mutation</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-                                    <span class="n">recombination</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
-                                    <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1000</span><span class="p">),</span> <span class="n">polish</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                                    <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                    <span class="n">disp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="s1">&#39;latinhypercube&#39;</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">DifferentialEvolutionSolver</span><span class="p">(</span><span class="n">func</span><span class="p">,</span>
+                                         <span class="n">bounds</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span>
+                                         <span class="n">args</span><span class="o">=</span><span class="p">(),</span>
+                                         <span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;best1bin&#39;</span><span class="p">,</span>
+                                         <span class="n">maxiter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                                         <span class="n">popsize</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+                                         <span class="n">mutation</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                                         <span class="n">recombination</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+                                         <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1000</span><span class="p">),</span>
+                                         <span class="n">polish</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                         <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                         <span class="n">disp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                         <span class="n">init</span><span class="o">=</span><span class="s1">&#39;latinhypercube&#39;</span><span class="p">,</span>
+                                         <span class="n">atol</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-        <span class="n">rval</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">pop</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">population</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">population_energies</span><span class="p">):</span>
             <span class="n">rc</span> <span class="o">=</span> <span class="n">Configuration</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_space</span><span class="p">,</span> <span class="n">vector</span><span class="o">=</span><span class="n">pop</span><span class="p">)</span>
             <span class="n">rc</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;DifferentialEvolution&#39;</span>
@@ -772,6 +775,7 @@
         <span class="n">configs</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">configs</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">configs</span></div>
+
 
 <div class="viewcode-block" id="RandomSearch"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.RandomSearch">[docs]</a><span class="k">class</span> <span class="nc">RandomSearch</span><span class="p">(</span><span class="n">AcquisitionFunctionMaximizer</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get candidate solutions via random sampling of configurations.</span>
@@ -790,7 +794,7 @@
             <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
             <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">,</span>
             <span class="n">num_points</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-            <span class="n">_sorted</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">_sorted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;Randomly sampled configurations</span>
@@ -881,13 +885,13 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_sls_iterations</span> <span class="o">=</span> <span class="n">n_sls_iterations</span>
 
-        <span class="c1">#=======================================================================</span>
+        <span class="c1"># =======================================================================</span>
         <span class="c1"># self.local_search = DiffOpt(</span>
         <span class="c1">#     acquisition_function=acquisition_function,</span>
         <span class="c1">#     config_space=config_space,</span>
         <span class="c1">#     rng=rng</span>
         <span class="c1"># )</span>
-        <span class="c1">#=======================================================================</span>
+        <span class="c1"># =======================================================================</span>
 
 <div class="viewcode-block" id="InterleavedLocalAndRandomSearch.maximize"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch.maximize">[docs]</a>    <span class="k">def</span> <span class="nf">maximize</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
@@ -942,8 +946,7 @@
         <span class="c1"># the list ensures this (even after adding the configurations by local</span>
         <span class="c1"># search, and then sorting them)</span>
         <span class="n">next_configs_by_acq_value</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">next_configs_by_random_search_sorted</span>
-            <span class="o">+</span> <span class="n">next_configs_by_local_search</span>
+            <span class="n">next_configs_by_random_search_sorted</span> <span class="o">+</span> <span class="n">next_configs_by_local_search</span>
         <span class="p">)</span>
         <span class="n">next_configs_by_acq_value</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
@@ -1046,7 +1049,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>

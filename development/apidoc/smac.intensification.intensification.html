@@ -296,7 +296,7 @@ procedure).</p>
 <li><p><strong>cutoff</strong> (<em>int</em>) – runtime cutoff of TA runs</p></li>
 <li><p><strong>deterministic</strong> (<em>bool</em>) – whether the TA is deterministic or not</p></li>
 <li><p><strong>run_obj_time</strong> (<em>bool</em>) – whether the run objective is runtime or not (if true, apply adaptive capping)</p></li>
-<li><p><strong>always_race_against</strong> (<em>Configuration</em>) – if incumbent changes race this configuration always against new incumbent;
+<li><p><strong>always_race_against</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – if incumbent changes race this configuration always against new incumbent;
 can sometimes prevent over-tuning</p></li>
 <li><p><strong>use_ta_time_bound</strong> (<em>bool</em><em>,</em>) – if true, trust time reported by the target algorithms instead of
 measuring the wallclock time for limiting the time of intensification</p></li>
@@ -322,8 +322,8 @@ If both arguments are given, then the optimizer will be used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>challenger</strong> (<em>Configuration</em>) – promising configurations</p></li>
-<li><p><strong>incumbent</strong> (<em>typing.Optional</em><em>[</em><em>Configuration</em><em>]</em>) – best configuration so far, None in 1st run</p></li>
+<li><p><strong>challenger</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – promising configurations</p></li>
+<li><p><strong>incumbent</strong> (<em>typing.Optional</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em>) – best configuration so far, None in 1st run</p></li>
 <li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – stores all runs we ran so far</p></li>
 <li><p><strong>aggregate_func</strong> (<em>typing.Callable</em>) – aggregate error across instances</p></li>
 <li><p><strong>time_bound</strong> (<em>float</em><em>, </em><em>optional</em><em> (</em><em>default=2 ** 31 - 1</em><em>)</em>) – time in [sec] available to perform intensify</p></li>
@@ -349,7 +349,7 @@ while the later iterations pick top configurations from the previously selected 
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>challengers</strong> (<em>typing.List</em><em>[</em><em>Configuration</em><em>]</em>) – promising configurations</p></li>
+<li><p><strong>challengers</strong> (<em>typing.List</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em>) – promising configurations</p></li>
 <li><p><strong>chooser</strong> (<a class="reference internal" href="smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser" title="smac.optimizer.epm_configuration_chooser.EPMChooser"><em>smac.optimizer.epm_configuration_chooser.EPMChooser</em></a>) – optimizer that generates next configurations to use for racing</p></li>
 <li><p><strong>run_history</strong> (<em>typing.Optional</em><em>[</em><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a><em>]</em>) – stores all runs we ran so far</p></li>
 <li><p><strong>repeat_configs</strong> (<em>bool</em>) – if False, an evaluated configuration will not be generated again</p></li>
@@ -411,7 +411,7 @@ while the later iterations pick top configurations from the previously selected 
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>

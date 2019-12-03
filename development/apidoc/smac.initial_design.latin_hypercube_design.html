@@ -280,7 +280,7 @@
 <span id="smac-initial-design-latin-hypercube-design-module"></span><h1>smac.initial_design.latin_hypercube_design module<a class="headerlink" href="#module-smac.initial_design.latin_hypercube_design" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.initial_design.latin_hypercube_design.LHDesign">
-<em class="property">class </em><code class="sig-prename descclassname">smac.initial_design.latin_hypercube_design.</code><code class="sig-name descname">LHDesign</code><span class="sig-paren">(</span><em class="sig-param">cs: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em class="sig-param">rng: numpy.random.mtrand.RandomState</em>, <em class="sig-param">traj_logger: smac.utils.io.traj_logging.TrajLogger</em>, <em class="sig-param">ta_run_limit: float</em>, <em class="sig-param">configs: Optional[List[ConfigSpace.configuration_space.Configuration]] = None</em>, <em class="sig-param">n_configs_x_params: Optional[int] = 10</em>, <em class="sig-param">max_config_fracs: float = 0.25</em>, <em class="sig-param">init_budget: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/initial_design/latin_hypercube_design.html#LHDesign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.latin_hypercube_design.LHDesign" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.initial_design.latin_hypercube_design.</code><code class="sig-name descname">LHDesign</code><span class="sig-paren">(</span><em class="sig-param">cs: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em class="sig-param">rng: numpy.random.mtrand.RandomState</em>, <em class="sig-param">traj_logger: smac.utils.io.traj_logging.TrajLogger</em>, <em class="sig-param">ta_run_limit: int</em>, <em class="sig-param">configs: Optional[List[ConfigSpace.configuration_space.Configuration]] = None</em>, <em class="sig-param">n_configs_x_params: Optional[int] = 10</em>, <em class="sig-param">max_config_fracs: float = 0.25</em>, <em class="sig-param">init_budget: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/initial_design/latin_hypercube_design.html#LHDesign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.latin_hypercube_design.LHDesign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign" title="smac.initial_design.initial_design.InitialDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.initial_design.initial_design.InitialDesign</span></code></a></p>
 <p>Latin Hypercube design</p>
 <dl class="attribute">
@@ -291,7 +291,7 @@ Don’t pass configs to the constructor;
 otherwise factorial design is overwritten</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>typing.List[Configuration]</p>
+<dd class="field-odd"><p>typing.List[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -300,12 +300,12 @@ otherwise factorial design is overwritten</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cs</strong> (<em>ConfigurationSpace</em>) – configuration space object</p></li>
+<li><p><strong>cs</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="smac.configspace.ConfigurationSpace"><em>ConfigurationSpace</em></a>) – configuration space object</p></li>
 <li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</p></li>
 <li><p><strong>traj_logger</strong> (<a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger"><em>TrajLogger</em></a>) – Trajectory logging to add new incumbents found by the initial
 design.</p></li>
 <li><p><strong>ta_run_limit</strong> (<em>int</em>) – Number of iterations allowed for the target algorithm</p></li>
-<li><p><strong>configs</strong> (<em>typing.Optional</em><em>[</em><em>typing.List</em><em>[</em><em>Configuration</em><em>]</em><em>]</em>) – List of initial configurations. Disables the arguments <code class="docutils literal notranslate"><span class="pre">n_configs_x_params</span></code> if given.
+<li><p><strong>configs</strong> (<em>typing.Optional</em><em>[</em><em>typing.List</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em><em>]</em>) – List of initial configurations. Disables the arguments <code class="docutils literal notranslate"><span class="pre">n_configs_x_params</span></code> if given.
 Either this, or <code class="docutils literal notranslate"><span class="pre">n_configs_x_params</span></code> or <code class="docutils literal notranslate"><span class="pre">init_budget</span></code> must be provided.</p></li>
 <li><p><strong>n_configs_x_params</strong> (<em>int</em>) – how many configurations will be used at most in the initial design (X*D). Either
 this, or <code class="docutils literal notranslate"><span class="pre">init_budget</span></code> or <code class="docutils literal notranslate"><span class="pre">configs</span></code> must be provided. Disables the argument
@@ -341,7 +341,7 @@ provided.</p></li>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>

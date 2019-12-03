@@ -308,7 +308,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">in_scenario_fn_list</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;To read warmstart data from previous runhistories, the corresponding scenarios are required. Use option --warmstart_scenario&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;To read warmstart data from previous runhistories,&quot;</span>
+                         <span class="s2">&quot; the corresponding scenarios are required. Use option --warmstart_scenario&quot;</span><span class="p">)</span>
     <span class="n">scens</span> <span class="o">=</span> <span class="p">[</span><span class="n">Scenario</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scen_fn</span><span class="p">,</span> <span class="n">cmd_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;output_dir&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">})</span> <span class="k">for</span> <span class="n">scen_fn</span> <span class="ow">in</span> <span class="n">in_scenario_fn_list</span><span class="p">]</span>
     <span class="n">rhs</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">rh_fn</span> <span class="ow">in</span> <span class="n">in_runhistory_fn_list</span><span class="p">:</span>
@@ -380,7 +381,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>
