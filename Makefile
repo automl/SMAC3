@@ -3,11 +3,6 @@
 test:
 	pytest -sv --cov=smac test --durations=20
 
-.PHONY: test-fast
-test-fast:
-	# requires nose-timer
-	pytest -sv -m !slow --durations=20 test
-
 .PHONY: test-runtimes
 test-runtimes:
 	# requires nose-timer
