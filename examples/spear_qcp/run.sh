@@ -1,1 +1,1 @@
-python3 ../../scripts/smac --scenario scenario.txt --verbose DEBUG
+python ../../scripts/smac --scenario scenario.txt --verbose DEBUG

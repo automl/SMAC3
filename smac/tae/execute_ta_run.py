@@ -163,8 +163,6 @@ class ExecuteTARun(object):
                 "Skip target algorithm run due to exhausted "
                 "configuration budget")
 
-        if cutoff is not None:
-            cutoff = int(math.ceil(cutoff))
         if cutoff is None and self.run_obj == "runtime":
             self.logger.error("For scenarios optimizing running time "
                               "(run objective), a cutoff time is required, "

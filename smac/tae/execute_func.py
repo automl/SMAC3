@@ -134,15 +134,14 @@ class AbstractTAFunc(ExecuteTARun):
             obj_kwargs['budget'] = budget
 
         if self.use_pynisher:
-            # walltime for pynisher has to be a rounded up integer
             if cutoff is not None:
-                cutoff = int(math.ceil(cutoff))
                 if cutoff > MAX_CUTOFF:
                     raise ValueError("%d is outside the legal range of [0, 65535] "
                                      "for cutoff (when using pynisher, due to OS limitations)" % cutoff)
 
             arguments = {'logger': logging.getLogger("pynisher"),
-                         'wall_time_in_s': cutoff,
+                         # walltime for pynisher has to be a rounded up integer
+                         'wall_time_in_s': int(math.ceil(cutoff)),
                          'mem_in_mb': self.memory_limit}
 
             # call ta
