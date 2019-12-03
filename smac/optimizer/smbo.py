@@ -26,6 +26,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
+from smac.tae.execute_ta_run import FirstRunCrashedException
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
 from smac.utils.constants import MAXINT
@@ -217,13 +218,17 @@ class SMBO(object):
                 # evaluate selected challenger
                 self.logger.debug("Intensify - evaluate challenger")
 
-                self.incumbent, inc_perf = self.intensifier.eval_challenger(
-                    challenger=challenger,
-                    incumbent=self.incumbent,
-                    run_history=self.runhistory,
-                    aggregate_func=self.aggregate_func,
-                    time_bound=max(self.intensifier._min_time, time_left))
+                try:
+                    self.incumbent, inc_perf = self.intensifier.eval_challenger(
+                        challenger=challenger,
+                        incumbent=self.incumbent,
+                        run_history=self.runhistory,
+                        aggregate_func=self.aggregate_func,
+                        time_bound=max(self.intensifier._min_time, time_left))
 
+                except FirstRunCrashedException:
+                    if self.scenario.abort_on_first_run_crash:
+                        raise
                 if self.scenario.shared_model:
                     pSMAC.write(run_history=self.runhistory,
                                 output_directory=self.scenario.output_dir_for_this_run,
