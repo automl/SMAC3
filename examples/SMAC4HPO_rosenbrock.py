@@ -1,3 +1,9 @@
+"""
+=========================================================================================
+Using the SMAC interface tuned for hyperparameter optimization for black-box optimization
+=========================================================================================
+"""
+
 import logging
 
 import numpy as np

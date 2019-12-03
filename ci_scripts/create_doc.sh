@@ -8,9 +8,6 @@ if ! [[ -z ${DOCPUSH+x} ]]; then
 
     if [[ "$DOCPUSH" == "true" ]]; then
 
-        # install documentation building dependencies
-        pip install --upgrade sphinx_rtd_theme
-
         # $1 is the branch name
         # $2 is the global variable where we set the script status
 

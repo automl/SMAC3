@@ -1,3 +1,9 @@
+"""
+==================================================
+Using the black-box optimization interface of SMAC
+==================================================
+"""
+
 import logging
 
 import numpy as np

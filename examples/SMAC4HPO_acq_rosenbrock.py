@@ -1,3 +1,9 @@
+"""
+=================================
+Changing the acquisition function
+=================================
+"""
+
 import logging
 
 import numpy as np
