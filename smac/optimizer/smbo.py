@@ -136,22 +136,17 @@ class SMBO(object):
 
         self.initial_design_configs = []
 
-        # initialize the chooser to get configurations from the EPM
-        if self.intensifier in (Hyperband, SuccessiveHalving):
-            self.epm_chooser = EPMChooserBudgets
-        else:
-            self.epm_chooser = EPMChooser
-        self.epm_chooser = self.epm_chooser(scenario=scenario,
-                                            stats=stats,
-                                            runhistory=runhistory,
-                                            runhistory2epm=runhistory2epm,
-                                            model=model,
-                                            acq_optimizer=acq_optimizer,
-                                            acquisition_func=acquisition_func,
-                                            rng=rng,
-                                            restore_incumbent=restore_incumbent,
-                                            random_configuration_chooser=random_configuration_chooser,
-                                            predict_incumbent=predict_incumbent)
+        self.epm_chooser = self.EPMChooser(scenario=scenario,
+                                           stats=stats,
+                                           runhistory=runhistory,
+                                           runhistory2epm=runhistory2epm,
+                                           model=model,
+                                           acq_optimizer=acq_optimizer,
+                                           acquisition_func=acquisition_func,
+                                           rng=rng,
+                                           restore_incumbent=restore_incumbent,
+                                           random_configuration_chooser=random_configuration_chooser,
+                                           predict_incumbent=predict_incumbent)
 
     def start(self):
         """Starts the Bayesian Optimization loop.
