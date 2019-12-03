@@ -85,7 +85,7 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
             num_trees=N_TREES,
             do_bootstrapping=bootstrap,
             n_points_per_tree=N_POINTS_PER_TREE,
-            ratio_features=5/6,
+            ratio_features=5 / 6,
             min_samples_split=3,
             min_samples_leaf=3,
             max_depth=MAX_DEPTH,
@@ -118,8 +118,7 @@ class RandomForestWithInstancesHPO(RandomForestWithInstances):
         self._set_hypers(self._get_configuration_space().get_default_configuration())
         self.seed = seed
 
-        self.logger = logging.getLogger(self.__module__ + "." +
-                                        self.__class__.__name__)
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
     def _train(self, X: np.ndarray, y: np.ndarray) -> 'RandomForestWithInstancesHPO':
         """Trains the random forest on X and y.

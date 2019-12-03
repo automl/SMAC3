@@ -111,7 +111,7 @@ class Hydra(object):
         self.optimizer = None
         self.portfolio_cost = None
 
-    def _get_validation_set(self, val_set: str, delete: bool=True) -> typing.List[str]:
+    def _get_validation_set(self, val_set: str, delete: bool = True) -> typing.List[str]:
         """
         Create small validation set for hydra to determine incumbent performance
 
@@ -138,7 +138,7 @@ class Hydra(object):
             self.logger.warning('Can not determine validation set size. Using full training-set!')
             return self.scenario.train_insts
         else:
-            size = int(val_set[3:])/100
+            size = int(val_set[3:]) / 100
             if size <= 0 or size >= 1:
                 raise ValueError('X invalid in valX, should be between 0 and 1')
             insts = np.array(self.scenario.train_insts)
@@ -176,7 +176,7 @@ class Hydra(object):
         # parent process SMAC only used for validation purposes
         self.solver = SMAC4AC(scenario=scen, tae_runner=self._tae, rng=self.rng, run_id=self.run_id, **self.kwargs)
         for i in range(self.n_iterations):
-            self.logger.info("="*120)
+            self.logger.info("=" * 120)
             self.logger.info("Hydra Iteration: %d", (i + 1))
 
             if i == 0:
@@ -231,11 +231,11 @@ class Hydra(object):
         self.rh.save_json(fn=os.path.join(self.top_dir, 'all_validated_runs_runhistory.json'), save_external=True)
         with open(os.path.join(self.top_dir, 'portfolio.pkl'), 'wb') as fh:
             pickle.dump(self.portfolio, fh)
-        self.logger.info("~"*120)
+        self.logger.info("~" * 120)
         self.logger.info('Resulting Portfolio:')
         for configuration in self.portfolio:
             self.logger.info(str(configuration))
-        self.logger.info("~"*120)
+        self.logger.info("~" * 120)
 
         return self.portfolio
 

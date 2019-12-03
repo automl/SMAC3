@@ -1,5 +1,4 @@
 import itertools
-import typing
 
 from ConfigSpace.configuration_space import Configuration
 from ConfigSpace.hyperparameters import Constant, NumericalHyperparameter, \
@@ -8,7 +7,6 @@ from ConfigSpace.util import deactivate_inactive_hyperparameters
 import numpy as np
 
 from smac.initial_design.initial_design import InitialDesign
-
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -51,8 +49,8 @@ class FactorialInitialDesign(InitialDesign):
                 mid.append(param.choices[0])
             elif isinstance(param, OrdinalHyperparameter):
                 v = [param.sequence[0], param.sequence[-1]]
-                l = len(param.sequence)
-                mid.append(param.sequence[int(l/2)])
+                length = len(param.sequence)
+                mid.append(param.sequence[int(length / 2)])
             values.append(v)
 
         factorial_design = itertools.product(*values)
@@ -66,12 +64,12 @@ class FactorialInitialDesign(InitialDesign):
 
         # add corner points
         for design in factorial_design:
-            conf_dict = dict([(p.name,v) for p,v in zip(params,design)])
+            conf_dict = dict([(p.name, v) for p, v in zip(params, design)])
             conf = deactivate_inactive_hyperparameters(conf_dict, self.cs)
             conf.origin = "Factorial Design"
             configs.append(conf)
             self.logger.debug(conf)
 
-        self.logger.debug("Size of factorial design: %d" %(len(configs)))
+        self.logger.debug("Size of factorial design: %d" % (len(configs)))
 
         return configs

@@ -54,7 +54,7 @@ class TestSingleInitialDesign(unittest.TestCase):
         tj = TrajLogger(output_dir=None, stats=stats)
         rh = RunHistory(aggregate_func=average_cost)
         self.ta.runhistory = rh
-        rng = np.random.RandomState(seed=12345)
+        _ = np.random.RandomState(seed=12345)
 
         configs = [Configuration(configuration_space=self.cs, values={"x1": 4}),
                    Configuration(configuration_space=self.cs, values={"x1": 2})]
@@ -79,7 +79,7 @@ class TestSingleInitialDesign(unittest.TestCase):
         tj = TrajLogger(output_dir=None, stats=stats)
         rh = RunHistory(aggregate_func=average_cost)
         self.ta.runhistory = rh
-        rng = np.random.RandomState(seed=12345)
+        _ = np.random.RandomState(seed=12345)
 
         kwargs = dict(
             cs=self.cs,

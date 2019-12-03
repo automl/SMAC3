@@ -23,7 +23,7 @@ class TestPSMAC(unittest.TestCase):
     def _remove_tmp_dir(self):
         try:
             shutil.rmtree(self.tmp_dir)
-        except:
+        except Exception:
             pass
 
     def test_write(self):
@@ -79,13 +79,12 @@ class TestPSMAC(unittest.TestCase):
         logger = logging.getLogger("Test")
         pSMAC.write(run_history, self.tmp_dir, logger=logger)
         r_size = len(run_history.data)
-        pSMAC.read(run_history=run_history, 
-                   output_dirs=[self.tmp_dir], 
-                   configuration_space=configuration_space, 
+        pSMAC.read(run_history=run_history,
+                   output_dirs=[self.tmp_dir],
+                   configuration_space=configuration_space,
                    logger=logger)
-        self.assertEqual(r_size, len(run_history.data), 
+        self.assertEqual(r_size, len(run_history.data),
                          "Runhistory should be the same and not changed after reading")
-        
 
         output_filename = os.path.join(self.tmp_dir, 'runhistory.json')
         self.assertTrue(os.path.exists(output_filename))
@@ -94,27 +93,27 @@ class TestPSMAC(unittest.TestCase):
         with open(output_filename) as fh:
             output = json.load(fh, object_hook=StatusType.enum_hook)
         self.assertEqual(output, fixture)
-        
+
     def test_load(self):
         configuration_space = test_helpers.get_branin_config_space()
 
         other_runhistory = '{"data": [[[2, "branini", 1], [1, 1,' \
-                  '{"__enum__": "StatusType.SUCCESS"}, null]], ' \
-                  '[[1, "branin", 1], [1, 1,' \
-                  '{"__enum__": "StatusType.SUCCESS"}, null]], ' \
-                  '[[3, "branin-hoo", 1], [1, 1,' \
-                  '{"__enum__": "StatusType.SUCCESS"}, null]], ' \
-                  '[[2, null, 1], [1, 1,' \
-                  '{"__enum__": "StatusType.SUCCESS"}, null]], ' \
-                  '[[1, "branini", 1], [1, 1,' \
-                  '{"__enum__": "StatusType.SUCCESS"}, null]], ' \
-                  '[[4, null, 1], [1, 1,' \
-                  '{"__enum__": "StatusType.SUCCESS"}, null]]], ' \
-                  '"configs": {' \
-                  '"4": {"x": -2.2060968293349363, "y": 5.183410905645716}, ' \
-                  '"3": {"x": -2.7986616377433045, "y": 1.385078921531967}, ' \
-                  '"1": {"x": 1.2553300705386103, "y": 10.804867401632372}, ' \
-                  '"2": {"x": -4.998284377739827, "y": 4.534988589477597}}}'
+                           '{"__enum__": "StatusType.SUCCESS"}, null]], ' \
+                           '[[1, "branin", 1], [1, 1,' \
+                           '{"__enum__": "StatusType.SUCCESS"}, null]], ' \
+                           '[[3, "branin-hoo", 1], [1, 1,' \
+                           '{"__enum__": "StatusType.SUCCESS"}, null]], ' \
+                           '[[2, null, 1], [1, 1,' \
+                           '{"__enum__": "StatusType.SUCCESS"}, null]], ' \
+                           '[[1, "branini", 1], [1, 1,' \
+                           '{"__enum__": "StatusType.SUCCESS"}, null]], ' \
+                           '[[4, null, 1], [1, 1,' \
+                           '{"__enum__": "StatusType.SUCCESS"}, null]]], ' \
+                           '"configs": {' \
+                           '"4": {"x": -2.2060968293349363, "y": 5.183410905645716}, ' \
+                           '"3": {"x": -2.7986616377433045, "y": 1.385078921531967}, ' \
+                           '"1": {"x": 1.2553300705386103, "y": 10.804867401632372}, ' \
+                           '"2": {"x": -4.998284377739827, "y": 4.534988589477597}}}'
 
         other_runhistory_filename = os.path.join(self.tmp_dir,
                                                  'runhistory.json')
@@ -134,7 +133,7 @@ class TestPSMAC(unittest.TestCase):
         configuration_space.seed(1)
         config = configuration_space.sample_configuration()
         runhistory.add(config, 1, 1, StatusType.SUCCESS, seed=1,
-                        instance_id='branin')
+                       instance_id='branin')
         id_before = id(runhistory.data[RunKey(1, 'branin', 1)])
         runhistory.update_from_json(other_runhistory_filename,
                                     configuration_space)

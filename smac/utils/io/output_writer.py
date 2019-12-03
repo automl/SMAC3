@@ -5,6 +5,7 @@ import typing
 from smac.configspace import pcs_new, json, ConfigurationSpace
 from smac.utils.logging import PickableLoggerAdapter
 
+
 class OutputWriter(object):
     """Writing scenario to file."""
 
@@ -44,7 +45,8 @@ class OutputWriter(object):
 
         # options_dest2name maps scenario._arguments from dest -> name
         options_dest2name = {(scenario._arguments[v]['dest'] if
-            scenario._arguments[v]['dest'] else v) : v.lstrip('-').replace('-', '_') for v in scenario._arguments}
+                              scenario._arguments[v]['dest'] else v): v.lstrip('-').replace('-', '_') for v in
+                             scenario._arguments}
 
         # Write all options into "output_dir/scenario.txt"
         path = os.path.join(scenario.output_dir_for_this_run, "scenario.txt")
@@ -100,7 +102,7 @@ class OutputWriter(object):
                     self.save_configspace(scenario.cs, pcs_path, 'pcs_new')
                 except TypeError:
                     self.logger.error("Could not write pcs file to disk."
-                    " ConfigSpace not compatible with (new) pcs format.")
+                                      " ConfigSpace not compatible with (new) pcs format.")
                 new_path = os.path.join(scenario.output_dir_for_this_run, 'configspace.json')
                 self.save_configspace(scenario.cs, new_path, 'json')
             elif key == 'train_inst_fn' and scenario.train_insts != [None]:
@@ -152,7 +154,7 @@ class OutputWriter(object):
                  File name of instance feature file
         """
         header = "Instance, " + ", ".join(
-            ["feature"+str(i) for i in range(n_features)]) + "\n"
+            ["feature" + str(i) for i in range(n_features)]) + "\n"
         body = [", ".join([inst] + [str(f) for f in feat_dict[inst]]) + "\n"
                 for inst in feat_dict]
         with open(fn, 'w') as fh:

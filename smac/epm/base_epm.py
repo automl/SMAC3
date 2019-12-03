@@ -53,8 +53,8 @@ class AbstractEPM(object):
                  types: np.ndarray,
                  bounds: typing.List[typing.Tuple[float, float]],
                  seed: int,
-                 instance_features: np.ndarray=None,
-                 pca_components: float=None,
+                 instance_features: np.ndarray = None,
+                 pca_components: float = None,
                  ):
         """Constructor
 

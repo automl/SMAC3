@@ -119,7 +119,7 @@ class TestIntensify(unittest.TestCase):
     @attr('slow')
     def test_race_challenger_3(self):
         """
-           test _race_challenger with adaptive capping on a previously capped configuration  
+           test _race_challenger with adaptive capping on a previously capped configuration
         """
 
         def target(config: Configuration, seed: int, instance: str):
@@ -151,13 +151,13 @@ class TestIntensify(unittest.TestCase):
                                            run_history=self.rh,
                                            aggregate_func=average_cost)
         self.assertEqual(inc, self.config1)
-        
+
         # further run for incumbent
         self.rh.add(config=self.config1, cost=2, time=2,
                     status=StatusType.TIMEOUT, instance_id=2,
                     seed=12345,
                     additional_info=None)
-        
+
         # give config2 a second chance - now it should run on both instances
 
         # run on instance 1
@@ -204,7 +204,7 @@ class TestIntensify(unittest.TestCase):
             deterministic=True)
 
         for i in range(10):
-            self.rh.add(config=self.config1, cost=i+1, time=1,
+            self.rh.add(config=self.config1, cost=i + 1, time=1,
                         status=StatusType.SUCCESS, instance_id=i,
                         seed=12345,
                         additional_info=None)
@@ -250,7 +250,7 @@ class TestIntensify(unittest.TestCase):
             deterministic=False)
 
         for i in range(10):
-            self.rh.add(config=self.config1, cost=i+1, time=1,
+            self.rh.add(config=self.config1, cost=i + 1, time=1,
                         status=StatusType.SUCCESS, instance_id=i,
                         seed=i,
                         additional_info=None)
@@ -320,7 +320,7 @@ class TestIntensify(unittest.TestCase):
             tae_runner=taf, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
-            instances=[1,2],
+            instances=[1, 2],
             deterministic=False)
 
         intensifier._add_inc_run(incumbent=self.config1, run_history=self.rh)

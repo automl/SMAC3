@@ -30,7 +30,6 @@ class TrajLogger(object):
     trajectory
     """
 
-
     def __init__(self, output_dir, stats):
         """Constructor
 
@@ -91,7 +90,7 @@ class TrajLogger(object):
         ta_time_used = self.stats.ta_time_used
         wallclock_time = self.stats.get_used_wallclock_time()
         self.trajectory.append(TrajEntry(train_perf, incumbent_id, incumbent,
-                                ta_runs, ta_time_used, wallclock_time))
+                               ta_runs, ta_time_used, wallclock_time))
         if self.output_dir is not None:
             self._add_in_old_format(train_perf, incumbent_id, incumbent,
                                     ta_time_used, wallclock_time)
@@ -281,7 +280,7 @@ class TrajLogger(object):
         """
         config_dict = {}
         for param in config_list:
-            k,v = param.split("=")
+            k, v = param.split("=")
             v = v.strip("'")
             hp = cs.get_hyperparameter(k)
             if isinstance(hp, FloatHyperparameter):
@@ -315,7 +314,7 @@ class TrajLogger(object):
                     v = legal.pop()
 
             config_dict[k] = v
-            
+
         config = Configuration(configuration_space=cs, values=config_dict)
         config.origin = "External Trajectory"
 

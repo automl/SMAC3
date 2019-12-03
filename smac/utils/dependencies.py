@@ -63,11 +63,9 @@ def _verify_package(name, operation, version):
     elif operation == '<':
         check = installed_version < required_version
     elif operation == '>=':
-        check = installed_version > required_version or \
-                installed_version == required_version
+        check = installed_version > required_version or installed_version == required_version
     elif operation == '<=':
-        check = installed_version < required_version or \
-                installed_version == required_version
+        check = installed_version < required_version or installed_version == required_version
     else:
         raise NotImplementedError(
             'operation \'%s\' is not supported' % operation)

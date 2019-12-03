@@ -200,9 +200,8 @@ class SMAC4AC(object):
             self.output_dir = scenario.output_dir_for_this_run
 
         if (
-            scenario.deterministic is True
-            and getattr(scenario, 'tuner_timeout', None) is None
-            and scenario.run_obj == 'quality'
+                scenario.deterministic is True and getattr(scenario, 'tuner_timeout',
+                                                           None) is None and scenario.run_obj == 'quality'
         ):
             self.logger.info('Optimizing a deterministic scenario for quality without a tuner timeout - will make '
                              'SMAC deterministic and only evaluate one configuration per iteration!')
@@ -234,7 +233,7 @@ class SMAC4AC(object):
                 runhistory.aggregate_func = aggregate_func
 
         rand_conf_chooser_kwargs = {
-           'rng': rng
+            'rng': rng
         }
         if random_configuration_chooser_kwargs is not None:
             rand_conf_chooser_kwargs.update(random_configuration_chooser_kwargs)
@@ -285,7 +284,7 @@ class SMAC4AC(object):
             model = model(**model_def_kwargs)
         else:
             raise TypeError(
-                "Model not recognized: %s" %(type(model)))
+                "Model not recognized: %s" % (type(model)))
 
         # initial acquisition function
         acq_def_kwargs = {'model': model}
@@ -315,7 +314,7 @@ class SMAC4AC(object):
             'acquisition_function': acquisition_function,
             'config_space': scenario.cs,
             'rng': rng,
-            }
+        }
         if acquisition_function_optimizer_kwargs is not None:
             acq_func_opt_kwargs.update(acquisition_function_optimizer_kwargs)
         if acquisition_function_optimizer is None:
@@ -345,7 +344,7 @@ class SMAC4AC(object):
             'par_factor': scenario.par_factor,
             'cost_for_crash': scenario.cost_for_crash,
             'abort_on_first_run_crash': scenario.abort_on_first_run_crash
-            }
+        }
         if tae_runner_kwargs is not None:
             tae_def_kwargs.update(tae_runner_kwargs)
         if 'ta' not in tae_def_kwargs:
@@ -384,14 +383,14 @@ class SMAC4AC(object):
             'deterministic': scenario.deterministic,
             'run_obj_time': scenario.run_obj == "runtime",
             'always_race_against': scenario.cs.get_default_configuration()
-                                   if scenario.always_race_default else None,
+            if scenario.always_race_default else None,
             'use_ta_time_bound': scenario.use_ta_time,
             'instance_specifics': scenario.instance_specific,
             'minR': scenario.minR,
             'maxR': scenario.maxR,
             'adaptive_capping_slackfactor': scenario.intens_adaptive_capping_slackfactor,
             'min_chall': scenario.intens_min_chall
-            }
+        }
         if intensifier_kwargs is not None:
             intensifier_def_kwargs.update(intensifier_kwargs)
 
@@ -418,7 +417,7 @@ class SMAC4AC(object):
             'configs': initial_configurations,
             'n_configs_x_params': 0,
             'max_config_fracs': 0.0
-            }
+        }
         if initial_design_kwargs is not None:
             init_design_def_kwargs.update(initial_design_kwargs)
         if initial_configurations is not None:
@@ -472,7 +471,7 @@ class SMAC4AC(object):
             'impute_state': [StatusType.CAPPED, ],
             'imputor': imputor,
             'scale_perc': 5
-            }
+        }
         if scenario.run_obj == 'quality':
             r2e_def_kwargs.update({
                 'success_states': [StatusType.SUCCESS, StatusType.CRASHED],
@@ -560,8 +559,8 @@ class SMAC4AC(object):
                  instance_mode: Union[List[str], str] = 'train+test',
                  repetitions: int = 1,
                  use_epm: bool = False,
-                 n_jobs: int = -1, backend:
-                 str = 'threading'):
+                 n_jobs: int = -1,
+                 backend: str = 'threading'):
         """
         Create validator-object and run validation, using
         scenario-information, runhistory from smbo and tae_runner from intensify

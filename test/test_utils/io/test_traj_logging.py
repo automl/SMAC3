@@ -15,10 +15,11 @@ from unittest.mock import patch
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.io.traj_logging import TrajEntry
 
-from smac.configspace import ConfigurationSpace, Configuration, CategoricalHyperparameter, Constant, \
-                             UniformFloatHyperparameter, UniformIntegerHyperparameter
+from smac.configspace import ConfigurationSpace,\
+    Configuration, CategoricalHyperparameter, Constant, UniformFloatHyperparameter, UniformIntegerHyperparameter
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
+
 
 class TrajLoggerTest(unittest.TestCase):
 
@@ -152,6 +153,7 @@ class TrajLoggerTest(unittest.TestCase):
         self.assertIsInstance(from_aclib2[0]['incumbent']['ambigous_categorical'], str)
         # Works good for alljson:
         self.assertIsInstance(from_alljson[0]['incumbent']['ambigous_categorical'], bool)
+
 
 if __name__ == "__main__":
     unittest.main()

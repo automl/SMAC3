@@ -16,7 +16,6 @@ from smac.utils.io.traj_logging import TrajLogger
 from smac.intensification.abstract_racer import AbstractRacer
 from smac.optimizer.epm_configuration_chooser import EPMChooser
 
-
 __author__ = "Katharina Eggensperger, Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
@@ -24,8 +23,8 @@ __license__ = "3-clause BSD"
 
 class IntensifierStage(Enum):
     """Class to define different stages of intensifier"""
-    RUN_INCUMBENT = 1    # Lines 3-7
-    RUN_CHALLENGER = 2   # Lines 8-17
+    RUN_INCUMBENT = 1  # Lines 3-7
+    RUN_CHALLENGER = 2  # Lines 8-17
     RUN_DEFAULT = 3
 
 
@@ -397,8 +396,7 @@ class Intensifier(AbstractRacer):
                     cutoff=cutoff,
                     instance_specific=self.instance_specifics.get(
                         instance, "0"),
-                    capped=(self.cutoff is not None) and
-                           (cutoff < self.cutoff))
+                    capped=(self.cutoff is not None) and (cutoff < self.cutoff))
                 self._num_run += 1
                 self._ta_time += dur
 
@@ -416,10 +414,10 @@ class Intensifier(AbstractRacer):
         # if all <instance, seed> have been run, compare challenger performance
         if not self.to_run:
             new_incumbent = self._compare_configs(
-                    incumbent=incumbent, challenger=challenger,
-                    run_history=run_history,
-                    aggregate_func=aggregate_func,
-                    log_traj=log_traj)
+                incumbent=incumbent, challenger=challenger,
+                run_history=run_history,
+                aggregate_func=aggregate_func,
+                log_traj=log_traj)
             if new_incumbent == incumbent:
                 # move on to the next iteration
                 self.stage = IntensifierStage.RUN_INCUMBENT

@@ -1,4 +1,3 @@
-import sys
 import json
 from subprocess import Popen, PIPE
 
@@ -20,10 +19,10 @@ class ExecuteTARunAClib(ExecuteTARun):
     """
 
     def run(self, config: Configuration,
-            instance: str=None,
-            cutoff: float=None,
-            seed: int=12345,
-            instance_specific: str="0"):
+            instance: str = None,
+            cutoff: float = None,
+            seed: int = 12345,
+            instance_specific: str = "0"):
         """Runs target algorithm <self.ta> with configuration <config> on
         instance <instance> with instance specifics <specifics> for at most
         <cutoff> seconds and random seed <seed>
@@ -58,9 +57,9 @@ class ExecuteTARunAClib(ExecuteTARun):
             cutoff = 99999999999999
 
         results, stdout_, stderr_ = self._call_ta(config=config,
-                                instance=instance,
-                                instance_specific=instance_specific,
-                                cutoff=cutoff, seed=seed)
+                                                  instance=instance,
+                                                  instance_specific=instance_specific,
+                                                  cutoff=cutoff, seed=seed)
 
         if results["status"] in ["SAT", "UNSAT", "SUCCESS"]:
             status = StatusType.SUCCESS
@@ -94,8 +93,7 @@ class ExecuteTARunAClib(ExecuteTARun):
 
         if self.run_obj == "quality" and results.get("cost") is None:
             self.logger.error(
-                "The target algorithm has not returned a quality/cost value" +
-                "although we optimize cost.")
+                "The target algorithm has not returned a quality/cost value although we optimize cost.")
             # (TODO) Do not return 0
             results["cost"] = 0
 

@@ -2,8 +2,6 @@ import unittest
 
 import numpy as np
 import scipy.optimize
-import scipy.stats as scst
-import scipy.integrate as scin
 
 from smac.epm.gp_base_prior import TophatPrior, HorseshoePrior, LognormalPrior, GammaPrior, SoftTopHatPrior
 from smac.utils.constants import VERY_SMALL_NUMBER
@@ -124,7 +122,7 @@ class TestHorseshoePrior(unittest.TestCase):
 class TestGammaPrior(unittest.TestCase):
 
     def test_lnprob_and_grad_scalar(self):
-        prior = GammaPrior(a=0.5, scale=1/2, loc=0, rng=np.random.RandomState(1))
+        prior = GammaPrior(a=0.5, scale=1 / 2, loc=0, rng=np.random.RandomState(1))
 
         # Legal scalar
         x = -1
@@ -132,7 +130,7 @@ class TestGammaPrior(unittest.TestCase):
         self.assertEqual(prior.gradient(x), -1.2357588823428847)
 
     def test_lnprob_and_grad_array(self):
-        prior = GammaPrior(a=0.5, scale=1/2, loc=0, rng=np.random.RandomState(1))
+        prior = GammaPrior(a=0.5, scale=1 / 2, loc=0, rng=np.random.RandomState(1))
         val = np.array([-1, -1])
         with self.assertRaises(NotImplementedError):
             prior.lnprob(val)

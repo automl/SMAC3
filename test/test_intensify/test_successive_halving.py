@@ -310,7 +310,7 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         for i in range(2):
             self.rh.add(config=self.config1, cost=.001, time=0.001,
-                        status=StatusType.SUCCESS, instance_id=i+1, seed=0,
+                        status=StatusType.SUCCESS, instance_id=i + 1, seed=0,
                         additional_info=None)
 
         intensifier._update_stage()

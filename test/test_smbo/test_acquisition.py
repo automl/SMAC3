@@ -29,10 +29,8 @@ class MockModel(object):
         self.num_targets = num_targets
 
     def predict_marginalized_over_instances(self, X):
-        return np.array([np.mean(X, axis=1).reshape((1, -1))] *
-                        self.num_targets).reshape((-1, 1)), \
-               np.array([np.mean(X, axis=1).reshape((1, -1))] *
-                        self.num_targets).reshape((-1, 1))
+        return np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 1)),\
+            np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 1))
 
 
 class MockModelDual(object):
@@ -40,10 +38,8 @@ class MockModelDual(object):
         self.num_targets = num_targets
 
     def predict_marginalized_over_instances(self, X):
-        return np.array([np.mean(X, axis=1).reshape((1, -1))] *
-                        self.num_targets).reshape((-1, 2)), \
-               np.array([np.mean(X, axis=1).reshape((1, -1))] *
-                        self.num_targets).reshape((-1, 2))
+        return np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 2)), \
+            np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 2))
 
 
 class TestAcquisitionFunction(unittest.TestCase):

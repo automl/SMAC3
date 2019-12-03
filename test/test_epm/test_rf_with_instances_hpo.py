@@ -18,7 +18,8 @@ def get_rf(n_dimensions, rs):
         configspace.add_hyperparameter(smac.configspace.UniformFloatHyperparameter('x%d' % i, 0, 1))
 
     model = RandomForestWithInstancesHPO(
-        configspace=configspace, types=types, bounds=bounds, log_y=False, bootstrap=False, n_iters=5, n_splits=5, seed=1,
+        configspace=configspace, types=types, bounds=bounds, log_y=False, bootstrap=False,
+        n_iters=5, n_splits=5, seed=1,
     )
     return model
 

@@ -30,7 +30,7 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
         bounds: List[Tuple[float, float]],
         types: np.ndarray,
         seed: int,
-        rf_kwargs: Optional[Dict[str, Any]]=None,
+        rf_kwargs: Optional[Dict[str, Any]] = None,
         **kwargs
     ):
         """Constructor
@@ -127,4 +127,3 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
             mean[:, i] = m.flatten()
             var[:, i] = v.flatten()
         return mean, var
-

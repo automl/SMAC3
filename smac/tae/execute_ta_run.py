@@ -182,8 +182,8 @@ class ExecuteTARun(object):
         self.stats.ta_time_used += float(runtime)
 
         # Catch NaN or inf.
-        if (self.run_obj == 'runtime' and not np.isfinite(runtime) or
-            self.run_obj == 'quality' and not np.isfinite(cost)):
+        if (self.run_obj == 'runtime' and not np.isfinite(runtime
+                                                          ) or self.run_obj == 'quality' and not np.isfinite(cost)):
             self.logger.warning("Target Algorithm returned NaN or inf as {}. "
                                 "Algorithm run is treated as CRASHED, cost "
                                 "is set to {} for quality scenarios. "

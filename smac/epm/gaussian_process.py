@@ -55,7 +55,7 @@ class GaussianProcess(BaseModel):
         bounds: typing.List[typing.Tuple[float, float]],
         seed: int,
         kernel: Kernel,
-        normalize_y: bool=True,
+        normalize_y: bool = True,
         n_opt_restarts=10,
         **kwargs
     ):
@@ -72,7 +72,7 @@ class GaussianProcess(BaseModel):
 
         self._set_has_conditions()
 
-    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool=True):
+    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True):
         """
         Computes the Cholesky decomposition of the covariance of X and
         estimates the GP hyperparameters by optimizing the marginal
@@ -216,7 +216,7 @@ class GaussianProcess(BaseModel):
                 theta_star = theta
         return theta_star
 
-    def _predict(self, X_test: np.ndarray, full_cov: bool=False):
+    def _predict(self, X_test: np.ndarray, full_cov: bool = False):
         r"""
         Returns the predictive mean and variance of the objective function at
         the given test points.
@@ -253,7 +253,7 @@ class GaussianProcess(BaseModel):
 
         return mu, var
 
-    def sample_functions(self, X_test: np.ndarray, n_funcs: int=1) -> np.ndarray:
+    def sample_functions(self, X_test: np.ndarray, n_funcs: int = 1) -> np.ndarray:
         """
         Samples F function values from the current posterior at the N
         specified test points.

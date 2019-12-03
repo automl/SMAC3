@@ -40,4 +40,3 @@ def create_output_directory(
                            output_dir, move_to)
     scenario.output_dir_for_this_run = output_dir
     return output_dir
-

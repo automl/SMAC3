@@ -9,11 +9,8 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 from smac.configspace import ConfigurationSpace
 
-from smac.runhistory.runhistory import RunHistory
 from smac.facade.roar_facade import ROAR
 from smac.scenario.scenario import Scenario
-from smac.stats.stats import Stats
-from smac.tae.execute_func import ExecuteTAFuncArray
 
 
 class TestROARFacade(unittest.TestCase):
