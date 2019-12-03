@@ -175,4 +175,4 @@ class SMAC4BO(SMAC4AC):
 
         self.solver.scenario.acq_opt_challengers = 1000
         # activate predict incumbent
-        self.solver.predict_incumbent = True
+        self.solver.epm_chooser.predict_incumbent = True
