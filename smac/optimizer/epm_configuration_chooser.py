@@ -86,7 +86,7 @@ class EPMChooser(object):
         self.predict_incumbent = predict_incumbent
 
         self.min_samples_model = min_samples_model
-        self.currently_considered_budgets = [0, ]
+        self.currently_considered_budgets = [0.0, ]
 
     def _collect_data_to_train_model(self):
         # if we use a float value as a budget, we want to train the model only on the highest budget
@@ -177,7 +177,7 @@ class EPMChooser(object):
         np.ndarry
         Configuration
         """
-        all_configs = self.runhistory.get_all_configs_per_budget(budget_subset=[0, ])
+        all_configs = self.runhistory.get_all_configs_per_budget(budget_subset=self.currently_considered_budgets)
 
         if self.predict_incumbent:
             configs_array = convert_configurations_to_array(all_configs)

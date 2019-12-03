@@ -352,7 +352,7 @@ class RunHistory(object):
         """
         return list(self.config_ids.keys())
 
-    def get_all_configs_per_budget(self, budget_subset: list = None):
+    def get_all_configs_per_budget(self, budget_subset: typing.Optional[typing.List] = None):
         """
         Return all configs in this RunHistory object that have been run on one of these budgets
 
