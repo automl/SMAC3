@@ -15,8 +15,8 @@ from unittest.mock import patch
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.io.traj_logging import TrajEntry
 
-from smac.configspace import ConfigurationSpace, Configuration, CategoricalHyperparameter, Constant, \
-                             UniformFloatHyperparameter, UniformIntegerHyperparameter
+from smac.configspace import ConfigurationSpace,\
+    Configuration, CategoricalHyperparameter, Constant, UniformFloatHyperparameter, UniformIntegerHyperparameter
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 

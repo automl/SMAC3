@@ -29,7 +29,7 @@ def generate_config(cs, rs):
     instance_id = min(max(0, instance_id), 100)
 
     status = StatusType.SUCCESS
-    runtime = 10**(numpy.sin(i)+f) + seed/10000 - numpy.sin(instance_id)
+    runtime = 10**(numpy.sin(i) + f) + seed / 10000 - numpy.sin(instance_id)
 
     if runtime > 40:
         status = StatusType.TIMEOUT
@@ -63,12 +63,10 @@ class ImputorTest(unittest.TestCase):
     def setUp(self):
         logging.basicConfig(level=logging.DEBUG)
         self.cs = ConfigurationSpace()
-        self.cs.add_hyperparameter(CategoricalHyperparameter(
-                name="cat_a_b", choices=["a", "b"], default_value="a"))
-        self.cs.add_hyperparameter(UniformFloatHyperparameter(
-                name="float_0_1", lower=0, upper=1, default_value=0.5))
-        self.cs.add_hyperparameter(UniformIntegerHyperparameter(
-                name='integer_0_100', lower=-10, upper=10, default_value=0))
+        self.cs.add_hyperparameter(CategoricalHyperparameter(name="cat_a_b", choices=["a", "b"], default_value="a"))
+        self.cs.add_hyperparameter(UniformFloatHyperparameter(name="float_0_1", lower=0, upper=1, default_value=0.5))
+        self.cs.add_hyperparameter(UniformIntegerHyperparameter(name='integer_0_100',
+                                                                lower=-10, upper=10, default_value=0))
 
         self.rh = runhistory.RunHistory(aggregate_func=average_cost)
         rs = numpy.random.RandomState(1)
@@ -106,9 +104,9 @@ class ImputorTest(unittest.TestCase):
 
         for i in range(0, 150, 15):
             # First random imputation sanity check
-            num_samples = max(1, i*10)
+            num_samples = max(1, i * 10)
             num_feat = max(1, i)
-            num_censored = int(num_samples*0.1)
+            num_censored = int(num_samples * 0.1)
             X = rs.rand(num_samples, num_feat)
             y = numpy.sin(X[:, 0:1])
 
@@ -125,17 +123,16 @@ class ImputorTest(unittest.TestCase):
 
             cs = ConfigurationSpace()
             for i in range(num_feat):
-                cs.add_hyperparameter(UniformFloatHyperparameter(
-                    name="a_%d" % i, lower=0, upper=1, default_value=0.5)
-                )
+                cs.add_hyperparameter(UniformFloatHyperparameter(name="a_%d" % i,
+                                                                 lower=0, upper=1, default_value=0.5))
 
             types, bounds = get_types(cs, None)
             print(types)
             print(bounds)
-            print('#'*120)
+            print('#' * 120)
             print(cen_X)
             print(uncen_X)
-            print('~'*120)
+            print('~' * 120)
             self.model = RandomForestWithInstances(
                 configspace=cs,
                 types=types,
@@ -145,7 +142,7 @@ class ImputorTest(unittest.TestCase):
             )
             imputor = rfr_imputator.RFRImputator(rng=rs,
                                                  cutoff=cutoff,
-                                                 threshold=cutoff*10,
+                                                 threshold=cutoff * 10,
                                                  change_threshold=0.01,
                                                  max_iter=5,
                                                  model=self.model)
@@ -165,7 +162,7 @@ class ImputorTest(unittest.TestCase):
         rs = numpy.random.RandomState(1)
         imputor = rfr_imputator.RFRImputator(rng=rs,
                                              cutoff=self.scen.cutoff,
-                                             threshold=self.scen.cutoff*10,
+                                             threshold=self.scen.cutoff * 10,
                                              change_threshold=0.01, max_iter=10,
                                              model=self.model)
 

@@ -46,9 +46,8 @@ class TaeTest(unittest.TestCase):
                                   'output_dir': ''}, cmd_options=None)
         stats = Stats(scen)
         stats.start_timing()
-        eta = ExecuteTARun(
-                ta=lambda *args: None,  # Dummy-function
-                stats=stats)
+        eta = ExecuteTARun(ta=lambda *args: None,  # Dummy-function
+                           stats=stats)
 
         self.assertRaises(
             BudgetExhaustedException, eta.start, config={}, instance=1)
@@ -95,6 +94,7 @@ class TaeTest(unittest.TestCase):
         '''
             test nan-handling and inf-handling
         '''
+
         def get_tae(obj):
             """ Create ExecuteTARun-object for testing. """
             scen = Scenario(scenario={'cs': ConfigurationSpace(), 'run_obj': obj,

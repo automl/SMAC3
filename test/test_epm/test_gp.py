@@ -178,7 +178,7 @@ class TestGP(unittest.TestCase):
         model._train(X[:10], Y[:10], do_optimize=False)
         theta = model.gp.kernel.theta
         theta_ = model.gp.kernel_.theta
-        fixture = np.array([0.693147, 0.,  0.,  0.,  0.,  0., 0.,  0.,  0.,  0.,  0., -6.907755])
+        fixture = np.array([0.693147, 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., -6.907755])
         np.testing.assert_array_almost_equal(theta, fixture)
         np.testing.assert_array_almost_equal(theta_, fixture)
         np.testing.assert_array_almost_equal(theta, theta_)
@@ -236,7 +236,7 @@ class TestGP(unittest.TestCase):
         X, Y, n_dims = get_cont_data(rs)
 
         model = get_gp(n_dims, rs)
-        fixture = model.kernel.theta
+        _ = model.kernel.theta
         model._train(X[:10], Y[:10], do_optimize=True)
         np.testing.assert_array_almost_equal(
             model.gp.kernel.theta,
@@ -256,7 +256,7 @@ class TestGP(unittest.TestCase):
         for ct, model in enumerate((get_gp(n_dims, rs), get_mixed_gp(cat_dims, cont_dims, rs))):
             model.train(X[:10], Y[:10])
             model.predict(X[10:])
-            self.assertEqual(rf_mock.call_count, ct+1)
+            self.assertEqual(rf_mock.call_count, ct + 1)
 
     def test_predict_with_actual_values(self):
         X = np.array([

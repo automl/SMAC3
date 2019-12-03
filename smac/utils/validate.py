@@ -281,8 +281,7 @@ class Validator(object):
         runhistory: RunHistory
             runhistory with predicted runs
         """
-        if not isinstance(runhistory, RunHistory) and (self.epm is None or
-                                                       reuse_epm is False):
+        if not isinstance(runhistory, RunHistory) and (self.epm is None or reuse_epm is False):
             raise ValueError("No runhistory specified for validating with EPM!")
         elif reuse_epm is False or self.epm is None:
             # Create RandomForest
@@ -488,8 +487,7 @@ class Validator(object):
         if runhistory:
             relevant = dict()
             for key in runhistory.data:
-                if (runhistory.ids_config[key.config_id] in configs
-                        and key.instance_id in insts):
+                if (runhistory.ids_config[key.config_id] in configs and key.instance_id in insts):
                     relevant[key] = runhistory.data[key]
 
             # Change data-structure to {instances:[(seed1, (configs)), (seed2, (configs), ... ]}
@@ -543,18 +541,15 @@ class Validator(object):
         if mode in ["wallclock_time", "cpu_time"]:
             # get highest time-entry and add entries from there
             # not using wallclock_limit in case it's inf
-            if (mode == "wallclock_time" and
-                    np.isfinite(self.scen.wallclock_limit)):
+            if (mode == "wallclock_time" and np.isfinite(self.scen.wallclock_limit)):
                 max_time = self.scen.wallclock_limit
-            elif (mode == "cpu_time" and
-                  np.isfinite(self.scen.algo_runs_timelimit)):
+            elif (mode == "cpu_time" and np.isfinite(self.scen.algo_runs_timelimit)):
                 max_time = self.scen.algo_runs_timelimit
             else:
                 max_time = self.traj[-1][mode]
             counter = 2 ** 0
             for entry in self.traj[::-1]:
-                if (entry[mode] <= max_time / counter and
-                        entry["incumbent"] not in configs):
+                if (entry[mode] <= max_time / counter and entry["incumbent"] not in configs):
                     configs.append(entry["incumbent"])
                     counter *= 2
             if not self.traj[0]["incumbent"] in configs:
@@ -587,18 +582,16 @@ class Validator(object):
                              % mode)
 
         # Make sure if instances matter, than instances should be passed
-        if ((instance_mode == 'train' and self.scen.train_insts == [None]) or
-                (instance_mode == 'test' and self.scen.test_insts == [None])):
+        if ((instance_mode == 'train' and self.scen.train_insts == [None]) or (
+                instance_mode == 'test' and self.scen.test_insts == [None])):
             self.logger.warning("Instance mode is set to %s, but there are no "
                                 "%s-instances specified in the scenario. Setting instance mode to"
                                 "\"train+test\"!", instance_mode, instance_mode)
             instance_mode = 'train+test'
 
         instances = []
-        if ((instance_mode == 'train' or instance_mode == 'train+test') and
-                not self.scen.train_insts == [None]):
+        if (instance_mode == 'train' or instance_mode == 'train+test') and not self.scen.train_insts == [None]:
             instances.extend(self.scen.train_insts)
-        if ((instance_mode == 'test' or instance_mode == 'train+test') and
-                not self.scen.test_insts == [None]):
+        if (instance_mode == 'test' or instance_mode == 'train+test') and not self.scen.test_insts == [None]:
             instances.extend(self.scen.test_insts)
         return instances

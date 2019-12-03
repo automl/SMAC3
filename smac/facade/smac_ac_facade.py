@@ -200,9 +200,8 @@ class SMAC4AC(object):
             self.output_dir = scenario.output_dir_for_this_run
 
         if (
-                scenario.deterministic is True
-                and getattr(scenario, 'tuner_timeout', None) is None
-                and scenario.run_obj == 'quality'
+                scenario.deterministic is True and getattr(scenario, 'tuner_timeout',
+                                                           None) is None and scenario.run_obj == 'quality'
         ):
             self.logger.info('Optimizing a deterministic scenario for quality without a tuner timeout - will make '
                              'SMAC deterministic and only evaluate one configuration per iteration!')

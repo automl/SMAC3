@@ -204,7 +204,7 @@ class TestIntensify(unittest.TestCase):
             deterministic=True)
 
         for i in range(10):
-            self.rh.add(config=self.config1, cost=i+1, time=1,
+            self.rh.add(config=self.config1, cost=i + 1, time=1,
                         status=StatusType.SUCCESS, instance_id=i,
                         seed=12345,
                         additional_info=None)
@@ -250,7 +250,7 @@ class TestIntensify(unittest.TestCase):
             deterministic=False)
 
         for i in range(10):
-            self.rh.add(config=self.config1, cost=i+1, time=1,
+            self.rh.add(config=self.config1, cost=i + 1, time=1,
                         status=StatusType.SUCCESS, instance_id=i,
                         seed=i,
                         additional_info=None)

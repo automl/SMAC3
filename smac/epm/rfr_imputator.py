@@ -151,9 +151,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
                 # iteration, assume imputed values are always concatenated
                 # after uncensored values
 
-                change = np.mean(np.abs(imputed_y -
-                                        y[uncensored_y.shape[0]:]) /
-                                 y[uncensored_y.shape[0]:])
+                change = np.mean(np.abs(imputed_y - y[uncensored_y.shape[0]:]) / y[uncensored_y.shape[0]:])
 
             # lower all values that are higher than threshold
             # should probably never happen

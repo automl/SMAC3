@@ -44,7 +44,7 @@ class LHDesign(InitialDesign):
             if isinstance(p, Constant):
                 constants += 1
 
-        lhd = pyDOE.lhs(n=len(params)-constants, samples=self.init_budget)
+        lhd = pyDOE.lhs(n=len(params) - constants, samples=self.init_budget)
 
         return self._transform_continuous_designs(design=lhd,
                                                   origin='LHD',

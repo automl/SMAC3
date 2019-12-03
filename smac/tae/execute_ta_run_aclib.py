@@ -93,8 +93,7 @@ class ExecuteTARunAClib(ExecuteTARun):
 
         if self.run_obj == "quality" and results.get("cost") is None:
             self.logger.error(
-                "The target algorithm has not returned a quality/cost value" +
-                "although we optimize cost.")
+                "The target algorithm has not returned a quality/cost value although we optimize cost.")
             # (TODO) Do not return 0
             results["cost"] = 0
 

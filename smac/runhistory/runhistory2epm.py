@@ -190,8 +190,8 @@ class AbstractRunHistory2EPM(object):
 
         # Also get TIMEOUT runs
         t_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
-                      if runhistory.data[run].status == StatusType.TIMEOUT and
-                      runhistory.data[run].time >= self.cutoff_time}
+                      if runhistory.data[
+                          run].status == StatusType.TIMEOUT and runhistory.data[run].time >= self.cutoff_time}
         t_instance_id_list = [k.instance_id for k in s_run_dict.keys()]
 
         # use penalization (e.g. PAR10) for EPM training
@@ -207,8 +207,8 @@ class AbstractRunHistory2EPM(object):
         if self.impute_censored_data:
             # Get all censored runs
             c_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
-                          if runhistory.data[run].status in self.impute_state and
-                          runhistory.data[run].time < self.cutoff_time}
+                          if runhistory.data[
+                              run].status in self.impute_state and runhistory.data[run].time < self.cutoff_time}
             if len(c_run_dict) == 0:
                 self.logger.debug("No censored data found, skip imputation")
                 # If we do not impute, we also return TIMEOUT data

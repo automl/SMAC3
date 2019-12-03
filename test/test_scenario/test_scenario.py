@@ -224,8 +224,7 @@ class ScenarioTest(unittest.TestCase):
                     self.assertEqual(len(scen1.feature_dict),
                                      len(scen2.feature_dict))
                     for key in scen1.feature_dict:
-                        self.assertTrue((scen1.feature_dict[key] ==
-                                         scen2.feature_dict[key]).all())
+                        self.assertTrue((scen1.feature_dict[key] == scen2.feature_dict[key]).all())
                 else:
                     print(name, getattr(scen1, name), getattr(scen2, name))
                     self.assertEqual(getattr(scen1, name),

@@ -675,8 +675,7 @@ class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
         # the list ensures this (even after adding the configurations by local
         # search, and then sorting them)
         next_configs_by_acq_value = (
-            next_configs_by_random_search_sorted
-            + next_configs_by_local_search
+            next_configs_by_random_search_sorted + next_configs_by_local_search
         )
         next_configs_by_acq_value.sort(reverse=True, key=lambda x: x[0])
         self.logger.debug(

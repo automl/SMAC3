@@ -379,8 +379,8 @@ class LognormalPrior(Prior):
             return -1e25
         else:
             rval = (
-                -(math.log(theta) - self.mean) ** 2 / (2 * self.sigma_square)
-                - math.log(self.sqrt_2_pi * self.sigma * theta)
+                -(math.log(
+                    theta) - self.mean) ** 2 / (2 * self.sigma_square) - math.log(self.sqrt_2_pi * self.sigma * theta)
             )
             return rval
 

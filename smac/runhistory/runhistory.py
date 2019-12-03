@@ -386,8 +386,7 @@ class RunHistory(object):
                    if id_ in config_ids_to_serialize}
         config_origins = {id_: conf.origin
                           for id_, conf in self.ids_config.items()
-                          if (id_ in config_ids_to_serialize and
-                              conf.origin is not None)}
+                          if (id_ in config_ids_to_serialize and conf.origin is not None)}
 
         with open(fn, "w") as fp:
             json.dump({"data": data,

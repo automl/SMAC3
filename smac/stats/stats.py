@@ -151,9 +151,8 @@ class Stats(object):
         exhaustedness: boolean
             true if one of the budgets is exhausted
         """
-        return (self.get_remaing_time_budget() < 0 or
-                self.get_remaining_ta_budget() < 0 or
-                self.get_remaining_ta_runs() <= 0)
+        return (self.get_remaing_time_budget() < 0 or self.get_remaining_ta_budget()
+                ) < 0 or self.get_remaining_ta_runs() <= 0
 
     def update_average_configs_per_intensify(self, n_configs: int):
         """Updates statistics how many configurations on average per used in
@@ -171,7 +170,7 @@ class Stats(object):
             self._ema_n_configs_per_intensifiy = n_configs
         else:
             self._ema_n_configs_per_intensifiy = (1 - self._EMA_ALPHA) * self._ema_n_configs_per_intensifiy \
-                                                 + self._EMA_ALPHA * n_configs
+                + self._EMA_ALPHA * n_configs
 
     def print_stats(self, debug_out: bool = False):
         """Prints all statistics
@@ -197,7 +196,7 @@ class Stats(object):
         self._logger.debug("Debug Statistics:")
         if self._n_calls_of_intensify > 0:
             self._logger.debug("Average Configurations per Intensify: %.2f" % (
-                    self._n_configs_per_intensify / self._n_calls_of_intensify))
+                self._n_configs_per_intensify / self._n_calls_of_intensify))
             self._logger.debug("Exponential Moving Average of Configurations per Intensify: %.2f" % (
                 self._ema_n_configs_per_intensifiy))
 
