@@ -93,18 +93,15 @@ class SMBO(object):
             intensification of new challengers against incumbent configuration
             (probably with some kind of racing on the instances)
         aggregate_func: callable
-            how to aggregate the runs in the runhistory to get the performance of a
-             configuration
+            how to aggregate the runs in the runhistory to get the performance of a configuration
         num_run: int
             id of this run (used for pSMAC)
         model: RandomForestWithInstances
-            empirical performance model (right now, we support only
-            RandomForestWithInstances)
+            empirical performance model (right now, we support only RandomForestWithInstances)
         acq_optimizer: AcquisitionFunctionMaximizer
             Optimizer of acquisition function.
         acquisition_func : AcquisitionFunction
-            Object that implements the AbstractAcquisitionFunction (i.e., infill
-            criterion for acq_optimizer)
+            Object that implements the AbstractAcquisitionFunction (i.e., infill criterion for acq_optimizer)
         restore_incumbent: Configuration
             incumbent to be used from the start. ONLY used to restore states.
         rng: np.random.RandomState
@@ -151,7 +148,7 @@ class SMBO(object):
 
     def start(self):
         """Starts the Bayesian Optimization loop.
-        Detects whether we the optimization is restored from previous state.
+        Detects whether the optimization is restored from a previous state.
         """
         self.stats.start_timing()
 
