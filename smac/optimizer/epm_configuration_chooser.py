@@ -86,7 +86,7 @@ class EPMChooser(object):
         return X, Y
 
     def _get_evaluated_configs(self):
-        return len(self.runhistory.data)
+        return self.runhistory.data
 
     def choose_next(self, incumbent_value: float = None):
         """Choose next candidate solution with Bayesian optimization. The
@@ -156,7 +156,7 @@ class EPMChooser(object):
         np.ndarry
         Configuration
         """
-        all_configs = self._get_evaluated_configs()
+        all_configs = self.runhistory.get_all_configs_per_budget(budget_subset=[0, ])
         if self.predict_incumbent:
             configs_array = convert_configurations_to_array(all_configs)
             costs = list(map(
