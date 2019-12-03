@@ -9,20 +9,19 @@ optimize the average accuracy on a 5-fold cross validation.
 import logging
 import warnings
 
-import numpy as np
-from sklearn.model_selection import cross_val_score, StratifiedKFold
-from sklearn.neural_network import MLPClassifier
-from sklearn.datasets import load_digits
-from sklearn.exceptions import ConvergenceWarning
-
 import ConfigSpace as CS
-from smac.configspace import ConfigurationSpace
+import numpy as np
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformFloatHyperparameter, UniformIntegerHyperparameter
+from sklearn.datasets import load_digits
+from sklearn.exceptions import ConvergenceWarning
+from sklearn.model_selection import cross_val_score, StratifiedKFold
+from sklearn.neural_network import MLPClassifier
 
-from smac.scenario.scenario import Scenario
+from smac.configspace import ConfigurationSpace
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.intensification.hyperband import Hyperband
+from smac.scenario.scenario import Scenario
 
 digits = load_digits()
 
@@ -108,15 +107,15 @@ use_batch_size = CS.conditions.InCondition(child=batch_size, parent=solver, valu
 cs.add_conditions([use_lr, use_batch_size, use_lr_init])
 
 # SMAC scenario object
-scenario = Scenario({"run_obj": "quality",      # we optimize quality (alternative to runtime)
-                     "wallclock-limit": 100,    # max duration to run the optimization (in seconds)
-                     "cs": cs,                  # configuration space
+scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative to runtime)
+                     "wallclock-limit": 100,  # max duration to run the optimization (in seconds)
+                     "cs": cs,  # configuration space
                      "deterministic": "true",
-                     "limit_resources": True,   # Uses pynisher to limit memory and runtime
-                                                # Alternatively, you can also disable this.
-                                                # Then you should handle runtime and memory yourself in the TA
-                     "cutoff": 30,              # runtime limit for target algorithm
-                     "memory_limit": 3072,      # adapt this to reasonable value for your hardware
+                     "limit_resources": True,  # Uses pynisher to limit memory and runtime
+                     # Alternatively, you can also disable this.
+                     # Then you should handle runtime and memory yourself in the TA
+                     "cutoff": 30,  # runtime limit for target algorithm
+                     "memory_limit": 3072,  # adapt this to reasonable value for your hardware
                      })
 
 # max budget for hyperband can be anything. Here, we set it to maximum no. of epochs to train the MLP for
@@ -126,8 +125,8 @@ intensifier_kwargs = {'initial_budget': 5, 'max_budget': max_iters, 'eta': 3}
 # To optimize, we pass the function to the SMAC-object
 smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
                 tae_runner=mlp_from_cfg,
-                intensifier=Hyperband,                  # you can also change the intensifier to use like this!
-                                                        # This example currently uses Hyperband intensification,
+                intensifier=Hyperband,  # you can also change the intensifier to use like this!
+                # This example currently uses Hyperband intensification,
                 intensifier_kwargs=intensifier_kwargs)  # all arguments related to intensifier can be passed like this
 
 # Example call of the function with default values
