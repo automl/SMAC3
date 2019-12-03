@@ -1,6 +1,5 @@
 import unittest
 import logging
-import pytest.mark
 import numpy
 
 from ConfigSpace import Configuration, ConfigurationSpace
@@ -98,7 +97,6 @@ class ImputorTest(unittest.TestCase):
             seed=1234567980,
         )
 
-    @pytest.mark.slow
     def testRandomImputation(self):
         rs = numpy.random.RandomState(1)
 
