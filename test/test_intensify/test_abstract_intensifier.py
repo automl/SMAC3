@@ -79,10 +79,14 @@ class TestAbstractIntensifier(unittest.TestCase):
         chooser = SMAC4AC(self.scen, rng=1).solver.epm_chooser
 
         config, _ = intensifier.get_next_challenger(challengers=None, chooser=chooser, run_history=self.rh)
-        self.assertEqual(list(config.get_dictionary().values()), [24, 68])
+        self.assertEqual(len(list(config.get_dictionary().values())), 2)
+        self.assertTrue(24 in config.get_dictionary().values())
+        self.assertTrue(68 in config.get_dictionary().values())
 
         config, _ = intensifier.get_next_challenger(challengers=None, chooser=chooser, run_history=self.rh)
-        self.assertEqual(list(config.get_dictionary().values()), [95, 38])
+        self.assertEqual(len(list(config.get_dictionary().values())), 2)
+        self.assertTrue(95 in config.get_dictionary().values())
+        self.assertTrue(38 in config.get_dictionary().values())
 
     def test_get_next_challenger_repeat(self):
         """
