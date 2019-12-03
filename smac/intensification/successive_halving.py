@@ -1,6 +1,5 @@
 import logging
 import typing
-import warnings
 
 import numpy as np
 
@@ -141,9 +140,9 @@ class SuccessiveHalving(AbstractRacer):
             else:
                 seeds = self.rs.randint(low=0, high=MAXINT, size=self.n_seeds)
                 if self.n_seeds == 1:
-                    warnings.warn('The target algorithm is specified to be non deterministic, '
-                                  'but number of seeds to evaluate are set to 1. '
-                                  'Consider setting `n_seeds` > 1.')
+                    self.logger.warn('The target algorithm is specified to be non deterministic, '
+                                     'but number of seeds to evaluate are set to 1. '
+                                     'Consider setting `n_seeds` > 1.')
 
             # storing instances & seeds as tuples
             self.inst_seed_pairs = [(i, s) for s in seeds for i in self.instances]
