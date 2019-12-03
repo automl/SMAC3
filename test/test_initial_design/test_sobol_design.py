@@ -2,7 +2,7 @@ import unittest
 import unittest.mock
 
 import numpy as np
-from ConfigSpace import ConfigurationSpace, Configuration, UniformFloatHyperparameter
+from ConfigSpace import ConfigurationSpace, UniformFloatHyperparameter
 
 from smac.initial_design.sobol_design import SobolDesign
 
@@ -30,8 +30,8 @@ class TestSobol(unittest.TestCase):
 
         cs.add_hyperparameter(UniformFloatHyperparameter('x41', 0, 1))
         with self.assertRaisesRegex(
-            Exception,
-            "('NoneType' object is not iterable)|(cannot unpack non-iterable NoneType object)",
+                Exception,
+                "('NoneType' object is not iterable)|(cannot unpack non-iterable NoneType object)",
         ):
             SobolDesign(
                 cs=cs,
