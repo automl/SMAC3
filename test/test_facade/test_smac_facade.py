@@ -385,7 +385,7 @@ class TestSMACFacade(unittest.TestCase):
         shutil.rmtree(smac.output_dir + '.OLD.OLD')
         shutil.rmtree(smac.output_dir + '.OLD')
         # This is done by teardown!
-        #shutil.rmtree(smac.output_dir)
+        # shutil.rmtree(smac.output_dir)
         shutil.rmtree(smac4.output_dir)
 
     def test_no_output(self):

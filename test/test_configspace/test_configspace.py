@@ -7,10 +7,6 @@ import os
 import unittest
 
 from ConfigSpace.read_and_write import pcs
-from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
-    UniformFloatHyperparameter
-from ConfigSpace.conditions import EqualsCondition
-import smac.configspace
 
 
 class ConfigSpaceTest(unittest.TestCase):
@@ -27,4 +23,4 @@ class ConfigSpaceTest(unittest.TestCase):
             cs = pcs.read(pcs_str)
 
         for i in range(100):
-            config = cs.sample_configuration()
+            _ = cs.sample_configuration()

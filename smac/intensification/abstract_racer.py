@@ -277,8 +277,7 @@ class AbstractRacer(object):
                                  instance_seed_budget_keys=chall_inst_seeds,
                                  run_history=run_history)
         cutoff = min(curr_cutoff,
-                     inc_sum_cost * self.adaptive_capping_slackfactor -
-                     chal_sum_cost
+                     inc_sum_cost * self.adaptive_capping_slackfactor - chal_sum_cost
                      )
         return cutoff
 

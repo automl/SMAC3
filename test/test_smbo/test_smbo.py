@@ -130,7 +130,7 @@ class TestSMBO(unittest.TestCase):
 
     def test_validation(self):
         with mock.patch.object(TrajLogger, "read_traj_aclib_format",
-                               return_value=None) as traj_mock:
+                               return_value=None):
             self.scenario.output_dir = "test"
             smac = SMAC4AC(self.scenario)
             self.output_dirs.append(smac.output_dir)
@@ -166,7 +166,7 @@ class TestSMBO(unittest.TestCase):
     def test_gp_comp_builder(self):
         seed = 42
         smbo = SMAC4AC(self.scenario, rng=seed).solver
-        conf = {"model":"GP", "acq_func":"EI"}
+        conf = {"model": "GP", "acq_func": "EI"}
         acqf, model = smbo._component_builder(conf)
 
         self.assertTrue(isinstance(acqf, EI))
@@ -175,7 +175,7 @@ class TestSMBO(unittest.TestCase):
     def test_smbo_cs(self):
         seed = 42
         smbo = SMAC4AC(self.scenario, rng=seed).solver
-        cs = smbo._get_acm_cs()
+        _ = smbo._get_acm_cs()
 
     def test_cs_comp_builder(self):
         seed = 42

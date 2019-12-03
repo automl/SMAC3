@@ -100,7 +100,7 @@ class GaussianProcessMCMC(BaseModel):
         # Internal statistics
         self._n_ll_evals = 0
 
-    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool=True):
+    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True):
         """
         Performs MCMC sampling to sample hyperparameter configurations from the
         likelihood and trains for each sample a GP on X and y
@@ -295,7 +295,7 @@ class GaussianProcessMCMC(BaseModel):
 
         try:
             lml = self.gp.log_marginal_likelihood(theta)
-        except ValueError as e:
+        except ValueError:
             return -np.inf
 
         # Add prior
@@ -383,7 +383,7 @@ class GaussianProcessMCMC(BaseModel):
         if not self.is_trained:
             raise Exception('Model has to be trained first!')
 
-        X = self._impute_inactive(X_test)
+        X_test = self._impute_inactive(X_test)
 
         mu = np.zeros([len(self.models), X_test.shape[0]])
         var = np.zeros([len(self.models), X_test.shape[0]])

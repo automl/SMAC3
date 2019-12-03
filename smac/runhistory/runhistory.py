@@ -98,7 +98,7 @@ class RunHistory(object):
     def __init__(
         self,
         aggregate_func: typing.Callable,
-        overwrite_existing_runs: bool=False
+        overwrite_existing_runs: bool = False
     ) -> None:
         """Constructor
 
@@ -146,7 +146,7 @@ class RunHistory(object):
             seed: int = None,
             budget: float = 0,
             additional_info: dict = None,
-            origin: DataOrigin=DataOrigin.INTERNAL):
+            origin: DataOrigin = DataOrigin.INTERNAL):
         """Adds a data of a new target algorithm (TA) run;
         it will update data if the same key values are used
         (config, instance_id, seed)
@@ -240,7 +240,7 @@ class RunHistory(object):
         self.cost_per_config[config_id] = perf
         self.runs_per_config[config_id] = len(inst_seed_budgets)
 
-    def compute_all_costs(self, instances: typing.List[str]=None):
+    def compute_all_costs(self, instances: typing.List[str] = None):
         """Computes the cost of all configurations from scratch and overwrites
         self.cost_perf_config and self.runs_per_config accordingly;
 
@@ -363,7 +363,7 @@ class RunHistory(object):
         """
         return len(self.data) == 0
 
-    def save_json(self, fn: str="runhistory.json", save_external: bool=False):
+    def save_json(self, fn: str = "runhistory.json", save_external: bool = False):
         """
         saves runhistory on disk
 
@@ -386,8 +386,7 @@ class RunHistory(object):
                    if id_ in config_ids_to_serialize}
         config_origins = {id_: conf.origin
                           for id_, conf in self.ids_config.items()
-                          if (id_ in config_ids_to_serialize and
-                              conf.origin is not None)}
+                          if (id_ in config_ids_to_serialize and conf.origin is not None)}
 
         with open(fn, "w") as fp:
             json.dump({"data": data,
@@ -442,7 +441,7 @@ class RunHistory(object):
                      additional_info=v[3])
 
     def update_from_json(self, fn: str, cs: ConfigurationSpace,
-                         origin: DataOrigin=DataOrigin.EXTERNAL_SAME_INSTANCES):
+                         origin: DataOrigin = DataOrigin.EXTERNAL_SAME_INSTANCES):
         """Update the current runhistory by adding new runs from a json file.
 
         Parameters
@@ -459,7 +458,7 @@ class RunHistory(object):
         self.update(runhistory=new_runhistory, origin=origin)
 
     def update(self, runhistory: 'RunHistory',
-               origin: DataOrigin=DataOrigin.EXTERNAL_SAME_INSTANCES):
+               origin: DataOrigin = DataOrigin.EXTERNAL_SAME_INSTANCES):
         """Update the current runhistory by adding new runs from a RunHistory.
 
         Parameters

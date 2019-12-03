@@ -507,8 +507,7 @@ class RBF(MagicMixin, kernels.RBF):
                 return K, K_gradient
             elif self.anisotropic:
                 # We need to recompute the pairwise dimension-wise distances
-                K_gradient = (X[:, np.newaxis, :] - X[np.newaxis, :, :]) ** 2 \
-                             / (length_scale ** 2)
+                K_gradient = (X[:, np.newaxis, :] - X[np.newaxis, :, :]) ** 2 / (length_scale ** 2)
                 K_gradient *= K[..., np.newaxis]
                 return K, K_gradient
         else:
@@ -567,8 +566,7 @@ class WhiteKernel(MagicMixin, kernels.WhiteKernel):
 
             if eval_gradient:
                 if not self.hyperparameter_noise_level.fixed:
-                    return (K, self.noise_level
-                            * np.eye(X.shape[0])[:, :, np.newaxis])
+                    return (K, self.noise_level * np.eye(X.shape[0])[:, :, np.newaxis])
                 else:
                     return K, np.empty((X.shape[0], X.shape[0], 0))
             else:
@@ -635,7 +633,7 @@ class HammingKernel(MagicMixin, kernels.HammingKernel):
             Y = np.atleast_2d(Y)
 
         indicator = np.expand_dims(X, axis=1) != Y
-        K = (-1/(2*length_scale**2) * indicator).sum(axis=2)
+        K = (-1 / (2 * length_scale**2) * indicator).sum(axis=2)
         K = np.exp(K)
 
         if active is not None:

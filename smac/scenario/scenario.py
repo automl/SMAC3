@@ -27,7 +27,7 @@ class Scenario(object):
 
     """
 
-    def __init__(self, scenario=None, cmd_options: dict=None):
+    def __init__(self, scenario=None, cmd_options: dict = None):
         """ Creates a scenario-object. The output_dir will be
         "output_dir/run_id/" and if that exists already, the old folder and its
         content will be moved (without any checks on whether it's still used by
@@ -81,7 +81,6 @@ class Scenario(object):
             raise TypeError(
                 "Wrong type of scenario (str or dict are supported)")
 
-
         for arg_name, arg_value in scenario.items():
             setattr(self, arg_name, arg_value)
 
@@ -91,7 +90,7 @@ class Scenario(object):
         if cmd_options:
             for arg_name, arg_value in cmd_options.items():
                 if isinstance(arg_value, (int, str, float)):
-                    self.logger.debug("%s = %s" %(arg_name, arg_value))
+                    self.logger.debug("%s = %s" % (arg_name, arg_value))
 
     def _transform_arguments(self):
         """TODO"""
@@ -100,7 +99,7 @@ class Scenario(object):
         self.feature_array = None
 
         self.instance_specific = {}
-        
+
         if self.run_obj == "runtime":
             self.logy = True
 
@@ -116,8 +115,8 @@ class Scenario(object):
         if self.test_insts:
             self.test_insts = extract_instance_specific(self.test_insts)
 
-        self.train_insts = self._to_str_and_warn(l=self.train_insts)
-        self.test_insts = self._to_str_and_warn(l=self.test_insts)
+        self.train_insts = self._to_str_and_warn(list_=self.train_insts)
+        self.test_insts = self._to_str_and_warn(list_=self.test_insts)
 
         if self.feature_dict:
             self.feature_array = []
@@ -141,18 +140,18 @@ class Scenario(object):
         self.logger = logging.getLogger(
             self.__module__ + '.' + self.__class__.__name__)
 
-    def _to_str_and_warn(self, l: typing.List[typing.Any]):
+    def _to_str_and_warn(self, list_: typing.List[typing.Any]):
         warn_ = False
-        for i, e in enumerate(l):
+        for i, e in enumerate(list_):
             if e is not None and not isinstance(e, str):
                 warn_ = True
                 try:
-                    l[i] = str(e)
+                    list_[i] = str(e)
                 except ValueError:
                     raise ValueError("Failed to cast all instances to str")
         if warn_:
             self.logger.warning("All instances were casted to str.")
-        return l
+        return list_
 
     def write(self):
         """ Write scenario to self.output_dir/scenario.txt. """

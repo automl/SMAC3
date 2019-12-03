@@ -3,7 +3,6 @@ import numpy as np
 import typing
 import math
 
-
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.optimizer import pSMAC
 from smac.optimizer.ei_optimization import LocalSearch
@@ -15,7 +14,6 @@ from smac.stats.stats import Stats
 from smac.initial_design.initial_design import InitialDesign
 from smac.scenario.scenario import Scenario
 from smac.configspace import Configuration, get_one_exchange_neighbourhood
-from smac.tae.execute_ta_run import FirstRunCrashedException
 from smac.utils.constants import MAXINT
 
 __author__ = "Marius Lindauer"
@@ -24,7 +22,6 @@ __license__ = "3-clause BSD"
 
 
 class EPILS_Solver(object):
-
     """Interface that contains the main Bayesian optimization loop
 
     Attributes
@@ -75,8 +72,8 @@ class EPILS_Solver(object):
                  acq_optimizer: LocalSearch,
                  acquisition_func: AbstractAcquisitionFunction,
                  rng: np.random.RandomState,
-                 restart_prob: float=0.01,
-                 pertubation_steps: int=3):
+                 restart_prob: float = 0.01,
+                 pertubation_steps: int = 3):
         """Constructor
 
         Parameters
@@ -92,7 +89,8 @@ class EPILS_Solver(object):
         runhistory2epm : AbstractRunHistory2EPM
             Object that implements the AbstractRunHistory2EPM to convert runhistory data into EPM data
         intensifier: AbstractRacer
-            intensification of new challengers against incumbent configuration (probably with some kind of racing on the instances)
+            intensification of new challengers against incumbent configuration
+            (probably with some kind of racing on the instances)
         aggregate_func: callable
             how to aggregate the runs in the runhistory to get the performance of a configuration
         num_run: int
@@ -128,17 +126,17 @@ class EPILS_Solver(object):
         self.acq_optimizer = acq_optimizer
         self.acquisition_func = acquisition_func
         self.rng = rng
-        
+
         self.max_neighbors = max(5, int(math.sqrt(len(self.config_space.get_hyperparameters()))))
         self.restart_prob = restart_prob
         self.pertubation_steps = pertubation_steps
-        
+
         self.slow_race_minR = 5
         self.slow_race_adaptive_capping_factor = 2
-        
+
         self.fast_race_minR = 1
         self.fast_race_adaptive_capping_factor = 1.2
-        
+
     def run(self):
         """Runs the Bayesian optimization loop
 
@@ -164,7 +162,7 @@ class EPILS_Solver(object):
             # model training
             self.logger.info("Model Training")
             X, Y = self.rh2EPM.transform(self.runhistory)
-            self.model.train(X, Y)            
+            self.model.train(X, Y)
             self.acquisition_func.update(model=self.model, eta=self.runhistory.get_cost(self.incumbent))
 
             if iteration == 1:
@@ -185,7 +183,7 @@ class EPILS_Solver(object):
             # SLS
             self.logger.info("SLS")
             local_inc = self.local_search(start_point=start_point)
-            
+
             # decide global inc
             self.logger.info("Race local incumbent against global incumbent")
             # don't be too aggressive here
@@ -202,7 +200,7 @@ class EPILS_Solver(object):
                 pSMAC.write(run_history=self.runhistory,
                             output_directory=self.stats.output_dir,
                             num_run=self.num_run)
-                
+
             iteration += 1
 
             self.logger.debug("Remaining budget: %f (wallclock), "
@@ -217,8 +215,8 @@ class EPILS_Solver(object):
             self.stats.print_stats(debug_out=True)
 
         return self.incumbent
-    
-    def local_search(self, start_point:Configuration):
+
+    def local_search(self, start_point: Configuration):
         """Starts a local search from the given startpoint and quits
         if either the max number of steps is reached or no neighbor
         with an higher improvement was found.
@@ -234,15 +232,14 @@ class EPILS_Solver(object):
         incumbent: Configuration
             The best found configuration
         """
-        
+
         self.intensifier.minR = self.fast_race_minR  # be aggressive here!
         self.intensifier.Adaptive_Capping_Slackfactor = self.fast_race_adaptive_capping_factor
-        
+
         incumbent = start_point
 
         local_search_steps = 0
         neighbors_looked_at = 0
-        time_n = []
         while True:
 
             local_search_steps += 1
@@ -257,10 +254,10 @@ class EPILS_Solver(object):
                 incumbent, seed=self.rng.randint(MAXINT)))
 
             acq_val = self.acquisition_func(all_neighbors)
-            
-            sorted_neighbors = sorted(zip(all_neighbors, acq_val), key=lambda x: x[1], reverse=True)
+
+            _ = sorted(zip(all_neighbors, acq_val), key=lambda x: x[1], reverse=True)
             prev_incumbent = incumbent
-            
+
             for neighbor in all_neighbors[:self.max_neighbors]:
                 neighbors_looked_at += 1
 
@@ -276,7 +273,7 @@ class EPILS_Solver(object):
 
             if not changed_inc:
                 self.logger.info("Local search took %d steps and looked at %d configurations." %
-                                  (local_search_steps, neighbors_looked_at))
+                                 (local_search_steps, neighbors_looked_at))
                 break
 
         return incumbent

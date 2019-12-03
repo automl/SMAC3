@@ -13,7 +13,7 @@ def get_types(config_space, instance_features=None):
     # Extract types vector for rf from config space and the bounds
     types = np.zeros(len(config_space.get_hyperparameters()),
                      dtype=np.uint)
-    bounds = [(np.nan, np.nan)]*types.shape[0]
+    bounds = [(np.nan, np.nan)] * types.shape[0]
 
     for i, param in enumerate(config_space.get_hyperparameters()):
         parents = config_space.get_parents_of(param.name)

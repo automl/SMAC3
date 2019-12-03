@@ -1,4 +1,3 @@
-import sys
 import typing
 from subprocess import Popen, PIPE
 
@@ -62,7 +61,7 @@ class ExecuteTARunOld(ExecuteTARun):
         if cutoff is None:
             cutoff = 99999999999999.
 
-        stdout_, stderr_ = self._call_ta(config=config, 
+        stdout_, stderr_ = self._call_ta(config=config,
                                          instance=instance,
                                          instance_specific=instance_specific,
                                          cutoff=cutoff, seed=seed)
@@ -116,8 +115,8 @@ class ExecuteTARunOld(ExecuteTARun):
             cost = quality
 
         return status, cost, float(runtime), additional_info
-    
-    def _call_ta(self, 
+
+    def _call_ta(self,
                  config: Configuration,
                  instance: str,
                  instance_specific: str,
@@ -139,5 +138,5 @@ class ExecuteTARunOld(ExecuteTARun):
 
         self.logger.debug("Stdout: %s" % stdout_)
         self.logger.debug("Stderr: %s" % stderr_)
-        
+
         return stdout_, stderr_

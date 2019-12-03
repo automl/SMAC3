@@ -51,4 +51,3 @@ class TestSMACFacade(unittest.TestCase):
                                maxfun=1)
 
         self.output_dirs.append(smac.scenario.output_dir)
-

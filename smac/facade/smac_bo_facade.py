@@ -109,7 +109,7 @@ class SMAC4BO(SMAC4AC):
 
             if len(cont_dims) > 0 and len(cat_dims) > 0:
                 # both
-                kernel = cov_amp * (exp_kernel*ham_kernel) + noise_kernel
+                kernel = cov_amp * (exp_kernel * ham_kernel) + noise_kernel
             elif len(cont_dims) > 0 and len(cat_dims) == 0:
                 # only cont
                 kernel = cov_amp * exp_kernel + noise_kernel

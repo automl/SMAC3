@@ -16,14 +16,14 @@ class ExecuteTARunHydra(ExecuteTARun):
 
     """Returns min(cost, cost_portfolio)
     """
-    
+
     def __init__(self,
                  cost_oracle: typing.Mapping[str, float],
                  tae: typing.Type[ExecuteTARun] = ExecuteTARunOld,
                  **kwargs):
         '''
             Constructor
-            
+
             Arguments
             ---------
             cost_oracle: typing.Mapping[str,float]

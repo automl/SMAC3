@@ -10,7 +10,7 @@ from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, \
 from smac.scenario.scenario import Scenario
 from smac.optimizer.acquisition import EI, EIPS, LogEI
 from smac.tae.execute_func import ExecuteTAFuncArray
-from smac.tae.execute_ta_run import  FirstRunCrashedException
+from smac.tae.execute_ta_run import FirstRunCrashedException
 from smac.utils import test_helpers
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.uncorrelated_mo_rf_with_instances import \

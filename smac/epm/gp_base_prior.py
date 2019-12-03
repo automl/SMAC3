@@ -379,8 +379,8 @@ class LognormalPrior(Prior):
             return -1e25
         else:
             rval = (
-                -(math.log(theta) - self.mean) ** 2 / (2 * self.sigma_square)
-                - math.log(self.sqrt_2_pi * self.sigma * theta)
+                -(math.log(
+                    theta) - self.mean) ** 2 / (2 * self.sigma_square) - math.log(self.sqrt_2_pi * self.sigma * theta)
             )
             return rval
 
@@ -484,7 +484,7 @@ class SoftTopHatPrior(Prior):
             if theta < self._log_lower_bound:
                 return - self.exponent * (theta - self._log_lower_bound)
             elif theta > self._log_upper_bound:
-                return self.exponent * ( self._log_upper_bound - theta)
+                return self.exponent * (self._log_upper_bound - theta)
             else:
                 return 0
         else:

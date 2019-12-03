@@ -316,8 +316,7 @@ class SuccessiveHalving(AbstractRacer):
                     cutoff=cutoff,
                     budget=0.0 if self.instance_as_budget else curr_budget,
                     instance_specific=self.instance_specifics.get(instance, "0"),
-                    capped=(self.cutoff is not None) and
-                           (cutoff < self.cutoff)
+                    capped=(self.cutoff is not None) and (cutoff < self.cutoff)
                 )
                 self._ta_time += dur
                 self._num_run += 1
