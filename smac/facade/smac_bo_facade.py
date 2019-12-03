@@ -51,9 +51,16 @@ class SMAC4BO(SMAC4AC):
         Constructor
         see ~smac.facade.smac_facade for documentation
         """
+
         scenario = kwargs['scenario']
 
-        kwargs['initial_design'] = kwargs.get('initial_design', SobolDesign)
+        if len(scenario.cs.get_hyperparameters()) <= 40:
+            kwargs['initial_design'] = kwargs.get('initial_design', SobolDesign)
+        else:
+            raise ValueError(
+                'The default initial design "Sobol sequence" can only handle up to 40 dimensions. '
+                'Please use a different initial design, such as "the Latin Hypercube design".',
+            )
         kwargs['runhistory2epm'] = kwargs.get('runhistory2epm', RunHistory2EPM4Cost)
 
         init_kwargs = kwargs.get('initial_design_kwargs', dict()) or dict()
