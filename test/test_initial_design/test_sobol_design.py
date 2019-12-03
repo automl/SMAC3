@@ -29,7 +29,10 @@ class TestSobol(unittest.TestCase):
         ).select_configurations()
 
         cs.add_hyperparameter(UniformFloatHyperparameter('x41', 0, 1))
-        with self.assertRaisesRegex(Exception, "'NoneType' object is not iterable"):
+        with self.assertRaisesRegex(
+            Exception,
+            "('NoneType' object is not iterable)|(cannot unpack non-iterable NoneType object)",
+        ):
             SobolDesign(
                 cs=cs,
                 **sobol_kwargs
