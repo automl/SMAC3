@@ -6,7 +6,6 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from smac.configspace import ConfigurationSpace
 
 from smac.facade.smac_bo_facade import SMAC4BO
-from smac.initial_design.latin_hypercube_design import LHDesign
 from smac.initial_design.sobol_design import SobolDesign
 from smac.scenario.scenario import Scenario
 

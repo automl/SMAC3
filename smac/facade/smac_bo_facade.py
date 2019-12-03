@@ -5,7 +5,6 @@ from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
 from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
 from smac.epm.util_funcs import get_types, get_rng
 from smac.initial_design.sobol_design import SobolDesign
-from smac.initial_design.latin_hypercube_design import LHDesign
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
 
 

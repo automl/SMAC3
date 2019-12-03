@@ -3,7 +3,6 @@ from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
 from smac.optimizer.acquisition import LogEI
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.initial_design.sobol_design import SobolDesign
-from smac.initial_design.latin_hypercube_design import LHDesign
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
