@@ -5,6 +5,7 @@ from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
 from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
 from smac.epm.util_funcs import get_types, get_rng
 from smac.initial_design.sobol_design import SobolDesign
+from smac.initial_design.latin_hypercube_design import LHDesign
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
 
 
@@ -51,9 +52,21 @@ class SMAC4BO(SMAC4AC):
         Constructor
         see ~smac.facade.smac_facade for documentation
         """
+
+        # The logger is only initialized on the call to super AFTER constructing all objects. In order to still log
+        # messages, we keep them in an array and fire them off later
+        log_messages = []
+
         scenario = kwargs['scenario']
 
-        kwargs['initial_design'] = kwargs.get('initial_design', SobolDesign)
+        if len(scenario.cs.get_hyperparameters()) <= 40:
+            kwargs['initial_design'] = kwargs.get('initial_design', SobolDesign)
+        else:
+            kwargs['initial_design'] = kwargs.get('initial_design', LHDesign)
+            log_messages.append((
+                30,
+                'The Sobol initial design can only handle up to 40 dimensions. Changing to a Latin Hypercube design',
+            ))
         kwargs['runhistory2epm'] = kwargs.get('runhistory2epm', RunHistory2EPM4Cost)
 
         init_kwargs = kwargs.get('initial_design_kwargs', dict()) or dict()
@@ -160,6 +173,8 @@ class SMAC4BO(SMAC4AC):
         scenario.intensification_percentage = 1e-10
 
         super().__init__(**kwargs)
+        for level, message in log_messages:
+            self.logger.log(level, message)
 
         if self.solver.scenario.n_features > 0:
             raise NotImplementedError("BOGP cannot handle instances")
