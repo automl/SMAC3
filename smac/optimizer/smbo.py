@@ -134,6 +134,7 @@ class SMBO(object):
 
         self.initial_design_configs = []
 
+        # initialize the chooser to get configurations from the EPM 
         self.epm_chooser = EPMChooser(scenario=scenario,
                                       stats=stats,
                                       runhistory=runhistory,
