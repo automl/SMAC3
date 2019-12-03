@@ -1,3 +1,5 @@
+import contextlib
+import shutil
 import unittest
 import unittest.mock
 
@@ -11,6 +13,21 @@ from smac.scenario.scenario import Scenario
 
 
 class TestSMACFacade(unittest.TestCase):
+
+    def setUp(self):
+        self.cs = ConfigurationSpace()
+        self.scenario = Scenario({'cs': self.cs, 'run_obj': 'quality',
+                                  'output_dir': ''})
+        self.output_dirs = []
+
+    def tearDown(self):
+        for i in range(20):
+            with contextlib.suppress(Exception):
+                dirname = 'run_1' + ('.OLD' * i)
+                shutil.rmtree(dirname)
+        for output_dir in self.output_dirs:
+            if output_dir:
+                shutil.rmtree(output_dir, ignore_errors=True)
 
     def test_exchange_sobol_for_lhd(self):
         cs = ConfigurationSpace()
@@ -27,3 +44,4 @@ class TestSMACFacade(unittest.TestCase):
             '"the Latin Hypercube design"',
         ):
             SMAC4BO(scenario=scenario)
+        self.output_dirs.append(scenario.output_dir)
