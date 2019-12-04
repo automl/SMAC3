@@ -297,6 +297,7 @@
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="kn">import</span> <span class="n">AbstractRunHistory2EPM</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="kn">import</span> <span class="n">FirstRunCrashedException</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="kn">import</span> <span class="n">TrajLogger</span>
 <span class="kn">from</span> <span class="nn">smac.utils.validate</span> <span class="kn">import</span> <span class="n">Validator</span>
 <span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span>
@@ -488,13 +489,17 @@
                 <span class="c1"># evaluate selected challenger</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Intensify - evaluate challenger&quot;</span><span class="p">)</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">inc_perf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">eval_challenger</span><span class="p">(</span>
-                    <span class="n">challenger</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
-                    <span class="n">incumbent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">,</span>
-                    <span class="n">run_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
-                    <span class="n">aggregate_func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aggregate_func</span><span class="p">,</span>
-                    <span class="n">time_bound</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">_min_time</span><span class="p">,</span> <span class="n">time_left</span><span class="p">))</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">inc_perf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">eval_challenger</span><span class="p">(</span>
+                        <span class="n">challenger</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
+                        <span class="n">incumbent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">,</span>
+                        <span class="n">run_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
+                        <span class="n">aggregate_func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aggregate_func</span><span class="p">,</span>
+                        <span class="n">time_bound</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">_min_time</span><span class="p">,</span> <span class="n">time_left</span><span class="p">))</span>
 
+                <span class="k">except</span> <span class="n">FirstRunCrashedException</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span><span class="p">:</span>
+                        <span class="k">raise</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">shared_model</span><span class="p">:</span>
                     <span class="n">pSMAC</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">run_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
                                 <span class="n">output_directory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">,</span>
