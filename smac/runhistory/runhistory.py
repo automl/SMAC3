@@ -352,6 +352,25 @@ class RunHistory(object):
         """
         return list(self.config_ids.keys())
 
+    def get_all_configs_per_budget(self, budget_subset: typing.Optional[typing.List] = None):
+        """
+        Return all configs in this RunHistory object that have been run on one of these budgets
+
+        Parameter
+        ---------
+            budget_subset: list
+
+        Returns
+        -------
+            parameter configurations: list
+        """
+        if budget_subset is None: return self.get_all_configs()
+        configs = []
+        for c, i, s, b in self.data.keys():
+            if b in budget_subset:
+                configs.append(self.ids_config[c])
+        return configs
+
     def empty(self):
         """Check whether or not the RunHistory is empty.
 

@@ -2,16 +2,17 @@ from smac.facade.smac_ac_facade import SMAC4AC
 from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
 from smac.optimizer.acquisition import LogEI
 from smac.epm.rf_with_instances import RandomForestWithInstances
-from smac.initial_design.sobol_design import SobolDesign
+from smac.initial_design.random_configuration_design import RandomConfigurations
+from smac.intensification.hyperband import Hyperband
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class SMAC4HPO(SMAC4AC):
+class BOHB4HPO(SMAC4AC):
     """
-    Facade to use SMAC for hyperparameter optimization
+    Facade to use BOHB i.e., SMAC with a Hyperband intensifier for hyperparameter optimization
 
     see smac.facade.smac_Facade for API
     This facade overwrites options available via the SMAC facade
@@ -31,18 +32,12 @@ class SMAC4HPO(SMAC4AC):
     def __init__(self, **kwargs):
         """
         Constructor
-        see ~smac.facade.smac_facade for docu
+        see ~smac.facade.smac_facade for documentation
         """
 
         scenario = kwargs['scenario']
 
-        if len(scenario.cs.get_hyperparameters()) <= 40:
-            kwargs['initial_design'] = kwargs.get('initial_design', SobolDesign)
-        else:
-            raise ValueError(
-                'The default initial design "Sobol sequence" can only handle up to 40 dimensions. '
-                'Please use a different initial design, such as "the Latin Hypercube design".',
-            )
+        kwargs['initial_design'] = kwargs.get('initial_design', RandomConfigurations)
         kwargs['runhistory2epm'] = kwargs.get('runhistory2epm', RunHistory2EPM4LogScaledCost)
 
         init_kwargs = kwargs.get('initial_design_kwargs', dict())
@@ -50,7 +45,9 @@ class SMAC4HPO(SMAC4AC):
         init_kwargs['max_config_fracs'] = init_kwargs.get('max_config_fracs', 0.25)
         kwargs['initial_design_kwargs'] = init_kwargs
 
-        # Intensification parameters - which intensifier to use and respective parameters
+        # Intensification parameters
+        # select Hyperband as the intensifier ensure respective parameters are provided
+        kwargs['intensifier'] = Hyperband
         intensifier_kwargs = kwargs.get('intensifier_kwargs', dict())
         intensifier_kwargs['min_chall'] = 1
         kwargs['intensifier_kwargs'] = intensifier_kwargs
@@ -94,3 +91,6 @@ class SMAC4HPO(SMAC4AC):
 
         # activate predict incumbent
         self.solver.epm_chooser.predict_incumbent = True
+
+        # BOHB requires at least D+1 no. of samples to build a model
+        self.solver.epm_chooser.min_samples_model = len(scenario.cs.get_hyperparameters()) + 1

@@ -30,7 +30,9 @@ class EPMChooser(object):
                  restore_incumbent: Configuration = None,
                  random_configuration_chooser: typing.Union[
                      ChooserNoCoolDown, ChooserLinearCoolDown] = ChooserNoCoolDown(2.0),
-                 predict_incumbent: bool = True):
+                 predict_incumbent: bool = True,
+                 min_samples_model: int = 1
+                 ):
         """
         Interface to train the EPM and generate next configurations
 
@@ -57,6 +59,8 @@ class EPMChooser(object):
             * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)
         predict_incumbent: bool
             Use predicted performance of incumbent instead of observed performance
+        min_samples_model: int
+-            Minimum number of samples to build a model
         """
 
         self.logger = logging.getLogger(
@@ -81,6 +85,30 @@ class EPMChooser(object):
 
         self.predict_incumbent = predict_incumbent
 
+        self.min_samples_model = min_samples_model
+        self.currently_considered_budgets = [0.0, ]
+
+    def _collect_data_to_train_model(self):
+        # if we use a float value as a budget, we want to train the model only on the highest budget
+        available_budgets = []
+        for i in self.runhistory.data.keys():
+            available_budgets.append(i.budget)
+
+        # Sort available budgets from highest to lowest budget
+        available_budgets = sorted(list(set(available_budgets)), reverse=True)
+
+        # Get #points per budget and if there are enough samples, then build a model
+        for b in available_budgets:
+            X, Y = self.rh2EPM.transform(self.runhistory, budget_subset=[b, ])
+            if X.shape[0] >= self.min_samples_model:
+                self.currently_considered_budgets = [b, ]
+                return X, Y
+
+        return np.empty(shape=[0, 0]), np.empty(shape=[0, ])
+
+    def _get_evaluated_configs(self):
+        return self.runhistory.get_all_configs_per_budget(budget_subset=self.currently_considered_budgets)
+
     def choose_next(self, incumbent_value: float = None):
         """Choose next candidate solution with Bayesian optimization. The
         suggested configurations depend on the argument ``acq_optimizer`` to
@@ -101,8 +129,7 @@ class EPMChooser(object):
         """
 
         self.logger.debug("Search for next configuration")
-
-        X, Y = self.rh2EPM.transform(self.runhistory)
+        X, Y = self._collect_data_to_train_model()
 
         if X.shape[0] == 0:
             # Only return a single point to avoid an overly high number of
@@ -110,7 +137,6 @@ class EPMChooser(object):
             return self._random_search.maximize(
                 runhistory=self.runhistory, stats=self.stats, num_points=1
             )
-
         self.model.train(X, Y)
 
         if incumbent_value is None:
@@ -127,7 +153,7 @@ class EPMChooser(object):
             eta=incumbent_value,
             incumbent=incumbent,
             incumbent_array=incumbent_array,
-            num_data=len(self.runhistory.data),
+            num_data=len(self._get_evaluated_configs()),
             X=X,
         )
 
@@ -151,7 +177,8 @@ class EPMChooser(object):
         np.ndarry
         Configuration
         """
-        all_configs = self.runhistory.get_all_configs()
+        all_configs = self.runhistory.get_all_configs_per_budget(budget_subset=self.currently_considered_budgets)
+
         if self.predict_incumbent:
             configs_array = convert_configurations_to_array(all_configs)
             costs = list(map(
