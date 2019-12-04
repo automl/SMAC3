@@ -10,7 +10,7 @@ __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class SMAC4BOHB(SMAC4AC):
+class BOHB4HPO(SMAC4AC):
     """
     Facade to use BOHB i.e., SMAC with a Hyperband intensifier for hyperparameter optimization
 
