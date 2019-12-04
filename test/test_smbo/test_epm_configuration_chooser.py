@@ -59,6 +59,7 @@ class TestEPMChooser(unittest.TestCase):
         # There is no model, so it returns a single random configuration
         x = smbo.epm_chooser.choose_next()
         self.assertEqual(len(x), 1)
+        self.assertEqual(x[0].origin, "Random Search")
 
     def test_choose_next_higher_budget(self):
         seed = 42
