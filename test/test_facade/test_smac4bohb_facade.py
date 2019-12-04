@@ -6,7 +6,7 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 from smac.configspace import ConfigurationSpace
 
-from smac.facade.smac_bohb_facade import SMAC4BOHB
+from smac.facade.smac_bohb_facade import BOHB4SMAC
 from smac.initial_design.random_configuration_design import RandomConfigurations
 from smac.scenario.scenario import Scenario
 
@@ -34,7 +34,7 @@ class TestSMACFacade(unittest.TestCase):
             cs.add_hyperparameter(UniformFloatHyperparameter('x%d' % (i + 1), 0, 1))
         scenario = Scenario({'cs': cs, 'run_obj': 'quality'})
         hb_kwargs = {'initial_budget': 1, 'max_budget': 3}
-        facade = SMAC4BOHB(scenario=scenario, intensifier_kwargs=hb_kwargs)
+        facade = BOHB4SMAC(scenario=scenario, intensifier_kwargs=hb_kwargs)
 
         self.assertIsInstance(facade.solver.initial_design, RandomConfigurations)
         # ensure number of samples required is D+1
