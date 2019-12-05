@@ -39,3 +39,4 @@ class TestSMACFacade(unittest.TestCase):
         self.assertIsInstance(facade.solver.initial_design, RandomConfigurations)
         # ensure number of samples required is D+1
         self.assertEqual(facade.solver.epm_chooser.min_samples_model, 41)
+        self.output_dirs.append(scenario.output_dir)
