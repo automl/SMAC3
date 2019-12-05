@@ -4,7 +4,6 @@ import numpy as np
 import time
 import typing
 
-import smac
 from smac.configspace import Configuration
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.initial_design.initial_design import InitialDesign
