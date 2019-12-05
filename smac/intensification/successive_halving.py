@@ -4,12 +4,11 @@ import typing
 import numpy as np
 
 from smac.intensification.abstract_racer import AbstractRacer
-from smac.optimizer.objective import sum_cost
 from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
 from smac.configspace import Configuration
-from smac.runhistory.runhistory import RunHistory
+from smac.runhistory.runhistory import RunHistory, sum_cost
 from smac.tae.execute_ta_run import BudgetExhaustedException, CappedRunException, ExecuteTARun
 from smac.utils.io.traj_logging import TrajLogger
 

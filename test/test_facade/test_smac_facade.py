@@ -26,10 +26,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import RunHistory2EPM4EIPS
 from smac.scenario.scenario import Scenario
 from smac.optimizer.acquisition import EI, EIPS, LCB
-from smac.optimizer.random_configuration_chooser import (
-    ChooserCosineAnnealing,
-    ChooserProb,
-)
+from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, ChooserProb
 from smac.tae.execute_func import ExecuteTAFuncDict
 
 
@@ -113,10 +110,10 @@ class TestSMACFacade(unittest.TestCase):
         self.assertEqual(smbo.solver.epm_chooser.random_configuration_chooser.prob, 0.1)
         smbo = SMAC4AC(
             self.scenario,
-            random_configuration_chooser=ChooserCosineAnnealing,
-            random_configuration_chooser_kwargs={'prob_max': 1, 'prob_min': 0.1, 'restart_iteration': 10},
+            random_configuration_chooser=ChooserNoCoolDown,
+            random_configuration_chooser_kwargs={'modulus': 10},
         )
-        self.assertIsInstance(smbo.solver.epm_chooser.random_configuration_chooser, ChooserCosineAnnealing)
+        self.assertIsInstance(smbo.solver.epm_chooser.random_configuration_chooser, ChooserNoCoolDown)
         # Check for construction failure on wrong argument
         with self.assertRaisesRegex(Exception, 'got an unexpected keyword argument'):
             SMAC4AC(self.scenario, random_configuration_chooser_kwargs={'dummy': 0.1})

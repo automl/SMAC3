@@ -14,7 +14,7 @@ from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
 # runhistory
-from smac.runhistory.runhistory import RunHistory
+from smac.runhistory.runhistory import RunHistory, average_cost
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, \
     RunHistory2EPM4LogCost, RunHistory2EPM4Cost, \
     RunHistory2EPM4InvScaledCost, RunHistory2EPM4LogScaledCost
@@ -32,7 +32,6 @@ from smac.intensification.intensification import Intensifier
 from smac.intensification.abstract_racer import AbstractRacer
 # optimizer
 from smac.optimizer.smbo import SMBO
-from smac.optimizer.objective import average_cost
 from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction, IntegratedAcquisitionFunction
 from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
     AcquisitionFunctionMaximizer

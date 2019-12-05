@@ -6,10 +6,9 @@ import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
-from smac.runhistory.runhistory import RunHistory
+from smac.runhistory.runhistory import RunHistory, average_cost, sum_cost
 from smac.scenario.scenario import Scenario
 from smac.intensification.abstract_racer import AbstractRacer
-from smac.optimizer.objective import average_cost, sum_cost
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats

@@ -6,11 +6,10 @@ from enum import Enum
 
 import numpy as np
 
-from smac.optimizer.objective import sum_cost
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
 from smac.configspace import Configuration
-from smac.runhistory.runhistory import RunHistory, InstSeedBudgetKey
+from smac.runhistory.runhistory import RunHistory, InstSeedBudgetKey, sum_cost
 from smac.tae.execute_ta_run import BudgetExhaustedException, CappedRunException, ExecuteTARun
 from smac.utils.io.traj_logging import TrajLogger
 from smac.intensification.abstract_racer import AbstractRacer

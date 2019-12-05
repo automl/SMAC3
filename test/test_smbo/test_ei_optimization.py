@@ -11,10 +11,9 @@ import numpy as np
 from scipy.spatial.distance import euclidean
 
 from smac.configspace import pcs
-from smac.optimizer.objective import average_cost
 from smac.optimizer.acquisition import EI
 from smac.optimizer.ei_optimization import LocalSearch, RandomSearch
-from smac.runhistory.runhistory import RunHistory
+from smac.runhistory.runhistory import RunHistory, average_cost
 from smac.tae.execute_ta_run import StatusType
 from smac.configspace import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \

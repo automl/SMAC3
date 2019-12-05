@@ -6,8 +6,7 @@ from ConfigSpace import Configuration, UniformFloatHyperparameter
 from smac.configspace import ConfigurationSpace
 from smac.initial_design.default_configuration_design import DefaultConfiguration
 from smac.initial_design.initial_design import InitialDesign
-from smac.optimizer.objective import average_cost
-from smac.runhistory.runhistory import RunHistory
+from smac.runhistory.runhistory import RunHistory, average_cost
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger

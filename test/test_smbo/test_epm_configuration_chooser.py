@@ -7,8 +7,7 @@ from ConfigSpace import Configuration
 
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.facade.smac_ac_facade import SMAC4AC
-from smac.optimizer.objective import average_cost
-from smac.runhistory.runhistory import RunHistory
+from smac.runhistory.runhistory import RunHistory, average_cost
 from smac.scenario.scenario import Scenario
 from smac.utils import test_helpers
 from smac.tae.execute_ta_run import StatusType

@@ -4,11 +4,10 @@ import shutil
 import unittest
 import logging
 
-from smac.runhistory.runhistory import RunHistory, RunKey, DataOrigin
+from smac.runhistory.runhistory import RunHistory, RunKey, DataOrigin, average_cost
 from smac.utils import test_helpers
 from smac.tae.execute_ta_run import StatusType
 from smac.optimizer import pSMAC
-from smac.optimizer.objective import average_cost
 
 
 class TestPSMAC(unittest.TestCase):

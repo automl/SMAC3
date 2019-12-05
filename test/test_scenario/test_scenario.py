@@ -20,8 +20,7 @@ from smac.configspace import ConfigurationSpace
 from smac.utils.merge_foreign_data import merge_foreign_data
 from smac.utils.io.cmd_reader import truthy as _is_truthy
 from smac.utils.io.input_reader import InputReader
-from smac.runhistory.runhistory import RunHistory
-from smac.optimizer.objective import average_cost
+from smac.runhistory.runhistory import RunHistory, average_cost
 from smac.tae.execute_ta_run import StatusType
 
 in_reader = InputReader()

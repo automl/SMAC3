@@ -1,7 +1,6 @@
-from smac.runhistory.runhistory import RunHistory, DataOrigin
+from smac.runhistory.runhistory import RunHistory, DataOrigin, average_cost
 from smac.scenario.scenario import Scenario
 from smac.configspace import ConfigurationSpace
-from smac.optimizer.objective import average_cost
 
 import typing
 

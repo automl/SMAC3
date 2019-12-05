@@ -370,8 +370,7 @@ class CMDReader(object):
                               default=logging.INFO, choices=["INFO", "DEBUG"],
                               help="Verbosity level.")
         opt_opts.add_argument("--mode",
-                              default="SMAC4AC", choices=["SMAC4AC", "ROAR", "EPILS", "Hydra", "PSMAC", "SMAC4HPO",
-                                                          "SMAC4BO"],
+                              default="SMAC4AC", choices=["SMAC4AC", "ROAR", "Hydra", "PSMAC", "SMAC4HPO", "SMAC4BO"],
                               help="Configuration mode.")
         opt_opts.add_argument("--restore-state", "--restore_state", dest="restore_state",
                               default=None,

@@ -8,8 +8,7 @@ import numpy as np
 from smac.scenario.scenario import Scenario
 from smac.tae.execute_ta_run import StatusType
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
-from smac.runhistory.runhistory import RunHistory
-from smac.optimizer.objective import average_cost
+from smac.runhistory.runhistory import RunHistory, average_cost
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator, _Run
 

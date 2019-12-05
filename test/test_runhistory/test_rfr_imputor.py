@@ -8,11 +8,11 @@ from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, \
 
 from smac.tae.execute_ta_run import StatusType
 from smac.runhistory import runhistory, runhistory2epm
+from smac.runhistory.runhistory import average_cost
 from smac.scenario import scenario
 from smac.epm import rfr_imputator
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.util_funcs import get_types
-from smac.optimizer.objective import average_cost
 
 
 def generate_config(cs, rs):
