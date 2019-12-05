@@ -34,6 +34,7 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.epm.gp_base_prior module" href="smac.epm.gp_base_prior.html" />
@@ -206,6 +207,17 @@
 <li class="toctree-l2"><a class="reference internal" href="smac.smac_cli.html">smac.smac_cli module</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_sgd_hyperband_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_mlp_hyperband.html">Optimizing an MLP with HyperBand</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
@@ -281,7 +293,7 @@
 <span id="smac-epm-gaussian-process-mcmc-module"></span><h1>smac.epm.gaussian_process_mcmc module<a class="headerlink" href="#module-smac.epm.gaussian_process_mcmc" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.epm.gaussian_process_mcmc.GaussianProcessMCMC">
-<em class="property">class </em><code class="sig-prename descclassname">smac.epm.gaussian_process_mcmc.</code><code class="sig-name descname">GaussianProcessMCMC</code><span class="sig-paren">(</span><em class="sig-param">configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: numpy.ndarray, bounds: List[Tuple[float, float]], seed: int, kernel: &lt;lazy_import.LazyCallable object at 0x7f1191bf1450&gt;, n_mcmc_walkers: int = 20, chain_length: int = 50, burnin_steps: int = 50, normalize_y: bool = True, mcmc_sampler: str = 'emcee', average_samples: bool = False, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process_mcmc.html#GaussianProcessMCMC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process_mcmc.GaussianProcessMCMC" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.epm.gaussian_process_mcmc.</code><code class="sig-name descname">GaussianProcessMCMC</code><span class="sig-paren">(</span><em class="sig-param">configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: numpy.ndarray, bounds: List[Tuple[float, float]], seed: int, kernel: &lt;lazy_import.LazyCallable object at 0x7fe921341ed0&gt;, n_mcmc_walkers: int = 20, chain_length: int = 50, burnin_steps: int = 50, normalize_y: bool = True, mcmc_sampler: str = 'emcee', average_samples: bool = False, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process_mcmc.html#GaussianProcessMCMC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process_mcmc.GaussianProcessMCMC" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.epm.base_gp.html#smac.epm.base_gp.BaseModel" title="smac.epm.base_gp.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_gp.BaseModel</span></code></a></p>
 <p>Gaussian process model.</p>
 <p>The GP hyperparameters are integrated out by MCMC. If you use this class
