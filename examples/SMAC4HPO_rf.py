@@ -1,3 +1,9 @@
+"""
+====================================================
+Using the SMAC-HPO interface to tune a random forest
+====================================================
+"""
+
 import logging
 
 import numpy as np

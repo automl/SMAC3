@@ -18,6 +18,8 @@ with open(os.path.join(os.path.dirname(__file__), 'extras_require.json')) as fh:
 
 extras_installed = set()
 for name, requirements in extras_require.items():
+    if name in ['documentation', 'test']:
+        continue
     if dependencies.are_valid_packages(requirements):
         extras_installed.add(name)
     for requirement in requirements:

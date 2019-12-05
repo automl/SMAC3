@@ -3,7 +3,6 @@ import unittest
 from unittest import mock
 
 import numpy as np
-from nose.plugins.attrib import attr
 
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
 from smac.epm.rf_with_instances import RandomForestWithInstances
@@ -111,7 +110,6 @@ class TestSMBO(unittest.TestCase):
         except FirstRunCrashedException:
             self.fail('Raises FirstRunCrashedException unexpectedly!')
 
-    @attr('slow')
     def test_intensification_percentage(self):
         def target(x):
             return 5

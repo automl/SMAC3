@@ -1,17 +1,7 @@
 
 .PHONY: test
 test:
-	python -m nose -v --with-coverage --cover-package=smac
-
-.PHONY: test-fast
-test-fast:
-	# requires nose-timer
-	python -m nose -a '!slow' -sv --with-coverage --cover-package=smac --with-timer --timer-top-n 15
-
-.PHONY: test-runtimes
-test-runtimes:
-	# requires nose-timer
-	python -m nose -v --with-timer --timer-top-n 15
+	pytest -v --cov=smac test --durations=20
 
 .PHONY: doc
 doc:

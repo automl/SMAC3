@@ -1,4 +1,8 @@
-from __future__ import division, print_function
+"""
+==========================
+scipy-style fmin interface
+==========================
+"""
 
 import logging
 

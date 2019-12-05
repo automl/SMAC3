@@ -1,6 +1,5 @@
 import os
 import unittest
-from nose.plugins.attrib import attr
 import logging
 import shutil
 
@@ -217,7 +216,6 @@ class ValidationTest(unittest.TestCase):
         runs = validator._get_runs(['config1'], insts, repetitions=1)
         self.assertEqual(runs[0], expected)
 
-    @attr('slow')
     def test_validate(self):
         ''' test validation '''
         scen = Scenario(self.scen_fn,
@@ -247,7 +245,6 @@ class ValidationTest(unittest.TestCase):
         self.assertEqual(len(rh.get_all_configs()), 1)
         self.assertEqual(len(rh.get_runs_for_config(rh.get_all_configs()[0])), 9)
 
-    @attr('slow')
     def test_validate_no_insts(self):
         ''' no instances '''
         scen = Scenario(self.scen_fn,
@@ -259,7 +256,6 @@ class ValidationTest(unittest.TestCase):
         self.assertEqual(sum([len(rh.get_runs_for_config(c)) for c in
                               rh.get_all_configs()]), 6)
 
-    @attr('slow')
     def test_validate_deterministic(self):
         ''' deterministic ta '''
         scen = Scenario(self.scen_fn,
@@ -274,7 +270,6 @@ class ValidationTest(unittest.TestCase):
         self.assertEqual(sum([len(rh.get_runs_for_config(c)) for c in
                               rh.get_all_configs()]), 6)
 
-    @attr('slow')
     def test_parallel(self):
         ''' test parallel '''
         scen = Scenario(self.scen_fn,

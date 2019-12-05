@@ -3,7 +3,6 @@ import sys
 import time
 import unittest
 import unittest.mock
-from nose.plugins.attrib import attr
 
 import numpy as np
 
@@ -149,7 +148,6 @@ class TestExecuteFunc(unittest.TestCase):
             raise ValueError('Test cannot be performed on platform %s' %
                              sys.platform)
 
-    @attr('slow')
     def test_timeout(self):
         def run_over_time(*args):
             time.sleep(5)
@@ -161,7 +159,6 @@ class TestExecuteFunc(unittest.TestCase):
         self.assertGreaterEqual(rval[2], 0.0)
         self.assertEqual(rval[3], dict())
 
-    @attr('slow')
     def test_timeout_runtime(self):
         def run_over_time(*args):
             time.sleep(5)

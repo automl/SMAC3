@@ -1,6 +1,5 @@
 import unittest
 
-from nose.plugins.attrib import attr
 from scipy.optimize import fmin_l_bfgs_b
 import shutil
 from smac.facade.func_facade import fmin_smac
@@ -21,7 +20,6 @@ class TestSMACFacade(unittest.TestCase):
             if output_dir:
                 shutil.rmtree(output_dir, ignore_errors=True)
 
-    @attr('slow')
     def test_func_smac(self):
         func = rosenbrock_2d
         x0 = [-3, -4]
