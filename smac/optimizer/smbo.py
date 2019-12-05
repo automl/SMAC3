@@ -5,19 +5,12 @@ import time
 import typing
 
 import smac
-from smac.configspace import ConfigurationSpace, Configuration, Constant, \
-    CategoricalHyperparameter, UniformFloatHyperparameter, \
-    UniformIntegerHyperparameter, InCondition
-from smac.epm.base_epm import AbstractEPM
+from smac.configspace import Configuration
 from smac.epm.rf_with_instances import RandomForestWithInstances
-from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
-from smac.epm.gp_base_prior import LognormalPrior, HorseshoePrior
-from smac.epm.util_funcs import get_types
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer
 from smac.optimizer import pSMAC
-from smac.optimizer.acquisition import AbstractAcquisitionFunction, EI, LogEI, \
-    LCB, PI
+from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, RandomConfigurationChooser
 from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer
 from smac.optimizer.epm_configuration_chooser import EPMChooser
@@ -28,7 +21,6 @@ from smac.stats.stats import Stats
 from smac.tae.execute_ta_run import FirstRunCrashedException
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
-from smac.utils.constants import MAXINT
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"

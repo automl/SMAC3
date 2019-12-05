@@ -4,7 +4,6 @@ from unittest import mock
 
 import numpy as np
 
-from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.intensification.intensification import Intensifier
@@ -15,8 +14,6 @@ from smac.tae.execute_ta_run import FirstRunCrashedException
 from smac.utils import test_helpers
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
-
-from test import requires_extra
 
 
 class ConfigurationMock(object):
