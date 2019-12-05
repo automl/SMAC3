@@ -221,13 +221,13 @@ class EPILS_Solver(object):
         if either the max number of steps is reached or no neighbor
         with an higher improvement was found.
 
-        Parameters:
+        Parameters
         ----------
 
         start_point: Configuration
             The point from where the local search starts
 
-        Returns:
+        Returns
         -------
         incumbent: Configuration
             The best found configuration

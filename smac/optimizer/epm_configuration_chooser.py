@@ -38,6 +38,7 @@ class EPMChooser(object):
 
         Parameters
         ----------
+
         scenario: smac.scenario.scenario.Scenario
             Scenario object
         stats: smac.stats.stats.Stats
@@ -53,14 +54,15 @@ class EPMChooser(object):
             incumbent to be used from the start. ONLY used to restore states.
         rng: np.random.RandomState
             Random number generator
-        random_configuration_chooser
+        random_configuration_chooser:
             Chooser for random configuration -- one of
+
             * ChooserNoCoolDown(modulus)
             * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)
         predict_incumbent: bool
             Use predicted performance of incumbent instead of observed performance
         min_samples_model: int
--            Minimum number of samples to build a model
+            Minimum number of samples to build a model
         """
 
         self.logger = logging.getLogger(
@@ -171,8 +173,8 @@ class EPMChooser(object):
         This is retrieved either from the runhistory or from best predicted
         performance on configs in runhistory (depends on self.predict_incumbent)
 
-        Return
-        ------
+        Returns
+        -------
         float
         np.ndarry
         Configuration

@@ -356,8 +356,8 @@ class RunHistory(object):
         """
         Return all configs in this RunHistory object that have been run on one of these budgets
 
-        Parameter
-        ---------
+        Parameters
+        ----------
             budget_subset: list
 
         Returns

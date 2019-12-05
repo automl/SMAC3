@@ -114,7 +114,7 @@ class SMBO(object):
         predict_incumbent: bool
             Use predicted performance of incumbent instead of observed performance
         min_samples_model: int
--            Minimum number of samples to build a model
+            Minimum number of samples to build a model
         """
 
         self.logger = logging.getLogger(

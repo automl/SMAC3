@@ -25,6 +25,7 @@ class SMAC4BO(SMAC4AC):
     DSO workshop 2019 (https://arxiv.org/abs/1908.06674).
 
     Changes are:
+
     * Instead of having an initial design of size 10*D as suggested by Jones et al. 1998 (actually, they suggested
       10*D+1), we use an initial design of 8*D.
     * More restrictive lower and upper bounds on the length scale for the Matern and Hamming Kernel than the ones

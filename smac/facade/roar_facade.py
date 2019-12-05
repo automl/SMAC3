@@ -30,7 +30,7 @@ class ROAR(SMAC4AC):
 
     See Also
     --------
-    :class:`~smac.facade.smac_facade.SMAC`
+    :class:`~smac.facade.smac_ac_facade.SMAC4AC`
 
     """
 

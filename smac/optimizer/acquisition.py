@@ -424,12 +424,10 @@ class PI(AbstractAcquisitionFunction):
                  model: AbstractEPM,
                  par: float = 0.0):
 
-        """Computes the probability of improvement for a given x over the best so far value as
-        acquisition value.
+        """Computes the probability of improvement for a given x over the best so far value as acquisition value.
 
-        :math:`P(f_{t+1}(\mathbf{X})\geq f(\mathbf{X^+})) :=
-        \Phi(\frac{\mu(\mathbf{X}) - f(\mathbf{X^+})}{\sigma(\mathbf{X})})`,
-        with :math:`f(X^+)` as the incumbent and :math:`\Phi` the cdf of the standard normal
+        :math:`P(f_{t+1}(\mathbf{X})\geq f(\mathbf{X^+}))` :math:`:= \Phi(\\frac{ \mu(\mathbf{X})-f(\mathbf{X^+}) }
+        { \sigma(\mathbf{X}) })` with :math:`f(X^+)` as the incumbent and :math:`\Phi` the cdf of the standard normal
 
         Parameters
         ----------

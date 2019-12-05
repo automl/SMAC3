@@ -15,8 +15,8 @@ def create_output_directory(
 
     Side effect: Adds the current output directory to the scenario object!
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
 
     scenario : ~smac.scenario.scenario.Scenario
 
