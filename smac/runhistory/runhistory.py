@@ -364,7 +364,8 @@ class RunHistory(object):
         -------
             parameter configurations: list
         """
-        if budget_subset is None: return self.get_all_configs()
+        if budget_subset is None:
+            return self.get_all_configs()
         configs = []
         for c, i, s, b in self.data.keys():
             if b in budget_subset:
