@@ -133,6 +133,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 </ul>
 </li>
@@ -322,12 +323,15 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.transform">
-<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.transform" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">budget_subset: list = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns vector representation of runhistory; if imputation is
 disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – Runhistory containing all evaluated configurations/instances</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – Runhistory containing all evaluated configurations/instances</p></li>
+<li><p><strong>budget_subset</strong> (<em>list of budgets to consider</em>) – </p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">

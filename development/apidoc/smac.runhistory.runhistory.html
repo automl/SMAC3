@@ -133,6 +133,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 </ul>
 </li>
@@ -560,6 +561,23 @@ False otherwise</p>
 <dt id="smac.runhistory.runhistory.RunHistory.get_all_configs">
 <code class="sig-name descname">get_all_configs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_all_configs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_all_configs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all configurations in this RunHistory object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>parameter configurations</strong></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory.RunHistory.get_all_configs_per_budget">
+<code class="sig-name descname">get_all_configs_per_budget</code><span class="sig-paren">(</span><em class="sig-param">budget_subset: Optional[List] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_all_configs_per_budget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_all_configs_per_budget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all configs in this RunHistory object that have been run on one of these budgets</p>
+<blockquote>
+<div><p>budget_subset: list</p>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><strong>parameter configurations</strong></p>

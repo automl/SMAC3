@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.initial_design.random_configuration_design &mdash; SMAC 0.11.2dev documentation</title>
+  <title>smac.facade.smac_bohb_facade &mdash; SMAC 0.11.2dev documentation</title>
   
 
   
@@ -254,7 +254,7 @@
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
-      <li>smac.initial_design.random_configuration_design</li>
+      <li>smac.facade.smac_bohb_facade</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -269,37 +269,103 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for smac.initial_design.random_configuration_design</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+  <h1>Source code for smac.facade.smac_bohb_facade</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">smac.facade.smac_ac_facade</span> <span class="kn">import</span> <span class="n">SMAC4AC</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="kn">import</span> <span class="n">RunHistory2EPM4LogScaledCost</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="kn">import</span> <span class="n">LogEI</span>
+<span class="kn">from</span> <span class="nn">smac.epm.rf_with_instances</span> <span class="kn">import</span> <span class="n">RandomForestWithInstances</span>
+<span class="kn">from</span> <span class="nn">smac.initial_design.random_configuration_design</span> <span class="kn">import</span> <span class="n">RandomConfigurations</span>
+<span class="kn">from</span> <span class="nn">smac.intensification.hyperband</span> <span class="kn">import</span> <span class="n">Hyperband</span>
 
-<span class="kn">from</span> <span class="nn">ConfigSpace</span> <span class="kn">import</span> <span class="n">Configuration</span>
-
-<span class="kn">from</span> <span class="nn">smac.initial_design.initial_design</span> <span class="kn">import</span> <span class="n">InitialDesign</span>
-
-
-<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Katharina Eggensperger&quot;</span>
-<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2016, ML4AAD&quot;</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2018, ML4AAD&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
-<div class="viewcode-block" id="RandomConfigurations"><a class="viewcode-back" href="../../../apidoc/smac.initial_design.random_configuration_design.html#smac.initial_design.random_configuration_design.RandomConfigurations">[docs]</a><span class="k">class</span> <span class="nc">RandomConfigurations</span><span class="p">(</span><span class="n">InitialDesign</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Initial design that evaluates random configurations.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="BOHB4HPO"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_bohb_facade.html#smac.facade.smac_bohb_facade.BOHB4HPO">[docs]</a><span class="k">class</span> <span class="nc">BOHB4HPO</span><span class="p">(</span><span class="n">SMAC4AC</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Facade to use BOHB i.e., SMAC with a Hyperband intensifier for hyperparameter optimization</span>
 
-    <span class="k">def</span> <span class="nf">_select_configurations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Select a random configuration.</span>
+<span class="sd">    see smac.facade.smac_Facade for API</span>
+<span class="sd">    This facade overwrites options available via the SMAC facade</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        config: Configuration()</span>
-<span class="sd">            Initial incumbent configuration</span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    logger</span>
+<span class="sd">    stats : Stats</span>
+<span class="sd">    solver : SMBO</span>
+<span class="sd">    runhistory : RunHistory</span>
+<span class="sd">        List with information about previous runs</span>
+<span class="sd">    trajectory : list</span>
+<span class="sd">        List of all incumbents</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        see ~smac.facade.smac_facade for documentation</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">sample_configuration</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">init_budget</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_budget</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">configs</span> <span class="o">=</span> <span class="p">[</span><span class="n">configs</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">:</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;Random initial design.&#39;</span>
-        <span class="k">return</span> <span class="n">configs</span></div>
+        <span class="n">scenario</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;scenario&#39;</span><span class="p">]</span>
+
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;initial_design&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;initial_design&#39;</span><span class="p">,</span> <span class="n">RandomConfigurations</span><span class="p">)</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;runhistory2epm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runhistory2epm&#39;</span><span class="p">,</span> <span class="n">RunHistory2EPM4LogScaledCost</span><span class="p">)</span>
+
+        <span class="n">init_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;initial_design_kwargs&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+        <span class="n">init_kwargs</span><span class="p">[</span><span class="s1">&#39;n_configs_x_params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;n_configs_x_params&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">init_kwargs</span><span class="p">[</span><span class="s1">&#39;max_config_fracs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;max_config_fracs&#39;</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;initial_design_kwargs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_kwargs</span>
+
+        <span class="c1"># Intensification parameters</span>
+        <span class="c1"># select Hyperband as the intensifier ensure respective parameters are provided</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;intensifier&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Hyperband</span>
+        <span class="n">intensifier_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;intensifier_kwargs&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+        <span class="n">intensifier_kwargs</span><span class="p">[</span><span class="s1">&#39;min_chall&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;intensifier_kwargs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">intensifier_kwargs</span>
+        <span class="n">scenario</span><span class="o">.</span><span class="n">intensification_percentage</span> <span class="o">=</span> <span class="mf">1e-10</span>
+
+        <span class="n">model_class</span> <span class="o">=</span> <span class="n">RandomForestWithInstances</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_class</span>
+
+        <span class="c1"># == static RF settings</span>
+        <span class="n">model_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;model_kwargs&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+        <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;num_trees&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;num_trees&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;do_bootstrapping&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;do_bootstrapping&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;ratio_features&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ratio_features&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;min_samples_split&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;min_samples_split&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;log_y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;log_y&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;model_kwargs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_kwargs</span>
+
+        <span class="c1"># == Acquisition function</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;acquisition_function&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acquisition_function&#39;</span><span class="p">,</span> <span class="n">LogEI</span><span class="p">)</span>
+
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;runhistory2epm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runhistory2epm&#39;</span><span class="p">,</span> <span class="n">RunHistory2EPM4LogScaledCost</span><span class="p">)</span>
+
+        <span class="c1"># assumes random chooser for random configs</span>
+        <span class="n">random_config_chooser_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;random_configuration_chooser_kwargs&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+        <span class="n">random_config_chooser_kwargs</span><span class="p">[</span><span class="s1">&#39;prob&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">random_config_chooser_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;prob&#39;</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">)</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;random_configuration_chooser_kwargs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">random_config_chooser_kwargs</span>
+
+        <span class="c1"># better improve acquisition function optimization</span>
+        <span class="c1"># 1. increase number of sls iterations</span>
+        <span class="n">acquisition_function_optimizer_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acquisition_function_optimizer_kwargs&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+        <span class="n">acquisition_function_optimizer_kwargs</span><span class="p">[</span><span class="s1">&#39;n_sls_iterations&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;acquisition_function_optimizer_kwargs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">acquisition_function_optimizer_kwargs</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+
+        <span class="c1"># better improve acquisition function optimization</span>
+        <span class="c1"># 2. more randomly sampled configurations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">acq_opt_challengers</span> <span class="o">=</span> <span class="mi">10000</span>
+
+        <span class="c1"># activate predict incumbent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">epm_chooser</span><span class="o">.</span><span class="n">predict_incumbent</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># BOHB requires at least D+1 no. of samples to build a model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">epm_chooser</span><span class="o">.</span><span class="n">min_samples_model</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">())</span> <span class="o">+</span> <span class="mi">1</span></div>
 </pre></div>
 
            </div>

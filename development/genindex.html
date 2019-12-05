@@ -132,6 +132,7 @@
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 </ul>
 </li>
@@ -371,6 +372,8 @@
         <li><a href="apidoc/smac.epm.base_rf.html#smac.epm.base_rf.BaseModel">(class in smac.epm.base_rf)</a>
 </li>
       </ul></li>
+      <li><a href="apidoc/smac.facade.smac_bohb_facade.html#smac.facade.smac_bohb_facade.BOHB4HPO">BOHB4HPO (class in smac.facade.smac_bohb_facade)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances.bounds">bounds (smac.epm.rf_with_instances.RandomForestWithInstances attribute)</a>
@@ -639,6 +642,8 @@
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_all_configs">get_all_configs() (smac.runhistory.runhistory.RunHistory method)</a>
 </li>
+      <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_all_configs_per_budget">get_all_configs_per_budget() (smac.runhistory.runhistory.RunHistory method)</a>
+</li>
       <li><a href="apidoc/smac.configspace.html#smac.configspace.ConfigurationSpace.get_all_unconditional_hyperparameters">get_all_unconditional_hyperparameters (smac.configspace.ConfigurationSpace attribute)</a>
 </li>
       <li><a href="apidoc/smac.configspace.html#smac.configspace.Configuration.get_array">get_array (smac.configspace.Configuration attribute)</a>
@@ -685,6 +690,8 @@
         <li><a href="apidoc/smac.configspace.html#smac.configspace.UniformIntegerHyperparameter.get_neighbors">(smac.configspace.UniformIntegerHyperparameter method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.intensification.abstract_racer.html#smac.intensification.abstract_racer.AbstractRacer.get_next_challenger">get_next_challenger() (smac.intensification.abstract_racer.AbstractRacer method)</a>
 
       <ul>
@@ -695,8 +702,6 @@
         <li><a href="apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving.get_next_challenger">(smac.intensification.successive_halving.SuccessiveHalving method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.configspace.html#smac.configspace.CategoricalHyperparameter.get_num_neighbors">get_num_neighbors() (smac.configspace.CategoricalHyperparameter method)</a>
 
       <ul>
@@ -955,6 +960,8 @@
         <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.logger">(smac.facade.smac_ac_facade.SMAC4AC attribute)</a>
 </li>
         <li><a href="apidoc/smac.facade.smac_bo_facade.html#smac.facade.smac_bo_facade.SMAC4BO.logger">(smac.facade.smac_bo_facade.SMAC4BO attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_bohb_facade.html#smac.facade.smac_bohb_facade.BOHB4HPO.logger">(smac.facade.smac_bohb_facade.BOHB4HPO attribute)</a>
 </li>
         <li><a href="apidoc/smac.facade.smac_hpo_facade.html#smac.facade.smac_hpo_facade.SMAC4HPO.logger">(smac.facade.smac_hpo_facade.SMAC4HPO attribute)</a>
 </li>
@@ -1268,6 +1275,8 @@
       <ul>
         <li><a href="apidoc/smac.facade.smac_bo_facade.html#smac.facade.smac_bo_facade.SMAC4BO.runhistory">(smac.facade.smac_bo_facade.SMAC4BO attribute)</a>
 </li>
+        <li><a href="apidoc/smac.facade.smac_bohb_facade.html#smac.facade.smac_bohb_facade.BOHB4HPO.runhistory">(smac.facade.smac_bohb_facade.BOHB4HPO attribute)</a>
+</li>
         <li><a href="apidoc/smac.facade.smac_hpo_facade.html#smac.facade.smac_hpo_facade.SMAC4HPO.runhistory">(smac.facade.smac_hpo_facade.SMAC4HPO attribute)</a>
 </li>
         <li><a href="apidoc/smac.optimizer.epils.html#smac.optimizer.epils.EPILS_Solver.runhistory">(smac.optimizer.epils.EPILS_Solver attribute)</a>
@@ -1405,6 +1414,8 @@
 </li>
       <li><a href="apidoc/smac.facade.smac_bo_facade.html#module-smac.facade.smac_bo_facade">smac.facade.smac_bo_facade (module)</a>
 </li>
+      <li><a href="apidoc/smac.facade.smac_bohb_facade.html#module-smac.facade.smac_bohb_facade">smac.facade.smac_bohb_facade (module)</a>
+</li>
       <li><a href="apidoc/smac.facade.smac_hpo_facade.html#module-smac.facade.smac_hpo_facade">smac.facade.smac_hpo_facade (module)</a>
 </li>
       <li><a href="apidoc/smac.initial_design.html#module-smac.initial_design">smac.initial_design (module)</a>
@@ -1441,10 +1452,10 @@
 </li>
       <li><a href="apidoc/smac.optimizer.epm_configuration_chooser.html#module-smac.optimizer.epm_configuration_chooser">smac.optimizer.epm_configuration_chooser (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.optimizer.objective.html#module-smac.optimizer.objective">smac.optimizer.objective (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.optimizer.pSMAC.html#module-smac.optimizer.pSMAC">smac.optimizer.pSMAC (module)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.random_configuration_chooser.html#module-smac.optimizer.random_configuration_chooser">smac.optimizer.random_configuration_chooser (module)</a>
@@ -1534,6 +1545,8 @@
 </li>
         <li><a href="apidoc/smac.facade.smac_bo_facade.html#smac.facade.smac_bo_facade.SMAC4BO.solver">(smac.facade.smac_bo_facade.SMAC4BO attribute)</a>
 </li>
+        <li><a href="apidoc/smac.facade.smac_bohb_facade.html#smac.facade.smac_bohb_facade.BOHB4HPO.solver">(smac.facade.smac_bohb_facade.BOHB4HPO attribute)</a>
+</li>
         <li><a href="apidoc/smac.facade.smac_hpo_facade.html#smac.facade.smac_hpo_facade.SMAC4HPO.solver">(smac.facade.smac_hpo_facade.SMAC4HPO attribute)</a>
 </li>
       </ul></li>
@@ -1559,6 +1572,8 @@
         <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.stats">(smac.facade.smac_ac_facade.SMAC4AC attribute)</a>
 </li>
         <li><a href="apidoc/smac.facade.smac_bo_facade.html#smac.facade.smac_bo_facade.SMAC4BO.stats">(smac.facade.smac_bo_facade.SMAC4BO attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_bohb_facade.html#smac.facade.smac_bohb_facade.BOHB4HPO.stats">(smac.facade.smac_bohb_facade.BOHB4HPO attribute)</a>
 </li>
         <li><a href="apidoc/smac.facade.smac_hpo_facade.html#smac.facade.smac_hpo_facade.SMAC4HPO.stats">(smac.facade.smac_hpo_facade.SMAC4HPO attribute)</a>
 </li>
@@ -1623,6 +1638,8 @@
 
       <ul>
         <li><a href="apidoc/smac.facade.smac_bo_facade.html#smac.facade.smac_bo_facade.SMAC4BO.trajectory">(smac.facade.smac_bo_facade.SMAC4BO attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_bohb_facade.html#smac.facade.smac_bohb_facade.BOHB4HPO.trajectory">(smac.facade.smac_bohb_facade.BOHB4HPO attribute)</a>
 </li>
         <li><a href="apidoc/smac.facade.smac_hpo_facade.html#smac.facade.smac_hpo_facade.SMAC4HPO.trajectory">(smac.facade.smac_hpo_facade.SMAC4HPO attribute)</a>
 </li>

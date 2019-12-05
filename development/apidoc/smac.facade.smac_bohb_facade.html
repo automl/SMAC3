@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.initial_design.sobol_design module &mdash; SMAC 0.11.2dev documentation</title>
+  <title>smac.facade.smac_bohb_facade module &mdash; SMAC 0.11.2dev documentation</title>
   
 
   
@@ -36,8 +36,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.intensification package" href="smac.intensification.html" />
-    <link rel="prev" title="smac.initial_design.random_configuration_design module" href="smac.initial_design.random_configuration_design.html" /> 
+    <link rel="next" title="smac.facade.smac_hpo_facade module" href="smac.facade.smac_hpo_facade.html" />
+    <link rel="prev" title="smac.facade.smac_bo_facade module" href="smac.facade.smac_bo_facade.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -122,7 +122,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="smac.facade.html">smac.facade package</a><ul>
+<li class="toctree-l2 current"><a class="reference internal" href="smac.facade.html">smac.facade package</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.experimental.html">smac.facade.experimental package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.epils_facade.html">smac.facade.experimental.epils_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.hydra_facade.html">smac.facade.experimental.hydra_facade module</a></li>
@@ -133,17 +133,17 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="smac.initial_design.html">smac.initial_design package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="smac.initial_design.html">smac.initial_design package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="smac.initial_design.default_configuration_design.html">smac.initial_design.default_configuration_design module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.initial_design.factorial_design.html">smac.initial_design.factorial_design module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.initial_design.initial_design.html">smac.initial_design.initial_design module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.initial_design.latin_hypercube_design.html">smac.initial_design.latin_hypercube_design module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.initial_design.random_configuration_design.html">smac.initial_design.random_configuration_design module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">smac.initial_design.sobol_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.sobol_design.html">smac.initial_design.sobol_design module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.intensification.html">smac.intensification package</a><ul>
@@ -256,15 +256,15 @@
         
           <li><a href="../api.html">API Documentation</a> &raquo;</li>
         
-          <li><a href="smac.initial_design.html">smac.initial_design package</a> &raquo;</li>
+          <li><a href="smac.facade.html">smac.facade package</a> &raquo;</li>
         
-      <li>smac.initial_design.sobol_design module</li>
+      <li>smac.facade.smac_bohb_facade module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/apidoc/smac.initial_design.sobol_design.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/apidoc/smac.facade.smac_bohb_facade.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -277,47 +277,64 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-smac.initial_design.sobol_design">
-<span id="smac-initial-design-sobol-design-module"></span><h1>smac.initial_design.sobol_design module<a class="headerlink" href="#module-smac.initial_design.sobol_design" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-smac.facade.smac_bohb_facade">
+<span id="smac-facade-smac-bohb-facade-module"></span><h1>smac.facade.smac_bohb_facade module<a class="headerlink" href="#module-smac.facade.smac_bohb_facade" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="smac.initial_design.sobol_design.SobolDesign">
-<em class="property">class </em><code class="sig-prename descclassname">smac.initial_design.sobol_design.</code><code class="sig-name descname">SobolDesign</code><span class="sig-paren">(</span><em class="sig-param">cs: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em class="sig-param">rng: numpy.random.mtrand.RandomState</em>, <em class="sig-param">traj_logger: smac.utils.io.traj_logging.TrajLogger</em>, <em class="sig-param">ta_run_limit: int</em>, <em class="sig-param">configs: Optional[List[ConfigSpace.configuration_space.Configuration]] = None</em>, <em class="sig-param">n_configs_x_params: Optional[int] = 10</em>, <em class="sig-param">max_config_fracs: float = 0.25</em>, <em class="sig-param">init_budget: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/initial_design/sobol_design.html#SobolDesign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.sobol_design.SobolDesign" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign" title="smac.initial_design.initial_design.InitialDesign"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.initial_design.initial_design.InitialDesign</span></code></a></p>
-<p>Sobol sequence design</p>
+<dt id="smac.facade.smac_bohb_facade.BOHB4HPO">
+<em class="property">class </em><code class="sig-prename descclassname">smac.facade.smac_bohb_facade.</code><code class="sig-name descname">BOHB4HPO</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_bohb_facade.html#BOHB4HPO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_bohb_facade.BOHB4HPO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC" title="smac.facade.smac_ac_facade.SMAC4AC"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.facade.smac_ac_facade.SMAC4AC</span></code></a></p>
+<p>Facade to use BOHB i.e., SMAC with a Hyperband intensifier for hyperparameter optimization</p>
+<p>see smac.facade.smac_Facade for API
+This facade overwrites options available via the SMAC facade</p>
 <dl class="attribute">
-<dt id="smac.initial_design.sobol_design.SobolDesign.configs">
-<code class="sig-name descname">configs</code><a class="headerlink" href="#smac.initial_design.sobol_design.SobolDesign.configs" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of configurations to be evaluated
-Don’t pass configs to the constructor;
-otherwise factorial design is overwritten</p>
-<dl class="field-list simple">
+<dt id="smac.facade.smac_bohb_facade.BOHB4HPO.logger">
+<code class="sig-name descname">logger</code><a class="headerlink" href="#smac.facade.smac_bohb_facade.BOHB4HPO.logger" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.facade.smac_bohb_facade.BOHB4HPO.stats">
+<code class="sig-name descname">stats</code><a class="headerlink" href="#smac.facade.smac_bohb_facade.BOHB4HPO.stats" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>typing.List[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>]</p>
+<dd class="field-odd"><p><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">Stats</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<p>Constructor</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cs</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="smac.configspace.ConfigurationSpace"><em>ConfigurationSpace</em></a>) – configuration space object</p></li>
-<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</p></li>
-<li><p><strong>traj_logger</strong> (<a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger"><em>TrajLogger</em></a>) – Trajectory logging to add new incumbents found by the initial
-design.</p></li>
-<li><p><strong>ta_run_limit</strong> (<em>int</em>) – Number of iterations allowed for the target algorithm</p></li>
-<li><p><strong>configs</strong> (<em>typing.Optional</em><em>[</em><em>typing.List</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em><em>]</em>) – List of initial configurations. Disables the arguments <code class="docutils literal notranslate"><span class="pre">n_configs_x_params</span></code> if given.
-Either this, or <code class="docutils literal notranslate"><span class="pre">n_configs_x_params</span></code> or <code class="docutils literal notranslate"><span class="pre">init_budget</span></code> must be provided.</p></li>
-<li><p><strong>n_configs_x_params</strong> (<em>int</em>) – how many configurations will be used at most in the initial design (X*D). Either
-this, or <code class="docutils literal notranslate"><span class="pre">init_budget</span></code> or <code class="docutils literal notranslate"><span class="pre">configs</span></code> must be provided. Disables the argument
-<code class="docutils literal notranslate"><span class="pre">n_configs_x_params</span></code> if given.</p></li>
-<li><p><strong>max_config_fracs</strong> (<em>float</em>) – use at most X*budget in the initial design. Not active if a time limit is given.</p></li>
-<li><p><strong>init_budget</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximal initial budget (disables the arguments <code class="docutils literal notranslate"><span class="pre">n_configs_x_params</span></code> and <code class="docutils literal notranslate"><span class="pre">configs</span></code>
-if both are given). Either this, or <code class="docutils literal notranslate"><span class="pre">n_configs_x_params</span></code> or <code class="docutils literal notranslate"><span class="pre">configs</span></code> must be
-provided.</p></li>
-</ul>
+<dl class="attribute">
+<dt id="smac.facade.smac_bohb_facade.BOHB4HPO.solver">
+<code class="sig-name descname">solver</code><a class="headerlink" href="#smac.facade.smac_bohb_facade.BOHB4HPO.solver" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO" title="smac.optimizer.smbo.SMBO">SMBO</a></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.facade.smac_bohb_facade.BOHB4HPO.runhistory">
+<code class="sig-name descname">runhistory</code><a class="headerlink" href="#smac.facade.smac_bohb_facade.BOHB4HPO.runhistory" title="Permalink to this definition">¶</a></dt>
+<dd><p>List with information about previous runs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">RunHistory</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.facade.smac_bohb_facade.BOHB4HPO.trajectory">
+<code class="sig-name descname">trajectory</code><a class="headerlink" href="#smac.facade.smac_bohb_facade.BOHB4HPO.trajectory" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of all incumbents</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>Constructor
+see ~smac.facade.smac_facade for documentation</p>
 </dd></dl>
 
 </div>
@@ -330,10 +347,10 @@ provided.</p></li>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="smac.intensification.html" class="btn btn-neutral float-right" title="smac.intensification package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="smac.facade.smac_hpo_facade.html" class="btn btn-neutral float-right" title="smac.facade.smac_hpo_facade module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="smac.initial_design.random_configuration_design.html" class="btn btn-neutral float-left" title="smac.initial_design.random_configuration_design module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="smac.facade.smac_bo_facade.html" class="btn btn-neutral float-left" title="smac.facade.smac_bo_facade module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

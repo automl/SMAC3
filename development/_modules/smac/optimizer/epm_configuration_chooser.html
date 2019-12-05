@@ -131,6 +131,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 </ul>
 </li>
@@ -301,7 +302,9 @@
                  <span class="n">restore_incumbent</span><span class="p">:</span> <span class="n">Configuration</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">random_configuration_chooser</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
                      <span class="n">ChooserNoCoolDown</span><span class="p">,</span> <span class="n">ChooserLinearCoolDown</span><span class="p">]</span> <span class="o">=</span> <span class="n">ChooserNoCoolDown</span><span class="p">(</span><span class="mf">2.0</span><span class="p">),</span>
-                 <span class="n">predict_incumbent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+                 <span class="n">predict_incumbent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">min_samples_model</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+                 <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Interface to train the EPM and generate next configurations</span>
 
@@ -328,6 +331,8 @@
 <span class="sd">            * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)</span>
 <span class="sd">        predict_incumbent: bool</span>
 <span class="sd">            Use predicted performance of incumbent instead of observed performance</span>
+<span class="sd">        min_samples_model: int</span>
+<span class="sd">-            Minimum number of samples to build a model</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
@@ -352,6 +357,30 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">predict_incumbent</span> <span class="o">=</span> <span class="n">predict_incumbent</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_samples_model</span> <span class="o">=</span> <span class="n">min_samples_model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currently_considered_budgets</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_collect_data_to_train_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># if we use a float value as a budget, we want to train the model only on the highest budget</span>
+        <span class="n">available_budgets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">available_budgets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span>
+
+        <span class="c1"># Sort available budgets from highest to lowest budget</span>
+        <span class="n">available_budgets</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">available_budgets</span><span class="p">)),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Get #points per budget and if there are enough samples, then build a model</span>
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">available_budgets</span><span class="p">:</span>
+            <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rh2EPM</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span> <span class="n">budget_subset</span><span class="o">=</span><span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="p">])</span>
+            <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_samples_model</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">currently_considered_budgets</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="p">]</span>
+                <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">_get_evaluated_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_all_configs_per_budget</span><span class="p">(</span><span class="n">budget_subset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">currently_considered_budgets</span><span class="p">)</span>
+
 <div class="viewcode-block" id="EPMChooser.choose_next"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser.choose_next">[docs]</a>    <span class="k">def</span> <span class="nf">choose_next</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incumbent_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Choose next candidate solution with Bayesian optimization. The</span>
 <span class="sd">        suggested configurations depend on the argument ``acq_optimizer`` to</span>
@@ -372,8 +401,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Search for next configuration&quot;</span><span class="p">)</span>
-
-        <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rh2EPM</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">)</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_data_to_train_model</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># Only return a single point to avoid an overly high number of</span>
@@ -381,7 +409,6 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_random_search</span><span class="o">.</span><span class="n">maximize</span><span class="p">(</span>
                 <span class="n">runhistory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span> <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span> <span class="n">num_points</span><span class="o">=</span><span class="mi">1</span>
             <span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">incumbent_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -398,7 +425,7 @@
             <span class="n">eta</span><span class="o">=</span><span class="n">incumbent_value</span><span class="p">,</span>
             <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
             <span class="n">incumbent_array</span><span class="o">=</span><span class="n">incumbent_array</span><span class="p">,</span>
-            <span class="n">num_data</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="p">),</span>
+            <span class="n">num_data</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_evaluated_configs</span><span class="p">()),</span>
             <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -422,7 +449,8 @@
 <span class="sd">        np.ndarry</span>
 <span class="sd">        Configuration</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">all_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_all_configs</span><span class="p">()</span>
+        <span class="n">all_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_all_configs_per_budget</span><span class="p">(</span><span class="n">budget_subset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">currently_considered_budgets</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_incumbent</span><span class="p">:</span>
             <span class="n">configs_array</span> <span class="o">=</span> <span class="n">convert_configurations_to_array</span><span class="p">(</span><span class="n">all_configs</span><span class="p">)</span>
             <span class="n">costs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span>

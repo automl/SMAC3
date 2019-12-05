@@ -131,6 +131,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 </ul>
 </li>
@@ -343,7 +344,8 @@
                  <span class="n">restore_incumbent</span><span class="p">:</span> <span class="n">Configuration</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">random_configuration_chooser</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
                      <span class="n">ChooserNoCoolDown</span><span class="p">,</span> <span class="n">ChooserLinearCoolDown</span><span class="p">]</span> <span class="o">=</span> <span class="n">ChooserNoCoolDown</span><span class="p">(</span><span class="mf">2.0</span><span class="p">),</span>
-                 <span class="n">predict_incumbent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+                 <span class="n">predict_incumbent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">min_samples_model</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Interface that contains the main Bayesian optimization loop</span>
 
@@ -364,18 +366,15 @@
 <span class="sd">            intensification of new challengers against incumbent configuration</span>
 <span class="sd">            (probably with some kind of racing on the instances)</span>
 <span class="sd">        aggregate_func: callable</span>
-<span class="sd">            how to aggregate the runs in the runhistory to get the performance of a</span>
-<span class="sd">             configuration</span>
+<span class="sd">            how to aggregate the runs in the runhistory to get the performance of a configuration</span>
 <span class="sd">        num_run: int</span>
 <span class="sd">            id of this run (used for pSMAC)</span>
 <span class="sd">        model: RandomForestWithInstances</span>
-<span class="sd">            empirical performance model (right now, we support only</span>
-<span class="sd">            RandomForestWithInstances)</span>
+<span class="sd">            empirical performance model (right now, we support only RandomForestWithInstances)</span>
 <span class="sd">        acq_optimizer: AcquisitionFunctionMaximizer</span>
 <span class="sd">            Optimizer of acquisition function.</span>
 <span class="sd">        acquisition_func : AcquisitionFunction</span>
-<span class="sd">            Object that implements the AbstractAcquisitionFunction (i.e., infill</span>
-<span class="sd">            criterion for acq_optimizer)</span>
+<span class="sd">            Object that implements the AbstractAcquisitionFunction (i.e., infill criterion for acq_optimizer)</span>
 <span class="sd">        restore_incumbent: Configuration</span>
 <span class="sd">            incumbent to be used from the start. ONLY used to restore states.</span>
 <span class="sd">        rng: np.random.RandomState</span>
@@ -386,6 +385,8 @@
 <span class="sd">            * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)</span>
 <span class="sd">        predict_incumbent: bool</span>
 <span class="sd">            Use predicted performance of incumbent instead of observed performance</span>
+<span class="sd">        min_samples_model: int</span>
+<span class="sd">-            Minimum number of samples to build a model</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
@@ -415,11 +416,12 @@
                                       <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
                                       <span class="n">restore_incumbent</span><span class="o">=</span><span class="n">restore_incumbent</span><span class="p">,</span>
                                       <span class="n">random_configuration_chooser</span><span class="o">=</span><span class="n">random_configuration_chooser</span><span class="p">,</span>
-                                      <span class="n">predict_incumbent</span><span class="o">=</span><span class="n">predict_incumbent</span><span class="p">)</span>
+                                      <span class="n">predict_incumbent</span><span class="o">=</span><span class="n">predict_incumbent</span><span class="p">,</span>
+                                      <span class="n">min_samples_model</span><span class="o">=</span><span class="n">min_samples_model</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SMBO.start"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Starts the Bayesian Optimization loop.</span>
-<span class="sd">        Detects whether we the optimization is restored from previous state.</span>
+<span class="sd">        Detects whether the optimization is restored from a previous state.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">start_timing</span><span class="p">()</span>
 
