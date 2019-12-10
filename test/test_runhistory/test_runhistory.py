@@ -7,7 +7,7 @@ from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
 from smac.tae.execute_ta_run import StatusType
-from smac.runhistory.runhistory import RunHistory, average_cost
+from smac.runhistory.runhistory import RunHistory
 
 
 def get_config_space():
@@ -27,7 +27,7 @@ class RunhistoryTest(unittest.TestCase):
         '''
             simply adding some rundata to runhistory, then pickle it
         '''
-        rh = RunHistory(aggregate_func=average_cost)
+        rh = RunHistory()
         cs = get_config_space()
         config = Configuration(cs, values={'a': 1, 'b': 2})
 
@@ -55,7 +55,7 @@ class RunhistoryTest(unittest.TestCase):
         self.assertEqual(loaded_rh.data, rh.data)
 
     def test_add_multiple_times(self):
-        rh = RunHistory(aggregate_func=average_cost)
+        rh = RunHistory()
         cs = get_config_space()
         config = Configuration(cs, values={'a': 1, 'b': 2})
 
@@ -74,7 +74,7 @@ class RunhistoryTest(unittest.TestCase):
             get some config runs from runhistory
         '''
         # return max budget only
-        rh = RunHistory(aggregate_func=average_cost)
+        rh = RunHistory()
         cs = get_config_space()
         config1 = Configuration(cs,
                                 values={'a': 1, 'b': 2})
@@ -99,7 +99,7 @@ class RunhistoryTest(unittest.TestCase):
         self.assertEqual(ist[1].budget, 1)
 
         # multiple budgets
-        rh = RunHistory(aggregate_func=average_cost)
+        rh = RunHistory()
         cs = get_config_space()
         config1 = Configuration(cs,
                                 values={'a': 1, 'b': 2})
@@ -123,7 +123,7 @@ class RunhistoryTest(unittest.TestCase):
         self.assertEqual(ist[1].budget, 2)
 
     def test_full_update(self):
-        rh = RunHistory(aggregate_func=average_cost)
+        rh = RunHistory()
         cs = get_config_space()
         config1 = Configuration(cs,
                                 values={'a': 1, 'b': 2})
@@ -154,7 +154,7 @@ class RunhistoryTest(unittest.TestCase):
 
     def test_incremental_update(self):
 
-        rh = RunHistory(aggregate_func=average_cost)
+        rh = RunHistory()
         cs = get_config_space()
         config1 = Configuration(cs,
                                 values={'a': 1, 'b': 2})
@@ -173,7 +173,7 @@ class RunhistoryTest(unittest.TestCase):
 
     def test_multiple_budgets(self):
 
-        rh = RunHistory(aggregate_func=average_cost)
+        rh = RunHistory()
         cs = get_config_space()
         config1 = Configuration(cs,
                                 values={'a': 1, 'b': 2})
@@ -194,7 +194,7 @@ class RunhistoryTest(unittest.TestCase):
     def test_json_origin(self):
 
         for origin in ['test_origin', None]:
-            rh = RunHistory(aggregate_func=average_cost)
+            rh = RunHistory()
             cs = get_config_space()
             config1 = Configuration(cs,
                                     values={'a': 1, 'b': 2},

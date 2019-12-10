@@ -39,7 +39,6 @@ class SMBO(object):
     initial_design
     runhistory
     intensifier
-    aggregate_func
     num_run
     rng
     initial_design_configs
@@ -53,7 +52,6 @@ class SMBO(object):
                  runhistory: RunHistory,
                  runhistory2epm: AbstractRunHistory2EPM,
                  intensifier: AbstractRacer,
-                 aggregate_func: callable,
                  num_run: int,
                  model: RandomForestWithInstances,
                  acq_optimizer: AcquisitionFunctionMaximizer,
@@ -82,8 +80,6 @@ class SMBO(object):
         intensifier: Intensifier
             intensification of new challengers against incumbent configuration
             (probably with some kind of racing on the instances)
-        aggregate_func: callable
-            how to aggregate the runs in the runhistory to get the performance of a configuration
         num_run: int
             id of this run (used for pSMAC)
         model: RandomForestWithInstances
@@ -116,7 +112,6 @@ class SMBO(object):
         self.initial_design = initial_design
         self.runhistory = runhistory
         self.intensifier = intensifier
-        self.aggregate_func = aggregate_func
         self.num_run = num_run
         self.rng = rng
 
@@ -213,7 +208,6 @@ class SMBO(object):
                         challenger=challenger,
                         incumbent=self.incumbent,
                         run_history=self.runhistory,
-                        aggregate_func=self.aggregate_func,
                         time_bound=max(self.intensifier._min_time, time_left))
 
                 except FirstRunCrashedException:

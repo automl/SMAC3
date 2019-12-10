@@ -20,7 +20,7 @@ from smac.configspace import ConfigurationSpace
 from smac.utils.merge_foreign_data import merge_foreign_data
 from smac.utils.io.cmd_reader import truthy as _is_truthy
 from smac.utils.io.input_reader import InputReader
-from smac.runhistory.runhistory import RunHistory, average_cost
+from smac.runhistory.runhistory import RunHistory
 from smac.tae.execute_ta_run import StatusType
 
 in_reader = InputReader()
@@ -152,7 +152,7 @@ class ScenarioTest(unittest.TestCase):
                                                            lower=0,
                                                            upper=100))
         # build runhistory
-        rh_merge = RunHistory(aggregate_func=average_cost)
+        rh_merge = RunHistory()
         config = Configuration(cs, values={'a': 1, 'b': 2})
 
         rh_merge.add(config=config, instance_id="inst_new", cost=10, time=20,
@@ -167,7 +167,7 @@ class ScenarioTest(unittest.TestCase):
                      additional_info=None)
 
         # build empty rh
-        rh_base = RunHistory(aggregate_func=average_cost)
+        rh_base = RunHistory()
 
         merge_foreign_data(scenario=scenario, runhistory=rh_base,
                            in_scenario_list=[scenario_2], in_runhistory_list=[rh_merge])

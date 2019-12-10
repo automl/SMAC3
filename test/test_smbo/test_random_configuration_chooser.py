@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, ChooserProb
+from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, ChooserProb, ChooserLinearCoolDown
 
 
 class TestRandomConfigurationChooser(unittest.TestCase):

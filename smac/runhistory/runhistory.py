@@ -91,21 +91,17 @@ class RunHistory(object):
     runs_per_config : dict
         Maps config_id -> number of runs
 
-    aggregate_func
     overwrite_existing_runs
     """
 
     def __init__(
         self,
-        aggregate_func: typing.Callable,
         overwrite_existing_runs: bool = False
     ) -> None:
         """Constructor
 
         Parameters
         ----------
-        aggregate_func: callable
-            function to aggregate perf across instances
         overwrite_existing_runs: bool
             allows to overwrites old results if pairs of
             algorithm-instance-seed were measured
@@ -138,7 +134,6 @@ class RunHistory(object):
         # a JSON file. Can be chosen to not be written to disk
         self.external = {}  # type: typing.Dict[RunKey, DataOrigin]
 
-        self.aggregate_func = aggregate_func
         self.overwrite_existing_runs = overwrite_existing_runs
 
     def add(self, config: Configuration, cost: float, time: float,
@@ -227,7 +222,6 @@ class RunHistory(object):
     def update_cost(self, config: Configuration):
         """Store the performance of a configuration across the instances in
         self.cost_per_config and also updates self.runs_per_config;
-        uses self.aggregate_func
 
         Parameters
         ----------
@@ -235,7 +229,7 @@ class RunHistory(object):
             configuration to update cost based on all runs in runhistory
         """
         inst_seed_budgets = set(self.get_runs_for_config(config))
-        perf = self.aggregate_func(config, self, inst_seed_budgets)
+        perf = self.average_cost(config, inst_seed_budgets)
         config_id = self.config_ids[config]
         self.cost_per_config[config_id] = perf
         self.runs_per_config[config_id] = len(inst_seed_budgets)
@@ -258,7 +252,7 @@ class RunHistory(object):
                     filter(lambda x: x.instance in instances, inst_seed_budgets))
 
             if inst_seed_budgets:  # can be empty if never saw any runs on <instances>
-                perf = self.aggregate_func(config, self, inst_seed_budgets)
+                perf = self.average_cost(config, inst_seed_budgets)
                 self.cost_per_config[config_id] = perf
                 self.runs_per_config[config_id] = len(inst_seed_budgets)
 
@@ -473,7 +467,7 @@ class RunHistory(object):
         origin : DataOrigin
             What to store as data origin.
         """
-        new_runhistory = RunHistory(self.aggregate_func)
+        new_runhistory = RunHistory()
         new_runhistory.load_json(fn, cs)
         self.update(runhistory=new_runhistory, origin=origin)
 
@@ -504,83 +498,84 @@ class RunHistory(object):
                      seed=seed, budget=budget, additional_info=additional_info,
                      origin=origin)
 
+    def _cost(
+        self,
+        config: Configuration,
+        instance_seed_budget_keys: typing.Optional[InstSeedBudgetKey] = None,
+    ):
+        """Return array of all costs for the given config for further calculations.
 
-def _cost(config: Configuration, run_history: RunHistory,
-          instance_seed_budget_keys=None):
-    """Return array of all costs for the given config for further calculations.
+        Parameters
+        ----------
+        config : Configuration
+            Configuration to calculate objective for
+        instance_seed_budget_keys : list, optional (default=None)
+            List of tuples of instance-seeds-budget keys. If None, the run_history is
+            queried for all runs of the given configuration.
 
-    Parameters
-    ----------
-    config : Configuration
-        Configuration to calculate objective for
-    run_history : RunHistory
-        RunHistory object from which the objective value is computed.
-    instance_seed_budget_keys : list, optional (default=None)
-        List of tuples of instance-seeds-budget keys. If None, the run_history is
-        queried for all runs of the given configuration.
+        Returns
+        -------
+        Costs: list
+            Array of all costs
+        """
+        try:
+            id_ = self.config_ids[config]
+        except KeyError:  # challenger was not running so far
+            return []
 
-    Returns
-    -------
-    Costs: list
-        Array of all costs
-    """
-    try:
-        id_ = run_history.config_ids[config]
-    except KeyError:  # challenger was not running so far
-        return []
+        if instance_seed_budget_keys is None:
+            instance_seed_budget_keys = self.get_runs_for_config(config)
 
-    if instance_seed_budget_keys is None:
-        instance_seed_budget_keys = run_history.get_runs_for_config(config)
+        costs = []
+        for i, r, b in instance_seed_budget_keys:
+            k = RunKey(id_, i, r, b)
+            costs.append(self.data[k].cost)
+        return costs
 
-    costs = []
-    for i, r, b in instance_seed_budget_keys:
-        k = RunKey(id_, i, r, b)
-        costs.append(run_history.data[k].cost)
-    return costs
+    def average_cost(
+        self,
+        config: Configuration,
+        instance_seed_budget_keys: typing.Optional[InstSeedBudgetKey] = None,
+    ):
+        """Return the average cost of a configuration.
 
+        This is the mean of costs of all instance-seed pairs.
 
-def average_cost(config, run_history, instance_seed_budget_keys=None):
-    """Return the average cost of a configuration.
+        Parameters
+        ----------
+        config : Configuration
+            Configuration to calculate objective for
+        instance_seed_budget_keys : list, optional (default=None)
+            List of tuples of instance-seeds-budget keys. If None, the run_history is
+            queried for all runs of the given configuration.
 
-    This is the mean of costs of all instance-seed pairs.
+        Returns
+        ----------
+        Cost: float
+            Average cost
+        """
+        return np.mean(self._cost(config, instance_seed_budget_keys))
 
-    Parameters
-    ----------
-    config : Configuration
-        Configuration to calculate objective for
-    run_history : RunHistory
-        RunHistory object from which the objective value is computed.
-    instance_seed_budget_keys : list, optional (default=None)
-        List of tuples of instance-seeds-budget keys. If None, the run_history is
-        queried for all runs of the given configuration.
+    def sum_cost(
+        self,
+        config: Configuration,
+        instance_seed_budget_keys: typing.Optional[InstSeedBudgetKey] = None,
+    ):
+        """Return the sum of costs of a configuration.
 
-    Returns
-    ----------
-    Cost: float
-        Average cost
-    """
-    return np.mean(_cost(config, run_history, instance_seed_budget_keys))
+        This is the sum of costs of all instance-seed pairs.
 
+        Parameters
+        ----------
+        config : Configuration
+            Configuration to calculate objective for
+        instance_seed_budget_keys : list, optional (default=None)
+            List of tuples of instance-seeds-budget keys. If None, the run_history is
+            queried for all runs of the given configuration.
 
-def sum_cost(config: Configuration, run_history: RunHistory,
-             instance_seed_budget_keys=None):
-    """Return the sum of costs of a configuration.
-
-    This is the sum of costs of all instance-seed pairs.
-
-    Parameters
-    ----------
-    config : Configuration
-        Configuration to calculate objective for
-    run_history : RunHistory
-        RunHistory object from which the objective value is computed.
-    instance_seed_budget_keys : list, optional (default=None)
-        List of tuples of instance-seeds-budget keys. If None, the run_history is
-        queried for all runs of the given configuration.
-
-    Returns
-    ----------
-    sum_cost: float
-        Sum of costs of config
-    """
-    return np.sum(_cost(config, run_history, instance_seed_budget_keys))
+        Returns
+        ----------
+        sum_cost: float
+            Sum of costs of config
+        """
+        return np.sum(self._cost(config, instance_seed_budget_keys))

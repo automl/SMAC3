@@ -7,7 +7,7 @@ from ConfigSpace import Configuration
 
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.facade.smac_ac_facade import SMAC4AC
-from smac.runhistory.runhistory import RunHistory, average_cost
+from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
 from smac.utils import test_helpers
 from smac.tae.execute_ta_run import StatusType
@@ -37,7 +37,7 @@ class TestEPMChooser(unittest.TestCase):
     def test_choose_next(self):
         seed = 42
         config = self.scenario.cs.sample_configuration()
-        rh = RunHistory(aggregate_func=average_cost)
+        rh = RunHistory()
         rh.add(config, 10, 10, StatusType.SUCCESS)
 
         smbo = SMAC4AC(self.scenario, rng=seed, runhistory=rh).solver
@@ -48,7 +48,7 @@ class TestEPMChooser(unittest.TestCase):
     def test_choose_next_budget(self):
         seed = 42
         config = self.scenario.cs.sample_configuration()
-        rh = RunHistory(aggregate_func=average_cost)
+        rh = RunHistory()
         rh.add(config=config, cost=10, time=10, instance_id=None,
                seed=1, budget=1, additional_info=None, status=StatusType.SUCCESS)
 
@@ -63,7 +63,7 @@ class TestEPMChooser(unittest.TestCase):
     def test_choose_next_higher_budget(self):
         seed = 42
         config = self.scenario.cs.sample_configuration
-        rh = RunHistory(aggregate_func=average_cost)
+        rh = RunHistory()
         rh.add(config=config(), cost=1, time=10, instance_id=None,
                seed=1, budget=1, additional_info=None, status=StatusType.SUCCESS)
         rh.add(config=config(), cost=2, time=10, instance_id=None,
@@ -84,7 +84,7 @@ class TestEPMChooser(unittest.TestCase):
     def test_choose_next_w_empty_rh(self):
         seed = 42
         smbo = SMAC4AC(self.scenario, rng=seed).solver
-        smbo.runhistory = RunHistory(aggregate_func=average_cost)
+        smbo.runhistory = RunHistory()
 
         # should return random search configuration
         x = smbo.epm_chooser.choose_next(incumbent_value=0.0)
@@ -126,7 +126,7 @@ class TestEPMChooser(unittest.TestCase):
 
         seed = 42
         incumbent = self.scenario.cs.get_default_configuration()
-        rh = RunHistory(aggregate_func=average_cost)
+        rh = RunHistory()
         rh.add(incumbent, 10, 10, StatusType.SUCCESS)
         epm_chooser = SMAC4AC(self.scenario, rng=seed, runhistory=rh).solver.epm_chooser
 
@@ -177,7 +177,7 @@ class TestEPMChooser(unittest.TestCase):
         epm_chooser = SMAC4AC(self.scenario, rng=1).solver.epm_chooser
         epm_chooser.incumbent = self.scenario.cs.sample_configuration()
         previous_configs = [epm_chooser.incumbent] + [self.scenario.cs.sample_configuration() for _ in range(0, 20)]
-        epm_chooser.runhistory = RunHistory(aggregate_func=average_cost)
+        epm_chooser.runhistory = RunHistory()
         for i, config in enumerate(previous_configs):
             epm_chooser.runhistory.add(config, i, 10, StatusType.SUCCESS)
         epm_chooser.model = mock.Mock(spec=RandomForestWithInstances)

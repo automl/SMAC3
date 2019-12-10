@@ -4,7 +4,7 @@ import shutil
 import unittest
 import logging
 
-from smac.runhistory.runhistory import RunHistory, RunKey, DataOrigin, average_cost
+from smac.runhistory.runhistory import RunHistory, RunKey, DataOrigin
 from smac.utils import test_helpers
 from smac.tae.execute_ta_run import StatusType
 from smac.optimizer import pSMAC
@@ -46,7 +46,7 @@ class TestPSMAC(unittest.TestCase):
                   '"1": {"x": 1.2553300705386103, "y": 10.804867401632372}, ' \
                   '"2": {"x": -4.998284377739827, "y": 4.534988589477597}}}'
 
-        run_history = RunHistory(aggregate_func=average_cost)
+        run_history = RunHistory()
         configuration_space = test_helpers.get_branin_config_space()
         configuration_space.seed(1)
 
@@ -120,7 +120,7 @@ class TestPSMAC(unittest.TestCase):
             fh.write(other_runhistory)
 
         # load from an empty runhistory
-        runhistory = RunHistory(aggregate_func=average_cost)
+        runhistory = RunHistory()
         runhistory.load_json(other_runhistory_filename, configuration_space)
         self.assertEqual(sorted(list(runhistory.ids_config.keys())),
                          [1, 2, 3, 4])
@@ -128,7 +128,7 @@ class TestPSMAC(unittest.TestCase):
 
         # load from non-empty runhistory, in case of a duplicate the existing
         # result will be kept and the new one silently discarded
-        runhistory = RunHistory(aggregate_func=average_cost)
+        runhistory = RunHistory()
         configuration_space.seed(1)
         config = configuration_space.sample_configuration()
         runhistory.add(config, 1, 1, StatusType.SUCCESS, seed=1,
@@ -142,7 +142,7 @@ class TestPSMAC(unittest.TestCase):
 
         # load from non-empty runhistory, in case of a duplicate the existing
         # result will be kept and the new one silently discarded
-        runhistory = RunHistory(aggregate_func=average_cost)
+        runhistory = RunHistory()
         configuration_space.seed(1)
         config = configuration_space.sample_configuration()
         config = configuration_space.sample_configuration()

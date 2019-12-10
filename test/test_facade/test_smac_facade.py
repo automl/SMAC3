@@ -82,17 +82,15 @@ class TestSMACFacade(unittest.TestCase):
         )
 
     def test_construct_runhistory(self):
-        fixture = 'dummy'
 
         smbo = SMAC4AC(self.scenario)
         self.assertIsInstance(smbo.solver.runhistory, RunHistory)
-        smbo = SMAC4AC(self.scenario, runhistory_kwargs={'aggregate_func': fixture})
-        self.assertEqual(smbo.solver.runhistory.aggregate_func, fixture)
+        self.assertFalse(smbo.solver.runhistory.overwrite_existing_runs)
+        smbo = SMAC4AC(self.scenario, runhistory_kwargs={'overwrite_existing_runs': True})
+        self.assertIsInstance(smbo.solver.runhistory, RunHistory)
+        self.assertTrue(smbo.solver.runhistory.overwrite_existing_runs)
         smbo = SMAC4AC(self.scenario, runhistory=RunHistory)
         self.assertIsInstance(smbo.solver.runhistory, RunHistory)
-        rh = RunHistory(aggregate_func=None)
-        smbo = SMAC4AC(self.scenario, runhistory=rh)
-        self.assertIsNotNone(smbo.solver.runhistory.aggregate_func)
 
     def test_construct_random_configuration_chooser(self):
         rng = np.random.RandomState(42)

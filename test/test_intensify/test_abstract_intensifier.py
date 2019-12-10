@@ -6,7 +6,7 @@ import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
-from smac.runhistory.runhistory import RunHistory, average_cost, sum_cost
+from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
 from smac.intensification.abstract_racer import AbstractRacer
 from smac.facade.smac_ac_facade import SMAC4AC
@@ -31,7 +31,7 @@ class TestAbstractIntensifier(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.rh = RunHistory(aggregate_func=average_cost)
+        self.rh = RunHistory()
         self.cs = get_config_space()
         self.config1 = Configuration(self.cs,
                                      values={'a': 0, 'b': 100})
@@ -128,8 +128,7 @@ class TestAbstractIntensifier(unittest.TestCase):
         # The sets for the incumbent are completely disjoint.
         conf = intensifier._compare_configs(incumbent=self.config1,
                                             challenger=self.config2,
-                                            run_history=self.rh,
-                                            aggregate_func=average_cost)
+                                            run_history=self.rh)
         self.assertIsNone(conf)
 
         # The incumbent has still one instance-seed pair left on which the
@@ -139,8 +138,7 @@ class TestAbstractIntensifier(unittest.TestCase):
                     seed=1, additional_info=None)
         conf = intensifier._compare_configs(incumbent=self.config1,
                                             challenger=self.config2,
-                                            run_history=self.rh,
-                                            aggregate_func=average_cost)
+                                            run_history=self.rh)
         self.assertIsNone(conf)
 
     def test_compare_configs_chall(self):
@@ -165,8 +163,7 @@ class TestAbstractIntensifier(unittest.TestCase):
 
         conf = intensifier._compare_configs(incumbent=self.config1,
                                             challenger=self.config2,
-                                            run_history=self.rh,
-                                            aggregate_func=average_cost)
+                                            run_history=self.rh)
 
         # challenger has enough runs and is better
         self.assertEqual(conf, self.config2, "conf: %s" % (conf))
@@ -193,8 +190,7 @@ class TestAbstractIntensifier(unittest.TestCase):
 
         conf = intensifier._compare_configs(incumbent=self.config1,
                                             challenger=self.config2,
-                                            run_history=self.rh,
-                                            aggregate_func=average_cost)
+                                            run_history=self.rh)
 
         # challenger worse than inc
         self.assertEqual(conf, self.config1, "conf: %s" % (conf))
@@ -227,8 +223,7 @@ class TestAbstractIntensifier(unittest.TestCase):
 
         conf = intensifier._compare_configs(incumbent=self.config1,
                                             challenger=self.config2,
-                                            run_history=self.rh,
-                                            aggregate_func=average_cost)
+                                            run_history=self.rh)
 
         # challenger worse than inc
         self.assertIsNone(conf, "conf: %s" % (conf))
@@ -257,8 +252,7 @@ class TestAbstractIntensifier(unittest.TestCase):
 
         inst_seed_pairs = self.rh.get_runs_for_config(self.config1)
         # cost used by incumbent for going over all runs in inst_seed_pairs
-        inc_sum_cost = sum_cost(config=self.config1, instance_seed_budget_keys=inst_seed_pairs,
-                                run_history=self.rh)
+        inc_sum_cost = self.rh.sum_cost(config=self.config1, instance_seed_budget_keys=inst_seed_pairs)
 
         cutoff = intensifier._adapt_cutoff(challenger=self.config2, run_history=self.rh, inc_sum_cost=inc_sum_cost)
         # 15*1.2 - 6

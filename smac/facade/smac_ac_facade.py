@@ -14,7 +14,7 @@ from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
 # runhistory
-from smac.runhistory.runhistory import RunHistory, average_cost
+from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM, \
     RunHistory2EPM4LogCost, RunHistory2EPM4Cost, \
     RunHistory2EPM4InvScaledCost, RunHistory2EPM4LogScaledCost
@@ -178,8 +178,6 @@ class SMAC4AC(object):
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
-        aggregate_func = average_cost
-
         self.scenario = scenario
         self.output_dir = ""
         if not restore_incumbent:
@@ -220,16 +218,17 @@ class SMAC4AC(object):
             self.scenario.transform_y = "LOG"
 
         # initialize empty runhistory
-        runhistory_def_kwargs = {'aggregate_func': aggregate_func}
+        runhistory_def_kwargs = {}
         if runhistory_kwargs is not None:
             runhistory_def_kwargs.update(runhistory_kwargs)
         if runhistory is None:
             runhistory = RunHistory(**runhistory_def_kwargs)
         elif inspect.isclass(runhistory):
             runhistory = runhistory(**runhistory_def_kwargs)
+        elif isinstance(runhistory, RunHistory):
+            pass
         else:
-            if runhistory.aggregate_func is None:
-                runhistory.aggregate_func = aggregate_func
+            raise ValueError('runhistory has to be a class or an object of RunHistory')
 
         rand_conf_chooser_kwargs = {
             'rng': rng
@@ -509,7 +508,6 @@ class SMAC4AC(object):
             'runhistory': runhistory,
             'runhistory2epm': runhistory2epm,
             'intensifier': intensifier,
-            'aggregate_func': aggregate_func,
             'num_run': run_id,
             'model': model,
             'acq_optimizer': acquisition_function_optimizer,

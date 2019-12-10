@@ -1,4 +1,4 @@
-from smac.runhistory.runhistory import RunHistory, DataOrigin, average_cost
+from smac.runhistory.runhistory import RunHistory, DataOrigin
 from smac.scenario.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 
@@ -9,8 +9,7 @@ def merge_foreign_data_from_file(scenario: Scenario,
                                  runhistory: RunHistory,
                                  in_scenario_fn_list: typing.List[str],
                                  in_runhistory_fn_list: typing.List[str],
-                                 cs: ConfigurationSpace,
-                                 aggregate_func: typing.Callable = average_cost):
+                                 cs: ConfigurationSpace,):
     """Extend <scenario> and <runhistory> with runhistory data from another
     <in_scenario> assuming the same pcs, feature space, but different instances
 
@@ -26,8 +25,6 @@ def merge_foreign_data_from_file(scenario: Scenario,
         list filenames of runhistory dumps
     cs: ConfigurationSpace
         parameter configuration space to read runhistory from file
-    aggregate_func: typing.Callable
-        function to aggregate performance of a configuratoion across instances
 
     Returns
     -------
@@ -41,7 +38,7 @@ def merge_foreign_data_from_file(scenario: Scenario,
     scens = [Scenario(scenario=scen_fn, cmd_options={"output_dir": ""}) for scen_fn in in_scenario_fn_list]
     rhs = []
     for rh_fn in in_runhistory_fn_list:
-        rh = RunHistory(aggregate_func)
+        rh = RunHistory()
         rh.load_json(rh_fn, cs)
         rhs.append(rh)
 

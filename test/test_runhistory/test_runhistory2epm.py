@@ -11,7 +11,6 @@ import numpy as np
 
 from smac.tae.execute_ta_run import StatusType
 from smac.runhistory import runhistory, runhistory2epm
-from smac.runhistory.runhistory import average_cost
 
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
@@ -37,7 +36,7 @@ class RunhistoryTest(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.rh = runhistory.RunHistory(aggregate_func=average_cost)
+        self.rh = runhistory.RunHistory()
         self.cs = get_config_space()
         self.config1 = Configuration(self.cs,
                                      values={'a': 0, 'b': 100})

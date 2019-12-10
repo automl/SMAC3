@@ -8,7 +8,6 @@ from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, \
 
 from smac.tae.execute_ta_run import StatusType
 from smac.runhistory import runhistory, runhistory2epm
-from smac.runhistory.runhistory import average_cost
 from smac.scenario import scenario
 from smac.epm import rfr_imputator
 from smac.epm.rf_with_instances import RandomForestWithInstances
@@ -67,7 +66,7 @@ class ImputorTest(unittest.TestCase):
         self.cs.add_hyperparameter(UniformIntegerHyperparameter(name='integer_0_100',
                                                                 lower=-10, upper=10, default_value=0))
 
-        self.rh = runhistory.RunHistory(aggregate_func=average_cost)
+        self.rh = runhistory.RunHistory()
         rs = numpy.random.RandomState(1)
         to_count = 0
         cn_count = 0
