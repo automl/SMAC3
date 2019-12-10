@@ -132,6 +132,7 @@ class GaussianProcess(BaseModel):
             self.hypers = self.gp.kernel.theta
 
         self.is_trained = True
+        return self
 
     def _nll(self, theta: np.ndarray) -> typing.Tuple[float, np.ndarray]:
         """
