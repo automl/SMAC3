@@ -410,7 +410,7 @@ class Validator(object):
         # Counter for runs without the need of recalculation
         runs_from_rh = 0
         # If we reuse runs, we want to return them as well
-        new_rh = RunHistory(average_cost)
+        new_rh = RunHistory()
 
         for i in sorted(insts):
             for rep in range(repetitions):
