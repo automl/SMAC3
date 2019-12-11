@@ -26,10 +26,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import RunHistory2EPM4EIPS
 from smac.scenario.scenario import Scenario
 from smac.optimizer.acquisition import EI, EIPS, LCB
-from smac.optimizer.random_configuration_chooser import (
-    ChooserCosineAnnealing,
-    ChooserProb,
-)
+from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, ChooserProb
 from smac.tae.execute_func import ExecuteTAFuncDict
 
 
@@ -85,17 +82,15 @@ class TestSMACFacade(unittest.TestCase):
         )
 
     def test_construct_runhistory(self):
-        fixture = 'dummy'
 
         smbo = SMAC4AC(self.scenario)
         self.assertIsInstance(smbo.solver.runhistory, RunHistory)
-        smbo = SMAC4AC(self.scenario, runhistory_kwargs={'aggregate_func': fixture})
-        self.assertEqual(smbo.solver.runhistory.aggregate_func, fixture)
+        self.assertFalse(smbo.solver.runhistory.overwrite_existing_runs)
+        smbo = SMAC4AC(self.scenario, runhistory_kwargs={'overwrite_existing_runs': True})
+        self.assertIsInstance(smbo.solver.runhistory, RunHistory)
+        self.assertTrue(smbo.solver.runhistory.overwrite_existing_runs)
         smbo = SMAC4AC(self.scenario, runhistory=RunHistory)
         self.assertIsInstance(smbo.solver.runhistory, RunHistory)
-        rh = RunHistory(aggregate_func=None)
-        smbo = SMAC4AC(self.scenario, runhistory=rh)
-        self.assertIsNotNone(smbo.solver.runhistory.aggregate_func)
 
     def test_construct_random_configuration_chooser(self):
         rng = np.random.RandomState(42)
@@ -113,10 +108,10 @@ class TestSMACFacade(unittest.TestCase):
         self.assertEqual(smbo.solver.epm_chooser.random_configuration_chooser.prob, 0.1)
         smbo = SMAC4AC(
             self.scenario,
-            random_configuration_chooser=ChooserCosineAnnealing,
-            random_configuration_chooser_kwargs={'prob_max': 1, 'prob_min': 0.1, 'restart_iteration': 10},
+            random_configuration_chooser=ChooserNoCoolDown,
+            random_configuration_chooser_kwargs={'modulus': 10},
         )
-        self.assertIsInstance(smbo.solver.epm_chooser.random_configuration_chooser, ChooserCosineAnnealing)
+        self.assertIsInstance(smbo.solver.epm_chooser.random_configuration_chooser, ChooserNoCoolDown)
         # Check for construction failure on wrong argument
         with self.assertRaisesRegex(Exception, 'got an unexpected keyword argument'):
             SMAC4AC(self.scenario, random_configuration_chooser_kwargs={'dummy': 0.1})

@@ -6,7 +6,6 @@ from ConfigSpace import Configuration, UniformFloatHyperparameter
 from smac.configspace import ConfigurationSpace
 from smac.initial_design.default_configuration_design import DefaultConfiguration
 from smac.initial_design.initial_design import InitialDesign
-from smac.optimizer.objective import average_cost
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
@@ -52,7 +51,7 @@ class TestSingleInitialDesign(unittest.TestCase):
         stats.start_timing()
         self.ta.stats = stats
         tj = TrajLogger(output_dir=None, stats=stats)
-        rh = RunHistory(aggregate_func=average_cost)
+        rh = RunHistory()
         self.ta.runhistory = rh
         _ = np.random.RandomState(seed=12345)
 
@@ -77,7 +76,7 @@ class TestSingleInitialDesign(unittest.TestCase):
         stats.start_timing()
         self.ta.stats = stats
         tj = TrajLogger(output_dir=None, stats=stats)
-        rh = RunHistory(aggregate_func=average_cost)
+        rh = RunHistory()
         self.ta.runhistory = rh
         _ = np.random.RandomState(seed=12345)
 

@@ -11,7 +11,7 @@ cmd_folder = os.path.realpath(os.path.join(cmd_folder, ".."))
 if cmd_folder not in sys.path:
     sys.path.insert(0, cmd_folder)
 
-from smac.optimizer.objective import average_cost
+from smac.runhistory.runhistory import average_cost
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats

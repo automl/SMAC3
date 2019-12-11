@@ -9,7 +9,6 @@ from smac.scenario.scenario import Scenario
 from smac.tae.execute_ta_run import StatusType
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.runhistory.runhistory import RunHistory
-from smac.optimizer.objective import average_cost
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator, _Run
 
@@ -98,7 +97,7 @@ class ValidationTest(unittest.TestCase):
         scen = Scenario(self.scen_fn, cmd_options={'run_obj': 'quality'})
         scen.feature_array = None
         validator = Validator(scen, self.trajectory)
-        old_rh = RunHistory(average_cost)
+        old_rh = RunHistory()
         for config in [e["incumbent"] for e in self.trajectory]:
             old_rh.add(config, 1, 1, StatusType.SUCCESS, instance_id='0',
                        seed=127)
@@ -113,7 +112,7 @@ class ValidationTest(unittest.TestCase):
         scen = Scenario(self.scen_fn, cmd_options={'run_obj': 'quality'})
         scen.feature_array = None
         validator = Validator(scen, self.trajectory)
-        old_rh = RunHistory(average_cost)
+        old_rh = RunHistory()
         for config in [e["incumbent"] for e in self.trajectory]:
             old_rh.add(config, 1, 1, StatusType.SUCCESS, instance_id='0',
                        seed=127)
@@ -149,7 +148,7 @@ class ValidationTest(unittest.TestCase):
         # Get runhistory
         old_configs = ['config1', 'config2', 'config3',
                        'config4', 'config5', 'config6']
-        old_rh = RunHistory(average_cost)
+        old_rh = RunHistory()
         old_rh.add('config1', 1, 1, StatusType.SUCCESS, instance_id='0', seed=0)
         old_rh.add('config2', 1, 1, StatusType.TIMEOUT, instance_id='0', seed=0)
         old_rh.add('config3', 1, 1, StatusType.CRASHED, instance_id='0', seed=0)
@@ -287,7 +286,7 @@ class ValidationTest(unittest.TestCase):
         validator = Validator(scen, self.trajectory, self.rng)
         # Add a few runs and check, if they are correctly processed
         old_configs = [entry["incumbent"] for entry in self.trajectory]
-        old_rh = RunHistory(average_cost)
+        old_rh = RunHistory()
         seeds = [127 for i in range(int(len(old_configs) / 2))]
         seeds[-1] = 126  # Test instance_seed-structure in validation
         for config in old_configs[:int(len(old_configs) / 2)]:
@@ -313,7 +312,7 @@ class ValidationTest(unittest.TestCase):
         validator = Validator(scen, self.trajectory, self.rng)
         # Add a few runs and check, if they are correctly processed
         old_configs = [entry["incumbent"] for entry in self.trajectory]
-        old_rh = RunHistory(average_cost)
+        old_rh = RunHistory()
         for config in old_configs[:int(len(old_configs) / 2)]:
             old_rh.add(config, 1, 1, StatusType.SUCCESS, instance_id='0')
 
@@ -334,7 +333,7 @@ class ValidationTest(unittest.TestCase):
         validator = Validator(scen, self.trajectory, self.rng)
         # Add a few runs and check, if they are correctly processed
         old_configs = [entry["incumbent"] for entry in self.trajectory]
-        old_rh = RunHistory(average_cost)
+        old_rh = RunHistory()
         for config in old_configs[:int(len(old_configs) / 2)]:
             old_rh.add(config, 1, 1, StatusType.SUCCESS, seed=127)
 
@@ -358,7 +357,7 @@ class ValidationTest(unittest.TestCase):
         validator = Validator(scen, self.trajectory, self.rng)
         # Add a few runs and check, if they are correctly processed
         old_configs = [entry["incumbent"] for entry in self.trajectory]
-        old_rh = RunHistory(average_cost)
+        old_rh = RunHistory()
         for config in old_configs[:int(len(old_configs) / 2)]:
             old_rh.add(config, 1, 1, StatusType.SUCCESS, instance_id='0',
                        seed=127)
@@ -370,7 +369,7 @@ class ValidationTest(unittest.TestCase):
                                                    'cutoff_time': 5})
         validator = Validator(scen, self.trajectory, self.rng)
         old_configs = [entry["incumbent"] for entry in self.trajectory]
-        old_rh = RunHistory(average_cost)
+        old_rh = RunHistory()
         for config in old_configs[:int(len(old_configs) / 2)]:
             old_rh.add(config, 1, 1, StatusType.SUCCESS, instance_id='0')
         validator.validate_epm('all', 'train', 1, old_rh)
@@ -389,7 +388,7 @@ class ValidationTest(unittest.TestCase):
         validator = Validator(scen, self.trajectory, self.rng)
         # Add a few runs and check, if they are correctly processed
         old_configs = [entry["incumbent"] for entry in self.trajectory]
-        old_rh = RunHistory(average_cost)
+        old_rh = RunHistory()
         for config in old_configs[:int(len(old_configs) / 2)]:
             old_rh.add(config, 1, 1, StatusType.SUCCESS, instance_id='0',
                        seed=127)

@@ -15,7 +15,6 @@ from smac.runhistory import runhistory, runhistory2epm
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 from smac.scenario.scenario import Scenario
-from smac.optimizer.objective import average_cost
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.util_funcs import get_types
@@ -37,7 +36,7 @@ class RunhistoryTest(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.rh = runhistory.RunHistory(aggregate_func=average_cost)
+        self.rh = runhistory.RunHistory()
         self.cs = get_config_space()
         self.config1 = Configuration(self.cs,
                                      values={'a': 0, 'b': 100})

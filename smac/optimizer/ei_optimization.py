@@ -614,14 +614,6 @@ class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
         )
         self.n_sls_iterations = n_sls_iterations
 
-        # =======================================================================
-        # self.local_search = DiffOpt(
-        #     acquisition_function=acquisition_function,
-        #     config_space=config_space,
-        #     rng=rng
-        # )
-        # =======================================================================
-
     def maximize(
             self,
             runhistory: RunHistory,

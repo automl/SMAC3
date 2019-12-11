@@ -11,7 +11,6 @@ from smac.scenario.scenario import Scenario
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.intensification.successive_halving import SuccessiveHalving
 from smac.runhistory.runhistory import RunHistory
-from smac.optimizer.objective import average_cost
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
@@ -33,7 +32,7 @@ class TestSuccessiveHalving(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.rh = RunHistory(aggregate_func=average_cost)
+        self.rh = RunHistory()
         self.cs = get_config_space()
         self.config1 = Configuration(self.cs,
                                      values={'a': 0, 'b': 100})
@@ -187,8 +186,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertFalse(new)
 
         # evaluating configuration
-        _ = intensifier.eval_challenger(challenger=config, incumbent=None, run_history=self.rh,
-                                        aggregate_func=average_cost)
+        _ = intensifier.eval_challenger(challenger=config, incumbent=None, run_history=self.rh,)
         config, new = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
         self.assertEqual(config, self.config2)
         self.assertEqual(len(intensifier.curr_challengers), 1)
@@ -278,8 +276,7 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         inc, inc_value = intensifier.eval_challenger(challenger=self.config2,
                                                      incumbent=self.config1,
-                                                     run_history=self.rh,
-                                                     aggregate_func=average_cost)
+                                                     run_history=self.rh,)
 
         self.assertEqual(inc, self.config2)
         self.assertEqual(inc_value, 0.05)
@@ -315,8 +312,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         # config2 should be capped and config1 should still be the incumbent
         inc, _ = intensifier.eval_challenger(challenger=self.config2,
                                              incumbent=self.config1,
-                                             run_history=self.rh,
-                                             aggregate_func=average_cost)
+                                             run_history=self.rh,)
 
         self.assertEqual(inc, self.config1)
         self.assertEqual(self.stats.ta_runs, 1)
@@ -348,8 +344,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         config, _ = intensifier.get_next_challenger(challengers=[self.config1], chooser=None, run_history=self.rh)
         inc, _ = intensifier.eval_challenger(challenger=config,
                                              incumbent=None,
-                                             run_history=self.rh,
-                                             aggregate_func=average_cost)
+                                             run_history=self.rh,)
 
         self.assertEqual(inc, None)   # since this is first run, doesn't return any incumbent
         self.assertEqual(len(self.rh.get_runs_for_config(self.config1)), 1)
@@ -357,8 +352,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         config, _ = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
         inc, _ = intensifier.eval_challenger(challenger=config,
                                              incumbent=None,
-                                             run_history=self.rh,
-                                             aggregate_func=average_cost)
+                                             run_history=self.rh,)
 
         self.assertEqual(inc, None)
         self.assertEqual(len(self.rh.get_runs_for_config(self.config2)), 1)
@@ -368,8 +362,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         config, _ = intensifier.get_next_challenger(challengers=[self.config3], chooser=None, run_history=self.rh)
         inc, _ = intensifier.eval_challenger(challenger=config,
                                              incumbent=None,
-                                             run_history=self.rh,
-                                             aggregate_func=average_cost)
+                                             run_history=self.rh,)
 
         self.assertEqual(inc, self.config1)  # run completed, incumbent generated
 
@@ -385,8 +378,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         config, _ = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
         inc, _ = intensifier.eval_challenger(challenger=config,
                                              incumbent=None,
-                                             run_history=self.rh,
-                                             aggregate_func=average_cost)
+                                             run_history=self.rh)
 
         self.assertEqual(config, self.config2)
         self.assertEqual(len(self.rh.get_runs_for_config(self.config2)), 2)

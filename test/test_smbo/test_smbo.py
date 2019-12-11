@@ -4,7 +4,6 @@ from unittest import mock
 
 import numpy as np
 
-from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.intensification.intensification import Intensifier
@@ -15,8 +14,6 @@ from smac.tae.execute_ta_run import FirstRunCrashedException
 from smac.utils import test_helpers
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
-
-from test import requires_extra
 
 
 class ConfigurationMock(object):
@@ -163,39 +160,3 @@ class TestSMBO(unittest.TestCase):
         # SMBO should have the default configuration as the 1st config if no initial design is given
         smbo.start()
         self.assertEqual(smbo.initial_design_configs[0], smbo.scenario.cs.get_default_configuration())
-
-    def test_rf_comp_builder(self):
-        seed = 42
-        smbo = SMAC4AC(self.scenario, rng=seed).solver
-        conf = {"model": "RF", "acq_func": "EI"}
-        acqf, model = smbo._component_builder(conf)
-
-        self.assertTrue(isinstance(acqf, EI))
-        self.assertTrue(isinstance(model, RandomForestWithInstances))
-
-    @requires_extra('gp')
-    def test_gp_comp_builder(self):
-        seed = 42
-        smbo = SMAC4AC(self.scenario, rng=seed).solver
-        conf = {"model": "GP", "acq_func": "EI"}
-        acqf, model = smbo._component_builder(conf)
-
-        self.assertTrue(isinstance(acqf, EI))
-        self.assertTrue(isinstance(model, GaussianProcessMCMC))
-
-    def test_smbo_cs(self):
-        seed = 42
-        smbo = SMAC4AC(self.scenario, rng=seed).solver
-        _ = smbo._get_acm_cs()
-
-    def test_cs_comp_builder(self):
-        seed = 42
-        smbo = SMAC4AC(self.scenario, rng=seed).solver
-        cs = smbo._get_acm_cs()
-        conf = cs.sample_configuration()
-
-        acqf, model = smbo._component_builder(conf)
-
-
-if __name__ == "__main__":
-    unittest.main()

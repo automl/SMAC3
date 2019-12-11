@@ -20,7 +20,6 @@ from smac.facade.smac_ac_facade import SMAC4AC
 from smac.facade.experimental.psmac_facade import PSMAC
 from smac.utils.io.output_directory import create_output_directory
 from smac.runhistory.runhistory import RunHistory
-from smac.optimizer.objective import average_cost
 from smac.epm.util_funcs import get_rng
 from smac.utils.constants import MAXINT
 from smac.optimizer.pSMAC import read
@@ -97,7 +96,7 @@ class Hydra(object):
         self.top_dir = None
         self.solver = None
         self.portfolio = None
-        self.rh = RunHistory(average_cost)
+        self.rh = RunHistory()
         self._tae = tae
         self._tae_kwargs = tae_kwargs
         if incs_per_round <= 0:

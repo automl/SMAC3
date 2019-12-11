@@ -9,8 +9,7 @@ from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer, \
     RandomSearch
-from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, \
-    ChooserLinearCoolDown
+from smac.optimizer.random_configuration_chooser import RandomConfigurationChooser, ChooserNoCoolDown
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.scenario.scenario import Scenario
@@ -28,8 +27,7 @@ class EPMChooser(object):
                  acquisition_func: AbstractAcquisitionFunction,
                  rng: np.random.RandomState,
                  restore_incumbent: Configuration = None,
-                 random_configuration_chooser: typing.Union[
-                     ChooserNoCoolDown, ChooserLinearCoolDown] = ChooserNoCoolDown(2.0),
+                 random_configuration_chooser: typing.Union[RandomConfigurationChooser] = ChooserNoCoolDown(2.0),
                  predict_incumbent: bool = True,
                  min_samples_model: int = 1
                  ):

@@ -108,7 +108,6 @@ class Hyperband(SuccessiveHalving):
                         challenger: Configuration,
                         incumbent: typing.Optional[Configuration],
                         run_history: RunHistory,
-                        aggregate_func: typing.Callable,
                         time_bound: float = float(MAXINT),
                         log_traj: bool = True) -> typing.Tuple[Configuration, float]:
         """
@@ -125,8 +124,6 @@ class Hyperband(SuccessiveHalving):
             best configuration so far, None in 1st run
         run_history : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
-        aggregate_func: typing.Callable
-            aggregate error across instances
         time_bound : float, optional (default=2 ** 31 - 1)
             time in [sec] available to perform intensify
         log_traj: bool
@@ -143,7 +140,6 @@ class Hyperband(SuccessiveHalving):
         incumbent, inc_perf = self.sh_intensifier.eval_challenger(challenger=challenger,
                                                                   incumbent=incumbent,
                                                                   run_history=run_history,
-                                                                  aggregate_func=aggregate_func,
                                                                   time_bound=time_bound,
                                                                   log_traj=log_traj)
 

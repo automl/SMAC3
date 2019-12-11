@@ -12,7 +12,6 @@ from smac.scenario import scenario
 from smac.epm import rfr_imputator
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.util_funcs import get_types
-from smac.optimizer.objective import average_cost
 
 
 def generate_config(cs, rs):
@@ -67,7 +66,7 @@ class ImputorTest(unittest.TestCase):
         self.cs.add_hyperparameter(UniformIntegerHyperparameter(name='integer_0_100',
                                                                 lower=-10, upper=10, default_value=0))
 
-        self.rh = runhistory.RunHistory(aggregate_func=average_cost)
+        self.rh = runhistory.RunHistory()
         rs = numpy.random.RandomState(1)
         to_count = 0
         cn_count = 0

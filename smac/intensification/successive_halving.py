@@ -4,7 +4,6 @@ import typing
 import numpy as np
 
 from smac.intensification.abstract_racer import AbstractRacer
-from smac.optimizer.objective import sum_cost
 from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
@@ -246,7 +245,6 @@ class SuccessiveHalving(AbstractRacer):
                         challenger: Configuration,
                         incumbent: typing.Optional[Configuration],
                         run_history: RunHistory,
-                        aggregate_func: typing.Callable,
                         time_bound: float = float(MAXINT),
                         log_traj: bool = True) -> typing.Tuple[Configuration, float]:
         """
@@ -261,8 +259,6 @@ class SuccessiveHalving(AbstractRacer):
             best configuration so far, None in 1st run
         run_history : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
-        aggregate_func: typing.Callable
-            aggregate error across instances
         time_bound : float, optional (default=2 ** 31 - 1)
             time in [sec] available to perform intensify
         log_traj : bool
@@ -278,7 +274,7 @@ class SuccessiveHalving(AbstractRacer):
         #     for the first ever 'intensify' run (from initial design)
         if incumbent:
             inc_runs = run_history.get_runs_for_config(incumbent)
-            inc_sum_cost = sum_cost(config=incumbent, instance_seed_budget_keys=inc_runs, run_history=run_history)
+            inc_sum_cost = run_history.sum_cost(config=incumbent, instance_seed_budget_keys=inc_runs)
         else:
             inc_sum_cost = np.inf
 
@@ -342,7 +338,6 @@ class SuccessiveHalving(AbstractRacer):
                 incumbent = self._get_incumbent(challenger=challenger,
                                                 incumbent=incumbent,
                                                 run_history=run_history,
-                                                aggregate_func=aggregate_func,
                                                 log_traj=log_traj)
         except BudgetExhaustedException:
             # Returning the final incumbent selected so far because we ran out of optimization budget
@@ -496,7 +491,6 @@ class SuccessiveHalving(AbstractRacer):
                        challenger: Configuration,
                        incumbent: typing.Optional[Configuration],
                        run_history: RunHistory,
-                       aggregate_func: typing.Callable,
                        log_traj: bool = True) -> Configuration:
         """
         Compares the challenger with current incumbent and returns the best configuration
@@ -509,8 +503,6 @@ class SuccessiveHalving(AbstractRacer):
             best configuration so far
         run_history : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
-        aggregate_func: typing.Callable
-            aggregate error across instances
         log_traj : bool
             whether to log changes of incumbents in trajectory
 
@@ -534,7 +526,7 @@ class SuccessiveHalving(AbstractRacer):
 
         else:
             new_incumbent = self._compare_configs(incumbent, challenger,
-                                                  run_history, aggregate_func, log_traj)
+                                                  run_history, log_traj)
             # if compare config returned none, then it is undecided. So return old incumbent
             new_incumbent = incumbent if new_incumbent is None else new_incumbent
 

@@ -11,7 +11,6 @@ from smac.configspace import Configuration, convert_configurations_to_array
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.util_funcs import get_types
-from smac.optimizer.objective import average_cost
 from smac.runhistory.runhistory import RunHistory, RunKey, StatusType
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
 from smac.scenario.scenario import Scenario
@@ -411,7 +410,7 @@ class Validator(object):
         # Counter for runs without the need of recalculation
         runs_from_rh = 0
         # If we reuse runs, we want to return them as well
-        new_rh = RunHistory(average_cost)
+        new_rh = RunHistory()
 
         for i in sorted(insts):
             for rep in range(repetitions):
