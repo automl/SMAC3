@@ -117,7 +117,6 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
@@ -125,7 +124,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.facade.html">smac.facade package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.experimental.html">smac.facade.experimental package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.epils_facade.html">smac.facade.experimental.epils_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.hydra_facade.html">smac.facade.experimental.hydra_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.psmac_facade.html">smac.facade.experimental.psmac_facade module</a></li>
 </ul>
@@ -157,9 +155,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="smac.optimizer.html">smac.optimizer package</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">smac.optimizer.smbo module</a></li>
@@ -293,7 +289,7 @@
 <span id="smac-optimizer-smbo-module"></span><h1>smac.optimizer.smbo module<a class="headerlink" href="#module-smac.optimizer.smbo" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.optimizer.smbo.SMBO">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.smbo.</code><code class="sig-name descname">SMBO</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">initial_design: smac.initial_design.initial_design.InitialDesign</em>, <em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</em>, <em class="sig-param">intensifier: smac.intensification.abstract_racer.AbstractRacer</em>, <em class="sig-param">aggregate_func: callable</em>, <em class="sig-param">num_run: int</em>, <em class="sig-param">model: smac.epm.rf_with_instances.RandomForestWithInstances</em>, <em class="sig-param">acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</em>, <em class="sig-param">acquisition_func: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">rng: numpy.random.mtrand.RandomState</em>, <em class="sig-param">restore_incumbent: ConfigSpace.configuration_space.Configuration = None</em>, <em class="sig-param">random_configuration_chooser: Union[smac.optimizer.random_configuration_chooser.ChooserNoCoolDown</em>, <em class="sig-param">smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown] = &lt;smac.optimizer.random_configuration_chooser.ChooserNoCoolDown object&gt;</em>, <em class="sig-param">predict_incumbent: bool = True</em>, <em class="sig-param">min_samples_model: int = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.smbo.</code><code class="sig-name descname">SMBO</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">initial_design: smac.initial_design.initial_design.InitialDesign</em>, <em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</em>, <em class="sig-param">intensifier: smac.intensification.abstract_racer.AbstractRacer</em>, <em class="sig-param">num_run: int</em>, <em class="sig-param">model: smac.epm.rf_with_instances.RandomForestWithInstances</em>, <em class="sig-param">acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</em>, <em class="sig-param">acquisition_func: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">rng: numpy.random.mtrand.RandomState</em>, <em class="sig-param">restore_incumbent: ConfigSpace.configuration_space.Configuration = None</em>, <em class="sig-param">random_configuration_chooser: smac.optimizer.random_configuration_chooser.RandomConfigurationChooser = &lt;smac.optimizer.random_configuration_chooser.ChooserNoCoolDown object&gt;</em>, <em class="sig-param">predict_incumbent: bool = True</em>, <em class="sig-param">min_samples_model: int = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Interface that contains the main Bayesian optimization loop</p>
 <dl class="attribute">
@@ -337,11 +333,6 @@
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="smac.optimizer.smbo.SMBO.aggregate_func">
-<code class="sig-name descname">aggregate_func</code><a class="headerlink" href="#smac.optimizer.smbo.SMBO.aggregate_func" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
 <dt id="smac.optimizer.smbo.SMBO.num_run">
 <code class="sig-name descname">num_run</code><a class="headerlink" href="#smac.optimizer.smbo.SMBO.num_run" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -374,8 +365,6 @@ data into EPM data</p>
 </dd>
 <dt>intensifier: Intensifier</dt><dd><p>intensification of new challengers against incumbent configuration
 (probably with some kind of racing on the instances)</p>
-</dd>
-<dt>aggregate_func: callable</dt><dd><p>how to aggregate the runs in the runhistory to get the performance of a configuration</p>
 </dd>
 <dt>num_run: int</dt><dd><p>id of this run (used for pSMAC)</p>
 </dd>

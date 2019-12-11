@@ -115,7 +115,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
@@ -123,7 +122,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.facade.html">smac.facade package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.html">smac.facade.experimental package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.epils_facade.html">smac.facade.experimental.epils_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.hydra_facade.html">smac.facade.experimental.hydra_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.psmac_facade.html">smac.facade.experimental.psmac_facade module</a></li>
 </ul>
@@ -155,9 +153,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
@@ -295,7 +291,6 @@
 <span class="kn">from</span> <span class="nn">smac.epm.rf_with_instances</span> <span class="kn">import</span> <span class="n">RandomForestWithInstances</span>
 <span class="kn">from</span> <span class="nn">smac.epm.rfr_imputator</span> <span class="kn">import</span> <span class="n">RFRImputator</span>
 <span class="kn">from</span> <span class="nn">smac.epm.util_funcs</span> <span class="kn">import</span> <span class="n">get_types</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="kn">import</span> <span class="n">average_cost</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">RunKey</span><span class="p">,</span> <span class="n">StatusType</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="kn">import</span> <span class="n">RunHistory2EPM4Cost</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
@@ -695,7 +690,7 @@
         <span class="c1"># Counter for runs without the need of recalculation</span>
         <span class="n">runs_from_rh</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="c1"># If we reuse runs, we want to return them as well</span>
-        <span class="n">new_rh</span> <span class="o">=</span> <span class="n">RunHistory</span><span class="p">(</span><span class="n">average_cost</span><span class="p">)</span>
+        <span class="n">new_rh</span> <span class="o">=</span> <span class="n">RunHistory</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">insts</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">rep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repetitions</span><span class="p">):</span>

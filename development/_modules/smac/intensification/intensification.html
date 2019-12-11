@@ -115,7 +115,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
@@ -123,7 +122,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.facade.html">smac.facade package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.html">smac.facade.experimental package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.epils_facade.html">smac.facade.experimental.epils_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.hydra_facade.html">smac.facade.experimental.hydra_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.psmac_facade.html">smac.facade.experimental.psmac_facade module</a></li>
 </ul>
@@ -155,9 +153,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
@@ -290,7 +286,6 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="kn">import</span> <span class="n">sum_cost</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
 <span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span>
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">Configuration</span>
@@ -425,7 +420,6 @@
                         <span class="n">challenger</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
                         <span class="n">incumbent</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
                         <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
-                        <span class="n">aggregate_func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
                         <span class="n">time_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">),</span>
                         <span class="n">log_traj</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Running intensification to determine the incumbent configuration.</span>
@@ -444,8 +438,6 @@
 <span class="sd">            best configuration so far, None in 1st run</span>
 <span class="sd">        run_history : smac.runhistory.runhistory.RunHistory</span>
 <span class="sd">            stores all runs we ran so far</span>
-<span class="sd">        aggregate_func: typing.Callable</span>
-<span class="sd">            aggregate error across instances</span>
 <span class="sd">        time_bound : float, optional (default=2 ** 31 - 1)</span>
 <span class="sd">            time in [sec] available to perform intensify</span>
 <span class="sd">        log_traj: bool</span>
@@ -493,7 +485,6 @@
                 <span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_race_challenger</span><span class="p">(</span><span class="n">challenger</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
                                                   <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
                                                   <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
-                                                  <span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">,</span>
                                                   <span class="n">log_traj</span><span class="o">=</span><span class="n">log_traj</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">always_race_against</span> <span class="ow">and</span> \
@@ -503,7 +494,6 @@
                     <span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_race_challenger</span><span class="p">(</span><span class="n">challenger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">always_race_against</span><span class="p">,</span>
                                                       <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
                                                       <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
-                                                      <span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">,</span>
                                                       <span class="n">log_traj</span><span class="o">=</span><span class="n">log_traj</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># move on to next iteration</span>
@@ -622,7 +612,6 @@
                          <span class="n">challenger</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
                          <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
                          <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
-                         <span class="n">aggregate_func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
                          <span class="n">log_traj</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Aggressively race challenger against incumbent</span>
 
@@ -634,8 +623,6 @@
 <span class="sd">            Best configuration so far</span>
 <span class="sd">        run_history : smac.runhistory.runhistory.RunHistory</span>
 <span class="sd">            Stores all runs we ran so far</span>
-<span class="sd">        aggregate_func: typing.Callable</span>
-<span class="sd">            Aggregate performance across instances</span>
 <span class="sd">        log_traj: bool</span>
 <span class="sd">            Whether to log changes of incumbents in trajectory</span>
 
@@ -700,7 +687,6 @@
             <span class="n">new_incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compare_configs</span><span class="p">(</span>
                 <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">challenger</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
                 <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
-                <span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">,</span>
                 <span class="n">log_traj</span><span class="o">=</span><span class="n">log_traj</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">new_incumbent</span> <span class="o">==</span> <span class="n">incumbent</span><span class="p">:</span>
                 <span class="c1"># move on to the next iteration</span>
@@ -762,9 +748,10 @@
         <span class="c1"># because of efficiency computed here</span>
         <span class="n">inst_seed_pairs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">inc_inst_seeds</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">missing_runs</span><span class="p">))</span>
         <span class="c1"># cost used by incumbent for going over all runs in inst_seed_pairs</span>
-        <span class="n">inc_sum_cost</span> <span class="o">=</span> <span class="n">sum_cost</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
-                                <span class="n">instance_seed_budget_keys</span><span class="o">=</span><span class="n">inst_seed_pairs</span><span class="p">,</span>
-                                <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">)</span>
+        <span class="n">inc_sum_cost</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">sum_cost</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
+            <span class="n">instance_seed_budget_keys</span><span class="o">=</span><span class="n">inst_seed_pairs</span><span class="p">,</span>
+        <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">to_run</span><span class="p">,</span> <span class="n">inc_sum_cost</span>
 

@@ -115,7 +115,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
@@ -123,7 +122,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.facade.html">smac.facade package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.html">smac.facade.experimental package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.epils_facade.html">smac.facade.experimental.epils_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.hydra_facade.html">smac.facade.experimental.hydra_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.psmac_facade.html">smac.facade.experimental.psmac_facade module</a></li>
 </ul>
@@ -155,9 +153,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
@@ -375,21 +371,17 @@
 <span class="sd">    runs_per_config : dict</span>
 <span class="sd">        Maps config_id -&gt; number of runs</span>
 
-<span class="sd">    aggregate_func</span>
 <span class="sd">    overwrite_existing_runs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">aggregate_func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
         <span class="n">overwrite_existing_runs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Constructor</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        aggregate_func: callable</span>
-<span class="sd">            function to aggregate perf across instances</span>
 <span class="sd">        overwrite_existing_runs: bool</span>
 <span class="sd">            allows to overwrites old results if pairs of</span>
 <span class="sd">            algorithm-instance-seed were measured</span>
@@ -422,7 +414,6 @@
         <span class="c1"># a JSON file. Can be chosen to not be written to disk</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">external</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: typing.Dict[RunKey, DataOrigin]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">aggregate_func</span> <span class="o">=</span> <span class="n">aggregate_func</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_existing_runs</span> <span class="o">=</span> <span class="n">overwrite_existing_runs</span>
 
 <div class="viewcode-block" id="RunHistory.add"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">cost</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -511,7 +502,6 @@
 <div class="viewcode-block" id="RunHistory.update_cost"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.update_cost">[docs]</a>    <span class="k">def</span> <span class="nf">update_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Store the performance of a configuration across the instances in</span>
 <span class="sd">        self.cost_per_config and also updates self.runs_per_config;</span>
-<span class="sd">        uses self.aggregate_func</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -519,7 +509,7 @@
 <span class="sd">            configuration to update cost based on all runs in runhistory</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">inst_seed_budgets</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">config</span><span class="p">))</span>
-        <span class="n">perf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aggregate_func</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">inst_seed_budgets</span><span class="p">)</span>
+        <span class="n">perf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">average_cost</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">inst_seed_budgets</span><span class="p">)</span>
         <span class="n">config_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_ids</span><span class="p">[</span><span class="n">config</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cost_per_config</span><span class="p">[</span><span class="n">config_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">perf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">runs_per_config</span><span class="p">[</span><span class="n">config_id</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">inst_seed_budgets</span><span class="p">)</span></div>
@@ -542,7 +532,7 @@
                     <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">instance</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">,</span> <span class="n">inst_seed_budgets</span><span class="p">))</span>
 
             <span class="k">if</span> <span class="n">inst_seed_budgets</span><span class="p">:</span>  <span class="c1"># can be empty if never saw any runs on &lt;instances&gt;</span>
-                <span class="n">perf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aggregate_func</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">inst_seed_budgets</span><span class="p">)</span>
+                <span class="n">perf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">average_cost</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">inst_seed_budgets</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">cost_per_config</span><span class="p">[</span><span class="n">config_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">perf</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">runs_per_config</span><span class="p">[</span><span class="n">config_id</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">inst_seed_budgets</span><span class="p">)</span></div>
 
@@ -757,7 +747,7 @@
 <span class="sd">        origin : DataOrigin</span>
 <span class="sd">            What to store as data origin.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">new_runhistory</span> <span class="o">=</span> <span class="n">RunHistory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aggregate_func</span><span class="p">)</span>
+        <span class="n">new_runhistory</span> <span class="o">=</span> <span class="n">RunHistory</span><span class="p">()</span>
         <span class="n">new_runhistory</span><span class="o">.</span><span class="n">load_json</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">cs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">runhistory</span><span class="o">=</span><span class="n">new_runhistory</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">)</span></div>
 
@@ -786,7 +776,89 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">cost</span><span class="o">=</span><span class="n">cost</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span>
                      <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span> <span class="n">instance_id</span><span class="o">=</span><span class="n">instance_id</span><span class="p">,</span>
                      <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="n">budget</span><span class="p">,</span> <span class="n">additional_info</span><span class="o">=</span><span class="n">additional_info</span><span class="p">,</span>
-                     <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">)</span></div></div>
+                     <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_cost</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+        <span class="n">instance_seed_budget_keys</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">InstSeedBudgetKey</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return array of all costs for the given config for further calculations.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config : Configuration</span>
+<span class="sd">            Configuration to calculate objective for</span>
+<span class="sd">        instance_seed_budget_keys : list, optional (default=None)</span>
+<span class="sd">            List of tuples of instance-seeds-budget keys. If None, the run_history is</span>
+<span class="sd">            queried for all runs of the given configuration.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Costs: list</span>
+<span class="sd">            Array of all costs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">id_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_ids</span><span class="p">[</span><span class="n">config</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>  <span class="c1"># challenger was not running so far</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">instance_seed_budget_keys</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">instance_seed_budget_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="n">costs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">instance_seed_budget_keys</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">RunKey</span><span class="p">(</span><span class="n">id_</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+            <span class="n">costs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">cost</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">costs</span>
+
+<div class="viewcode-block" id="RunHistory.average_cost"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.average_cost">[docs]</a>    <span class="k">def</span> <span class="nf">average_cost</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+        <span class="n">instance_seed_budget_keys</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">InstSeedBudgetKey</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the average cost of a configuration.</span>
+
+<span class="sd">        This is the mean of costs of all instance-seed pairs.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config : Configuration</span>
+<span class="sd">            Configuration to calculate objective for</span>
+<span class="sd">        instance_seed_budget_keys : list, optional (default=None)</span>
+<span class="sd">            List of tuples of instance-seeds-budget keys. If None, the run_history is</span>
+<span class="sd">            queried for all runs of the given configuration.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Cost: float</span>
+<span class="sd">            Average cost</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cost</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">instance_seed_budget_keys</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="RunHistory.sum_cost"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.sum_cost">[docs]</a>    <span class="k">def</span> <span class="nf">sum_cost</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+        <span class="n">instance_seed_budget_keys</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">InstSeedBudgetKey</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the sum of costs of a configuration.</span>
+
+<span class="sd">        This is the sum of costs of all instance-seed pairs.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config : Configuration</span>
+<span class="sd">            Configuration to calculate objective for</span>
+<span class="sd">        instance_seed_budget_keys : list, optional (default=None)</span>
+<span class="sd">            List of tuples of instance-seeds-budget keys. If None, the run_history is</span>
+<span class="sd">            queried for all runs of the given configuration.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        sum_cost: float</span>
+<span class="sd">            Sum of costs of config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cost</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">instance_seed_budget_keys</span><span class="p">))</span></div></div>
 </pre></div>
 
            </div>

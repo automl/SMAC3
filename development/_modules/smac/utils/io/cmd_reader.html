@@ -115,7 +115,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
@@ -123,7 +122,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../apidoc/smac.facade.html">smac.facade package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.facade.experimental.html">smac.facade.experimental package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../../apidoc/smac.facade.experimental.epils_facade.html">smac.facade.experimental.epils_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../apidoc/smac.facade.experimental.hydra_facade.html">smac.facade.experimental.hydra_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../apidoc/smac.facade.experimental.psmac_facade.html">smac.facade.experimental.psmac_facade module</a></li>
 </ul>
@@ -155,9 +153,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.optimizer.epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
@@ -654,8 +650,7 @@
                               <span class="n">default</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;INFO&quot;</span><span class="p">,</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">],</span>
                               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Verbosity level.&quot;</span><span class="p">)</span>
         <span class="n">opt_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--mode&quot;</span><span class="p">,</span>
-                              <span class="n">default</span><span class="o">=</span><span class="s2">&quot;SMAC4AC&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SMAC4AC&quot;</span><span class="p">,</span> <span class="s2">&quot;ROAR&quot;</span><span class="p">,</span> <span class="s2">&quot;EPILS&quot;</span><span class="p">,</span> <span class="s2">&quot;Hydra&quot;</span><span class="p">,</span> <span class="s2">&quot;PSMAC&quot;</span><span class="p">,</span> <span class="s2">&quot;SMAC4HPO&quot;</span><span class="p">,</span>
-                                                          <span class="s2">&quot;SMAC4BO&quot;</span><span class="p">],</span>
+                              <span class="n">default</span><span class="o">=</span><span class="s2">&quot;SMAC4AC&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SMAC4AC&quot;</span><span class="p">,</span> <span class="s2">&quot;ROAR&quot;</span><span class="p">,</span> <span class="s2">&quot;Hydra&quot;</span><span class="p">,</span> <span class="s2">&quot;PSMAC&quot;</span><span class="p">,</span> <span class="s2">&quot;SMAC4HPO&quot;</span><span class="p">,</span> <span class="s2">&quot;SMAC4BO&quot;</span><span class="p">],</span>
                               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Configuration mode.&quot;</span><span class="p">)</span>
         <span class="n">opt_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--restore-state&quot;</span><span class="p">,</span> <span class="s2">&quot;--restore_state&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;restore_state&quot;</span><span class="p">,</span>
                               <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>

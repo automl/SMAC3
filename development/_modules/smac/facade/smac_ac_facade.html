@@ -115,7 +115,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
@@ -123,7 +122,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.facade.html">smac.facade package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.html">smac.facade.experimental package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.epils_facade.html">smac.facade.experimental.epils_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.hydra_facade.html">smac.facade.experimental.hydra_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.psmac_facade.html">smac.facade.experimental.psmac_facade module</a></li>
 </ul>
@@ -155,9 +153,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
@@ -316,7 +312,6 @@
 <span class="kn">from</span> <span class="nn">smac.intensification.abstract_racer</span> <span class="kn">import</span> <span class="n">AbstractRacer</span>
 <span class="c1"># optimizer</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.smbo</span> <span class="kn">import</span> <span class="n">SMBO</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="kn">import</span> <span class="n">average_cost</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="kn">import</span> <span class="n">EI</span><span class="p">,</span> <span class="n">LogEI</span><span class="p">,</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span> <span class="n">IntegratedAcquisitionFunction</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="kn">import</span> <span class="n">InterleavedLocalAndRandomSearch</span><span class="p">,</span> \
     <span class="n">AcquisitionFunctionMaximizer</span>
@@ -463,8 +458,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
-        <span class="n">aggregate_func</span> <span class="o">=</span> <span class="n">average_cost</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span> <span class="o">=</span> <span class="n">scenario</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">restore_incumbent</span><span class="p">:</span>
@@ -505,16 +498,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="o">=</span> <span class="s2">&quot;LOG&quot;</span>
 
         <span class="c1"># initialize empty runhistory</span>
-        <span class="n">runhistory_def_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;aggregate_func&#39;</span><span class="p">:</span> <span class="n">aggregate_func</span><span class="p">}</span>
+        <span class="n">runhistory_def_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">runhistory_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">runhistory_def_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">runhistory_kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">runhistory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">runhistory</span> <span class="o">=</span> <span class="n">RunHistory</span><span class="p">(</span><span class="o">**</span><span class="n">runhistory_def_kwargs</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">runhistory</span><span class="p">):</span>
             <span class="n">runhistory</span> <span class="o">=</span> <span class="n">runhistory</span><span class="p">(</span><span class="o">**</span><span class="n">runhistory_def_kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">runhistory</span><span class="p">,</span> <span class="n">RunHistory</span><span class="p">):</span>
+            <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">aggregate_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">runhistory</span><span class="o">.</span><span class="n">aggregate_func</span> <span class="o">=</span> <span class="n">aggregate_func</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;runhistory has to be a class or an object of RunHistory&#39;</span><span class="p">)</span>
 
         <span class="n">rand_conf_chooser_kwargs</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;rng&#39;</span><span class="p">:</span> <span class="n">rng</span>
@@ -794,7 +788,6 @@
             <span class="s1">&#39;runhistory&#39;</span><span class="p">:</span> <span class="n">runhistory</span><span class="p">,</span>
             <span class="s1">&#39;runhistory2epm&#39;</span><span class="p">:</span> <span class="n">runhistory2epm</span><span class="p">,</span>
             <span class="s1">&#39;intensifier&#39;</span><span class="p">:</span> <span class="n">intensifier</span><span class="p">,</span>
-            <span class="s1">&#39;aggregate_func&#39;</span><span class="p">:</span> <span class="n">aggregate_func</span><span class="p">,</span>
             <span class="s1">&#39;num_run&#39;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">,</span>
             <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="n">model</span><span class="p">,</span>
             <span class="s1">&#39;acq_optimizer&#39;</span><span class="p">:</span> <span class="n">acquisition_function_optimizer</span><span class="p">,</span>

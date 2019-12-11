@@ -115,7 +115,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
@@ -123,7 +122,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidoc/smac.facade.html">smac.facade package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.facade.experimental.html">smac.facade.experimental package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../apidoc/smac.facade.experimental.epils_facade.html">smac.facade.experimental.epils_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../apidoc/smac.facade.experimental.hydra_facade.html">smac.facade.experimental.hydra_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../apidoc/smac.facade.experimental.psmac_facade.html">smac.facade.experimental.psmac_facade module</a></li>
 </ul>
@@ -155,9 +153,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.optimizer.epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
@@ -292,14 +288,12 @@
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.facade.smac_ac_facade</span> <span class="kn">import</span> <span class="n">SMAC4AC</span>
 <span class="kn">from</span> <span class="nn">smac.facade.roar_facade</span> <span class="kn">import</span> <span class="n">ROAR</span>
-<span class="kn">from</span> <span class="nn">smac.facade.experimental.epils_facade</span> <span class="kn">import</span> <span class="n">EPILS</span>
 <span class="kn">from</span> <span class="nn">smac.facade.experimental.hydra_facade</span> <span class="kn">import</span> <span class="n">Hydra</span>
 <span class="kn">from</span> <span class="nn">smac.facade.experimental.psmac_facade</span> <span class="kn">import</span> <span class="n">PSMAC</span>
 <span class="kn">from</span> <span class="nn">smac.facade.smac_hpo_facade</span> <span class="kn">import</span> <span class="n">SMAC4HPO</span>
 <span class="kn">from</span> <span class="nn">smac.facade.smac_bo_facade</span> <span class="kn">import</span> <span class="n">SMAC4BO</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.objective</span> <span class="kn">import</span> <span class="n">average_cost</span>
 <span class="kn">from</span> <span class="nn">smac.utils.merge_foreign_data</span> <span class="kn">import</span> <span class="n">merge_foreign_data_from_file</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="kn">import</span> <span class="n">TrajLogger</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="kn">import</span> <span class="n">TAEAbortException</span><span class="p">,</span> <span class="n">FirstRunCrashedException</span>
@@ -373,16 +367,14 @@
                                                             <span class="n">traj_list_aclib</span><span class="p">,</span> <span class="n">traj_list_old</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">main_args_</span><span class="o">.</span><span class="n">warmstart_runhistory</span><span class="p">:</span>
-            <span class="n">aggregate_func</span> <span class="o">=</span> <span class="n">average_cost</span>
-            <span class="n">rh</span> <span class="o">=</span> <span class="n">RunHistory</span><span class="p">(</span><span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">)</span>
+            <span class="n">rh</span> <span class="o">=</span> <span class="n">RunHistory</span><span class="p">()</span>
 
             <span class="n">scen</span><span class="p">,</span> <span class="n">rh</span> <span class="o">=</span> <span class="n">merge_foreign_data_from_file</span><span class="p">(</span>
                 <span class="n">scenario</span><span class="o">=</span><span class="n">scen</span><span class="p">,</span>
                 <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>
                 <span class="n">in_scenario_fn_list</span><span class="o">=</span><span class="n">main_args_</span><span class="o">.</span><span class="n">warmstart_scenario</span><span class="p">,</span>
                 <span class="n">in_runhistory_fn_list</span><span class="o">=</span><span class="n">main_args_</span><span class="o">.</span><span class="n">warmstart_runhistory</span><span class="p">,</span>
-                <span class="n">cs</span><span class="o">=</span><span class="n">scen</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span>
-                <span class="n">aggregate_func</span><span class="o">=</span><span class="n">aggregate_func</span><span class="p">)</span>
+                <span class="n">cs</span><span class="o">=</span><span class="n">scen</span><span class="o">.</span><span class="n">cs</span><span class="p">,)</span>
 
         <span class="k">if</span> <span class="n">main_args_</span><span class="o">.</span><span class="n">warmstart_incumbent</span><span class="p">:</span>
             <span class="n">initial_configs</span> <span class="o">=</span> <span class="p">[</span><span class="n">scen</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">()]</span>
@@ -420,13 +412,6 @@
                 <span class="n">run_id</span><span class="o">=</span><span class="n">main_args_</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">main_args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;ROAR&quot;</span><span class="p">:</span>
             <span class="n">optimizer</span> <span class="o">=</span> <span class="n">ROAR</span><span class="p">(</span>
-                <span class="n">scenario</span><span class="o">=</span><span class="n">scen</span><span class="p">,</span>
-                <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">main_args_</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
-                <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>
-                <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configs</span><span class="p">,</span>
-                <span class="n">run_id</span><span class="o">=</span><span class="n">main_args_</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">main_args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;EPILS&quot;</span><span class="p">:</span>
-            <span class="n">optimizer</span> <span class="o">=</span> <span class="n">EPILS</span><span class="p">(</span>
                 <span class="n">scenario</span><span class="o">=</span><span class="n">scen</span><span class="p">,</span>
                 <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">main_args_</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
                 <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>
@@ -473,7 +458,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">args_</span><span class="o">.</span><span class="n">restore_state</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;Could not find folder from which to restore.&quot;</span><span class="p">)</span>
         <span class="c1"># Load runhistory and stats</span>
-        <span class="n">rh</span> <span class="o">=</span> <span class="n">RunHistory</span><span class="p">(</span><span class="n">aggregate_func</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">rh</span> <span class="o">=</span> <span class="n">RunHistory</span><span class="p">()</span>
         <span class="n">rh</span><span class="o">.</span><span class="n">load_json</span><span class="p">(</span><span class="n">rh_path</span><span class="p">,</span> <span class="n">scen</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Restored runhistory from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">rh_path</span><span class="p">)</span>
         <span class="n">stats</span> <span class="o">=</span> <span class="n">Stats</span><span class="p">(</span><span class="n">scen</span><span class="p">)</span>

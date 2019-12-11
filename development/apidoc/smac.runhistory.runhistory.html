@@ -117,7 +117,6 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
@@ -125,7 +124,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.facade.html">smac.facade package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.experimental.html">smac.facade.experimental package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.epils_facade.html">smac.facade.experimental.epils_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.hydra_facade.html">smac.facade.experimental.hydra_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.psmac_facade.html">smac.facade.experimental.psmac_facade module</a></li>
 </ul>
@@ -157,9 +155,7 @@
 <li class="toctree-l2"><a class="reference internal" href="smac.optimizer.html">smac.optimizer package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
@@ -438,7 +434,7 @@ implement default like this:</p>
 
 <dl class="class">
 <dt id="smac.runhistory.runhistory.RunHistory">
-<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory.</code><code class="sig-name descname">RunHistory</code><span class="sig-paren">(</span><em class="sig-param">aggregate_func: Callable</em>, <em class="sig-param">overwrite_existing_runs: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory.</code><code class="sig-name descname">RunHistory</code><span class="sig-paren">(</span><em class="sig-param">overwrite_existing_runs: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Container for target algorithm run information.</p>
 <p><strong>Note:</strong> Guaranteed to be picklable.</p>
@@ -498,11 +494,6 @@ implement default like this:</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="smac.runhistory.runhistory.RunHistory.aggregate_func">
-<code class="sig-name descname">aggregate_func</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.aggregate_func" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
 <dt id="smac.runhistory.runhistory.RunHistory.overwrite_existing_runs">
 <code class="sig-name descname">overwrite_existing_runs</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.overwrite_existing_runs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -510,12 +501,9 @@ implement default like this:</p>
 <p>Constructor</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>aggregate_func</strong> (<em>callable</em>) – function to aggregate perf across instances</p></li>
-<li><p><strong>overwrite_existing_runs</strong> (<em>bool</em>) – allows to overwrites old results if pairs of
+<dd class="field-odd"><p><strong>overwrite_existing_runs</strong> (<em>bool</em>) – allows to overwrites old results if pairs of
 algorithm-instance-seed were measured
-multiple times</p></li>
-</ul>
+multiple times</p>
 </dd>
 </dl>
 <dl class="method">
@@ -538,6 +526,28 @@ it will update data if the same key values are used
 information from TA or fields such as start time and host_id)</p></li>
 <li><p><strong>origin</strong> (<a class="reference internal" href="#smac.runhistory.runhistory.DataOrigin" title="smac.runhistory.runhistory.DataOrigin"><em>DataOrigin</em></a>) – Defines how data will be used.</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory.RunHistory.average_cost">
+<code class="sig-name descname">average_cost</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">instance_seed_budget_keys: Optional[smac.runhistory.runhistory.InstSeedBudgetKey] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.average_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.average_cost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the average cost of a configuration.</p>
+<p>This is the mean of costs of all instance-seed pairs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – Configuration to calculate objective for</p></li>
+<li><p><strong>instance_seed_budget_keys</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – List of tuples of instance-seeds-budget keys. If None, the run_history is
+queried for all runs of the given configuration.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>Cost</strong> – Average cost</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -699,6 +709,28 @@ moving average;</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="smac.runhistory.runhistory.RunHistory.sum_cost">
+<code class="sig-name descname">sum_cost</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">instance_seed_budget_keys: Optional[smac.runhistory.runhistory.InstSeedBudgetKey] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.sum_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.sum_cost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the sum of costs of a configuration.</p>
+<p>This is the sum of costs of all instance-seed pairs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – Configuration to calculate objective for</p></li>
+<li><p><strong>instance_seed_budget_keys</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – List of tuples of instance-seeds-budget keys. If None, the run_history is
+queried for all runs of the given configuration.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>sum_cost</strong> – Sum of costs of config</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.update">
 <code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">origin: smac.runhistory.runhistory.DataOrigin = &lt;DataOrigin.EXTERNAL_SAME_INSTANCES: 2&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the current runhistory by adding new runs from a RunHistory.</p>
@@ -718,8 +750,7 @@ and be available <code class="xref py py-meth docutils literal notranslate"><spa
 <dt id="smac.runhistory.runhistory.RunHistory.update_cost">
 <code class="sig-name descname">update_cost</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.update_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store the performance of a configuration across the instances in
-self.cost_per_config and also updates self.runs_per_config;
-uses self.aggregate_func</p>
+self.cost_per_config and also updates self.runs_per_config;</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – configuration to update cost based on all runs in runhistory</p>
