@@ -2,7 +2,6 @@ import typing
 
 import numpy as np
 
-from sklearn.base import BaseEstimator
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.exceptions import NotFittedError
@@ -54,8 +53,8 @@ class AbstractEPM(object):
                  types: np.ndarray,
                  bounds: np.ndarray,
                  seed: int,
-                 instance_features: np.ndarray = None,
-                 pca_components: float = None,
+                 instance_features: typing.Optional[np.ndarray] = None,
+                 pca_components: typing.Optional[int] = 7,
                  ) -> None:
         """Constructor
 
@@ -133,7 +132,7 @@ class AbstractEPM(object):
         self.n_params = X.shape[1] - self.n_feats
 
         # reduce dimensionality of features of larger than PCA_DIM
-        if self.pca and self.n_feats > self.pca.n_components:
+        if self.pca_components and self.n_feats > self.pca.n_components:
             X_feats = X[:, -self.n_feats:]
             # scale features
             X_feats = self.scaler.fit_transform(X_feats)
@@ -190,7 +189,7 @@ class AbstractEPM(object):
         if X.shape[1] != len(self._initial_types):
             raise ValueError('Rows in X should have %d entries but have %d!' % (len(self._initial_types), X.shape[1]))
 
-        if self.pca:
+        if self.pca_components:
             try:
                 X_feats = X[:, -self.n_feats:]
                 X_feats = self.scaler.transform(X_feats)

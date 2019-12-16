@@ -31,8 +31,8 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
         types: np.ndarray,
         seed: int,
         rf_kwargs: Optional[Dict[str, Any]] = None,
-        instance_features: np.ndarray = None,
-        pca_components: float = None,
+        instance_features: Optional[np.ndarray] = None,
+        pca_components: Optional[int] = None,
     ) -> None:
         """Constructor
 

@@ -70,8 +70,8 @@ class GaussianProcess(BaseModel):
         kernel: Kernel,
         normalize_y: bool = True,
         n_opt_restarts: int = 10,
-        instance_features: np.ndarray = None,
-        pca_components: float = None,
+        instance_features: typing.Optional[np.ndarray] = None,
+        pca_components: typing.Optional[int] = None,
     ):
         super().__init__(
             configspace=configspace,

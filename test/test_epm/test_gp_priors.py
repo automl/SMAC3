@@ -213,5 +213,7 @@ class TestSoftTopHatPrior(unittest.TestCase):
             grad = prior.gradient(theta)
             grad_vector = prior.gradient(theta)
             self.assertEqual(grad, grad_vector)
-            error = scipy.optimize.check_grad(prior.lnprob, prior.gradient, np.array([theta]), epsilon=1e-5)
+            prob = lambda x: prior.lnprob(x[0])
+            grad = lambda x: prior.gradient(x[0])
+            error = scipy.optimize.check_grad(prob, grad, np.array([theta]), epsilon=1e-5)
             self.assertAlmostEqual(error, 0, delta=5, msg=theta)

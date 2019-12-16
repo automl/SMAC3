@@ -26,8 +26,8 @@ class BaseModel(AbstractEPM):
         bounds: np.ndarray,
         seed: int,
         kernel: Kernel,
-        instance_features: np.ndarray = None,
-        pca_components: float = None,
+        instance_features: Optional[np.ndarray] = None,
+        pca_components: Optional[int] = None,
     ):
         """
         Abstract base class for all Gaussian process models.
@@ -42,9 +42,8 @@ class BaseModel(AbstractEPM):
         )
 
         self.rng = np.random.RandomState(seed)
-        self.gp = self._get_gp()
         self.kernel = kernel
-
+        self.gp = self._get_gp()
 
     def _get_gp(self) -> GaussianProcessRegressor:
         raise NotImplementedError()

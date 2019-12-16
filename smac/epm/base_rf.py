@@ -14,14 +14,15 @@ from smac.configspace import (
 
 class BaseModel(AbstractEPM):
 
-    def __init__(self,
-         configspace: ConfigurationSpace,
-         types: np.ndarray,
-         bounds: np.ndarray,
-         seed: int,
-         instance_features: np.ndarray = None,
-         pca_components: float = None,
-     ) -> None:
+    def __init__(
+        self,
+        configspace: ConfigurationSpace,
+        types: np.ndarray,
+        bounds: np.ndarray,
+        seed: int,
+        instance_features: Optional[np.ndarray] = None,
+        pca_components: Optional[int] = None,
+    ) -> None:
         """
         Abstract base class for all random forest models.
         """
@@ -35,7 +36,7 @@ class BaseModel(AbstractEPM):
         )
 
         self.rng = np.random.RandomState(seed)
-        self.impute_values = dict()  # type: Dict[int, float]
+        self.impute_values = dict()  # type: Dict[int, Optional[float]]
 
     def _impute_inactive(self, X: np.ndarray) -> np.ndarray:
         X = X.copy()
@@ -43,7 +44,7 @@ class BaseModel(AbstractEPM):
             if idx not in self.impute_values:
                 parents = self.configspace.get_parents_of(hp.name)
                 if len(parents) == 0:
-                    self.impute_values[idx] = Optional[None]
+                    self.impute_values[idx] = None
                 else:
                     if isinstance(hp, CategoricalHyperparameter):
                         self.impute_values[idx] = len(hp.choices)

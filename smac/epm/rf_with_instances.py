@@ -54,8 +54,8 @@ class RandomForestWithInstances(BaseModel):
         max_depth: int = 2**20,
         eps_purity: float = 1e-8,
         max_num_nodes: int = 2**20,
-        instance_features: np.ndarray = None,
-        pca_components: float = None,
+        instance_features: typing.Optional[np.ndarray] = None,
+        pca_components: typing.Optional[int] = None,
     ) -> None:
         """
         Parameters
@@ -299,7 +299,7 @@ class RandomForestWithInstances(BaseModel):
 
             # marginalize over instances
             # 1. get all leaf values for each tree
-            preds_trees = [np.NaN for i in range(self.rf_opts.num_trees)]  # typing.List[float]
+            preds_trees = [[] for i in range(self.rf_opts.num_trees)]  # type: typing.List[typing.List[float]]
 
             for feat in self.instance_features:
                 x_ = np.concatenate([x, feat])

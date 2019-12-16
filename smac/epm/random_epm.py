@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Optional
 
 import numpy as np
 
@@ -21,8 +21,8 @@ class RandomEPM(AbstractEPM):
                  types: np.ndarray,
                  bounds: np.ndarray,
                  seed: int,
-                 instance_features: np.ndarray = None,
-                 pca_components: float = None,
+                 instance_features: Optional[np.ndarray] = None,
+                 pca_components: Optional[int] = None,
                  ) -> None:
         """Constructor
 

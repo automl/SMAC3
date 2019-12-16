@@ -1,6 +1,6 @@
 from inspect import signature, Signature
 import math
-from typing import Optional, Union, TYPE_CHECKING, Tuple, List, Callable, Dict, Any, cast
+from typing import Optional, Union, TYPE_CHECKING, Tuple, List, Callable, Dict, Any
 
 import numpy as np
 import sklearn.gaussian_process.kernels
@@ -9,11 +9,7 @@ import scipy.spatial.distance
 import scipy.special
 
 from smac.epm.gp_base_prior import Prior
-if TYPE_CHECKING:
-    import skopt.learning.gaussian_process.kernels as kernels
-else:
-    from lazy_import import lazy_module
-    kernels = lazy_module('skopt.learning.gaussian_process.kernels')
+import skopt.learning.gaussian_process.kernels as kernels
 
 # This file contains almost no type annotations to simplify comparing it to the original scikit-learn version!
 
@@ -39,7 +35,7 @@ class MagicMixin(kernels.Kernel):
         Y: Optional[np.ndarray] = None,
         eval_gradient: bool = False,
         active: Optional[np.ndarray] = None,
-    )  -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
+    ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
 
         if active is None and self.has_conditions:
             if self.operate_on is None:
@@ -106,7 +102,7 @@ class MagicMixin(kernels.Kernel):
         else:
             return sig_
 
-    def get_params(self, deep: bool=True) -> Dict[str, Any]:
+    def get_params(self, deep: bool = True) -> Dict[str, Any]:
         """Get parameters of this kernel.
 
         Parameters

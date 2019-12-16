@@ -37,8 +37,8 @@ class GaussianProcessMCMC(BaseModel):
         normalize_y: bool = True,
         mcmc_sampler: str = 'emcee',
         average_samples: bool = False,
-        instance_features: np.ndarray = None,
-        pca_components: float = None,
+        instance_features: typing.Optional[np.ndarray] = None,
+        pca_components: typing.Optional[int] = None,
     ):
         """
         Gaussian process model.
