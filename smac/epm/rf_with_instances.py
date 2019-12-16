@@ -42,7 +42,7 @@ class RandomForestWithInstances(BaseModel):
         self,
         configspace: ConfigurationSpace,
         types: np.ndarray,
-        bounds: typing.List[typing.Tuple[float, float]],
+        bounds: np.ndarray,
         seed: int,
         log_y: bool = False,
         num_trees: int = N_TREES,
@@ -54,8 +54,9 @@ class RandomForestWithInstances(BaseModel):
         max_depth: int = 2**20,
         eps_purity: float = 1e-8,
         max_num_nodes: int = 2**20,
-        **kwargs
-    ):
+        instance_features: np.ndarray = None,
+        pca_components: float = None,
+    ) -> None:
         """
         Parameters
         ----------
@@ -92,8 +93,20 @@ class RandomForestWithInstances(BaseModel):
             different
         max_num_nodes : int
             The maxmimum total number of nodes in a tree
+        instance_features : np.ndarray (I, K)
+            Contains the K dimensional instance features of the I different instances
+        pca_components : float
+            Number of components to keep when using PCA to reduce dimensionality of instance features. Requires to
+            set n_feats (> pca_dims).
         """
-        super().__init__(configspace, types, bounds, seed, **kwargs)
+        super().__init__(
+            configspace=configspace,
+            types=types,
+            bounds=bounds,
+            seed=seed,
+            instance_features=instance_features,
+            pca_components=pca_components,
+        )
 
         self.log_y = log_y
         self.rng = regression.default_random_engine(seed)
@@ -121,7 +134,7 @@ class RandomForestWithInstances(BaseModel):
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
-    def _train(self, X: np.ndarray, y: np.ndarray):
+    def _train(self, X: np.ndarray, y: np.ndarray) -> 'RandomForestWithInstances':
         """Trains the random forest on X and y.
 
         Parameters
@@ -149,7 +162,7 @@ class RandomForestWithInstances(BaseModel):
         self.rf.fit(data, rng=self.rng)
         return self
 
-    def _init_data_container(self, X: np.ndarray, y: np.ndarray):
+    def _init_data_container(self, X: np.ndarray, y: np.ndarray) -> regression.default_data_container:
         """Fills a pyrfr default data container, s.t. the forest knows
         categoricals and bounds for continous data
 
@@ -236,7 +249,7 @@ class RandomForestWithInstances(BaseModel):
 
         return means.reshape((-1, 1)), vars_.reshape((-1, 1))
 
-    def predict_marginalized_over_instances(self, X: np.ndarray):
+    def predict_marginalized_over_instances(self, X: np.ndarray) -> typing.Tuple[np.ndarray, np.ndarray]:
         """Predict mean and variance marginalized over all instances.
 
         Returns the predictive mean and variance marginalised over all
@@ -286,7 +299,7 @@ class RandomForestWithInstances(BaseModel):
 
             # marginalize over instances
             # 1. get all leaf values for each tree
-            preds_trees = [[] for i in range(self.rf_opts.num_trees)]
+            preds_trees = [np.NaN for i in range(self.rf_opts.num_trees)]  # typing.List[float]
 
             for feat in self.instance_features:
                 x_ = np.concatenate([x, feat])

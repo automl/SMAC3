@@ -1,3 +1,5 @@
+from typing import Dict, Optional
+
 import numpy as np
 
 from smac.epm.base_epm import AbstractEPM
@@ -6,19 +8,34 @@ from smac.configspace import (
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
     Constant,
+    ConfigurationSpace,
 )
 
 
 class BaseModel(AbstractEPM):
 
-    def __init__(self, configspace, types, bounds, seed, **kwargs):
+    def __init__(self,
+         configspace: ConfigurationSpace,
+         types: np.ndarray,
+         bounds: np.ndarray,
+         seed: int,
+         instance_features: np.ndarray = None,
+         pca_components: float = None,
+     ) -> None:
         """
         Abstract base class for all random forest models.
         """
-        super().__init__(configspace=configspace, types=types, bounds=bounds, seed=seed, **kwargs)
+        super().__init__(
+            configspace=configspace,
+            types=types,
+            bounds=bounds,
+            seed=seed,
+            instance_features=instance_features,
+            pca_components=pca_components,
+        )
 
         self.rng = np.random.RandomState(seed)
-        self.impute_values = dict()
+        self.impute_values = dict()  # type: Dict[int, float]
 
     def _impute_inactive(self, X: np.ndarray) -> np.ndarray:
         X = X.copy()
@@ -26,7 +43,7 @@ class BaseModel(AbstractEPM):
             if idx not in self.impute_values:
                 parents = self.configspace.get_parents_of(hp.name)
                 if len(parents) == 0:
-                    self.impute_values[idx] = None
+                    self.impute_values[idx] = Optional[None]
                 else:
                     if isinstance(hp, CategoricalHyperparameter):
                         self.impute_values[idx] = len(hp.choices)

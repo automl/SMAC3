@@ -424,7 +424,7 @@ class LognormalPrior(Prior):
 
 
 class SoftTopHatPrior(Prior):
-    def __init__(self, lower_bound, upper_bound, exponent, rng: np.random.RandomState):
+    def __init__(self, lower_bound: float, upper_bound: float, exponent: float, rng: np.random.RandomState) -> None:
         super().__init__(rng)
 
         with warnings.catch_warnings():
@@ -453,7 +453,7 @@ class SoftTopHatPrior(Prior):
     def lnprob(self, theta: float) -> float:
         # We need to use lnprob here instead of _lnprob to have the squared function work in the logarithmic space,
         # too.
-        if np.ndim(theta) == 0 or (np.ndim(theta) == 1 and len(theta) == 1):
+        if np.ndim(theta) == 0:
             if theta < self._log_lower_bound:
                 return - ((theta - self._log_lower_bound) ** self.exponent)
             elif theta > self._log_upper_bound:
@@ -480,7 +480,7 @@ class SoftTopHatPrior(Prior):
         return np.exp(self.rng.uniform(self._log_lower_bound, self._log_upper_bound, size=(n_samples, )))
 
     def gradient(self, theta: float) -> float:
-        if np.ndim(theta) == 0 or (np.ndim(theta) == 1 and len(theta) == 1):
+        if np.ndim(theta) == 0:
             if theta < self._log_lower_bound:
                 return - self.exponent * (theta - self._log_lower_bound)
             elif theta > self._log_upper_bound:
@@ -490,7 +490,7 @@ class SoftTopHatPrior(Prior):
         else:
             raise NotImplementedError()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return 'SoftTopHatPrior(lower_bound=%f, upper_bound=%f)' % (self.lower_bound, self.upper_bound)
 
 

@@ -2,6 +2,7 @@ import typing
 
 import numpy as np
 
+from sklearn.base import BaseEstimator
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.exceptions import NotFittedError
@@ -51,11 +52,11 @@ class AbstractEPM(object):
     def __init__(self,
                  configspace: ConfigurationSpace,
                  types: np.ndarray,
-                 bounds: typing.List[typing.Tuple[float, float]],
+                 bounds: np.ndarray,
                  seed: int,
                  instance_features: np.ndarray = None,
                  pca_components: float = None,
-                 ):
+                 ) -> None:
         """Constructor
 
         Parameters
@@ -68,7 +69,7 @@ class AbstractEPM(object):
             have 2 dimension where the first dimension consists of 3 different
             categorical choices and the second dimension is continuous than we
             have to pass np.array([3, 0]). Note that we count starting from 0.
-        bounds : list
+        bounds : np.ndarray
             bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
         seed : int
             The seed that is passed to the model library.
@@ -92,11 +93,8 @@ class AbstractEPM(object):
 
         self.n_params = None  # will be updated on train()
 
-        self.pca = None
-        self.scaler = None
-        if self.pca_components and self.n_feats > self.pca_components:
-            self.pca = PCA(n_components=self.pca_components)
-            self.scaler = MinMaxScaler()
+        self.pca = PCA(n_components=self.pca_components)
+        self.scaler = MinMaxScaler()
 
         # Never use a lower variance than this
         self.var_threshold = VERY_SMALL_NUMBER
@@ -135,7 +133,7 @@ class AbstractEPM(object):
         self.n_params = X.shape[1] - self.n_feats
 
         # reduce dimensionality of features of larger than PCA_DIM
-        if self.pca and X.shape[0] > self.pca.n_components:
+        if self.pca and self.n_feats > self.pca.n_components:
             X_feats = X[:, -self.n_feats:]
             # scale features
             X_feats = self.scaler.fit_transform(X_feats)

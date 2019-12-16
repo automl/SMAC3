@@ -1,5 +1,8 @@
+from typing import Tuple
+
 import numpy as np
 
+from smac.configspace import ConfigurationSpace
 from smac.epm.base_epm import AbstractEPM
 
 __author__ = "Katharina Eggensperger"
@@ -13,12 +16,50 @@ __version__ = "0.0.1"
 class RandomEPM(AbstractEPM):
     """EPM which returns random values on a call to ``fit``."""
 
-    def __init__(self, **kwargs):
+    def __init__(self,
+                 configspace: ConfigurationSpace,
+                 types: np.ndarray,
+                 bounds: np.ndarray,
+                 seed: int,
+                 instance_features: np.ndarray = None,
+                 pca_components: float = None,
+                 ) -> None:
+        """Constructor
 
-        super().__init__(**kwargs)
+        Parameters
+        ----------
+        configspace : ConfigurationSpace
+            Configuration space to tune for.
+        types : np.ndarray (D)
+            Specifies the number of categorical values of an input dimension where
+            the i-th entry corresponds to the i-th input dimension. Let's say we
+            have 2 dimension where the first dimension consists of 3 different
+            categorical choices and the second dimension is continuous than we
+            have to pass np.array([3, 0]). Note that we count starting from 0.
+        bounds : np.ndarray
+            bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
+        seed : int
+            The seed that is passed to the model library.
+        instance_features : np.ndarray (I, K)
+            Contains the K dimensional instance features
+            of the I different instances
+        pca_components : float
+            Number of components to keep when using PCA to reduce
+            dimensionality of instance features. Requires to
+            set n_feats (> pca_dims).
+        """
+
+        super().__init__(
+            configspace=configspace,
+            types=types,
+            bounds=bounds,
+            seed=seed,
+            instance_features=instance_features,
+            pca_components=pca_components,
+        )
         self.rng = np.random.RandomState(self.seed)
 
-    def _train(self, X: np.ndarray, Y: np.ndarray, **kwargs):
+    def _train(self, X: np.ndarray, Y: np.ndarray) -> 'RandomEPM':
         """
         Pseudo training on X and Y.
 
@@ -37,8 +78,9 @@ class RandomEPM(AbstractEPM):
             raise NotImplementedError("Y has to be of type np.ndarray")
 
         self.logger.debug("(Pseudo) Fit model to data")
+        return self
 
-    def _predict(self, X: np.ndarray):
+    def _predict(self, X: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """
         Predict means and variances for given X.
 
