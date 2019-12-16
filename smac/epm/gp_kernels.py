@@ -1,6 +1,6 @@
 from inspect import signature, Signature
 import math
-from typing import Optional, Union, TYPE_CHECKING, Tuple, List, Callable, Dict, Any
+from typing import Optional, Union, Tuple, List, Callable, Dict, Any
 
 import numpy as np
 import sklearn.gaussian_process.kernels
