@@ -72,11 +72,11 @@ class ROAR(SMAC4AC):
             Will use :class:`smac.optimizer.ei_optimization.RandomSearch` if not set. Can be used
             to perform random search over a fixed set of configurations.
         acquisition_function_optimizer_kwargs: Optional[dict]
-            Arguments passed to constructor of '~acquisition_function_optimizer'
+            Arguments passed to constructor of `~acquisition_function_optimizer`
         initial_design : InitialDesign
             initial sampling design
         initial_design_kwargs: Optional[dict]
-            arguments passed to constructor of `~initial_design'
+            arguments passed to constructor of `~initial_design`
         initial_configurations: typing.List[Configuration]
             list of initial configurations for initial design --
             cannot be used together with initial_design
