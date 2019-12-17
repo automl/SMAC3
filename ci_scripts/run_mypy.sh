@@ -10,4 +10,4 @@ MYPYOPS="$MYPYOPS --ignore-missing-imports --follow-imports skip"
 #MYPYOPTS="$MYPYOPS --disallow-any-explicit"
 #MYPYOPTS="$MYPYOPS --disallow-any-generics"
 MYPYOPTS="$MYPYOPS --disallow-untyped-defs"
-mypy $MYPYOPTS smac/epm
+mypy $MYPYOPTS --show-error-codes smac/epm

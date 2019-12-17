@@ -25,7 +25,7 @@ def get_conditional_hyperparameters(X: np.ndarray, Y: Optional[np.ndarray]) -> n
     return active
 
 
-class MagicMixin(kernels.Kernel):
+class MagicMixin:
 
     prior = None  # type: Optional[Prior]
 
@@ -37,7 +37,7 @@ class MagicMixin(kernels.Kernel):
         active: Optional[np.ndarray] = None,
     ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
 
-        if active is None and self.has_conditions:
+        if active is None and self.has_conditions:  # type: ignore[attr-defined] # noqa F821
             if self.operate_on is None:
                 active = get_conditional_hyperparameters(X, Y)
             else:
@@ -47,10 +47,10 @@ class MagicMixin(kernels.Kernel):
                     active = get_conditional_hyperparameters(X[:, self.operate_on], Y[:, self.operate_on])
 
         if self.operate_on is None:
-            rval = self._call(X, Y, eval_gradient, active)
+            rval = self._call(X, Y, eval_gradient, active)  # type: ignore[attr-defined] # noqa F821
         else:
             if Y is None:
-                rval = self._call(
+                rval = self._call(  # type: ignore[attr-defined] # noqa F821
                     X=X[:, self.operate_on].reshape([-1, self.len_active]),
                     Y=None,
                     eval_gradient=eval_gradient,
@@ -58,7 +58,7 @@ class MagicMixin(kernels.Kernel):
                 )
                 X = X[:, self.operate_on].reshape((-1, self.len_active))
             else:
-                rval = self._call(
+                rval = self._call(  # type: ignore[attr-defined] # noqa F821
                     X=X[:, self.operate_on].reshape([-1, self.len_active]),
                     Y=Y[:, self.operate_on].reshape([-1, self.len_active]),
                     eval_gradient=eval_gradient,
@@ -121,7 +121,7 @@ class MagicMixin(kernels.Kernel):
         try:
             args = self._args_cache
         except AttributeError:
-            tmp = super().get_params(deep)
+            tmp = super().get_params(deep)  # type: ignore[misc] # noqa F821
             args = list(tmp.keys())
             # Sum and Product do not clone the 'has_conditions' attribute by default. Instead of changing their
             # get_params() method, we simply add the attribute here!
@@ -141,7 +141,7 @@ class MagicMixin(kernels.Kernel):
         except AttributeError:
             pass
 
-        r = super().hyperparameters
+        r = super().hyperparameters  # type: ignore[misc] # noqa F821
         self._hyperparameters_cache = r  # type: List[kernels.Hyperparameter]
 
         return r
@@ -155,7 +155,8 @@ class MagicMixin(kernels.Kernel):
         except AttributeError:
             pass
 
-        self._n_dims_cache = super().n_dims  # type: int
+        self._n_dims_cache = -1  # type: int
+        self._n_dims_cache = super().n_dims  # type: ignore[misc] # noqa F821
         return self._n_dims_cache
 
     def clone_with_theta(self, theta: np.ndarray) -> kernels.Kernel:
