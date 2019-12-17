@@ -1,7 +1,6 @@
 from contextlib import suppress
 import shutil
 import unittest
-from nose.plugins.attrib import attr
 
 import numpy as np
 
@@ -31,7 +30,6 @@ class TestROARFacade(unittest.TestCase):
             if output_dir:
                 shutil.rmtree(output_dir, ignore_errors=True)
 
-    @attr('slow')
     def test_check_deterministic_rosenbrock(self):
         def rosenbrock_2d(x):
             x1 = x['x1']

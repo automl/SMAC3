@@ -11,7 +11,6 @@ import numpy as np
 from scipy.spatial.distance import euclidean
 
 from smac.configspace import pcs
-from smac.optimizer.objective import average_cost
 from smac.optimizer.acquisition import EI
 from smac.optimizer.ei_optimization import LocalSearch, RandomSearch
 from smac.runhistory.runhistory import RunHistory
@@ -177,7 +176,7 @@ class TestLocalSearch(unittest.TestCase):
             max_steps=np.inf,
         )
 
-        runhistory = RunHistory(aggregate_func=average_cost)
+        runhistory = RunHistory()
         self.cs.seed(1)
         random_configs = self.cs.sample_configuration(size=100)
         costs = [rosenbrock_4d(random_config) for random_config in random_configs]

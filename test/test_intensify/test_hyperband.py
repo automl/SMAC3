@@ -1,5 +1,4 @@
 import unittest
-from nose.plugins.attrib import attr
 
 import logging
 import numpy as np
@@ -12,7 +11,6 @@ from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.intensification.hyperband import Hyperband
 from smac.intensification.successive_halving import SuccessiveHalving
 from smac.runhistory.runhistory import RunHistory
-from smac.optimizer.objective import average_cost
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
@@ -34,7 +32,7 @@ class TestHyperband(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.rh = RunHistory(aggregate_func=average_cost)
+        self.rh = RunHistory()
         self.cs = get_config_space()
         self.config1 = Configuration(self.cs,
                                      values={'a': 0, 'b': 100})
@@ -86,7 +84,6 @@ class TestHyperband(unittest.TestCase):
         self.assertEqual(intensifier.sh_intensifier.initial_budget, 0.125)
         self.assertEqual(intensifier.sh_intensifier.n_configs_in_stage, [8.0, 4.0, 2.0, 1.0])
 
-    @attr('slow')
     def test_eval_challenger(self):
         """
             since hyperband uses eval_challenger and get_next_challenger of the internal successive halving,
@@ -129,8 +126,7 @@ class TestHyperband(unittest.TestCase):
         # evaluation should change the incumbent to config2
         inc, inc_value = intensifier.eval_challenger(challenger=self.config2,
                                                      incumbent=self.config1,
-                                                     run_history=self.rh,
-                                                     aggregate_func=average_cost)
+                                                     run_history=self.rh)
 
         self.assertEqual(inc, self.config2)
         self.assertEqual(intensifier.s, 0)

@@ -5,7 +5,6 @@ from collections import OrderedDict
 
 import numpy as np
 
-from smac.optimizer.objective import sum_cost
 from smac.optimizer.epm_configuration_chooser import EPMChooser
 
 from smac.stats.stats import Stats
@@ -118,7 +117,6 @@ class AbstractRacer(object):
                         challenger: Configuration,
                         incumbent: typing.Optional[Configuration],
                         run_history: RunHistory,
-                        aggregate_func: typing.Callable,
                         time_bound: float = float(MAXINT),
                         log_traj: bool = True) -> typing.Tuple[Configuration, float]:
         """
@@ -133,8 +131,6 @@ class AbstractRacer(object):
             best configuration so far, None in 1st run
         run_history : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
-        aggregate_func: typing.Callable
-            aggregate error across instances
         time_bound : float, optional (default=2 ** 31 - 1)
             time in [sec] available to perform intensify
         log_traj : bool
@@ -273,9 +269,10 @@ class AbstractRacer(object):
         # should be subset of runs of incumbent (not checked for efficiency
         # reasons)
         chall_inst_seeds = run_history.get_runs_for_config(challenger)
-        chal_sum_cost = sum_cost(config=challenger,
-                                 instance_seed_budget_keys=chall_inst_seeds,
-                                 run_history=run_history)
+        chal_sum_cost = run_history.sum_cost(
+            config=challenger,
+            instance_seed_budget_keys=chall_inst_seeds,
+        )
         cutoff = min(curr_cutoff,
                      inc_sum_cost * self.adaptive_capping_slackfactor - chal_sum_cost
                      )
@@ -285,7 +282,6 @@ class AbstractRacer(object):
                          incumbent: Configuration,
                          challenger: Configuration,
                          run_history: RunHistory,
-                         aggregate_func: typing.Callable,
                          log_traj: bool = True) -> typing.Optional[Configuration]:
         """
         Compare two configuration wrt the runhistory and return the one which
@@ -307,8 +303,6 @@ class AbstractRacer(object):
             Challenger configuration
         run_history: smac.runhistory.runhistory.RunHistory
             Stores all runs we ran so far
-        aggregate_func: typing.Callable
-            Aggregate performance across instances
         log_traj: bool
             Whether to log changes of incumbents in trajectory
 
@@ -322,8 +316,8 @@ class AbstractRacer(object):
         to_compare_runs = set(inc_runs).intersection(chall_runs)
 
         # performance on challenger runs
-        chal_perf = aggregate_func(challenger, run_history, to_compare_runs)
-        inc_perf = aggregate_func(incumbent, run_history, to_compare_runs)
+        chal_perf = run_history.average_cost(challenger, to_compare_runs)
+        inc_perf = run_history.average_cost(incumbent, to_compare_runs)
 
         # Line 15
         if chal_perf > inc_perf and len(chall_runs) >= self.minR:

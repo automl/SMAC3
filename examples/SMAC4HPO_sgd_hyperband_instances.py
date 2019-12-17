@@ -1,4 +1,8 @@
 """
+==============================================================
+Optimizing average cross-validation performance with HyperBand
+==============================================================
+
 An example for the usage of Hyperband intensifier in SMAC with multiple instances.
 We optimize a SGD classifier on the digits dataset as multiple binary classification problems
 using "Hyperband" intensification. We split the digits dataset (10 classes) into 45 binary datasets.

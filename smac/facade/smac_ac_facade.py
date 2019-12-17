@@ -32,7 +32,6 @@ from smac.intensification.intensification import Intensifier
 from smac.intensification.abstract_racer import AbstractRacer
 # optimizer
 from smac.optimizer.smbo import SMBO
-from smac.optimizer.objective import average_cost
 from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction, IntegratedAcquisitionFunction
 from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
     AcquisitionFunctionMaximizer
@@ -179,8 +178,6 @@ class SMAC4AC(object):
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
-        aggregate_func = average_cost
-
         self.scenario = scenario
         self.output_dir = ""
         if not restore_incumbent:
@@ -221,16 +218,17 @@ class SMAC4AC(object):
             self.scenario.transform_y = "LOG"
 
         # initialize empty runhistory
-        runhistory_def_kwargs = {'aggregate_func': aggregate_func}
+        runhistory_def_kwargs = {}
         if runhistory_kwargs is not None:
             runhistory_def_kwargs.update(runhistory_kwargs)
         if runhistory is None:
             runhistory = RunHistory(**runhistory_def_kwargs)
         elif inspect.isclass(runhistory):
             runhistory = runhistory(**runhistory_def_kwargs)
+        elif isinstance(runhistory, RunHistory):
+            pass
         else:
-            if runhistory.aggregate_func is None:
-                runhistory.aggregate_func = aggregate_func
+            raise ValueError('runhistory has to be a class or an object of RunHistory')
 
         rand_conf_chooser_kwargs = {
             'rng': rng
@@ -510,7 +508,6 @@ class SMAC4AC(object):
             'runhistory': runhistory,
             'runhistory2epm': runhistory2epm,
             'intensifier': intensifier,
-            'aggregate_func': aggregate_func,
             'num_run': run_id,
             'model': model,
             'acq_optimizer': acquisition_function_optimizer,

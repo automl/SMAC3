@@ -6,7 +6,6 @@ from enum import Enum
 
 import numpy as np
 
-from smac.optimizer.objective import sum_cost
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
 from smac.configspace import Configuration
@@ -141,7 +140,6 @@ class Intensifier(AbstractRacer):
                         challenger: Configuration,
                         incumbent: typing.Optional[Configuration],
                         run_history: RunHistory,
-                        aggregate_func: typing.Callable,
                         time_bound: float = float(MAXINT),
                         log_traj: bool = True) -> typing.Tuple[Configuration, float]:
         """Running intensification to determine the incumbent configuration.
@@ -160,8 +158,6 @@ class Intensifier(AbstractRacer):
             best configuration so far, None in 1st run
         run_history : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
-        aggregate_func: typing.Callable
-            aggregate error across instances
         time_bound : float, optional (default=2 ** 31 - 1)
             time in [sec] available to perform intensify
         log_traj: bool
@@ -209,7 +205,6 @@ class Intensifier(AbstractRacer):
                 incumbent = self._race_challenger(challenger=challenger,
                                                   incumbent=incumbent,
                                                   run_history=run_history,
-                                                  aggregate_func=aggregate_func,
                                                   log_traj=log_traj)
             else:
                 if self.always_race_against and \
@@ -219,7 +214,6 @@ class Intensifier(AbstractRacer):
                     incumbent = self._race_challenger(challenger=self.always_race_against,
                                                       incumbent=incumbent,
                                                       run_history=run_history,
-                                                      aggregate_func=aggregate_func,
                                                       log_traj=log_traj)
                 else:
                     # move on to next iteration
@@ -338,7 +332,6 @@ class Intensifier(AbstractRacer):
                          challenger: Configuration,
                          incumbent: Configuration,
                          run_history: RunHistory,
-                         aggregate_func: typing.Callable,
                          log_traj: bool = True) -> Configuration:
         """Aggressively race challenger against incumbent
 
@@ -350,8 +343,6 @@ class Intensifier(AbstractRacer):
             Best configuration so far
         run_history : smac.runhistory.runhistory.RunHistory
             Stores all runs we ran so far
-        aggregate_func: typing.Callable
-            Aggregate performance across instances
         log_traj: bool
             Whether to log changes of incumbents in trajectory
 
@@ -416,7 +407,6 @@ class Intensifier(AbstractRacer):
             new_incumbent = self._compare_configs(
                 incumbent=incumbent, challenger=challenger,
                 run_history=run_history,
-                aggregate_func=aggregate_func,
                 log_traj=log_traj)
             if new_incumbent == incumbent:
                 # move on to the next iteration
@@ -478,9 +468,10 @@ class Intensifier(AbstractRacer):
         # because of efficiency computed here
         inst_seed_pairs = list(inc_inst_seeds - set(missing_runs))
         # cost used by incumbent for going over all runs in inst_seed_pairs
-        inc_sum_cost = sum_cost(config=incumbent,
-                                instance_seed_budget_keys=inst_seed_pairs,
-                                run_history=run_history)
+        inc_sum_cost = run_history.sum_cost(
+            config=incumbent,
+            instance_seed_budget_keys=inst_seed_pairs,
+        )
 
         return to_run, inc_sum_cost
 

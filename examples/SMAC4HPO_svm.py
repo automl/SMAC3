@@ -1,4 +1,8 @@
 """
+========================================================
+Optimize the hyperparameters of a support vector machine
+========================================================
+
 An example for the usage of SMAC within Python.
 We optimize a simple SVM on the IRIS-benchmark.
 

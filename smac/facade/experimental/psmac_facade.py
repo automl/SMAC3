@@ -16,7 +16,6 @@ from smac.scenario.scenario import Scenario
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.utils.io.output_directory import create_output_directory
 from smac.runhistory.runhistory import RunHistory
-from smac.optimizer.objective import average_cost
 from smac.epm.util_funcs import get_rng
 from smac.utils.constants import MAXINT
 
@@ -132,7 +131,7 @@ class PSMAC(object):
         self.run_id, self.rng = get_rng(rng, run_id, logger=self.logger)
         self.kwargs = kwargs
         self.output_dir = None
-        self.rh = RunHistory(average_cost)
+        self.rh = RunHistory()
         self._tae = tae
         self._tae_kwargs = tae_kwargs
         if n_optimizers <= 1:
