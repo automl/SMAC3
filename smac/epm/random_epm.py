@@ -40,7 +40,7 @@ class RandomEPM(AbstractEPM):
             bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
         seed : int
             The seed that is passed to the model library.
-        instance_features : np.ndarray (I, K)
+        instance_features : np.ndarray (I, K), optional
             Contains the K dimensional instance features
             of the I different instances
         pca_components : float

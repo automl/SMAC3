@@ -86,7 +86,7 @@ class GaussianProcess(BaseModel):
         self.normalize_y = normalize_y
         self.n_opt_restarts = n_opt_restarts
 
-        self.hypers = np.empty((0, ))  # type: np.ndarray
+        self.hypers = np.empty((0, ))
         self.is_trained = False
         self._n_ll_evals = 0
 
