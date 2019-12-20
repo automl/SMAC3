@@ -1,5 +1,7 @@
 import logging
+import typing
 import warnings
+
 import numpy as np
 from scipy.stats import truncnorm
 
@@ -70,7 +72,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         self.var_threshold = 10 ** -2
 
     def impute(self, censored_X: np.ndarray, censored_y: np.ndarray,
-               uncensored_X: np.ndarray, uncensored_y: np.ndarray):
+               uncensored_X: np.ndarray, uncensored_y: np.ndarray) -> typing.Optional[np.ndarray]:
         """
         Imputes censored runs and returns new y values.
 
@@ -106,7 +108,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         imputed_y = None  # define this, if imputation fails
 
         # Define variables
-        y = None
+        y = np.empty((0, ))  # This only defines the type, the actual value will not be used later on.
 
         it = 1
         change = 0

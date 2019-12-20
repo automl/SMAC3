@@ -1,21 +1,52 @@
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Tuple, Union, TYPE_CHECKING
 
+from smac.configspace import ConfigurationSpace
 import numpy as np
 import sklearn.gaussian_process.kernels
 
 from smac.epm.base_epm import AbstractEPM
 import smac.epm.gp_base_prior
 
+if TYPE_CHECKING:
+    from skopt.learning.gaussian_process.kernels import Kernel
+    from skopt.learning.gaussian_process import GaussianProcessRegressor
+else:
+    from lazy_import import lazy_callable
+    Kernel = lazy_callable('skopt.learning.gaussian_process.kernels.Kernel')
+    GaussianProcessRegressor = lazy_callable(
+        'skopt.learning.gaussian_process.GaussianProcessRegressor')
+
 
 class BaseModel(AbstractEPM):
 
-    def __init__(self, configspace, types, bounds, seed, **kwargs):
+    def __init__(
+        self,
+        configspace: ConfigurationSpace,
+        types: List[int],
+        bounds: List[Tuple[float, float]],
+        seed: int,
+        kernel: Kernel,
+        instance_features: Optional[np.ndarray] = None,
+        pca_components: Optional[int] = None,
+    ):
         """
         Abstract base class for all Gaussian process models.
         """
-        super().__init__(configspace=configspace, types=types, bounds=bounds, seed=seed, **kwargs)
+        super().__init__(
+            configspace=configspace,
+            types=types,
+            bounds=bounds,
+            seed=seed,
+            instance_features=instance_features,
+            pca_components=pca_components,
+        )
 
         self.rng = np.random.RandomState(seed)
+        self.kernel = kernel
+        self.gp = self._get_gp()
+
+    def _get_gp(self) -> GaussianProcessRegressor:
+        raise NotImplementedError()
 
     def _normalize_y(self, y: np.ndarray) -> np.ndarray:
         """Normalize data to zero mean unit standard deviation.
@@ -102,7 +133,7 @@ class BaseModel(AbstractEPM):
                     all_priors.append(priors_for_hp)
         return all_priors
 
-    def _set_has_conditions(self):
+    def _set_has_conditions(self) -> None:
         has_conditions = len(self.configspace.get_conditions()) > 0
         to_visit = []
         to_visit.append(self.kernel)

@@ -56,18 +56,19 @@ class SMAC4HPO(SMAC4AC):
         kwargs['intensifier_kwargs'] = intensifier_kwargs
         scenario.intensification_percentage = 1e-10
 
-        model_class = RandomForestWithInstances
-        kwargs['model'] = model_class
+        if kwargs.get('model') is None:
+            model_class = RandomForestWithInstances
+            kwargs['model'] = model_class
 
-        # == static RF settings
-        model_kwargs = kwargs.get('model_kwargs', dict())
-        model_kwargs['num_trees'] = model_kwargs.get('num_trees', 10)
-        model_kwargs['do_bootstrapping'] = model_kwargs.get('do_bootstrapping', True)
-        model_kwargs['ratio_features'] = model_kwargs.get('ratio_features', 1.0)
-        model_kwargs['min_samples_split'] = model_kwargs.get('min_samples_split', 2)
-        model_kwargs['min_samples_leaf'] = model_kwargs.get('min_samples_leaf', 1)
-        model_kwargs['log_y'] = model_kwargs.get('log_y', True)
-        kwargs['model_kwargs'] = model_kwargs
+            # == static RF settings
+            model_kwargs = kwargs.get('model_kwargs', dict())
+            model_kwargs['num_trees'] = model_kwargs.get('num_trees', 10)
+            model_kwargs['do_bootstrapping'] = model_kwargs.get('do_bootstrapping', True)
+            model_kwargs['ratio_features'] = model_kwargs.get('ratio_features', 1.0)
+            model_kwargs['min_samples_split'] = model_kwargs.get('min_samples_split', 2)
+            model_kwargs['min_samples_leaf'] = model_kwargs.get('min_samples_leaf', 1)
+            model_kwargs['log_y'] = model_kwargs.get('log_y', True)
+            kwargs['model_kwargs'] = model_kwargs
 
         # == Acquisition function
         kwargs['acquisition_function'] = kwargs.get('acquisition_function', LogEI)

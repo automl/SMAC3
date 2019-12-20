@@ -257,8 +257,7 @@ class TestSMACFacade(unittest.TestCase):
         )
         self.assertRaisesRegex(
             TypeError,
-            "Argument run_id accepts only arguments of type None, int or np.random.RandomState, "
-            "you provided <class 'str'>.",
+            "Argument run_id accepts only arguments of type None, int, you provided <class 'str'>.",
             get_rng,
             run_id='ABC'
         )

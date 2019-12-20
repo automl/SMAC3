@@ -27,12 +27,13 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
         self,
         target_names: List[str],
         configspace: ConfigurationSpace,
+        types: List[int],
         bounds: List[Tuple[float, float]],
-        types: np.ndarray,
         seed: int,
         rf_kwargs: Optional[Dict[str, Any]] = None,
-        **kwargs
-    ):
+        instance_features: Optional[np.ndarray] = None,
+        pca_components: Optional[int] = None,
+    ) -> None:
         """Constructor
 
         Parameters
@@ -40,17 +41,28 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
         target_names : list
             List of str, each entry is the name of one target dimension. Length
             of the list will be ``n_objectives``.
-
-        bounds : np.ndarray
-            See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
-
-        types : np.ndarray
-            See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
-
-        kwargs
-            See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
+        types : List[int]
+            Specifies the number of categorical values of an input dimension where
+            the i-th entry corresponds to the i-th input dimension. Let's say we
+            have 2 dimension where the first dimension consists of 3 different
+            categorical choices and the second dimension is continuous than we
+            have to pass [3, 0]. Note that we count starting from 0.
+        bounds : List[Tuple[float, float]]
+            bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
+        instance_features : np.ndarray (I, K)
+            Contains the K dimensional instance features of the I different instances
+        pca_components : float
+            Number of components to keep when using PCA to reduce dimensionality of instance features. Requires to
+            set n_feats (> pca_dims).
         """
-        super().__init__(configspace=configspace, bounds=bounds, types=types, seed=seed, **kwargs)
+        super().__init__(
+            configspace=configspace,
+            bounds=bounds,
+            types=types,
+            seed=seed,
+            instance_features=instance_features,
+            pca_components=pca_components,
+        )
         if rf_kwargs is None:
             rf_kwargs = {}
 
@@ -60,7 +72,7 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
         self.estimators = [RandomForestWithInstances(configspace, types, bounds, **rf_kwargs)
                            for _ in range(self.num_targets)]
 
-    def _train(self, X: np.ndarray, Y: np.ndarray, **kwargs):
+    def _train(self, X: np.ndarray, Y: np.ndarray) -> 'UncorrelatedMultiObjectiveRandomForestWithInstances':
         """Trains the random forest on X and y.
 
         Parameters
@@ -76,11 +88,11 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
         self
         """
         for i, estimator in enumerate(self.estimators):
-            estimator.train(X, Y[:, i], **kwargs)
+            estimator.train(X, Y[:, i])
 
         return self
 
-    def _predict(self, X: np.ndarray):
+    def _predict(self, X: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """Predict means and variances for given X.
 
         Parameters
@@ -103,7 +115,7 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
             var[:, i] = v.flatten()
         return mean, var
 
-    def predict_marginalized_over_instances(self, X: np.ndarray):
+    def predict_marginalized_over_instances(self, X: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """Predict mean and variance marginalized over all instances.
 
         Returns the predictive mean and variance marginalised over all
