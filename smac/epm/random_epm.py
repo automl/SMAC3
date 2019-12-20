@@ -18,7 +18,7 @@ class RandomEPM(AbstractEPM):
 
     def __init__(self,
                  configspace: ConfigurationSpace,
-                 types: Tuple[List[int]],
+                 types: List[int],
                  bounds: List[Tuple[float, float]],
                  seed: int,
                  instance_features: Optional[np.ndarray] = None,

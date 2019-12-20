@@ -41,7 +41,7 @@ class RandomForestWithInstances(BaseModel):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: typing.Tuple[typing.List[int]],
+        types: typing.List[int],
         bounds: typing.List[typing.Tuple[float, float]],
         seed: int,
         log_y: bool = False,

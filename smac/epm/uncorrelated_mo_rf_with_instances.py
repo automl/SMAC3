@@ -27,7 +27,7 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
         self,
         target_names: List[str],
         configspace: ConfigurationSpace,
-        types: Tuple[List[int]],
+        types: List[int],
         bounds: List[Tuple[float, float]],
         seed: int,
         rf_kwargs: Optional[Dict[str, Any]] = None,

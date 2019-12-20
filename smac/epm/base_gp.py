@@ -22,7 +22,7 @@ class BaseModel(AbstractEPM):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: Tuple[List[int]],
+        types: List[int],
         bounds: List[Tuple[float, float]],
         seed: int,
         kernel: Kernel,
