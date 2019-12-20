@@ -191,7 +191,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.constants.html">smac.utils.constants module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.dependencies.html">smac.utils.dependencies module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.logging.html">smac.utils.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
@@ -278,7 +277,8 @@
            <div itemprop="articleBody">
             
   <h1>Source code for smac.epm.base_epm</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">typing</span>
+<span></span><span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -330,25 +330,25 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">configspace</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
-                 <span class="n">types</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">types</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
                  <span class="n">bounds</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
                  <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                 <span class="n">instance_features</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">pca_components</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="p">):</span>
+                 <span class="n">instance_features</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">pca_components</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+                 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Constructor</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        configspace : ConfigurationSpace</span>
 <span class="sd">            Configuration space to tune for.</span>
-<span class="sd">        types : np.ndarray (D)</span>
+<span class="sd">        types : List[int]</span>
 <span class="sd">            Specifies the number of categorical values of an input dimension where</span>
 <span class="sd">            the i-th entry corresponds to the i-th input dimension. Let&#39;s say we</span>
 <span class="sd">            have 2 dimension where the first dimension consists of 3 different</span>
 <span class="sd">            categorical choices and the second dimension is continuous than we</span>
-<span class="sd">            have to pass np.array([3, 0]). Note that we count starting from 0.</span>
-<span class="sd">        bounds : list</span>
+<span class="sd">            have to pass [3, 0]. Note that we count starting from 0.</span>
+<span class="sd">        bounds : List[Tuple[float, float]]</span>
 <span class="sd">            bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims</span>
 <span class="sd">        seed : int</span>
 <span class="sd">            The seed that is passed to the model library.</span>
@@ -372,11 +372,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">n_params</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># will be updated on train()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">pca</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">scaler</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pca_components</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_feats</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">pca_components</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pca_components</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">scaler</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pca_components</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scaler</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">()</span>
 
         <span class="c1"># Never use a lower variance than this</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">var_threshold</span> <span class="o">=</span> <span class="n">VERY_SMALL_NUMBER</span>
@@ -384,7 +381,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="n">bounds</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">types</span> <span class="o">=</span> <span class="n">types</span>
         <span class="c1"># Initial types array which is used to reset the type array at every call to train()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_initial_types</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initial_types</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">types</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">PickableLoggerAdapter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -403,7 +400,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        self : AbstractEPM</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">types</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_types</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">types</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_types</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Expected 2d array, got </span><span class="si">%d</span><span class="s1">d array!&#39;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
@@ -415,7 +412,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">n_params</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_feats</span>
 
         <span class="c1"># reduce dimensionality of features of larger than PCA_DIM</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pca</span> <span class="ow">and</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">pca</span><span class="o">.</span><span class="n">n_components</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pca_components</span> <span class="ow">and</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">pca</span><span class="o">.</span><span class="n">n_components</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_feats</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pca_components</span><span class="p">:</span>
             <span class="n">X_feats</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">n_feats</span><span class="p">:]</span>
             <span class="c1"># scale features</span>
             <span class="n">X_feats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_feats</span><span class="p">)</span>
@@ -472,7 +469,7 @@
         <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_types</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Rows in X should have </span><span class="si">%d</span><span class="s1"> entries but have </span><span class="si">%d</span><span class="s1">!&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_initial_types</span><span class="p">),</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pca</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pca_components</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">X_feats</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">n_feats</span><span class="p">:]</span>
                 <span class="n">X_feats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_feats</span><span class="p">)</span>
@@ -532,10 +529,9 @@
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Expected 2d array, got </span><span class="si">%d</span><span class="s1">d array!&#39;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Rows in X should have </span><span class="si">%d</span><span class="s1"> entries but have </span><span class="si">%d</span><span class="s1">!&#39;</span> <span class="o">%</span>
-                             <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                              <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                             <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">),</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_features</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> \
                 <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance_features</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>

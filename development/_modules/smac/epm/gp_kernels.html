@@ -191,7 +191,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.constants.html">smac.utils.constants module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.dependencies.html">smac.utils.dependencies module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.logging.html">smac.utils.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
@@ -278,9 +277,9 @@
            <div itemprop="articleBody">
             
   <h1>Source code for smac.epm.gp_kernels</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">signature</span>
+<span></span><span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">signature</span><span class="p">,</span> <span class="n">Signature</span>
 <span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">sklearn.gaussian_process.kernels</span>
@@ -288,8 +287,8 @@
 <span class="kn">import</span> <span class="nn">scipy.spatial.distance</span>
 <span class="kn">import</span> <span class="nn">scipy.special</span>
 
-<span class="kn">from</span> <span class="nn">lazy_import</span> <span class="kn">import</span> <span class="n">lazy_module</span>
-<span class="n">kernels</span> <span class="o">=</span> <span class="n">lazy_module</span><span class="p">(</span><span class="s1">&#39;skopt.learning.gaussian_process.kernels&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">smac.epm.gp_base_prior</span> <span class="kn">import</span> <span class="n">Prior</span>
+<span class="kn">import</span> <span class="nn">skopt.learning.gaussian_process.kernels</span> <span class="k">as</span> <span class="nn">kernels</span>
 
 <span class="c1"># This file contains almost no type annotations to simplify comparing it to the original scikit-learn version!</span>
 
@@ -307,11 +306,23 @@
 
 <div class="viewcode-block" id="MagicMixin"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.MagicMixin">[docs]</a><span class="k">class</span> <span class="nc">MagicMixin</span><span class="p">:</span>
 
-    <span class="n">prior</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># This is a mixin for a kernel to override functions of the kernel. Because it overrides functions of the kernel,</span>
+    <span class="c1"># it needs to be placed first in the inheritance hierarchy. For this reason it is not possible to subclass the</span>
+    <span class="c1"># Mixin from the kernel class because this will prevent it from being instantiatable. Therefore, mypy won&#39;t know</span>
+    <span class="c1"># about anything related to the superclass and I had to add a few type:ignore statements when accessing a member</span>
+    <span class="c1"># that is declared in the superclass such as self.has_conditions, self._call, super().get_params etc.</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eval_gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">prior</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: Optional[Prior]</span>
 
-        <span class="k">if</span> <span class="n">active</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_conditions</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">Y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">eval_gradient</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">active</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+
+        <span class="k">if</span> <span class="n">active</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_conditions</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">operate_on</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">active</span> <span class="o">=</span> <span class="n">get_conditional_hyperparameters</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -321,10 +332,10 @@
                     <span class="n">active</span> <span class="o">=</span> <span class="n">get_conditional_hyperparameters</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">operate_on</span><span class="p">],</span> <span class="n">Y</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">operate_on</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">operate_on</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">rval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">eval_gradient</span><span class="p">,</span> <span class="n">active</span><span class="p">)</span>
+            <span class="n">rval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">eval_gradient</span><span class="p">,</span> <span class="n">active</span><span class="p">)</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">Y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">rval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span>
+                <span class="n">rval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
                     <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">operate_on</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_active</span><span class="p">]),</span>
                     <span class="n">Y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">eval_gradient</span><span class="o">=</span><span class="n">eval_gradient</span><span class="p">,</span>
@@ -332,7 +343,7 @@
                 <span class="p">)</span>
                 <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">operate_on</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_active</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">rval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span>
+                <span class="n">rval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
                     <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">operate_on</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_active</span><span class="p">]),</span>
                     <span class="n">Y</span><span class="o">=</span><span class="n">Y</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">operate_on</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_active</span><span class="p">]),</span>
                     <span class="n">eval_gradient</span><span class="o">=</span><span class="n">eval_gradient</span><span class="p">,</span>
@@ -343,38 +354,40 @@
 
         <span class="k">return</span> <span class="n">rval</span>
 
-    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Sum</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">Sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ConstantKernel</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">Sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Sum</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">Sum</span><span class="p">(</span><span class="n">ConstantKernel</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Sum</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Product</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">Product</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ConstantKernel</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">Product</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Product</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">Product</span><span class="p">(</span><span class="n">ConstantKernel</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Product</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Signature</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">sig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_signature_cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+            <span class="n">sig_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_signature_cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>  <span class="c1"># type: Optional[Signature]</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_signature_cache</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-            <span class="n">sig</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">sig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_signature_cache</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Dict[Callable, Signature]</span>
+            <span class="n">sig_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">sig_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">sig</span> <span class="o">=</span> <span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_signature_cache</span><span class="p">[</span><span class="n">func</span><span class="p">]</span> <span class="o">=</span> <span class="n">sig</span>
-        <span class="k">return</span> <span class="n">sig</span>
+            <span class="k">return</span> <span class="n">sig</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">sig_</span>
 
-<div class="viewcode-block" id="MagicMixin.get_params"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.MagicMixin.get_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="MagicMixin.get_params"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.MagicMixin.get_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deep</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Get parameters of this kernel.</span>
 
 <span class="sd">        Parameters</span>
@@ -393,33 +406,35 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args_cache</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-            <span class="n">tmp</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">deep</span><span class="p">)</span>
+            <span class="c1"># ignore[misc] looks like it catches all kinds of errors, but misc is actually a category from mypy:</span>
+            <span class="c1"># https://mypy.readthedocs.io/en/latest/error_code_list.html#miscellaneous-checks-misc</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">deep</span><span class="p">)</span>  <span class="c1"># type: ignore[misc] # noqa F821</span>
             <span class="n">args</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
             <span class="c1"># Sum and Product do not clone the &#39;has_conditions&#39; attribute by default. Instead of changing their</span>
             <span class="c1"># get_params() method, we simply add the attribute here!</span>
             <span class="k">if</span> <span class="s1">&#39;has_conditions&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
                 <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;has_conditions&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_args_cache</span> <span class="o">=</span> <span class="n">args</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_args_cache</span> <span class="o">=</span> <span class="n">args</span>  <span class="c1"># type: List[Union[str, Any]]</span>
 
         <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
             <span class="n">params</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">params</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">kernels</span><span class="o">.</span><span class="n">Hyperparameter</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Returns a list of all hyperparameter specifications.&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters_cache</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="k">pass</span>
 
-        <span class="n">r</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">hyperparameters</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters_cache</span> <span class="o">=</span> <span class="n">r</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">hyperparameters</span>  <span class="c1"># type: ignore[misc] # noqa F821</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters_cache</span> <span class="o">=</span> <span class="n">r</span>  <span class="c1"># type: List[kernels.Hyperparameter]</span>
 
         <span class="k">return</span> <span class="n">r</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">n_dims</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">n_dims</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Returns the number of non-fixed hyperparameters of the kernel.&quot;&quot;&quot;</span>
 
         <span class="k">try</span><span class="p">:</span>
@@ -427,10 +442,11 @@
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="k">pass</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_n_dims_cache</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">n_dims</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_dims_cache</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># type: int # I cannot use `varname: type = value` syntax because that&#39;s &gt;=Python3.6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_dims_cache</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">n_dims</span>  <span class="c1"># type: ignore[misc] # noqa F821</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_dims_cache</span>
 
-<div class="viewcode-block" id="MagicMixin.clone_with_theta"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.MagicMixin.clone_with_theta">[docs]</a>    <span class="k">def</span> <span class="nf">clone_with_theta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+<div class="viewcode-block" id="MagicMixin.clone_with_theta"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.MagicMixin.clone_with_theta">[docs]</a>    <span class="k">def</span> <span class="nf">clone_with_theta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Returns a clone of self with given hyperparameters theta.</span>
 
 <span class="sd">        Parameters</span>
@@ -441,7 +457,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">theta</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="MagicMixin.set_active_dims"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.MagicMixin.set_active_dims">[docs]</a>    <span class="k">def</span> <span class="nf">set_active_dims</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operate_on</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="MagicMixin.set_active_dims"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.MagicMixin.set_active_dims">[docs]</a>    <span class="k">def</span> <span class="nf">set_active_dims</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operate_on</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Sets dimensions this kernel should work on</span>
 
 <span class="sd">        Parameters</span>
@@ -453,8 +469,8 @@
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;argument operate_on needs to be of type np.ndarray, but is </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">operate_on</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">operate_on</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;dtype of argument operate_on needs to be np.int, but is </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">operate_on</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">operate_on</span> <span class="o">=</span> <span class="n">operate_on</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">len_active</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">operate_on</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">operate_on</span> <span class="o">=</span> <span class="n">operate_on</span>  <span class="c1"># type: Optional[np.ndarray]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len_active</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">operate_on</span><span class="p">)</span>  <span class="c1"># type: Optional[int]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">operate_on</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">len_active</span> <span class="o">=</span> <span class="kc">None</span></div></div>
@@ -462,12 +478,24 @@
 
 <div class="viewcode-block" id="Sum"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Sum">[docs]</a><span class="k">class</span> <span class="nc">Sum</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Sum</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">operate_on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">has_conditions</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">k1</span><span class="p">:</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">,</span>
+        <span class="n">k2</span><span class="p">:</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">,</span>
+        <span class="n">operate_on</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">has_conditions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Sum</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">k1</span><span class="o">=</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="o">=</span><span class="n">k2</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_active_dims</span><span class="p">(</span><span class="n">operate_on</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_conditions</span> <span class="o">=</span> <span class="n">has_conditions</span>
 
-    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eval_gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">Y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">eval_gradient</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">active</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
 
 <span class="sd">        Parameters</span>
@@ -506,12 +534,24 @@
 
 <div class="viewcode-block" id="Product"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Product">[docs]</a><span class="k">class</span> <span class="nc">Product</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Product</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">operate_on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">has_conditions</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">k1</span><span class="p">:</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">,</span>
+        <span class="n">k2</span><span class="p">:</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">,</span>
+        <span class="n">operate_on</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">has_conditions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Product</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">k1</span><span class="o">=</span><span class="n">k1</span><span class="p">,</span> <span class="n">k2</span><span class="o">=</span><span class="n">k2</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_active_dims</span><span class="p">(</span><span class="n">operate_on</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_conditions</span> <span class="o">=</span> <span class="n">has_conditions</span>
 
-    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eval_gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">Y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">eval_gradient</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">active</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
 
 <span class="sd">        Parameters</span>
@@ -552,19 +592,26 @@
 <div class="viewcode-block" id="ConstantKernel"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.ConstantKernel">[docs]</a><span class="k">class</span> <span class="nc">ConstantKernel</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">ConstantKernel</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">constant_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-            <span class="n">constant_value_bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e5</span><span class="p">),</span>
-            <span class="n">operate_on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">prior</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">has_conditions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="p">):</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">constant_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">constant_value_bounds</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e5</span><span class="p">),</span>
+        <span class="n">operate_on</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">prior</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Prior</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">has_conditions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
         <span class="nb">super</span><span class="p">(</span><span class="n">ConstantKernel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">constant_value</span><span class="o">=</span><span class="n">constant_value</span><span class="p">,</span> <span class="n">constant_value_bounds</span><span class="o">=</span><span class="n">constant_value_bounds</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_active_dims</span><span class="p">(</span><span class="n">operate_on</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_conditions</span> <span class="o">=</span> <span class="n">has_conditions</span>
 
-    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eval_gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">Y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">eval_gradient</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">active</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
 
 <span class="sd">        Parameters</span>
@@ -616,19 +663,26 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">length_scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-        <span class="n">length_scale_bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e5</span><span class="p">),</span>
-        <span class="n">nu</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
-        <span class="n">operate_on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">prior</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">has_conditions</span><span class="o">=</span><span class="kc">False</span>
-    <span class="p">):</span>
+        <span class="n">length_scale</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">length_scale_bounds</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e5</span><span class="p">),</span>
+        <span class="n">nu</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">,</span>
+        <span class="n">operate_on</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">prior</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Prior</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">has_conditions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
         <span class="nb">super</span><span class="p">(</span><span class="n">Matern</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">length_scale</span><span class="o">=</span><span class="n">length_scale</span><span class="p">,</span> <span class="n">length_scale_bounds</span><span class="o">=</span><span class="n">length_scale_bounds</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="n">nu</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_active_dims</span><span class="p">(</span><span class="n">operate_on</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_conditions</span> <span class="o">=</span> <span class="n">has_conditions</span>
 
-    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eval_gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">Y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">eval_gradient</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">active</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -724,19 +778,28 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">length_scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-        <span class="n">length_scale_bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e5</span><span class="p">),</span>
-        <span class="n">operate_on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">prior</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">has_conditions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="p">):</span>
+        <span class="n">length_scale</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">length_scale_bounds</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e5</span><span class="p">),</span>
+        <span class="n">operate_on</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">prior</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Prior</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">has_conditions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
         <span class="nb">super</span><span class="p">(</span><span class="n">RBF</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">length_scale</span><span class="o">=</span><span class="n">length_scale</span><span class="p">,</span> <span class="n">length_scale_bounds</span><span class="o">=</span><span class="n">length_scale_bounds</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_active_dims</span><span class="p">(</span><span class="n">operate_on</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_conditions</span> <span class="o">=</span> <span class="n">has_conditions</span>
 
-    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eval_gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">Y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">eval_gradient</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">active</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+
         <span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        X : array, shape (n_samples_X, n_features)</span>
@@ -749,6 +812,7 @@
 <span class="sd">            hyperparameter is determined. Only supported when Y is None.</span>
 <span class="sd">        active : np.ndarray (n_samples_X, n_features) (optional)</span>
 <span class="sd">            Boolean array specifying which hyperparameters are active.</span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        K : array, shape (n_samples_X, n_samples_Y)</span>
@@ -790,26 +854,33 @@
                 <span class="n">K_gradient</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">X</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">length_scale</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
                 <span class="n">K_gradient</span> <span class="o">*=</span> <span class="n">K</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
                 <span class="k">return</span> <span class="n">K</span><span class="p">,</span> <span class="n">K_gradient</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">K</span></div>
+
+        <span class="k">return</span> <span class="n">K</span></div>
 
 
 <div class="viewcode-block" id="WhiteKernel"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.WhiteKernel">[docs]</a><span class="k">class</span> <span class="nc">WhiteKernel</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">WhiteKernel</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">noise_level</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-        <span class="n">noise_level_bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e5</span><span class="p">),</span>
-        <span class="n">operate_on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">prior</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">has_conditions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="p">):</span>
+        <span class="n">noise_level</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">noise_level_bounds</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e5</span><span class="p">),</span>
+        <span class="n">operate_on</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">prior</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Prior</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">has_conditions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
         <span class="nb">super</span><span class="p">(</span><span class="n">WhiteKernel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">noise_level</span><span class="o">=</span><span class="n">noise_level</span><span class="p">,</span> <span class="n">noise_level_bounds</span><span class="o">=</span><span class="n">noise_level_bounds</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_active_dims</span><span class="p">(</span><span class="n">operate_on</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_conditions</span> <span class="o">=</span> <span class="n">has_conditions</span>
 
-    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eval_gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">Y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">eval_gradient</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">active</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -859,18 +930,24 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">length_scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-        <span class="n">length_scale_bounds</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e5</span><span class="p">),</span>
-        <span class="n">operate_on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">prior</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">has_conditions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="p">):</span>
+        <span class="n">length_scale</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">length_scale_bounds</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e5</span><span class="p">),</span>
+        <span class="n">operate_on</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">prior</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Prior</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">has_conditions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">HammingKernel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">length_scale</span><span class="o">=</span><span class="n">length_scale</span><span class="p">,</span> <span class="n">length_scale_bounds</span><span class="o">=</span><span class="n">length_scale_bounds</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_active_dims</span><span class="p">(</span><span class="n">operate_on</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_conditions</span> <span class="o">=</span> <span class="n">has_conditions</span>
 
-    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eval_gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">Y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">eval_gradient</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">active</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
 
 <span class="sd">        Parameters</span>

@@ -193,7 +193,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.constants.html">smac.utils.constants module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.dependencies.html">smac.utils.dependencies module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.logging.html">smac.utils.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
@@ -289,7 +288,7 @@
 <span id="smac-epm-base-epm-module"></span><h1>smac.epm.base_epm module<a class="headerlink" href="#module-smac.epm.base_epm" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.epm.base_epm.AbstractEPM">
-<em class="property">class </em><code class="sig-prename descclassname">smac.epm.base_epm.</code><code class="sig-name descname">AbstractEPM</code><span class="sig-paren">(</span><em class="sig-param">configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: numpy.ndarray, bounds: List[Tuple[float, float]], seed: int, instance_features: numpy.ndarray = None, pca_components: float = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.epm.base_epm.</code><code class="sig-name descname">AbstractEPM</code><span class="sig-paren">(</span><em class="sig-param">configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: List[int], bounds: List[Tuple[float, float]], seed: int, instance_features: Optional[numpy.ndarray] = None, pca_components: Optional[int] = 7</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Abstract implementation of the EPM API.</p>
 <p><strong>Note:</strong> The input dimensionality of Y for training and the output dimensions
@@ -391,12 +390,12 @@ to var_threshold</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>configspace</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="smac.configspace.ConfigurationSpace"><em>ConfigurationSpace</em></a>) – Configuration space to tune for.</p></li>
-<li><p><strong>types</strong> (<em>np.ndarray</em><em> (</em><em>D</em><em>)</em>) – Specifies the number of categorical values of an input dimension where
+<li><p><strong>types</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – Specifies the number of categorical values of an input dimension where
 the i-th entry corresponds to the i-th input dimension. Let’s say we
 have 2 dimension where the first dimension consists of 3 different
 categorical choices and the second dimension is continuous than we
-have to pass np.array([3, 0]). Note that we count starting from 0.</p></li>
-<li><p><strong>bounds</strong> (<em>list</em>) – bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims</p></li>
+have to pass [3, 0]. Note that we count starting from 0.</p></li>
+<li><p><strong>bounds</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims</p></li>
 <li><p><strong>seed</strong> (<em>int</em>) – The seed that is passed to the model library.</p></li>
 <li><p><strong>instance_features</strong> (<em>np.ndarray</em><em> (</em><em>I</em><em>, </em><em>K</em><em>)</em>) – Contains the K dimensional instance features
 of the I different instances</p></li>

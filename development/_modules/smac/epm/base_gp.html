@@ -191,7 +191,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.constants.html">smac.utils.constants module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.dependencies.html">smac.utils.dependencies module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.logging.html">smac.utils.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
@@ -278,24 +277,55 @@
            <div itemprop="articleBody">
             
   <h1>Source code for smac.epm.base_gp</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
 
+<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">sklearn.gaussian_process.kernels</span>
 
 <span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="kn">import</span> <span class="n">AbstractEPM</span>
 <span class="kn">import</span> <span class="nn">smac.epm.gp_base_prior</span>
 
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">skopt.learning.gaussian_process.kernels</span> <span class="kn">import</span> <span class="n">Kernel</span>
+    <span class="kn">from</span> <span class="nn">skopt.learning.gaussian_process</span> <span class="kn">import</span> <span class="n">GaussianProcessRegressor</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">lazy_import</span> <span class="kn">import</span> <span class="n">lazy_callable</span>
+    <span class="n">Kernel</span> <span class="o">=</span> <span class="n">lazy_callable</span><span class="p">(</span><span class="s1">&#39;skopt.learning.gaussian_process.kernels.Kernel&#39;</span><span class="p">)</span>
+    <span class="n">GaussianProcessRegressor</span> <span class="o">=</span> <span class="n">lazy_callable</span><span class="p">(</span>
+        <span class="s1">&#39;skopt.learning.gaussian_process.GaussianProcessRegressor&#39;</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="BaseModel"><a class="viewcode-back" href="../../../apidoc/smac.epm.base_gp.html#smac.epm.base_gp.BaseModel">[docs]</a><span class="k">class</span> <span class="nc">BaseModel</span><span class="p">(</span><span class="n">AbstractEPM</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configspace</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">configspace</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
+        <span class="n">types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">bounds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">kernel</span><span class="p">:</span> <span class="n">Kernel</span><span class="p">,</span>
+        <span class="n">instance_features</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">pca_components</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Abstract base class for all Gaussian process models.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">configspace</span><span class="o">=</span><span class="n">configspace</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">configspace</span><span class="o">=</span><span class="n">configspace</span><span class="p">,</span>
+            <span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">,</span>
+            <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
+            <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
+            <span class="n">instance_features</span><span class="o">=</span><span class="n">instance_features</span><span class="p">,</span>
+            <span class="n">pca_components</span><span class="o">=</span><span class="n">pca_components</span><span class="p">,</span>
+        <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">=</span> <span class="n">kernel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_gp</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_get_gp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GaussianProcessRegressor</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_normalize_y</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Normalize data to zero mean unit standard deviation.</span>
@@ -382,7 +412,7 @@
                     <span class="n">all_priors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">priors_for_hp</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">all_priors</span>
 
-    <span class="k">def</span> <span class="nf">_set_has_conditions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_set_has_conditions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">has_conditions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">get_conditions</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span>
         <span class="n">to_visit</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">to_visit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">)</span>

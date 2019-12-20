@@ -193,7 +193,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.constants.html">smac.utils.constants module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.dependencies.html">smac.utils.dependencies module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.logging.html">smac.utils.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
@@ -289,7 +288,7 @@
 <span id="smac-epm-random-epm-module"></span><h1>smac.epm.random_epm module<a class="headerlink" href="#module-smac.epm.random_epm" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.epm.random_epm.RandomEPM">
-<em class="property">class </em><code class="sig-prename descclassname">smac.epm.random_epm.</code><code class="sig-name descname">RandomEPM</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/random_epm.html#RandomEPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.random_epm.RandomEPM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.epm.random_epm.</code><code class="sig-name descname">RandomEPM</code><span class="sig-paren">(</span><em class="sig-param">configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: List[int], bounds: List[Tuple[float, float]], seed: int, instance_features: Optional[numpy.ndarray] = None, pca_components: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/random_epm.html#RandomEPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.random_epm.RandomEPM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_epm.AbstractEPM</span></code></a></p>
 <p>EPM which returns random values on a call to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p>
 <p>Constructor</p>
@@ -297,14 +296,14 @@
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>configspace</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="smac.configspace.ConfigurationSpace"><em>ConfigurationSpace</em></a>) – Configuration space to tune for.</p></li>
-<li><p><strong>types</strong> (<em>np.ndarray</em><em> (</em><em>D</em><em>)</em>) – Specifies the number of categorical values of an input dimension where
+<li><p><strong>types</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – Specifies the number of categorical values of an input dimension where
 the i-th entry corresponds to the i-th input dimension. Let’s say we
 have 2 dimension where the first dimension consists of 3 different
 categorical choices and the second dimension is continuous than we
-have to pass np.array([3, 0]). Note that we count starting from 0.</p></li>
-<li><p><strong>bounds</strong> (<em>list</em>) – bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims</p></li>
+have to pass [3, 0]. Note that we count starting from 0.</p></li>
+<li><p><strong>bounds</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims</p></li>
 <li><p><strong>seed</strong> (<em>int</em>) – The seed that is passed to the model library.</p></li>
-<li><p><strong>instance_features</strong> (<em>np.ndarray</em><em> (</em><em>I</em><em>, </em><em>K</em><em>)</em>) – Contains the K dimensional instance features
+<li><p><strong>instance_features</strong> (<em>np.ndarray</em><em> (</em><em>I</em><em>, </em><em>K</em><em>)</em><em>, </em><em>optional</em>) – Contains the K dimensional instance features
 of the I different instances</p></li>
 <li><p><strong>pca_components</strong> (<em>float</em>) – Number of components to keep when using PCA to reduce
 dimensionality of instance features. Requires to

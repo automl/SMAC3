@@ -193,7 +193,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.constants.html">smac.utils.constants module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.dependencies.html">smac.utils.dependencies module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.logging.html">smac.utils.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
@@ -289,7 +288,7 @@
 <span id="smac-epm-base-rf-module"></span><h1>smac.epm.base_rf module<a class="headerlink" href="#module-smac.epm.base_rf" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.epm.base_rf.BaseModel">
-<em class="property">class </em><code class="sig-prename descclassname">smac.epm.base_rf.</code><code class="sig-name descname">BaseModel</code><span class="sig-paren">(</span><em class="sig-param">configspace</em>, <em class="sig-param">types</em>, <em class="sig-param">bounds</em>, <em class="sig-param">seed</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_rf.html#BaseModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_rf.BaseModel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.epm.base_rf.</code><code class="sig-name descname">BaseModel</code><span class="sig-paren">(</span><em class="sig-param">configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: List[int], bounds: List[Tuple[float, float]], seed: int, instance_features: Optional[numpy.ndarray] = None, pca_components: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_rf.html#BaseModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_rf.BaseModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_epm.AbstractEPM</span></code></a></p>
 <p>Abstract base class for all random forest models.</p>
 </dd></dl>

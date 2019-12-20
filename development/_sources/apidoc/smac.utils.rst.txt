@@ -17,7 +17,6 @@ Subpackages
 
    smac.utils.constants
    smac.utils.dependencies
-   smac.utils.duplicate_filter_logging
    smac.utils.logging
    smac.utils.merge_foreign_data
    smac.utils.test_helpers

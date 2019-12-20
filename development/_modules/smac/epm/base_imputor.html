@@ -191,7 +191,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.constants.html">smac.utils.constants module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.dependencies.html">smac.utils.dependencies module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.logging.html">smac.utils.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
@@ -294,12 +293,12 @@
 <div class="viewcode-block" id="BaseImputor"><a class="viewcode-back" href="../../../apidoc/smac.epm.base_imputor.html#smac.epm.base_imputor.BaseImputor">[docs]</a><span class="k">class</span> <span class="nc">BaseImputor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Abstract implementation of the Imputation API.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">pass</span>
 
 <div class="viewcode-block" id="BaseImputor.impute"><a class="viewcode-back" href="../../../apidoc/smac.epm.base_imputor.html#smac.epm.base_imputor.BaseImputor.impute">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">impute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">censored_X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">censored_y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-               <span class="n">uncensored_X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">uncensored_y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+               <span class="n">uncensored_X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">uncensored_y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Imputes censored runs and returns new y values.</span>
 
