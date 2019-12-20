@@ -163,7 +163,8 @@ class MagicMixin:
         except AttributeError:
             pass
 
-        self._n_dims_cache: int = super().n_dims  # type: ignore[misc] # noqa F821
+        self._n_dims_cache = -1  # type: int # I cannot use `varname: type = value` syntax because that's >=Python3.6
+        self._n_dims_cache = super().n_dims  # type: ignore[misc] # noqa F821
         return self._n_dims_cache
 
     def clone_with_theta(self, theta: np.ndarray) -> kernels.Kernel:
