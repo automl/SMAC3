@@ -27,8 +27,8 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
         self,
         target_names: List[str],
         configspace: ConfigurationSpace,
-        bounds: np.ndarray,
-        types: np.ndarray,
+        types: Tuple[List[int]],
+        bounds: List[Tuple[float, float]],
         seed: int,
         rf_kwargs: Optional[Dict[str, Any]] = None,
         instance_features: Optional[np.ndarray] = None,
@@ -41,10 +41,14 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
         target_names : list
             List of str, each entry is the name of one target dimension. Length
             of the list will be ``n_objectives``.
-        bounds : np.ndarray
-            See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
-        types : np.ndarray
-            See :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` documentation.
+        types : List[int]
+            Specifies the number of categorical values of an input dimension where
+            the i-th entry corresponds to the i-th input dimension. Let's say we
+            have 2 dimension where the first dimension consists of 3 different
+            categorical choices and the second dimension is continuous than we
+            have to pass [3, 0]. Note that we count starting from 0.
+        bounds : List[Tuple[float, float]]
+            bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
         instance_features : np.ndarray (I, K)
             Contains the K dimensional instance features of the I different instances
         pca_components : float

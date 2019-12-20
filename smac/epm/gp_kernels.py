@@ -27,6 +27,12 @@ def get_conditional_hyperparameters(X: np.ndarray, Y: Optional[np.ndarray]) -> n
 
 class MagicMixin:
 
+    # This is a mixin for a kernel to override functions of the kernel. Because it overrides functions of the kernel,
+    # it needs to be placed first in the inheritance hierarchy. For this reason it is not possible to subclass the
+    # Mixin from the kernel class because this will prevent it from being instantiatable. Therefore, mypy won't know
+    # about anything related to the superclass and I had to add a few type:ignore statements when accessing a member
+    # that is declared in the superclass such as self.has_conditions, self._call, super().get_params etc.
+
     prior = None  # type: Optional[Prior]
 
     def __call__(
@@ -121,6 +127,8 @@ class MagicMixin:
         try:
             args = self._args_cache
         except AttributeError:
+            # ignore[misc] looks like it catches all kinds of errors, but misc is actually a category from mypy:
+            # https://mypy.readthedocs.io/en/latest/error_code_list.html#miscellaneous-checks-misc
             tmp = super().get_params(deep)  # type: ignore[misc] # noqa F821
             args = list(tmp.keys())
             # Sum and Product do not clone the 'has_conditions' attribute by default. Instead of changing their
@@ -155,8 +163,7 @@ class MagicMixin:
         except AttributeError:
             pass
 
-        self._n_dims_cache = -1  # type: int
-        self._n_dims_cache = super().n_dims  # type: ignore[misc] # noqa F821
+        self._n_dims_cache: int = super().n_dims  # type: ignore[misc] # noqa F821
         return self._n_dims_cache
 
     def clone_with_theta(self, theta: np.ndarray) -> kernels.Kernel:

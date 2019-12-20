@@ -12,12 +12,11 @@ from smac.utils.constants import MAXINT
 def get_types(
     config_space: ConfigurationSpace,
     instance_features: typing.Optional[np.ndarray] = None,
-) -> typing.Tuple[np.ndarray, np.ndarray]:
+) -> typing.Tuple[typing.List[int], typing.List[typing.Tuple[float, float]]]:
     """TODO"""
     # Extract types vector for rf from config space and the bounds
-    types = np.zeros(len(config_space.get_hyperparameters()),
-                     dtype=np.uint)
-    bounds = [(np.nan, np.nan)] * types.shape[0]
+    types = [0] * len(config_space.get_hyperparameters())
+    bounds = [(np.nan, np.nan)] * len(types)
 
     for i, param in enumerate(config_space.get_hyperparameters()):
         parents = config_space.get_parents_of(param.name)
@@ -70,12 +69,8 @@ def get_types(
             raise TypeError("Unknown hyperparameter type %s" % type(param))
 
     if instance_features is not None:
-        types = np.hstack(
-            (types, np.zeros((instance_features.shape[1])))
-        )
+        types = types + [0] * instance_features.shape[1]
 
-    types = np.array(types, dtype=np.uint)
-    bounds = np.array(bounds, dtype=object)
     return types, bounds
 
 

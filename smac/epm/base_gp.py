@@ -22,8 +22,8 @@ class BaseModel(AbstractEPM):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: np.ndarray,
-        bounds: np.ndarray,
+        types: Tuple[List[int]],
+        bounds: List[Tuple[float, float]],
         seed: int,
         kernel: Kernel,
         instance_features: Optional[np.ndarray] = None,

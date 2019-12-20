@@ -1,3 +1,4 @@
+import copy
 import typing
 
 import numpy as np
@@ -50,8 +51,8 @@ class AbstractEPM(object):
 
     def __init__(self,
                  configspace: ConfigurationSpace,
-                 types: np.ndarray,
-                 bounds: np.ndarray,
+                 types: typing.List[int],
+                 bounds: typing.List[typing.Tuple[float, float]],
                  seed: int,
                  instance_features: typing.Optional[np.ndarray] = None,
                  pca_components: typing.Optional[int] = 7,
@@ -62,13 +63,13 @@ class AbstractEPM(object):
         ----------
         configspace : ConfigurationSpace
             Configuration space to tune for.
-        types : np.ndarray (D)
+        types : List[int]
             Specifies the number of categorical values of an input dimension where
             the i-th entry corresponds to the i-th input dimension. Let's say we
             have 2 dimension where the first dimension consists of 3 different
             categorical choices and the second dimension is continuous than we
-            have to pass np.array([3, 0]). Note that we count starting from 0.
-        bounds : np.ndarray
+            have to pass [3, 0]. Note that we count starting from 0.
+        bounds : List[Tuple[float, float]]
             bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
         seed : int
             The seed that is passed to the model library.
@@ -101,7 +102,7 @@ class AbstractEPM(object):
         self.bounds = bounds
         self.types = types
         # Initial types array which is used to reset the type array at every call to train()
-        self._initial_types = types.copy()
+        self._initial_types = copy.deepcopy(types)
 
         self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
 
@@ -120,7 +121,7 @@ class AbstractEPM(object):
         -------
         self : AbstractEPM
         """
-        self.types = self._initial_types.copy()
+        self.types = copy.deepcopy(self._initial_types)
 
         if len(X.shape) != 2:
             raise ValueError('Expected 2d array, got %dd array!' % len(X.shape))
@@ -249,10 +250,9 @@ class AbstractEPM(object):
 
         if len(X.shape) != 2:
             raise ValueError('Expected 2d array, got %dd array!' % len(X.shape))
-        if X.shape[1] != self.bounds.shape[0]:
+        if X.shape[1] != len(self.bounds):
             raise ValueError('Rows in X should have %d entries but have %d!' %
-                             (self.bounds.shape[0],
-                              X.shape[1]))
+                             (len(self.bounds), X.shape[1]))
 
         if self.instance_features is None or \
                 len(self.instance_features) == 0:

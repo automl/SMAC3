@@ -41,8 +41,8 @@ class RandomForestWithInstances(BaseModel):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: np.ndarray,
-        bounds: np.ndarray,
+        types: typing.Tuple[typing.List[int]],
+        bounds: typing.List[typing.Tuple[float, float]],
         seed: int,
         log_y: bool = False,
         num_trees: int = N_TREES,
@@ -60,14 +60,14 @@ class RandomForestWithInstances(BaseModel):
         """
         Parameters
         ----------
-        types : np.ndarray (D)
+        types : List[int]
             Specifies the number of categorical values of an input dimension where
             the i-th entry corresponds to the i-th input dimension. Let's say we
             have 2 dimension where the first dimension consists of 3 different
             categorical choices and the second dimension is continuous than we
-            have to pass np.array([2, 0]). Note that we count starting from 0.
-        bounds : list
-            Specifies the bounds for continuous features.
+            have to pass [3, 0]. Note that we count starting from 0.
+        bounds : List[Tuple[float, float]]
+            bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
         seed : int
             The seed that is passed to the random_forest_run library.
         log_y: bool
@@ -115,7 +115,7 @@ class RandomForestWithInstances(BaseModel):
         self.rf_opts.num_trees = num_trees
         self.rf_opts.do_bootstrapping = do_bootstrapping
         max_features = 0 if ratio_features > 1.0 else \
-            max(1, int(types.shape[0] * ratio_features))
+            max(1, int(len(types) * ratio_features))
         self.rf_opts.tree_opts.max_features = max_features
         self.rf_opts.tree_opts.min_samples_to_split = min_samples_split
         self.rf_opts.tree_opts.min_samples_in_leaf = min_samples_leaf
@@ -209,8 +209,8 @@ class RandomForestWithInstances(BaseModel):
         if len(X.shape) != 2:
             raise ValueError(
                 'Expected 2d array, got %dd array!' % len(X.shape))
-        if X.shape[1] != self.types.shape[0]:
-            raise ValueError('Rows in X should have %d entries but have %d!' % (self.types.shape[0], X.shape[1]))
+        if X.shape[1] != len(self.types):
+            raise ValueError('Rows in X should have %d entries but have %d!' % (len(self.types), X.shape[1]))
 
         X = self._impute_inactive(X)
 

@@ -27,8 +27,8 @@ class GaussianProcessMCMC(BaseModel):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: np.ndarray,
-        bounds: np.ndarray,
+        types: typing.Tuple[typing.List[int]],
+        bounds: typing.List[typing.Tuple[float, float]],
         seed: int,
         kernel: Kernel,
         n_mcmc_walkers: int = 20,
@@ -55,14 +55,14 @@ class GaussianProcessMCMC(BaseModel):
 
         Parameters
         ----------
-        types : np.ndarray (D)
+        types : List[int]
             Specifies the number of categorical values of an input dimension where
             the i-th entry corresponds to the i-th input dimension. Let's say we
             have 2 dimension where the first dimension consists of 3 different
             categorical choices and the second dimension is continuous than we
-            have to pass np.array([2, 0]). Note that we count starting from 0.
-        bounds : list
-            Specifies the bounds for continuous features.
+            have to pass [3, 0]. Note that we count starting from 0.
+        bounds : List[Tuple[float, float]]
+            bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
         seed : int
             Model seed.
         kernel : george kernel object

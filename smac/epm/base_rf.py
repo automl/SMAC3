@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Dict, Optional, Tuple, List
 
 import numpy as np
 
@@ -17,8 +17,8 @@ class BaseModel(AbstractEPM):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: np.ndarray,
-        bounds: np.ndarray,
+        types: Tuple[List[int]],
+        bounds: List[Tuple[float, float]],
         seed: int,
         instance_features: Optional[np.ndarray] = None,
         pca_components: Optional[int] = None,
@@ -36,16 +36,18 @@ class BaseModel(AbstractEPM):
         )
 
         self.rng = np.random.RandomState(seed)
-        self.impute_values = dict()  # type: Dict[int, Optional[float]]
+        self.conditional = dict()  # type: Dict[int, bool]
+        self.impute_values = dict()  # type: Dict[int, float]
 
     def _impute_inactive(self, X: np.ndarray) -> np.ndarray:
         X = X.copy()
         for idx, hp in enumerate(self.configspace.get_hyperparameters()):
-            if idx not in self.impute_values:
+            if idx not in self.conditional:
                 parents = self.configspace.get_parents_of(hp.name)
                 if len(parents) == 0:
-                    self.impute_values[idx] = None
+                    self.conditional[idx] = False
                 else:
+                    self.conditional[idx] = True
                     if isinstance(hp, CategoricalHyperparameter):
                         self.impute_values[idx] = len(hp.choices)
                     elif isinstance(hp, (UniformFloatHyperparameter, UniformIntegerHyperparameter)):
@@ -55,7 +57,8 @@ class BaseModel(AbstractEPM):
                     else:
                         raise ValueError
 
-            nonfinite_mask = ~np.isfinite(X[:, idx])
-            X[nonfinite_mask, idx] = self.impute_values[idx]
+            if self.conditional[idx] is True:
+                nonfinite_mask = ~np.isfinite(X[:, idx])
+                X[nonfinite_mask, idx] = self.impute_values[idx]
 
         return X
