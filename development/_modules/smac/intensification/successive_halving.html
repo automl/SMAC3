@@ -509,7 +509,7 @@
 
         <span class="c1"># precomputing stuff for SH</span>
         <span class="c1"># max. no. of SH iterations possible given the budgets</span>
-        <span class="n">max_sh_iter</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_budget</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="p">))</span>
+        <span class="n">max_sh_iter</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_budget</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="p">)))</span>
         <span class="c1"># initial number of challengers to sample</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">num_initial_challengers</span><span class="p">:</span>
             <span class="n">num_initial_challengers</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">**</span> <span class="n">max_sh_iter</span><span class="p">)</span>
@@ -859,7 +859,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>
