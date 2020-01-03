@@ -230,7 +230,7 @@ class SuccessiveHalving(AbstractRacer):
 
         # precomputing stuff for SH
         # max. no. of SH iterations possible given the budgets
-        max_sh_iter = np.floor(np.log(self.max_budget / self.initial_budget) / np.log(self.eta))
+        max_sh_iter = int(np.floor(np.log(self.max_budget / self.initial_budget) / np.log(self.eta)))
         # initial number of challengers to sample
         if not num_initial_challengers:
             num_initial_challengers = int(self.eta ** max_sh_iter)
