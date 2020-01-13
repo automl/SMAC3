@@ -88,9 +88,7 @@ class AbstractRunHistory2EPM(object):
         self.scale_perc = scale_perc
 
         # Configuration
-        self.success_states = success_states
         self.impute_censored_data = impute_censored_data
-        self.impute_state = impute_state
         self.cutoff_time = self.scenario.cutoff
         self.imputor = imputor
 
@@ -98,11 +96,15 @@ class AbstractRunHistory2EPM(object):
         if rng is None:
             self.rng = np.random.RandomState(seed=1)
 
-        if self.impute_state is None:
+        if impute_state is None:
             self.impute_state = [StatusType.CAPPED, ]
+        else:
+            self.impute_state = impute_state
 
-        if self.success_states is None:
+        if success_states is None:
             self.success_states = [StatusType.SUCCESS, ]
+        else:
+            self.success_states = success_states
 
         self.instance_features = scenario.feature_dict
         self.n_feats = scenario.n_features
@@ -129,16 +131,16 @@ class AbstractRunHistory2EPM(object):
                              type(self.imputor))
 
         # Learned statistics
-        self.min_y = None
-        self.max_y = None
-        self.perc = None
+        self.min_y = np.NaN
+        self.max_y = np.NaN
+        self.perc = np.NaN
 
     @abc.abstractmethod
     def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
                       runhistory: RunHistory,
                       instances: list = None,
                       return_time_as_y: bool = False,
-                      store_statistics: bool = False):
+                      store_statistics: bool = False) -> typing.Tuple[np.ndarray, np.ndarray]:
         """Builds x,y matrixes from selected runs from runhistory
 
         Parameters
@@ -161,7 +163,11 @@ class AbstractRunHistory2EPM(object):
         """
         raise NotImplementedError()
 
-    def transform(self, runhistory: RunHistory, budget_subset: list = None):
+    def transform(
+        self,
+        runhistory: RunHistory,
+        budget_subset: typing.Optional[typing.List] = None,
+    ) -> typing.Tuple[np.ndarray, np.ndarray]:
         """Returns vector representation of runhistory; if imputation is
         disabled, censored (TIMEOUT with time < cutoff) will be skipped
 
@@ -201,7 +207,7 @@ class AbstractRunHistory2EPM(object):
         t_instance_id_list = [k.instance_id for k in s_run_dict.keys()]
 
         # use penalization (e.g. PAR10) for EPM training
-        store_statistics = True if self.min_y is None else False
+        store_statistics = True if np.isnan(self.min_y) else False
         tX, tY = self._build_matrix(run_dict=t_run_dict, runhistory=runhistory,
                                     instances=t_instance_id_list, store_statistics=store_statistics)
 
@@ -245,6 +251,7 @@ class AbstractRunHistory2EPM(object):
 
                 # return imp_Y in PAR depending on the used threshold in
                 # imputor
+                assert isinstance(self.imputor, BaseImputor)  # please mypy
                 imp_Y = self.imputor.impute(censored_X=cen_X, censored_y=cen_Y,
                                             uncensored_X=X, uncensored_y=Y)
 
@@ -274,7 +281,7 @@ class AbstractRunHistory2EPM(object):
         """
         raise NotImplementedError
 
-    def get_X_y(self, runhistory: RunHistory):
+    def get_X_y(self, runhistory: RunHistory) -> typing.Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """Simple interface to obtain all data in runhistory in X, y format
 
         Parameters
@@ -315,7 +322,7 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
                       runhistory: RunHistory,
                       instances: list = None,
                       return_time_as_y: bool = False,
-                      store_statistics: bool = False):
+                      store_statistics: bool = False) -> typing.Tuple[np.ndarray, np.ndarray]:
         """"Builds X,y matrixes from selected runs from runhistory
 
         Parameters
@@ -443,7 +450,7 @@ class RunHistory2EPM4ScaledCost(RunHistory2EPM4Cost):
 
 class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
     """TODO"""
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs):  # type: ignore[no-untyped-def] # noqa F723
         super().__init__(**kwargs)
         if self.instance_features is not None:
             if len(self.instance_features) > 1:
@@ -477,7 +484,7 @@ class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
 
 class RunHistory2EPM4SqrtScaledCost(RunHistory2EPM4Cost):
     """TODO"""
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs):  # type: ignore[no-untyped-def]  # noqa F723
         super().__init__(**kwargs)
         if self.instance_features is not None:
             if len(self.instance_features) > 1:
@@ -544,7 +551,7 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
     def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
                       runhistory: RunHistory, instances: typing.List[str] = None,
                       return_time_as_y: bool = False,
-                      store_statistics: bool = False):
+                      store_statistics: bool = False) -> typing.Tuple[np.ndarray, np.ndarray]:
         """TODO"""
         if return_time_as_y:
             raise NotImplementedError()
@@ -574,7 +581,7 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
 
         return X, y
 
-    def transform_response_values(self, values: np.ndarray):
+    def transform_response_values(self, values: np.ndarray) -> typing.Tuple[np.ndarray]:
         """Transform function response values.
 
         Transform the runtimes by a log transformation (log(1 + runtime).
