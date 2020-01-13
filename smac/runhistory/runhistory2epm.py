@@ -207,7 +207,7 @@ class AbstractRunHistory2EPM(object):
         t_instance_id_list = [k.instance_id for k in s_run_dict.keys()]
 
         # use penalization (e.g. PAR10) for EPM training
-        store_statistics = True if np.isinf(self.min_y) else False
+        store_statistics = True if np.isnan(self.min_y) else False
         tX, tY = self._build_matrix(run_dict=t_run_dict, runhistory=runhistory,
                                     instances=t_instance_id_list, store_statistics=store_statistics)
 
