@@ -311,7 +311,7 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 </dl>
 <dl class="method">
 <dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y">
-<code class="sig-name descname">get_X_y</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM.get_X_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_X_y</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM.get_X_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simple interface to obtain all data in runhistory in X, y format</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -330,7 +330,7 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.transform">
-<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">budget_subset: list = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.transform" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">budget_subset: Optional[List] = None</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns vector representation of runhistory; if imputation is
 disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</p>
 <dl class="field-list simple">
@@ -439,7 +439,7 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 </dl>
 <dl class="method">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS.transform_response_values">
-<code class="sig-name descname">transform_response_values</code><span class="sig-paren">(</span><em class="sig-param">values: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4EIPS.transform_response_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS.transform_response_values" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transform_response_values</code><span class="sig-paren">(</span><em class="sig-param">values: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray]<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4EIPS.transform_response_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS.transform_response_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform function response values.</p>
 <p>Transform the runtimes by a log transformation (log(1 + runtime).</p>
 <dl class="field-list simple">
