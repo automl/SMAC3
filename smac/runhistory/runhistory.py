@@ -22,7 +22,8 @@ class RunKey(collections.namedtuple('RunKey', ['config_id', 'instance_id', 'seed
     __slots__ = ()
 
     def __new__(
-        cls,
+        cls,  # No type annotation because the 1st argument for a namedtuble is always the class type,
+              # see https://docs.python.org/3/reference/datamodel.html#object.__new__
         config_id: int,
         instance_id: typing.Optional[str],
         seed: typing.Optional[int],

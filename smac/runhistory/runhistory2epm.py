@@ -163,7 +163,11 @@ class AbstractRunHistory2EPM(object):
         """
         raise NotImplementedError()
 
-    def transform(self, runhistory: RunHistory, budget_subset: list = None) -> typing.Tuple[np.ndarray, np.ndarray]:
+    def transform(
+        self,
+        runhistory: RunHistory,
+        budget_subset: typing.Optional[typing.List] = None,
+    ) -> typing.Tuple[np.ndarray, np.ndarray]:
         """Returns vector representation of runhistory; if imputation is
         disabled, censored (TIMEOUT with time < cutoff) will be skipped
 
@@ -203,7 +207,7 @@ class AbstractRunHistory2EPM(object):
         t_instance_id_list = [k.instance_id for k in s_run_dict.keys()]
 
         # use penalization (e.g. PAR10) for EPM training
-        store_statistics = True if self.min_y is None else False
+        store_statistics = True if np.isinf(self.min_y) else False
         tX, tY = self._build_matrix(run_dict=t_run_dict, runhistory=runhistory,
                                     instances=t_instance_id_list, store_statistics=store_statistics)
 
