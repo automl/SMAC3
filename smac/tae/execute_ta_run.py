@@ -180,9 +180,12 @@ class ExecuteTARun(object):
         if cutoff is not None:
             cutoff = int(math.ceil(cutoff))
         if cutoff is None and self.run_obj == "runtime":
-            self.logger.error("For scenarios optimizing running time "
-                              "(run objective), a cutoff time is required, "
-                              "but not given to this call.")
+            self.logger.critical("For scenarios optimizing running time "
+                                 "(run objective), a cutoff time is required, "
+                                 "but not given to this call.")
+            raise ValueError("For scenarios optimizing running time "
+                             "(run objective), a cutoff time is required, "
+                             "but not given to this call.")
 
         status, cost, runtime, additional_info = self.run(config=config,
                                                           instance=instance,
@@ -214,11 +217,13 @@ class ExecuteTARun(object):
                                     "in the trajectory-file.")
 
         if self.run_obj == "runtime":
-            assert cutoff is not None  # please mypy
+            # The following line pleases mypy - we already check for cutoff not being none above, prior to calling
+            # run. However, mypy assumes that the data type of cutoff is still Optional[int]
+            assert cutoff is not None
             if runtime > self.par_factor * cutoff:
-                self.logger.warn("Returned running time is larger "
-                                 "than {0} times the passed cutoff time. "
-                                 "Clamping to {0} x cutoff.".format(self.par_factor))
+                self.logger.warning("Returned running time is larger "
+                                    "than {0} times the passed cutoff time. "
+                                    "Clamping to {0} x cutoff.".format(self.par_factor))
                 runtime = cutoff * self.par_factor
                 status = StatusType.TIMEOUT
             if status == StatusType.SUCCESS:

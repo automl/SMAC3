@@ -84,7 +84,7 @@ class AbstractTAFunc(ExecuteTARun):
         self._accepts_instance = 'instance' in signature.keys()
         self._accepts_budget = 'budget' in signature.keys()
         if not callable(ta):
-            raise TypeError('Argument `ta` must be a callalbe, but is %s' % type(ta))
+            raise TypeError('Argument `ta` must be a callable, but is %s' % type(ta))
         self._ta = typing.cast(typing.Callable, ta)
 
         if memory_limit is not None:
