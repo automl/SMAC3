@@ -301,8 +301,7 @@ class TestIntensify(unittest.TestCase):
 
         def target(x):
             return (x['a'] + 1) / 1000.
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="solution_quality")
-        taf.runhistory = self.rh
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, runhistory=self.rh, run_obj="solution_quality")
 
         intensifier = Intensifier(
             tae_runner=taf, stats=self.stats,

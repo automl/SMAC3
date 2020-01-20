@@ -43,7 +43,7 @@ class AbstractRacer(object):
         list of all instance ids
     instance_specifics : typing.Mapping[str,np.ndarray]
         mapping from instance name to instance specific string
-    cutoff : int
+    cutoff : float
         runtime cutoff of TA runs
     deterministic: bool
         whether the TA is deterministic or not
@@ -65,14 +65,13 @@ class AbstractRacer(object):
                  traj_logger: TrajLogger,
                  rng: np.random.RandomState,
                  instances: typing.List[str],
-                 instance_specifics: typing.Mapping[str, np.ndarray] = None,
-                 cutoff: typing.Optional[int] = None,
+                 instance_specifics: typing.Optional[typing.Mapping[str, np.ndarray]] = None,
+                 cutoff: typing.Optional[float] = None,
                  deterministic: bool = False,
                  run_obj_time: bool = True,
                  minR: int = 1,
                  maxR: int = 2000,
-                 adaptive_capping_slackfactor: float = 1.2,
-                 **kwargs):
+                 adaptive_capping_slackfactor: float = 1.2,):
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
@@ -98,7 +97,7 @@ class AbstractRacer(object):
         # removing duplicates in the user provided instances
         self.instances = list(OrderedDict.fromkeys(instances))
         if instance_specifics is None:
-            self.instance_specifics = {}
+            self.instance_specifics = {}  # type: typing.Mapping[str, np.ndarray]
         else:
             self.instance_specifics = instance_specifics
 
@@ -261,7 +260,7 @@ class AbstractRacer(object):
         """
 
         if not self.run_obj_time:
-            return self.cutoff
+            raise ValueError('This method only works when the run objective is quality')
 
         curr_cutoff = self.cutoff if self.cutoff is not None else np.inf
 

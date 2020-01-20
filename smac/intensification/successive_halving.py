@@ -19,6 +19,10 @@ __license__ = "3-clause BSD"
 
 
 class SuccessiveHalving(AbstractRacer):
+    curr_inst_idx = 0
+    running_challenger = None
+    curr_challengers = set()  # type: typing.Set[Configuration]
+
     """Races multiple challengers against an incumbent using Successive Halving method
 
     Implementation following the description in
@@ -83,6 +87,8 @@ class SuccessiveHalving(AbstractRacer):
         * shuffle - shuffle before every SH run
     adaptive_capping_slackfactor : float
         slack factor of adpative capping (factor * adaptive cutoff)
+    inst_seed_pairs : typing.List[typing.Tuple[str, int]], optional
+        Do not set this argument, it will only be used by hyperband!
     """
 
     def __init__(self,
@@ -92,7 +98,7 @@ class SuccessiveHalving(AbstractRacer):
                  rng: np.random.RandomState,
                  instances: typing.List[str],
                  instance_specifics: typing.Mapping[str, np.ndarray] = None,
-                 cutoff: typing.Optional[int] = None,
+                 cutoff: typing.Optional[float] = None,
                  deterministic: bool = False,
                  initial_budget: typing.Optional[float] = None,
                  max_budget: typing.Optional[float] = None,
@@ -102,7 +108,7 @@ class SuccessiveHalving(AbstractRacer):
                  n_seeds: typing.Optional[int] = None,
                  instance_order: typing.Optional[str] = 'shuffle_once',
                  adaptive_capping_slackfactor: float = 1.2,
-                 **kwargs):
+                 inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None):
 
         super().__init__(tae_runner=tae_runner,
                          stats=stats,
@@ -129,9 +135,8 @@ class SuccessiveHalving(AbstractRacer):
 
         # if instances are coming from Hyperband, skip the instance preprocessing section
         # it is already taken care by Hyperband
-        self.inst_seed_pairs = kwargs.get('inst_seed_pairs', None)
 
-        if not self.inst_seed_pairs:
+        if not inst_seed_pairs:
             # set seed(s) for all SH runs
             # - currently user gives the number of seeds to consider
             if self.deterministic:
@@ -150,6 +155,8 @@ class SuccessiveHalving(AbstractRacer):
             if self.instance_order == 'shuffle_once':
                 # randomize once
                 self.rs.shuffle(self.inst_seed_pairs)
+        else:
+            self.inst_seed_pairs = inst_seed_pairs
 
         # successive halving parameters
         self._init_sh_params(initial_budget, max_budget, eta, num_initial_challengers)
@@ -295,13 +302,15 @@ class SuccessiveHalving(AbstractRacer):
         instance, seed = curr_insts[self.curr_inst_idx]
 
         # selecting cutoff if running adaptive capping
-        cutoff = self._adapt_cutoff(challenger=challenger,
-                                    run_history=run_history,
-                                    inc_sum_cost=inc_sum_cost)
-        if cutoff is not None and cutoff <= 0:
-            # ran out of time to validate challenger
-            self.logger.debug("Stop challenger itensification due to adaptive capping.")
-            self.curr_inst_idx = np.inf
+        cutoff = self.cutoff
+        if self.run_obj_time:
+            cutoff = self._adapt_cutoff(challenger=challenger,
+                                        run_history=run_history,
+                                        inc_sum_cost=inc_sum_cost)
+            if cutoff is not None and cutoff <= 0:
+                # ran out of time to validate challenger
+                self.logger.debug("Stop challenger itensification due to adaptive capping.")
+                self.curr_inst_idx = np.inf
 
         self.logger.debug('Cutoff for challenger: %s' % str(cutoff))
 
@@ -317,7 +326,9 @@ class SuccessiveHalving(AbstractRacer):
                     cutoff=cutoff,
                     budget=0.0 if self.instance_as_budget else curr_budget,
                     instance_specific=self.instance_specifics.get(instance, "0"),
-                    capped=(self.cutoff is not None) and (cutoff < self.cutoff)
+                    # Cutoff might be None if self.cutoff is None, but then the first if statement prevents
+                    # evaluation of the second if statement
+                    capped=(self.cutoff is not None) and (cutoff < self.cutoff)  # type: ignore[operator] # noqa F821
                 )
                 self._ta_time += dur
                 self._num_run += 1
@@ -416,8 +427,12 @@ class SuccessiveHalving(AbstractRacer):
             new_challenger = True
         else:
             # sample top configs from previously sampled configurations
-            challenger = self.configs_to_run.pop()
-            new_challenger = False
+            try:
+                challenger = self.configs_to_run.pop(0)
+                new_challenger = False
+            except StopIteration:
+                challenger = None
+                new_challenger = False
 
         if challenger:
             # reset instance index for the new challenger
@@ -446,7 +461,7 @@ class SuccessiveHalving(AbstractRacer):
             self.sh_iters = 0
             self.stage = 0
             # to track challengers across stages
-            self.configs_to_run = None
+            self.configs_to_run = []  # type: typing.List[Configuration]
             self.curr_inst_idx = 0
             self.running_challenger = None
             self.curr_challengers = set()
@@ -476,7 +491,7 @@ class SuccessiveHalving(AbstractRacer):
                 self.iteration_done = True
                 self.sh_iters += 1
                 self.stage = 0
-                self.configs_to_run = None
+                self.configs_to_run = []
 
                 # randomize instance-seed pairs per successive halving run, if user specifies
                 if self.instance_order == 'shuffle':
