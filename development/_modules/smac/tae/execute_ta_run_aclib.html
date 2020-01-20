@@ -279,6 +279,7 @@
   <h1>Source code for smac.tae.execute_ta_run_aclib</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">Popen</span><span class="p">,</span> <span class="n">PIPE</span>
+<span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="kn">import</span> <span class="n">StatusType</span><span class="p">,</span> <span class="n">ExecuteTARun</span>
@@ -297,11 +298,15 @@
 <span class="sd">    instance and some resource limitations. Uses the AClib 2.0 style</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ExecuteTARunAClib.run"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run_aclib.html#smac.tae.execute_ta_run_aclib.ExecuteTARunAClib.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
-            <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">cutoff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12345</span><span class="p">,</span>
-            <span class="n">instance_specific</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="ExecuteTARunAClib.run"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run_aclib.html#smac.tae.execute_ta_run_aclib.ExecuteTARunAClib.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+        <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">cutoff</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12345</span><span class="p">,</span>
+        <span class="n">budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">instance_specific</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">StatusType</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Runs target algorithm &lt;self.ta&gt; with configuration &lt;config&gt; on</span>
 <span class="sd">        instance &lt;instance&gt; with instance specifics &lt;specifics&gt; for at most</span>
 <span class="sd">        &lt;cutoff&gt; seconds and random seed &lt;seed&gt;</span>
@@ -316,6 +321,8 @@
 <span class="sd">                Runtime cutoff</span>
 <span class="sd">            seed : int</span>
 <span class="sd">                Random seed</span>
+<span class="sd">            budget : float (optional)</span>
+<span class="sd">                Not implemented</span>
 <span class="sd">            instance_specific: str</span>
 <span class="sd">                Instance specific information -- ignored here</span>
 <span class="sd">        Returns</span>
@@ -329,6 +336,8 @@
 <span class="sd">            additional_info: dict</span>
 <span class="sd">                all further additional run information</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">budget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">instance</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
@@ -393,16 +402,20 @@
 
         <span class="k">return</span> <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">results</span></div>
 
-    <span class="k">def</span> <span class="nf">_call_ta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
-                 <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                 <span class="n">instance_specific</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                 <span class="n">cutoff</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                 <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_call_ta</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+        <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">instance_specific</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">cutoff</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 
         <span class="c1"># TODO: maybe replace fixed instance specific and cutoff_length (0) to</span>
         <span class="c1"># other value</span>
-        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: typing.List[str]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ta</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;self.ta needs to be of type list or tuple, but is </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ta</span><span class="p">))</span>
         <span class="n">cmd</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ta</span><span class="p">)</span>
         <span class="n">cmd</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;--instance&quot;</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span>
                     <span class="s2">&quot;--cutoff&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">cutoff</span><span class="p">),</span>

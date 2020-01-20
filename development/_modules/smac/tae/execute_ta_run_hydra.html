@@ -279,6 +279,7 @@
   <h1>Source code for smac.tae.execute_ta_run_hydra</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">typing</span>
 
+<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_old</span> <span class="kn">import</span> <span class="n">ExecuteTARunOld</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_aclib</span> <span class="kn">import</span> <span class="n">ExecuteTARunAClib</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_aclib</span> <span class="kn">import</span> <span class="n">ExecuteTARun</span>
@@ -296,10 +297,12 @@
     <span class="sd">&quot;&quot;&quot;Returns min(cost, cost_portfolio)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">cost_oracle</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
-                 <span class="n">tae</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">ExecuteTARun</span><span class="p">]</span> <span class="o">=</span> <span class="n">ExecuteTARunOld</span><span class="p">,</span>
-                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">cost_oracle</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">tae</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">ExecuteTARun</span><span class="p">]</span> <span class="o">=</span> <span class="n">ExecuteTARunOld</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">            Constructor</span>
 
@@ -312,7 +315,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cost_oracle</span> <span class="o">=</span> <span class="n">cost_oracle</span>
         <span class="k">if</span> <span class="n">tae</span> <span class="ow">is</span> <span class="n">ExecuteTARunAClib</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">runner</span> <span class="o">=</span> <span class="n">ExecuteTARunAClib</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">runner</span> <span class="o">=</span> <span class="n">ExecuteTARunAClib</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># type: ExecuteTARun</span>
         <span class="k">elif</span> <span class="n">tae</span> <span class="ow">is</span> <span class="n">ExecuteTARunOld</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">runner</span> <span class="o">=</span> <span class="n">ExecuteTARunOld</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">tae</span> <span class="ow">is</span> <span class="n">ExecuteTAFuncDict</span><span class="p">:</span>
@@ -322,17 +325,28 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;TAE not supported&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ExecuteTARunHydra.run"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run_hydra.html#smac.tae.execute_ta_run_hydra.ExecuteTARunHydra.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ExecuteTARunHydra.run"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run_hydra.html#smac.tae.execute_ta_run_hydra.ExecuteTARunHydra.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+            <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">cutoff</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12345</span><span class="p">,</span>
+            <span class="n">budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">instance_specific</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">StatusType</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot; see ~smac.tae.execute_ta_run.ExecuteTARunOld for docstring</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">additional_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">inst</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;instance&quot;</span><span class="p">]</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">oracle_perf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost_oracle</span><span class="p">[</span><span class="n">inst</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="n">oracle_perf</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">oracle_perf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cutoff</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Cutoff of type None is not supported&#39;</span><span class="p">)</span>
+
+        <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">additional_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span>
+            <span class="n">cutoff</span><span class="o">=</span><span class="n">cutoff</span><span class="p">,</span>
+            <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
+            <span class="n">budget</span><span class="o">=</span><span class="n">budget</span><span class="p">,</span>
+            <span class="n">instance_specific</span><span class="o">=</span><span class="n">instance_specific</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost_oracle</span><span class="p">:</span>
+            <span class="n">oracle_perf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost_oracle</span><span class="p">[</span><span class="n">instance</span><span class="p">]</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;runtime&quot;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Portfolio perf: </span><span class="si">%f</span><span class="s2"> vs </span><span class="si">%f</span><span class="s2"> = </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">oracle_perf</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">oracle_perf</span><span class="p">,</span> <span class="n">runtime</span><span class="p">))</span>
                 <span class="n">runtime</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">oracle_perf</span><span class="p">,</span> <span class="n">runtime</span><span class="p">)</span>
@@ -340,7 +354,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Portfolio perf: </span><span class="si">%f</span><span class="s2"> vs </span><span class="si">%f</span><span class="s2"> = </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">oracle_perf</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">oracle_perf</span><span class="p">,</span> <span class="n">cost</span><span class="p">))</span>
                 <span class="n">cost</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">oracle_perf</span><span class="p">,</span> <span class="n">cost</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">oracle_perf</span> <span class="o">&lt;</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;cutoff&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">status</span> <span class="ow">is</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">TIMEOUT</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">oracle_perf</span> <span class="o">&lt;</span> <span class="n">cutoff</span> <span class="ow">and</span> <span class="n">status</span> <span class="ow">is</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">TIMEOUT</span><span class="p">:</span>
                 <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Oracle performance missing --- should not happen&quot;</span><span class="p">)</span>

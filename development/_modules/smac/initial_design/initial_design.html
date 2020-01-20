@@ -347,7 +347,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">traj_logger</span> <span class="o">=</span> <span class="n">traj_logger</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">configs</span> <span class="o">=</span> <span class="n">configs</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
         <span class="n">n_params</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">())</span>
         <span class="k">if</span> <span class="n">init_budget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -368,7 +368,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_budget</span> <span class="o">&gt;</span> <span class="n">ta_run_limit</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s1">&#39;Initial budget </span><span class="si">%d</span><span class="s1"> cannot be higher than the run limit </span><span class="si">%d</span><span class="s1">.&#39;</span>
-                <span class="o">%</span> <span class="p">(</span><span class="n">init_budget</span><span class="p">,</span> <span class="n">ta_run_limit</span><span class="p">)</span>
+                <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">init_budget</span><span class="p">,</span> <span class="n">ta_run_limit</span><span class="p">)</span>
             <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Running initial design for </span><span class="si">%d</span><span class="s2"> configurations&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_budget</span><span class="p">)</span>
 

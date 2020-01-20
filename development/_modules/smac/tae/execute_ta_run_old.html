@@ -298,12 +298,15 @@
 <span class="sd">    (SMAC &lt; v2.10)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ExecuteTARunOld.run"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run_old.html#smac.tae.execute_ta_run_old.ExecuteTARunOld.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
-            <span class="n">instance</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">cutoff</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12345</span><span class="p">,</span>
-            <span class="n">budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
-            <span class="n">instance_specific</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="ExecuteTARunOld.run"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run_old.html#smac.tae.execute_ta_run_old.ExecuteTARunOld.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+        <span class="n">instance</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">cutoff</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12345</span><span class="p">,</span>
+        <span class="n">budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">instance_specific</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">StatusType</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Runs target algorithm &lt;self.ta&gt; with configuration &lt;config&gt; on</span>
 <span class="sd">        instance &lt;instance&gt; with instance specifics &lt;specifics&gt; for at most</span>
 <span class="sd">        &lt;cutoff&gt; seconds and random seed &lt;seed&gt;</span>
@@ -345,10 +348,10 @@
                                          <span class="n">instance_specific</span><span class="o">=</span><span class="n">instance_specific</span><span class="p">,</span>
                                          <span class="n">cutoff</span><span class="o">=</span><span class="n">cutoff</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
 
-        <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;CRASHED&quot;</span>
-        <span class="n">quality</span> <span class="o">=</span> <span class="mi">1234567890</span>
-        <span class="n">runtime</span> <span class="o">=</span> <span class="mi">1234567890</span>
-        <span class="n">additional_info</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">status_string</span> <span class="o">=</span> <span class="s2">&quot;CRASHED&quot;</span>
+        <span class="n">quality</span> <span class="o">=</span> <span class="mf">1234567890.0</span>
+        <span class="n">runtime</span> <span class="o">=</span> <span class="mf">1234567890.0</span>
+        <span class="n">additional_info</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: typing.Dict[str, str]</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">stdout_</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Result of this algorithm run:&quot;</span><span class="p">)</span> <span class="ow">or</span> \
                     <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Result for ParamILS&quot;</span><span class="p">)</span> <span class="ow">or</span> \
@@ -356,25 +359,24 @@
                 <span class="n">fields</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
                 <span class="n">fields</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">fields</span><span class="p">))</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
-                    <span class="n">status</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">runlength</span><span class="p">,</span> <span class="n">quality</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">fields</span>
+                    <span class="n">status_string</span><span class="p">,</span> <span class="n">runtime_string</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">quality_string</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">fields</span>
                     <span class="n">additional_info</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">status</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">runlength</span><span class="p">,</span> <span class="n">quality</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">additional_info</span> <span class="o">=</span> <span class="n">fields</span>
-                    <span class="n">additional_info</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;additional_info&quot;</span><span class="p">:</span> <span class="n">additional_info</span><span class="p">}</span>
+                    <span class="n">status_string</span><span class="p">,</span> <span class="n">runtime_string</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">quality_string</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">additional_info_string</span> <span class="o">=</span> <span class="n">fields</span>
+                    <span class="n">additional_info</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;additional_info&quot;</span><span class="p">:</span> <span class="n">additional_info_string</span><span class="p">}</span>
 
-                <span class="n">runtime</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">runtime</span><span class="p">),</span> <span class="n">cutoff</span><span class="p">)</span>
-                <span class="n">quality</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">quality</span><span class="p">)</span>
-                <span class="n">seed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+                <span class="n">runtime</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">runtime_string</span><span class="p">),</span> <span class="n">cutoff</span><span class="p">)</span>
+                <span class="n">quality</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">quality_string</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">status</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;SAT&quot;</span><span class="p">,</span> <span class="s2">&quot;UNSAT&quot;</span><span class="p">,</span> <span class="s2">&quot;SUCCESS&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">status_string</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;SAT&quot;</span><span class="p">,</span> <span class="s2">&quot;UNSAT&quot;</span><span class="p">,</span> <span class="s2">&quot;SUCCESS&quot;</span><span class="p">]:</span>
             <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span>
-        <span class="k">elif</span> <span class="n">status</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;TIMEOUT&quot;</span><span class="p">]:</span>
+        <span class="k">elif</span> <span class="n">status_string</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;TIMEOUT&quot;</span><span class="p">]:</span>
             <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">TIMEOUT</span>
-        <span class="k">elif</span> <span class="n">status</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;CRASHED&quot;</span><span class="p">]:</span>
+        <span class="k">elif</span> <span class="n">status_string</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;CRASHED&quot;</span><span class="p">]:</span>
             <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span>
-        <span class="k">elif</span> <span class="n">status</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;ABORT&quot;</span><span class="p">]:</span>
+        <span class="k">elif</span> <span class="n">status_string</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;ABORT&quot;</span><span class="p">]:</span>
             <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">ABORT</span>
-        <span class="k">elif</span> <span class="n">status</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;MEMOUT&quot;</span><span class="p">]:</span>
+        <span class="k">elif</span> <span class="n">status_string</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;MEMOUT&quot;</span><span class="p">]:</span>
             <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">MEMOUT</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Could not parse output of target algorithm. Expected format: &quot;</span>
@@ -395,15 +397,19 @@
 
         <span class="k">return</span> <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">runtime</span><span class="p">),</span> <span class="n">additional_info</span></div>
 
-    <span class="k">def</span> <span class="nf">_call_ta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
-                 <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                 <span class="n">instance_specific</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                 <span class="n">cutoff</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                 <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_call_ta</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+        <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">instance_specific</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">cutoff</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 
         <span class="c1"># TODO: maybe replace fixed instance specific and cutoff_length (0) to other value</span>
-        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: typing.List[str]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ta</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;self.ta needs to be of type list or tuple, but is </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ta</span><span class="p">))</span>
         <span class="n">cmd</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ta</span><span class="p">)</span>
         <span class="n">cmd</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">instance</span><span class="p">,</span> <span class="n">instance_specific</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">cutoff</span><span class="p">),</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">seed</span><span class="p">)])</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
