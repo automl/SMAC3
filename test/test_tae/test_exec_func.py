@@ -119,7 +119,7 @@ class TestExecuteFunc(unittest.TestCase):
         mock.return_value = {'x1': 2, 'x2': 1}
         c = Configuration(configuration_space=self.cs, values={})
         taf = ExecuteTAFuncArray(target, stats=self.stats)
-        rval = taf._call_ta(target, c)
+        rval = taf._call_ta(target, c, {})
         self.assertEqual(rval, 5)
 
     def test_memout(self):

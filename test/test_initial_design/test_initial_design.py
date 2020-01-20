@@ -26,13 +26,13 @@ class TestSingleInitialDesign(unittest.TestCase):
             'output_dir': '',
             'ta_run_limit': 100,
         })
-        self.ta = ExecuteTAFuncDict(lambda x: x["x1"]**2)
+        self.stats = Stats(scenario=self.scenario)
+        self.rh = RunHistory()
+        self.ta = ExecuteTAFuncDict(lambda x: x["x1"]**2, stats=self.stats, runhistory=self.rh)
 
     def test_single_default_config_design(self):
-        stats = Stats(scenario=self.scenario)
-        stats.start_timing()
-        self.ta.stats = stats
-        tj = TrajLogger(output_dir=None, stats=stats)
+        self.stats.start_timing()
+        tj = TrajLogger(output_dir=None, stats=self.stats)
 
         dc = DefaultConfiguration(
             cs=self.cs,
@@ -47,12 +47,8 @@ class TestSingleInitialDesign(unittest.TestCase):
         self.assertEqual(configs[0]['x1'], 1)
 
     def test_multi_config_design(self):
-        stats = Stats(scenario=self.scenario)
-        stats.start_timing()
-        self.ta.stats = stats
-        tj = TrajLogger(output_dir=None, stats=stats)
-        rh = RunHistory()
-        self.ta.runhistory = rh
+        self.stats.start_timing()
+        tj = TrajLogger(output_dir=None, stats=self.stats)
         _ = np.random.RandomState(seed=12345)
 
         configs = [Configuration(configuration_space=self.cs, values={"x1": 4}),
@@ -72,12 +68,8 @@ class TestSingleInitialDesign(unittest.TestCase):
         self.assertEqual(init_configs, configs)
 
     def test_init_budget(self):
-        stats = Stats(scenario=self.scenario)
-        stats.start_timing()
-        self.ta.stats = stats
-        tj = TrajLogger(output_dir=None, stats=stats)
-        rh = RunHistory()
-        self.ta.runhistory = rh
+        self.stats.start_timing()
+        tj = TrajLogger(output_dir=None, stats=self.stats)
         _ = np.random.RandomState(seed=12345)
 
         kwargs = dict(

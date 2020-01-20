@@ -6,6 +6,7 @@ import shutil
 import numpy as np
 
 from smac.scenario.scenario import Scenario
+from smac.stats.stats import Stats
 from smac.tae.execute_ta_run import StatusType
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.runhistory.runhistory import RunHistory
@@ -41,6 +42,7 @@ class ValidationTest(unittest.TestCase):
                              '5': np.array((1, 2, 3))}
         self.output_rh = 'test/test_files/validation/'
         scen = Scenario(self.scen_fn, cmd_options={'run_obj': 'quality'})
+        self.stats = Stats(scen)
         self.trajectory = TrajLogger.read_traj_aclib_format(
             fn='test/test_files/validation/test_validation_traj.json', cs=scen.cs)
         self.output_dirs = [self.output_rh + 'test']
@@ -79,11 +81,22 @@ class ValidationTest(unittest.TestCase):
 
     def test_pass_tae(self):
         scen = Scenario(self.scen_fn, cmd_options={'run_obj': 'quality'})
-        tae = ExecuteTARunOld(ta=scen.ta)
+        tae = ExecuteTARunOld(ta=scen.ta, stats=self.stats)
         validator = Validator(scen, self.trajectory)
-        with mock.patch.object(Validator, "_validate_parallel",
-                               return_value=[(1, 2, 3, 4)]):
-            self.assertEqual(1, len(validator.validate(tae=tae).data))
+        rh_mock = mock.Mock()
+        with mock.patch.object(
+            Validator,
+            "_validate_parallel",
+            return_value=[mock.MagicMock(), mock.MagicMock(), mock.MagicMock(), mock.MagicMock()],
+        ) as validate_parallel_mock:
+            with mock.patch.object(
+                Validator,
+                "_get_runs",
+                return_value=[[mock.Mock(), mock.Mock(), mock.Mock(), mock.Mock()], rh_mock],
+            ):
+                validator.validate(tae=tae)
+                self.assertIs(validate_parallel_mock.call_args[0][0], tae)
+                self.assertEqual(rh_mock.add.call_count, 4)
 
     def test_no_rh_epm(self):
         scen = Scenario(self.scen_fn, cmd_options={'run_obj': 'quality'})

@@ -68,7 +68,7 @@ class InitialDesign:
         self.traj_logger = traj_logger
         self.configs = configs
 
-        self.logger = self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         n_params = len(self.cs.get_hyperparameters())
         if init_budget is not None:
@@ -89,7 +89,7 @@ class InitialDesign:
         if self.init_budget > ta_run_limit:
             raise ValueError(
                 'Initial budget %d cannot be higher than the run limit %d.'
-                % (init_budget, ta_run_limit)
+                % (self.init_budget, ta_run_limit)
             )
         self.logger.info("Running initial design for %d configurations" % self.init_budget)
 

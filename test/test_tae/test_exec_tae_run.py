@@ -60,15 +60,20 @@ class TaeTest(unittest.TestCase):
         # Patch run-function for custom-return
         test_run.return_value = StatusType.ABORT, 12345.0, 1.2345, {}
 
-        scen = Scenario(scenario={'cs': ConfigurationSpace(),
-                                  'run_obj': 'quality',
-                                  'output_dir': ''}, cmd_options=None)
+        scen = Scenario(
+            scenario={
+                'cs': ConfigurationSpace(),
+                'run_obj': 'quality',
+                'output_dir': '',
+            },
+            cmd_options=None,
+        )
         stats = Stats(scen)
         stats.start_timing()
         eta = ExecuteTARun(ta=lambda *args: None, stats=stats)
 
         self.assertRaises(
-            TAEAbortException, eta.start, config={}, instance=1)
+            TAEAbortException, eta.start, config={}, instance=1, cutoff=30)
 
     @mock.patch.object(ExecuteTARun, 'run')
     def test_start_crash_first_run(self, test_run):

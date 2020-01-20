@@ -19,12 +19,15 @@ class ExecuteTARunOld(ExecuteTARun):
     (SMAC < v2.10)
     """
 
-    def run(self, config: Configuration,
-            instance: typing.Optional[str] = None,
-            cutoff: typing.Optional[float] = None,
-            seed: int = 12345,
-            budget: typing.Optional[float] = 0.0,
-            instance_specific: str = "0"):
+    def run(
+        self,
+        config: Configuration,
+        instance: typing.Optional[str] = None,
+        cutoff: typing.Optional[float] = None,
+        seed: int = 12345,
+        budget: typing.Optional[float] = 0.0,
+        instance_specific: str = "0",
+    ) -> typing.Tuple[StatusType, float, float, typing.Dict]:
         """Runs target algorithm <self.ta> with configuration <config> on
         instance <instance> with instance specifics <specifics> for at most
         <cutoff> seconds and random seed <seed>
@@ -66,10 +69,10 @@ class ExecuteTARunOld(ExecuteTARun):
                                          instance_specific=instance_specific,
                                          cutoff=cutoff, seed=seed)
 
-        status = "CRASHED"
-        quality = 1234567890
-        runtime = 1234567890
-        additional_info = {}
+        status_string = "CRASHED"
+        quality = 1234567890.0
+        runtime = 1234567890.0
+        additional_info = {}  # type: typing.Dict[str, str]
         for line in stdout_.split("\n"):
             if line.startswith("Result of this algorithm run:") or \
                     line.startswith("Result for ParamILS") or \
@@ -77,25 +80,24 @@ class ExecuteTARunOld(ExecuteTARun):
                 fields = line.split(":")[1].split(",")
                 fields = list(map(lambda x: x.strip(" "), fields))
                 if len(fields) == 5:
-                    status, runtime, runlength, quality, seed = fields
+                    status_string, runtime_string, _, quality_string, _ = fields
                     additional_info = {}
                 else:
-                    status, runtime, runlength, quality, seed, additional_info = fields
-                    additional_info = {"additional_info": additional_info}
+                    status_string, runtime_string, _, quality_string, _, additional_info_string = fields
+                    additional_info = {"additional_info": additional_info_string}
 
-                runtime = min(float(runtime), cutoff)
-                quality = float(quality)
-                seed = int(seed)
+                runtime = min(float(runtime_string), cutoff)
+                quality = float(quality_string)
 
-        if status.upper() in ["SAT", "UNSAT", "SUCCESS"]:
+        if status_string.upper() in ["SAT", "UNSAT", "SUCCESS"]:
             status = StatusType.SUCCESS
-        elif status.upper() in ["TIMEOUT"]:
+        elif status_string.upper() in ["TIMEOUT"]:
             status = StatusType.TIMEOUT
-        elif status.upper() in ["CRASHED"]:
+        elif status_string.upper() in ["CRASHED"]:
             status = StatusType.CRASHED
-        elif status.upper() in ["ABORT"]:
+        elif status_string.upper() in ["ABORT"]:
             status = StatusType.ABORT
-        elif status.upper() in ["MEMOUT"]:
+        elif status_string.upper() in ["MEMOUT"]:
             status = StatusType.MEMOUT
         else:
             self.logger.warn("Could not parse output of target algorithm. Expected format: "
@@ -116,15 +118,19 @@ class ExecuteTARunOld(ExecuteTARun):
 
         return status, cost, float(runtime), additional_info
 
-    def _call_ta(self,
-                 config: Configuration,
-                 instance: str,
-                 instance_specific: str,
-                 cutoff: float,
-                 seed: int):
+    def _call_ta(
+        self,
+        config: Configuration,
+        instance: str,
+        instance_specific: str,
+        cutoff: float,
+        seed: int,
+    ) -> typing.Tuple[str, str]:
 
         # TODO: maybe replace fixed instance specific and cutoff_length (0) to other value
-        cmd = []
+        cmd = []  # type: typing.List[str]
+        if not isinstance(self.ta, (list, tuple)):
+            raise TypeError('self.ta needs to be of type list or tuple, but is %s' % type(self.ta))
         cmd.extend(self.ta)
         cmd.extend([instance, instance_specific, str(cutoff), "0", str(seed)])
         for p in config:
