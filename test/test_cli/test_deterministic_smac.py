@@ -2,7 +2,6 @@ import json
 import os
 import unittest
 import shutil
-from nose.plugins.attrib import attr
 
 from unittest import mock
 
@@ -33,7 +32,6 @@ class TestDeterministicSMAC(unittest.TestCase):
                 shutil.rmtree(output_dir, ignore_errors=True)
         os.chdir(self.current_dir)
 
-    @attr('slow')
     @unittest.mock.patch("smac.optimizer.ei_optimization.get_one_exchange_neighbourhood")
     def test_deterministic(self, patch):
         """

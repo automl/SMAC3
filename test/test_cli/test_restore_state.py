@@ -1,6 +1,5 @@
 import os
 import unittest
-from nose.plugins.attrib import attr
 import shutil
 
 import numpy as np
@@ -36,10 +35,8 @@ class TestSMACCLI(unittest.TestCase):
         for output_dir in self.output_dirs:
             if output_dir:
                 shutil.rmtree(output_dir, ignore_errors=True)
-                #pass
         os.chdir(self.current_dir)
 
-    @attr('slow')
     def test_run_and_restore(self):
         """
         Testing basic restore functionality.
@@ -81,7 +78,6 @@ class TestSMACCLI(unittest.TestCase):
         smac = SMAC4AC(scen, restore_incumbent=incumbent, rng=np.random.RandomState(42))
         self.assertRaises(ValueError, smac.optimize)
 
-    @attr('slow')
     def test_same_dir(self):
         """
         Testing possible error using same dir for restore
@@ -103,5 +99,3 @@ class TestSMACCLI(unittest.TestCase):
         self.assertFalse(os.path.exists(self.output_one + '.OLD'))
         self.assertTrue(os.path.exists(self.output_two))
         self.assertFalse(os.path.exists(self.output_two + '.OLD'))
-
-

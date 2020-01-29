@@ -1,5 +1,6 @@
 import logging
 import typing
+from collections import OrderedDict
 
 from ConfigSpace.configuration_space import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import NumericalHyperparameter, \
@@ -7,14 +8,7 @@ from ConfigSpace.hyperparameters import NumericalHyperparameter, \
 from ConfigSpace.util import deactivate_inactive_hyperparameters
 import numpy as np
 
-from smac.intensification.intensification import Intensifier
-from smac.tae.execute_ta_run import ExecuteTARun
-from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
-from smac.scenario.scenario import Scenario
-from smac.runhistory.runhistory import RunHistory
-from smac.tae.execute_ta_run import FirstRunCrashedException
-from smac.utils import constants
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2019, AutoML"
@@ -26,184 +20,100 @@ class InitialDesign:
 
     Attributes
     ----------
+    cs : ConfigurationSpace
     configs : typing.List[Configuration]
         List of configurations to be evaluated
-    intensifier
-    runhistory
-    aggregate_func
     """
 
     def __init__(self,
-                 tae_runner: ExecuteTARun,
-                 scenario: Scenario,
-                 stats: Stats,
-                 traj_logger: TrajLogger,
-                 runhistory: RunHistory,
+                 cs: ConfigurationSpace,
                  rng: np.random.RandomState,
-                 intensifier: Intensifier,
-                 aggregate_func: typing.Callable,
+                 traj_logger: TrajLogger,
+                 ta_run_limit: int,
                  configs: typing.Optional[typing.List[Configuration]] = None,
-                 n_configs_x_params: int = 10,
+                 n_configs_x_params: typing.Optional[int] = 10,
                  max_config_fracs: float = 0.25,
-                 run_first_config: bool = True,
-                 fill_random_configs: bool = False
+                 init_budget: typing.Optional[int] = None,
                  ):
         """Constructor
 
         Parameters
         ---------
-        tae_runner: ExecuteTARun
-            Target algorithm execution object.
-        scenario: Scenario
-            Scenario with all meta information (including configuration space).
-        stats: Stats
-            Statistics of experiments; needed in case initial design already
-            exhausts the budget.
+        cs: ConfigurationSpace
+            configuration space object
+        rng: np.random.RandomState
+            Random state
         traj_logger: TrajLogger
             Trajectory logging to add new incumbents found by the initial
             design.
-        runhistory: RunHistory
-            Runhistory with all target algorithm runs.
-        rng: np.random.RandomState
-            Random state
-        intensifier: Intensifier
-            Intensification object to issue a racing to decide the current
-            incumbent.
-        aggregate_func: typing:Callable
-            Function to aggregate performance of a configuration across
-            instances.
+        ta_run_limit: int
+            Number of iterations allowed for the target algorithm
         configs: typing.Optional[typing.List[Configuration]]
-            List of initial configurations.
+            List of initial configurations. Disables the arguments ``n_configs_x_params`` if given.
+            Either this, or ``n_configs_x_params`` or ``init_budget`` must be provided.
         n_configs_x_params: int
-            how many configurations will be used at most in the initial design (X*D)
+            how many configurations will be used at most in the initial design (X*D). Either
+            this, or ``init_budget`` or ``configs`` must be provided. Disables the argument
+            ``n_configs_x_params`` if given.
         max_config_fracs: float
             use at most X*budget in the initial design. Not active if a time limit is given.
-        run_first_config: bool
-            specify if target algorithm has to be run once on the first configuration before the intensify call
-        fill_random_configs: bool
-            fill budget with random configurations if initial incumbent sampling returns only 1 configuration
+        init_budget : int, optional
+            Maximal initial budget (disables the arguments ``n_configs_x_params`` and ``configs``
+            if both are given). Either this, or ``n_configs_x_params`` or ``configs`` must be
+            provided.
         """
 
-        self.tae_runner = tae_runner
-        self.stats = stats
-        self.traj_logger = traj_logger
-        self.scenario = scenario
+        self.cs = cs
         self.rng = rng
+        self.traj_logger = traj_logger
         self.configs = configs
-        self.intensifier = intensifier
-        self.runhistory = runhistory
-        self.aggregate_func = aggregate_func
-        self.run_first_config = run_first_config
-        self.fill_random_configs = fill_random_configs
 
-        self.logger = self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
-        n_params = len(self.scenario.cs.get_hyperparameters())
-        self.init_budget = int(max(1, min(n_configs_x_params * n_params,
-                                          (max_config_fracs * scenario.ta_run_limit))))
+        n_params = len(self.cs.get_hyperparameters())
+        if init_budget is not None:
+            self.init_budget = init_budget
+            if n_configs_x_params is not None:
+                self.logger.debug(
+                    'Ignoring argument `n_configs_x_params` (value %d).',
+                    n_configs_x_params,
+                )
+        elif configs is not None:
+            self.init_budget = len(configs)
+        elif n_configs_x_params is not None:
+            self.init_budget = int(max(1, min(n_configs_x_params * n_params,
+                                              (max_config_fracs * ta_run_limit))))
+        else:
+            raise ValueError('Need to provide either argument `init_budget`, `configs` or '
+                             '`n_configs_x_params`, but provided none of them.')
+        if self.init_budget > ta_run_limit:
+            raise ValueError(
+                'Initial budget %d cannot be higher than the run limit %d.'
+                % (self.init_budget, ta_run_limit)
+            )
         self.logger.info("Running initial design for %d configurations" % self.init_budget)
 
     def select_configurations(self) -> typing.List[Configuration]:
 
         if self.configs is None:
-            configs = self._select_configurations()
-            # add random configurations if _select_configurations() returns less than expected budget
-            if self.fill_random_configs and len(configs) < self.init_budget:
-                random_configs = self.scenario.cs.sample_configuration(size=self.init_budget - len(configs))
-                if isinstance(random_configs, list):
-                    configs.extend(random_configs)
-                else:
-                    configs.append(random_configs)
-            return configs
-        else:
-            return self.configs
+            self.configs = self._select_configurations()
 
-    def _select_configurations(self) -> typing.List[Configuration]:
-        raise NotImplementedError
-
-    def run(self) -> Configuration:
-        """Run the initial design.
-
-        Returns
-        -------
-        incumbent: Configuration
-            Initial incumbent configuration
-        """
-        configs = self.select_configurations()
-        for config in configs:
+        for config in self.configs:
             if config.origin is None:
                 config.origin = 'Initial design'
 
         # add this incumbent right away to have an entry to time point 0
         self.traj_logger.add_entry(train_perf=2**31,
                                    incumbent_id=1,
-                                   incumbent=configs[0])
+                                   incumbent=self.configs[0])
 
-        # run first design
-        inc = None
-        if self.run_first_config:
-            # ensures that first design is part of trajectory file
-            inc = self._run_first_configuration(configs[0], self.scenario)
-            configs.pop(0)
+        # removing duplicates
+        # (Reference: https://stackoverflow.com/questions/7961363/removing-duplicates-in-lists)
+        self.configs = list(OrderedDict.fromkeys(self.configs))
+        return self.configs
 
-        if len(set(configs)) >= 1:
-            # intensify will skip all challenger that are identical with the incumbent;
-            # if <configs> has only identical configurations,
-            # intensifiy will not do any configuration runs
-            # (also not on the incumbent)
-            # therefore, at least two different configurations have to be in <configs>
-            inc, _ = self.intensifier.intensify(
-                challengers=configs,
-                incumbent=inc,
-                run_history=self.runhistory,
-                aggregate_func=self.aggregate_func,
-            )
-
-        return inc
-
-    def _run_first_configuration(self, initial_incumbent, scenario):
-        """Runs the initial design by calling the target algorithm and adding new entries to the trajectory logger.
-
-        Returns
-        -------
-        incumbent: Configuration
-            Initial incumbent configuration
-        """
-        if initial_incumbent.origin is None:
-            initial_incumbent.origin = 'Initial design'
-
-        rand_inst = self.rng.choice(self.scenario.train_insts)
-
-        if self.scenario.deterministic:
-            initial_seed = 0
-        else:
-            initial_seed = self.rng.randint(0, constants.MAXINT)
-
-        try:
-            status, cost, runtime, _ = self.tae_runner.start(
-                initial_incumbent,
-                instance=rand_inst,
-                cutoff=self.scenario.cutoff,
-                seed=initial_seed,
-                instance_specific=self.scenario.instance_specific.get(rand_inst,
-                                                                      "0"))
-        except FirstRunCrashedException as err:
-            if self.scenario.abort_on_first_run_crash:
-                raise err
-            else:
-                # TODO make it possible to add the failed run to the runhistory
-                if self.scenario.run_obj == "quality":
-                    cost = self.scenario.cost_for_crash
-                else:
-                    cost = self.scenario.cutoff * scenario.par_factor
-
-        self.stats.inc_changed += 1  # first incumbent
-
-        self.traj_logger.add_entry(train_perf=cost,
-                                   incumbent_id=self.stats.inc_changed,
-                                   incumbent=initial_incumbent)
-
-        return initial_incumbent
+    def _select_configurations(self) -> typing.List[Configuration]:
+        raise NotImplementedError
 
     def _transform_continuous_designs(self,
                                       design: np.ndarray,
@@ -229,7 +139,7 @@ class InitialDesign:
                 v_design[v_design == 1] = 1 - 10**-10
                 design[:, idx] = np.array(v_design * len(param.sequence), dtype=np.int)
             else:
-                raise ValueError("Hyperparamer not supported in LHD")
+                raise ValueError("Hyperparameter not supported in LHD")
 
         self.logger.debug("Initial Design")
         configs = []

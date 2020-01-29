@@ -37,7 +37,7 @@ class TaeOldTest(unittest.TestCase):
         eta = ExecuteTARunAClib(
             ta=shlex.split("python test/test_tae/dummy_ta_wrapper_aclib.py 1"),
             stats=stats)
-        status, cost, runtime, ar_info = eta.run(config={})
+        status, cost, runtime, ar_info = eta.run(config={}, instance='0')
         assert status == StatusType.TIMEOUT
         assert cost == 2.0
         assert runtime == 2.0
@@ -47,7 +47,7 @@ class TaeOldTest(unittest.TestCase):
         eta = ExecuteTARunAClib(
             ta=shlex.split("python test/test_tae/dummy_ta_wrapper_aclib.py 2"),
             stats=stats)
-        status, cost, runtime, ar_info = eta.run(config={})
+        status, cost, runtime, ar_info = eta.run(config={}, instance='0')
         assert status == StatusType.SUCCESS
         assert cost == 3.0
         assert runtime == 3.0
@@ -57,15 +57,15 @@ class TaeOldTest(unittest.TestCase):
         eta = ExecuteTARunAClib(ta=shlex.split(
             "python test/test_tae/dummy_ta_wrapper_aclib.py 2"), stats=stats,
             run_obj="quality")
-        status, cost, runtime, ar_info = eta.run(config={},)
+        status, cost, runtime, ar_info = eta.run(config={}, instance='0')
         assert status == StatusType.SUCCESS
         assert cost == 2.0
         assert runtime == 3.0
 
         print(status, cost, runtime, ar_info)
-        
+
     def test_status(self):
-        
+
         scen = Scenario(scenario={'cs': ConfigurationSpace(),
                                   'run_obj': 'quality',
                                   'output_dir': ''}, cmd_options=None)
@@ -74,35 +74,35 @@ class TaeOldTest(unittest.TestCase):
         eta = ExecuteTARunAClib(
             ta=shlex.split(""),
             stats=stats)
-        
+
         def test_success(**kwargs):
             results = {"status": "SUCCESS",
                        "cost": 1234567890
                        }
             return results, "", ""
-        
+
         eta._call_ta = test_success
-        status, cost, runtime, ar_info = eta.run(config={},)
+        status, cost, runtime, ar_info = eta.run(config={}, instance='0')
         self.assertEqual(status, StatusType.SUCCESS)
-        
+
         def test_success(**kwargs):
             results = {"status": "SUCESS",
                        "cost": 1234567890
                        }
             return results, "", ""
-        
+
         eta._call_ta = test_success
-        status, cost, runtime, ar_info = eta.run(config={},)
+        status, cost, runtime, ar_info = eta.run(config={}, instance='0')
         self.assertEqual(status, StatusType.CRASHED)
-        
+
         def test_success(**kwargs):
             results = {"status": "success",
                        "cost": 1234567890
                        }
             return results, "", ""
-        
+
         eta._call_ta = test_success
-        status, cost, runtime, ar_info = eta.run(config={},)
+        status, cost, runtime, ar_info = eta.run(config={}, instance='0')
         self.assertEqual(status, StatusType.CRASHED)
 
 

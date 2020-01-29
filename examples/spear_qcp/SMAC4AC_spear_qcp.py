@@ -10,18 +10,26 @@ SMAC's own "intensifier" approach.
 import logging
 
 from smac.facade.smac_ac_facade import SMAC4AC
-from smac.scenario.scenario import Scenario
-
 from smac.intensification.successive_halving import SuccessiveHalving
+from smac.scenario.scenario import Scenario
 
 if __name__ == '__main__':
     logging.basicConfig(level=20)  # 10: debug; 20: info
 
     scenario = Scenario('scenario.txt')
-    intensifier_kwargs = {'initial_budget': 1, 'eta': 2}
+
+    # provide arguments for the intensifier like this
+    intensifier_kwargs = {'n_seeds': 2,  # specify the number of seeds to evaluate for a
+                          # non-deterministic target algorithm
+                          'initial_budget': 1,
+                          'eta': 3,
+                          }
+
     smac = SMAC4AC(scenario=scenario,  # scenario object
-                   intensifier_kwargs=intensifier_kwargs,  # parameters for Successive Halving
-                   intensifier=SuccessiveHalving)  # change intensifier to successive halving by passing the class
+                   intensifier_kwargs=intensifier_kwargs,  # arguments for Successive Halving
+                   intensifier=SuccessiveHalving  # change intensifier to successive halving by passing the class.
+                   # it must implement `AbstractRacer`
+                   )
 
     # Start optimization
     try:

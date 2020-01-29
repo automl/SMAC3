@@ -8,14 +8,12 @@ from smac.utils.io.cmd_reader import CMDReader
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.facade.roar_facade import ROAR
-from smac.facade.experimental.epils_facade import EPILS
 from smac.facade.experimental.hydra_facade import Hydra
 from smac.facade.experimental.psmac_facade import PSMAC
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.facade.smac_bo_facade import SMAC4BO
 from smac.runhistory.runhistory import RunHistory
 from smac.stats.stats import Stats
-from smac.optimizer.objective import average_cost
 from smac.utils.merge_foreign_data import merge_foreign_data_from_file
 from smac.utils.io.traj_logging import TrajLogger
 from smac.tae.execute_ta_run import TAEAbortException, FirstRunCrashedException
@@ -38,7 +36,7 @@ class SMACCLI(object):
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
-    def main_cli(self, commandline_arguments: typing.List[str]=None):
+    def main_cli(self, commandline_arguments: typing.List[str] = None):
         """Main function of SMAC for CLI interface"""
         self.logger.info("SMAC call: %s" % (" ".join(sys.argv)))
 
@@ -50,8 +48,7 @@ class SMACCLI(object):
 
         root_logger = logging.getLogger()
         root_logger.setLevel(main_args_.verbose_level)
-        logger_handler = logging.StreamHandler(
-                stream=sys.stdout)
+        logger_handler = logging.StreamHandler(stream=sys.stdout)
         if root_logger.level >= logging.INFO:
             formatter = logging.Formatter(
                 "%(levelname)s:\t%(message)s")
@@ -90,16 +87,14 @@ class SMACCLI(object):
                                                             traj_list_aclib, traj_list_old)
 
         if main_args_.warmstart_runhistory:
-            aggregate_func = average_cost
-            rh = RunHistory(aggregate_func=aggregate_func)
+            rh = RunHistory()
 
             scen, rh = merge_foreign_data_from_file(
                 scenario=scen,
                 runhistory=rh,
                 in_scenario_fn_list=main_args_.warmstart_scenario,
                 in_runhistory_fn_list=main_args_.warmstart_runhistory,
-                cs=scen.cs,
-                aggregate_func=aggregate_func)
+                cs=scen.cs,)
 
         if main_args_.warmstart_incumbent:
             initial_configs = [scen.cs.get_default_configuration()]
@@ -142,13 +137,6 @@ class SMACCLI(object):
                 runhistory=rh,
                 initial_configurations=initial_configs,
                 run_id=main_args_.seed)
-        elif main_args_.mode == "EPILS":
-            optimizer = EPILS(
-                scenario=scen,
-                rng=np.random.RandomState(main_args_.seed),
-                runhistory=rh,
-                initial_configurations=initial_configs,
-                run_id=main_args_.seed)
         elif main_args_.mode == "Hydra":
             optimizer = Hydra(
                 scenario=scen,
@@ -186,11 +174,11 @@ class SMACCLI(object):
         stats_path = os.path.join(args_.restore_state, "stats.json")
         traj_path_aclib = os.path.join(args_.restore_state, "traj_aclib2.json")
         traj_path_old = os.path.join(args_.restore_state, "traj_old.csv")
-        scen_path = os.path.join(args_.restore_state, "scenario.txt")
+        _ = os.path.join(args_.restore_state, "scenario.txt")
         if not os.path.isdir(args_.restore_state):
-           raise FileNotFoundError("Could not find folder from which to restore.")
+            raise FileNotFoundError("Could not find folder from which to restore.")
         # Load runhistory and stats
-        rh = RunHistory(aggregate_func=None)
+        rh = RunHistory()
         rh.load_json(rh_path, scen.cs)
         self.logger.debug("Restored runhistory from %s", rh_path)
         stats = Stats(scen)

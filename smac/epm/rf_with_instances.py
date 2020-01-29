@@ -41,7 +41,7 @@ class RandomForestWithInstances(BaseModel):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: np.ndarray,
+        types: typing.List[int],
         bounds: typing.List[typing.Tuple[float, float]],
         seed: int,
         log_y: bool = False,
@@ -54,19 +54,20 @@ class RandomForestWithInstances(BaseModel):
         max_depth: int = 2**20,
         eps_purity: float = 1e-8,
         max_num_nodes: int = 2**20,
-        **kwargs
-    ):
+        instance_features: typing.Optional[np.ndarray] = None,
+        pca_components: typing.Optional[int] = None,
+    ) -> None:
         """
         Parameters
         ----------
-        types : np.ndarray (D)
+        types : List[int]
             Specifies the number of categorical values of an input dimension where
             the i-th entry corresponds to the i-th input dimension. Let's say we
             have 2 dimension where the first dimension consists of 3 different
             categorical choices and the second dimension is continuous than we
-            have to pass np.array([2, 0]). Note that we count starting from 0.
-        bounds : list
-            Specifies the bounds for continuous features.
+            have to pass [3, 0]. Note that we count starting from 0.
+        bounds : List[Tuple[float, float]]
+            bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
         seed : int
             The seed that is passed to the random_forest_run library.
         log_y: bool
@@ -92,8 +93,20 @@ class RandomForestWithInstances(BaseModel):
             different
         max_num_nodes : int
             The maxmimum total number of nodes in a tree
+        instance_features : np.ndarray (I, K)
+            Contains the K dimensional instance features of the I different instances
+        pca_components : float
+            Number of components to keep when using PCA to reduce dimensionality of instance features. Requires to
+            set n_feats (> pca_dims).
         """
-        super().__init__(configspace, types, bounds, seed, **kwargs)
+        super().__init__(
+            configspace=configspace,
+            types=types,
+            bounds=bounds,
+            seed=seed,
+            instance_features=instance_features,
+            pca_components=pca_components,
+        )
 
         self.log_y = log_y
         self.rng = regression.default_random_engine(seed)
@@ -102,7 +115,7 @@ class RandomForestWithInstances(BaseModel):
         self.rf_opts.num_trees = num_trees
         self.rf_opts.do_bootstrapping = do_bootstrapping
         max_features = 0 if ratio_features > 1.0 else \
-            max(1, int(types.shape[0] * ratio_features))
+            max(1, int(len(types) * ratio_features))
         self.rf_opts.tree_opts.max_features = max_features
         self.rf_opts.tree_opts.min_samples_to_split = min_samples_split
         self.rf_opts.tree_opts.min_samples_in_leaf = min_samples_leaf
@@ -119,10 +132,9 @@ class RandomForestWithInstances(BaseModel):
                        n_points_per_tree, ratio_features, min_samples_split,
                        min_samples_leaf, max_depth, eps_purity, self.seed]
 
-        self.logger = logging.getLogger(self.__module__ + "." +
-                                        self.__class__.__name__)
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
-    def _train(self, X: np.ndarray, y: np.ndarray):
+    def _train(self, X: np.ndarray, y: np.ndarray) -> 'RandomForestWithInstances':
         """Trains the random forest on X and y.
 
         Parameters
@@ -150,7 +162,7 @@ class RandomForestWithInstances(BaseModel):
         self.rf.fit(data, rng=self.rng)
         return self
 
-    def _init_data_container(self, X: np.ndarray, y: np.ndarray):
+    def _init_data_container(self, X: np.ndarray, y: np.ndarray) -> regression.default_data_container:
         """Fills a pyrfr default data container, s.t. the forest knows
         categoricals and bounds for continous data
 
@@ -197,8 +209,8 @@ class RandomForestWithInstances(BaseModel):
         if len(X.shape) != 2:
             raise ValueError(
                 'Expected 2d array, got %dd array!' % len(X.shape))
-        if X.shape[1] != self.types.shape[0]:
-            raise ValueError('Rows in X should have %d entries but have %d!' % (self.types.shape[0], X.shape[1]))
+        if X.shape[1] != len(self.types):
+            raise ValueError('Rows in X should have %d entries but have %d!' % (len(self.types), X.shape[1]))
 
         X = self._impute_inactive(X)
 
@@ -237,7 +249,7 @@ class RandomForestWithInstances(BaseModel):
 
         return means.reshape((-1, 1)), vars_.reshape((-1, 1))
 
-    def predict_marginalized_over_instances(self, X: np.ndarray):
+    def predict_marginalized_over_instances(self, X: np.ndarray) -> typing.Tuple[np.ndarray, np.ndarray]:
         """Predict mean and variance marginalized over all instances.
 
         Returns the predictive mean and variance marginalised over all
@@ -287,7 +299,7 @@ class RandomForestWithInstances(BaseModel):
 
             # marginalize over instances
             # 1. get all leaf values for each tree
-            preds_trees = [[] for i in range(self.rf_opts.num_trees)]
+            preds_trees = [[] for i in range(self.rf_opts.num_trees)]  # type: typing.List[typing.List[float]]
 
             for feat in self.instance_features:
                 x_ = np.concatenate([x, feat])

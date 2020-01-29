@@ -7,8 +7,6 @@ import os
 import unittest
 import logging
 
-import numpy as np
-
 from smac.configspace import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from smac.configspace import pcs
@@ -49,9 +47,9 @@ class InputReaderTest(unittest.TestCase):
         in_reader = InputReader()
         feats = in_reader.read_instance_features_file(fn=feature_fn)
         self.assertEqual(feats[0], ["feature1", "feature2", "feature3"])
-        feats_original = {"inst1":[1.0, 2.0, 3.0],
-                          "inst2":[1.5, 2.5, 3.5],
-                          "inst3":[1.7, 1.8, 1.9]}
+        feats_original = {"inst1": [1.0, 2.0, 3.0],
+                          "inst2": [1.5, 2.5, 3.5],
+                          "inst3": [1.7, 1.8, 1.9]}
         for i in feats[1]:
             self.assertEqual(feats_original[i], list(feats[1][i]))
 

@@ -1,6 +1,6 @@
-import sys
 import json
 from subprocess import Popen, PIPE
+import typing
 
 from smac.configspace import Configuration
 from smac.tae.execute_ta_run import StatusType, ExecuteTARun
@@ -19,11 +19,15 @@ class ExecuteTARunAClib(ExecuteTARun):
     instance and some resource limitations. Uses the AClib 2.0 style
     """
 
-    def run(self, config: Configuration,
-            instance: str=None,
-            cutoff: float=None,
-            seed: int=12345,
-            instance_specific: str="0"):
+    def run(
+        self,
+        config: Configuration,
+        instance: str,
+        cutoff: typing.Optional[float] = None,
+        seed: int = 12345,
+        budget: typing.Optional[float] = None,
+        instance_specific: str = "0",
+    ) -> typing.Tuple[StatusType, float, float, typing.Dict]:
         """Runs target algorithm <self.ta> with configuration <config> on
         instance <instance> with instance specifics <specifics> for at most
         <cutoff> seconds and random seed <seed>
@@ -38,6 +42,8 @@ class ExecuteTARunAClib(ExecuteTARun):
                 Runtime cutoff
             seed : int
                 Random seed
+            budget : float (optional)
+                Not implemented
             instance_specific: str
                 Instance specific information -- ignored here
         Returns
@@ -51,6 +57,8 @@ class ExecuteTARunAClib(ExecuteTARun):
             additional_info: dict
                 all further additional run information
         """
+        if budget is not None:
+            raise NotImplementedError()
 
         if instance is None:
             instance = "0"
@@ -58,9 +66,9 @@ class ExecuteTARunAClib(ExecuteTARun):
             cutoff = 99999999999999
 
         results, stdout_, stderr_ = self._call_ta(config=config,
-                                instance=instance,
-                                instance_specific=instance_specific,
-                                cutoff=cutoff, seed=seed)
+                                                  instance=instance,
+                                                  instance_specific=instance_specific,
+                                                  cutoff=cutoff, seed=seed)
 
         if results["status"] in ["SAT", "UNSAT", "SUCCESS"]:
             status = StatusType.SUCCESS
@@ -94,8 +102,7 @@ class ExecuteTARunAClib(ExecuteTARun):
 
         if self.run_obj == "quality" and results.get("cost") is None:
             self.logger.error(
-                "The target algorithm has not returned a quality/cost value" +
-                "although we optimize cost.")
+                "The target algorithm has not returned a quality/cost value although we optimize cost.")
             # (TODO) Do not return 0
             results["cost"] = 0
 
@@ -116,16 +123,20 @@ class ExecuteTARunAClib(ExecuteTARun):
 
         return status, cost, runtime, results
 
-    def _call_ta(self,
-                 config: Configuration,
-                 instance: str,
-                 instance_specific: str,
-                 cutoff: float,
-                 seed: int):
+    def _call_ta(
+        self,
+        config: Configuration,
+        instance: str,
+        instance_specific: str,
+        cutoff: float,
+        seed: int,
+    ) -> typing.Tuple[typing.Dict, str, str]:
 
         # TODO: maybe replace fixed instance specific and cutoff_length (0) to
         # other value
-        cmd = []
+        cmd = []  # type: typing.List[str]
+        if not isinstance(self.ta, (list, tuple)):
+            raise TypeError('self.ta needs to be of type list or tuple, but is %s' % type(self.ta))
         cmd.extend(self.ta)
         cmd.extend(["--instance", instance,
                     "--cutoff", str(cutoff),

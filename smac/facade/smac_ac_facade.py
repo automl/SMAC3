@@ -1,7 +1,7 @@
 import inspect
 import logging
 import os
-from typing import  List, Union, Optional, Type, Callable
+from typing import List, Union, Optional, Type, Callable
 
 import numpy as np
 
@@ -29,10 +29,9 @@ from smac.initial_design.sobol_design import SobolDesign
 
 # intensification
 from smac.intensification.intensification import Intensifier
-from smac.intensification.successive_halving import SuccessiveHalving
+from smac.intensification.abstract_racer import AbstractRacer
 # optimizer
 from smac.optimizer.smbo import SMBO
-from smac.optimizer.objective import average_cost
 from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction, IntegratedAcquisitionFunction
 from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
     AcquisitionFunctionMaximizer
@@ -75,7 +74,7 @@ class SMAC4AC(object):
                  tae_runner_kwargs: Optional[dict] = None,
                  runhistory: Optional[Union[Type[RunHistory], RunHistory]] = None,
                  runhistory_kwargs: Optional[dict] = None,
-                 intensifier: Optional[Type[Intensifier]] = None,
+                 intensifier: Optional[Type[AbstractRacer]] = None,
                  intensifier_kwargs: Optional[dict] = None,
                  acquisition_function: Optional[Type[AbstractAcquisitionFunction]] = None,
                  acquisition_function_kwargs: Optional[dict] = None,
@@ -179,8 +178,6 @@ class SMAC4AC(object):
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
-        aggregate_func = average_cost
-
         self.scenario = scenario
         self.output_dir = ""
         if not restore_incumbent:
@@ -200,9 +197,8 @@ class SMAC4AC(object):
             self.output_dir = scenario.output_dir_for_this_run
 
         if (
-            scenario.deterministic is True
-            and getattr(scenario, 'tuner_timeout', None) is None
-            and scenario.run_obj == 'quality'
+                scenario.deterministic is True and getattr(scenario, 'tuner_timeout',
+                                                           None) is None and scenario.run_obj == 'quality'
         ):
             self.logger.info('Optimizing a deterministic scenario for quality without a tuner timeout - will make '
                              'SMAC deterministic and only evaluate one configuration per iteration!')
@@ -222,19 +218,20 @@ class SMAC4AC(object):
             self.scenario.transform_y = "LOG"
 
         # initialize empty runhistory
-        runhistory_def_kwargs = {'aggregate_func': aggregate_func}
+        runhistory_def_kwargs = {}
         if runhistory_kwargs is not None:
             runhistory_def_kwargs.update(runhistory_kwargs)
         if runhistory is None:
             runhistory = RunHistory(**runhistory_def_kwargs)
         elif inspect.isclass(runhistory):
             runhistory = runhistory(**runhistory_def_kwargs)
+        elif isinstance(runhistory, RunHistory):
+            pass
         else:
-            if runhistory.aggregate_func is None:
-                runhistory.aggregate_func = aggregate_func
+            raise ValueError('runhistory has to be a class or an object of RunHistory')
 
         rand_conf_chooser_kwargs = {
-           'rng': rng
+            'rng': rng
         }
         if random_configuration_chooser_kwargs is not None:
             rand_conf_chooser_kwargs.update(random_configuration_chooser_kwargs)
@@ -285,7 +282,7 @@ class SMAC4AC(object):
             model = model(**model_def_kwargs)
         else:
             raise TypeError(
-                "Model not recognized: %s" %(type(model)))
+                "Model not recognized: %s" % (type(model)))
 
         # initial acquisition function
         acq_def_kwargs = {'model': model}
@@ -315,7 +312,7 @@ class SMAC4AC(object):
             'acquisition_function': acquisition_function,
             'config_space': scenario.cs,
             'rng': rng,
-            }
+        }
         if acquisition_function_optimizer_kwargs is not None:
             acq_func_opt_kwargs.update(acquisition_function_optimizer_kwargs)
         if acquisition_function_optimizer is None:
@@ -345,7 +342,7 @@ class SMAC4AC(object):
             'par_factor': scenario.par_factor,
             'cost_for_crash': scenario.cost_for_crash,
             'abort_on_first_run_crash': scenario.abort_on_first_run_crash
-            }
+        }
         if tae_runner_kwargs is not None:
             tae_def_kwargs.update(tae_runner_kwargs)
         if 'ta' not in tae_def_kwargs:
@@ -384,14 +381,14 @@ class SMAC4AC(object):
             'deterministic': scenario.deterministic,
             'run_obj_time': scenario.run_obj == "runtime",
             'always_race_against': scenario.cs.get_default_configuration()
-                                   if scenario.always_race_default else None,
+            if scenario.always_race_default else None,
             'use_ta_time_bound': scenario.use_ta_time,
             'instance_specifics': scenario.instance_specific,
             'minR': scenario.minR,
             'maxR': scenario.maxR,
             'adaptive_capping_slackfactor': scenario.intens_adaptive_capping_slackfactor,
             'min_chall': scenario.intens_min_chall
-            }
+        }
         if intensifier_kwargs is not None:
             intensifier_def_kwargs.update(intensifier_kwargs)
 
@@ -411,24 +408,14 @@ class SMAC4AC(object):
                 "Either use initial_design or initial_configurations; but not both")
 
         init_design_def_kwargs = {
-            'tae_runner': tae_runner,
-            'scenario': scenario,
-            'stats': self.stats,
+            'cs': scenario.cs,
             'traj_logger': traj_logger,
-            'runhistory': runhistory,
             'rng': rng,
+            'ta_run_limit': scenario.ta_run_limit,
             'configs': initial_configurations,
-            'intensifier': intensifier,
-            'aggregate_func': aggregate_func,
             'n_configs_x_params': 0,
             'max_config_fracs': 0.0
-            }
-        if isinstance(intensifier, SuccessiveHalving):
-            # If running successive halving, then you need multiple configurations for the initial design
-            n_configs = intensifier.num_initial_challengers / len(self.scenario.cs.get_hyperparameters())
-            init_design_def_kwargs['n_configs_x_params'] = n_configs
-            init_design_def_kwargs['run_first_config'] = False
-            init_design_def_kwargs['fill_random_configs'] = True
+        }
         if initial_design_kwargs is not None:
             init_design_def_kwargs.update(initial_design_kwargs)
         if initial_configurations is not None:
@@ -482,7 +469,7 @@ class SMAC4AC(object):
             'impute_state': [StatusType.CAPPED, ],
             'imputor': imputor,
             'scale_perc': 5
-            }
+        }
         if scenario.run_obj == 'quality':
             r2e_def_kwargs.update({
                 'success_states': [StatusType.SUCCESS, StatusType.CRASHED],
@@ -521,7 +508,6 @@ class SMAC4AC(object):
             'runhistory': runhistory,
             'runhistory2epm': runhistory2epm,
             'intensifier': intensifier,
-            'aggregate_func': aggregate_func,
             'num_run': run_id,
             'model': model,
             'acq_optimizer': acquisition_function_optimizer,
@@ -570,8 +556,8 @@ class SMAC4AC(object):
                  instance_mode: Union[List[str], str] = 'train+test',
                  repetitions: int = 1,
                  use_epm: bool = False,
-                 n_jobs: int = -1, backend:
-                 str = 'threading'):
+                 n_jobs: int = -1,
+                 backend: str = 'threading'):
         """
         Create validator-object and run validation, using
         scenario-information, runhistory from smbo and tae_runner from intensify

@@ -6,7 +6,6 @@ Created on Nov 15, 2018
 import os
 import unittest
 import shlex
-from collections import defaultdict
 
 from smac.configspace import ConfigurationSpace
 from smac.tae.execute_ta_run_hydra import ExecuteTARunHydra
@@ -22,7 +21,7 @@ class TaeHydra(unittest.TestCase):
         self.current_dir = os.getcwd()
         base_dir = os.path.split(__file__)[0]
         base_dir = os.path.join(base_dir, '..', '..')
-        self.oracle = defaultdict(float)
+        self.oracle = {}
         os.chdir(base_dir)
 
     def tearDown(self):
@@ -36,12 +35,13 @@ class TaeHydra(unittest.TestCase):
                                   'run_obj': 'quality',
                                   'output_dir': ''}, cmd_options=None)
         stats = Stats(scen)
+        self.oracle['inst'] = 0.0
 
         eta = ExecuteTARunHydra(
             cost_oracle=self.oracle, tae=ExecuteTARunAClib,
             ta=shlex.split("python test/test_tae/dummy_ta_wrapper_aclib.py 1"),
             stats=stats)
-        status, cost, runtime, ar_info = eta.run(config={}, instance=None, cutoff=10)
+        status, cost, runtime, ar_info = eta.run(config={}, instance='inst', cutoff=10)
         assert status == StatusType.SUCCESS
         assert cost == 0
         assert runtime == 0
@@ -49,11 +49,11 @@ class TaeHydra(unittest.TestCase):
         print(status, cost, runtime)
 
         eta = ExecuteTARunHydra(cost_oracle=self.oracle, tae=ExecuteTARunAClib,
-            ta=shlex.split("python test/test_tae/dummy_ta_wrapper_aclib.py 2"),
-            stats=stats)
-        status, cost, runtime, ar_info = eta.run(config={}, instance=None, cutoff=10)
+                                ta=shlex.split("python test/test_tae/dummy_ta_wrapper_aclib.py 2"),
+                                stats=stats)
+        status, cost, runtime, ar_info = eta.run(config={}, instance='inst', cutoff=10)
         assert status == StatusType.SUCCESS
-        assert cost == 0
+        assert cost == 0, cost
         assert runtime == 0
 
         print(status, cost, runtime)
@@ -61,7 +61,7 @@ class TaeHydra(unittest.TestCase):
         eta = ExecuteTARunHydra(cost_oracle=self.oracle, tae=ExecuteTARunAClib,
                                 ta=shlex.split("python test/test_tae/dummy_ta_wrapper_aclib.py 2"), stats=stats,
                                 run_obj="quality")
-        status, cost, runtime, ar_info = eta.run(config={}, instance=None, cutoff=10)
+        status, cost, runtime, ar_info = eta.run(config={}, instance='inst', cutoff=10)
         assert status == StatusType.SUCCESS
         assert cost == 0
         assert runtime == 3.0

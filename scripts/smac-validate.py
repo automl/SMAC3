@@ -5,12 +5,13 @@ import logging
 import sys
 import os
 import inspect
-cmd_folder = os.path.realpath(os.path.abspath(os.path.split(inspect.getfile( inspect.currentframe() ))[0]))
+
+cmd_folder = os.path.realpath(os.path.abspath(os.path.split(inspect.getfile(inspect.currentframe()))[0]))
 cmd_folder = os.path.realpath(os.path.join(cmd_folder, ".."))
 if cmd_folder not in sys.path:
     sys.path.insert(0, cmd_folder)
 
-from smac.optimizer.objective import average_cost
+from smac.runhistory.runhistory import average_cost
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
@@ -18,7 +19,6 @@ from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
-
 
 if __name__ == "__main__":
     parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)

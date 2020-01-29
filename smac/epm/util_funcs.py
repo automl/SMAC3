@@ -2,18 +2,21 @@ import typing
 import logging
 import numpy as np
 
+from ConfigSpace import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformFloatHyperparameter, UniformIntegerHyperparameter, Constant, \
     OrdinalHyperparameter
 from smac.utils.constants import MAXINT
 
 
-def get_types(config_space, instance_features=None):
+def get_types(
+    config_space: ConfigurationSpace,
+    instance_features: typing.Optional[np.ndarray] = None,
+) -> typing.Tuple[typing.List[int], typing.List[typing.Tuple[float, float]]]:
     """TODO"""
     # Extract types vector for rf from config space and the bounds
-    types = np.zeros(len(config_space.get_hyperparameters()),
-                     dtype=np.uint)
-    bounds = [(np.nan, np.nan)]*types.shape[0]
+    types = [0] * len(config_space.get_hyperparameters())
+    bounds = [(np.nan, np.nan)] * len(types)
 
     for i, param in enumerate(config_space.get_hyperparameters()):
         parents = config_space.get_parents_of(param.name)
@@ -66,12 +69,8 @@ def get_types(config_space, instance_features=None):
             raise TypeError("Unknown hyperparameter type %s" % type(param))
 
     if instance_features is not None:
-        types = np.hstack(
-            (types, np.zeros((instance_features.shape[1])))
-        )
+        types = types + [0] * instance_features.shape[1]
 
-    types = np.array(types, dtype=np.uint)
-    bounds = np.array(bounds, dtype=object)
     return types, bounds
 
 
@@ -108,29 +107,31 @@ def get_rng(
         raise TypeError('Argument rng accepts only arguments of type None, int or np.random.RandomState, '
                         'you provided %s.' % str(type(rng)))
     if run_id is not None and not isinstance(run_id, int):
-        raise TypeError('Argument run_id accepts only arguments of type None, int or np.random.RandomState, '
+        raise TypeError('Argument run_id accepts only arguments of type None, int, '
                         'you provided %s.' % str(type(run_id)))
 
     if rng is None and run_id is None:
         # Case that both are None
         logger.debug('No rng and no run_id given: using a random value to initialize run_id.')
-        rng = np.random.RandomState()
-        run_id = rng.randint(MAXINT)
+        rng_return = np.random.RandomState()
+        run_id_return = rng_return.randint(MAXINT)
     elif rng is None and isinstance(run_id, int):
         logger.debug('No rng and no run_id given: using run_id %d as seed.', run_id)
-        rng = np.random.RandomState(seed=run_id)
-    elif isinstance(rng, int):
-        if run_id is None:
-            run_id = rng
-        else:
-            pass
-        rng = np.random.RandomState(seed=rng)
-    elif isinstance(rng, np.random.RandomState):
-        if run_id is None:
-            run_id = rng.randint(MAXINT)
-        else:
-            pass
+        rng_return = np.random.RandomState(seed=run_id)
+        run_id_return = run_id
+    elif isinstance(rng, int) and run_id is None:
+        run_id_return = rng
+        rng_return = np.random.RandomState(seed=rng)
+    elif isinstance(rng, int) and isinstance(run_id, int):
+        run_id_return = run_id
+        rng_return = np.random.RandomState(seed=rng)
+    elif isinstance(rng, np.random.RandomState) and run_id is None:
+        rng_return = rng
+        run_id_return = rng.randint(MAXINT)
+    elif isinstance(rng, np.random.RandomState) and isinstance(run_id, int):
+        rng_return = rng
+        run_id_return = run_id
     else:
         raise ValueError('This should not happen! Please contact the developers! Arguments: rng=%s of type %s and '
-                         'run_id=% of type %s' % (rng, type(rng), run_id, type(run_id)))
-    return run_id, rng
+                         'run_id=%s of type %s' % (rng, type(rng), str(run_id), type(run_id)))
+    return run_id_return, rng_return

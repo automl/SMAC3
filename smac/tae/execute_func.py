@@ -3,12 +3,18 @@ import inspect
 import math
 import time
 import json
+import typing
 
 import numpy as np
 import pynisher
 
+from smac.configspace import Configuration
+from smac.stats.stats import Stats
 from smac.tae.execute_ta_run import StatusType, ExecuteTARun
 from smac.utils.constants import MAXINT, MAX_CUTOFF
+
+if typing.TYPE_CHECKING:
+    from smac.runhistory.runhistory import RunHistory  # noqa F401
 
 __author__ = "Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -29,11 +35,18 @@ class AbstractTAFunc(ExecuteTARun):
     use_pynisher
     """
 
-    def __init__(self, ta, stats=None, runhistory=None, run_obj:str="quality",
-                 memory_limit:int=None, par_factor:int=1,
-                 cost_for_crash:float=float(MAXINT),
-                 abort_on_first_run_crash: bool=False,
-                 use_pynisher:bool=True):
+    def __init__(
+        self,
+        ta: typing.Callable,
+        stats: Stats,
+        runhistory: typing.Optional['RunHistory'] = None,
+        run_obj: str = "quality",
+        memory_limit: typing.Optional[int] = None,
+        par_factor: int = 1,
+        cost_for_crash: float = float(MAXINT),
+        abort_on_first_run_crash: bool = False,
+        use_pynisher: bool = True,
+    ):
 
         super().__init__(ta=ta, stats=stats, runhistory=runhistory,
                          run_obj=run_obj, par_factor=par_factor,
@@ -59,18 +72,20 @@ class AbstractTAFunc(ExecuteTARun):
             cost that is used in case of crashed runs (including runs
             that returned NaN or inf)
         use_pynisher: bool
-            use pynisher to limit resources; 
+            use pynisher to limit resources;
             if disabled
-              * TA func can use as many resources 
+              * TA func can use as many resources
               as it wants (time and memory) --- use with caution
               * all runs will be returned as SUCCESS if returned value is not None
-            
         """
 
         signature = inspect.signature(ta).parameters
-        self._accepts_seed = len(signature) > 1
-        self._accepts_instance = len(signature) > 2
-        self._accepts_budget = len(signature) > 3
+        self._accepts_seed = 'seed' in signature.keys()
+        self._accepts_instance = 'instance' in signature.keys()
+        self._accepts_budget = 'budget' in signature.keys()
+        if not callable(ta):
+            raise TypeError('Argument `ta` must be a callable, but is %s' % type(ta))
+        self._ta = typing.cast(typing.Callable, ta)
 
         if memory_limit is not None:
             memory_limit = int(math.ceil(memory_limit))
@@ -81,11 +96,13 @@ class AbstractTAFunc(ExecuteTARun):
         self.logger = logging.getLogger(
             self.__module__ + '.' + self.__class__.__name__)
 
-    def run(self, config, instance=None,
-            cutoff=None,
-            seed=12345,
-            instance_specific="0"):
-        """Runs target algorithm <self.ta> with configuration <config> for at
+    def run(self, config: Configuration,
+            instance: typing.Optional[str] = None,
+            cutoff: typing.Optional[float] = None,
+            seed: int = 12345,
+            budget: typing.Optional[float] = None,
+            instance_specific: str = "0") -> typing.Tuple[StatusType, float, float, typing.Dict]:
+        """Runs target algorithm <self._ta> with configuration <config> for at
         most <cutoff> seconds, allowing it to use at most <memory_limit> RAM.
 
         Whether the target algorithm is called with the <instance> and
@@ -94,18 +111,18 @@ class AbstractTAFunc(ExecuteTARun):
 
         Parameters
         ----------
-            config : dictionary (or similar)
+            config : Configuration, dictionary (or similar)
                 Dictionary param -> value
-            instance : str
+            instance : str, optional
                 Problem instance
-            cutoff : int, optional
+            cutoff : float, optional
                 Wallclock time limit of the target algorithm. If no value is
-                provided no limit will be enforced.
-            memory_limit : int, optional
-                Memory limit in MB enforced on the target algorithm If no
-                value is provided no limit will be enforced.
+                provided no limit will be enforced. It is casted to integer internally.
             seed : int
                 Random seed
+            budget : float, optional
+                A positive, real-valued number representing an arbitrary limit to the target algorithm
+                Handled by the target algorithm internally
             instance_specific: str
                 Instance specific information (e.g., domain file or solution)
         Returns
@@ -120,13 +137,13 @@ class AbstractTAFunc(ExecuteTARun):
                 all further additional run information
         """
 
-        obj_kwargs = {}
+        obj_kwargs = {}  # type: typing.Dict[str, typing.Union[int, str, float, None]]
         if self._accepts_seed:
             obj_kwargs['seed'] = seed
         if self._accepts_instance:
             obj_kwargs['instance'] = instance
         if self._accepts_budget:
-            obj_kwargs['budget'] = cutoff
+            obj_kwargs['budget'] = budget
 
         if self.use_pynisher:
             # walltime for pynisher has to be a rounded up integer
@@ -141,8 +158,8 @@ class AbstractTAFunc(ExecuteTARun):
                          'mem_in_mb': self.memory_limit}
 
             # call ta
-            obj = pynisher.enforce_limits(**arguments)(self.ta)
-            rval = self._call_ta(obj, config, **obj_kwargs)
+            obj = pynisher.enforce_limits(**arguments)(self._ta)
+            rval = self._call_ta(obj, config, obj_kwargs)
 
             if isinstance(rval, tuple):
                 result = rval[0]
@@ -164,32 +181,27 @@ class AbstractTAFunc(ExecuteTARun):
             else:
                 status = StatusType.CRASHED
                 cost = self.crash_cost
-        
+
             runtime = float(obj.wall_clock_time)
         else:
             start_time = time.time()
             # call ta
             try:
-                rval = self._call_ta(self.ta, config, **obj_kwargs)
+                rval = self._call_ta(self._ta, config, obj_kwargs)
                 if isinstance(rval, tuple):
                     result = rval[0]
                     additional_run_info = rval[1]
                 else:
                     result = rval
                     additional_run_info = {}
-            except Exception as e:
-                self.logger.exception(e)
-                result = None
-                additional_run_info = {}
-
-            # get status, cost, time
-            if result is not None:
                 status = StatusType.SUCCESS
                 cost = result
-            else:
+            except Exception as e:
+                self.logger.exception(e)
                 status = StatusType.CRASHED
                 cost = self.crash_cost
-            
+                additional_run_info = {}
+
             runtime = time.time() - start_time
 
         # check serializability of results
@@ -208,9 +220,18 @@ class AbstractTAFunc(ExecuteTARun):
                             "Please ensure all objects returned are JSON serializable.".format(additional_run_info)) \
                 from e
 
+        if status == StatusType.SUCCESS and not isinstance(result, (int, float)):
+            status = StatusType.CRASHED
+            cost = self.crash_cost
+
         return status, cost, runtime, additional_run_info
 
-    def _call_ta(self, obj, config, instance, seed):
+    def _call_ta(
+        self,
+        obj: typing.Callable,
+        config: Configuration,
+        obj_kwargs: typing.Dict[str, typing.Union[int, str, float, None]],
+    ) -> typing.Union[float, typing.Tuple[float, typing.Dict]]:
         raise NotImplementedError()
 
 
@@ -250,9 +271,14 @@ class ExecuteTAFuncDict(AbstractTAFunc):
         use pynisher to limit resources;
     """
 
-    def _call_ta(self, obj, config, **kwargs):
+    def _call_ta(
+        self,
+        obj: typing.Callable,
+        config: Configuration,
+        obj_kwargs: typing.Dict[str, typing.Union[int, str, float, None]],
+    ) -> typing.Union[float, typing.Tuple[float, typing.Dict]]:
 
-        return obj(config, **kwargs)
+        return obj(config, **obj_kwargs)
 
 
 class ExecuteTAFuncArray(AbstractTAFunc):
@@ -288,8 +314,13 @@ class ExecuteTAFuncArray(AbstractTAFunc):
         Penalized average runtime factor. Only used when `run_obj='runtime'`
     """
 
-    def _call_ta(self, obj, config, **kwargs):
+    def _call_ta(
+        self,
+        obj: typing.Callable,
+        config: Configuration,
+        obj_kwargs: typing.Dict[str, typing.Union[int, str, float, None]],
+    ) -> typing.Union[float, typing.Tuple[float, typing.Dict]]:
 
         x = np.array([val for _, val in sorted(config.get_dictionary().items())],
                      dtype=np.float)
-        return obj(x, **kwargs)
+        return obj(x, **obj_kwargs)

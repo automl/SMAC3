@@ -37,24 +37,32 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
             Models the objective function.
         """
         self.model = model
+        self._required_updates = ('model', )
         self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
 
     def update(self, **kwargs):
-        """Update the acquisition functions values.
+        """Update the acquisition function attributes required for calculation.
 
-        This method will be called if the model is updated. E.g.
-        entropy search uses it to update its approximation of P(x=x_min),
-        EI uses it to update the current fmin.
+        This method will be called after fitting the model, but before maximizing the acquisition
+        function. As an examples, EI uses it to update the current fmin.
 
-        The default implementation takes all keyword arguments and sets the
-        respective attributes for the acquisition function object.
+        The default implementation only updates the attributes of the acqusition function which
+        are already present.
 
         Parameters
         ----------
         kwargs
         """
+        for key in self._required_updates:
+            if key not in kwargs:
+                raise ValueError(
+                    'Acquisition function %s needs to be updated with key %s, but only got '
+                    'keys %s.'
+                    % (self.__class__.__name__, key, list(kwargs.keys()))
+                )
         for key in kwargs:
-            setattr(self, key, kwargs[key])
+            if key in self._required_updates:
+                setattr(self, key, kwargs[key])
 
     def __call__(self, configurations: List[Configuration]):
         """Computes the acquisition value for a given X
@@ -182,7 +190,7 @@ class EI(AbstractAcquisitionFunction):
 
     def __init__(self,
                  model: AbstractEPM,
-                 par: float=0.0):
+                 par: float = 0.0):
         """Constructor
 
         Parameters
@@ -199,6 +207,7 @@ class EI(AbstractAcquisitionFunction):
         self.long_name = 'Expected Improvement'
         self.par = par
         self.eta = None
+        self._required_updates = ('model', 'eta')
 
     def _compute(self, X: np.ndarray, **kwargs):
         """Computes the EI value and its derivatives.
@@ -253,10 +262,10 @@ class EI(AbstractAcquisitionFunction):
 class EIPS(EI):
     def __init__(self,
                  model: AbstractEPM,
-                 par: float=0.0):
+                 par: float = 0.0):
         r"""Computes for a given x the expected improvement as
         acquisition value.
-        :math:`EI(X) := \frac{\mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]} {np.log(r(x))}`,
+        :math:`EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}`,
         with :math:`f(X^+)` as the incumbent and :math:`r(x)` as runtime.
 
         Parameters
@@ -338,7 +347,7 @@ class LogEI(AbstractAcquisitionFunction):
 
     def __init__(self,
                  model: AbstractEPM,
-                 par: float=0.0):
+                 par: float = 0.0):
         r"""Computes for a given x the logarithm expected improvement as
         acquisition value.
 
@@ -355,6 +364,7 @@ class LogEI(AbstractAcquisitionFunction):
         self.long_name = 'Expected Improvement'
         self.par = par
         self.eta = None
+        self._required_updates = ('model', 'eta')
 
     def _compute(self, X: np.ndarray, **kwargs):
         """Computes the EI value and its derivatives.
@@ -412,7 +422,7 @@ class LogEI(AbstractAcquisitionFunction):
 class PI(AbstractAcquisitionFunction):
     def __init__(self,
                  model: AbstractEPM,
-                 par: float=0.0):
+                 par: float = 0.0):
 
         """Computes the probability of improvement for a given x over the best so far value as
         acquisition value.
@@ -434,6 +444,7 @@ class PI(AbstractAcquisitionFunction):
         self.long_name = 'Probability of Improvement'
         self.par = par
         self.eta = None
+        self._required_updates = ('model', 'eta')
 
     def _compute(self, X: np.ndarray):
         """Computes the PI value.
@@ -463,7 +474,7 @@ class PI(AbstractAcquisitionFunction):
 class LCB(AbstractAcquisitionFunction):
     def __init__(self,
                  model: AbstractEPM,
-                 par: float=1.0):
+                 par: float = 1.0):
 
         """Computes the lower confidence bound for a given x over the best so far value as
         acquisition value.
@@ -484,8 +495,8 @@ class LCB(AbstractAcquisitionFunction):
         super(LCB, self).__init__(model)
         self.long_name = 'Lower Confidence Bound'
         self.par = par
-        self.eta = None  # to be compatible with the existing update calls in SMBO
         self.num_data = None
+        self._required_updates = ('model', 'num_data')
 
     def _compute(self, X: np.ndarray):
         """Computes the LCB value.
@@ -508,5 +519,5 @@ class LCB(AbstractAcquisitionFunction):
             X = X[:, np.newaxis]
         m, var_ = self.model.predict_marginalized_over_instances(X)
         std = np.sqrt(var_)
-        beta = 2*np.log((X.shape[1] * self.num_data**2) / self.par)
-        return -(m - np.sqrt(beta)*std)
+        beta = 2 * np.log((X.shape[1] * self.num_data**2) / self.par)
+        return -(m - np.sqrt(beta) * std)

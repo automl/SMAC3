@@ -1,7 +1,6 @@
 from contextlib import suppress
 import shutil
 import unittest
-from nose.plugins.attrib import attr
 
 import numpy as np
 
@@ -9,11 +8,8 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 from smac.configspace import ConfigurationSpace
 
-from smac.runhistory.runhistory import RunHistory
 from smac.facade.roar_facade import ROAR
 from smac.scenario.scenario import Scenario
-from smac.stats.stats import Stats
-from smac.tae.execute_func import ExecuteTAFuncArray
 
 
 class TestROARFacade(unittest.TestCase):
@@ -34,7 +30,6 @@ class TestROARFacade(unittest.TestCase):
             if output_dir:
                 shutil.rmtree(output_dir, ignore_errors=True)
 
-    @attr('slow')
     def test_check_deterministic_rosenbrock(self):
         def rosenbrock_2d(x):
             x1 = x['x1']

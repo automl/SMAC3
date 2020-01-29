@@ -14,12 +14,12 @@ __version__ = "0.0.1"
 class BaseImputor(object):
     """Abstract implementation of the Imputation API."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
     @abstractmethod
     def impute(self, censored_X: np.ndarray, censored_y: np.ndarray,
-               uncensored_X: np.ndarray, uncensored_y: np.ndarray):
+               uncensored_X: np.ndarray, uncensored_y: np.ndarray) -> np.ndarray:
         """
         Imputes censored runs and returns new y values.
 

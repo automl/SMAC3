@@ -3,7 +3,6 @@ Created on Mar 29, 2015
 
 @author: Andre Biedenkapp
 '''
-from collections import defaultdict
 import sys
 import os
 import logging
@@ -22,7 +21,6 @@ from smac.utils.merge_foreign_data import merge_foreign_data
 from smac.utils.io.cmd_reader import truthy as _is_truthy
 from smac.utils.io.input_reader import InputReader
 from smac.runhistory.runhistory import RunHistory
-from smac.optimizer.objective import average_cost
 from smac.tae.execute_ta_run import StatusType
 
 in_reader = InputReader()
@@ -84,13 +82,13 @@ class ScenarioTest(unittest.TestCase):
             if output_file:
                 try:
                     os.remove(output_file)
-                except FileNotFoundError as e:
+                except FileNotFoundError:
                     pass
         os.chdir(self.current_dir)
 
     def test_Exception(self):
         with self.assertRaises(TypeError):
-            s = Scenario(['a', 'b'])
+            _ = Scenario(['a', 'b'])
 
     def test_string_scenario(self):
         scenario = Scenario('test/test_files/scenario_test/scenario.txt')
@@ -154,7 +152,7 @@ class ScenarioTest(unittest.TestCase):
                                                            lower=0,
                                                            upper=100))
         # build runhistory
-        rh_merge = RunHistory(aggregate_func=average_cost)
+        rh_merge = RunHistory()
         config = Configuration(cs, values={'a': 1, 'b': 2})
 
         rh_merge.add(config=config, instance_id="inst_new", cost=10, time=20,
@@ -169,7 +167,7 @@ class ScenarioTest(unittest.TestCase):
                      additional_info=None)
 
         # build empty rh
-        rh_base = RunHistory(aggregate_func=average_cost)
+        rh_base = RunHistory()
 
         merge_foreign_data(scenario=scenario, runhistory=rh_base,
                            in_scenario_list=[scenario_2], in_runhistory_list=[rh_merge])
@@ -189,7 +187,8 @@ class ScenarioTest(unittest.TestCase):
                      additional_info=None)
 
         self.assertRaises(ValueError, merge_foreign_data, **{
-                          "scenario": scenario, "runhistory": rh_base, "in_scenario_list": [scenario_2], "in_runhistory_list": [rh_merge]})
+                          "scenario": scenario, "runhistory": rh_base,
+                          "in_scenario_list": [scenario_2], "in_runhistory_list": [rh_merge]})
 
     def test_pickle_dump(self):
         scenario = Scenario(self.test_scenario_dict)
@@ -224,8 +223,7 @@ class ScenarioTest(unittest.TestCase):
                     self.assertEqual(len(scen1.feature_dict),
                                      len(scen2.feature_dict))
                     for key in scen1.feature_dict:
-                        self.assertTrue((scen1.feature_dict[key] ==
-                                         scen2.feature_dict[key]).all())
+                        self.assertTrue((scen1.feature_dict[key] == scen2.feature_dict[key]).all())
                 else:
                     print(name, getattr(scen1, name), getattr(scen2, name))
                     self.assertEqual(getattr(scen1, name),
@@ -271,7 +269,7 @@ class ScenarioTest(unittest.TestCase):
         scenario = Scenario(self.test_scenario_dict)
         # This injection would usually happen by the facade object!
         scenario.output_dir_for_this_run = scenario.output_dir
-        with self.assertRaises(OSError) as cm:
+        with self.assertRaises(OSError):
             scenario.write()
 
     def test_no_output_dir(self):

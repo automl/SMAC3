@@ -1,3 +1,11 @@
+# 0.11.2dev
+
+## Maintenance
+
+* Dropped the random forest with HPO surrogate which was added in 0.9
+* Dropped the EPILS facade which was added in 0.6
+* MAINT Simplified the interface for constructing a runhistory object
+
 # 0.11.1
 
 ## Changes
